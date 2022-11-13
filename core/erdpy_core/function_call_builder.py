@@ -15,13 +15,14 @@ class FunctionCallBuilder:
         self.function_name = ""
         self.arguments: List[Any] = []
 
-    def set_function(self, function_name: str):
+    def set_function(self, function_name: str) -> None:
         self.function_name = function_name
-        return self
 
-    def set_arguments(self, args: List[Any]):
+    def add_argument(self, arg: Any) -> None:
+        self.arguments.append(arg)
+
+    def set_arguments(self, args: List[Any]) -> None:
         self.arguments = args
-        return self
 
     def build(self) -> TransactionPayload:
         data = self.function_name
