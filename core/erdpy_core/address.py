@@ -1,6 +1,7 @@
 from typing import Any
 
 from erdpy_core import bech32
+from erdpy_core.errors import ErrBadAddress
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 HRP = "erd"
@@ -30,7 +31,7 @@ class Address():
         elif len(value) == BECH32_LENGTH:
             self._value_hex = _decode_bech32(value).hex()
         else:
-            raise Exception(f"Bad address: {value}")
+            raise ErrBadAddress(value)
 
     def hex(self) -> str:
         self._assert_validity()
@@ -43,7 +44,7 @@ class Address():
         assert isinstance(b32, str)
         return b32
 
-    def pubkey(self):
+    def pubkey(self) -> bytes:
         self._assert_validity()
         pubkey = bytes.fromhex(self._value_hex)
         return pubkey
@@ -73,6 +74,6 @@ def _decode_bech32(value: Any):
     bech32_string = _as_string(value)
     hrp, value_bytes = bech32.bech32_decode(bech32_string)
     if hrp != HRP:
-        raise Exception(f"Bad address format: {value}")
+        raise ErrBadAddress(value)
     decoded_bytes = bech32.convertbits(value_bytes, 5, 8, False)
     return bytearray(decoded_bytes)
