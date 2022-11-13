@@ -16,7 +16,7 @@ class UserSigner:
         self.secret_key = secret_key
 
     @classmethod
-    def from_pem_file(cls, file: Path, index: int = 0):
+    def from_pem_file(cls, file: Path, index: int = 0) -> 'UserSigner':
         secret_key, _ = pem.parse(file, index)
         return UserSigner(secret_key)
 
