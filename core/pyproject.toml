@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "erdpy_core"
+version = "0.1.0"
+authors = [
+  { name="Elrond Network" },
+]
+description = "erdpy_core"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ElrondNetwork/elrond-sdk-erdpy-eggs"
