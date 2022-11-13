@@ -1,5 +1,8 @@
 
-class IAddress:
+from typing import Protocol
+
+
+class IAddress(Protocol):
     def bech32(self) -> str:
         return ""
 
@@ -14,6 +17,6 @@ ITransactionOptions = int
 ISignature = bytes
 
 
-class ITransactionPayload:
+class ITransactionPayload(Protocol):
     def encoded(self) -> str:
         return ""
