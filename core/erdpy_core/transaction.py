@@ -15,26 +15,28 @@ class Transaction:
     def __init__(
         self,
         nonce: INonce,
-        value: Union[ITransactionValue, None],
         sender: IAddress,
         receiver: IAddress,
-        gas_price: Union[IGasPrice, None],
         gas_limit: IGasLimit,
-        data: Union[ITransactionPayload, None],
         chain_id: IChainID,
-        version: Union[ITransactionVersion, None],
-        options: Union[ITransactionOptions, None]
+        gas_price: Union[IGasPrice, None] = None,
+        value: Union[ITransactionValue, None] = None,
+        data: Union[ITransactionPayload, None] = None,
+        version: Union[ITransactionVersion, None] = None,
+        options: Union[ITransactionOptions, None] = None
     ):
         self.nonce = nonce or 0
-        self.value = value or "0"
         self.sender = sender
         self.receiver = receiver
-        self.gas_price = gas_price or TRANSACTION_MIN_GAS_PRICE
         self.gas_limit = gas_limit
-        self.data = data
         self.chainID = chain_id
-        self.version = version or TRANSACTION_VERSION_DEFAULT
-        self.options = options or TRANSACTION_OPTIONS_DEFAULT
+
+        self.gas_price: IGasPrice = gas_price or TRANSACTION_MIN_GAS_PRICE
+        self.value = value or "0"
+        self.data = data
+        self.version: ITransactionVersion = version or TRANSACTION_VERSION_DEFAULT
+        self.options: ITransactionOptions = options or TRANSACTION_OPTIONS_DEFAULT
+
         self.signature = bytes()
 
     def serialize_for_signing(self) -> bytes:
