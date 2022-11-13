@@ -1,12 +1,5 @@
-import logging
 import nacl.encoding
 import nacl.signing
-
-logger = logging.getLogger("wallet.generator")
-
-
-def generate_pairs():
-    pass
 
 
 def generate_pair():

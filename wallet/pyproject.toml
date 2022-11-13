@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project]
+name = "erdpy_wallet"
+version = "0.1.0"
+authors = [
+  { name="Elrond Network" },
+]
+description = "erdpy_wallet"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "pynacl==1.5.0",
+  "pycryptodomex==3.15.0",
+  "cryptography==36.0.2",
+  "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@init#egg=erdpy_core"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-eggs-wallet"
