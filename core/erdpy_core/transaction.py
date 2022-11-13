@@ -44,10 +44,6 @@ class Transaction:
         serialized = self._dict_to_json(dictionary)
         return serialized
 
-    def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
-        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
-        return serialized
-
     def to_dictionary(self) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = self.nonce
@@ -75,5 +71,9 @@ class Transaction:
 
         return dictionary
 
-    def apply_signature(self, signature: ISignature):
+    def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
+        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
+        return serialized
+
+    def apply_signature(self, signature: ISignature) -> None:
         self.signature = signature
