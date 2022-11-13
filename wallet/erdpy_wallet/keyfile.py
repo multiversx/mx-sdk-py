@@ -12,8 +12,9 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from erdpy_core import Address
 
-from erdpy_wallet.errors import (InvalidKeystoreFilePassword, UnknownCipher,
-                                 UnknownDerivationFunction)
+from erdpy_wallet.errors import (ErrInvalidKeystoreFilePassword,
+                                 ErrUnknownCipher,
+                                 ErrUnknownDerivationFunction)
 
 
 # References:
@@ -28,7 +29,7 @@ def load_from_key_file(key_file_json, password):
     # derive the decryption key
     kdf_name = keystore['crypto']['kdf']
     if kdf_name != 'scrypt':
-        raise UnknownDerivationFunction()
+        raise ErrUnknownDerivationFunction()
 
     salt = unhexlify(keystore['crypto']['kdfparams']['salt'])
     dklen = keystore['crypto']['kdfparams']['dklen']
@@ -42,7 +43,7 @@ def load_from_key_file(key_file_json, password):
     # decrypt the secret key with half of the decryption key
     cipher_name = keystore['crypto']['cipher']
     if cipher_name != 'aes-128-ctr':
-        raise UnknownCipher(name=cipher_name)
+        raise ErrUnknownCipher(name=cipher_name)
 
     iv = unhexlify(keystore['crypto']['cipherparams']['iv'])
     ciphertext = unhexlify(keystore['crypto']['ciphertext'])
@@ -59,7 +60,7 @@ def load_from_key_file(key_file_json, password):
     mac = h.finalize()
 
     if mac != unhexlify(keystore['crypto']['mac']):
-        raise InvalidKeystoreFilePassword()
+        raise ErrInvalidKeystoreFilePassword()
 
     address_bech32 = keystore['bech32']
     secret_key = ''.join([pemified_secret_key[i:i + 64].decode() for i in range(0, len(pemified_secret_key), 64)])

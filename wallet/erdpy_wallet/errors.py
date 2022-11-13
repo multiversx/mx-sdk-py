@@ -1,13 +1,18 @@
-class UnknownCipher(Exception):
+class ErrUnknownCipher(Exception):
     def __init__(self, name: str):
         super().__init__(f"Unknown cipher: {name}.")
 
 
-class UnknownDerivationFunction(Exception):
+class ErrUnknownDerivationFunction(Exception):
     def __init__(self):
         super().__init__("Unknown key derivation function.")
 
 
-class InvalidKeystoreFilePassword(Exception):
+class ErrInvalidKeystoreFilePassword(Exception):
     def __init__(self):
         super().__init__("Provided keystore file password is invalid.")
+
+
+class ErrCannotSign(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__("Cannot sign object.")
