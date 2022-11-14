@@ -49,8 +49,8 @@ class Transaction:
         dictionary["nonce"] = self.nonce
         dictionary["value"] = self.value
 
-        dictionary["receiver"] = self.receiver
-        dictionary["sender"] = self.sender
+        dictionary["receiver"] = self.receiver.bech32()
+        dictionary["sender"] = self.sender.bech32()
 
         dictionary["gasPrice"] = self.gas_price
         dictionary["gasLimit"] = self.gas_limit
