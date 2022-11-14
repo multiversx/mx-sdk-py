@@ -31,7 +31,8 @@ class UserSigner:
     def _try_sign(self, signable: ISignable) -> ISignature:
         data = signable.serialize_for_signing()
         signing_key = SigningKey(self.secret_key)
-        signature = signing_key.sign(data)
+        signed = signing_key.sign(data)
+        signature = signed.signature
         return signature
 
     def get_address(self) -> IAddressAsOutput:
