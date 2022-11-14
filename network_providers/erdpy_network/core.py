@@ -1,20 +1,22 @@
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import requests
+from requests.auth import AuthBase
 
 from erdpy_network.errors import GenericError
 from erdpy_network.resources import GenericResponse
 
 
 class ProxyNetworkProvider():
-    def __init__(self, url: str):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None):
         self.url = url
+        self.auth = auth
 
     def do_get(self, url: str) -> GenericResponse:
         url = f"{self.url}/{url}"
 
         try:
-            response = requests.get(url)
+            response = requests.get(url, auth=self.auth)
             response.raise_for_status()
             parsed = response.json()
             return _get_data(parsed, url)
@@ -30,7 +32,7 @@ class ProxyNetworkProvider():
         url = f"{self.url}/{url}"
 
         try:
-            response = requests.post(url, json=payload)
+            response = requests.post(url, json=payload, auth=self.auth)
             response.raise_for_status()
             parsed = response.json()
             return _get_data(parsed, url)
