@@ -1,5 +1,3 @@
-from typing import Any
-
 from erdpy_core import bech32
 from erdpy_core.errors import ErrBadAddress, ErrBadPubkeyLength
 
