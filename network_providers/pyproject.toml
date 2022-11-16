@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "erdpy_network"
+version = "0.1.0"
+authors = [
+  { name="MultiversX" },
+]
+description = "erdpy_network"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "requests==2.24.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-eggs-network-providers"
