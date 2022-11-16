@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "erdpy_network"
 version = "0.1.0"
 authors = [
-  { name="Elrond Network" },
+  { name="MultiversX" },
 ]
 description = "erdpy_network"
 requires-python = ">=3.8"
@@ -20,4 +20,4 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/elrond-sdk-erdpy-eggs"
+"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-eggs-network-providers"
