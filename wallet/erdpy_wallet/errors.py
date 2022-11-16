@@ -14,5 +14,10 @@ class ErrInvalidKeystoreFilePassword(Exception):
 
 
 class ErrCannotSign(Exception):
-    def __init__(self, *args: object) -> None:
+    def __init__(self) -> None:
         super().__init__("Cannot sign object.")
+
+
+class ErrBadMnemonicLength(Exception):
+    def __init__(self, actual: int, expected: int) -> None:
+        super().__init__(f"Bad mnemonic length: actual = {actual}, expected = {expected}")
