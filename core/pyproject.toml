@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "erdpy_core"
 version = "0.1.0"
 authors = [
-  { name="Elrond Network" },
+  { name="MultiversX" },
 ]
 description = "erdpy_core"
 requires-python = ">=3.8"
@@ -17,4 +17,4 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/elrond-sdk-erdpy-eggs"
+"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-eggs-core"

@@ -21,6 +21,8 @@
 """Reference implementation for Bech32 and segwit addresses."""
 
 
+from typing import List, Union
+
 CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 
 
@@ -53,7 +55,7 @@ def bech32_create_checksum(hrp, data):
     return [(polymod >> 5 * (5 - i)) & 31 for i in range(6)]
 
 
-def bech32_encode(hrp: str, data):
+def bech32_encode(hrp: str, data: List[int]):
     """Compute a Bech32 string given HRP and data values."""
     combined = data + bech32_create_checksum(hrp, data)
     return hrp + '1' + ''.join([CHARSET[d] for d in combined])
@@ -76,12 +78,12 @@ def bech32_decode(bech: str):
     return (hrp, data[:-6])
 
 
-def convertbits(data, frombits, tobits, pad=True):
+def convertbits(data: Union[List[int], bytes], frombits: int, tobits: int, pad: bool = True) -> Union[List[int], None]:
     """General power-of-2 base conversion."""
-    acc = 0
-    bits = 0
-    ret = []
-    maxv = (1 << tobits) - 1
+    acc: int = 0
+    bits: int = 0
+    ret: List[int] = []
+    maxv: int = (1 << tobits) - 1
     max_acc = (1 << (frombits + tobits - 1)) - 1
     for value in data:
         if value < 0 or (value >> frombits):
@@ -99,7 +101,7 @@ def convertbits(data, frombits, tobits, pad=True):
     return ret
 
 
-def decode(hrp, addr):
+def decode(hrp: str, addr):
     """Decode a segwit address."""
     hrpgot, data = bech32_decode(addr)
     if hrpgot != hrp:
