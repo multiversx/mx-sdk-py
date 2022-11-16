@@ -49,11 +49,11 @@ def _get_data(parsed: Dict[str, Any], url: str) -> GenericResponse:
     err = parsed.get("error")
     code = parsed.get("code")
 
-    if not err:
-        data: Dict[str, Any] = parsed.get("data", dict())
-        return GenericResponse(data)
+    if err:
+        raise GenericError(url, f"code:{code}, error: {err}")
 
-    raise GenericError(url, f"code:{code}, error: {err}")
+    data: Dict[str, Any] = parsed.get("data", dict())
+    return GenericResponse(data)
 
 
 def _extract_error_from_response(response: Any):
