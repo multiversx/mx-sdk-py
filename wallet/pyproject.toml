@@ -20,10 +20,9 @@ classifiers = [
 ]
 dependencies = [
   "pynacl==1.5.0",
-  "pycryptodomex==3.15.0",
   "cryptography==36.0.2",
   "mnemonic==0.20",
-  "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@init#egg=erdpy_core"
+  "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@main#egg=erdpy_core"
 ]
 
 [project.urls]

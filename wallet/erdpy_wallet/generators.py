@@ -3,16 +3,8 @@ from pathlib import Path
 import nacl.encoding
 import nacl.signing
 from erdpy_core import Address
-from mnemonic import Mnemonic
 
 from erdpy_wallet import pem
-from erdpy_wallet.constants import BIP39_STRENGTH
-
-
-def generate_mnemonic() -> str:
-    mnemo = Mnemonic("english")
-    words = mnemo.generate(strength=BIP39_STRENGTH)
-    return words
 
 
 def generate_pair():

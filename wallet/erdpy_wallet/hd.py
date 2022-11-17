@@ -2,11 +2,6 @@ import hashlib
 import hmac
 import struct
 
-import nacl.signing
-
-from erdpy_wallet.constants import BIP39_MNEMONIC_WORD_COUNT
-from erdpy_wallet.errors import ErrBadMnemonicLength
-
 BIP39_SALT_MODIFIER = "mnemonic"
 BIP39_PBKDF2_ROUNDS = 2048
 BIP32_SEED_MODIFIER = b'ed25519 seed'
@@ -14,21 +9,16 @@ ELROND_DERIVATION_PATH = [44, 508, 0, 0]
 HARDENED_OFFSET = 0x80000000
 
 
-def derive_keys(mnemonic: str, account_index: int = 0):
-    mnemonic = _normalize_mnemonic(mnemonic)
-
+def derive_keys(mnemonic: str, address_index: int = 0):
     bip39seed = mnemonic_to_bip39seed(mnemonic)
-    secret_key = bip39seed_to_secret_key(bip39seed, account_index)
-    public_key = bytes(nacl.signing.SigningKey(secret_key).verify_key)
-    return secret_key, public_key
+    secret_key = bip39seed_to_secret_key(bip39seed, address_index)
+    return secret_key
 
 
 # References:
 # https://github.com/trezor/python-mnemonic/blob/master/mnemonic/mnemonic.py
 # https://ethereum.stackexchange.com/a/72871/59887
 def mnemonic_to_bip39seed(mnemonic: str, passphrase: str = ""):
-    mnemonic = _normalize_mnemonic(mnemonic)
-
     passphrase = BIP39_SALT_MODIFIER + passphrase
     mnemonic_bytes = mnemonic.encode("utf-8")
     passphrase_bytes = passphrase.encode("utf-8")
@@ -46,10 +36,10 @@ def bip39seed_to_master_key(seed: bytes):
 
 
 # Reference: https://github.com/alepop/ed25519-hd-key
-def bip39seed_to_secret_key(seed: bytes, account_index: int = 0):
+def bip39seed_to_secret_key(seed: bytes, address_index: int = 0):
     key, chain_code = bip39seed_to_master_key(seed)
 
-    for segment in ELROND_DERIVATION_PATH + [account_index]:
+    for segment in ELROND_DERIVATION_PATH + [address_index]:
         key, chain_code = _ckd_priv(key, chain_code, segment + HARDENED_OFFSET)
 
     return key
@@ -63,11 +53,3 @@ def _ckd_priv(key: bytes, chain_code: bytes, index: int):
     key, chain_code = hashed[:32], hashed[32:]
 
     return key, chain_code
-
-
-def _normalize_mnemonic(value: str):
-    words = value.split()
-    if len(words) != BIP39_MNEMONIC_WORD_COUNT:
-        raise ErrBadMnemonicLength(len(words), BIP39_MNEMONIC_WORD_COUNT)
-
-    return " ".join(words)

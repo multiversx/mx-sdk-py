@@ -1,12 +1,9 @@
 from pathlib import Path
 
-from erdpy_core import Address
-from nacl.signing import SigningKey
-
-from erdpy_wallet import pem
 from erdpy_wallet.errors import ErrCannotSign
 from erdpy_wallet.interfaces import ISignable, ISignature
 from erdpy_wallet.interfaces_as_output import IAddressAsOutput
+from erdpy_wallet.user_keys import UserSecretKey
 
 
 class UserSigner:
@@ -14,12 +11,17 @@ class UserSigner:
     ed25519 signer
     """
 
-    def __init__(self, secret_key: bytes) -> None:
+    def __init__(self, secret_key: UserSecretKey) -> None:
         self.secret_key = secret_key
 
     @classmethod
-    def from_pem_file(cls, file: Path, index: int = 0) -> 'UserSigner':
-        secret_key, _ = pem.parse(file, index)
+    def from_pem_file(cls, path: Path, index: int = 0) -> 'UserSigner':
+        secret_key = UserSecretKey.from_pem_file(path, index)
+        return UserSigner(secret_key)
+
+    @classmethod
+    def from_wallet(cls, path: Path, password: str):
+        secret_key = UserSecretKey.from_wallet_file(path, password)
         return UserSigner(secret_key)
 
     def sign(self, signable: ISignable) -> ISignature:
@@ -30,12 +32,9 @@ class UserSigner:
 
     def _try_sign(self, signable: ISignable) -> ISignature:
         data = signable.serialize_for_signing()
-        signing_key = SigningKey(self.secret_key)
-        signed = signing_key.sign(data)
-        signature = signed.signature
+        signature = self.secret_key.sign(data)
         return signature
 
     def get_address(self) -> IAddressAsOutput:
-        signing_key = SigningKey(self.secret_key)
-        pubkey_bytes = bytes(signing_key.verify_key)
-        return Address(pubkey_bytes)
+        public_key = self.secret_key.generate_public_key()
+        return public_key.to_address()

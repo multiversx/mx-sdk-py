@@ -3,7 +3,7 @@ import os
 from binascii import b2a_base64, hexlify, unhexlify
 from json import dump, load
 from pathlib import Path
-from typing import Any
+from typing import Any, Tuple
 from uuid import uuid4
 
 from cryptography.hazmat.backends import default_backend
@@ -20,7 +20,7 @@ from erdpy_wallet.errors import (ErrInvalidKeystoreFilePassword,
 # References:
 # Thanks for this implementation @flyingbasalt
 # https://github.com/flyingbasalt/erdkeys
-def load_from_key_file(key_file_json, password):
+def load_from_key_file(key_file_json: Path, password: str) -> Tuple[str, bytes]:
     with open(key_file_json) as json_f:
         keystore = load(json_f)
 

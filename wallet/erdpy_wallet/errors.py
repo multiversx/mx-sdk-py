@@ -18,6 +18,16 @@ class ErrCannotSign(Exception):
         super().__init__("Cannot sign object.")
 
 
-class ErrBadMnemonicLength(Exception):
-    def __init__(self, actual: int, expected: int) -> None:
-        super().__init__(f"Bad mnemonic length: actual = {actual}, expected = {expected}")
+class ErrBadMnemonic(Exception):
+    def __init__(self) -> None:
+        super().__init__(f"Bad mnemonic")
+
+
+class ErrBadSecretKeyLength(Exception):
+    def __init__(self) -> None:
+        super().__init__(f"Bad length of secret key")
+
+
+class ErrBadPublicKeyLength(Exception):
+    def __init__(self) -> None:
+        super().__init__(f"Bad length of public key")
