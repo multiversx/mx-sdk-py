@@ -50,7 +50,7 @@ def parse_all(pem_file: Path) -> List[Tuple[bytes, bytes]]:
     return result
 
 
-def parse_validator_pem(pem_file: Path, index: int = 0):
+def parse_validator_pem(pem_file: Path, index: int = 0) -> Tuple[bytes, str]:
     pem_file = pem_file.expanduser()
     _guard_is_file(pem_file)
 

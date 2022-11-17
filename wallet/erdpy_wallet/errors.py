@@ -31,3 +31,8 @@ class ErrBadSecretKeyLength(Exception):
 class ErrBadPublicKeyLength(Exception):
     def __init__(self) -> None:
         super().__init__(f"Bad length of public key")
+
+
+class ErrMclSignerPathNotDefined(Exception):
+    def __init__(self) -> None:
+        super().__init__(f"MCL_SIGNER_PATH isn't defined.")
