@@ -25,5 +25,10 @@ dependencies = [
   "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@main#egg=erdpy_core"
 ]
 
+[tool.hatch.build]
+exclude = [
+  "testdata/**"
+]
+
 [project.urls]
 "Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-eggs-wallet"

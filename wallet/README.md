@@ -24,3 +24,9 @@ If using VSCode, restart it or follow these steps:
  - `Ctrl + Shift + P`
  - _Select Interpreter_
  - Choose `./.venv/bin/python`.
+
+Run the tests as follows:
+
+```
+pytest .
+```

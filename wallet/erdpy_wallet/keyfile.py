@@ -1,9 +1,7 @@
 import base64
 import os
 from binascii import b2a_base64, hexlify, unhexlify
-from json import dump, load
-from pathlib import Path
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple, Union
 from uuid import uuid4
 
 from cryptography.hazmat.backends import default_backend
@@ -15,15 +13,13 @@ from erdpy_core import Address
 from erdpy_wallet.errors import (ErrInvalidKeystoreFilePassword,
                                  ErrUnknownCipher,
                                  ErrUnknownDerivationFunction)
+from erdpy_wallet.interfaces import IUserWalletRandomness
 
 
 # References:
 # Thanks for this implementation @flyingbasalt
 # https://github.com/flyingbasalt/erdkeys
-def load_from_key_file(key_file_json: Path, password: str) -> Tuple[str, bytes]:
-    with open(key_file_json) as json_f:
-        keystore = load(json_f)
-
+def load_from_key_file_object(keystore: Dict[str, Any], password: str) -> Tuple[str, bytes]:
     backend = default_backend()
 
     # derive the decryption key
@@ -73,16 +69,18 @@ def load_from_key_file(key_file_json: Path, password: str) -> Tuple[str, bytes]:
     return address_bech32, secret_key
 
 
-def save_to_key_file(json_path: Path, secret_key: str, pubkey: str, password: str) -> None:
+def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, randomness: Union[None, IUserWalletRandomness]) -> Dict[str, Any]:
+    salt = os.urandom(32) if randomness is None else randomness.get_salt()
+    iv = os.urandom(16) if randomness is None else randomness.get_iv()
+    uid = str(uuid4()) if randomness is None else randomness.get_id()
+
     backend = default_backend()
 
     # derive the encryption key
-    salt = os.urandom(32)
     kdf = Scrypt(salt=salt, length=32, n=4096, r=8, p=1, backend=backend)
     key = kdf.derive(bytes(password.encode()))
 
     # encrypt the secret key with half of the encryption key
-    iv = os.urandom(16)
     ciphertext = make_cyphertext(backend, key, iv, secret_key)
 
     hmac_key = key[16:32]
@@ -90,15 +88,11 @@ def save_to_key_file(json_path: Path, secret_key: str, pubkey: str, password: st
     h.update(ciphertext)
     mac = h.finalize()
 
-    uid = str(uuid4())
-
-    json = format_key_json(uid, pubkey, iv, ciphertext, salt, mac)
-
-    with open(json_path, 'w') as json_file:
-        dump(json, json_file, indent=4)
+    data = format_key_json(uid, pubkey, iv, ciphertext, salt, mac)
+    return data
 
 
-def make_cyphertext(backend: Any, key: bytes, iv: bytes, secret_key: str):
+def make_cyphertext(backend: Any, key: bytes, iv: bytes, secret_key: bytes):
     encryption_key = key[0:16]
     cipher = Cipher(algorithms.AES(encryption_key), modes.CTR(iv), backend=backend)
     encryptor = cipher.encryptor()
@@ -107,7 +101,7 @@ def make_cyphertext(backend: Any, key: bytes, iv: bytes, secret_key: str):
 
 # erdjs implementation:
 # https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/walletcore/userWallet.ts
-def format_key_json(uid: str, pubkey: str, iv: bytes, ciphertext: bytes, salt: bytes, mac: bytes) -> Any:
+def format_key_json(uid: str, pubkey: bytes, iv: bytes, ciphertext: bytes, salt: bytes, mac: bytes) -> Dict[str, Any]:
     address = Address(pubkey)
 
     return {

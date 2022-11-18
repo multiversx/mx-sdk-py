@@ -1,14 +1,10 @@
-from pathlib import Path
-
 import nacl.signing
 from erdpy_core.address import Address
 
-from erdpy_wallet import pem
 from erdpy_wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
 from erdpy_wallet.errors import ErrBadPublicKeyLength, ErrBadSecretKeyLength
 from erdpy_wallet.interfaces import ISignature
 from erdpy_wallet.interfaces_as_output import IAddressAsOutput
-from erdpy_wallet.keyfile import load_from_key_file
 
 
 class UserSecretKey:
@@ -22,16 +18,6 @@ class UserSecretKey:
     def from_string(cls, buffer_hex: str) -> 'UserSecretKey':
         buffer = bytes.fromhex(buffer_hex)
         return UserSecretKey(buffer)
-
-    @classmethod
-    def from_pem_file(cls, path: Path, index: int) -> 'UserSecretKey':
-        secret_key, _ = pem.parse(path, index)
-        return UserSecretKey(secret_key)
-
-    @classmethod
-    def from_wallet_file(cls, path: Path, password: str) -> 'UserSecretKey':
-        _, secret_key = load_from_key_file(path, password)
-        return UserSecretKey(secret_key)
 
     def generate_public_key(self) -> 'UserPublicKey':
         public_key = bytes(nacl.signing.SigningKey(self.buffer).verify_key)
