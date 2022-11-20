@@ -81,7 +81,7 @@ def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, r
     key = kdf.derive(bytes(password.encode()))
 
     # encrypt the secret key with half of the encryption key
-    ciphertext = make_cyphertext(backend, key, iv, secret_key)
+    ciphertext = make_cyphertext(backend, key, iv, secret_key + pubkey)
 
     hmac_key = key[16:32]
     h = hmac.HMAC(hmac_key, hashes.SHA256(), backend=default_backend())
@@ -92,11 +92,11 @@ def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, r
     return data
 
 
-def make_cyphertext(backend: Any, key: bytes, iv: bytes, secret_key: bytes):
+def make_cyphertext(backend: Any, key: bytes, iv: bytes, data: bytes):
     encryption_key = key[0:16]
     cipher = Cipher(algorithms.AES(encryption_key), modes.CTR(iv), backend=backend)
     encryptor = cipher.encryptor()
-    return encryptor.update(secret_key) + encryptor.finalize()
+    return encryptor.update(data) + encryptor.finalize()
 
 
 # erdjs implementation:
