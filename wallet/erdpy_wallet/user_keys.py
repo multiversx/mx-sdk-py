@@ -3,8 +3,7 @@ from erdpy_core.address import Address
 
 from erdpy_wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
 from erdpy_wallet.errors import ErrBadPublicKeyLength, ErrBadSecretKeyLength
-from erdpy_wallet.interfaces import ISignature
-from erdpy_wallet.interfaces_as_output import IAddressAsOutput
+from erdpy_wallet.interfaces import IAddressAsOutput, ISignature
 
 
 class UserSecretKey:

@@ -2,8 +2,7 @@ from pathlib import Path
 
 from erdpy_wallet import pem
 from erdpy_wallet.errors import ErrCannotSign
-from erdpy_wallet.interfaces import ISignable, ISignature
-from erdpy_wallet.interfaces_as_output import IAddressAsOutput
+from erdpy_wallet.interfaces import IAddressAsOutput, ISignable, ISignature
 from erdpy_wallet.user_keys import UserSecretKey
 from erdpy_wallet.user_wallet import UserWallet
 
@@ -23,7 +22,7 @@ class UserSigner:
         return UserSigner(secret_key)
 
     @classmethod
-    def from_wallet(cls, path: Path, password: str):
+    def from_wallet(cls, path: Path, password: str) -> 'UserSigner':
         secret_key = UserWallet.decrypt_secret_key_from_file(path, password)
         return UserSigner(secret_key)
 
