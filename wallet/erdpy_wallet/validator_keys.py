@@ -18,11 +18,6 @@ class ValidatorSecretKey:
 
         self.buffer = buffer
 
-    @classmethod
-    def from_pem_file(cls, path: Path, index: int) -> 'ValidatorSecretKey':
-        secret_key, _ = parse_validator_pem(path, index)
-        return ValidatorSecretKey(secret_key)
-
     def sign(self, data: bytes) -> ISignature:
         mcl_signer_path = self._get_mcl_signer_path()
         signed_hex: str = subprocess.check_output([mcl_signer_path, data.hex(), self.buffer.hex()], universal_newlines=True, shell=False)

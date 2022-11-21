@@ -58,8 +58,9 @@ def parse_validator_pem(pem_file: Path, index: int = 0) -> Tuple[bytes, str]:
     bls_keys = read_bls_keys(lines)
     secret_keys = read_validators_secret_keys(lines)
 
-    secret_key = secret_keys[index]
-    secret_key_bytes = get_bytes_from_secret_key(secret_key)
+    secret_key_base64: str = secret_keys[index]
+    secret_key_hex = base64.b64decode(secret_key_base64).decode()
+    secret_key_bytes = bytes.fromhex(secret_key_hex)
 
     bls_key = bls_keys[index]
     return secret_key_bytes, bls_key
@@ -91,14 +92,6 @@ def read_validators_secret_keys(lines):
         secret_keys.append(key_list[0] + key_list[1])
 
     return secret_keys
-
-
-def get_bytes_from_secret_key(secret_key):
-    key_base64 = secret_key
-    key_hex = base64.b64decode(key_base64).hex()
-    key_bytes = bytes.fromhex(key_hex)
-
-    return key_bytes
 
 
 def write(pem_file: Path, secret_key: bytes, pubkey: bytes, name: str = ""):
