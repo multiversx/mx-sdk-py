@@ -1,6 +1,6 @@
 import mnemonic
 
-from erdpy_wallet import bip39
+from erdpy_wallet import core
 from erdpy_wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
 from erdpy_wallet.errors import ErrBadMnemonic
 from erdpy_wallet.user_keys import UserSecretKey
@@ -20,7 +20,7 @@ class Mnemonic:
         return Mnemonic(text)
 
     def derive_key(self, address_index: int = 0) -> UserSecretKey:
-        secret_key = bip39.derive_keys(self.text, address_index)
+        secret_key = core.derive_keys(self.text, address_index)
         return UserSecretKey(secret_key)
 
     def get_text(self):

@@ -2,6 +2,8 @@ import hashlib
 import hmac
 import struct
 
+# TODO: Rename "core.py" to "bip39.py".
+
 BIP39_SALT_MODIFIER = "mnemonic"
 BIP39_PBKDF2_ROUNDS = 2048
 BIP32_SEED_MODIFIER = b'ed25519 seed'
