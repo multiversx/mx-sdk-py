@@ -1,8 +1,15 @@
+import base64
 import json
+from collections import OrderedDict
 from pathlib import Path
+from typing import Any, Dict
 
+from erdpy_core.address import Address
+
+from erdpy_wallet.interfaces import ISignature
 from erdpy_wallet.user_keys import UserSecretKey
 from erdpy_wallet.user_signer import UserSigner
+from erdpy_wallet.user_verifer import UserVerifier
 from erdpy_wallet.user_wallet import UserWallet
 
 
@@ -30,21 +37,21 @@ def test_from_pem_file():
 
 def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_randomness():
     alice_secret_key = UserSecretKey.from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9")
-    alice_wallet = UserWallet(alice_secret_key, "password", UserWalletRandomness(
+    alice_wallet = UserWallet(alice_secret_key, "password", DummyRandomness(
         salt=bytes.fromhex("4903bd0e7880baa04fc4f886518ac5c672cdc745a6bd13dcec2b6c12e9bffe8d"),
         iv=bytes.fromhex("033182afaa1ebaafcde9ccc68a5eac31"),
         id="0dc10c02-b59b-4bac-9710-6b2cfa4284ba"
     ))
 
     bob_secret_key = UserSecretKey.from_string("b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639")
-    bob_wallet = UserWallet(bob_secret_key, "password", UserWalletRandomness(
+    bob_wallet = UserWallet(bob_secret_key, "password", DummyRandomness(
         salt=bytes.fromhex("18304455ac2dbe2a2018bda162bd03ef95b81622e99d8275c34a6d5e6932a68b"),
         iv=bytes.fromhex("18378411e31f6c4e99f1435d9ab82831"),
         id="85fdc8a7-7119-479d-b7fb-ab4413ed038d"
     ))
 
     carol_secret_key = UserSecretKey.from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436")
-    carol_wallet = UserWallet(carol_secret_key, "password", UserWalletRandomness(
+    carol_wallet = UserWallet(carol_secret_key, "password", DummyRandomness(
         salt=bytes.fromhex("4f2f5530ce28dc0210962589b908f52714f75c8fb79ff18bdd0024c43c7a220b"),
         iv=bytes.fromhex("258ed2b4dc506b4dc9d274b0449b0eb0"),
         id="65894f35-d142-41d2-9335-6ad02e0ed0be"
@@ -81,10 +88,31 @@ def test_user_wallet_encrypt_then_decrypt():
 
 
 def test_sign_transaction():
-    pass
+    """
+    Also see: https://github.com/ElrondNetwork/elrond-go/blob/master/examples/construction_test.go
+    """
+
+    tx = DummyTransaction(
+        nonce=89,
+        value="0",
+        receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+        sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+        data="",
+        gas_price=1000000000,
+        gas_limit=50000,
+        chain_id="local-testnet",
+        version=1,
+        options=0
+    )
+
+    signer = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"))
+    verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+    tx.signature = signer.sign(tx)
+    assert verifier.verify(tx) == True
+    assert tx.signature.hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
 
 
-class UserWalletRandomness:
+class DummyRandomness:
     def __init__(self, salt: bytes, iv: bytes, id: str) -> None:
         self.salt = salt
         self.iv = iv
@@ -99,3 +127,66 @@ class UserWalletRandomness:
     def get_id(self) -> str:
         return self.id
 
+
+class DummyTransaction:
+    def __init__(
+        self,
+        nonce: int,
+        sender: str,
+        receiver: str,
+        gas_limit: int,
+        chain_id: str,
+        gas_price: int,
+        value: str,
+        data: str,
+        version: int,
+        options: int
+    ):
+        self.nonce = nonce
+        self.sender = sender
+        self.receiver = receiver
+        self.gas_limit = gas_limit
+        self.chainID = chain_id
+        self.gas_price = gas_price
+        self.value = value
+        self.data = data
+        self.version = version
+        self.options = options
+
+        self.signature = bytes()
+
+    def serialize_for_signing(self) -> bytes:
+        dictionary = self.to_dictionary()
+        serialized = self._dict_to_json(dictionary)
+        return serialized
+
+    def to_dictionary(self) -> Dict[str, Any]:
+        dictionary: Dict[str, Any] = OrderedDict()
+        dictionary["nonce"] = self.nonce
+        dictionary["value"] = self.value
+
+        dictionary["receiver"] = self.receiver
+        dictionary["sender"] = self.sender
+
+        dictionary["gasPrice"] = self.gas_price
+        dictionary["gasLimit"] = self.gas_limit
+
+        if self.data:
+            dictionary["data"] = base64.b64encode(self.data.encode()).decode()
+
+        dictionary["chainID"] = self.chainID
+
+        if self.version:
+            dictionary["version"] = self.version
+
+        if self.options:
+            dictionary["options"] = self.options
+
+        return dictionary
+
+    def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
+        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
+        return serialized
+
+    def get_signature(self) -> ISignature:
+        return self.signature
