@@ -1,63 +1,65 @@
-from typing import Any, Dict, Union
-
-import requests
+import logging
+from typing import Any, Union
 from requests.auth import AuthBase
+from erdpy_network.network_config import NetworkConfig
+from erdpy_network.http_facade import do_get, do_post
+from erdpy_network.internal_interfaces import INetworkProvider
 
-from erdpy_network.errors import GenericError
-from erdpy_network.resources import GenericResponse
+AWAIT_TRANSACTION_PERIOD = 5
+
+logger = logging.getLogger('NetworkProvider')
+METACHAIN_ID = 4294967295
 
 
-class ProxyNetworkProvider():
+class NetworkProvider(INetworkProvider):
     def __init__(self, url: str, auth: Union[AuthBase, None] = None):
         self.url = url
         self.auth = auth
 
-    def do_get(self, url: str) -> GenericResponse:
-        url = f"{self.url}/{url}"
+    def get_network_config(self) -> NetworkConfig:
+        url = f"network/config"
+        response = self.do_get_generic(url)
+        payload = response.get("config")
+        result = NetworkConfig(payload)
+        return result
 
-        try:
-            response = requests.get(url, auth=self.auth)
-            response.raise_for_status()
-            parsed = response.json()
-            return _get_data(parsed, url)
-        except requests.HTTPError as err:
-            error_data = _extract_error_from_response(err.response)
-            raise GenericError(url, error_data)
-        except requests.ConnectionError as err:
-            raise GenericError(url, err)
-        except Exception as err:
-            raise GenericError(url, err)
+    def _get_network_status(self, shard_id: Union[str, int]):
+        url = f"network/status/{shard_id}"
+        response = self.do_get_generic(url)
+        payload = response.get("status")
+        return payload
 
-    def do_post(self, url: str, payload: Any) -> GenericResponse:
-        url = f"{self.url}/{url}"
+    def get_epoch(self):
+        status = self._get_network_status(METACHAIN_ID)
+        nonce = status.get("erd_epoch_number", 0)
+        return nonce
 
-        try:
-            response = requests.post(url, json=payload, auth=self.auth)
-            response.raise_for_status()
-            parsed = response.json()
-            return _get_data(parsed, url)
-        except requests.HTTPError as err:
-            error_data = _extract_error_from_response(err.response)
-            raise GenericError(url, error_data)
-        except requests.ConnectionError as err:
-            raise GenericError(url, err)
-        except Exception as err:
-            raise GenericError(url, err)
+    def get_last_block_nonce(self, shard_id: Union[str, int]):
+        if shard_id == "metachain":
+            metrics = self._get_network_status(METACHAIN_ID)
+        else:
+            metrics = self._get_network_status(shard_id)
 
+        nonce = metrics.get("erd_highest_final_nonce", 0)
+        return nonce
 
-def _get_data(parsed: Dict[str, Any], url: str) -> GenericResponse:
-    err = parsed.get("error")
-    code = parsed.get("code")
+    def get_num_shards(self):
+        network_config = self.get_network_config()
+        return network_config.num_shards
 
-    if err:
-        raise GenericError(url, f"code:{code}, error: {err}")
+    def get_gas_price(self):
+        network_config = self.get_network_config()
+        return network_config.min_gas_price
 
-    data: Dict[str, Any] = parsed.get("data", dict())
-    return GenericResponse(data)
+    def get_chain_id(self):
+        network_config = self.get_network_config()
+        return network_config.chain_id
 
+    def do_get_generic(self, resource_url: str):
+        response = do_get(f'{self.url}/{resource_url}')
+        return response
 
-def _extract_error_from_response(response: Any):
-    try:
-        return response.json()
-    except Exception:
-        return response.text
+    def do_post_generic(self, resource_url: str, payload: Any):
+        url = f'{self.url}/{resource_url}'
+        response = do_post(url, payload)
+        return response
