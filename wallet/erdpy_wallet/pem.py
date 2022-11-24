@@ -2,9 +2,7 @@ import base64
 import itertools
 import textwrap
 from pathlib import Path
-from typing import List, Tuple, Union
-
-from erdpy import guards, utils
+from typing import List, Tuple
 
 
 def get_pubkey(pem_file: Path):
@@ -14,9 +12,9 @@ def get_pubkey(pem_file: Path):
 
 def parse(pem_file: Path, index: int = 0) -> Tuple[bytes, bytes]:
     pem_file = pem_file.expanduser()
-    guards.is_file(pem_file)
+    _guard_is_file(pem_file)
 
-    lines = utils.read_lines(pem_file)
+    lines = _read_lines(pem_file)
     keys_lines = [list(key_lines) for is_next_key, key_lines in itertools.groupby(lines, lambda line: "-----" in line)
                   if not is_next_key]
     keys = ["".join(key_lines) for key_lines in keys_lines]
@@ -32,9 +30,9 @@ def parse(pem_file: Path, index: int = 0) -> Tuple[bytes, bytes]:
 
 def parse_all(pem_file: Path) -> List[Tuple[bytes, bytes]]:
     pem_file = pem_file.expanduser()
-    guards.is_file(pem_file)
+    _guard_is_file(pem_file)
 
-    lines = utils.read_lines(pem_file)
+    lines = _read_lines(pem_file)
     keys_lines = [list(key_lines) for is_next_key, key_lines in itertools.groupby(lines, lambda line: "-----" in line)
                   if not is_next_key]
     keys = ["".join(key_lines) for key_lines in keys_lines]
@@ -52,16 +50,17 @@ def parse_all(pem_file: Path) -> List[Tuple[bytes, bytes]]:
     return result
 
 
-def parse_validator_pem(pem_file: Path, index: int = 0):
+def parse_validator_pem(pem_file: Path, index: int = 0) -> Tuple[bytes, str]:
     pem_file = pem_file.expanduser()
-    guards.is_file(pem_file)
+    _guard_is_file(pem_file)
 
-    lines = utils.read_lines(pem_file)
+    lines = _read_lines(pem_file)
     bls_keys = read_bls_keys(lines)
     secret_keys = read_validators_secret_keys(lines)
 
-    secret_key = secret_keys[index]
-    secret_key_bytes = get_bytes_from_secret_key(secret_key)
+    secret_key_base64: str = secret_keys[index]
+    secret_key_hex = base64.b64decode(secret_key_base64).decode()
+    secret_key_bytes = bytes.fromhex(secret_key_hex)
 
     bls_key = bls_keys[index]
     return secret_key_bytes, bls_key
@@ -95,14 +94,6 @@ def read_validators_secret_keys(lines):
     return secret_keys
 
 
-def get_bytes_from_secret_key(secret_key):
-    key_base64 = secret_key
-    key_hex = base64.b64decode(key_base64).hex()
-    key_bytes = bytes.fromhex(key_hex)
-
-    return key_bytes
-
-
 def write(pem_file: Path, secret_key: bytes, pubkey: bytes, name: str = ""):
     pem_file = pem_file.expanduser()
 
@@ -121,4 +112,22 @@ def write(pem_file: Path, secret_key: bytes, pubkey: bytes, name: str = ""):
     payload_lines = textwrap.wrap(key_base64, 64)
     payload = "\n".join(payload_lines)
     content = "\n".join([header, payload, footer])
-    utils.write_file(pem_file, content)
+    _write_file(pem_file, content)
+
+
+def _guard_is_file(input: Path):
+    if not input.is_file():
+        raise Exception(str(input), "is not a valid file")
+
+
+def _read_lines(file: Path) -> List[str]:
+    with open(file) as f:
+        lines = f.readlines()
+    lines = [line.strip() for line in lines]
+    lines = [line for line in lines if line]
+    return lines
+
+
+def _write_file(file_path: Path, text: str):
+    with open(file_path, "w") as file:
+        return file.write(text)

@@ -1,32 +1,31 @@
 import base64
 import os
 from binascii import b2a_base64, hexlify, unhexlify
-from pathlib import Path
-from typing import Any
-import erdpy.accounts as accounts
-from json import load, dump
+from typing import Any, Dict, Tuple, Union
 from uuid import uuid4
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-from erdpy import errors
+from erdpy_core import Address
+
+from erdpy_wallet.errors import (ErrInvalidKeystoreFilePassword,
+                                 ErrUnknownCipher,
+                                 ErrUnknownDerivationFunction)
+from erdpy_wallet.interfaces import IUserWalletRandomness
 
 
 # References:
 # Thanks for this implementation @flyingbasalt
 # https://github.com/flyingbasalt/erdkeys
-def load_from_key_file(key_file_json, password):
-    with open(key_file_json) as json_f:
-        keystore = load(json_f)
-
+def load_from_key_file_object(keystore: Dict[str, Any], password: str) -> Tuple[str, bytes]:
     backend = default_backend()
 
     # derive the decryption key
     kdf_name = keystore['crypto']['kdf']
     if kdf_name != 'scrypt':
-        raise errors.UnknownDerivationFunction()
+        raise ErrUnknownDerivationFunction()
 
     salt = unhexlify(keystore['crypto']['kdfparams']['salt'])
     dklen = keystore['crypto']['kdfparams']['dklen']
@@ -40,7 +39,7 @@ def load_from_key_file(key_file_json, password):
     # decrypt the secret key with half of the decryption key
     cipher_name = keystore['crypto']['cipher']
     if cipher_name != 'aes-128-ctr':
-        raise errors.UnknownCipher(name=cipher_name)
+        raise ErrUnknownCipher(name=cipher_name)
 
     iv = unhexlify(keystore['crypto']['cipherparams']['iv'])
     ciphertext = unhexlify(keystore['crypto']['ciphertext'])
@@ -57,7 +56,7 @@ def load_from_key_file(key_file_json, password):
     mac = h.finalize()
 
     if mac != unhexlify(keystore['crypto']['mac']):
-        raise errors.InvalidKeystoreFilePassword()
+        raise ErrInvalidKeystoreFilePassword()
 
     address_bech32 = keystore['bech32']
     secret_key = ''.join([pemified_secret_key[i:i + 64].decode() for i in range(0, len(pemified_secret_key), 64)])
@@ -70,42 +69,40 @@ def load_from_key_file(key_file_json, password):
     return address_bech32, secret_key
 
 
-def save_to_key_file(json_path: Path, secret_key: str, pubkey: str, password: str) -> None:
+def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, randomness: Union[None, IUserWalletRandomness]) -> Dict[str, Any]:
+    salt = os.urandom(32) if randomness is None else randomness.get_salt()
+    iv = os.urandom(16) if randomness is None else randomness.get_iv()
+    uid = str(uuid4()) if randomness is None else randomness.get_id()
+
     backend = default_backend()
 
     # derive the encryption key
-    salt = os.urandom(32)
     kdf = Scrypt(salt=salt, length=32, n=4096, r=8, p=1, backend=backend)
     key = kdf.derive(bytes(password.encode()))
 
     # encrypt the secret key with half of the encryption key
-    iv = os.urandom(16)
-    ciphertext = make_cyphertext(backend, key, iv, secret_key)
+    ciphertext = make_cyphertext(backend, key, iv, secret_key + pubkey)
 
     hmac_key = key[16:32]
     h = hmac.HMAC(hmac_key, hashes.SHA256(), backend=default_backend())
     h.update(ciphertext)
     mac = h.finalize()
 
-    uid = str(uuid4())
-
-    json = format_key_json(uid, pubkey, iv, ciphertext, salt, mac)
-
-    with open(json_path, 'w') as json_file:
-        dump(json, json_file, indent=4)
+    data = format_key_json(uid, pubkey, iv, ciphertext, salt, mac)
+    return data
 
 
-def make_cyphertext(backend: Any, key: bytes, iv: bytes, secret_key: str):
+def make_cyphertext(backend: Any, key: bytes, iv: bytes, data: bytes):
     encryption_key = key[0:16]
     cipher = Cipher(algorithms.AES(encryption_key), modes.CTR(iv), backend=backend)
     encryptor = cipher.encryptor()
-    return encryptor.update(secret_key) + encryptor.finalize()
+    return encryptor.update(data) + encryptor.finalize()
 
 
 # erdjs implementation:
 # https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/walletcore/userWallet.ts
-def format_key_json(uid: str, pubkey: str, iv: bytes, ciphertext: bytes, salt: bytes, mac: bytes) -> Any:
-    address = accounts.Address(pubkey)
+def format_key_json(uid: str, pubkey: bytes, iv: bytes, ciphertext: bytes, salt: bytes, mac: bytes) -> Dict[str, Any]:
+    address = Address(pubkey)
 
     return {
         'version': 4,
