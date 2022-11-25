@@ -1,24 +1,26 @@
 from typing import Any, Dict
 from interface import IAddress
-from primitives import Address
+from erdpy_core import Address
 
 
-class AccountsOnNetwork:
+class AccountOnNetwork:
     def __init__(self):
-        self.address: IAddress = Address('')
+        self.address: IAddress = Address.zero()
         self.nonce: int = 0
-        self.balance: int = 0
-        self.code: str = ''
+        self.balance: str = ''
+        self.code: bytes = b''
         self.username: str = ''
 
     @staticmethod
-    def from_http_response(payload: Dict[str, Any]) -> 'AccountsOnNetwork':
-        result = AccountsOnNetwork()
+    def from_http_response(payload: Dict[str, Any]) -> 'AccountOnNetwork':
+        result = AccountOnNetwork()
 
-        result.address = payload.get('address', '')
+        address = payload.get('address', '')
+        result.address = Address.from_bech32(address) if address else Address.zero()
+
         result.nonce = payload.get('nonce', 0)
-        result.balance = payload.get('balance', 0)
-        result.code = payload.get('code', '')
+        result.balance = str(payload.get('balance', ''))
+        result.code = bytes(payload.get('code', '').encode())
         result.username = payload.get('username', '')
 
         return result

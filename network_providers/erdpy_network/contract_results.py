@@ -1,7 +1,7 @@
 import base64
 from typing import List, Any, Dict
 from erdpy_network.interface import IAddress
-from erdpy_network.primitives import Address
+from erdpy_core import Address
 from erdpy_network.transaction_logs import TransactionLogs
 
 
@@ -15,14 +15,19 @@ class ContractResults:
         items = list(map(ContractResultItem.from_api_http_response, results))
         return ContractResults(items)
 
+    @staticmethod
+    def from_proxy_http_response(results: List[Any]) -> 'ContractResults':
+        items = list(map(ContractResultItem.from_proxy_http_response, results))
+        return ContractResults(items)
+
 
 class ContractResultItem:
     def __init__(self):
         self.hash: str = ''
         self.nonce: int = 0
         self.value: str = ''
-        self.receiver: IAddress = Address('')
-        self.sender: IAddress = Address('')
+        self.receiver: IAddress = Address.zero()
+        self.sender: IAddress = Address.zero()
         self.data: str = ''
         self.previous_hash: str = ''
         self.original_hash: str = ''
@@ -42,14 +47,25 @@ class ContractResultItem:
         return item
 
     @staticmethod
+    def from_proxy_http_response(response: Any) -> 'ContractResultItem':
+        item = ContractResultItem.from_http_response(response)
+
+        return item
+
+    @staticmethod
     def from_http_response(response: Dict[str, Any]) -> 'ContractResultItem':
         item = ContractResultItem()
 
         item.hash = response.get('hash')
         item.nonce = response.get('nonce', 0)
         item.value = str(response.get('value', 0))
-        item.receiver = Address(response.get('receiver'))
-        item.sender = Address(response.get('sender'))
+
+        sender = response.get('sender', '')
+        item.sender = Address.from_bech32(sender) if sender else Address.zero()
+
+        receiver = response.get('receiver', '')
+        item.receiver = Address.from_bech32(receiver) if receiver else Address.zero()
+
         item.previous_hash = response.get('prevTxHash')
         item.original_hash = response.get('originalTxHash')
         item.gas_limit = response.get('gasLimit', 0)

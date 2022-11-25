@@ -28,9 +28,6 @@ class ISimulateCostResponse(ISerializable):
 
 
 class IPagination(Protocol):
-    start: int = 0
-    size: int = 100
-
     def get_start(self) -> int:
         return 0
 
@@ -39,11 +36,6 @@ class IPagination(Protocol):
 
 
 class IContractQuery(Protocol):
-    address: IAddress
-    caller: Union[IAddress, None]
-    function: str
-    value: str
-
     def get_encoded_arguments(self):
         return []
 
@@ -52,3 +44,9 @@ class IContractQuery(Protocol):
 
     def get_value(self) -> int:
         return 0
+
+    def get_address(self) -> IAddress:
+        return IAddress()
+
+    def get_caller(self) -> Union[IAddress, None]:
+        return None

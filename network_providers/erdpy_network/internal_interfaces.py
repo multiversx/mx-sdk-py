@@ -3,12 +3,12 @@ from erdpy_network.interface import IContractQuery
 from erdpy_network.contract_query_response import ContractQueryResponse
 from erdpy_network.transactions import TransactionOnNetwork
 from erdpy_network.interface import IAddress
-from erdpy_network.accounts import AccountsOnNetwork
+from erdpy_network.accounts import AccountOnNetwork
 
 
 class INetworkProvider(Protocol):
-    def get_account(self, address: IAddress) -> AccountsOnNetwork:
-        return AccountsOnNetwork()
+    def get_account(self, address: IAddress) -> AccountOnNetwork:
+        return AccountOnNetwork()
 
     def get_account_nonce(self, address: IAddress) -> int:
         return 0

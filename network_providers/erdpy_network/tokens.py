@@ -1,6 +1,7 @@
 from interface import IAddress
-from primitives import Address
+from erdpy_core import Address
 from typing import Any, List, Dict
+from primitives import Nonce
 
 
 class FungibleTokenOfAccountOnNetwork:
@@ -13,7 +14,7 @@ class FungibleTokenOfAccountOnNetwork:
     def from_http_response(payload: Any) -> 'FungibleTokenOfAccountOnNetwork':
         result = FungibleTokenOfAccountOnNetwork()
 
-        result.identifier = payload.get('tokenIdentifier', 0) or payload.get('identifier', 0)
+        result.identifier = payload.get('tokenIdentifier', '') or payload.get('identifier', '')
         result.balance = payload.get('balance', 0)
         result.raw_response = payload
 
@@ -29,7 +30,7 @@ class NonFungibleTokenOfAccountOnNetwork:
         self.nonce: int = 0
         self.type: str = ''
         self.name: str = ''
-        self.creator: IAddress = Address('')
+        self.creator: IAddress = Address.zero()
         self.supply: int = 0
         self.decimals: int = 0
         self.royalties: int = 0
@@ -46,6 +47,29 @@ class NonFungibleTokenOfAccountOnNetwork:
         return result
 
     @staticmethod
+    def from_proxy_http_response(payload: Dict[str, Any]) -> 'NonFungibleTokenOfAccountOnNetwork':
+        result = NonFungibleTokenOfAccountOnNetwork.from_http_response(payload)
+
+        result.identifier = payload.get('tokenIdentifier', '')
+        result.collection = NonFungibleTokenOfAccountOnNetwork.parse_collection_from_identifier(result.identifier)
+        result.royalties = float(payload.get('royalties', 0)) / 100
+
+        return result
+
+    @staticmethod
+    def from_proxy_http_response_by_nonce(payload: Dict[str, Any]) -> 'NonFungibleTokenOfAccountOnNetwork':
+        result = NonFungibleTokenOfAccountOnNetwork.from_proxy_http_response(payload)
+
+        nonce_as_hex = Nonce(payload.get('nonce', 0)).hex()
+        token_identifier = payload.get('tokenIdentifier', '')
+
+        result.identifier = f'{token_identifier}-{nonce_as_hex}'
+        result.collection = token_identifier
+        result.royalties = float(payload.get('royalties', 0)) / 100
+
+        return result
+
+    @staticmethod
     def from_http_response(payload: Dict[str, Any]) -> 'NonFungibleTokenOfAccountOnNetwork':
         result = NonFungibleTokenOfAccountOnNetwork()
 
@@ -54,7 +78,10 @@ class NonFungibleTokenOfAccountOnNetwork:
         result.nonce = payload.get('nonce', 0)
         result.type = payload.get('type', '')
         result.name = payload.get('name', '')
-        result.creator = Address(payload.get('creator', ''))
+
+        creator = payload.get('creator', '')
+        result.creator = Address.from_bech32(creator) if creator else Address.zero()
+
         result.decimals = payload.get('decimal', 0)
         result.supply = payload.get('supply', 1)
         result.royalties = payload.get('royalties', 0)
@@ -62,3 +89,10 @@ class NonFungibleTokenOfAccountOnNetwork:
         result.balance = payload.get('balance', 0)
 
         return result
+
+    @staticmethod
+    def parse_collection_from_identifier(identifier: str) -> str:
+        parts = identifier.split('-')
+        collection = '-'.join(parts[0:2])
+
+        return collection

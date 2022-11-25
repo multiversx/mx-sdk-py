@@ -1,12 +1,12 @@
 import base64
 from typing import List, Any, Dict
 from erdpy_network.interface import IAddress
-from erdpy_network.primitives import Address
+from erdpy_core import Address
 
 
 class TransactionEvent:
     def __init__(self):
-        self.address: IAddress = Address('')
+        self.address: IAddress = Address.zero()
         self.identifier: str = ''
         self.topics: List[TransactionEventTopic] = []
         self.data: str = ''
@@ -15,7 +15,9 @@ class TransactionEvent:
     def from_http_response(response: Dict[str, Any]) -> 'TransactionEvent':
         result = TransactionEvent()
 
-        result.address = Address(response.get('address', ''))
+        address = response.get('address', '')
+        result.address = Address.from_bech32(address) if address else Address.zero()
+
         result.identifier = response.get('identifier', '')
         topics = response.get('topics', [])
         result.topics = [TransactionEventTopic(item) for item in topics]
@@ -33,6 +35,3 @@ class TransactionEventTopic:
 
     def hex(self):
         return hex(int(self.raw, 16))
-
-    def value_of(self):
-        return self.raw

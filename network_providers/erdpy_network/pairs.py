@@ -1,11 +1,11 @@
 from typing import Any, Dict
 from erdpy_network.interface import IAddress
-from erdpy_network.primitives import Address
+from erdpy_core import Address
 
 
 class PairOnNetwork:
     def __init__(self):
-        self.address: IAddress = Address('')
+        self.address: IAddress = Address.zero()
         self.id: str = ''
         self.symbol: str = ''
         self.name: str = ''
@@ -28,7 +28,9 @@ class PairOnNetwork:
     def from_api_http_response(payload: Dict[str, Any]) -> 'PairOnNetwork':
         result = PairOnNetwork()
 
-        result.address = Address(payload.get('address', ''))
+        address = payload.get('address', '')
+        result.address = Address.from_bech32(address) if address else Address.zero()
+
         result.id = payload.get('id', '')
         result.symbol = payload.get('symbol', '')
         result.name = payload.get('name', '')

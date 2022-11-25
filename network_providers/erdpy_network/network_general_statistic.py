@@ -16,13 +16,13 @@ class NetworkGeneralStatistics:
     def from_http_response(payload: Dict[str, Any]) -> 'NetworkGeneralStatistics':
         stats = NetworkGeneralStatistics()
 
-        stats.shards = int(payload['shards'])
-        stats.blocks = int(payload['blocks'])
-        stats.accounts = int(payload['accounts'])
-        stats.transactions = int(payload['transactions'])
-        stats.refresh_rate = int(payload['refreshRate'])
-        stats.epoch = int(payload['epoch'])
-        stats.rounds_passed = int(payload['roundsPassed'])
-        stats.rounds_per_epoch = int(payload['roundsPerEpoch'])
+        stats.shards = int(payload.get('shards', 0))
+        stats.blocks = int(payload.get('blocks', 0))
+        stats.accounts = int(payload.get('accounts', 0))
+        stats.transactions = int(payload.get('transactions', 0))
+        stats.refresh_rate = int(payload.get('refreshRate', 0))
+        stats.epoch = int(payload.get('epoch', 0))
+        stats.rounds_passed = int(payload.get('roundsPassed', 0))
+        stats.rounds_per_epoch = int(payload.get('roundsPerEpoch', 0))
 
         return stats

@@ -1,12 +1,12 @@
 from typing import Dict, Any
 from erdpy_network.interface import IAddress
-from erdpy_network.primitives import Address
+from erdpy_core import Address
 
 
 class TransactionReceipt:
     def __init__(self):
         self.value: str = ''
-        self.sender: IAddress = Address('')
+        self.sender: IAddress = Address.zero()
         self.data: str = ''
         self.hash: str = ''
 
@@ -15,7 +15,9 @@ class TransactionReceipt:
         result = TransactionReceipt()
 
         result.value = response.get('value', '')
-        result.sender = Address(response.get('sender', ''))
+        sender = response.get('sender', '')
+        result.sender = Address.from_bech32(sender) if sender else Address.zero()
+
         result.data = response.get('data', '')
         result.hash = response.get('txHash', '')
 

@@ -14,3 +14,9 @@ class ITransactionOnNetwork(Protocol):
 class TransactionCompletionStrategyOnApi:
     def is_completed(self, transaction: ITransactionOnNetwork) -> bool:
         return not transaction.get_status().is_pending()
+
+
+class TransactionCompletionStrategyOnProxy:
+    @classmethod
+    def is_completed(cls):
+        raise NotImplementedError('Method is not implemented yet')

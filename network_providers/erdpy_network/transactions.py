@@ -1,12 +1,13 @@
 import base64
 from typing import Any, Dict
 from erdpy_network.interface import IAddress
-from erdpy_network.primitives import Address
+from erdpy_core import Address
 from erdpy_network.contract_results import ContractResults
 from erdpy_network.transaction_logs import TransactionLogs
 from erdpy_network.transaction_status import TransactionStatus
 from erdpy_network.transaction_receipt import TransactionReceipt
-from erdpy_network.transaction_completion_strategy import TransactionCompletionStrategyOnApi
+from erdpy_network.transaction_completion_strategy import TransactionCompletionStrategyOnApi,\
+    TransactionCompletionStrategyOnProxy
 
 
 class TransactionOnNetwork:
@@ -18,8 +19,8 @@ class TransactionOnNetwork:
         self.round: int = 0
         self.epoch: int = 0
         self.value: str = ''
-        self.receiver: IAddress = Address('')
-        self.sender: IAddress = Address('')
+        self.receiver: IAddress = Address.zero()
+        self.sender: IAddress = Address.zero()
         self.gas_limit: int = 0
         self.gas_price: int = 0
         self.data: str = ''
@@ -47,6 +48,15 @@ class TransactionOnNetwork:
         return result
 
     @staticmethod
+    def from_proxy_http_response(tx_hash: str, response: Dict[str, Any]) -> 'TransactionOnNetwork':
+        result = TransactionOnNetwork.from_http_response(tx_hash, response)
+
+        result.contract_results = ContractResults.from_proxy_http_response(response.get('smartContractResults', []))
+        result.is_completed = TransactionCompletionStrategyOnProxy.is_completed()
+
+        return result
+
+    @staticmethod
     def from_http_response(tx_hash: str, response: Dict[str, Any]) -> 'TransactionOnNetwork':
         result = TransactionOnNetwork()
 
@@ -56,8 +66,13 @@ class TransactionOnNetwork:
         result.round = response.get('round', 0)
         result.epoch = response.get('epoch', 0)
         result.value = str(response.get('value', 0))
-        result.sender = Address(response.get('sender', ''))
-        result.receiver = Address(response.get('receiver', ''))
+
+        sender = response.get('sender', '')
+        result.sender = Address.from_bech32(sender) if sender else Address.zero()
+
+        receiver = response.get('receiver', '')
+        result.receiver = Address.from_bech32(receiver) if receiver else Address.zero()
+
         result.gas_price = response.get('gasPrice', 0)
         result.gas_limit = response.get('gasLimit', 0)
         result.data = base64.b64decode(response.get('responseData', '').encode())

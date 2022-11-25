@@ -3,11 +3,9 @@ from requests.auth import AuthBase
 from typing import Union, Dict, List, Any
 from erdpy_network.errors import GenericError
 from erdpy_network.pairs import PairOnNetwork
-from erdpy_network.core import NetworkProvider
 from erdpy_network.primitives import Nonce
 from erdpy_network.network_stake import NetworkStake
-from erdpy_network.accounts import AccountsOnNetwork
-from erdpy_network.http_facade import _extract_error_from_response
+from erdpy_network.accounts import AccountOnNetwork
 from erdpy_network.contract_query_requests import ContractQueryRequest
 from erdpy_network.contract_query_response import ContractQueryResponse
 from erdpy_network.network_general_statistic import NetworkGeneralStatistics
@@ -16,32 +14,41 @@ from erdpy_network.token_definitions import DefinitionOfFungibleTokenOnNetwork, 
 from erdpy_network.transactions import TransactionOnNetwork
 from erdpy_network.interface import IAddress, IPagination, IContractQuery, ITransaction
 from erdpy_network.transaction_status import TransactionStatus
+from erdpy_network.proxy_network_provider import ProxyNetworkProvider
+from erdpy_network.config import DefaultPagination
 
 
-class ApiNetworkProvider(NetworkProvider):
-    def __init__(self, url: str):
-        super().__init__(url)
+class ApiNetworkProvider:
+    def __init__(self, url: str, backing_proxy_network_provider: ProxyNetworkProvider):
+        self.url = url
+        self.backing_proxy = backing_proxy_network_provider
+
+    def get_network_config(self):
+        return self.backing_proxy.get_network_config()
+
+    def get_network_status(self):
+        return self.backing_proxy.get_network_status()
 
     def get_network_stake_statistics(self) -> NetworkStake:
-        response = NetworkProvider.do_get_generic(self, 'stake')
-        network_stake = NetworkStake.from_http_response(response.to_dictionary())
+        response = self.do_get_generic('stake')
+        network_stake = NetworkStake.from_http_response(response)
 
         return network_stake
 
     def get_network_general_statistics(self) -> NetworkGeneralStatistics:
-        response = NetworkProvider.do_get_generic(self, 'stats')
-        network_stats = NetworkGeneralStatistics.from_http_response(response.to_dictionary())
+        response = self.do_get_generic('stats')
+        network_stats = NetworkGeneralStatistics.from_http_response(response)
 
         return network_stats
 
-    def get_account(self, address: IAddress) -> AccountsOnNetwork:
-        response = NetworkProvider.do_get_generic(self, f'accounts/{address.bech32()}')
-        account = AccountsOnNetwork.from_http_response(response.to_dictionary())
+    def get_account(self, address: IAddress) -> AccountOnNetwork:
+        response = self.do_get_generic(f'accounts/{address.bech32()}')
+        account = AccountOnNetwork.from_http_response(response)
 
         return account
 
     def get_fungible_tokens_of_account(self, address: IAddress, pagination: IPagination = None):
-        default_pagination = IPagination()
+        default_pagination = DefaultPagination()
         pagination = pagination if pagination is not None else default_pagination
 
         url = f'accounts/{address.bech32()}/tokens?{self.__build_pagination_params(pagination)}'
@@ -51,7 +58,7 @@ class ApiNetworkProvider(NetworkProvider):
         return list(result)
 
     def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: IPagination = None):
-        default_pagination = IPagination()
+        default_pagination = DefaultPagination()
         pagination = pagination if pagination is not None else default_pagination
 
         url = f'accounts/{address.bech32()}/nfts?{self.__build_pagination_params(pagination)}'
@@ -78,7 +85,7 @@ class ApiNetworkProvider(NetworkProvider):
     def get_mex_pairs(self, pagination: IPagination = None):
         url = 'mex/pairs'
         if pagination:
-            url = f'{url}?from={pagination.start}&size={pagination.size}'
+            url = f'{url}?from={pagination.get_start()}&size={pagination.get_size()}'
 
         response = self.do_get_generic(url)
         result = map(PairOnNetwork.from_api_http_response, response)
@@ -124,13 +131,13 @@ class ApiNetworkProvider(NetworkProvider):
 
     def send_transaction(self, payload: ITransaction) -> str:
         url = f'{self.url}/transaction/send'
-        response = self.do_post_generic(url, payload)
+        response = self.do_post_generic(url, payload.to_dictionary())
         tx_hash = response.get('txHash', '')
 
         return tx_hash
 
     def __build_pagination_params(self, pagination: IPagination):
-        return f'from={pagination.start}&size={pagination.size}'
+        return f'from={pagination.get_start()}&size={pagination.get_size()}'
 
     def do_get_generic(self, resource_url: str):
         response = self.do_get(f'{self.url}/{resource_url}')
@@ -147,7 +154,7 @@ class ApiNetworkProvider(NetworkProvider):
             parsed = response.json()
             return self._get_data(parsed, url)
         except requests.HTTPError as err:
-            error_data = _extract_error_from_response(err.response)
+            error_data = self._extract_error_from_response(err.response)
             raise GenericError(url, error_data)
         except requests.ConnectionError as err:
             raise GenericError(url, err)
@@ -163,7 +170,7 @@ class ApiNetworkProvider(NetworkProvider):
             parsed = response.json()
             return self._get_data(parsed, url)
         except requests.HTTPError as err:
-            error_data = _extract_error_from_response(err.response)
+            error_data = self._extract_error_from_response(err.response)
             raise GenericError(url, error_data)
         except requests.ConnectionError as err:
             raise GenericError(url, err)
@@ -180,3 +187,9 @@ class ApiNetworkProvider(NetworkProvider):
                 raise GenericError(url, f"code:{code}, error: {err}")
             else:
                 return parsed
+
+    def _extract_error_from_response(self, response: Any):
+        try:
+            return response.json()
+        except Exception:
+            return response.text
