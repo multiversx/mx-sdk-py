@@ -34,7 +34,7 @@ class DefinitionOfFungibleTokenOnNetwork:
         result.owner = Address.from_bech32(owner) if owner else Address.zero()
 
         result.decimals = payload.get('decimals', 0)
-        result.supply = payload.get('supply', 0)
+        result.supply = int(payload.get('supply', 0))
         result.burnt_value = payload.get('burntValue', 0)
         result.is_paused = payload.get('isPaused', False)
         result.can_upgrade = payload.get('canUpgrade', False)

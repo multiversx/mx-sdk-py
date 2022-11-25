@@ -1,7 +1,7 @@
-from interface import IAddress
+from erdpy_network.interface import IAddress
 from erdpy_core import Address
 from typing import Any, List, Dict
-from primitives import Nonce
+from erdpy_network.primitives import Nonce
 
 
 class FungibleTokenOfAccountOnNetwork:
@@ -15,7 +15,7 @@ class FungibleTokenOfAccountOnNetwork:
         result = FungibleTokenOfAccountOnNetwork()
 
         result.identifier = payload.get('tokenIdentifier', '') or payload.get('identifier', '')
-        result.balance = payload.get('balance', 0)
+        result.balance = int(payload.get('balance', 0))
         result.raw_response = payload
 
         return result
@@ -75,7 +75,7 @@ class NonFungibleTokenOfAccountOnNetwork:
 
         result.timestamp = payload.get('timestamp', 0)
         result.attributes = payload.get('attributes', '')
-        result.nonce = payload.get('nonce', 0)
+        result.nonce = int(payload.get('nonce', 0))
         result.type = payload.get('type', '')
         result.name = payload.get('name', '')
 
@@ -86,7 +86,7 @@ class NonFungibleTokenOfAccountOnNetwork:
         result.supply = payload.get('supply', 1)
         result.royalties = payload.get('royalties', 0)
         result.assets = payload.get('assets', [])
-        result.balance = payload.get('balance', 0)
+        result.balance = int(payload.get('balance', 0))
 
         return result
 

@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from interface import IAddress
+from erdpy_network.interface import IAddress
 from erdpy_core import Address
 
 

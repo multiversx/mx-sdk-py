@@ -25,7 +25,7 @@ class ContractResultItem:
     def __init__(self):
         self.hash: str = ''
         self.nonce: int = 0
-        self.value: str = ''
+        self.value: int = 0
         self.receiver: IAddress = Address.zero()
         self.sender: IAddress = Address.zero()
         self.data: str = ''
@@ -58,7 +58,7 @@ class ContractResultItem:
 
         item.hash = response.get('hash')
         item.nonce = response.get('nonce', 0)
-        item.value = str(response.get('value', 0))
+        item.value = int(response.get('value', 0))
 
         sender = response.get('sender', '')
         item.sender = Address.from_bech32(sender) if sender else Address.zero()
