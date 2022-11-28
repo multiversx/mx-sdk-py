@@ -17,6 +17,5 @@ class TransactionCompletionStrategyOnApi:
 
 
 class TransactionCompletionStrategyOnProxy:
-    @classmethod
-    def is_completed(cls):
+    def is_completed(self, transaction: ITransactionOnNetwork):
         raise NotImplementedError('Method is not implemented yet')

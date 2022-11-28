@@ -19,14 +19,6 @@ class ITransaction(ISerializable, Protocol):
         return ""
 
 
-class ISimulateResponse(ISerializable):
-    pass
-
-
-class ISimulateCostResponse(ISerializable):
-    pass
-
-
 class IPagination(Protocol):
     def get_start(self) -> int:
         return 0

@@ -1,7 +1,7 @@
 from erdpy_network.interface import IAddress
 from erdpy_core import Address
 from typing import Any, List, Dict
-from erdpy_network.primitives import Nonce
+from erdpy_network.utils import decimal_to_padded_hex
 
 
 class FungibleTokenOfAccountOnNetwork:
@@ -60,7 +60,7 @@ class NonFungibleTokenOfAccountOnNetwork:
     def from_proxy_http_response_by_nonce(payload: Dict[str, Any]) -> 'NonFungibleTokenOfAccountOnNetwork':
         result = NonFungibleTokenOfAccountOnNetwork.from_proxy_http_response(payload)
 
-        nonce_as_hex = Nonce(payload.get('nonce', 0)).hex()
+        nonce_as_hex = decimal_to_padded_hex(payload.get('nonce', 0))
         token_identifier = payload.get('tokenIdentifier', '')
 
         result.identifier = f'{token_identifier}-{nonce_as_hex}'
@@ -82,7 +82,7 @@ class NonFungibleTokenOfAccountOnNetwork:
         creator = payload.get('creator', '')
         result.creator = Address.from_bech32(creator) if creator else Address.zero()
 
-        result.decimals = payload.get('decimal', 0)
+        result.decimals = payload.get('decimals', 0)
         result.supply = payload.get('supply', 1)
         result.royalties = payload.get('royalties', 0)
         result.assets = payload.get('assets', [])

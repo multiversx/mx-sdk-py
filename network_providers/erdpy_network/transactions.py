@@ -18,7 +18,7 @@ class TransactionOnNetwork:
         self.nonce: int = 0
         self.round: int = 0
         self.epoch: int = 0
-        self.value: str = ''
+        self.value: int = 0
         self.receiver: IAddress = Address.zero()
         self.sender: IAddress = Address.zero()
         self.gas_limit: int = 0
@@ -52,7 +52,7 @@ class TransactionOnNetwork:
         result = TransactionOnNetwork.from_http_response(tx_hash, response)
 
         result.contract_results = ContractResults.from_proxy_http_response(response.get('smartContractResults', []))
-        result.is_completed = TransactionCompletionStrategyOnProxy.is_completed()
+        result.is_completed = TransactionCompletionStrategyOnProxy().is_completed(result)
 
         return result
 
@@ -65,7 +65,7 @@ class TransactionOnNetwork:
         result.nonce = response.get('nonce', 0)
         result.round = response.get('round', 0)
         result.epoch = response.get('epoch', 0)
-        result.value = str(response.get('value', 0))
+        result.value = response.get('value', 0)
 
         sender = response.get('sender', '')
         result.sender = Address.from_bech32(sender) if sender else Address.zero()

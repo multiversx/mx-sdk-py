@@ -1,2 +1,3 @@
 def decimal_to_padded_hex(i):
-    return "0" + f"{i:x}" if len(f"{i:x}") % 2 else f"{i:x}"
+    as_hex = f'{i:x}'
+    return "0" + as_hex if len(as_hex) % 2 else as_hex

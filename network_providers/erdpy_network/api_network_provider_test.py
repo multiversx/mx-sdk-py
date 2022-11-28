@@ -1,6 +1,8 @@
+import pytest
 from erdpy_core import Address
 from erdpy_network.api_network_provider import ApiNetworkProvider
 from erdpy_network.proxy_network_provider import ProxyNetworkProvider, ContractQuery
+from erdpy_network.errors import GenericError
 
 
 class TestApi:
@@ -31,12 +33,16 @@ class TestApi:
         assert result.address.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.username == ''
 
+    def test_get_generic_with_bad_address(self):
+        with pytest.raises(GenericError, match='a bech32 address is expected'):
+            url = f'accounts/erd1bad'
+            self.api.do_get_generic(url)
+
     def test_get_fungible_token_of_account(self):
         address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
         result = self.api.get_fungible_token_of_account(address, 'ABC-10df96')
 
         assert result.identifier == 'ABC-10df96'
-        assert result.balance == 50
 
     def test_get_nonfungible_token_of_account(self):
         address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
@@ -48,16 +54,14 @@ class TestApi:
         assert result.identifier == 'ASDASD-510041-02'
         assert result.type == 'NonFungibleESDT'
 
-    def test_get_mex_pairs(self):
-        result = self.api.get_mex_pairs()
-        first_pair = result[0]
+    def test_get_meta_esdt(self):
+        adr = Address.from_bech32('erd1dk5urklhptgjp69k684wzapjxdp40fu0a3jn39rtcc78wxhewkyscp53au')
+        result = self.api.get_nonfungible_token_of_account(adr, 'EGLDRIDEF-9cf6f6', 4)
 
-        assert len(result) >= 0
-        assert first_pair.address.bech32() == 'erd1qqqqqqqqqqqqqpgquu5rsa4ee6l4azz6vdu4hjp8z4p6tt8m0n4suht3dy'
-        assert first_pair.name == 'EGLDMEXLP'
-        assert first_pair.symbol == 'EGLDMEX'
-        assert first_pair.state == 'active'
-        assert first_pair.type == 'core'
+        assert result.balance != 0
+        assert result.nonce == 4
+        assert result.identifier == 'EGLDRIDEF-9cf6f6-04'
+        assert result.decimals == 18
 
     def test_get_transaction(self):
         result = self.api.get_transaction('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')

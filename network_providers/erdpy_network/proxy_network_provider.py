@@ -2,7 +2,7 @@ import requests
 from requests.models import PreparedRequest
 from typing import List, Any, Dict, Union
 from erdpy_network.interface import IAddress, ITransaction, IContractQuery
-from erdpy_network.config import ESDT_CONTRACT_ADDRESS
+from erdpy_network.constants import ESDT_CONTRACT_ADDRESS, METACHAIN_ID
 from erdpy_network.accounts import AccountOnNetwork
 from erdpy_network.tokens import FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork
 from erdpy_network.resources import GenericResponse
@@ -27,7 +27,7 @@ class ProxyNetworkProvider:
         return network_config
 
     def get_network_status(self) -> NetworkStatus:
-        response = self.do_get_generic('network/status/4294967295')
+        response = self.do_get_generic(f'network/status/{str(METACHAIN_ID)}')
         network_status = NetworkStatus.from_http_response(response.get('status', ''))
 
         return network_status
@@ -70,7 +70,7 @@ class ProxyNetworkProvider:
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
         """NOT IMPLEMENTED. Will raise NotImplementedError"""
-        url = self.build_url_with_quert_parameters(f'transaction/{tx_hash}', {'with_results': 'true'})
+        url = self.__build_url_with_query_parameters(f'transaction/{tx_hash}', {'with_results': 'true'})
         response = self.do_get_generic(url)
         transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response.to_dictionary())
 
@@ -93,12 +93,12 @@ class ProxyNetworkProvider:
         return ContractQueryResponse.from_http_response(response.get('data', ''))
 
     def get_definition_of_fungible_token(self, token_identifier: str) -> DefinitionOfFungibleTokenOnNetwork:
-        response = self.get_token_properties(token_identifier)
+        response = self.__get_token_properties(token_identifier)
         definition = DefinitionOfFungibleTokenOnNetwork.from_response_of_get_token_properties(token_identifier,
                                                                                               response)
         return definition
 
-    def get_token_properties(self, identifier: str):
+    def __get_token_properties(self, identifier: str) -> List:
         encoded_identifier = identifier.encode()
 
         query = ContractQuery(ESDT_CONTRACT_ADDRESS, 'getTokenProperties', 0, [encoded_identifier])
@@ -109,23 +109,24 @@ class ProxyNetworkProvider:
         return properties
 
     def get_definition_of_token_collection(self, collection: str) -> DefinitionOfTokenCollectionOnNetwork:
-        properties = self.get_token_properties(collection)
+        properties = self.__get_token_properties(collection)
         definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties)
 
         return definition
 
-    def build_url_with_quert_parameters(self, endpoint: str, params: Dict[str, str]):
+    def __build_url_with_query_parameters(self, endpoint: str, params: Dict[str, str]) -> str:
         url = f'{self.url}/{endpoint}'
         request = PreparedRequest()
         request.prepare_url(url, params)
 
         return request.url
 
-    def do_get_generic(self, resource_url: str):
-        response = self.do_get(f'{self.url}/{resource_url}')
+    def do_get_generic(self, resource_url: str) -> GenericResponse:
+        url = f'{self.url}/{resource_url}'
+        response = self.do_get(url)
         return response
 
-    def do_post_generic(self, resource_url: str, payload: Any):
+    def do_post_generic(self, resource_url: str, payload: Any) -> GenericResponse:
         url = f'{self.url}/{resource_url}'
         response = self.do_post(url, payload)
         return response

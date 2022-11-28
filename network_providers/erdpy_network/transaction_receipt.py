@@ -5,7 +5,7 @@ from erdpy_core import Address
 
 class TransactionReceipt:
     def __init__(self):
-        self.value: str = ''
+        self.value: int = 0
         self.sender: IAddress = Address.zero()
         self.data: str = ''
         self.hash: str = ''
@@ -14,7 +14,7 @@ class TransactionReceipt:
     def from_http_response(response: Dict[str, Any]) -> 'TransactionReceipt':
         result = TransactionReceipt()
 
-        result.value = response.get('value', '')
+        result.value = response.get('value', 0)
         sender = response.get('sender', '')
         result.sender = Address.from_bech32(sender) if sender else Address.zero()
 

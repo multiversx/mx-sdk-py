@@ -30,8 +30,8 @@ class TransactionEventTopic:
     def __init__(self, topic: str):
         self.raw = base64.b64decode(topic.encode())
 
-    def to_string(self):
-        return str(self.raw, 'utf-8')
+    def __str__(self):
+        return self.raw.decode()
 
     def hex(self):
-        return hex(int(self.raw, 16))
+        return self.raw.hex()

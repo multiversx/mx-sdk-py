@@ -10,7 +10,7 @@ class ContractQueryResponse:
 
     @staticmethod
     def from_http_response(payload: Dict[str, Any]) -> 'ContractQueryResponse':
-        return_data = payload.get('returnData', '') or payload.get('ReturnData', '')
+        return_data = payload.get('returnData', []) or payload.get('ReturnData', [])
         return_code = payload.get('returnCode', '') or payload.get('ReturnCode', '')
         return_message = payload.get('returnMessage', '') or payload.get('ReturnMessage', '')
         gas_remaining = payload.get('gasRemaining', 0) or payload.get('GasRemaining', 0)
@@ -23,4 +23,4 @@ class ContractQueryResponse:
         return result
 
     def get_return_data_parts(self) -> List:
-        return list(map(lambda x: base64.b64decode(x), self.return_data))
+        return [base64.b64decode(item) for item in self.return_data]

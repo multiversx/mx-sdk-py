@@ -12,7 +12,7 @@ class ContractResults:
 
     @staticmethod
     def from_api_http_response(results: List[Any]) -> 'ContractResults':
-        items = list(map(ContractResultItem.from_api_http_response, results))
+        items = [ContractResultItem.from_api_http_response(item) for item in results]
         return ContractResults(items)
 
     @staticmethod
@@ -39,7 +39,7 @@ class ContractResultItem:
 
     @staticmethod
     def from_api_http_response(response: Any) -> 'ContractResultItem':
-        item = ContractResultItem.from_http_response(response)
+        item = ContractResultItem._from_http_response(response)
 
         item.data = base64.b64decode(item.data.encode())
         item.call_type = int(item.call_type)
@@ -48,12 +48,12 @@ class ContractResultItem:
 
     @staticmethod
     def from_proxy_http_response(response: Any) -> 'ContractResultItem':
-        item = ContractResultItem.from_http_response(response)
+        item = ContractResultItem._from_http_response(response)
 
         return item
 
     @staticmethod
-    def from_http_response(response: Dict[str, Any]) -> 'ContractResultItem':
+    def _from_http_response(response: Dict[str, Any]) -> 'ContractResultItem':
         item = ContractResultItem()
 
         item.hash = response.get('hash')
@@ -71,7 +71,7 @@ class ContractResultItem:
         item.gas_limit = response.get('gasLimit', 0)
         item.gas_price = response.get('gasPrice', 0)
         item.data = response.get('data', '')
-        item.call_type = response.get('callType')
+        item.call_type = response.get('callType', 0)
         item.return_message = response.get('returnMessage')
 
         item.logs = TransactionLogs.from_http_response(response.get('logs', {}))
