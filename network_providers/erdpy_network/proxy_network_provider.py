@@ -1,24 +1,30 @@
+from typing import Any, Dict, List, Union
+
 import requests
+from requests.auth import AuthBase
 from requests.models import PreparedRequest
-from typing import List, Any, Dict, Union
-from erdpy_network.interface import IAddress, ITransaction, IContractQuery
-from erdpy_network.constants import ESDT_CONTRACT_ADDRESS, METACHAIN_ID
+
 from erdpy_network.accounts import AccountOnNetwork
-from erdpy_network.tokens import FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork
-from erdpy_network.resources import GenericResponse
-from erdpy_network.errors import GenericError
-from erdpy_network.network_config import NetworkConfig
-from erdpy_network.network_status import NetworkStatus
-from erdpy_network.transactions import TransactionOnNetwork
-from erdpy_network.transaction_status import TransactionStatus
+from erdpy_network.constants import ESDT_CONTRACT_ADDRESS, METACHAIN_ID
 from erdpy_network.contract_query_requests import ContractQueryRequest
 from erdpy_network.contract_query_response import ContractQueryResponse
-from erdpy_network.token_definitions import DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork
+from erdpy_network.errors import GenericError
+from erdpy_network.interface import IAddress, IContractQuery, ITransaction
+from erdpy_network.network_config import NetworkConfig
+from erdpy_network.network_status import NetworkStatus
+from erdpy_network.resources import GenericResponse
+from erdpy_network.token_definitions import (
+    DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
+from erdpy_network.tokens import (FungibleTokenOfAccountOnNetwork,
+                                  NonFungibleTokenOfAccountOnNetwork)
+from erdpy_network.transaction_status import TransactionStatus
+from erdpy_network.transactions import TransactionOnNetwork
 
 
 class ProxyNetworkProvider:
-    def __init__(self, url: str):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None):
         self.url = url
+        self.auth = auth
 
     def get_network_config(self) -> NetworkConfig:
         response = self.do_get_generic('network/config')
@@ -133,7 +139,7 @@ class ProxyNetworkProvider:
 
     def do_get(self, url: str) -> GenericResponse:
         try:
-            response = requests.get(url)
+            response = requests.get(url, auth=self.auth)
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)
@@ -147,7 +153,7 @@ class ProxyNetworkProvider:
 
     def do_post(self, url: str, payload: Any) -> GenericResponse:
         try:
-            response = requests.post(url, json=payload)
+            response = requests.post(url, json=payload, auth=self.auth)
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)
