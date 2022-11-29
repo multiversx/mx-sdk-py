@@ -40,11 +40,11 @@ class Transaction:
         self.signature = bytes()
 
     def serialize_for_signing(self) -> bytes:
-        dictionary = self.to_dictionary()
+        dictionary = self.to_dictionary(with_signature=False)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
-    def to_dictionary(self) -> Dict[str, Any]:
+    def to_dictionary(self, with_signature: bool = True) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = self.nonce
         dictionary["value"] = self.value
@@ -66,7 +66,7 @@ class Transaction:
         if self.options:
             dictionary["options"] = self.options
 
-        if self.signature:
+        if with_signature:
             dictionary["signature"] = self.signature.hex()
 
         return dictionary
