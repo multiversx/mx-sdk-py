@@ -1,28 +1,34 @@
+from typing import Any, Dict, List, Union
+
 import requests
 from requests.auth import AuthBase
-from typing import Union, Dict, List, Any
-from erdpy_network.errors import GenericError
-from erdpy_network.utils import decimal_to_padded_hex
-from erdpy_network.network_stake import NetworkStake
+
 from erdpy_network.accounts import AccountOnNetwork
+from erdpy_network.config import DefaultPagination
 from erdpy_network.contract_query_requests import ContractQueryRequest
 from erdpy_network.contract_query_response import ContractQueryResponse
-from erdpy_network.network_general_statistics import NetworkGeneralStatistics
-from erdpy_network.tokens import FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork
-from erdpy_network.token_definitions import DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork
-from erdpy_network.transactions import TransactionOnNetwork
-from erdpy_network.interface import IAddress, IPagination, IContractQuery, ITransaction
-from erdpy_network.transaction_status import TransactionStatus
-from erdpy_network.proxy_network_provider import ProxyNetworkProvider
-from erdpy_network.config import DefaultPagination
+from erdpy_network.errors import GenericError
+from erdpy_network.interface import (IAddress, IContractQuery, IPagination,
+                                     ITransaction)
 from erdpy_network.network_config import NetworkConfig
+from erdpy_network.network_general_statistics import NetworkGeneralStatistics
+from erdpy_network.network_stake import NetworkStake
 from erdpy_network.network_status import NetworkStatus
+from erdpy_network.proxy_network_provider import ProxyNetworkProvider
+from erdpy_network.token_definitions import (
+    DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
+from erdpy_network.tokens import (FungibleTokenOfAccountOnNetwork,
+                                  NonFungibleTokenOfAccountOnNetwork)
+from erdpy_network.transaction_status import TransactionStatus
+from erdpy_network.transactions import TransactionOnNetwork
+from erdpy_network.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(self, url: str, backing_proxy_network_provider: ProxyNetworkProvider):
+    def __init__(self, url: str, backing_proxy_network_provider: ProxyNetworkProvider, auth: Union[AuthBase, None] = None):
         self.url = url
         self.backing_proxy = backing_proxy_network_provider
+        self.auth = auth
 
     def get_network_config(self) -> NetworkConfig:
         return self.backing_proxy.get_network_config()
@@ -140,9 +146,9 @@ class ApiNetworkProvider:
         response = self.do_post(url, payload)
         return response
 
-    def do_get(self, url: str, auth: Union[AuthBase, None] = None):
+    def do_get(self, url: str):
         try:
-            response = requests.get(url, auth=auth)
+            response = requests.get(url, auth=self.auth)
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
@@ -156,7 +162,7 @@ class ApiNetworkProvider:
 
     def do_post(self, url: str, payload: Any):
         try:
-            response = requests.post(url, json=payload)
+            response = requests.post(url, json=payload, auth=self.auth)
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
