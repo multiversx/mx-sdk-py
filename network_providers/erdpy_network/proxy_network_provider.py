@@ -27,7 +27,7 @@ class ProxyNetworkProvider:
         return network_config
 
     def get_network_status(self) -> NetworkStatus:
-        response = self.do_get_generic(f'network/status/{str(METACHAIN_ID)}')
+        response = self.do_get_generic(f'network/status/{METACHAIN_ID}')
         network_status = NetworkStatus.from_http_response(response.get('status', ''))
 
         return network_status
@@ -51,7 +51,7 @@ class ProxyNetworkProvider:
         url = f'address/{address.bech32()}/esdt'
         response = self.do_get_generic(url)
         items = response.get('esdts')
-        nfts = [items[key] for key in items.keys() if items[key].get('nonce', -1) >= 0]
+        nfts = [items[key] for key in items.keys() if items[key].get('nonce', -1) > 0]
         result = map(NonFungibleTokenOfAccountOnNetwork.from_proxy_http_response, nfts)
 
         return list(result)
