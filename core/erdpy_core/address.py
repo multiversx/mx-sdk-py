@@ -13,7 +13,7 @@ class Address():
         if len(pubkey) != PUBKEY_LENGTH:
             raise ErrBadPubkeyLength(len(pubkey), PUBKEY_LENGTH)
 
-        self._pubkey = pubkey
+        self._pubkey = bytes(pubkey)
 
     @classmethod
     def from_bech32(cls, value: str) -> 'Address':
