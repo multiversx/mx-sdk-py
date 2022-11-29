@@ -169,11 +169,11 @@ class ProxyNetworkProvider:
         err = parsed.get("error")
         code = parsed.get("code")
 
-        if not err and code == "successful":
-            data: Dict[str, Any] = parsed.get("data", dict())
-            return GenericResponse(data)
+        if err:
+            raise GenericError(url, f"code:{code}, error: {err}")
 
-        raise GenericError(url, f"code:{code}, error: {err}")
+        data: Dict[str, Any] = parsed.get("data", dict())
+        return GenericResponse(data)
 
     def _extract_error_from_response(self, response: Any):
         try:
