@@ -75,5 +75,8 @@ class Transaction:
         serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
         return serialized
 
-    def apply_signature(self, signature: ISignature) -> None:
+    def set_signature(self, signature: ISignature) -> None:
         self.signature = signature
+
+    def get_signature(self) -> ISignature:
+        return self.signature
