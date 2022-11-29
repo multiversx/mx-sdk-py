@@ -1,7 +1,7 @@
 from typing import Any, Dict
 
 
-class GenericResponse():
+class GenericResponse:
     def __init__(self, data: Any) -> None:
         self.__dict__.update(data)
 
