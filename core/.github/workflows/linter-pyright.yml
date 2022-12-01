@@ -1,0 +1,10 @@
+# See: https://github.com/microsoft/pyright/blob/main/docs/ci-integration.md
+
+name: Linter checks (pyright)
+on: [pull_request]
+jobs:
+  run-linter:
+    name: pyright
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jakebailey/pyright-action@v1
