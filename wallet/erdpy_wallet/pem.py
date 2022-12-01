@@ -5,11 +5,6 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-def get_pubkey(pem_file: Path):
-    _, pubkey = parse(pem_file)
-    return pubkey
-
-
 def parse(pem_file: Path, index: int = 0) -> Tuple[bytes, bytes]:
     pem_file = pem_file.expanduser()
     _guard_is_file(pem_file)
@@ -37,7 +32,7 @@ def parse_all(pem_file: Path) -> List[Tuple[bytes, bytes]]:
                   if not is_next_key]
     keys = ["".join(key_lines) for key_lines in keys_lines]
 
-    result = []
+    result: List[Tuple[bytes, bytes]] = []
 
     for key_base64 in keys:
         key_hex = base64.b64decode(key_base64).decode()
@@ -56,7 +51,7 @@ def parse_validator_pem(pem_file: Path, index: int = 0) -> Tuple[bytes, str]:
 
     lines = _read_lines(pem_file)
     bls_keys = read_bls_keys(lines)
-    secret_keys = read_validators_secret_keys(lines)
+    secret_keys = _read_validators_secret_keys(lines)
 
     secret_key_base64: str = secret_keys[index]
     secret_key_hex = base64.b64decode(secret_key_base64).decode()
@@ -66,8 +61,8 @@ def parse_validator_pem(pem_file: Path, index: int = 0) -> Tuple[bytes, str]:
     return secret_key_bytes, bls_key
 
 
-def read_bls_keys(lines) -> List[str]:
-    bls_keys = []
+def read_bls_keys(lines: List[str]) -> List[str]:
+    bls_keys: List[str] = []
 
     for line in lines:
         splited_line = line.split(" ")
@@ -83,8 +78,8 @@ def read_bls_keys(lines) -> List[str]:
 
 
 # TODO rewrite using generators or simplify the list comprehension within
-def read_validators_secret_keys(lines):
-    secret_keys = []
+def _read_validators_secret_keys(lines: List[str]):
+    secret_keys: List[str] = []
 
     secret_keys_lines = [list(key_lines) for is_next_key, key_lines in
                          itertools.groupby(lines, lambda line: "-----" in line) if not is_next_key]

@@ -1,12 +1,8 @@
-import base64
 import json
-from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Dict
 
-from erdpy_core.address import Address
+from erdpy_core import Address, Message, Transaction
 
-from erdpy_wallet.interfaces import ISignature
 from erdpy_wallet.user_keys import UserSecretKey
 from erdpy_wallet.user_signer import UserSigner
 from erdpy_wallet.user_verifer import UserVerifier
@@ -92,12 +88,12 @@ def test_sign_transaction():
     Also see: https://github.com/ElrondNetwork/elrond-go/blob/master/examples/construction_test.go
     """
 
-    tx = DummyTransaction(
+    tx = Transaction(
         nonce=89,
         value="0",
-        receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
-        sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-        data="",
+        receiver=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
+        sender=Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+        data=None,
         gas_price=1000000000,
         gas_limit=50000,
         chain_id="local-testnet",
@@ -107,9 +103,21 @@ def test_sign_transaction():
 
     signer = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
-    tx.signature = signer.sign(tx)
-    assert verifier.verify(tx) == True
-    assert tx.signature.hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+
+    tx.set_signature(signer.sign(tx))
+    assert tx.get_signature().hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+    assert verifier.verify(tx)
+
+
+def test_sign_message():
+    message = Message.from_string("hello")
+
+    signer = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"))
+    verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+
+    message.set_signature(signer.sign(message))
+    assert message.get_signature().hex() == "66dd503199222d3104cb5381da953b14c895ca564579f98934c4e54a45d75f097da2a0c30060c0e7d014928b8e54509335cadc69b2bb1940cd59bd0c1bb80b0b"
+    assert verifier.verify(message)
 
 
 class DummyRandomness:
@@ -126,67 +134,3 @@ class DummyRandomness:
 
     def get_id(self) -> str:
         return self.id
-
-
-class DummyTransaction:
-    def __init__(
-        self,
-        nonce: int,
-        sender: str,
-        receiver: str,
-        gas_limit: int,
-        chain_id: str,
-        gas_price: int,
-        value: str,
-        data: str,
-        version: int,
-        options: int
-    ):
-        self.nonce = nonce
-        self.sender = sender
-        self.receiver = receiver
-        self.gas_limit = gas_limit
-        self.chainID = chain_id
-        self.gas_price = gas_price
-        self.value = value
-        self.data = data
-        self.version = version
-        self.options = options
-
-        self.signature = bytes()
-
-    def serialize_for_signing(self) -> bytes:
-        dictionary = self.to_dictionary()
-        serialized = self._dict_to_json(dictionary)
-        return serialized
-
-    def to_dictionary(self) -> Dict[str, Any]:
-        dictionary: Dict[str, Any] = OrderedDict()
-        dictionary["nonce"] = self.nonce
-        dictionary["value"] = self.value
-
-        dictionary["receiver"] = self.receiver
-        dictionary["sender"] = self.sender
-
-        dictionary["gasPrice"] = self.gas_price
-        dictionary["gasLimit"] = self.gas_limit
-
-        if self.data:
-            dictionary["data"] = base64.b64encode(self.data.encode()).decode()
-
-        dictionary["chainID"] = self.chainID
-
-        if self.version:
-            dictionary["version"] = self.version
-
-        if self.options:
-            dictionary["options"] = self.options
-
-        return dictionary
-
-    def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
-        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
-        return serialized
-
-    def get_signature(self) -> ISignature:
-        return self.signature

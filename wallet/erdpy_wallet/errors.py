@@ -20,19 +20,19 @@ class ErrCannotSign(Exception):
 
 class ErrBadMnemonic(Exception):
     def __init__(self) -> None:
-        super().__init__(f"Bad mnemonic")
+        super().__init__("Bad mnemonic")
 
 
 class ErrBadSecretKeyLength(Exception):
     def __init__(self) -> None:
-        super().__init__(f"Bad length of secret key")
+        super().__init__("Bad length of secret key")
 
 
 class ErrBadPublicKeyLength(Exception):
     def __init__(self) -> None:
-        super().__init__(f"Bad length of public key")
+        super().__init__("Bad length of public key")
 
 
 class ErrMclSignerPathNotDefined(Exception):
     def __init__(self) -> None:
-        super().__init__(f"MCL_SIGNER_PATH isn't defined.")
+        super().__init__("MCL_SIGNER_PATH isn't defined.")

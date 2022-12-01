@@ -43,7 +43,7 @@ class UserPublicKey:
         if len(buffer) != USER_PUBKEY_LENGTH:
             raise ErrBadPublicKeyLength()
 
-        self.buffer = buffer
+        self.buffer = bytes(buffer)
 
     def verify(self, data: bytes, signature: ISignature) -> bool:
         verify_key = nacl.signing.VerifyKey(self.buffer)
