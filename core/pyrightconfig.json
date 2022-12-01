@@ -3,8 +3,7 @@
         "erdpy_core"
     ],
     "exclude": [
-        "**/__pycache__",
-        ".venv"
+        "**/__pycache__"
     ],
     "ignore": [],
     "defineConstant": {
