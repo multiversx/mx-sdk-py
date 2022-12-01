@@ -43,8 +43,14 @@ First, install [`pyright`](https://github.com/microsoft/pyright) as follows:
 npm install --global pyright
 ```
 
-Trigger checks by invoking the command:
+Run `pyright`:
 
 ```
 pyright
+```
+
+Run `flake8`:
+
+```
+flake8 erdpy_core
 ```
