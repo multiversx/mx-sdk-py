@@ -1,4 +1,4 @@
-from typing import Any, Dict, Protocol, Union
+from typing import Any, Dict, Protocol, Union, List
 
 
 class ISerializable(Protocol):
@@ -28,7 +28,7 @@ class IPagination(Protocol):
 
 
 class IContractQuery(Protocol):
-    def get_encoded_arguments(self):
+    def get_encoded_arguments(self) -> List[str]:
         return []
 
     def get_function(self) -> str:

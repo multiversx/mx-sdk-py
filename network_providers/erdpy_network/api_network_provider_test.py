@@ -35,7 +35,7 @@ class TestApi:
 
     def test_get_generic_with_bad_address(self):
         with pytest.raises(GenericError, match='a bech32 address is expected'):
-            url = f'accounts/erd1bad'
+            url = 'accounts/erd1bad'
             self.api.do_get_generic(url)
 
     def test_get_fungible_token_of_account(self):

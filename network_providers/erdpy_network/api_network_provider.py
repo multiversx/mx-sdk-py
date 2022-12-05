@@ -129,24 +129,24 @@ class ApiNetworkProvider:
     def send_transaction(self, payload: ITransaction) -> str:
         url = f'{self.url}/transaction/send'
         response = self.do_post_generic(url, payload.to_dictionary())
-        tx_hash = response.get('txHash', '')
+        tx_hash: str = response.get('txHash', '')
 
         return tx_hash
 
     def _build_pagination_params(self, pagination: IPagination) -> str:
         return f'from={pagination.get_start()}&size={pagination.get_size()}'
 
-    def do_get_generic(self, resource_url: str):
+    def do_get_generic(self, resource_url: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         url = f'{self.url}/{resource_url}'
         response = self.do_get(url)
         return response
 
-    def do_post_generic(self, resource_url: str, payload: Any):
+    def do_post_generic(self, resource_url: str, payload: Any) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         url = f'{self.url}/{resource_url}'
         response = self.do_post(url, payload)
         return response
 
-    def do_get(self, url: str):
+    def do_get(self, url: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         try:
             response = requests.get(url, auth=self.auth)
             response.raise_for_status()
@@ -160,7 +160,7 @@ class ApiNetworkProvider:
         except Exception as err:
             raise GenericError(url, err)
 
-    def do_post(self, url: str, payload: Any):
+    def do_post(self, url: str, payload: Any) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         try:
             response = requests.post(url, json=payload, auth=self.auth)
             response.raise_for_status()
@@ -174,7 +174,7 @@ class ApiNetworkProvider:
         except Exception as err:
             raise GenericError(url, err)
 
-    def _get_data(self, parsed: Union[Dict, List], url: str):
+    def _get_data(self, parsed: Union[Dict[str, Any], List[Dict[str, Any]]], url: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         if isinstance(parsed, List):
             return parsed
         else:
