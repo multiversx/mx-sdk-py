@@ -13,7 +13,7 @@ class ContractQueryResponse:
         return_data = payload.get('returnData', []) or payload.get('ReturnData', [])
         return_code = payload.get('returnCode', '') or payload.get('ReturnCode', '')
         return_message = payload.get('returnMessage', '') or payload.get('ReturnMessage', '')
-        gas_remaining = payload.get('gasRemaining', 0) or payload.get('GasRemaining', 0)
+        # gas_remaining = payload.get('gasRemaining', 0) or payload.get('GasRemaining', 0)
 
         result = ContractQueryResponse()
         result.return_data = return_data
@@ -22,5 +22,5 @@ class ContractQueryResponse:
 
         return result
 
-    def get_return_data_parts(self) -> List:
+    def get_return_data_parts(self) -> List[bytes]:
         return [base64.b64decode(item) for item in self.return_data]

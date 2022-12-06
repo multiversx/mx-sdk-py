@@ -41,7 +41,7 @@ class ContractResultItem:
     def from_api_http_response(response: Any) -> 'ContractResultItem':
         item = ContractResultItem._from_http_response(response)
 
-        item.data = base64.b64decode(item.data.encode())
+        item.data = base64.b64decode(item.data.encode()).decode()
         item.call_type = int(item.call_type)
 
         return item
@@ -56,7 +56,7 @@ class ContractResultItem:
     def _from_http_response(response: Dict[str, Any]) -> 'ContractResultItem':
         item = ContractResultItem()
 
-        item.hash = response.get('hash')
+        item.hash = response.get('hash', '')
         item.nonce = response.get('nonce', 0)
         item.value = int(response.get('value', 0))
 
@@ -66,13 +66,13 @@ class ContractResultItem:
         receiver = response.get('receiver', '')
         item.receiver = Address.from_bech32(receiver) if receiver else Address.zero()
 
-        item.previous_hash = response.get('prevTxHash')
-        item.original_hash = response.get('originalTxHash')
+        item.previous_hash = response.get('prevTxHash', '')
+        item.original_hash = response.get('originalTxHash', '')
         item.gas_limit = response.get('gasLimit', 0)
         item.gas_price = response.get('gasPrice', 0)
         item.data = response.get('data', '')
         item.call_type = response.get('callType', 0)
-        item.return_message = response.get('returnMessage')
+        item.return_message = response.get('returnMessage', '')
 
         item.logs = TransactionLogs.from_http_response(response.get('logs', {}))
 

@@ -75,10 +75,10 @@ class ProxyNetworkProvider:
         return token
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        """NOT IMPLEMENTED. Will raise NotImplementedError"""
-        url = self.__build_url_with_query_parameters(f'transaction/{tx_hash}', {'with_results': 'true'})
-        response = self.do_get_generic(url)
-        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response.to_dictionary())
+        url = self.__build_url_with_query_parameters(f'http://transaction/{tx_hash}', {'withResults': 'true'})
+        url = url[7:]
+        response = self.do_get_generic(url).get('transaction', '')
+        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response)
 
         return transaction
 
@@ -104,7 +104,7 @@ class ProxyNetworkProvider:
                                                                                               response)
         return definition
 
-    def __get_token_properties(self, identifier: str) -> List:
+    def __get_token_properties(self, identifier: str) -> List[bytes]:
         encoded_identifier = identifier.encode()
 
         query = ContractQuery(ESDT_CONTRACT_ADDRESS, 'getTokenProperties', 0, [encoded_identifier])
@@ -121,9 +121,8 @@ class ProxyNetworkProvider:
         return definition
 
     def __build_url_with_query_parameters(self, endpoint: str, params: Dict[str, str]) -> str:
-        url = f'{self.url}/{endpoint}'
         request = PreparedRequest()
-        request.prepare_url(url, params)
+        request.prepare_url(endpoint, params)
 
         return request.url
 
