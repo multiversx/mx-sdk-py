@@ -2,8 +2,6 @@ from typing import Any, Dict, List, Union
 
 import requests
 from requests.auth import AuthBase
-from requests.models import PreparedRequest
-
 from erdpy_network.accounts import AccountOnNetwork
 from erdpy_network.constants import ESDT_CONTRACT_ADDRESS, METACHAIN_ID
 from erdpy_network.contract_query_requests import ContractQueryRequest
@@ -75,8 +73,7 @@ class ProxyNetworkProvider:
         return token
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        url = self.__build_url_with_query_parameters(f'http://transaction/{tx_hash}', {'withResults': 'true'})
-        url = url[7:]
+        url = f"transaction/{tx_hash}?withResults=true"
         response = self.do_get_generic(url).get('transaction', '')
         transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response)
 
@@ -119,12 +116,6 @@ class ProxyNetworkProvider:
         definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties)
 
         return definition
-
-    def __build_url_with_query_parameters(self, endpoint: str, params: Dict[str, str]) -> str:
-        request = PreparedRequest()
-        request.prepare_url(endpoint, params)
-
-        return request.url
 
     def do_get_generic(self, resource_url: str) -> GenericResponse:
         url = f'{self.url}/{resource_url}'

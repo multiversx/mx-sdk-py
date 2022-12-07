@@ -1,4 +1,4 @@
-from typing import List, Any, Dict, Callable
+from typing import List, Any, Dict, Callable, Union
 from erdpy_network.interface import IAddress
 from erdpy_core import Address
 from erdpy_network.transaction_events import TransactionEvent
@@ -21,13 +21,16 @@ class TransactionLogs:
 
         return result
     
-    def find_first_or_none_event(self, identifier: str, predicate: Callable[[TransactionEvent], bool] = None) -> TransactionEvent:
-        return self.find_events(identifier, predicate)[0]
+    def find_first_or_none_event(self, identifier: str, predicate: Callable[[TransactionEvent], bool] = None) -> Union[TransactionEvent, None]:
+        try:
+            return self.find_events(identifier, predicate)[0]
+        except:
+            return None
 
     def find_events(self, identifier: str, predicate: Callable[[TransactionEvent], bool] = None) -> List[TransactionEvent]:
         events = [item for item in self.events if item.identifier == identifier]
 
         if predicate is not None:
-            events = list(filter(lambda x: predicate(x), events))
+            events = list(filter(predicate, events))
 
         return events

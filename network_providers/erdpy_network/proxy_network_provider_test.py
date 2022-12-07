@@ -53,6 +53,7 @@ class TestProxy:
         assert result.collection == 'ASDASD-510041'
         assert result.identifier == 'ASDASD-510041-02'
         assert result.type == ''
+        assert result.royalties == 75
 
     def test_get_transaction_status(self):
         result = self.proxy.get_transaction_status('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')

@@ -53,6 +53,7 @@ class TestApi:
         assert result.collection == 'ASDASD-510041'
         assert result.identifier == 'ASDASD-510041-02'
         assert result.type == 'NonFungibleESDT'
+        assert result.royalties == 75
 
     def test_get_meta_esdt(self):
         adr = Address.from_bech32('erd1dk5urklhptgjp69k684wzapjxdp40fu0a3jn39rtcc78wxhewkyscp53au')

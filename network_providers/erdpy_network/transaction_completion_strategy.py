@@ -1,5 +1,5 @@
 from typing import Protocol
-from erdpy_network.utils import is_padded_hex
+from erdpy_network.utils import has_even_lenght
 from erdpy_network.transaction_logs import TransactionLogs
 from erdpy_network.transaction_status import TransactionStatus
 
@@ -28,6 +28,7 @@ class TransactionCompletionStrategyOnApi:
 
 
 # this class is similar to the one in erdjs-network-providers
+# https://github.com/ElrondNetwork/elrond-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts
 class TransactionCompletionStrategyOnProxy:
     def is_completed(self, transaction: ITransactionOnNetwork) -> bool:
         if transaction.get_status().is_pending():
@@ -47,6 +48,8 @@ class TransactionCompletionStrategyOnProxy:
 
         return False
 
+    # erdjs implementation:
+    # https://github.com/ElrondNetwork/elrond-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts#L50
     def __is_certainly_move_balance(self, transaction_data: str) -> bool:
         parts = transaction_data.split("@")
         prefix = parts[0]
@@ -59,4 +62,4 @@ class TransactionCompletionStrategyOnProxy:
         return empty_prefix or some_parts_are_not_valid_args
 
     def __is_valid_argument(self, arg: str) -> bool:
-        return is_padded_hex(arg)
+        return has_even_lenght(arg)
