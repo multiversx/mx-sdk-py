@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from erdpy_core import bech32
+from erdpy_core import bech32, sharding
 from erdpy_core.errors import ErrBadAddress, ErrBadPubkeyLength
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
@@ -39,6 +39,10 @@ class Address():
 
     def is_smart_contract(self):
         return self.hex().startswith(SC_HEX_PUBKEY_PREFIX)
+
+    def get_shard(self) -> int:
+        shard = sharding.get_shard_of_pubkey(self.pubkey)
+        return shard
 
     def __repr__(self):
         return self.bech32()
@@ -79,6 +83,11 @@ class AddressConverter():
     def pubkey_to_bech32(self, pubkey: bytes) -> str:
         address = Address(pubkey, self.hrp)
         return address.bech32()
+
+
+def is_valid_bech32(value: str, expected_hrp: str) -> bool:
+    hrp, value_bytes = bech32.bech32_decode(value)
+    return hrp == expected_hrp and value_bytes is not None
 
 
 def _decode_bech32(value: str) -> Tuple[str, bytes]:
