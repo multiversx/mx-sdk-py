@@ -1,5 +1,5 @@
 from typing import Protocol
-from erdpy_network.utils import has_even_lenght
+from erdpy_network.utils import is_padded_hex
 from erdpy_network.transaction_logs import TransactionLogs
 from erdpy_network.transaction_status import TransactionStatus
 
@@ -62,4 +62,4 @@ class TransactionCompletionStrategyOnProxy:
         return empty_prefix or some_parts_are_not_valid_args
 
     def __is_valid_argument(self, arg: str) -> bool:
-        return has_even_lenght(arg)
+        return is_padded_hex(arg)
