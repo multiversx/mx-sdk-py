@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional, cast
 
 import requests
 from requests.auth import AuthBase
@@ -54,22 +54,22 @@ class ApiNetworkProvider:
 
         return account
 
-    def get_fungible_tokens_of_account(self, address: IAddress, pagination: IPagination = None) -> List[FungibleTokenOfAccountOnNetwork]:
+    def get_fungible_tokens_of_account(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[FungibleTokenOfAccountOnNetwork]:
         default_pagination = DefaultPagination()
         pagination = pagination if pagination is not None else default_pagination
 
         url = f'accounts/{address.bech32()}/tokens?{self._build_pagination_params(pagination)}'
-        response = self.do_get_generic(url)
+        response = self.do_get_generic_collection(url)
         result = map(FungibleTokenOfAccountOnNetwork.from_http_response, response)
 
         return list(result)
 
-    def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: IPagination = None) -> List[NonFungibleTokenOfAccountOnNetwork]:
+    def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[NonFungibleTokenOfAccountOnNetwork]:
         default_pagination = DefaultPagination()
         pagination = pagination if pagination is not None else default_pagination
 
         url = f'accounts/{address.bech32()}/nfts?{self._build_pagination_params(pagination)}'
-        response = self.do_get_generic(url)
+        response = self.do_get_generic_collection(url)
         result = map(NonFungibleTokenOfAccountOnNetwork.from_api_http_response, response)
 
         return list(result)
@@ -136,17 +136,22 @@ class ApiNetworkProvider:
     def _build_pagination_params(self, pagination: IPagination) -> str:
         return f'from={pagination.get_start()}&size={pagination.get_size()}'
 
-    def do_get_generic(self, resource_url: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
+    def do_get_generic(self, resource_url: str) -> Dict[str, Any]:
+        url = f'{self.url}/{resource_url}'
+        response = self.do_get(url)
+        return response
+    
+    def do_get_generic_collection(self, resource_url: str) -> List[Dict[str, Any]]:
         url = f'{self.url}/{resource_url}'
         response = self.do_get(url)
         return response
 
-    def do_post_generic(self, resource_url: str, payload: Any) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
+    def do_post_generic(self, resource_url: str, payload: Any) -> Dict[str, Any]:
         url = f'{self.url}/{resource_url}'
         response = self.do_post(url, payload)
         return response
 
-    def do_get(self, url: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
+    def do_get(self, url: str) -> Any:
         try:
             response = requests.get(url, auth=self.auth)
             response.raise_for_status()
@@ -160,12 +165,12 @@ class ApiNetworkProvider:
         except Exception as err:
             raise GenericError(url, err)
 
-    def do_post(self, url: str, payload: Any) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
+    def do_post(self, url: str, payload: Any) -> Dict[str, Any]:
         try:
             response = requests.post(url, json=payload, auth=self.auth)
             response.raise_for_status()
             parsed = response.json()
-            return self._get_data(parsed, url)
+            return cast(Dict[str, Any], self._get_data(parsed, url))
         except requests.HTTPError as err:
             error_data = self._extract_error_from_response(err.response)
             raise GenericError(url, error_data)
@@ -174,9 +179,9 @@ class ApiNetworkProvider:
         except Exception as err:
             raise GenericError(url, err)
 
-    def _get_data(self, parsed: Union[Dict[str, Any], List[Dict[str, Any]]], url: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
+    def _get_data(self, parsed: Any, url: str) -> Any:
         if isinstance(parsed, List):
-            return parsed
+            return cast(Any, parsed)
         else:
             err = parsed.get("error", None)
             if err:

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional
 
 import requests
 from requests.auth import AuthBase
@@ -183,7 +183,7 @@ class ProxyNetworkProvider:
 
 
 class ContractQuery(IContractQuery):
-    def __init__(self, address: IAddress, function: str, value: int, arguments: List[bytes], caller: IAddress = None):
+    def __init__(self, address: IAddress, function: str, value: int, arguments: List[bytes], caller: Optional[IAddress] = None):
         self.address = address
         self.function = function
         self.value = value

@@ -8,7 +8,7 @@ class ITransactionStatus(Protocol):
 
 class ITransactionOnNetwork(Protocol):
     def get_status(self) -> ITransactionStatus:
-        return ITransactionStatus()
+        ...
 
 
 class TransactionCompletionStrategyOnApi:

@@ -41,7 +41,7 @@ class ContractResultItem:
     def from_api_http_response(response: Any) -> "ContractResultItem":
         item = ContractResultItem._from_http_response(response)
 
-        item.data = base64.b64decode(item.data.encode())
+        item.data = base64.b64decode(item.data.encode()).decode()
         item.call_type = int(item.call_type)
 
         return item

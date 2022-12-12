@@ -12,8 +12,9 @@ class ContractQueryRequest:
                                    'value': str(self.query.get_value()),
                                    'args': self.query.get_encoded_arguments()
                                    }
+        caller = self.query.get_caller()
 
-        if self.query.get_caller() is not None:
-            request['caller'] = self.query.get_caller().bech32()
+        if caller:
+            request['caller'] = caller.bech32()
 
         return request
