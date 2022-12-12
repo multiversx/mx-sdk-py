@@ -3,8 +3,7 @@ from typing import Protocol
 
 
 class IAddress(Protocol):
-    def bech32(self) -> str:
-        return ""
+    def bech32(self) -> str: ...
 
 
 INonce = int
@@ -18,5 +17,8 @@ ISignature = bytes
 
 
 class ITransactionPayload(Protocol):
-    def encoded(self) -> str:
-        return ""
+    def encoded(self) -> str: ...
+
+
+class ICodeMetadata(Protocol):
+    def serialize(self) -> bytes: ...
