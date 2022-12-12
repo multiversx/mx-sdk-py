@@ -7,10 +7,10 @@ from erdpy_network.transaction_logs import TransactionLogs
 from erdpy_network.transaction_status import TransactionStatus
 from erdpy_network.transaction_receipt import TransactionReceipt
 from erdpy_network.transaction_completion_strategy import TransactionCompletionStrategyOnApi,\
-    TransactionCompletionStrategyOnProxy
+    TransactionCompletionStrategyOnProxy, ITransactionOnNetwork
 
 
-class TransactionOnNetwork:
+class TransactionOnNetwork(ITransactionOnNetwork):
     def __init__(self):
         self.is_completed: bool = False
         self.hash: str = ''
@@ -36,7 +36,7 @@ class TransactionOnNetwork:
         self.contract_results: ContractResults = ContractResults([])
         self.logs: TransactionLogs = TransactionLogs()
 
-    def get_status(self):
+    def get_status(self) -> TransactionStatus:
         return self.status.get_status()
 
     @staticmethod
@@ -75,7 +75,7 @@ class TransactionOnNetwork:
 
         result.gas_price = response.get('gasPrice', 0)
         result.gas_limit = response.get('gasLimit', 0)
-        result.data = base64.b64decode(response.get('responseData', '')).decode()
+        result.data = base64.b64decode(response.get('data', '')).decode()
         result.status = TransactionStatus(response.get('status'))
         result.timestamp = response.get('timestamp', 0)
 
