@@ -1,7 +1,8 @@
 
 import pytest
 
-from erdpy_core.address import Address, AddressConverter, AddressFactory
+from erdpy_core.address import (Address, AddressConverter, AddressFactory,
+                                is_valid_bech32)
 from erdpy_core.errors import ErrBadAddress, ErrBadPubkeyLength
 
 
@@ -47,3 +48,10 @@ def test_address_factory():
 
     assert factory_foo.create_from_pubkey(pubkey).bech32() == "foo1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssunhpj4"
     assert factory_erd.create_from_pubkey(pubkey).bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+
+def test_is_valid_bech32():
+    assert is_valid_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", "erd")
+    assert is_valid_bech32("foo1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssunhpj4", "foo")
+    assert not is_valid_bech32("foobar", "foo")
+    assert not is_valid_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", "foo")
