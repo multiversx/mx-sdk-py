@@ -44,6 +44,9 @@ class Address():
         shard = sharding.get_shard_of_pubkey(self.pubkey)
         return shard
 
+    def serialize(self) -> bytes:
+        return self.pubkey
+
     def __repr__(self):
         return self.bech32()
 
