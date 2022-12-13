@@ -2,8 +2,8 @@ from pathlib import Path
 
 from erdpy_wallet import pem
 from erdpy_wallet.errors import ErrCannotSign
-from erdpy_wallet.interfaces import IAddressAsOutput, ISignable, ISignature
-from erdpy_wallet.user_keys import UserSecretKey
+from erdpy_wallet.interfaces import ISignable, ISignature
+from erdpy_wallet.user_keys import UserPublicKey, UserSecretKey
 from erdpy_wallet.user_wallet import UserWallet
 
 
@@ -37,6 +37,5 @@ class UserSigner:
         signature = self.secret_key.sign(data)
         return signature
 
-    def get_address(self) -> IAddressAsOutput:
-        public_key = self.secret_key.generate_public_key()
-        return public_key.to_address()
+    def get_pubkey(self) -> UserPublicKey:
+        return self.secret_key.generate_public_key()

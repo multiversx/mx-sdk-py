@@ -57,9 +57,6 @@ class UserPublicKey:
     def hex(self) -> str:
         return self.buffer.hex()
 
-    def to_address(self) -> IAddressAsOutput:
-        return Address(self.buffer)
-
     def __str__(self) -> str:
         return self.hex()
 

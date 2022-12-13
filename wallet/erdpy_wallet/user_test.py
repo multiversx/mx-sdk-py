@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from erdpy_core import Address, Message, Transaction
+from erdpy_core import Address, AddressConverter, Message, Transaction
 
 from erdpy_wallet.user_keys import UserSecretKey
 from erdpy_wallet.user_signer import UserSigner
@@ -26,9 +26,16 @@ def test_user_secret_key_generate_public_key():
 
 
 def test_from_pem_file():
-    assert UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"), 0).get_address().bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-    assert UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/bob.pem"), 0).get_address().bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
-    assert UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/carol.pem"), 0).get_address().bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    converter = AddressConverter()
+
+    pubkey = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"), 0).get_pubkey()
+    assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+    pubkey = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/bob.pem"), 0).get_pubkey()
+    assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+
+    pubkey = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/carol.pem"), 0).get_pubkey()
+    assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
 
 
 def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_randomness():
@@ -54,31 +61,31 @@ def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_rando
     ))
 
     with open("./erdpy_wallet/testdata/alice.json") as f:
-        assert json.load(f) == alice_wallet.to_keyfile_object()
+        assert json.load(f) == alice_wallet.to_keyfile_object("erd")
 
     with open("./erdpy_wallet/testdata/bob.json") as f:
-        assert json.load(f) == bob_wallet.to_keyfile_object()
+        assert json.load(f) == bob_wallet.to_keyfile_object("erd")
 
     with open("./erdpy_wallet/testdata/carol.json") as f:
-        assert json.load(f) == carol_wallet.to_keyfile_object()
+        assert json.load(f) == carol_wallet.to_keyfile_object("erd")
 
 
 def test_user_wallet_encrypt_then_decrypt():
     alice_secret_key = UserSecretKey.from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9")
     alice_wallet = UserWallet(alice_secret_key, "password")
-    alice_keyfile_object = alice_wallet.to_keyfile_object()
+    alice_keyfile_object = alice_wallet.to_keyfile_object("erd")
     decrypted_secret_key = UserWallet.decrypt_secret_key(alice_keyfile_object, "password")
     assert decrypted_secret_key.buffer == alice_secret_key.buffer
 
     bob_secret_key = UserSecretKey.from_string("b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639")
     bob_wallet = UserWallet(bob_secret_key, "password")
-    bob_keyfile_object = bob_wallet.to_keyfile_object()
+    bob_keyfile_object = bob_wallet.to_keyfile_object("erd")
     decrypted_secret_key = UserWallet.decrypt_secret_key(bob_keyfile_object, "password")
     assert decrypted_secret_key.buffer == bob_secret_key.buffer
 
     carol_secret_key = UserSecretKey.from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436")
     carol_wallet = UserWallet(carol_secret_key, "password")
-    carol_keyfile_object = carol_wallet.to_keyfile_object()
+    carol_keyfile_object = carol_wallet.to_keyfile_object("erd")
     decrypted_secret_key = UserWallet.decrypt_secret_key(carol_keyfile_object, "password")
     assert decrypted_secret_key.buffer == carol_secret_key.buffer
 
@@ -104,8 +111,8 @@ def test_sign_transaction():
     signer = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
 
-    tx.set_signature(signer.sign(tx))
-    assert tx.get_signature().hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+    tx.signature = signer.sign(tx)
+    assert tx.signature.hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
     assert verifier.verify(tx)
 
 
@@ -115,8 +122,8 @@ def test_sign_message():
     signer = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
 
-    message.set_signature(signer.sign(message))
-    assert message.get_signature().hex() == "66dd503199222d3104cb5381da953b14c895ca564579f98934c4e54a45d75f097da2a0c30060c0e7d014928b8e54509335cadc69b2bb1940cd59bd0c1bb80b0b"
+    message.signature = signer.sign(message)
+    assert message.signature.hex() == "66dd503199222d3104cb5381da953b14c895ca564579f98934c4e54a45d75f097da2a0c30060c0e7d014928b8e54509335cadc69b2bb1940cd59bd0c1bb80b0b"
     assert verifier.verify(message)
 
 
@@ -125,12 +132,3 @@ class DummyRandomness:
         self.salt = salt
         self.iv = iv
         self.id = id
-
-    def get_salt(self) -> bytes:
-        return self.salt
-
-    def get_iv(self) -> bytes:
-        return self.iv
-
-    def get_id(self) -> str:
-        return self.id
