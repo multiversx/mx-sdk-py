@@ -21,7 +21,7 @@ class TransactionEvent:
         result.identifier = response.get('identifier', '')
         topics = response.get('topics', [])
         result.topics = [TransactionEventTopic(item) for item in topics]
-        result.data = base64.b64decode(response.get('responseData', '').encode()).decode()
+        result.data = base64.b64decode(response.get('responseData', '')).decode()
 
         return result
 

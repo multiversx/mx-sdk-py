@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, Optional
 
 import requests
 from requests.auth import AuthBase
@@ -86,12 +86,12 @@ class ProxyNetworkProvider:
         return status
 
     def send_transaction(self, tx: ITransaction) -> str:
-        response = self.do_post_generic(f'transaction/send', tx.to_dictionary())
+        response = self.do_post_generic('transaction/send', tx.to_dictionary())
         return response.get('txHash', '')
 
     def query_contract(self, query: IContractQuery) -> ContractQueryResponse:
         request = ContractQueryRequest(query).to_http_request()
-        response = self.do_post_generic(f'vm-values/query', request)
+        response = self.do_post_generic('vm-values/query', request)
 
         return ContractQueryResponse.from_http_response(response.get('data', ''))
 
@@ -173,7 +173,7 @@ class ProxyNetworkProvider:
 
 
 class ContractQuery(IContractQuery):
-    def __init__(self, address: IAddress, function: str, value: int, arguments: List[bytes], caller: IAddress = None):
+    def __init__(self, address: IAddress, function: str, value: int, arguments: List[bytes], caller: Optional[IAddress] = None):
         self.address = address
         self.function = function
         self.value = value

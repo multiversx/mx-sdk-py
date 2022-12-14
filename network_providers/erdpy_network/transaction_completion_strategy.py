@@ -8,9 +8,7 @@ KNOWN_COMPLETION_EVENTS = ["completedTxEvent", "SCDeploy", "signalError"]
 
 
 class ITransactionStatus(Protocol):
-    def is_pending(self):
-        return False
-
+    def is_pending(self) -> bool: ...
 
 class ITransactionOnNetwork(Protocol):
     logs: TransactionLogs
@@ -18,8 +16,7 @@ class ITransactionOnNetwork(Protocol):
     hyperblock_nonce: int
     data: str
 
-    def get_status(self) -> ITransactionStatus:
-        return ITransactionStatus()
+    def get_status(self) -> ITransactionStatus: ...
 
 
 class TransactionCompletionStrategyOnApi:
