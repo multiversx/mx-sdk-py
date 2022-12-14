@@ -1,9 +1,11 @@
 import json
+import os
 from pathlib import Path
 
 from erdpy_core import Address, AddressConverter, Message, Transaction
 
 from erdpy_wallet.user_keys import UserSecretKey
+from erdpy_wallet.user_pem import UserPEM
 from erdpy_wallet.user_signer import UserSigner
 from erdpy_wallet.user_verifer import UserVerifier
 from erdpy_wallet.user_wallet import UserWallet
@@ -125,6 +127,23 @@ def test_sign_message():
     message.signature = signer.sign(message)
     assert message.signature.hex() == "66dd503199222d3104cb5381da953b14c895ca564579f98934c4e54a45d75f097da2a0c30060c0e7d014928b8e54509335cadc69b2bb1940cd59bd0c1bb80b0b"
     assert verifier.verify(message)
+
+
+def test_pem_save():
+    path = Path("./erdpy_wallet/testdata/alice.pem")
+    path_saved = path.with_suffix(".saved")
+
+    with open(path) as f:
+        content_expected = f.read().strip()
+
+    pem = UserPEM.from_file(path)
+    pem.save(path_saved, "erd")
+
+    with open(path_saved) as f:
+        content_actual = f.read().strip()
+
+    assert content_actual == content_expected
+    os.remove(path_saved)
 
 
 class DummyRandomness:
