@@ -1,10 +1,9 @@
 from pathlib import Path
 
-from erdpy_wallet import pem
-from erdpy_wallet.constants import USER_SEED_LENGTH
 from erdpy_wallet.errors import ErrCannotSign
 from erdpy_wallet.interfaces import ISignable, ISignature
 from erdpy_wallet.user_keys import UserPublicKey, UserSecretKey
+from erdpy_wallet.user_pem import UserPEM
 from erdpy_wallet.user_wallet import UserWallet
 
 
@@ -18,8 +17,7 @@ class UserSigner:
 
     @classmethod
     def from_pem_file(cls, path: Path, index: int = 0) -> 'UserSigner':
-        entry = pem.parse(path, index)
-        secret_key = UserSecretKey(entry.message[0:USER_SEED_LENGTH])
+        secret_key = UserPEM.from_file(path, index).secret_key
         return UserSigner(secret_key)
 
     @classmethod

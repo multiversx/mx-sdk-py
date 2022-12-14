@@ -36,3 +36,8 @@ class ErrBadPublicKeyLength(Exception):
 class ErrMclSignerPathNotDefined(Exception):
     def __init__(self) -> None:
         super().__init__("MCL_SIGNER_PATH isn't defined.")
+
+
+class ErrMclNotImplemented(Exception):
+    def __init__(self) -> None:
+        super().__init__("Not yet implemented in the external MCL tool.")

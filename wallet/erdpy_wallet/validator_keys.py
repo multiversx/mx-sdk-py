@@ -1,12 +1,10 @@
 
 import os
 import subprocess
-from pathlib import Path
 
-from erdpy_wallet import pem
 from erdpy_wallet.constants import (VALIDATOR_PUBKEY_LENGTH,
                                     VALIDATOR_SECRETKEY_LENGTH)
-from erdpy_wallet.errors import (ErrBadSecretKeyLength,
+from erdpy_wallet.errors import (ErrBadSecretKeyLength, ErrMclNotImplemented,
                                  ErrMclSignerPathNotDefined)
 from erdpy_wallet.interfaces import ISignature
 
@@ -17,6 +15,18 @@ class ValidatorSecretKey:
             raise ErrBadSecretKeyLength()
 
         self.buffer = buffer
+
+    @classmethod
+    def generate(cls) -> 'ValidatorSecretKey':
+        raise ErrMclNotImplemented()
+
+    @classmethod
+    def from_string(cls, buffer_hex: str) -> 'ValidatorSecretKey':
+        buffer = bytes.fromhex(buffer_hex)
+        return ValidatorSecretKey(buffer)
+
+    def generate_public_key(self) -> 'ValidatorPublicKey':
+        raise ErrMclNotImplemented()
 
     def sign(self, data: bytes) -> ISignature:
         mcl_signer_path = self._get_mcl_signer_path()
@@ -29,9 +39,6 @@ class ValidatorSecretKey:
             raise ErrMclSignerPathNotDefined()
 
         return mcl_signer_path
-
-    def generate_public_key(self) -> 'ValidatorPublicKey':
-        raise NotImplementedError()
 
     def hex(self) -> str:
         return self.buffer.hex()
@@ -50,11 +57,8 @@ class ValidatorPublicKey:
 
         self.buffer = buffer
 
-    @classmethod
-    def from_pem_file(cls, path: Path, index: int) -> 'ValidatorPublicKey':
-        entry = pem.parse(path, index)
-        buffer = bytes.fromhex(entry.label)
-        return ValidatorPublicKey(buffer)
+    def verify(self, data: bytes, signature: ISignature) -> bool:
+        raise ErrMclNotImplemented()
 
     def hex(self) -> str:
         return self.buffer.hex()

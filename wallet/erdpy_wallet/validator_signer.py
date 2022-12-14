@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from erdpy_wallet import pem
 from erdpy_wallet.errors import ErrCannotSign
 from erdpy_wallet.interfaces import ISignable, ISignature
-from erdpy_wallet.validator_keys import ValidatorSecretKey
+from erdpy_wallet.validator_keys import ValidatorPublicKey, ValidatorSecretKey
+from erdpy_wallet.validator_pem import ValidatorPEM
 
 
 class ValidatorSigner:
@@ -16,8 +16,7 @@ class ValidatorSigner:
 
     @classmethod
     def from_pem_file(cls, path: Path, index: int = 0) -> 'ValidatorSigner':
-        entry = pem.parse(path, index)
-        secret_key = ValidatorSecretKey(entry.message)
+        secret_key = ValidatorPEM.from_file(path, index).secret_key
         return ValidatorSigner(secret_key)
 
     def sign(self, signable: ISignable) -> ISignature:
@@ -30,3 +29,6 @@ class ValidatorSigner:
         data = signable.serialize_for_signing()
         signature = self.secret_key.sign(data)
         return signature
+
+    def get_pubkey(self) -> ValidatorPublicKey:
+        return self.secret_key.generate_public_key()
