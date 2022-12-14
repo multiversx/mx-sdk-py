@@ -2,112 +2,62 @@ import base64
 import itertools
 import textwrap
 from pathlib import Path
-from typing import List, Tuple
+from typing import List
 
 
-def parse(pem_file: Path, index: int = 0) -> Tuple[bytes, bytes]:
+class PemEntry:
+    def __init__(self, label: str, message: bytes) -> None:
+        self.label: str = label
+        self.message: bytes = message
+
+
+def parse(pem_file: Path, index: int = 0) -> PemEntry:
+    pairs = parse_all(pem_file)
+    pair = pairs[index]
+    return pair
+
+
+def parse_all(pem_file: Path) -> List[PemEntry]:
     pem_file = pem_file.expanduser()
     _guard_is_file(pem_file)
 
     lines = _read_lines(pem_file)
-    keys_lines = [list(key_lines) for is_next_key, key_lines in itertools.groupby(lines, lambda line: "-----" in line)
-                  if not is_next_key]
-    keys = ["".join(key_lines) for key_lines in keys_lines]
+    messages_lines = [list(message_lines) for is_next_entry, message_lines in itertools.groupby(lines, lambda line: "-----" in line)
+                      if not is_next_entry]
+    messages_base64 = ["".join(message_lines) for message_lines in messages_lines]
+    labels = _parse_labels(lines)
 
-    key_base64 = keys[index]
-    key_hex = base64.b64decode(key_base64).decode()
-    key_bytes = bytes.fromhex(key_hex)
+    result: List[PemEntry] = []
 
-    secret_key = key_bytes[:32]
-    pubkey = key_bytes[32:]
-    return secret_key, pubkey
+    for index, message_base64 in enumerate(messages_base64):
+        message_hex = base64.b64decode(message_base64).decode()
+        message_bytes = bytes.fromhex(message_hex)
+        label = labels[index]
 
-
-def parse_all(pem_file: Path) -> List[Tuple[bytes, bytes]]:
-    pem_file = pem_file.expanduser()
-    _guard_is_file(pem_file)
-
-    lines = _read_lines(pem_file)
-    keys_lines = [list(key_lines) for is_next_key, key_lines in itertools.groupby(lines, lambda line: "-----" in line)
-                  if not is_next_key]
-    keys = ["".join(key_lines) for key_lines in keys_lines]
-
-    result: List[Tuple[bytes, bytes]] = []
-
-    for key_base64 in keys:
-        key_hex = base64.b64decode(key_base64).decode()
-        key_bytes = bytes.fromhex(key_hex)
-        secret_key = key_bytes[:32]
-        pubkey = key_bytes[32:]
-
-        result.append((secret_key, pubkey))
+        result.append(PemEntry(label, message_bytes))
 
     return result
 
 
-def parse_validator_pem(pem_file: Path, index: int = 0) -> Tuple[bytes, str]:
-    pem_file = pem_file.expanduser()
-    _guard_is_file(pem_file)
-
-    lines = _read_lines(pem_file)
-    bls_keys = read_bls_keys(lines)
-    secret_keys = _read_validators_secret_keys(lines)
-
-    secret_key_base64: str = secret_keys[index]
-    secret_key_hex = base64.b64decode(secret_key_base64).decode()
-    secret_key_bytes = bytes.fromhex(secret_key_hex)
-
-    bls_key = bls_keys[index]
-    return secret_key_bytes, bls_key
+def _parse_labels(headers: List[str]) -> List[str]:
+    marker = "-----BEGIN PRIVATE KEY for"
+    headers = [line for line in headers if line.startswith(marker)]
+    labels = [line.replace(marker, "").replace("-", "").strip() for line in headers]
+    return labels
 
 
-def read_bls_keys(lines: List[str]) -> List[str]:
-    bls_keys: List[str] = []
+def write(path: Path, label: str, message: bytes):
+    path = path.expanduser()
+    header = f"-----BEGIN PRIVATE KEY for {label}-----"
+    footer = f"-----END PRIVATE KEY for {label}-----"
 
-    for line in lines:
-        splited_line = line.split(" ")
-        if len(splited_line) < 5:
-            continue
-        if "BEGIN" in splited_line[0]:
-            continue
+    message_hex = message.hex().encode()
+    message_base64 = base64.b64encode(message_hex).decode()
 
-        token = splited_line[4].replace('-----', '')
-        bls_keys.append(token)
-
-    return bls_keys
-
-
-# TODO rewrite using generators or simplify the list comprehension within
-def _read_validators_secret_keys(lines: List[str]):
-    secret_keys: List[str] = []
-
-    secret_keys_lines = [list(key_lines) for is_next_key, key_lines in
-                         itertools.groupby(lines, lambda line: "-----" in line) if not is_next_key]
-    for key_list in secret_keys_lines:
-        secret_keys.append(key_list[0] + key_list[1])
-
-    return secret_keys
-
-
-def write(pem_file: Path, secret_key: bytes, pubkey: bytes, name: str = ""):
-    pem_file = pem_file.expanduser()
-
-    if not name:
-        name = pubkey.hex()
-
-    header = f"-----BEGIN PRIVATE KEY for {name}-----"
-    footer = f"-----END PRIVATE KEY for {name}-----"
-
-    secret_key_hex = secret_key.hex()
-    pubkey_hex = pubkey.hex()
-    combined = secret_key_hex + pubkey_hex
-    combined_bytes = combined.encode()
-    key_base64 = base64.b64encode(combined_bytes).decode()
-
-    payload_lines = textwrap.wrap(key_base64, 64)
+    payload_lines = textwrap.wrap(message_base64, 64)
     payload = "\n".join(payload_lines)
     content = "\n".join([header, payload, footer])
-    _write_file(pem_file, content)
+    _write_file(path, content)
 
 
 def _guard_is_file(input: Path):

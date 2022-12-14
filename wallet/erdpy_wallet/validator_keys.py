@@ -3,12 +3,12 @@ import os
 import subprocess
 from pathlib import Path
 
+from erdpy_wallet import pem
 from erdpy_wallet.constants import (VALIDATOR_PUBKEY_LENGTH,
                                     VALIDATOR_SECRETKEY_LENGTH)
 from erdpy_wallet.errors import (ErrBadSecretKeyLength,
                                  ErrMclSignerPathNotDefined)
 from erdpy_wallet.interfaces import ISignature
-from erdpy_wallet.pem import parse_validator_pem
 
 
 class ValidatorSecretKey:
@@ -52,8 +52,8 @@ class ValidatorPublicKey:
 
     @classmethod
     def from_pem_file(cls, path: Path, index: int) -> 'ValidatorPublicKey':
-        _, bls = parse_validator_pem(path, index)
-        buffer = bytes.fromhex(bls)
+        entry = pem.parse(path, index)
+        buffer = bytes.fromhex(entry.label)
         return ValidatorPublicKey(buffer)
 
     def hex(self) -> str:
