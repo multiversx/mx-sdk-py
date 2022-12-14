@@ -7,10 +7,10 @@ from erdpy_network.transaction_logs import TransactionLogs
 from erdpy_network.transaction_status import TransactionStatus
 from erdpy_network.transaction_receipt import TransactionReceipt
 from erdpy_network.transaction_completion_strategy import TransactionCompletionStrategyOnApi,\
-    TransactionCompletionStrategyOnProxy, ITransactionOnNetwork
+    TransactionCompletionStrategyOnProxy
 
 
-class TransactionOnNetwork(ITransactionOnNetwork):
+class TransactionOnNetwork:
     def __init__(self):
         self.is_completed: bool = False
         self.hash: str = ''

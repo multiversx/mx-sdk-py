@@ -138,12 +138,12 @@ class ApiNetworkProvider:
 
     def do_get_generic(self, resource_url: str) -> Dict[str, Any]:
         url = f'{self.url}/{resource_url}'
-        response = self.do_get(url)
+        response = self.__do_get(url)
         return response
     
     def do_get_generic_collection(self, resource_url: str) -> List[Dict[str, Any]]:
         url = f'{self.url}/{resource_url}'
-        response = self.do_get(url)
+        response = self.__do_get(url)
         return response
 
     def do_post_generic(self, resource_url: str, payload: Any) -> Dict[str, Any]:
@@ -151,7 +151,7 @@ class ApiNetworkProvider:
         response = self.do_post(url, payload)
         return response
 
-    def do_get(self, url: str) -> Any:
+    def __do_get(self, url: str) -> Any:
         try:
             response = requests.get(url, auth=self.auth)
             response.raise_for_status()
