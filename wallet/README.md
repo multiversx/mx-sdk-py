@@ -32,6 +32,7 @@ If using VSCode, restart it or follow these steps:
 Run the tests as follows:
 
 ```
+export MCL_SIGNER_PATH=~/elrondsdk/mcl_signer/v1.0.0/signer
 pytest .
 ```
 

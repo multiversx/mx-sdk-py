@@ -6,8 +6,6 @@ from erdpy_wallet.validator_signer import ValidatorSigner
 
 
 def test_sign_message():
-    os.environ["MCL_SIGNER_PATH"] = str(Path("~/elrondsdk/mcl_signer/v1.0.0/signer").expanduser())
-
     signer = ValidatorSigner.from_pem_file(Path("./erdpy_wallet/testdata/validatorKey00.pem"))
     message = DummyMessage(b"hello")
     signature = signer.sign(message)
