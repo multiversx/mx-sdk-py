@@ -25,26 +25,26 @@ class Transaction:
         version: Union[ITransactionVersion, None] = None,
         options: Union[ITransactionOptions, None] = None
     ):
-        self.nonce = nonce or 0
-        self.sender = sender
-        self.receiver = receiver
-        self.gas_limit = gas_limit
-        self.chainID = chain_id
+        self.nonce: INonce = nonce or 0
+        self.sender: IAddress = sender
+        self.receiver: IAddress = receiver
+        self.gas_limit: IGasLimit = gas_limit
+        self.chainID: IChainID = chain_id
 
         self.gas_price: IGasPrice = gas_price or TRANSACTION_MIN_GAS_PRICE
-        self.value = value or "0"
-        self.data = data
+        self.value: ITransactionValue = value or "0"
+        self.data: Union[ITransactionPayload, None] = data
         self.version: ITransactionVersion = version or TRANSACTION_VERSION_DEFAULT
         self.options: ITransactionOptions = options or TRANSACTION_OPTIONS_DEFAULT
 
-        self.signature = bytes()
+        self.signature: ISignature = bytes()
 
     def serialize_for_signing(self) -> bytes:
-        dictionary = self.to_dictionary()
+        dictionary = self.to_dictionary(with_signature=False)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
-    def to_dictionary(self) -> Dict[str, Any]:
+    def to_dictionary(self, with_signature: bool = True) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = self.nonce
         dictionary["value"] = self.value
@@ -66,7 +66,7 @@ class Transaction:
         if self.options:
             dictionary["options"] = self.options
 
-        if self.signature:
+        if with_signature:
             dictionary["signature"] = self.signature.hex()
 
         return dictionary
@@ -74,6 +74,3 @@ class Transaction:
     def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
         serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
         return serialized
-
-    def apply_signature(self, signature: ISignature) -> None:
-        self.signature = signature

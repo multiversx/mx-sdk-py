@@ -26,7 +26,7 @@ from typing import List, Union
 CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 
 
-def bech32_polymod(values):
+def bech32_polymod(values: List[int]):
     """Internal function that computes the Bech32 checksum."""
     generator = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]
     chk = 1
@@ -38,17 +38,17 @@ def bech32_polymod(values):
     return chk
 
 
-def bech32_hrp_expand(hrp):
+def bech32_hrp_expand(hrp: str) -> List[int]:
     """Expand the HRP into values for checksum computation."""
     return [ord(x) >> 5 for x in hrp] + [0] + [ord(x) & 31 for x in hrp]
 
 
-def bech32_verify_checksum(hrp, data):
+def bech32_verify_checksum(hrp: str, data: List[int]):
     """Verify a checksum given HRP and converted data characters."""
     return bech32_polymod(bech32_hrp_expand(hrp) + data) == 1
 
 
-def bech32_create_checksum(hrp, data):
+def bech32_create_checksum(hrp: str, data: List[int]):
     """Compute the checksum values given HRP and data."""
     values = bech32_hrp_expand(hrp) + data
     polymod = bech32_polymod(values + [0, 0, 0, 0, 0, 0]) ^ 1
@@ -101,9 +101,11 @@ def convertbits(data: Union[List[int], bytes], frombits: int, tobits: int, pad: 
     return ret
 
 
-def decode(hrp: str, addr):
+def decode(hrp: str, addr: str):
     """Decode a segwit address."""
     hrpgot, data = bech32_decode(addr)
+    if hrpgot is None or data is None:
+        return (None, None)
     if hrpgot != hrp:
         return (None, None)
     decoded = convertbits(data[1:], 5, 8, False)
@@ -116,9 +118,12 @@ def decode(hrp: str, addr):
     return (data[0], decoded)
 
 
-def encode(hrp, witver, witprog):
+def encode(hrp: str, witver: int, witprog: List[int]):
     """Encode a segwit address."""
-    ret = bech32_encode(hrp, [witver] + convertbits(witprog, 8, 5))
+    converted = convertbits(witprog, 8, 5)
+    if converted is None:
+        return None
+    ret = bech32_encode(hrp, [witver] + converted)
     if decode(hrp, ret) == (None, None):
         return None
     return ret
