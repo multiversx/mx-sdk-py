@@ -137,7 +137,7 @@ def test_pem_save():
         content_expected = f.read().strip()
 
     pem = UserPEM.from_file(path)
-    pem.save(path_saved, "erd")
+    pem.save(path_saved)
 
     with open(path_saved) as f:
         content_actual = f.read().strip()
