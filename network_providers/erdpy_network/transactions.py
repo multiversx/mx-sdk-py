@@ -36,7 +36,7 @@ class TransactionOnNetwork:
         self.contract_results: ContractResults = ContractResults([])
         self.logs: TransactionLogs = TransactionLogs()
 
-    def get_status(self):
+    def get_status(self) -> TransactionStatus:
         return self.status.get_status()
 
     @staticmethod
@@ -75,7 +75,7 @@ class TransactionOnNetwork:
 
         result.gas_price = response.get('gasPrice', 0)
         result.gas_limit = response.get('gasLimit', 0)
-        result.data = base64.b64decode(response.get('responseData', '').encode())
+        result.data = base64.b64decode(response.get('data', '')).decode()
         result.status = TransactionStatus(response.get('status'))
         result.timestamp = response.get('timestamp', 0)
 

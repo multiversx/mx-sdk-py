@@ -35,7 +35,7 @@ class TestApi:
 
     def test_get_generic_with_bad_address(self):
         with pytest.raises(GenericError, match='a bech32 address is expected'):
-            url = f'accounts/erd1bad'
+            url = 'accounts/erd1bad'
             self.api.do_get_generic(url)
 
     def test_get_fungible_token_of_account(self):
@@ -53,6 +53,7 @@ class TestApi:
         assert result.collection == 'ASDASD-510041'
         assert result.identifier == 'ASDASD-510041-02'
         assert result.type == 'NonFungibleESDT'
+        assert result.royalties == 75
 
     def test_get_meta_esdt(self):
         adr = Address.from_bech32('erd1dk5urklhptgjp69k684wzapjxdp40fu0a3jn39rtcc78wxhewkyscp53au')
@@ -72,6 +73,13 @@ class TestApi:
         assert result.sender.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.receiver.bech32() == 'erd1c8tnzykaj7lhrd5cy6jap533afr4dqu7uqcdm6qv4wuwly9lcsqqm9ll4f'
         assert result.value == '10000000000000000000'
+    
+    def test_get_sc_invoking_tx(self):
+        result = self.api.get_transaction('cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9')
+
+        assert result.is_completed == True
+        assert len(result.contract_results.items) > 0
+        assert result.data == 'issue@54455354@54455354@03e8@00@63616e4d696e74@74727565@63616e4275726e@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565'
 
     def test_get_transaction_status(self):
         result = self.api.get_transaction_status('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')

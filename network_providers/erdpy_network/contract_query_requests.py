@@ -7,13 +7,14 @@ class ContractQueryRequest:
         self.query = query
 
     def to_http_request(self) -> Dict[str, Any]:
-        request = {'scAddress': self.query.get_address().bech32(),
-                   'funcName': self.query.get_function(),
-                   'value': str(self.query.get_value()),
-                   'args': self.query.get_encoded_arguments()
-                   }
+        request: Dict[str, Any] = {'scAddress': self.query.get_address().bech32(),
+                                   'funcName': self.query.get_function(),
+                                   'value': str(self.query.get_value()),
+                                   'args': self.query.get_encoded_arguments()
+                                   }
+        caller = self.query.get_caller()
 
-        if self.query.get_caller() is not None:
-            request['caller'] = self.query.get_caller().bech32()
+        if caller:
+            request['caller'] = caller.bech32()
 
         return request

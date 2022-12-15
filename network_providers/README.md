@@ -16,7 +16,7 @@ pip install -r ./requirements.txt --upgrade
 Install development dependencies, as well:
 
 ```
-pip install autopep8 pytest
+pip install -r ./requirements-dev.txt --upgrade
 ```
 
 Above, `requirements.txt` should mirror the **dependencies** section of `pyproject.toml`.
@@ -25,3 +25,31 @@ If using VSCode, restart it or follow these steps:
  - `Ctrl + Shift + P`
  - _Select Interpreter_
  - Choose `./.venv/bin/python`.
+ 
+### Tests
+
+Run the tests as follows:
+
+```
+pytest .
+```
+
+### Linting
+
+First, install [`pyright`](https://github.com/microsoft/pyright) as follows:
+
+```
+npm install --global pyright
+```
+
+Run `pyright`:
+
+```
+pyright
+```
+
+Run `flake8`:
+
+```
+flake8 erdpy_core
+```

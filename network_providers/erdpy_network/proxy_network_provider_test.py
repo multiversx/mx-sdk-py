@@ -53,6 +53,7 @@ class TestProxy:
         assert result.collection == 'ASDASD-510041'
         assert result.identifier == 'ASDASD-510041-02'
         assert result.type == ''
+        assert result.royalties == 75
 
     def test_get_transaction_status(self):
         result = self.proxy.get_transaction_status('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')
@@ -85,3 +86,21 @@ class TestProxy:
         assert result.decimals == 0
         assert result.can_freeze
         assert not result.can_pause
+    
+    def test_get_transaction(self):
+        result = self.proxy.get_transaction('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')
+
+        assert result.nonce == 828
+        assert result.block_nonce == 3047400
+        assert result.epoch == 2540
+        assert result.hash == '2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b'
+        assert result.is_completed == True
+        assert result.sender.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
+        assert result.contract_results.items == []
+    
+    def test_get_sc_invoking_tx(self):
+        result = self.proxy.get_transaction('cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9')
+
+        assert result.is_completed == True
+        assert len(result.contract_results.items) > 0
+        assert result.data == 'issue@54455354@54455354@03e8@00@63616e4d696e74@74727565@63616e4275726e@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565'

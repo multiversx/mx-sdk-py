@@ -1,44 +1,33 @@
-from typing import Any, Dict, Protocol, Union
+from typing import Any, Dict, Protocol, Union, List
 
 
 class ISerializable(Protocol):
-    def to_dictionary(self) -> Dict[str, Any]:
-        return self.__dict__
+    def to_dictionary(self) -> Dict[str, Any]: ...
 
 
 class IAddress(Protocol):
-    def bech32(self) -> str:
-        return ""
+    def bech32(self) -> str: ...
 
 
 class ITransaction(ISerializable, Protocol):
-    def to_dictionary(self) -> Dict[str, Any]:
-        return {}
+    def to_dictionary(self) -> Dict[str, Any]: ...
 
-    def get_hash(self) -> str:
-        return ""
+    def get_hash(self) -> str: ...
 
 
 class IPagination(Protocol):
-    def get_start(self) -> int:
-        return 0
+    def get_start(self) -> int: ...
 
-    def get_size(self) -> int:
-        return 0
+    def get_size(self) -> int: ...
 
 
 class IContractQuery(Protocol):
-    def get_encoded_arguments(self):
-        return []
+    def get_encoded_arguments(self) -> List[str]: ...
 
-    def get_function(self) -> str:
-        return ''
+    def get_function(self) -> str: ...
 
-    def get_value(self) -> int:
-        return 0
+    def get_value(self) -> int: ...
 
-    def get_address(self) -> IAddress:
-        return IAddress()
+    def get_address(self) -> IAddress: ...
 
-    def get_caller(self) -> Union[IAddress, None]:
-        return None
+    def get_caller(self) -> Union[IAddress, None]: ...

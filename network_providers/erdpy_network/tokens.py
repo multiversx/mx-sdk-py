@@ -33,7 +33,7 @@ class NonFungibleTokenOfAccountOnNetwork:
         self.creator: IAddress = Address.zero()
         self.supply: int = 0
         self.decimals: int = 0
-        self.royalties: int = 0
+        self.royalties: float = 0
         self.assets: List[str] = []
         self.balance: int = 0
 
