@@ -32,7 +32,7 @@ class Transaction:
         self.chainID: IChainID = chain_id
 
         self.gas_price: IGasPrice = gas_price or TRANSACTION_MIN_GAS_PRICE
-        self.value: ITransactionValue = value or "0"
+        self.value: ITransactionValue = value or 0
         self.data: Union[ITransactionPayload, None] = data
         self.version: ITransactionVersion = version or TRANSACTION_VERSION_DEFAULT
         self.options: ITransactionOptions = options or TRANSACTION_OPTIONS_DEFAULT
@@ -47,7 +47,7 @@ class Transaction:
     def to_dictionary(self, with_signature: bool = True) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = self.nonce
-        dictionary["value"] = self.value
+        dictionary["value"] = str(self.value)
 
         dictionary["receiver"] = self.receiver.bech32()
         dictionary["sender"] = self.sender.bech32()

@@ -7,13 +7,17 @@ class IAddress(Protocol):
 
 
 INonce = int
-ITransactionValue = str
 IGasPrice = int
 IGasLimit = int
 IChainID = str
 ITransactionVersion = int
 ITransactionOptions = int
 ISignature = bytes
+ITokenIdentifier = str
+
+
+class ITransactionValue(Protocol):
+    def __str__(self) -> str: ...
 
 
 class ITransactionPayload(Protocol):
