@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union, Optional, cast
+from typing import Any, Dict, List, Optional, Union, cast
 
 import requests
 from requests.auth import AuthBase
@@ -25,9 +25,9 @@ from erdpy_network.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(self, url: str, backing_proxy_network_provider: ProxyNetworkProvider, auth: Union[AuthBase, None] = None):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None):
         self.url = url
-        self.backing_proxy = backing_proxy_network_provider
+        self.backing_proxy = ProxyNetworkProvider(url)
         self.auth = auth
 
     def get_network_config(self) -> NetworkConfig:
@@ -140,7 +140,7 @@ class ApiNetworkProvider:
         url = f'{self.url}/{resource_url}'
         response = self.__do_get(url)
         return response
-    
+
     def do_get_generic_collection(self, resource_url: str) -> List[Dict[str, Any]]:
         url = f'{self.url}/{resource_url}'
         response = self.__do_get(url)
