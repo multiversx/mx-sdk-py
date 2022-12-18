@@ -26,11 +26,11 @@ class UserWallet:
         _, buffer = keyfile.load_from_key_file_object(keyfile_object, password)
         return UserSecretKey(buffer)
 
-    def save(self, path: Path, address_prefix: str):
-        obj = self.to_keyfile_object(address_prefix)
+    def save(self, path: Path, address_hrp: str):
+        obj = self.to_keyfile_object(address_hrp)
 
         with open(path, 'w') as json_file:
             json.dump(obj, json_file, indent=4)
 
-    def to_keyfile_object(self, address_prefix: str) -> Dict[str, Any]:
-        return keyfile.convert_to_keyfile_object(self.secret_key.buffer, self.public_key.buffer, self.password, self.randomness, address_prefix)
+    def to_keyfile_object(self, address_hrp: str) -> Dict[str, Any]:
+        return keyfile.convert_to_keyfile_object(self.secret_key.buffer, self.public_key.buffer, self.password, self.randomness, address_hrp)

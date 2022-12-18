@@ -69,7 +69,7 @@ def load_from_key_file_object(keystore: Dict[str, Any], password: str) -> Tuple[
     return address_bech32, secret_key
 
 
-def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, randomness: Union[None, IUserWalletRandomness], address_prefix: str) -> Dict[str, Any]:
+def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, randomness: Union[None, IUserWalletRandomness], address_hrp: str) -> Dict[str, Any]:
     salt = os.urandom(32) if randomness is None else randomness.salt
     iv = os.urandom(16) if randomness is None else randomness.iv
     uid = str(uuid4()) if randomness is None else randomness.id
@@ -88,7 +88,7 @@ def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, r
     h.update(ciphertext)
     mac = h.finalize()
 
-    data = _format_key_json(uid, pubkey, iv, ciphertext, salt, mac, address_prefix)
+    data = _format_key_json(uid, pubkey, iv, ciphertext, salt, mac, address_hrp)
     return data
 
 
@@ -101,8 +101,8 @@ def make_cyphertext(backend: Any, key: bytes, iv: bytes, data: bytes):
 
 # erdjs implementation:
 # https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/walletcore/userWallet.ts
-def _format_key_json(uid: str, pubkey: bytes, iv: bytes, ciphertext: bytes, salt: bytes, mac: bytes, address_prefix: str) -> Dict[str, Any]:
-    address = Address(pubkey, address_prefix)
+def _format_key_json(uid: str, pubkey: bytes, iv: bytes, ciphertext: bytes, salt: bytes, mac: bytes, address_hrp: str) -> Dict[str, Any]:
+    address = Address(pubkey, address_hrp)
 
     return {
         'version': 4,
