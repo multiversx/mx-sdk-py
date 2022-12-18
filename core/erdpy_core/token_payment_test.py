@@ -55,7 +55,7 @@ def test_with_meta_esdt():
     assert str(payment) == "100000000000000000"
     assert payment.to_amount_string() == "0.100000000000000000"
     assert payment.token_identifier == identifier
-    assert payment.token_none == nonce
+    assert payment.token_nonce == nonce
 
 
 def test_with_nft():
@@ -66,4 +66,4 @@ def test_with_nft():
     assert str(payment) == "1"
     assert payment.to_amount_string() == "1"
     assert payment.token_identifier == identifier
-    assert payment.token_none == nonce
+    assert payment.token_nonce == nonce

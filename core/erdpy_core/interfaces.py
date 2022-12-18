@@ -16,6 +16,12 @@ ISignature = bytes
 ITokenIdentifier = str
 
 
+class ITokenPayment(Protocol):
+    token_identifier: str
+    token_nonce: INonce
+    amount_as_integer: int
+
+
 class ITransactionValue(Protocol):
     def __str__(self) -> str: ...
 
