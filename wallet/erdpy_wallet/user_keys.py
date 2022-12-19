@@ -1,9 +1,8 @@
 import nacl.signing
-from erdpy_core.address import Address
 
 from erdpy_wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
 from erdpy_wallet.errors import ErrBadPublicKeyLength, ErrBadSecretKeyLength
-from erdpy_wallet.interfaces import IAddressAsOutput, ISignature
+from erdpy_wallet.interfaces import ISignature
 
 
 class UserSecretKey:
@@ -12,6 +11,12 @@ class UserSecretKey:
             raise ErrBadSecretKeyLength()
 
         self.buffer = buffer
+
+    @classmethod
+    def generate(cls) -> 'UserSecretKey':
+        signing_key = nacl.signing.SigningKey.generate()
+        secret_key = bytes(signing_key)
+        return UserSecretKey(secret_key)
 
     @classmethod
     def from_string(cls, buffer_hex: str) -> 'UserSecretKey':
@@ -43,7 +48,7 @@ class UserPublicKey:
         if len(buffer) != USER_PUBKEY_LENGTH:
             raise ErrBadPublicKeyLength()
 
-        self.buffer = buffer
+        self.buffer = bytes(buffer)
 
     def verify(self, data: bytes, signature: ISignature) -> bool:
         verify_key = nacl.signing.VerifyKey(self.buffer)
@@ -56,9 +61,6 @@ class UserPublicKey:
 
     def hex(self) -> str:
         return self.buffer.hex()
-
-    def to_address(self) -> IAddressAsOutput:
-        return Address(self.buffer)
 
     def __str__(self) -> str:
         return self.hex()

@@ -10,11 +10,10 @@ class UserVerifier:
 
     @classmethod
     def from_address(cls, address: IAddress) -> 'UserVerifier':
-        buffer: bytes = Address.from_bech32(address.bech32()).pubkey()
+        buffer: bytes = Address.from_bech32(address.bech32()).pubkey
         public_key = UserPublicKey(buffer)
         return UserVerifier(public_key)
 
     def verify(self, message: IVerifiable) -> bool:
         data = message.serialize_for_signing()
-        signature = message.get_signature()
-        return self.public_key.verify(data, signature)
+        return self.public_key.verify(data, message.signature)

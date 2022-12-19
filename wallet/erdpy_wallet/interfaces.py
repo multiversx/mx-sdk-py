@@ -5,37 +5,26 @@ ISignature = bytes
 
 
 class ISignable(Protocol):
-    def serialize_for_signing(self) -> bytes:
-        return bytes()
+    def serialize_for_signing(self) -> bytes: ...
 
 
 class IVerifiable(Protocol):
-    def serialize_for_signing(self) -> bytes:
-        return bytes()
+    signature: ISignature
 
-    def get_signature(self) -> ISignature:
-        return bytes()
+    def serialize_for_signing(self) -> bytes: ...
 
 
 class IUserWalletRandomness(Protocol):
-    def get_salt(self) -> bytes:
-        return bytes()
-
-    def get_iv(self) -> bytes:
-        return bytes()
-
-    def get_id(self) -> str:
-        return ""
+    salt: bytes
+    iv: bytes
+    id: str
 
 
 class IAddress(Protocol):
-    def bech32(self) -> str:
-        return ""
+    def bech32(self) -> str: ...
 
 
 class IAddressAsOutput(Protocol):
-    def bech32(self) -> str:
-        return ""
+    def bech32(self) -> str: ...
 
-    def pubkey(self) -> bytes:
-        return bytes()
+    def pubkey(self) -> bytes: ...
