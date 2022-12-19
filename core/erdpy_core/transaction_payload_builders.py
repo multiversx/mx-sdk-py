@@ -25,7 +25,7 @@ class FunctionCallBuilder:
         return TransactionPayload.from_str(data)
 
 
-class ContractDeployBuilder:
+class ContractDeploymentBuilder:
     """
     A builder for TransactionPayload objects, to be used for Smart Contract deployments.
     """

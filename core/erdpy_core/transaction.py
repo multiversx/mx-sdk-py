@@ -1,6 +1,6 @@
 import json
 from collections import OrderedDict
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional
 
 from erdpy_core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                   TRANSACTION_OPTIONS_DEFAULT,
@@ -14,26 +14,28 @@ from erdpy_core.interfaces import (IAddress, IChainID, IGasLimit, IGasPrice,
 class Transaction:
     def __init__(
         self,
-        nonce: INonce,
+        chain_id: IChainID,
         sender: IAddress,
         receiver: IAddress,
         gas_limit: IGasLimit,
-        chain_id: IChainID,
-        gas_price: Union[IGasPrice, None] = None,
-        value: Union[ITransactionValue, None] = None,
-        data: Union[ITransactionPayload, None] = None,
-        version: Union[ITransactionVersion, None] = None,
-        options: Union[ITransactionOptions, None] = None
+        gas_price: Optional[IGasPrice] = None,
+        nonce: Optional[INonce] = 0,
+        value: Optional[ITransactionValue] = None,
+        data: Optional[ITransactionPayload] = None,
+        version: Optional[ITransactionVersion] = None,
+        options: Optional[ITransactionOptions] = None
     ):
-        self.nonce: INonce = nonce or 0
+        self.chainID: IChainID = chain_id
         self.sender: IAddress = sender
         self.receiver: IAddress = receiver
-        self.gas_limit: IGasLimit = gas_limit
-        self.chainID: IChainID = chain_id
 
+        self.gas_limit: IGasLimit = gas_limit
         self.gas_price: IGasPrice = gas_price or TRANSACTION_MIN_GAS_PRICE
+
+        self.nonce: INonce = nonce or 0
         self.value: ITransactionValue = value or 0
-        self.data: Union[ITransactionPayload, None] = data
+        self.data: Optional[ITransactionPayload] = data
+
         self.version: ITransactionVersion = version or TRANSACTION_VERSION_DEFAULT
         self.options: ITransactionOptions = options or TRANSACTION_OPTIONS_DEFAULT
 

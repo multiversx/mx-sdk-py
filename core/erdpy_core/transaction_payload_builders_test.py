@@ -2,7 +2,7 @@ from erdpy_core.address import Address
 from erdpy_core.code_metadata import CodeMetadata
 from erdpy_core.token_payment import TokenPayment
 from erdpy_core.transaction_payload_builders import (
-    ContractDeployBuilder, ContractUpgradeBuilder, ESDTNFTTransferBuilder,
+    ContractDeploymentBuilder, ContractUpgradeBuilder, ESDTNFTTransferBuilder,
     ESDTTransferBuilder, FunctionCallBuilder, MultiESDTNFTTransferBuilder)
 
 
@@ -24,7 +24,7 @@ def test_function_call_builder():
 
 def test_contract_deploy_builder():
     metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
-    builder = ContractDeployBuilder(bytes([0xAA, 0xBB, 0xCC, 0xDD]), metadata)
+    builder = ContractDeploymentBuilder(bytes([0xAA, 0xBB, 0xCC, 0xDD]), metadata)
     builder.arguments.append(42)
     builder.arguments.append("test")
     data = builder.build().data
