@@ -1,0 +1,79 @@
+from erdpy_core.address import Address
+from erdpy_core.code_metadata import CodeMetadata
+from erdpy_core.transaction_builders.contract_builders import (
+    ContractCallBuilder, ContractDeploymentBuilder, ContractUpgradeBuilder)
+
+
+def test_contract_deployment_builder():
+    owner = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+    metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
+
+    builder = ContractDeploymentBuilder(
+        chain_id="D",
+        owner=owner,
+        deploy_arguments=[42, "test"],
+        code_metadata=metadata,
+        code=bytes([0xAA, 0xBB, 0xCC, 0xDD]),
+        gas_limit=10000000
+    )
+
+    payload = builder.build_payload()
+    tx = builder.build_transaction()
+
+    assert payload.data == b"aabbccdd@0500@0506@2a@74657374"
+    assert tx.chainID == "D"
+    assert tx.sender == owner
+    assert tx.receiver.bech32() == "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
+    assert tx.gas_limit == 10000000
+    assert tx.gas_price == 1000000000
+    assert tx.data.encoded() == payload.encoded()
+
+
+def test_contract_upgrade_builder():
+    contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+    owner = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+    metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
+
+    builder = ContractUpgradeBuilder(
+        chain_id="D",
+        contract=contract,
+        owner=owner,
+        upgrade_arguments=[42, "test"],
+        code_metadata=metadata,
+        code=bytes([0xAA, 0xBB, 0xCC, 0xDD]),
+        gas_limit=10000000
+    )
+
+    payload = builder.build_payload()
+    tx = builder.build_transaction()
+
+    assert payload.data == b"upgradeContract@aabbccdd@0506@2a@74657374"
+    assert tx.chainID == "D"
+    assert tx.sender == owner
+    assert tx.receiver == contract
+    assert tx.gas_limit == 10000000
+    assert tx.gas_price == 1000000000
+    assert tx.data.encoded() == payload.encoded()
+
+
+def test_contract_call_builder():
+    contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
+    caller = Address.from_bech32("erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8")
+
+    builder = ContractCallBuilder(
+        chain_id="D",
+        contract=contract,
+        function_name="foo",
+        caller=caller,
+        call_arguments=[42, "test", Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")],
+        gas_limit=10000000
+    )
+
+    payload = builder.build_payload()
+    tx = builder.build_transaction()
+
+    assert payload.data == b"foo@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
+    assert tx.sender == caller
+    assert tx.receiver == contract
+    assert tx.gas_limit == 10000000
+    assert tx.data.encoded() == payload.encoded()
