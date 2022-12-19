@@ -7,9 +7,9 @@ from erdpy_core.interfaces import INonce, ITokenIdentifier
 
 class TokenPayment:
     def __init__(self, token_identifier: ITokenIdentifier, token_nonce: INonce, amount_as_integer: int, num_decimals: int) -> None:
-        self.token_identifier = token_identifier
-        self.token_nonce = token_nonce
-        self.amount_as_integer = amount_as_integer
+        self.token_identifier: ITokenIdentifier = token_identifier
+        self.token_nonce: INonce = token_nonce
+        self.amount_as_integer: int = amount_as_integer
         self.num_decimals = num_decimals
 
     def is_egld(self):

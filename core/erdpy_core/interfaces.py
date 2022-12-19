@@ -17,7 +17,7 @@ ITokenIdentifier = str
 
 
 class ITokenPayment(Protocol):
-    token_identifier: str
+    token_identifier: ITokenIdentifier
     token_nonce: INonce
     amount_as_integer: int
 
