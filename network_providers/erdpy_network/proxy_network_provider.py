@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union, Optional
+from typing import Any, Dict, List, Union, Optional, Tuple
 
 import requests
 from requests.auth import AuthBase
@@ -85,9 +85,18 @@ class ProxyNetworkProvider:
 
         return status
 
-    def send_transaction(self, tx: ITransaction) -> str:
-        response = self.do_post_generic('transaction/send', tx.to_dictionary())
+    def send_transaction(self, transaction: ITransaction) -> str:
+        response = self.do_post_generic('transaction/send', transaction.to_dictionary())
         return response.get('txHash', '')
+    
+    def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, str]:
+        transactions_as_dictionaries = [transaction.to_dictionary() for transaction in transactions]
+        response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
+        # Proxy and Observers have different response format:
+        num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
+        hashes = response.get("txsHashes")
+
+        return num_sent, hashes
 
     def query_contract(self, query: IContractQuery) -> ContractQueryResponse:
         request = ContractQueryRequest(query).to_http_request()
