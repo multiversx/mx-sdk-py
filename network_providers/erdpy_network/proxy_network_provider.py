@@ -91,7 +91,7 @@ class ProxyNetworkProvider:
     
     def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, str]:
         transactions_as_dictionaries = [transaction.to_dictionary() for transaction in transactions]
-        response = self.do_post_generic('trasaction/send-multiple', transactions_as_dictionaries)
+        response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         # Proxy and Observers have different response format:
         num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
         hashes = response.get("txsHashes")
