@@ -1,6 +1,9 @@
 from typing import Any, Dict, List
-from erdpy_network.interface import IAddress
+
 from erdpy_core import Address
+
+from erdpy_network.interface import IAddress
+from erdpy_network.resources import EmptyAddress
 
 
 class DefinitionOfFungibleTokenOnNetwork:
@@ -8,7 +11,7 @@ class DefinitionOfFungibleTokenOnNetwork:
         self.identifier: str = ''
         self.name: str = ''
         self.ticker: str = ''
-        self.owner: IAddress = Address.zero()
+        self.owner: IAddress = EmptyAddress()
         self.decimals: int = 0
         self.supply: int = 0
         self.burnt_value = 0
@@ -31,7 +34,7 @@ class DefinitionOfFungibleTokenOnNetwork:
         result.ticker = payload.get('ticker', '')
 
         owner = payload.get('owner', '')
-        result.owner = Address.from_bech32(owner) if owner else Address.zero()
+        result.owner = Address.from_bech32(owner) if owner else EmptyAddress()
 
         result.decimals = payload.get('decimals', 0)
         result.supply = int(payload.get('supply', 0))
@@ -79,7 +82,7 @@ class DefinitionOfTokenCollectionOnNetwork:
         self.type: str = ''
         self.name: str = ''
         self.ticker: str = ''
-        self.owner: IAddress = Address.zero()
+        self.owner: IAddress = EmptyAddress()
         self.decimals: int = 0
         self.can_pause: bool = False
         self.can_freeze: bool = False
@@ -96,7 +99,7 @@ class DefinitionOfTokenCollectionOnNetwork:
         result.ticker = payload.get('ticker', '')
 
         owner = payload.get('owner', '')
-        result.owner = Address.from_bech32(owner) if owner else Address.zero()
+        result.owner = Address.from_bech32(owner) if owner else EmptyAddress()
 
         result.decimals = payload.get('decimals', 0)
         result.can_pause = payload.get('canPause', False)

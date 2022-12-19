@@ -1,5 +1,7 @@
 from erdpy_core import Address
-from erdpy_network.proxy_network_provider import ProxyNetworkProvider, ContractQuery
+
+from erdpy_network.proxy_network_provider import (ContractQuery,
+                                                  ProxyNetworkProvider)
 
 
 class TestProxy:
