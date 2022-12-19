@@ -27,23 +27,10 @@ class ITransactionValue(Protocol):
 
 
 class ITransactionPayload(Protocol):
+    data: bytes
     def encoded(self) -> str: ...
+    def length(self) -> int: ...
 
 
 class ICodeMetadata(Protocol):
     def serialize(self) -> bytes: ...
-
-
-class ITransactionBuildersConfiguration(Protocol):
-    gas_price: IGasPrice
-    gas_limit_esdt_issue: IGasLimit
-    gas_limit_esdt_local_mint: IGasLimit
-    gas_limit_esdt_local_burn: IGasLimit
-    gas_limit_set_special_role: IGasLimit
-    gas_limit_pausing: IGasLimit
-    gas_limit_freezing: IGasLimit
-    issue_cost: ITransactionValue
-    transaction_version: ITransactionVersion
-    transaction_options: ITransactionOptions
-    deployment_address: IAddress
-    esdt_contract_address: IAddress

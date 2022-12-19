@@ -36,7 +36,7 @@ class ContractDeploymentBuilder:
         self.arguments: List[Any] = arguments
 
     def build(self) -> TransactionPayload:
-        data = f"{self.code.hex()}{ARGS_SEPARATOR}{VM_TYPE_WASM_VM}{ARGS_SEPARATOR}{self.code_metadata.hex()}"
+        data = f"{self.code.hex()}{ARGS_SEPARATOR}{VM_TYPE_WASM_VM.hex()}{ARGS_SEPARATOR}{self.code_metadata.hex()}"
 
         if self.arguments:
             data = f"{data}{ARGS_SEPARATOR}{args_to_string(self.arguments)}"

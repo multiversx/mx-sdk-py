@@ -9,6 +9,7 @@ from erdpy_core.interfaces import (IAddress, IChainID, IGasLimit, IGasPrice,
                                    INonce, ISignature, ITransactionOptions,
                                    ITransactionPayload, ITransactionValue,
                                    ITransactionVersion)
+from erdpy_core.transaction_payload import TransactionPayload
 
 
 class Transaction:
@@ -34,7 +35,7 @@ class Transaction:
 
         self.nonce: INonce = nonce or 0
         self.value: ITransactionValue = value or 0
-        self.data: Optional[ITransactionPayload] = data
+        self.data: ITransactionPayload = data or TransactionPayload.empty()
 
         self.version: ITransactionVersion = version or TRANSACTION_VERSION_DEFAULT
         self.options: ITransactionOptions = options or TRANSACTION_OPTIONS_DEFAULT
@@ -57,7 +58,7 @@ class Transaction:
         dictionary["gasPrice"] = self.gas_price
         dictionary["gasLimit"] = self.gas_limit
 
-        if self.data:
+        if self.data.length():
             dictionary["data"] = self.data.encoded()
 
         dictionary["chainID"] = self.chainID

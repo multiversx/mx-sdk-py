@@ -1,11 +1,10 @@
 from erdpy_core.address import Address
 from erdpy_core.interfaces import (IAddress, IGasLimit, IGasPrice,
-                                   ITransactionBuildersConfiguration,
                                    ITransactionOptions, ITransactionValue,
                                    ITransactionVersion)
 
 
-class DefaultTransactionBuildersConfiguration(ITransactionBuildersConfiguration):
+class Configuration:
     def __init__(self) -> None:
         self.gas_price: IGasPrice = 1000000000
         self.gas_limit_esdt_issue: IGasLimit = 60000000
