@@ -1,4 +1,4 @@
-from typing import Any, Dict, Protocol, Union, List
+from typing import Any, Dict, List, Protocol, Union
 
 
 class ISerializable(Protocol):
@@ -11,8 +11,6 @@ class IAddress(Protocol):
 
 class ITransaction(ISerializable, Protocol):
     def to_dictionary(self) -> Dict[str, Any]: ...
-
-    def get_hash(self) -> str: ...
 
 
 class IPagination(Protocol):
