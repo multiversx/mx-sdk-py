@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union, Optional, cast
+from typing import Any, Dict, List, Union, Optional, Tuple, cast
 
 import requests
 from requests.auth import AuthBase
@@ -126,12 +126,17 @@ class ApiNetworkProvider:
 
         return status
 
-    def send_transaction(self, payload: ITransaction) -> str:
-        url = f'{self.url}/transaction/send'
-        response = self.do_post_generic(url, payload.to_dictionary())
+    def send_transaction(self, transaction: ITransaction) -> str:
+        url = f'{self.url}/transactions'
+        response = self.do_post_generic(url, transaction.to_dictionary())
         tx_hash: str = response.get('txHash', '')
 
         return tx_hash
+    
+    def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, str]:
+        response = self.backing_proxy.send_transactions(transactions)
+
+        return response
 
     def _build_pagination_params(self, pagination: IPagination) -> str:
         return f'from={pagination.get_start()}&size={pagination.get_size()}'
