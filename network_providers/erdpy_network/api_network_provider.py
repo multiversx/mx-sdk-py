@@ -1,10 +1,11 @@
-from typing import Any, Dict, List, Union, Optional, Tuple, cast
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
 from requests.auth import AuthBase
 
 from erdpy_network.accounts import AccountOnNetwork
 from erdpy_network.config import DefaultPagination
+from erdpy_network.constants import DEFAULT_ADDRESS_HRP
 from erdpy_network.contract_query_requests import ContractQueryRequest
 from erdpy_network.contract_query_response import ContractQueryResponse
 from erdpy_network.errors import GenericError
@@ -25,9 +26,9 @@ from erdpy_network.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(self, url: str, backing_proxy_network_provider: ProxyNetworkProvider, auth: Union[AuthBase, None] = None):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP):
         self.url = url
-        self.backing_proxy = backing_proxy_network_provider
+        self.backing_proxy = ProxyNetworkProvider(url, auth, address_hrp)
         self.auth = auth
 
     def get_network_config(self) -> NetworkConfig:
@@ -132,7 +133,7 @@ class ApiNetworkProvider:
         tx_hash: str = response.get('txHash', '')
 
         return tx_hash
-    
+
     def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, str]:
         response = self.backing_proxy.send_transactions(transactions)
 
@@ -145,7 +146,7 @@ class ApiNetworkProvider:
         url = f'{self.url}/{resource_url}'
         response = self.__do_get(url)
         return response
-    
+
     def do_get_generic_collection(self, resource_url: str) -> List[Dict[str, Any]]:
         url = f'{self.url}/{resource_url}'
         response = self.__do_get(url)

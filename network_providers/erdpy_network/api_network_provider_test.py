@@ -1,12 +1,13 @@
 import pytest
 from erdpy_core import Address
+
 from erdpy_network.api_network_provider import ApiNetworkProvider
-from erdpy_network.proxy_network_provider import ProxyNetworkProvider, ContractQuery
 from erdpy_network.errors import GenericError
+from erdpy_network.proxy_network_provider import ContractQuery
 
 
 class TestApi:
-    api = ApiNetworkProvider('https://devnet-api.elrond.com', ProxyNetworkProvider('https://devnet-gateway.elrond.com'))
+    api = ApiNetworkProvider('https://devnet-api.elrond.com')
 
     def test_get_network_stake_statistic(self):
         result = self.api.get_network_stake_statistics()
@@ -73,7 +74,7 @@ class TestApi:
         assert result.sender.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.receiver.bech32() == 'erd1c8tnzykaj7lhrd5cy6jap533afr4dqu7uqcdm6qv4wuwly9lcsqqm9ll4f'
         assert result.value == '10000000000000000000'
-    
+
     def test_get_sc_invoking_tx(self):
         result = self.api.get_transaction('cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9')
 

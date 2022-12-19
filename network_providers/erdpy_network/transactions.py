@@ -1,13 +1,16 @@
 import base64
 from typing import Any, Dict
-from erdpy_network.interface import IAddress
+
 from erdpy_core import Address
+
 from erdpy_network.contract_results import ContractResults
+from erdpy_network.interface import IAddress
+from erdpy_network.resources import EmptyAddress
+from erdpy_network.transaction_completion_strategy import (
+    TransactionCompletionStrategyOnApi, TransactionCompletionStrategyOnProxy)
 from erdpy_network.transaction_logs import TransactionLogs
-from erdpy_network.transaction_status import TransactionStatus
 from erdpy_network.transaction_receipt import TransactionReceipt
-from erdpy_network.transaction_completion_strategy import TransactionCompletionStrategyOnApi,\
-    TransactionCompletionStrategyOnProxy
+from erdpy_network.transaction_status import TransactionStatus
 
 
 class TransactionOnNetwork:
@@ -19,8 +22,8 @@ class TransactionOnNetwork:
         self.round: int = 0
         self.epoch: int = 0
         self.value: int = 0
-        self.receiver: IAddress = Address.zero()
-        self.sender: IAddress = Address.zero()
+        self.receiver: IAddress = EmptyAddress()
+        self.sender: IAddress = EmptyAddress()
         self.gas_limit: int = 0
         self.gas_price: int = 0
         self.data: str = ''
@@ -68,10 +71,10 @@ class TransactionOnNetwork:
         result.value = response.get('value', 0)
 
         sender = response.get('sender', '')
-        result.sender = Address.from_bech32(sender) if sender else Address.zero()
+        result.sender = Address.from_bech32(sender) if sender else EmptyAddress()
 
         receiver = response.get('receiver', '')
-        result.receiver = Address.from_bech32(receiver) if receiver else Address.zero()
+        result.receiver = Address.from_bech32(receiver) if receiver else EmptyAddress()
 
         result.gas_price = response.get('gasPrice', 0)
         result.gas_limit = response.get('gasLimit', 0)

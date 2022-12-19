@@ -1,12 +1,15 @@
 import base64
-from typing import List, Any, Dict
-from erdpy_network.interface import IAddress
+from typing import Any, Dict, List
+
 from erdpy_core import Address
+
+from erdpy_network.interface import IAddress
+from erdpy_network.resources import EmptyAddress
 
 
 class TransactionEvent:
     def __init__(self):
-        self.address: IAddress = Address.zero()
+        self.address: IAddress = EmptyAddress()
         self.identifier: str = ''
         self.topics: List[TransactionEventTopic] = []
         self.data: str = ''
@@ -16,7 +19,7 @@ class TransactionEvent:
         result = TransactionEvent()
 
         address = response.get('address', '')
-        result.address = Address.from_bech32(address) if address else Address.zero()
+        result.address = Address.from_bech32(address) if address else EmptyAddress()
 
         result.identifier = response.get('identifier', '')
         topics = response.get('topics', [])

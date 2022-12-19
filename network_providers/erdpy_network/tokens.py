@@ -1,6 +1,9 @@
-from erdpy_network.interface import IAddress
+from typing import Any, Dict, List
+
 from erdpy_core import Address
-from typing import Any, List, Dict
+
+from erdpy_network.interface import IAddress
+from erdpy_network.resources import EmptyAddress
 from erdpy_network.utils import decimal_to_padded_hex
 
 
@@ -30,7 +33,7 @@ class NonFungibleTokenOfAccountOnNetwork:
         self.nonce: int = 0
         self.type: str = ''
         self.name: str = ''
-        self.creator: IAddress = Address.zero()
+        self.creator: IAddress = EmptyAddress()
         self.supply: int = 0
         self.decimals: int = 0
         self.royalties: float = 0
@@ -80,7 +83,7 @@ class NonFungibleTokenOfAccountOnNetwork:
         result.name = payload.get('name', '')
 
         creator = payload.get('creator', '')
-        result.creator = Address.from_bech32(creator) if creator else Address.zero()
+        result.creator = Address.from_bech32(creator) if creator else EmptyAddress()
 
         result.decimals = payload.get('decimals', 0)
         result.supply = payload.get('supply', 1)

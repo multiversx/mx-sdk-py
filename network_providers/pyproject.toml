@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "erdpy_network"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
   { name="MultiversX" },
 ]
@@ -20,7 +20,7 @@ classifiers = [
 ]
 dependencies = [
   "requests==2.24.0",
-    "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v0.1.0#egg=erdpy_core"
+    "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v0.2.0#egg=erdpy_core"
 ]
 
 [project.urls]

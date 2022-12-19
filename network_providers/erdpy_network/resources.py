@@ -10,3 +10,8 @@ class GenericResponse:
 
     def to_dictionary(self) -> Dict[str, Any]:
         return self.__dict__
+
+
+class EmptyAddress:
+    def bech32(self) -> str:
+        return ""
