@@ -5,6 +5,7 @@ from requests.auth import AuthBase
 
 from erdpy_network.accounts import AccountOnNetwork
 from erdpy_network.config import DefaultPagination
+from erdpy_network.constants import DEFAULT_ADDRESS_HRP
 from erdpy_network.contract_query_requests import ContractQueryRequest
 from erdpy_network.contract_query_response import ContractQueryResponse
 from erdpy_network.errors import GenericError
@@ -25,9 +26,9 @@ from erdpy_network.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(self, url: str, auth: Union[AuthBase, None] = None):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP):
         self.url = url
-        self.backing_proxy = ProxyNetworkProvider(url)
+        self.backing_proxy = ProxyNetworkProvider(url, auth, address_hrp)
         self.auth = auth
 
     def get_network_config(self) -> NetworkConfig:

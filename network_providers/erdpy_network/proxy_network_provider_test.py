@@ -88,7 +88,7 @@ class TestProxy:
         assert result.decimals == 0
         assert result.can_freeze
         assert not result.can_pause
-    
+
     def test_get_transaction(self):
         result = self.proxy.get_transaction('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')
 
@@ -99,7 +99,7 @@ class TestProxy:
         assert result.is_completed == True
         assert result.sender.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.contract_results.items == []
-    
+
     def test_get_sc_invoking_tx(self):
         result = self.proxy.get_transaction('cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9')
 

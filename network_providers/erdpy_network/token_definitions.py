@@ -51,16 +51,16 @@ class DefinitionOfFungibleTokenOnNetwork:
         return result
 
     @staticmethod
-    def from_response_of_get_token_properties(identifier: str, data: List[bytes]):
+    def from_response_of_get_token_properties(identifier: str, data: List[bytes], address_hrp: str):
         result = DefinitionOfFungibleTokenOnNetwork()
 
-        token_name, token_type, owner, supply, burnt_value, *properties_buffers = data
+        token_name, _, owner, supply, burnt_value, *properties_buffers = data
         properties = parse_token_properties(properties_buffers)
 
         result.identifier = identifier
         result.name = token_name.decode()
         result.ticker = identifier
-        result.owner = Address(owner)
+        result.owner = Address(owner, address_hrp)
         result.decimals = properties.get('NumDecimals', 0)
         result.supply = int(supply.decode()[:-result.decimals])
         result.burnt_value = int(burnt_value.decode())
@@ -110,7 +110,7 @@ class DefinitionOfTokenCollectionOnNetwork:
         return result
 
     @staticmethod
-    def from_response_of_get_token_properties(collection: str, data: List[bytes]) -> 'DefinitionOfTokenCollectionOnNetwork':
+    def from_response_of_get_token_properties(collection: str, data: List[bytes], address_hrp: str) -> 'DefinitionOfTokenCollectionOnNetwork':
         result = DefinitionOfTokenCollectionOnNetwork()
 
         token_name, token_type, owner, _, _, *properties_buffers = data
@@ -120,7 +120,7 @@ class DefinitionOfTokenCollectionOnNetwork:
         result.type = token_type.decode()
         result.name = token_name.decode()
         result.ticker = collection
-        result.owner = Address(owner)
+        result.owner = Address(owner, address_hrp)
         result.decimals = properties.get('NumDecimals', 0)
         result.can_pause = properties.get('CanPause', False)
         result.can_freeze = properties.get('CanFreeze', False)

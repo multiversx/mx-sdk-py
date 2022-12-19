@@ -1,9 +1,11 @@
-from typing import Any, Dict, List, Union, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
 from requests.auth import AuthBase
+
 from erdpy_network.accounts import AccountOnNetwork
-from erdpy_network.constants import ESDT_CONTRACT_ADDRESS, METACHAIN_ID
+from erdpy_network.constants import (DEFAULT_ADDRESS_HRP,
+                                     ESDT_CONTRACT_ADDRESS, METACHAIN_ID)
 from erdpy_network.contract_query_requests import ContractQueryRequest
 from erdpy_network.contract_query_response import ContractQueryResponse
 from erdpy_network.errors import GenericError
@@ -20,9 +22,10 @@ from erdpy_network.transactions import TransactionOnNetwork
 
 
 class ProxyNetworkProvider:
-    def __init__(self, url: str, auth: Union[AuthBase, None] = None):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP):
         self.url = url
         self.auth = auth
+        self.address_hrp = address_hrp
 
     def get_network_config(self) -> NetworkConfig:
         response = self.do_get_generic('network/config')
@@ -88,7 +91,7 @@ class ProxyNetworkProvider:
     def send_transaction(self, transaction: ITransaction) -> str:
         response = self.do_post_generic('transaction/send', transaction.to_dictionary())
         return response.get('txHash', '')
-    
+
     def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, str]:
         transactions_as_dictionaries = [transaction.to_dictionary() for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
@@ -106,8 +109,8 @@ class ProxyNetworkProvider:
 
     def get_definition_of_fungible_token(self, token_identifier: str) -> DefinitionOfFungibleTokenOnNetwork:
         response = self.__get_token_properties(token_identifier)
-        definition = DefinitionOfFungibleTokenOnNetwork.from_response_of_get_token_properties(token_identifier,
-                                                                                              response)
+        definition = DefinitionOfFungibleTokenOnNetwork.from_response_of_get_token_properties(token_identifier, response, self.address_hrp)
+
         return definition
 
     def __get_token_properties(self, identifier: str) -> List[bytes]:
@@ -122,7 +125,7 @@ class ProxyNetworkProvider:
 
     def get_definition_of_token_collection(self, collection: str) -> DefinitionOfTokenCollectionOnNetwork:
         properties = self.__get_token_properties(collection)
-        definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties)
+        definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties, self.address_hrp)
 
         return definition
 
