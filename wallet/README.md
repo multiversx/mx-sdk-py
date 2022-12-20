@@ -1,6 +1,6 @@
-# sdk-erdpy-eggs-wallet
+# sdk-erdpy-wallet
 
-**Experimental:** highly modularized **erdpy**.
+Wallet & crypto components of **erdpy**.
 
 ## Development setup
 
