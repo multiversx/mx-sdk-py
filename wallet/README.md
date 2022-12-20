@@ -2,6 +2,10 @@
 
 Wallet & crypto components of **erdpy**.
 
+## Documentation
+
+[docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
+
 ## Development setup
 
 ### Virtual environment
