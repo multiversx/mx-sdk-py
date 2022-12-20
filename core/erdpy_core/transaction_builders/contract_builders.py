@@ -1,18 +1,22 @@
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Protocol
 
-from erdpy_core.constants import ARGS_SEPARATOR, VM_TYPE_WASM_VM
+from erdpy_core.constants import VM_TYPE_WASM_VM
 from erdpy_core.contract_query import ContractQuery
-from erdpy_core.interfaces import (IAddress, IChainID, ICodeMetadata,
-                                   IGasLimit, IGasPrice, INonce, ITokenPayment,
+from erdpy_core.interfaces import (IAddress, ICodeMetadata, IGasLimit,
+                                   IGasPrice, INonce, ITokenPayment,
                                    ITransactionValue)
 from erdpy_core.serializer import arg_to_string, args_to_strings
-from erdpy_core.transaction_builders.base_builder import BaseBuilder
-from erdpy_core.transaction_payload import TransactionPayload
+from erdpy_core.transaction_builders.base_builder import (BaseBuilder,
+                                                          IBaseConfiguration)
+
+
+class IContractDeploymentConfiguration(IBaseConfiguration, Protocol):
+    deployment_address: IAddress
 
 
 class ContractDeploymentBuilder(BaseBuilder):
     def __init__(self,
-                 chain_id: IChainID,
+                 config: IContractDeploymentConfiguration,
                  code: bytes,
                  code_metadata: ICodeMetadata,
                  deploy_arguments: List[Any],
@@ -22,32 +26,24 @@ class ContractDeploymentBuilder(BaseBuilder):
                  gas_limit: Optional[IGasLimit] = None,
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:
-        super().__init__(chain_id, nonce, value, gas_limit, gas_price)
+        super().__init__(config, nonce, value, gas_limit, gas_price)
+        self.sender = owner
+        self.receiver = config.deployment_address
         self.code = code
         self.code_metadata = code_metadata
         self.deploy_arguments = deploy_arguments
-        self.owner = owner
 
-    def _get_sender(self) -> IAddress:
-        return self.owner
-
-    def _get_receiver(self) -> IAddress:
-        return self.configuration.deployment_address
-
-    def build_payload(self) -> TransactionPayload:
-        parts = [
+    def _build_payload_parts(self) -> List[str]:
+        return [
             self.code.hex(),
             arg_to_string(VM_TYPE_WASM_VM),
             arg_to_string(self.code_metadata)
         ] + args_to_strings(self.deploy_arguments)
 
-        data = ARGS_SEPARATOR.join(parts)
-        return TransactionPayload.from_str(data)
-
 
 class ContractUpgradeBuilder(BaseBuilder):
     def __init__(self,
-                 chain_id: IChainID,
+                 config: IBaseConfiguration,
                  contract: IAddress,
                  code: bytes,
                  code_metadata: ICodeMetadata,
@@ -58,33 +54,25 @@ class ContractUpgradeBuilder(BaseBuilder):
                  gas_limit: Optional[IGasLimit] = None,
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:
-        super().__init__(chain_id, nonce, value, gas_limit, gas_price)
-        self.contract = contract
+        super().__init__(config, nonce, value, gas_limit, gas_price)
+        self.sender = owner
+        self.receiver = contract
         self.code = code
         self.code_metadata = code_metadata
         self.upgrade_arguments = upgrade_arguments
         self.owner = owner
 
-    def _get_sender(self) -> IAddress:
-        return self.owner
-
-    def _get_receiver(self) -> IAddress:
-        return self.contract
-
-    def build_payload(self) -> TransactionPayload:
-        parts = [
+    def _build_payload_parts(self) -> List[str]:
+        return [
             "upgradeContract",
             self.code.hex(),
             arg_to_string(self.code_metadata)
         ] + args_to_strings(self.upgrade_arguments)
 
-        data = ARGS_SEPARATOR.join(parts)
-        return TransactionPayload.from_str(data)
-
 
 class ContractCallBuilder(BaseBuilder):
     def __init__(self,
-                 chain_id: IChainID,
+                 config: IBaseConfiguration,
                  contract: IAddress,
                  function_name: str,
                  call_arguments: List[Any],
@@ -95,7 +83,7 @@ class ContractCallBuilder(BaseBuilder):
                  gas_limit: Optional[IGasLimit] = None,
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:
-        super().__init__(chain_id, nonce, value, gas_limit, gas_price)
+        super().__init__(config, nonce, value, gas_limit, gas_price)
         self.contract = contract
         self.function_name = function_name
         self.call_arguments = call_arguments
@@ -109,7 +97,7 @@ class ContractCallBuilder(BaseBuilder):
         receiver_is_same_as_sender = self._has_multiple_transfers() or self._has_single_nft_transfer()
         return self.caller if receiver_is_same_as_sender else self.contract
 
-    def build_payload(self) -> TransactionPayload:
+    def _build_payload_parts(self) -> List[str]:
         parts: List[str] = []
 
         if self._has_single_esdt_transfer():
@@ -153,8 +141,7 @@ class ContractCallBuilder(BaseBuilder):
         else:
             parts = [self.function_name] + args_to_strings(self.call_arguments)
 
-        data = ARGS_SEPARATOR.join(parts)
-        return TransactionPayload.from_str(data)
+        return parts
 
     def build_query(self) -> ContractQuery:
         query = ContractQuery(

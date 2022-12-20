@@ -5,14 +5,9 @@ from erdpy_core.message import Message
 from erdpy_core.token_payment import TokenPayment
 from erdpy_core.transaction import Transaction
 from erdpy_core.transaction_payload import TransactionPayload
-from erdpy_core.transaction_payload_builders import (
-    ContractDeploymentBuilder, ContractUpgradeBuilder, ESDTNFTTransferBuilder,
-    ESDTTransferBuilder, FunctionCallBuilder, MultiESDTNFTTransferBuilder)
 
 __all__ = [
     "AccountNonceHolder", "Address", "AddressConverter", "AddressFactory",
     "Transaction", "TransactionPayload",
-    "FunctionCallBuilder", "ContractDeploymentBuilder", "ContractUpgradeBuilder",
-    "ESDTTransferBuilder", "ESDTNFTTransferBuilder", "MultiESDTNFTTransferBuilder",
     "Message", "CodeMetadata", "TokenPayment"
 ]
