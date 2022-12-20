@@ -22,9 +22,3 @@ class IUserWalletRandomness(Protocol):
 
 class IAddress(Protocol):
     def bech32(self) -> str: ...
-
-
-class IAddressAsOutput(Protocol):
-    def bech32(self) -> str: ...
-
-    def pubkey(self) -> bytes: ...
