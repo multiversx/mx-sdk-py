@@ -20,8 +20,8 @@ classifiers = [
 ]
 dependencies = [
   "requests==2.24.0",
-    "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-eggs-core.git@v0.2.0#egg=erdpy_core"
+    "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-core.git@v0.2.0#egg=erdpy_core"
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-eggs-network-providers"
+"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-network-providers"
