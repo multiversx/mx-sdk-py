@@ -20,12 +20,8 @@ class IPagination(Protocol):
 
 
 class IContractQuery(Protocol):
-    def get_encoded_arguments(self) -> List[str]: ...
-
-    def get_function(self) -> str: ...
-
-    def get_value(self) -> int: ...
-
-    def get_address(self) -> IAddress: ...
-
-    def get_caller(self) -> Union[IAddress, None]: ...
+    contract: IAddress
+    function: str
+    value: int
+    caller: Union[IAddress, None]
+    encoded_arguments: List[str]
