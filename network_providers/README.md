@@ -2,6 +2,9 @@
 
 Network providers for **erdpy**.
 
+## Documentation
+[docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
+
 ## Development setup
 
 Create a virtual environment and install the dependencies:
