@@ -1,10 +1,10 @@
 
 from erdpy_core.address import Address
 from erdpy_core.transaction_builders.default_configuration import \
-    DefaultConfiguration
+    DefaultTransactionBuildersConfiguration
 from erdpy_core.transaction_builders.esdt_builders import ESDTIssueBuilder
 
-dummyConfig = DefaultConfiguration(chain_id="D")
+dummyConfig = DefaultTransactionBuildersConfiguration(chain_id="D")
 
 
 def test_esdt_issue_builder():

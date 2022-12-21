@@ -2,12 +2,12 @@
 from erdpy_core.address import Address
 from erdpy_core.token_payment import TokenPayment
 from erdpy_core.transaction_builders.default_configuration import \
-    DefaultConfiguration
+    DefaultTransactionBuildersConfiguration
 from erdpy_core.transaction_builders.transfers_builders import (
     EGLDTransferBuilder, ESDTNFTTransferBuilder, ESDTTransferBuilder,
     MultiESDTNFTTransferBuilder)
 
-dummyConfig = DefaultConfiguration(chain_id="D")
+dummyConfig = DefaultTransactionBuildersConfiguration(chain_id="D")
 
 
 def test_egld_transfer_builder():

@@ -1,9 +1,9 @@
 from erdpy_core.transaction_builders.default_configuration import \
-    DefaultConfiguration
+    DefaultTransactionBuildersConfiguration
 
 
 def test_default_configuration():
-    config = DefaultConfiguration(chain_id="D")
+    config = DefaultTransactionBuildersConfiguration(chain_id="D")
 
     assert config.chain_id == "D"
     assert config.min_gas_price == 1000000000

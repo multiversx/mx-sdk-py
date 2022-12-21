@@ -7,9 +7,9 @@ from erdpy_core.token_payment import TokenPayment
 from erdpy_core.transaction_builders.contract_builders import (
     ContractCallBuilder, ContractDeploymentBuilder, ContractUpgradeBuilder)
 from erdpy_core.transaction_builders.default_configuration import \
-    DefaultConfiguration
+    DefaultTransactionBuildersConfiguration
 
-dummyConfig = DefaultConfiguration(chain_id="D")
+dummyConfig = DefaultTransactionBuildersConfiguration(chain_id="D")
 
 
 def test_contract_deployment_builder():

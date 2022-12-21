@@ -6,7 +6,7 @@ from erdpy_core.interfaces import (IAddress, IChainID, IGasPrice,
 
 
 @dataclass
-class DefaultConfiguration:
+class DefaultTransactionBuildersConfiguration:
     chain_id: IChainID
     min_gas_price: IGasPrice = 1000000000
     min_gas_limit = 50000
