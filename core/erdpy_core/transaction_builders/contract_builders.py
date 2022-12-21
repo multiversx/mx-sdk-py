@@ -1,7 +1,6 @@
 from typing import Any, List, Optional, Protocol, Sequence
 
 from erdpy_core.constants import VM_TYPE_WASM_VM
-from erdpy_core.contract_query import ContractQuery
 from erdpy_core.interfaces import (IAddress, ICodeMetadata, IGasLimit,
                                    IGasPrice, INonce, ITokenPayment,
                                    ITransactionValue)
@@ -142,16 +141,6 @@ class ContractCallBuilder(TransactionBuilder):
             parts = [self.function_name] + args_to_strings(self.call_arguments)
 
         return parts
-
-    def build_query(self) -> ContractQuery:
-        query = ContractQuery(
-            contract=self.contract,
-            function=self.function_name,
-            encoded_arguments=args_to_strings(self.call_arguments),
-            caller=self.caller
-        )
-
-        return query
 
     def _has_single_esdt_transfer(self) -> bool:
         return len(self.esdt_transfers) == 1 and self.esdt_transfers[0].is_fungible()
