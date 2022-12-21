@@ -16,7 +16,7 @@ class TokenPayment:
         return self.token_identifier == EGLD_TOKEN_IDENTIFIER
 
     def is_fungible(self):
-        return self.num_decimals == EGLD_NUM_DECIMALS
+        return self.token_nonce == 0
 
     @classmethod
     def egld_from_amount(cls, amount: Union[Decimal, str, int]) -> 'TokenPayment':

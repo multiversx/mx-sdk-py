@@ -2,19 +2,14 @@ from typing import List
 
 from erdpy_core.address import Address
 from erdpy_core.code_metadata import CodeMetadata
-from erdpy_core.interfaces import IAddress, ITokenPayment
+from erdpy_core.interfaces import ITokenPayment
 from erdpy_core.token_payment import TokenPayment
 from erdpy_core.transaction_builders.contract_builders import (
     ContractCallBuilder, ContractDeploymentBuilder, ContractUpgradeBuilder)
+from erdpy_core.transaction_builders.default_configuration import \
+    DefaultConfiguration
 
-
-class DummyConfig:
-    def __init__(self) -> None:
-        self.chain_id = "D"
-        self.min_gas_price = 1000000000
-        self.min_gas_limit = 50000
-        self.gas_limit_per_byte = 1500
-        self.deployment_address: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu")
+dummyConfig = DefaultConfiguration(chain_id="D")
 
 
 def test_contract_deployment_builder():
@@ -22,7 +17,7 @@ def test_contract_deployment_builder():
     metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
 
     builder = ContractDeploymentBuilder(
-        DummyConfig(),
+        dummyConfig,
         owner=owner,
         deploy_arguments=[42, "test"],
         code_metadata=metadata,
@@ -48,7 +43,7 @@ def test_contract_upgrade_builder():
     metadata = CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
 
     builder = ContractUpgradeBuilder(
-        DummyConfig(),
+        dummyConfig,
         contract=contract,
         owner=owner,
         upgrade_arguments=[42, "test"],
@@ -74,7 +69,7 @@ def test_contract_call_builder():
     caller = Address.from_bech32("erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8")
 
     builder = ContractCallBuilder(
-        DummyConfig(),
+        dummyConfig,
         contract=contract,
         function_name="foo",
         caller=caller,
@@ -101,7 +96,7 @@ def test_contract_call_builder_with_esdt_transfer():
     ]
 
     builder = ContractCallBuilder(
-        DummyConfig(),
+        dummyConfig,
         contract=contract,
         function_name="hello",
         caller=caller,
@@ -128,7 +123,7 @@ def test_contract_call_builder_with_esdt_nft_transfer():
     ]
 
     builder = ContractCallBuilder(
-        DummyConfig(),
+        dummyConfig,
         contract=contract,
         function_name="hello",
         caller=caller,
@@ -156,7 +151,7 @@ def test_contract_call_builder_with_multi_esdt_nft_transfer():
     ]
 
     builder = ContractCallBuilder(
-        DummyConfig(),
+        dummyConfig,
         contract=contract,
         function_name="hello",
         caller=caller,

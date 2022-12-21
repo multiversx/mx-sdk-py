@@ -1,7 +1,7 @@
 from typing import List, Optional, Protocol
 
 from erdpy_core.interfaces import (IAddress, IGasLimit, IGasPrice, INonce,
-                                   ITokenPayment, ITransactionValue)
+                                   ITransactionValue)
 from erdpy_core.serializer import arg_to_string, args_to_strings
 from erdpy_core.transaction_builders.base_builder import (BaseBuilder,
                                                           IBaseConfiguration)
@@ -11,16 +11,6 @@ class IESDTIssueConfiguration(IBaseConfiguration, Protocol):
     gas_limit_esdt_issue: IGasLimit
     issue_cost: ITransactionValue
     esdt_contract_address: IAddress
-
-
-class IESDTTransferConfiguration(IBaseConfiguration, Protocol):
-    gas_limit_esdt_transfer: IGasLimit
-    additional_gas_for_esdt_transfer: IGasLimit
-
-
-class IESDTNFTTransferConfiguration(IBaseConfiguration, Protocol):
-    gas_limit_esdt_nft_transfer: IGasLimit
-    additional_gas_for_esdt_nft_transfer: IGasLimit
 
 
 class ESDTIssueBuilder(BaseBuilder):
@@ -83,106 +73,3 @@ class ESDTIssueBuilder(BaseBuilder):
             *(args_to_strings(["canUpgrade", "true"]) if self.can_upgrade else []),
             *(args_to_strings(["canAddSpecialRoles", "true"]) if self.can_add_special_roles else [])
         ]
-
-
-class ESDTTransferBuilder(BaseBuilder):
-    def __init__(self,
-                 config: IESDTTransferConfiguration,
-                 sender: IAddress,
-                 receiver: IAddress,
-                 payment: ITokenPayment,
-                 nonce: Optional[INonce] = None,
-                 value: Optional[ITransactionValue] = None,
-                 gas_limit: Optional[IGasLimit] = None,
-                 gas_price: Optional[IGasPrice] = None
-                 ) -> None:
-        super().__init__(config, nonce, value, gas_limit, gas_price)
-        self.gas_limit_esdt_transfer = config.gas_limit_esdt_transfer
-        self.additional_gas_for_esdt_transfer = config.additional_gas_for_esdt_transfer
-
-        self.sender = sender
-        self.receiver = receiver
-        self.payment = payment
-
-    def _estimate_execution_gas(self) -> IGasLimit:
-        return self.gas_limit_esdt_transfer + self.additional_gas_for_esdt_transfer
-
-    def _build_payload_parts(self) -> List[str]:
-        return [
-            "ESDTTransfer",
-            arg_to_string(self.payment.token_identifier),
-            arg_to_string(self.payment.amount_as_integer)
-        ]
-
-
-class ESDTNFTTransferBuilder(BaseBuilder):
-    def __init__(self,
-                 config: IESDTNFTTransferConfiguration,
-                 sender: IAddress,
-                 destination: IAddress,
-                 payment: ITokenPayment,
-                 nonce: Optional[INonce] = None,
-                 value: Optional[ITransactionValue] = None,
-                 gas_limit: Optional[IGasLimit] = None,
-                 gas_price: Optional[IGasPrice] = None
-                 ) -> None:
-        super().__init__(config, nonce, value, gas_limit, gas_price)
-        self.gas_limit_esdt_nft_transfer = config.gas_limit_esdt_nft_transfer
-        self.additional_gas_for_esdt_nft_transfer = config.additional_gas_for_esdt_nft_transfer
-
-        self.sender = sender
-        self.receiver = sender
-        self.destination = destination
-        self.payment = payment
-
-    def _estimate_execution_gas(self) -> IGasLimit:
-        return self.gas_limit_esdt_nft_transfer + self.additional_gas_for_esdt_nft_transfer
-
-    def _build_payload_parts(self) -> List[str]:
-        return [
-            "ESDTNFTTransfer",
-            arg_to_string(self.payment.token_identifier),
-            arg_to_string(self.payment.token_nonce),
-            arg_to_string(self.payment.amount_as_integer),
-            arg_to_string(self.destination)
-        ]
-
-
-class MultiESDTNFTTransferBuilder(BaseBuilder):
-    def __init__(self,
-                 config: IESDTNFTTransferConfiguration,
-                 sender: IAddress,
-                 destination: IAddress,
-                 payments: List[ITokenPayment],
-                 nonce: Optional[INonce] = None,
-                 value: Optional[ITransactionValue] = None,
-                 gas_limit: Optional[IGasLimit] = None,
-                 gas_price: Optional[IGasPrice] = None
-                 ) -> None:
-        super().__init__(config, nonce, value, gas_limit, gas_price)
-        self.gas_limit_esdt_nft_transfer = config.gas_limit_esdt_nft_transfer
-        self.additional_gas_for_esdt_nft_transfer = config.additional_gas_for_esdt_nft_transfer
-
-        self.sender = sender
-        self.receiver = sender
-        self.destination = destination
-        self.payments = payments
-
-    def _estimate_execution_gas(self) -> IGasLimit:
-        return (self.gas_limit_esdt_nft_transfer + self.additional_gas_for_esdt_nft_transfer) * len(self.payments)
-
-    def _build_payload_parts(self) -> List[str]:
-        parts = [
-            "MultiESDTNFTTransfer",
-            arg_to_string(self.destination),
-            arg_to_string(len(self.payments))
-        ]
-
-        for payment in self.payments:
-            parts.extend([
-                arg_to_string(payment.token_identifier),
-                arg_to_string(payment.token_nonce),
-                arg_to_string(payment.amount_as_integer)
-            ])
-
-        return parts

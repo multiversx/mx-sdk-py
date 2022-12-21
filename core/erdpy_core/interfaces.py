@@ -21,6 +21,9 @@ class ITokenPayment(Protocol):
     token_nonce: INonce
     amount_as_integer: int
 
+    def is_egld(self) -> bool: ...
+    def is_fungible(self) -> bool: ...
+
 
 class ITransactionValue(Protocol):
     def __str__(self) -> str: ...

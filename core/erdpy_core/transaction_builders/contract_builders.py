@@ -154,10 +154,10 @@ class ContractCallBuilder(BaseBuilder):
         return query
 
     def _has_single_esdt_transfer(self) -> bool:
-        return len(self.esdt_transfers) == 1 and self.esdt_transfers[0].token_nonce == 0
+        return len(self.esdt_transfers) == 1 and self.esdt_transfers[0].is_fungible()
 
     def _has_single_nft_transfer(self) -> bool:
-        return len(self.esdt_transfers) == 1 and self.esdt_transfers[0].token_nonce > 0
+        return len(self.esdt_transfers) == 1 and not self.esdt_transfers[0].is_fungible()
 
     def _has_multiple_transfers(self) -> bool:
         return len(self.esdt_transfers) > 1
