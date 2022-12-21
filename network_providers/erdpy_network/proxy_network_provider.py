@@ -81,6 +81,13 @@ class ProxyNetworkProvider:
         transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response)
 
         return transaction
+    
+    def get_account_transactions(self, address: IAddress) -> List[TransactionOnNetwork]:
+        url = f"address/{address.bech32()}/transactions"
+        response = self.do_get_generic(url).get("transactions", [])
+        result = [TransactionOnNetwork.from_proxy_http_response(tx.get("hash", ""), tx) for tx in response]
+
+        return result
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transaction/{tx_hash}/status')
