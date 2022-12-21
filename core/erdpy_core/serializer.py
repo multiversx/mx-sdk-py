@@ -1,4 +1,4 @@
-from typing import Any, List, Protocol, runtime_checkable
+from typing import Any, List, Protocol, Sequence, runtime_checkable
 
 from erdpy_core.constants import ARGS_SEPARATOR, INTEGER_MAX_NUM_BYTES
 from erdpy_core.errors import ErrCannotSerializeArgument
@@ -9,17 +9,17 @@ class IArgument(Protocol):
     def serialize(self) -> bytes: ...
 
 
-def args_to_string(args: List[Any]) -> str:
+def args_to_string(args: Sequence[Any]) -> str:
     strings = args_to_strings(args)
     return ARGS_SEPARATOR.join(strings)
 
 
-def args_to_strings(args: List[Any]) -> List[str]:
+def args_to_strings(args: Sequence[Any]) -> List[str]:
     buffers = args_to_buffers(args)
     return [buffer.hex() for buffer in buffers]
 
 
-def args_to_buffers(args: List[Any]) -> List[bytes]:
+def args_to_buffers(args: Sequence[Any]) -> List[bytes]:
     return [arg_to_buffer(arg) for arg in args]
 
 

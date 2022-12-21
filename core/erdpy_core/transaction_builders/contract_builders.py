@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Protocol
+from typing import Any, List, Optional, Protocol, Sequence
 
 from erdpy_core.constants import VM_TYPE_WASM_VM
 from erdpy_core.contract_query import ContractQuery
@@ -19,7 +19,7 @@ class ContractDeploymentBuilder(TransactionBuilder):
                  config: IContractDeploymentConfiguration,
                  code: bytes,
                  code_metadata: ICodeMetadata,
-                 deploy_arguments: List[Any],
+                 deploy_arguments: Sequence[Any],
                  owner: IAddress,
                  nonce: Optional[INonce] = None,
                  value: Optional[ITransactionValue] = None,
@@ -47,7 +47,7 @@ class ContractUpgradeBuilder(TransactionBuilder):
                  contract: IAddress,
                  code: bytes,
                  code_metadata: ICodeMetadata,
-                 upgrade_arguments: List[Any],
+                 upgrade_arguments: Sequence[Any],
                  owner: IAddress,
                  nonce: Optional[INonce] = None,
                  value: Optional[ITransactionValue] = None,
@@ -75,11 +75,11 @@ class ContractCallBuilder(TransactionBuilder):
                  config: ITransactionBuilderConfiguration,
                  contract: IAddress,
                  function_name: str,
-                 call_arguments: List[Any],
+                 call_arguments: Sequence[Any],
                  caller: IAddress,
                  nonce: Optional[INonce] = None,
                  value: Optional[ITransactionValue] = None,
-                 esdt_transfers: List[ITokenPayment] = [],
+                 esdt_transfers: Sequence[ITokenPayment] = [],
                  gas_limit: Optional[IGasLimit] = None,
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:

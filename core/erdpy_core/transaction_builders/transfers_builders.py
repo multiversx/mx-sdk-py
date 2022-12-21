@@ -1,4 +1,4 @@
-from typing import List, Optional, Protocol
+from typing import List, Optional, Protocol, Sequence
 
 from erdpy_core.interfaces import (IAddress, IGasLimit, IGasPrice, INonce,
                                    ITokenPayment, ITransactionValue)
@@ -109,7 +109,7 @@ class MultiESDTNFTTransferBuilder(TransactionBuilder):
                  config: IESDTNFTTransferConfiguration,
                  sender: IAddress,
                  destination: IAddress,
-                 payments: List[ITokenPayment],
+                 payments: Sequence[ITokenPayment],
                  nonce: Optional[INonce] = None,
                  value: Optional[ITransactionValue] = None,
                  gas_limit: Optional[IGasLimit] = None,

@@ -145,7 +145,7 @@ def test_contract_call_builder_with_multi_esdt_nft_transfer():
     contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgquzmh78klkqwt0p4rjys0qtp3la07gz4d396qn50nnm")
     caller = Address.from_bech32("erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8")
 
-    transfers: List[ITokenPayment] = [
+    transfers = [
         TokenPayment.non_fungible("ERDPY-38f249", 1),
         TokenPayment.fungible_from_amount("BAR-c80d29", "10.00", 18)
     ]
