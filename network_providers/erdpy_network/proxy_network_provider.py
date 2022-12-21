@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 from requests.auth import AuthBase
@@ -191,3 +191,18 @@ class ContractQuery(IContractQuery):
         self.caller = caller
         self.value = value
         self.encoded_arguments = [item.hex() for item in arguments]
+
+    def get_contract(self) -> IAddress:
+        return self.contract
+
+    def get_function(self) -> str:
+        return self.function
+
+    def get_encoded_arguments(self) -> Sequence[str]:
+        return self.encoded_arguments
+
+    def get_caller(self) -> Optional[IAddress]:
+        return self.caller
+
+    def get_value(self) -> int:
+        return self.value
