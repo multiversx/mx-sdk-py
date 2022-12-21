@@ -18,6 +18,7 @@ class TestProxy:
         assert result.min_gas_price == 1_000_000_000
         assert result.min_transaction_version == 1
         assert result.top_up_factor == 0.5
+        assert result.num_shards_without_meta == 3
 
     def test_get_network_status(self):
         result = self.proxy.get_network_status()

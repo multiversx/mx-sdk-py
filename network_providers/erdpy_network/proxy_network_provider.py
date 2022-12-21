@@ -33,8 +33,8 @@ class ProxyNetworkProvider:
 
         return network_config
 
-    def get_network_status(self) -> NetworkStatus:
-        response = self.do_get_generic(f'network/status/{METACHAIN_ID}')
+    def get_network_status(self, shard: Optional[int] = METACHAIN_ID) -> NetworkStatus:
+        response = self.do_get_generic(f'network/status/{shard}')
         network_status = NetworkStatus.from_http_response(response.get('status', ''))
 
         return network_status
@@ -128,6 +128,12 @@ class ProxyNetworkProvider:
         definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties, self.address_hrp)
 
         return definition
+    
+    def simulate_transaction(self, transaction: Dict[str, Any]) -> Any:
+        raise NotImplementedError()
+    
+    def simulate_transaction_cost(self, transaction: Dict[str, Any]) -> Any:
+        raise NotImplementedError()
 
     def do_get_generic(self, resource_url: str) -> GenericResponse:
         url = f'{self.url}/{resource_url}'
