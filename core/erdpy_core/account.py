@@ -2,7 +2,7 @@
 from erdpy_core.interfaces import IAddress, INonce
 
 
-class Account():
+class AccountNonceHolder():
     """
     An abstraction representing an account (user or Smart Contract) on the Network.
     """
