@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Protocol, Union
+from typing import Any, Dict, Optional, Protocol, Sequence
 
 
 class ISerializable(Protocol):
@@ -22,6 +22,6 @@ class IPagination(Protocol):
 class IContractQuery(Protocol):
     contract: IAddress
     function: str
+    encoded_arguments: Sequence[str]
+    caller: Optional[IAddress]
     value: int
-    caller: Union[IAddress, None]
-    encoded_arguments: List[str]
