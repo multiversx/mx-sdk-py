@@ -17,4 +17,4 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-eggs-core"
+"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-core"

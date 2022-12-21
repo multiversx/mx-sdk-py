@@ -1,6 +1,10 @@
-# sdk-erdpy-eggs-core
+# sdk-erdpy-core
 
-**Experimental:** highly modularized **erdpy**.
+Core components of **erdpy**.
+
+## Documentation
+
+[docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
 
 ## Development setup
 
