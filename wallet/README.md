@@ -1,6 +1,10 @@
-# sdk-erdpy-eggs-wallet
+# sdk-erdpy-wallet
 
-**Experimental:** highly modularized **erdpy**.
+Wallet & crypto components of **erdpy**.
+
+## Documentation
+
+[docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
 
 ## Development setup
 
