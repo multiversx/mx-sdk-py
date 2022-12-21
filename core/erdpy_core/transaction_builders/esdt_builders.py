@@ -3,17 +3,17 @@ from typing import List, Optional, Protocol
 from erdpy_core.interfaces import (IAddress, IGasLimit, IGasPrice, INonce,
                                    ITransactionValue)
 from erdpy_core.serializer import arg_to_string, args_to_strings
-from erdpy_core.transaction_builders.base_builder import (BaseBuilder,
-                                                          IBaseConfiguration)
+from erdpy_core.transaction_builders.transaction_builder import (
+    ITransactionBuilderConfiguration, TransactionBuilder)
 
 
-class IESDTIssueConfiguration(IBaseConfiguration, Protocol):
+class IESDTIssueConfiguration(ITransactionBuilderConfiguration, Protocol):
     gas_limit_esdt_issue: IGasLimit
     issue_cost: ITransactionValue
     esdt_contract_address: IAddress
 
 
-class ESDTIssueBuilder(BaseBuilder):
+class ESDTIssueBuilder(TransactionBuilder):
     def __init__(self,
                  config: IESDTIssueConfiguration,
                  issuer: IAddress,

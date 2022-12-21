@@ -25,7 +25,7 @@ def test_egld_transfer_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
     assert payload.data == b"for the book"
     assert tx.chainID == "D"
     assert tx.sender == alice
@@ -42,7 +42,7 @@ def test_egld_transfer_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
     assert payload.data == b""
     assert tx.chainID == "D"
     assert tx.sender == alice
@@ -64,7 +64,7 @@ def test_esdt_transfer_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
     assert payload.data == b"ESDTTransfer@434f554e5445522d386230323866@2710"
     assert tx.chainID == "D"
     assert tx.sender == alice
@@ -86,7 +86,7 @@ def test_esdt_nft_transfer_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
     assert payload.data == b"ESDTNFTTransfer@45524450592d333866323439@01@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
     assert tx.chainID == "D"
     assert tx.sender == alice
@@ -110,7 +110,7 @@ def test_multi_esdt_nft_transfer_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
     assert payload.data == b"MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@02@45524450592d333866323439@01@01@4241522d633830643239@@8ac7230489e80000"
     assert tx.chainID == "D"
     assert tx.sender == alice

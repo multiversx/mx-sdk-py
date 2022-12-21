@@ -6,15 +6,15 @@ from erdpy_core.interfaces import (IAddress, ICodeMetadata, IGasLimit,
                                    IGasPrice, INonce, ITokenPayment,
                                    ITransactionValue)
 from erdpy_core.serializer import arg_to_string, args_to_strings
-from erdpy_core.transaction_builders.base_builder import (BaseBuilder,
-                                                          IBaseConfiguration)
+from erdpy_core.transaction_builders.transaction_builder import (
+    ITransactionBuilderConfiguration, TransactionBuilder)
 
 
-class IContractDeploymentConfiguration(IBaseConfiguration, Protocol):
+class IContractDeploymentConfiguration(ITransactionBuilderConfiguration, Protocol):
     deployment_address: IAddress
 
 
-class ContractDeploymentBuilder(BaseBuilder):
+class ContractDeploymentBuilder(TransactionBuilder):
     def __init__(self,
                  config: IContractDeploymentConfiguration,
                  code: bytes,
@@ -41,9 +41,9 @@ class ContractDeploymentBuilder(BaseBuilder):
         ] + args_to_strings(self.deploy_arguments)
 
 
-class ContractUpgradeBuilder(BaseBuilder):
+class ContractUpgradeBuilder(TransactionBuilder):
     def __init__(self,
-                 config: IBaseConfiguration,
+                 config: ITransactionBuilderConfiguration,
                  contract: IAddress,
                  code: bytes,
                  code_metadata: ICodeMetadata,
@@ -70,9 +70,9 @@ class ContractUpgradeBuilder(BaseBuilder):
         ] + args_to_strings(self.upgrade_arguments)
 
 
-class ContractCallBuilder(BaseBuilder):
+class ContractCallBuilder(TransactionBuilder):
     def __init__(self,
-                 config: IBaseConfiguration,
+                 config: ITransactionBuilderConfiguration,
                  contract: IAddress,
                  function_name: str,
                  call_arguments: List[Any],

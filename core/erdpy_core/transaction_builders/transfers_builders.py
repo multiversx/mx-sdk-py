@@ -3,23 +3,23 @@ from typing import List, Optional, Protocol
 from erdpy_core.interfaces import (IAddress, IGasLimit, IGasPrice, INonce,
                                    ITokenPayment, ITransactionValue)
 from erdpy_core.serializer import arg_to_string
-from erdpy_core.transaction_builders.base_builder import (BaseBuilder,
-                                                          IBaseConfiguration)
+from erdpy_core.transaction_builders.transaction_builder import (
+    ITransactionBuilderConfiguration, TransactionBuilder)
 
 
-class IESDTTransferConfiguration(IBaseConfiguration, Protocol):
+class IESDTTransferConfiguration(ITransactionBuilderConfiguration, Protocol):
     gas_limit_esdt_transfer: IGasLimit
     additional_gas_for_esdt_transfer: IGasLimit
 
 
-class IESDTNFTTransferConfiguration(IBaseConfiguration, Protocol):
+class IESDTNFTTransferConfiguration(ITransactionBuilderConfiguration, Protocol):
     gas_limit_esdt_nft_transfer: IGasLimit
     additional_gas_for_esdt_nft_transfer: IGasLimit
 
 
-class EGLDTransferBuilder(BaseBuilder):
+class EGLDTransferBuilder(TransactionBuilder):
     def __init__(self,
-                 config: IBaseConfiguration,
+                 config: ITransactionBuilderConfiguration,
                  sender: IAddress,
                  receiver: IAddress,
                  payment: ITokenPayment,
@@ -41,7 +41,7 @@ class EGLDTransferBuilder(BaseBuilder):
         return [self.data] if self.data else []
 
 
-class ESDTTransferBuilder(BaseBuilder):
+class ESDTTransferBuilder(TransactionBuilder):
     def __init__(self,
                  config: IESDTTransferConfiguration,
                  sender: IAddress,
@@ -71,7 +71,7 @@ class ESDTTransferBuilder(BaseBuilder):
         ]
 
 
-class ESDTNFTTransferBuilder(BaseBuilder):
+class ESDTNFTTransferBuilder(TransactionBuilder):
     def __init__(self,
                  config: IESDTNFTTransferConfiguration,
                  sender: IAddress,
@@ -104,7 +104,7 @@ class ESDTNFTTransferBuilder(BaseBuilder):
         ]
 
 
-class MultiESDTNFTTransferBuilder(BaseBuilder):
+class MultiESDTNFTTransferBuilder(TransactionBuilder):
     def __init__(self,
                  config: IESDTNFTTransferConfiguration,
                  sender: IAddress,

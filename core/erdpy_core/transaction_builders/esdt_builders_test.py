@@ -23,7 +23,7 @@ def test_esdt_issue_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
 
     assert payload.data == b"issue@464f4f@464f4f@e8d4a51000@08@63616e467265657a65@74727565@63616e4d696e74@74727565@63616e55706772616465@74727565"
     assert tx.chainID == "D"

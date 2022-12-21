@@ -10,16 +10,20 @@ from erdpy_core.transaction import Transaction
 from erdpy_core.transaction_payload import TransactionPayload
 
 
-class IBaseConfiguration(Protocol):
+class ITransactionBuilderConfiguration(Protocol):
     chain_id: IChainID
     min_gas_price: IGasPrice
     min_gas_limit: IGasLimit
     gas_limit_per_byte: IGasLimit
 
 
-class BaseBuilder:
+class TransactionBuilder:
+    """
+    Not intended to be used directly; should be derived and specialized.
+    """
+
     def __init__(self,
-                 config: IBaseConfiguration,
+                 config: ITransactionBuilderConfiguration,
                  nonce: Optional[INonce] = None,
                  value: Optional[ITransactionValue] = None,
                  gas_limit: Optional[IGasLimit] = None,
@@ -36,7 +40,7 @@ class BaseBuilder:
         self.sender: Optional[IAddress] = None
         self.receiver: Optional[IAddress] = None
 
-    def build_transaction(self) -> Transaction:
+    def build(self) -> Transaction:
         chain_id = self.chain_id
         sender = self._get_sender()
         receiver = self._get_receiver()

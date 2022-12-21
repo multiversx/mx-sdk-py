@@ -26,7 +26,7 @@ def test_contract_deployment_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
 
     assert payload.data == b"aabbccdd@0500@0506@2a@74657374"
     assert tx.chainID == "D"
@@ -53,7 +53,7 @@ def test_contract_upgrade_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
 
     assert payload.data == b"upgradeContract@aabbccdd@0506@2a@74657374"
     assert tx.chainID == "D"
@@ -78,7 +78,7 @@ def test_contract_call_builder():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
 
     assert payload.data == b"foo@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
     assert tx.sender == caller
@@ -106,7 +106,7 @@ def test_contract_call_builder_with_esdt_transfer():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
 
     assert payload.data == b"ESDTTransfer@434f554e5445522d386230323866@2710@68656c6c6f@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
     assert tx.sender == caller
@@ -133,7 +133,7 @@ def test_contract_call_builder_with_esdt_nft_transfer():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
 
     assert payload.data == b"ESDTNFTTransfer@45524450592d333866323439@01@01@00000000000000000500e0b77f1edfb01cb786a39120f02c31ff5fe40aad8974@68656c6c6f@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
     assert tx.sender == caller
@@ -161,7 +161,7 @@ def test_contract_call_builder_with_multi_esdt_nft_transfer():
     )
 
     payload = builder.build_payload()
-    tx = builder.build_transaction()
+    tx = builder.build()
 
     assert payload.data == b"MultiESDTNFTTransfer@00000000000000000500e0b77f1edfb01cb786a39120f02c31ff5fe40aad8974@02@45524450592d333866323439@01@01@4241522d633830643239@@8ac7230489e80000@68656c6c6f@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
     assert tx.sender == caller
