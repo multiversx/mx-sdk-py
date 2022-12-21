@@ -40,7 +40,7 @@ class TransactionOnNetwork:
         self.logs: TransactionLogs = TransactionLogs()
 
     def get_status(self) -> TransactionStatus:
-        return self.status.get_status()
+        return self.status
 
     @staticmethod
     def from_api_http_response(tx_hash: str, response: Dict[str, Any]) -> 'TransactionOnNetwork':
