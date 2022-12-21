@@ -12,8 +12,8 @@ class ContractQuery:
                  encoded_arguments: List[str] = [],
                  value: Optional[ITransactionValue] = None,
                  caller: Optional[IAddress] = None) -> None:
-        self.contract = contract
-        self.function = function
+        self.contract: IAddress = contract
+        self.function: str = function
         self.encoded_arguments = encoded_arguments
-        self.value = value
-        self.caller = caller
+        self.value: int = 0
+        self.caller: Optional[IAddress] = caller
