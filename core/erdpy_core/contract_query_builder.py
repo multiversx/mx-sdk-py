@@ -3,7 +3,7 @@
 from typing import Any, Optional, Sequence
 
 from erdpy_core.contract_query import ContractQuery
-from erdpy_core.interfaces import IAddress, ITransactionValue
+from erdpy_core.interfaces import IAddress
 from erdpy_core.serializer import args_to_strings
 
 
@@ -13,7 +13,7 @@ class ContractQueryBuilder():
                  function: str,
                  call_arguments: Sequence[Any] = [],
                  caller: Optional[IAddress] = None,
-                 value: Optional[ITransactionValue] = None,
+                 value: Optional[int] = None,
                  ) -> None:
         self.contract = contract
         self.function_name = function
