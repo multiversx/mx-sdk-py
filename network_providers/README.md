@@ -1,6 +1,9 @@
-# sdk-erdpy-eggs-network-providers
+# sdk-erdpy-network-providers
 
-**Experimental:** highly modularized **erdpy**.
+Network providers for **erdpy**.
+
+## Documentation
+[docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
 
 ## Development setup
 
