@@ -186,23 +186,8 @@ class ProxyNetworkProvider:
 
 class ContractQuery(IContractQuery):
     def __init__(self, address: IAddress, function: str, value: int, arguments: List[bytes], caller: Optional[IAddress] = None):
-        self.address = address
+        self.contract = address
         self.function = function
-        self.value = value
-        self.arguments = arguments
         self.caller = caller
-
-    def get_encoded_arguments(self):
-        return [item.hex() for item in self.arguments]
-
-    def get_function(self) -> str:
-        return self.function
-
-    def get_value(self) -> int:
-        return self.value
-
-    def get_address(self) -> IAddress:
-        return self.address
-
-    def get_caller(self) -> Union[IAddress, None]:
-        return self.caller
+        self.value = value
+        self.encoded_arguments = [item.hex() for item in arguments]

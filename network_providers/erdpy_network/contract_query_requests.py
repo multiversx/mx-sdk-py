@@ -1,4 +1,5 @@
-from typing import Dict, Any
+from typing import Any, Dict
+
 from erdpy_network.interface import IContractQuery
 
 
@@ -7,12 +8,12 @@ class ContractQueryRequest:
         self.query = query
 
     def to_http_request(self) -> Dict[str, Any]:
-        request: Dict[str, Any] = {'scAddress': self.query.get_address().bech32(),
-                                   'funcName': self.query.get_function(),
-                                   'value': str(self.query.get_value()),
-                                   'args': self.query.get_encoded_arguments()
+        request: Dict[str, Any] = {'scAddress': self.query.contract.bech32(),
+                                   'funcName': self.query.function,
+                                   'value': str(self.query.value),
+                                   'args': self.query.encoded_arguments
                                    }
-        caller = self.query.get_caller()
+        caller = self.query.caller
 
         if caller:
             request['caller'] = caller.bech32()
