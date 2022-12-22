@@ -1,4 +1,4 @@
 cryptography==36.0.2
 pynacl==1.5.0
 mnemonic==0.20
-git+https://git@github.com/ElrondNetwork/sdk-erdpy-core.git@v0.2.0#egg=erdpy_core
+git+https://git@github.com/ElrondNetwork/sdk-erdpy-core.git@v0.3.0#egg=erdpy_core
