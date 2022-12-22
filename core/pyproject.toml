@@ -3,12 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "erdpy_core"
+name = "mx-sdk-erdpy-core"
 version = "0.3.0"
 authors = [
   { name="MultiversX" },
 ]
-description = "erdpy_core"
+license = "MIT"
+description = "MultiversX: core components of erdpy."
+readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
