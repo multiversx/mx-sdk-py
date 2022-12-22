@@ -1,5 +1,5 @@
 
-from erdpy_core.interfaces import IAddress, INonce
+from erdpy_core.interfaces import INonce
 
 
 class AccountNonceHolder():
@@ -7,9 +7,8 @@ class AccountNonceHolder():
     An abstraction representing an account (user or Smart Contract) on the Network.
     """
 
-    def __init__(self, address: IAddress):
-        self.address = address
-        self.nonce: INonce = 0
+    def __init__(self, initial_nonce: INonce = 0):
+        self.nonce: INonce = initial_nonce
 
     def get_nonce_then_increment(self) -> INonce:
         nonce = self.nonce
