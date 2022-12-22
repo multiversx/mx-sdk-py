@@ -6,12 +6,14 @@ build-backend = "hatchling.build"
 allow-direct-references = true
 
 [project]
-name = "erdpy_wallet"
+name = "mx-sdk-erdpy-wallet"
 version = "0.2.1"
 authors = [
   { name="Elrond Network" },
 ]
-description = "erdpy_wallet"
+license = "MIT"
+description = "MultiversX: wallet components of erdpy."
+readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
