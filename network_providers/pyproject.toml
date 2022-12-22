@@ -6,12 +6,14 @@ build-backend = "hatchling.build"
 allow-direct-references = true
 
 [project]
-name = "erdpy_network"
+name = "mx-sdk-erdpy-network-providers"
 version = "0.5.0"
 authors = [
   { name="MultiversX" },
 ]
-description = "erdpy_network"
+license = "MIT"
+description = "MultiversX: network providers for erdpy."
+readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
