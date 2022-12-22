@@ -8,12 +8,12 @@ class ContractQueryRequest:
         self.query = query
 
     def to_http_request(self) -> Dict[str, Any]:
-        request: Dict[str, Any] = {'scAddress': self.query.contract.bech32(),
-                                   'funcName': self.query.function,
-                                   'value': str(self.query.value),
-                                   'args': self.query.encoded_arguments
+        request: Dict[str, Any] = {'scAddress': self.query.get_contract().bech32(),
+                                   'funcName': self.query.get_function(),
+                                   'value': str(self.query.get_value()),
+                                   'args': self.query.get_encoded_arguments()
                                    }
-        caller = self.query.caller
+        caller = self.query.get_caller()
 
         if caller:
             request['caller'] = caller.bech32()
