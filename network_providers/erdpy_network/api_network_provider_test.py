@@ -4,6 +4,19 @@ from erdpy_core import Address
 from erdpy_network.api_network_provider import ApiNetworkProvider
 from erdpy_network.errors import GenericError
 from erdpy_network.proxy_network_provider import ContractQuery
+from erdpy_network.interface import IPagination
+
+
+class Pagination(IPagination):
+    def __init__(self, start: int, size: int) -> None:
+        self.start = start
+        self.size = size
+    
+    def get_start(self) -> int:
+        return self.start
+    
+    def get_size(self) -> int:
+        return self.size
 
 
 class TestApi:
@@ -74,6 +87,14 @@ class TestApi:
         assert result.sender.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.receiver.bech32() == 'erd1c8tnzykaj7lhrd5cy6jap533afr4dqu7uqcdm6qv4wuwly9lcsqqm9ll4f'
         assert result.value == '10000000000000000000'
+    
+    def test_get_transactions(self):
+        address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
+        pagination = Pagination(0, 2)
+
+        result = self.api.get_transactions(address, pagination)
+
+        assert len(result) == 2
 
     def test_get_sc_invoking_tx(self):
         result = self.api.get_transaction('cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9')

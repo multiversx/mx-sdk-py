@@ -120,6 +120,17 @@ class ApiNetworkProvider:
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
 
         return transaction
+    
+    def get_transactions(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[TransactionOnNetwork]:
+        default_pagination = DefaultPagination()
+        pagination = pagination if pagination is not None else default_pagination
+
+        url = f"accounts/{address.bech32()}/transactions?{self._build_pagination_params(pagination)}"
+        response = self.do_get_generic_collection(url)
+
+        transactions = [TransactionOnNetwork.from_api_http_response(tx.get("txHash", ""), tx) for tx in response]
+
+        return transactions
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transactions/{tx_hash}?fields=status')
