@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
   "requests==2.24.0",
-    "erdpy_core @ https://git@github.com/ElrondNetwork/sdk-erdpy-core.git@v0.2.0#egg=erdpy_core"
+  "erdpy_core==0.3.0"
 ]
 
 [project.urls]
