@@ -2,6 +2,11 @@
 
 Core components of **erdpy**.
 
+## Distribution
+ 
+ - GitHub: `git+https://git@github.com/ElrondNetwork/sdk-erdpy-core.git@v{Version}#egg=erdpy_core`
+ - [PyPi](https://pypi.org/user/elrond/)
+
 ## Documentation
 
 [docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
