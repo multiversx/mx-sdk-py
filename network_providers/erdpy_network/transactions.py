@@ -90,3 +90,25 @@ class TransactionOnNetwork:
         result.logs = TransactionLogs.from_http_response(response.get('logs', {}))
 
         return result
+    
+    def to_dictionary(self) -> Dict[str, Any]:
+        return {
+            "isCompleted": self.is_completed,
+            "hash": self.hash,
+            "type": self.type,
+            "nonce": self.nonce,
+            "round": self.round,
+            "epoch": self.epoch,
+            "value": self.value,
+            "receiver": self.receiver.bech32(),
+            "sender": self.sender.bech32(),
+            "gasLimit": self.gas_limit,
+            "gasPrice": self.gas_price,
+            "data": self.data,
+            "signature": self.signature,
+            "status": self.status.status,
+            "timestamp": self.timestamp,
+            "blockNonce": self.block_nonce,
+            "hyperblockNonce": self.hyperblock_nonce,
+            "hyperblockHash": self.hyperblock_hash
+        }
