@@ -33,6 +33,6 @@ class AccountOnNetwork:
             "address": self.address.bech32(),
             "nonce": self.nonce,
             "balance": self.balance,
-            "code": self.code.hex(),
+            "code": self.code.decode(),
             "username": self.username
         }
