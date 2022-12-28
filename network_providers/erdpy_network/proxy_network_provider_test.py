@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from erdpy_core import Address
 
 from erdpy_network.proxy_network_provider import (ContractQuery,
@@ -127,7 +129,7 @@ class FirstTransaction:
     def __init__(self) -> None:
         pass
 
-    def to_dictionary(self):
+    def to_dictionary(self) -> Dict[str, Any]:
         return {
                 "nonce": 42,
                 "value": "1",
@@ -144,7 +146,7 @@ class SecondTransaction:
     def __init__(self) -> None:
         pass
 
-    def to_dictionary(self):
+    def to_dictionary(self) -> Dict[str, Any]:
         return {
                 "nonce": 43,
                 "value": "1",
