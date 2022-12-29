@@ -27,11 +27,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
-    - name: Install other dependencies
-      run: |
-        wget https://github.com/ElrondNetwork/elrond-sdk-go-tools/releases/download/v1.0.0/mcl_signer_v1.0.0_ubuntu-latest.tar.gz
-        tar -xf mcl_signer_v1.0.0_ubuntu-latest.tar.gz
     - name: Test with pytest
       run: |
-        export MCL_SIGNER_PATH=./signer
         pytest .

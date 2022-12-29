@@ -4,6 +4,8 @@ import platform
 from pathlib import Path
 from typing import Optional
 
+from erdpy_wallet.errors import LibraryNotFound
+
 
 class BLSFacade:
     _library: Optional[ctypes.CDLL] = None
@@ -61,24 +63,28 @@ class BLSFacade:
         return self._library
 
     def _load_library(self) -> ctypes.CDLL:
-        path = self._get_library_path()
-        library = ctypes.cdll.LoadLibrary(str(path))
+        lib_path = self._get_library_path()
 
-        library.generatePrivateKey.argtypes = []
-        library.generatePrivateKey.restype = ctypes.c_char_p
+        if not lib_path.exists():
+            raise LibraryNotFound(lib_path)
 
-        library.generatePublicKey.argtypes = [ctypes.c_char_p]
-        library.generatePublicKey.restype = ctypes.c_char_p
+        lib = ctypes.cdll.LoadLibrary(str(lib_path))
 
-        library.computeMessageSignature.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
-        library.computeMessageSignature.restype = ctypes.c_char_p
+        lib.generatePrivateKey.argtypes = []
+        lib.generatePrivateKey.restype = ctypes.c_char_p
 
-        library.verifyMessageSignature.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
-        library.verifyMessageSignature.restype = ctypes.c_int
+        lib.generatePublicKey.argtypes = [ctypes.c_char_p]
+        lib.generatePublicKey.restype = ctypes.c_char_p
 
-        logging.info(f"Loaded library: {path}")
+        lib.computeMessageSignature.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+        lib.computeMessageSignature.restype = ctypes.c_char_p
 
-        return library
+        lib.verifyMessageSignature.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+        lib.verifyMessageSignature.restype = ctypes.c_int
+
+        logging.info(f"Loaded library: {lib_path}")
+
+        return lib
 
     def _get_library_path(self):
         os_name = platform.system()
