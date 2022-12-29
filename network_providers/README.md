@@ -2,6 +2,11 @@
 
 Network providers for **erdpy**.
 
+## Distribution
+ 
+ - GitHub: `git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-network-providers.git@v{Version}#egg=erdpy_network`
+ - [PyPi](https://pypi.org/user/elrond/)
+
 ## Documentation
 [docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
 

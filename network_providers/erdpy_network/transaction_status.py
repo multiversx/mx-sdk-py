@@ -26,5 +26,5 @@ class TransactionStatus:
     def equals(self, other: 'TransactionStatus') -> bool:
         return self.status == other.status
 
-    def get_status(self):
-        return self
+    def __str__(self) -> str:
+        return self.status

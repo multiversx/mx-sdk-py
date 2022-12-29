@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Protocol, Union
+from typing import Any, Dict, Optional, Protocol, Sequence
 
 
 class ISerializable(Protocol):
@@ -15,13 +15,12 @@ class ITransaction(ISerializable, Protocol):
 
 class IPagination(Protocol):
     def get_start(self) -> int: ...
-
     def get_size(self) -> int: ...
 
 
 class IContractQuery(Protocol):
-    contract: IAddress
-    function: str
-    value: int
-    caller: Union[IAddress, None]
-    encoded_arguments: List[str]
+    def get_contract(self) -> IAddress: ...
+    def get_function(self) -> str: ...
+    def get_encoded_arguments(self) -> Sequence[str]: ...
+    def get_caller(self) -> Optional[IAddress]: ...
+    def get_value(self) -> int: ...
