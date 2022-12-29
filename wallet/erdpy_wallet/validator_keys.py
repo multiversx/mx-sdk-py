@@ -47,6 +47,11 @@ class ValidatorPublicKey:
 
         self.buffer = buffer
 
+    @classmethod
+    def from_string(cls, buffer_hex: str) -> 'ValidatorPublicKey':
+        buffer = bytes.fromhex(buffer_hex)
+        return ValidatorPublicKey(buffer)
+
     def verify(self, data: bytes, signature: ISignature) -> bool:
         ok = BLSFacade().verify_message_signature(self.buffer, data, signature)
         return ok
