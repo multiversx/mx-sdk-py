@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
+from typing import Any, Dict, List, Tuple, Union, cast
 
 import requests
 from requests.auth import AuthBase
@@ -55,20 +55,14 @@ class ApiNetworkProvider:
 
         return account
 
-    def get_fungible_tokens_of_account(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[FungibleTokenOfAccountOnNetwork]:
-        default_pagination = DefaultPagination()
-        pagination = pagination if pagination is not None else default_pagination
-
+    def get_fungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[FungibleTokenOfAccountOnNetwork]:
         url = f'accounts/{address.bech32()}/tokens?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(FungibleTokenOfAccountOnNetwork.from_http_response, response)
 
         return list(result)
 
-    def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[NonFungibleTokenOfAccountOnNetwork]:
-        default_pagination = DefaultPagination()
-        pagination = pagination if pagination is not None else default_pagination
-
+    def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[NonFungibleTokenOfAccountOnNetwork]:
         url = f'accounts/{address.bech32()}/nfts?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(NonFungibleTokenOfAccountOnNetwork.from_api_http_response, response)
@@ -121,10 +115,7 @@ class ApiNetworkProvider:
 
         return transaction
     
-    def get_transactions(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[TransactionOnNetwork]:
-        default_pagination = DefaultPagination()
-        pagination = pagination if pagination is not None else default_pagination
-
+    def get_transactions(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[TransactionOnNetwork]:
         url = f"accounts/{address.bech32()}/transactions?{self._build_pagination_params(pagination)}"
         response = self.do_get_generic_collection(url)
 

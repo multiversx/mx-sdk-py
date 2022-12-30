@@ -12,7 +12,7 @@ from erdpy_network.errors import GenericError
 from erdpy_network.interface import IAddress, IContractQuery, ITransaction
 from erdpy_network.network_config import NetworkConfig
 from erdpy_network.network_status import NetworkStatus
-from erdpy_network.resources import GenericResponse
+from erdpy_network.resources import GenericResponse, SimulateResponse
 from erdpy_network.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from erdpy_network.tokens import (FungibleTokenOfAccountOnNetwork,
@@ -136,11 +136,10 @@ class ProxyNetworkProvider:
 
         return definition
     
-    def simulate_transaction(self, transaction: Dict[str, Any]) -> Any:
-        raise NotImplementedError()
-    
-    def simulate_transaction_cost(self, transaction: Dict[str, Any]) -> Any:
-        raise NotImplementedError()
+    def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
+        url = "transaction/simulate"
+        response = self.do_post_generic(url, transaction.to_dictionary())
+        return SimulateResponse(response)
 
     def do_get_generic(self, resource_url: str) -> GenericResponse:
         url = f'{self.url}/{resource_url}'
