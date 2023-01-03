@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "mx-sdk-erdpy-network-providers"
-version = "0.6.0"
+version = "0.6.1"
 authors = [
   { name="MultiversX" },
 ]
@@ -22,8 +22,8 @@ classifiers = [
 ]
 dependencies = [
   "requests==2.24.0",
-  "erdpy_core==0.3.0"
+  "mx-sdk-erdpy_core==0.3.0"
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-network-providers"
+"Homepage" = "https://github.com/ElrondNetwork/mx-sdk-erdpy-network-providers"
