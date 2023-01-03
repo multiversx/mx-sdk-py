@@ -3,14 +3,14 @@ from typing import Any, Dict
 
 from erdpy_core import Address
 
-from erdpy_network.contract_results import ContractResults
-from erdpy_network.interface import IAddress
-from erdpy_network.resources import EmptyAddress
-from erdpy_network.transaction_completion_strategy import (
+from erdpy_network_providers.contract_results import ContractResults
+from erdpy_network_providers.interface import IAddress
+from erdpy_network_providers.resources import EmptyAddress
+from erdpy_network_providers.transaction_completion_strategy import (
     TransactionCompletionStrategyOnApi, TransactionCompletionStrategyOnProxy)
-from erdpy_network.transaction_logs import TransactionLogs
-from erdpy_network.transaction_receipt import TransactionReceipt
-from erdpy_network.transaction_status import TransactionStatus
+from erdpy_network_providers.transaction_logs import TransactionLogs
+from erdpy_network_providers.transaction_receipt import TransactionReceipt
+from erdpy_network_providers.transaction_status import TransactionStatus
 
 
 class TransactionOnNetwork:

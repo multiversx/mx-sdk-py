@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 import base64
-from erdpy_network.constants import MAX_UINT64
+from erdpy_network_providers.constants import MAX_UINT64
 
 
 class ContractQueryResponse:
