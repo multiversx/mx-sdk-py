@@ -14,7 +14,7 @@ class NetworkConfig:
         self.min_gas_price: int = 1000000000
         self.gas_price_modifier: float = 1
         self.min_transaction_version: int = 1
-        self.num_shards_without_meta: int = 0
+        self.num_shards_without_meta: int = 3
 
     @staticmethod
     def from_http_response(payload: Dict[str, Any]) -> 'NetworkConfig':
