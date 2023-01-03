@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from erdpy_core import Address
 
 from erdpy_network.proxy_network_provider import (ContractQuery,
@@ -106,3 +108,66 @@ class TestProxy:
         assert result.is_completed == True
         assert len(result.contract_results.items) > 0
         assert result.data == 'issue@54455354@54455354@03e8@00@63616e4d696e74@74727565@63616e4275726e@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565'
+
+    def test_send_transaction(self):
+        transaction = DummyTransaction({
+                "nonce": 42,
+                "value": "1",
+                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
+                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
+                "gasPrice": 1000000000,
+                "gasLimit": 50000,
+                "chainID": "D",
+                "version": 1,
+                "signature": "c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900"
+            })
+        
+        expected_hash = "6e2fa63ea02937f00d7549f3e4eb9af241e4ac13027aa65a5300816163626c01"
+
+        assert self.proxy.send_transaction(transaction) == expected_hash
+
+    def test_send_transactions(self):
+        first_tx = DummyTransaction({
+                "nonce": 42,
+                "value": "1",
+                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
+                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
+                "gasPrice": 1000000000,
+                "gasLimit": 50000,
+                "chainID": "D",
+                "version": 1,
+                "signature": "c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900"
+            })
+        
+        second_tx = DummyTransaction({
+                "nonce": 43,
+                "value": "1",
+                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
+                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
+                "gasPrice": 1000000000,
+                "gasLimit": 50000,
+                "chainID": "D",
+                "version": 1,
+                "signature": "9c4c22d0ae1b5a10c39583a5ab9020b00b27aa69d4ac8ab4922620dbf0df4036ed890f9946d38a9d0c85d6ac485c0d9b2eac0005e752f249fd0ad863b0471d02"
+            })
+
+        third_tx = DummyTransaction({
+                "nonce": 44
+            })
+
+        transactions = [first_tx, second_tx, third_tx]
+
+        expected_hashes = [
+            "6e2fa63ea02937f00d7549f3e4eb9af241e4ac13027aa65a5300816163626c01",
+            "37d7e84313a5baea2a61c6ab10bb29b52bc54f7ac9e3918a9faeb1e08f42081c"
+        ]
+
+        assert self.proxy.send_transactions(transactions) == (2, {'0': f"{expected_hashes[0]}", '1': f"{expected_hashes[1]}"})
+
+
+class DummyTransaction:
+    def __init__(self, transaction: Dict[str, Any]) -> None:
+        self.transaction = transaction
+    
+    def to_dictionary(self) -> Dict[str, Any]:
+        return self.transaction

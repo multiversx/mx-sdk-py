@@ -92,7 +92,7 @@ class ProxyNetworkProvider:
         response = self.do_post_generic('transaction/send', transaction.to_dictionary())
         return response.get('txHash', '')
 
-    def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, str]:
+    def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, str]:
         transactions_as_dictionaries = [transaction.to_dictionary() for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         # Proxy and Observers have different response format:
