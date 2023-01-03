@@ -28,3 +28,11 @@ class ContractQueryResponse:
 
     def get_return_data_parts(self) -> List[bytes]:
         return [base64.b64decode(item) for item in self.return_data]
+    
+    def to_dictionary(self) -> Dict[str, Any]:
+        return {
+            "returnData": self.return_data,
+            "returnCode": self.return_code,
+            "returnMessage": self.return_message,
+            "gasUsed": self.gas_used
+        }

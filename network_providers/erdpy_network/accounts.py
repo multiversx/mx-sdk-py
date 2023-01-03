@@ -27,3 +27,12 @@ class AccountOnNetwork:
         result.username = payload.get('username', '')
 
         return result
+    
+    def to_dictionary(self) -> Dict[str, Any]:
+        return{
+            "address": self.address.bech32(),
+            "nonce": self.nonce,
+            "balance": self.balance,
+            "code": self.code.hex(),
+            "username": self.username
+        }

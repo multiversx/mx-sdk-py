@@ -12,7 +12,7 @@ from erdpy_network.errors import GenericError
 from erdpy_network.interface import IAddress, IContractQuery, ITransaction
 from erdpy_network.network_config import NetworkConfig
 from erdpy_network.network_status import NetworkStatus
-from erdpy_network.resources import GenericResponse
+from erdpy_network.resources import GenericResponse, SimulateResponse
 from erdpy_network.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from erdpy_network.tokens import (FungibleTokenOfAccountOnNetwork,
@@ -33,8 +33,8 @@ class ProxyNetworkProvider:
 
         return network_config
 
-    def get_network_status(self) -> NetworkStatus:
-        response = self.do_get_generic(f'network/status/{METACHAIN_ID}')
+    def get_network_status(self, shard: Optional[int] = METACHAIN_ID) -> NetworkStatus:
+        response = self.do_get_generic(f'network/status/{shard}')
         network_status = NetworkStatus.from_http_response(response.get('status', ''))
 
         return network_status
@@ -81,6 +81,13 @@ class ProxyNetworkProvider:
         transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response)
 
         return transaction
+    
+    def get_account_transactions(self, address: IAddress) -> List[TransactionOnNetwork]:
+        url = f"address/{address.bech32()}/transactions"
+        response = self.do_get_generic(url).get("transactions", [])
+        result = [TransactionOnNetwork.from_proxy_http_response(tx.get("hash", ""), tx) for tx in response]
+
+        return result
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transaction/{tx_hash}/status')
@@ -128,6 +135,11 @@ class ProxyNetworkProvider:
         definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties, self.address_hrp)
 
         return definition
+    
+    def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
+        url = "transaction/simulate"
+        response = self.do_post_generic(url, transaction.to_dictionary())
+        return SimulateResponse(response)
 
     def do_get_generic(self, resource_url: str) -> GenericResponse:
         url = f'{self.url}/{resource_url}'

@@ -39,6 +39,22 @@ class ContractResultItem:
         self.call_type: int = 0
         self.return_message: str = ""
         self.logs: TransactionLogs = TransactionLogs()
+    
+    def to_dictionary(self) -> Dict[str, Any]:
+        return {
+            "hash": self.hash,
+            "nonce": self.nonce,
+            "value": self.value,
+            "receiver": self.receiver.bech32(),
+            "sender": self.sender.bech32(),
+            "data": self.data,
+            "previousHash": self.previous_hash,
+            "originalHash": self.original_hash,
+            "gasLimit": self.gas_limit,
+            "gasPrice": self.gas_price,
+            "callType": self.call_type,
+            "returnMessage": self.return_message
+        }
 
     @staticmethod
     def from_api_http_response(response: Any) -> "ContractResultItem":
