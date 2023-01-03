@@ -2,8 +2,8 @@ from typing import Any, Dict
 
 from erdpy_core import Address
 
-from erdpy_network.interface import IAddress
-from erdpy_network.resources import EmptyAddress
+from erdpy_network_providers.interface import IAddress
+from erdpy_network_providers.resources import EmptyAddress
 
 
 class TransactionReceipt:

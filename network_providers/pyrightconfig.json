@@ -1,6 +1,6 @@
 {
     "include": [
-        "erdpy_network"
+        "erdpy_network_providers"
     ],
     "exclude": [
         "**/__pycache__"

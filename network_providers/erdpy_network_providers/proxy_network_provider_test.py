@@ -2,7 +2,7 @@ from typing import Any, Dict
 
 from erdpy_core import Address
 
-from erdpy_network.proxy_network_provider import (ContractQuery,
+from erdpy_network_providers.proxy_network_provider import (ContractQuery,
                                                   ProxyNetworkProvider)
 
 

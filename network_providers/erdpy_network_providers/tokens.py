@@ -2,9 +2,9 @@ from typing import Any, Dict, List
 
 from erdpy_core import Address
 
-from erdpy_network.interface import IAddress
-from erdpy_network.resources import EmptyAddress
-from erdpy_network.utils import decimal_to_padded_hex
+from erdpy_network_providers.interface import IAddress
+from erdpy_network_providers.resources import EmptyAddress
+from erdpy_network_providers.utils import decimal_to_padded_hex
 
 
 class FungibleTokenOfAccountOnNetwork:

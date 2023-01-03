@@ -1,4 +1,4 @@
-from erdpy_network.interface import IPagination
+from erdpy_network_providers.interface import IPagination
 
 
 class DefaultPagination(IPagination):

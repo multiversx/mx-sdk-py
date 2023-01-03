@@ -1,8 +1,8 @@
 from typing import Protocol
 
-from erdpy_network.transaction_logs import TransactionLogs
-from erdpy_network.transaction_status import TransactionStatus
-from erdpy_network.utils import is_padded_hex
+from erdpy_network_providers.transaction_logs import TransactionLogs
+from erdpy_network_providers.transaction_status import TransactionStatus
+from erdpy_network_providers.utils import is_padded_hex
 
 KNOWN_COMPLETION_EVENTS = ["completedTxEvent", "SCDeploy", "signalError"]
 

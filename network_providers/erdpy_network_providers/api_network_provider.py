@@ -3,26 +3,26 @@ from typing import Any, Dict, List, Tuple, Union, cast
 import requests
 from requests.auth import AuthBase
 
-from erdpy_network.accounts import AccountOnNetwork
-from erdpy_network.config import DefaultPagination
-from erdpy_network.constants import DEFAULT_ADDRESS_HRP
-from erdpy_network.contract_query_requests import ContractQueryRequest
-from erdpy_network.contract_query_response import ContractQueryResponse
-from erdpy_network.errors import GenericError
-from erdpy_network.interface import (IAddress, IContractQuery, IPagination,
+from erdpy_network_providers.accounts import AccountOnNetwork
+from erdpy_network_providers.config import DefaultPagination
+from erdpy_network_providers.constants import DEFAULT_ADDRESS_HRP
+from erdpy_network_providers.contract_query_requests import ContractQueryRequest
+from erdpy_network_providers.contract_query_response import ContractQueryResponse
+from erdpy_network_providers.errors import GenericError
+from erdpy_network_providers.interface import (IAddress, IContractQuery, IPagination,
                                      ITransaction)
-from erdpy_network.network_config import NetworkConfig
-from erdpy_network.network_general_statistics import NetworkGeneralStatistics
-from erdpy_network.network_stake import NetworkStake
-from erdpy_network.network_status import NetworkStatus
-from erdpy_network.proxy_network_provider import ProxyNetworkProvider
-from erdpy_network.token_definitions import (
+from erdpy_network_providers.network_config import NetworkConfig
+from erdpy_network_providers.network_general_statistics import NetworkGeneralStatistics
+from erdpy_network_providers.network_stake import NetworkStake
+from erdpy_network_providers.network_status import NetworkStatus
+from erdpy_network_providers.proxy_network_provider import ProxyNetworkProvider
+from erdpy_network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
-from erdpy_network.tokens import (FungibleTokenOfAccountOnNetwork,
+from erdpy_network_providers.tokens import (FungibleTokenOfAccountOnNetwork,
                                   NonFungibleTokenOfAccountOnNetwork)
-from erdpy_network.transaction_status import TransactionStatus
-from erdpy_network.transactions import TransactionOnNetwork
-from erdpy_network.utils import decimal_to_padded_hex
+from erdpy_network_providers.transaction_status import TransactionStatus
+from erdpy_network_providers.transactions import TransactionOnNetwork
+from erdpy_network_providers.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
