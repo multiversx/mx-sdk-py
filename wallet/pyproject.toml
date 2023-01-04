@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "mx-sdk-erdpy-wallet"
-version = "0.2.1"
+version = "0.2.2"
 authors = [
   { name="MultiversX" },
 ]
@@ -24,7 +24,7 @@ dependencies = [
   "pynacl==1.5.0",
   "cryptography==36.0.2",
   "mnemonic==0.20",
-  "erdpy_core==0.3.0"
+  "mx-sdk-erdpy-core==0.3.0"
 ]
 
 [tool.hatch.build]
