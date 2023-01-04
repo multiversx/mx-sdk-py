@@ -78,7 +78,10 @@ class TransactionOnNetwork:
 
         result.gas_price = response.get('gasPrice', 0)
         result.gas_limit = response.get('gasLimit', 0)
-        result.data = base64.b64decode(response.get('data', '')).decode()
+
+        data = response.get('data', '') or ""
+
+        result.data = base64.b64decode(data).decode()
         result.status = TransactionStatus(response.get('status'))
         result.timestamp = response.get('timestamp', 0)
 
