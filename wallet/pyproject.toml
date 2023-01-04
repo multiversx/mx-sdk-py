@@ -9,7 +9,7 @@ allow-direct-references = true
 name = "mx-sdk-erdpy-wallet"
 version = "0.2.1"
 authors = [
-  { name="Elrond Network" },
+  { name="MultiversX" },
 ]
 license = "MIT"
 description = "MultiversX: wallet components of erdpy."
@@ -33,4 +33,4 @@ exclude = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/sdk-erdpy-wallet"
+"Homepage" = "https://github.com/multiversx/mx-sdk-erdpy-wallet"

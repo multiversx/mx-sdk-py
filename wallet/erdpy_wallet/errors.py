@@ -36,6 +36,11 @@ class ErrBadPublicKeyLength(Exception):
         super().__init__("Bad length of public key")
 
 
-class LibraryNotFound(Exception):
+class ErrLibraryNotFound(Exception):
     def __init__(self, path: Path) -> None:
         super().__init__(f"Library not found: {path}")
+
+
+class ErrUnsupportedOS(Exception):
+    def __init__(self, os_name: str) -> None:
+        super().__init__(f"Unsupported OS: {os_name}")
