@@ -134,3 +134,4 @@ typings/**
 # Libraries
 !libbls.so
 !libbls.dylib
+!libbls.dll
