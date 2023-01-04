@@ -68,7 +68,7 @@ class BLSFacade:
         if not lib_path.exists():
             raise ErrLibraryNotFound(lib_path)
 
-        lib = ctypes.cdll.LoadLibrary(str(lib_path))
+        lib = ctypes.CDLL(str(lib_path), winmode=0)
 
         lib.generatePrivateKey.argtypes = []
         lib.generatePrivateKey.restype = ctypes.c_char_p
