@@ -28,9 +28,15 @@ dependencies = [
 ]
 
 [tool.hatch.build]
-exclude = [
-  "testdata/**"
+include = [
+  "erdpy_wallet/**"
 ]
+exclude = [
+  "erdpy_wallet/testdata/**"
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+"erdpy_wallet/libraries" = "erdpy_wallet/libraries"
 
 [project.urls]
 "Homepage" = "https://github.com/multiversx/mx-sdk-erdpy-wallet"
