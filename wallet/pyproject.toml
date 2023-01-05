@@ -7,9 +7,9 @@ allow-direct-references = true
 
 [project]
 name = "mx-sdk-erdpy-wallet"
-version = "0.2.2"
+version = "0.3.0"
 authors = [
-  { name="Elrond Network" },
+  { name="MultiversX" },
 ]
 license = "MIT"
 description = "MultiversX: wallet components of erdpy."
@@ -28,9 +28,15 @@ dependencies = [
 ]
 
 [tool.hatch.build]
+include = [
+  "erdpy_wallet/**"
+]
 exclude = [
-  "testdata/**"
+  "erdpy_wallet/testdata/**"
 ]
 
+[tool.hatch.build.targets.wheel.force-include]
+"erdpy_wallet/libraries" = "erdpy_wallet/libraries"
+
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/mx-sdk-erdpy-wallet"
+"Homepage" = "https://github.com/multiversx/mx-sdk-erdpy-wallet"

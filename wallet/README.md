@@ -2,6 +2,11 @@
 
 Wallet & crypto components of **erdpy**.
 
+## Distribution
+
+ - GitHub: `git+https://git@github.com/multiversx/mx-sdk-erdpy-wallet.git@v{Version}#egg=erdpy_wallet`
+ - [PyPi](https://pypi.org/user/elrond/)
+
 ## Documentation
 
 [docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
@@ -36,7 +41,6 @@ If using VSCode, restart it or follow these steps:
 Run the tests as follows:
 
 ```
-export MCL_SIGNER_PATH=~/elrondsdk/mcl_signer/v1.0.0/signer
 pytest .
 ```
 

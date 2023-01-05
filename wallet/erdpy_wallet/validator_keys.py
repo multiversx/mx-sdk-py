@@ -1,12 +1,8 @@
-
-import os
-import subprocess
-
 from erdpy_wallet.constants import (VALIDATOR_PUBKEY_LENGTH,
                                     VALIDATOR_SECRETKEY_LENGTH)
-from erdpy_wallet.errors import (ErrBadSecretKeyLength, ErrMclNotImplemented,
-                                 ErrMclSignerPathNotDefined)
+from erdpy_wallet.errors import ErrBadSecretKeyLength
 from erdpy_wallet.interfaces import ISignature
+from erdpy_wallet.libraries.bls_facade import BLSFacade
 
 
 class ValidatorSecretKey:
@@ -18,7 +14,8 @@ class ValidatorSecretKey:
 
     @classmethod
     def generate(cls) -> 'ValidatorSecretKey':
-        raise ErrMclNotImplemented()
+        secret_key_bytes = BLSFacade().generate_private_key()
+        return ValidatorSecretKey(secret_key_bytes)
 
     @classmethod
     def from_string(cls, buffer_hex: str) -> 'ValidatorSecretKey':
@@ -26,19 +23,12 @@ class ValidatorSecretKey:
         return ValidatorSecretKey(buffer)
 
     def generate_public_key(self) -> 'ValidatorPublicKey':
-        raise ErrMclNotImplemented()
+        public_key_bytes = BLSFacade().generate_public_key(self.buffer)
+        return ValidatorPublicKey(public_key_bytes)
 
     def sign(self, data: bytes) -> ISignature:
-        mcl_signer_path = self._get_mcl_signer_path()
-        signed_hex: str = subprocess.check_output([mcl_signer_path, data.hex(), self.buffer.hex()], universal_newlines=True, shell=False)
-        return bytes.fromhex(signed_hex)
-
-    def _get_mcl_signer_path(self):
-        mcl_signer_path = os.environ.get("MCL_SIGNER_PATH", None)
-        if not mcl_signer_path:
-            raise ErrMclSignerPathNotDefined()
-
-        return mcl_signer_path
+        signature = BLSFacade().compute_message_signature(data, self.buffer)
+        return signature
 
     def hex(self) -> str:
         return self.buffer.hex()
@@ -57,8 +47,14 @@ class ValidatorPublicKey:
 
         self.buffer = buffer
 
+    @classmethod
+    def from_string(cls, buffer_hex: str) -> 'ValidatorPublicKey':
+        buffer = bytes.fromhex(buffer_hex)
+        return ValidatorPublicKey(buffer)
+
     def verify(self, data: bytes, signature: ISignature) -> bool:
-        raise ErrMclNotImplemented()
+        ok = BLSFacade().verify_message_signature(self.buffer, data, signature)
+        return ok
 
     def hex(self) -> str:
         return self.buffer.hex()
