@@ -140,6 +140,15 @@ class ProxyNetworkProvider:
         url = "transaction/simulate"
         response = self.do_post_generic(url, transaction.to_dictionary())
         return SimulateResponse(response)
+    
+    def get_hyperblock(self, key: Union[int, str]) -> Dict[str, Any]:
+        url = f"hyperblock/by-hash/{key}"
+        if str(key).isnumeric():
+            url = f"hyperblock/by-nonce/{key}"
+
+        response = self.do_get_generic(url)
+        response = response.get("hyperblock", {})
+        return response
 
     def do_get_generic(self, resource_url: str) -> GenericResponse:
         url = f'{self.url}/{resource_url}'

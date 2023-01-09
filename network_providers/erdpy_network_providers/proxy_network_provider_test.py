@@ -109,6 +109,18 @@ class TestProxy:
         assert result.is_completed == True
         assert len(result.contract_results.items) > 0
         assert result.data == 'issue@54455354@54455354@03e8@00@63616e4d696e74@74727565@63616e4275726e@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565'
+    
+    def test_get_hyperblock(self):
+        result_by_nonce = self.proxy.get_hyperblock(3825092)
+        result_by_hash = self.proxy.get_hyperblock("0af72ba7b04cc2b5bfac9a01950425dc20c102125cfbacc81bc651151a1b7601")
+
+        assert result_by_nonce.get("hash") == result_by_hash.get("hash")
+        assert result_by_nonce.get("nonce") == result_by_hash.get("nonce")
+        assert result_by_nonce.get("round") == result_by_hash.get("round")
+        assert result_by_nonce.get("epoch") == result_by_hash.get("epoch")
+        assert result_by_nonce.get("numTxs") == result_by_hash.get("numTxs")
+        assert result_by_nonce.get("timestamp") == result_by_hash.get("timestamp")
+
 
     def test_send_transaction(self):
         transaction = DummyTransaction({
