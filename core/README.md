@@ -4,12 +4,12 @@ Core components of **erdpy**.
 
 ## Distribution
  
- - GitHub: `git+https://git@github.com/ElrondNetwork/mx-sdk-erdpy-core.git@v{Version}#egg=erdpy_core`
- - [PyPi](https://pypi.org/user/elrond/)
+ - GitHub: `git+https://git@github.com/multiversx/mx-sdk-erdpy-core.git@v{Version}#egg=erdpy_core`
+ - [PyPi](https://pypi.org/user/multiversx/)
 
 ## Documentation
 
-[docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
+[docs.multiversx.com](https://docs.multiversx.com/sdk-and-tools/erdpy/erdpy/)
 
 ## Development setup
 
