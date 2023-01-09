@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "mx-sdk-erdpy-wallet"
-version = "0.3.0"
+version = "0.4.0"
 authors = [
   { name="MultiversX" },
 ]

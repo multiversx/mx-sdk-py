@@ -5,11 +5,11 @@ Wallet & crypto components of **erdpy**.
 ## Distribution
 
  - GitHub: `git+https://git@github.com/multiversx/mx-sdk-erdpy-wallet.git@v{Version}#egg=erdpy_wallet`
- - [PyPi](https://pypi.org/user/elrond/)
+ - [PyPi](https://pypi.org/user/multiversx/)
 
 ## Documentation
 
-[docs.elrond.com](https://docs.elrond.com/sdk-and-tools/erdpy/erdpy/)
+[docs.multiversx.com](https://docs.multiversx.com/sdk-and-tools/erdpy/erdpy/)
 
 ## Development setup
 

@@ -7,7 +7,7 @@ import struct
 BIP39_SALT_MODIFIER = "mnemonic"
 BIP39_PBKDF2_ROUNDS = 2048
 BIP32_SEED_MODIFIER = b'ed25519 seed'
-ELROND_DERIVATION_PATH = [44, 508, 0, 0]
+BIP39_DERIVATION_PATH = [44, 508, 0, 0]
 HARDENED_OFFSET = 0x80000000
 
 
@@ -41,7 +41,7 @@ def bip39seed_to_master_key(seed: bytes):
 def bip39seed_to_secret_key(seed: bytes, address_index: int = 0):
     key, chain_code = bip39seed_to_master_key(seed)
 
-    for segment in ELROND_DERIVATION_PATH + [address_index]:
+    for segment in BIP39_DERIVATION_PATH + [address_index]:
         key, chain_code = _ckd_priv(key, chain_code, segment + HARDENED_OFFSET)
 
     return key

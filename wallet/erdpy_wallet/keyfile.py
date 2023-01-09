@@ -100,7 +100,7 @@ def make_cyphertext(backend: Any, key: bytes, iv: bytes, data: bytes):
 
 
 # erdjs implementation:
-# https://github.com/ElrondNetwork/elrond-sdk-erdjs/blob/main/src/walletcore/userWallet.ts
+# https://github.com/multiversx/mx-sdk-erdjs-walletcore/blob/main/src/userWallet.ts
 def _format_key_json(uid: str, pubkey: bytes, iv: bytes, ciphertext: bytes, salt: bytes, mac: bytes, address_hrp: str) -> Dict[str, Any]:
     address = Address(pubkey, address_hrp)
 
