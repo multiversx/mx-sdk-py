@@ -20,7 +20,7 @@ class Pagination(IPagination):
 
 
 class TestApi:
-    api = ApiNetworkProvider('https://devnet-api.elrond.com')
+    api = ApiNetworkProvider('https://devnet-api.multiversx.com')
 
     def test_get_network_stake_statistic(self):
         result = self.api.get_network_stake_statistics()

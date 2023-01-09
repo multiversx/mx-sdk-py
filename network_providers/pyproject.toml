@@ -26,4 +26,4 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/ElrondNetwork/mx-sdk-erdpy-network-providers"
+"Homepage" = "https://github.com/multiversx/mx-sdk-erdpy-network-providers"
