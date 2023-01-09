@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "mx-sdk-erdpy-network-providers"
-version = "0.6.2"
+version = "0.6.3"
 authors = [
   { name="MultiversX" },
 ]

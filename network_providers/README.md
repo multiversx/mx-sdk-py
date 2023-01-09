@@ -5,7 +5,7 @@ Network providers for **erdpy**.
 ## Distribution
  
  - GitHub: `git+https://git@github.com/multiversx/mx-sdk-erdpy-network-providers.git@v{Version}#egg=erdpy_network_providers`
- - [PyPi](https://pypi.org/user/elrond/)
+ - [PyPi](https://pypi.org/user/multiversx/)
 
 ## Documentation
 [docs.multiversx.com](https://docs.multiversx.com/sdk-and-tools/erdpy/erdpy/)
