@@ -26,7 +26,7 @@ class TransactionCompletionStrategyOnApi:
 
 
 # this class is similar to the one in erdjs-network-providers
-# https://github.com/ElrondNetwork/elrond-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts
+# https://github.com/multiversx/mx-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts
 class TransactionCompletionStrategyOnProxy:
     def is_completed(self, transaction: ITransactionOnNetwork) -> bool:
         if transaction.get_status().is_pending():
@@ -47,7 +47,7 @@ class TransactionCompletionStrategyOnProxy:
         return False
 
     # erdjs implementation:
-    # https://github.com/ElrondNetwork/elrond-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts#L50
+    # https://github.com/multiversx/mx-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts#L50
     def __is_certainly_move_balance(self, transaction_data: str) -> bool:
         parts = transaction_data.split("@")
         prefix = parts[0]

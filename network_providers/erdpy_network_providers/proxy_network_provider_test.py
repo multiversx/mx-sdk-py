@@ -7,7 +7,7 @@ from erdpy_network_providers.proxy_network_provider import (ContractQuery,
 
 
 class TestProxy:
-    proxy = ProxyNetworkProvider('https://devnet-gateway.elrond.com')
+    proxy = ProxyNetworkProvider('https://devnet-gateway.multiversx.com')
 
     def test_get_network_config(self):
         result = self.proxy.get_network_config()
