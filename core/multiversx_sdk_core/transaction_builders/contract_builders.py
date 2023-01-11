@@ -1,11 +1,11 @@
 from typing import Any, List, Optional, Protocol, Sequence
 
-from erdpy_core.constants import VM_TYPE_WASM_VM
-from erdpy_core.interfaces import (IAddress, ICodeMetadata, IGasLimit,
-                                   IGasPrice, INonce, ITokenPayment,
-                                   ITransactionValue)
-from erdpy_core.serializer import arg_to_string, args_to_strings
-from erdpy_core.transaction_builders.transaction_builder import (
+from multiversx_sdk_core.constants import VM_TYPE_WASM_VM
+from multiversx_sdk_core.interfaces import (IAddress, ICodeMetadata, IGasLimit,
+                                            IGasPrice, INonce, ITokenPayment,
+                                            ITransactionValue)
+from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
+from multiversx_sdk_core.transaction_builders.transaction_builder import (
     ITransactionBuilderConfiguration, TransactionBuilder)
 
 

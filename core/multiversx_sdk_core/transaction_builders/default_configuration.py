@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from erdpy_core.address import Address
-from erdpy_core.interfaces import (IAddress, IChainID, IGasPrice,
-                                   ITransactionValue)
+from multiversx_sdk_core.address import Address
+from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasPrice,
+                                            ITransactionValue)
 
 
 @dataclass

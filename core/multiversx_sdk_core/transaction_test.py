@@ -1,8 +1,8 @@
 
-from erdpy_core.address import Address
-from erdpy_core.token_payment import TokenPayment
-from erdpy_core.transaction import Transaction
-from erdpy_core.transaction_payload import TransactionPayload
+from multiversx_sdk_core.address import Address
+from multiversx_sdk_core.token_payment import TokenPayment
+from multiversx_sdk_core.transaction import Transaction
+from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 def test_serialize_for_signing():

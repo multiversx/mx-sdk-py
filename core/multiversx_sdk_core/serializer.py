@@ -1,7 +1,7 @@
 from typing import Any, List, Protocol, Sequence, runtime_checkable
 
-from erdpy_core.constants import ARGS_SEPARATOR, INTEGER_MAX_NUM_BYTES
-from erdpy_core.errors import ErrCannotSerializeArgument
+from multiversx_sdk_core.constants import ARGS_SEPARATOR, INTEGER_MAX_NUM_BYTES
+from multiversx_sdk_core.errors import ErrCannotSerializeArgument
 
 
 @runtime_checkable

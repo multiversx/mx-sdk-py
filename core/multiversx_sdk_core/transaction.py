@@ -2,14 +2,16 @@ import json
 from collections import OrderedDict
 from typing import Any, Dict, Optional
 
-from erdpy_core.constants import (TRANSACTION_MIN_GAS_PRICE,
-                                  TRANSACTION_OPTIONS_DEFAULT,
-                                  TRANSACTION_VERSION_DEFAULT)
-from erdpy_core.interfaces import (IAddress, IChainID, IGasLimit, IGasPrice,
-                                   INonce, ISignature, ITransactionOptions,
-                                   ITransactionPayload, ITransactionValue,
-                                   ITransactionVersion)
-from erdpy_core.transaction_payload import TransactionPayload
+from multiversx_sdk_core.constants import (TRANSACTION_MIN_GAS_PRICE,
+                                           TRANSACTION_OPTIONS_DEFAULT,
+                                           TRANSACTION_VERSION_DEFAULT)
+from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
+                                            IGasPrice, INonce, ISignature,
+                                            ITransactionOptions,
+                                            ITransactionPayload,
+                                            ITransactionValue,
+                                            ITransactionVersion)
+from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 class Transaction:

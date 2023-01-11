@@ -1,8 +1,9 @@
 from decimal import ROUND_DOWN, Context, Decimal, localcontext
 from typing import Union
 
-from erdpy_core.constants import EGLD_NUM_DECIMALS, EGLD_TOKEN_IDENTIFIER
-from erdpy_core.interfaces import INonce, ITokenIdentifier
+from multiversx_sdk_core.constants import (EGLD_NUM_DECIMALS,
+                                           EGLD_TOKEN_IDENTIFIER)
+from multiversx_sdk_core.interfaces import INonce, ITokenIdentifier
 
 
 class TokenPayment:

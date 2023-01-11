@@ -2,10 +2,10 @@ from typing import Tuple
 
 from Cryptodome.Hash import keccak
 
-from erdpy_core import bech32
-from erdpy_core.constants import METACHAIN_ID
-from erdpy_core.errors import ErrBadAddress, ErrBadPubkeyLength
-from erdpy_core.interfaces import IAddress, INonce
+from multiversx_sdk_core import bech32
+from multiversx_sdk_core.constants import METACHAIN_ID
+from multiversx_sdk_core.errors import ErrBadAddress, ErrBadPubkeyLength
+from multiversx_sdk_core.interfaces import IAddress, INonce
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 DEFAULT_HRP = "erd"

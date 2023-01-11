@@ -2,7 +2,7 @@
 
 from typing import List, Optional, Sequence
 
-from erdpy_core.interfaces import IAddress
+from multiversx_sdk_core.interfaces import IAddress
 
 
 class ContractQuery:

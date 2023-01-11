@@ -1,4 +1,4 @@
-from erdpy_core.interfaces import ISignature
+from multiversx_sdk_core.interfaces import ISignature
 
 
 class Message:

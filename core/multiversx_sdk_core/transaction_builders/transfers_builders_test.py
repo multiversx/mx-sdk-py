@@ -1,9 +1,9 @@
 
-from erdpy_core.address import Address
-from erdpy_core.token_payment import TokenPayment
-from erdpy_core.transaction_builders.default_configuration import \
+from multiversx_sdk_core.address import Address
+from multiversx_sdk_core.token_payment import TokenPayment
+from multiversx_sdk_core.transaction_builders.default_configuration import \
     DefaultTransactionBuildersConfiguration
-from erdpy_core.transaction_builders.transfers_builders import (
+from multiversx_sdk_core.transaction_builders.transfers_builders import (
     EGLDTransferBuilder, ESDTNFTTransferBuilder, ESDTTransferBuilder,
     MultiESDTNFTTransferBuilder)
 
@@ -76,7 +76,7 @@ def test_esdt_transfer_builder():
 def test_esdt_nft_transfer_builder():
     alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
-    payment = TokenPayment.non_fungible("ERDPY-38f249", 1)
+    payment = TokenPayment.non_fungible("TEST-38f249", 1)
 
     builder = ESDTNFTTransferBuilder(
         config=dummyConfig,
@@ -87,7 +87,7 @@ def test_esdt_nft_transfer_builder():
 
     payload = builder.build_payload()
     tx = builder.build()
-    assert payload.data == b"ESDTNFTTransfer@45524450592d333866323439@01@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+    assert payload.data == b"ESDTNFTTransfer@544553542d333866323439@01@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
     assert tx.chainID == "D"
     assert tx.sender == alice
     assert tx.receiver == alice
@@ -99,7 +99,7 @@ def test_multi_esdt_nft_transfer_builder():
     alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
-    payment_one = TokenPayment.non_fungible("ERDPY-38f249", 1)
+    payment_one = TokenPayment.non_fungible("TEST-38f249", 1)
     payment_two = TokenPayment.fungible_from_amount("BAR-c80d29", "10.00", 18)
 
     builder = MultiESDTNFTTransferBuilder(
@@ -111,7 +111,7 @@ def test_multi_esdt_nft_transfer_builder():
 
     payload = builder.build_payload()
     tx = builder.build()
-    assert payload.data == b"MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@02@45524450592d333866323439@01@01@4241522d633830643239@@8ac7230489e80000"
+    assert payload.data == b"MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@02@544553542d333866323439@01@01@4241522d633830643239@@8ac7230489e80000"
     assert tx.chainID == "D"
     assert tx.sender == alice
     assert tx.receiver == alice

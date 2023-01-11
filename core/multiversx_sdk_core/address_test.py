@@ -1,9 +1,11 @@
 
 import pytest
 
-from erdpy_core.address import (Address, AddressConverter, AddressFactory,
-                                compute_contract_address, is_valid_bech32)
-from erdpy_core.errors import ErrBadAddress, ErrBadPubkeyLength
+from multiversx_sdk_core.address import (Address, AddressConverter,
+                                         AddressFactory,
+                                         compute_contract_address,
+                                         is_valid_bech32)
+from multiversx_sdk_core.errors import ErrBadAddress, ErrBadPubkeyLength
 
 
 def test_address():
