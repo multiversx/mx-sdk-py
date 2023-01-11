@@ -1,6 +1,6 @@
 # mx-sdk-py-core
 
-Core components of the Python SDK.
+Core components of the MultiversX Python SDK.
 
 ## Distribution
  
