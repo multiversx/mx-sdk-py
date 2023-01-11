@@ -2,13 +2,13 @@ import json
 import os
 from pathlib import Path
 
-from erdpy_core import Address, AddressConverter, Message, Transaction
+from multiversx_sdk_core import Address, AddressConverter, Message, Transaction
 
-from erdpy_wallet.user_keys import UserSecretKey
-from erdpy_wallet.user_pem import UserPEM
-from erdpy_wallet.user_signer import UserSigner
-from erdpy_wallet.user_verifer import UserVerifier
-from erdpy_wallet.user_wallet import UserWallet
+from multiversx_sdk_wallet.user_keys import UserSecretKey
+from multiversx_sdk_wallet.user_pem import UserPEM
+from multiversx_sdk_wallet.user_signer import UserSigner
+from multiversx_sdk_wallet.user_verifer import UserVerifier
+from multiversx_sdk_wallet.user_wallet import UserWallet
 
 
 def test_user_secret_key_create():
@@ -30,13 +30,13 @@ def test_user_secret_key_generate_public_key():
 def test_from_pem_file():
     converter = AddressConverter()
 
-    pubkey = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"), 0).get_pubkey()
+    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"), 0).get_pubkey()
     assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
-    pubkey = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/bob.pem"), 0).get_pubkey()
+    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/bob.pem"), 0).get_pubkey()
     assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
 
-    pubkey = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/carol.pem"), 0).get_pubkey()
+    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/carol.pem"), 0).get_pubkey()
     assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
 
 
@@ -62,13 +62,13 @@ def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_rando
         id="65894f35-d142-41d2-9335-6ad02e0ed0be"
     ))
 
-    with open("./erdpy_wallet/testdata/alice.json") as f:
+    with open("./multiversx_sdk_wallet/testdata/alice.json") as f:
         assert json.load(f) == alice_wallet.to_keyfile_object("erd")
 
-    with open("./erdpy_wallet/testdata/bob.json") as f:
+    with open("./multiversx_sdk_wallet/testdata/bob.json") as f:
         assert json.load(f) == bob_wallet.to_keyfile_object("erd")
 
-    with open("./erdpy_wallet/testdata/carol.json") as f:
+    with open("./multiversx_sdk_wallet/testdata/carol.json") as f:
         assert json.load(f) == carol_wallet.to_keyfile_object("erd")
 
 
@@ -110,7 +110,7 @@ def test_sign_transaction():
         options=0
     )
 
-    signer = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"))
+    signer = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
 
     tx.signature = signer.sign(tx)
@@ -121,7 +121,7 @@ def test_sign_transaction():
 def test_sign_message():
     message = Message.from_string("hello")
 
-    signer = UserSigner.from_pem_file(Path("./erdpy_wallet/testdata/alice.pem"))
+    signer = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
 
     message.signature = signer.sign(message)
@@ -130,7 +130,7 @@ def test_sign_message():
 
 
 def test_pem_save():
-    path = Path("./erdpy_wallet/testdata/alice.pem")
+    path = Path("./multiversx_sdk_wallet/testdata/alice.pem")
     path_saved = path.with_suffix(".saved")
 
     with open(path) as f:

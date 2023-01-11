@@ -1,4 +1,4 @@
-from erdpy_wallet.mnemonic import Mnemonic
+from multiversx_sdk_wallet.mnemonic import Mnemonic
 
 
 def test_generate():

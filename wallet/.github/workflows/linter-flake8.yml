@@ -19,5 +19,5 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Lint with flake8
       run: |
-        flake8 erdpy_wallet
+        flake8 multiversx_sdk_wallet
       continue-on-error: true

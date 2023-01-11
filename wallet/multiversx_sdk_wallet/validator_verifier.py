@@ -1,5 +1,5 @@
-from erdpy_wallet.interfaces import IVerifiable
-from erdpy_wallet.validator_keys import ValidatorPublicKey
+from multiversx_sdk_wallet.interfaces import IVerifiable
+from multiversx_sdk_wallet.validator_keys import ValidatorPublicKey
 
 
 class ValidatorVerifier:

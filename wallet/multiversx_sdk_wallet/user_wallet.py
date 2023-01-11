@@ -2,9 +2,9 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Union
 
-from erdpy_wallet import keyfile
-from erdpy_wallet.interfaces import IUserWalletRandomness
-from erdpy_wallet.user_keys import UserSecretKey
+from multiversx_sdk_wallet import keyfile
+from multiversx_sdk_wallet.interfaces import IUserWalletRandomness
+from multiversx_sdk_wallet.user_keys import UserSecretKey
 
 
 class UserWallet:

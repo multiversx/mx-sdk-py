@@ -1,12 +1,12 @@
 import os
 from pathlib import Path
 
-from erdpy_core import Message
+from multiversx_sdk_core import Message
 
-from erdpy_wallet.validator_keys import ValidatorSecretKey
-from erdpy_wallet.validator_pem import ValidatorPEM
-from erdpy_wallet.validator_signer import ValidatorSigner
-from erdpy_wallet.validator_verifier import ValidatorVerifier
+from multiversx_sdk_wallet.validator_keys import ValidatorSecretKey
+from multiversx_sdk_wallet.validator_pem import ValidatorPEM
+from multiversx_sdk_wallet.validator_signer import ValidatorSigner
+from multiversx_sdk_wallet.validator_verifier import ValidatorVerifier
 
 
 def test_validator_secret_key_generate_public_key():
@@ -14,7 +14,7 @@ def test_validator_secret_key_generate_public_key():
 
 
 def test_sign_message():
-    signer = ValidatorSigner.from_pem_file(Path("./erdpy_wallet/testdata/validatorKey00.pem"))
+    signer = ValidatorSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/validatorKey00.pem"))
     message = Message.from_string("hello")
     signature = signer.sign(message)
     assert signature.hex() == "84fd0a3a9d4f1ea2d4b40c6da67f9b786284a1c3895b7253fec7311597cda3f757862bb0690a92a13ce612c33889fd86"
@@ -32,7 +32,7 @@ def test_verify_message():
 
 
 def test_pem_save():
-    path = Path("./erdpy_wallet/testdata/validatorKey00.pem")
+    path = Path("./multiversx_sdk_wallet/testdata/validatorKey00.pem")
     path_saved = path.with_suffix(".saved")
 
     with open(path) as f:

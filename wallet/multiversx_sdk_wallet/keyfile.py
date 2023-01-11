@@ -8,12 +8,12 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-from erdpy_core import Address
+from multiversx_sdk_core import Address
 
-from erdpy_wallet.errors import (ErrInvalidKeystoreFilePassword,
-                                 ErrUnknownCipher,
-                                 ErrUnknownDerivationFunction)
-from erdpy_wallet.interfaces import IUserWalletRandomness
+from multiversx_sdk_wallet.errors import (ErrInvalidKeystoreFilePassword,
+                                          ErrUnknownCipher,
+                                          ErrUnknownDerivationFunction)
+from multiversx_sdk_wallet.interfaces import IUserWalletRandomness
 
 
 # References:

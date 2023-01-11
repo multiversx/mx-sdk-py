@@ -1,4 +1,4 @@
-from erdpy_wallet.libraries.bls_facade import BLSFacade
+from multiversx_sdk_wallet.libraries.bls_facade import BLSFacade
 
 
 def test_generate_public_key():

@@ -1,7 +1,7 @@
-from erdpy_core import Address
+from multiversx_sdk_core import Address
 
-from erdpy_wallet.interfaces import IAddress, IVerifiable
-from erdpy_wallet.user_keys import UserPublicKey
+from multiversx_sdk_wallet.interfaces import IAddress, IVerifiable
+from multiversx_sdk_wallet.user_keys import UserPublicKey
 
 
 class UserVerifier:

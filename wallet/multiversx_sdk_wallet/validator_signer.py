@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from erdpy_wallet.errors import ErrCannotSign
-from erdpy_wallet.interfaces import ISignable, ISignature
-from erdpy_wallet.validator_keys import ValidatorPublicKey, ValidatorSecretKey
-from erdpy_wallet.validator_pem import ValidatorPEM
+from multiversx_sdk_wallet.errors import ErrCannotSign
+from multiversx_sdk_wallet.interfaces import ISignable, ISignature
+from multiversx_sdk_wallet.validator_keys import (ValidatorPublicKey,
+                                                  ValidatorSecretKey)
+from multiversx_sdk_wallet.validator_pem import ValidatorPEM
 
 
 class ValidatorSigner:

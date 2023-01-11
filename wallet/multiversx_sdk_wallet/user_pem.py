@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from erdpy_wallet import pem_format
-from erdpy_wallet.constants import USER_SEED_LENGTH
-from erdpy_wallet.user_keys import UserSecretKey
+from multiversx_sdk_wallet import pem_format
+from multiversx_sdk_wallet.constants import USER_SEED_LENGTH
+from multiversx_sdk_wallet.user_keys import UserSecretKey
 
 
 class UserPEM:
