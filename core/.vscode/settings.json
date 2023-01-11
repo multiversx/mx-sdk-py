@@ -1,6 +1,6 @@
 {
     "python.testing.pytestArgs": [
-        "erdpy_core"
+        "multiversx_sdk_core"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true

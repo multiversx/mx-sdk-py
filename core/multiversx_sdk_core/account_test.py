@@ -1,5 +1,5 @@
 
-from erdpy_core.account import AccountNonceHolder
+from multiversx_sdk_core.account import AccountNonceHolder
 
 
 def test_account_nonce_holder():

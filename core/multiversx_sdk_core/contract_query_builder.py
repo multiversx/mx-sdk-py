@@ -2,9 +2,9 @@
 
 from typing import Any, Optional, Sequence
 
-from erdpy_core.contract_query import ContractQuery
-from erdpy_core.interfaces import IAddress
-from erdpy_core.serializer import args_to_strings
+from multiversx_sdk_core.contract_query import ContractQuery
+from multiversx_sdk_core.interfaces import IAddress
+from multiversx_sdk_core.serializer import args_to_strings
 
 
 class ContractQueryBuilder():

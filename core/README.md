@@ -1,10 +1,10 @@
-# sdk-erdpy-core
+# mx-sdk-py-core
 
-Core components of **erdpy**.
+Core components of the MultiversX Python SDK.
 
 ## Distribution
  
- - GitHub: `git+https://git@github.com/multiversx/mx-sdk-erdpy-core.git@v{Version}#egg=erdpy_core`
+ - GitHub: `git+https://git@github.com/multiversx/mx-sdk-py-core.git@v{Version}#egg=multiversx_sdk_core`
  - [PyPi](https://pypi.org/user/multiversx/)
 
 ## Documentation
@@ -61,5 +61,5 @@ pyright
 Run `flake8`:
 
 ```
-flake8 erdpy_core
+flake8 multiversx_sdk_core
 ```

@@ -1,9 +1,9 @@
 from typing import List, Optional, Protocol
 
-from erdpy_core.interfaces import (IAddress, IGasLimit, IGasPrice, INonce,
-                                   ITransactionValue)
-from erdpy_core.serializer import arg_to_string, args_to_strings
-from erdpy_core.transaction_builders.transaction_builder import (
+from multiversx_sdk_core.interfaces import (IAddress, IGasLimit, IGasPrice,
+                                            INonce, ITransactionValue)
+from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
+from multiversx_sdk_core.transaction_builders.transaction_builder import (
     ITransactionBuilderConfiguration, TransactionBuilder)
 
 

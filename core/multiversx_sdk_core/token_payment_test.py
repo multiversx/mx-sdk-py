@@ -1,7 +1,7 @@
 
 from decimal import Decimal
 
-from erdpy_core.token_payment import TokenPayment
+from multiversx_sdk_core.token_payment import TokenPayment
 
 
 def test_with_egld():
@@ -59,7 +59,7 @@ def test_with_meta_esdt():
 
 
 def test_with_nft():
-    identifier = "ERDPY-38f249"
+    identifier = "TEST-38f249"
     nonce = 1
 
     payment = TokenPayment.non_fungible(identifier, nonce)
