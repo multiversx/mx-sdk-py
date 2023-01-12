@@ -1,8 +1,10 @@
 import nacl.signing
 
-from erdpy_wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
-from erdpy_wallet.errors import ErrBadPublicKeyLength, ErrBadSecretKeyLength
-from erdpy_wallet.interfaces import ISignature
+from multiversx_sdk_wallet.constants import (USER_PUBKEY_LENGTH,
+                                             USER_SEED_LENGTH)
+from multiversx_sdk_wallet.errors import (ErrBadPublicKeyLength,
+                                          ErrBadSecretKeyLength)
+from multiversx_sdk_wallet.interfaces import ISignature
 
 
 class UserSecretKey:

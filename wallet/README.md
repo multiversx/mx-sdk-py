@@ -1,10 +1,10 @@
-# sdk-erdpy-wallet
+# mx-sdk-py-wallet
 
-Wallet & crypto components of **erdpy**.
+Wallet & crypto components of MultiversX Python SDK.
 
 ## Distribution
 
- - GitHub: `git+https://git@github.com/multiversx/mx-sdk-erdpy-wallet.git@v{Version}#egg=erdpy_wallet`
+ - GitHub: `git+https://git@github.com/multiversx/mx-sdk-py-wallet.git@v{Version}#egg=multiversx_sdk_wallet`
  - [PyPi](https://pypi.org/user/multiversx/)
 
 ## Documentation
@@ -61,5 +61,5 @@ pyright
 Run `flake8`:
 
 ```
-flake8 erdpy_wallet
+flake8 multiversx_sdk_wallet
 ```

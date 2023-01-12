@@ -4,7 +4,7 @@ import platform
 from pathlib import Path
 from typing import Optional
 
-from erdpy_wallet.errors import ErrLibraryNotFound, ErrUnsupportedOS
+from multiversx_sdk_wallet.errors import ErrLibraryNotFound, ErrUnsupportedOS
 
 
 class BLSFacade:

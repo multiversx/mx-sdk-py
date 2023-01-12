@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from erdpy_wallet import pem_format
-from erdpy_wallet.validator_keys import ValidatorSecretKey
+from multiversx_sdk_wallet import pem_format
+from multiversx_sdk_wallet.validator_keys import ValidatorSecretKey
 
 
 class ValidatorPEM:

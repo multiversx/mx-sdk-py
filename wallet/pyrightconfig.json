@@ -1,6 +1,6 @@
 {
     "include": [
-        "erdpy_wallet"
+        "multiversx_sdk_wallet"
     ],
     "exclude": [
         "**/__pycache__"

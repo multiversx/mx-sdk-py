@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from erdpy_wallet.errors import ErrCannotSign
-from erdpy_wallet.interfaces import ISignable, ISignature
-from erdpy_wallet.user_keys import UserPublicKey, UserSecretKey
-from erdpy_wallet.user_pem import UserPEM
-from erdpy_wallet.user_wallet import UserWallet
+from multiversx_sdk_wallet.errors import ErrCannotSign
+from multiversx_sdk_wallet.interfaces import ISignable, ISignature
+from multiversx_sdk_wallet.user_keys import UserPublicKey, UserSecretKey
+from multiversx_sdk_wallet.user_pem import UserPEM
+from multiversx_sdk_wallet.user_wallet import UserWallet
 
 
 class UserSigner:

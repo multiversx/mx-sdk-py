@@ -1,9 +1,9 @@
 import mnemonic
 
-from erdpy_wallet import core
-from erdpy_wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
-from erdpy_wallet.errors import ErrBadMnemonic
-from erdpy_wallet.user_keys import UserSecretKey
+from multiversx_sdk_wallet import core
+from multiversx_sdk_wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
+from multiversx_sdk_wallet.errors import ErrBadMnemonic
+from multiversx_sdk_wallet.user_keys import UserSecretKey
 
 
 class Mnemonic:

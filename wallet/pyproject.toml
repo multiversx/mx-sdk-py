@@ -6,13 +6,13 @@ build-backend = "hatchling.build"
 allow-direct-references = true
 
 [project]
-name = "mx-sdk-erdpy-wallet"
-version = "0.4.0"
+name = "multiversx-sdk-wallet"
+version = "0.4.1"
 authors = [
   { name="MultiversX" },
 ]
 license = "MIT"
-description = "MultiversX: wallet components of erdpy."
+description = "Wallet & crypto components of MultiversX Python SDK."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -24,19 +24,19 @@ dependencies = [
   "pynacl==1.5.0",
   "cryptography==36.0.2",
   "mnemonic==0.20",
-  "mx-sdk-erdpy-core==0.3.0"
+  "multiversx-sdk-core==0.3.2"
 ]
 
 [tool.hatch.build]
 include = [
-  "erdpy_wallet/**"
+  "multiversx_sdk_wallet/**"
 ]
 exclude = [
-  "erdpy_wallet/testdata/**"
+  "multiversx_sdk_wallet/testdata/**"
 ]
 
 [tool.hatch.build.targets.wheel.force-include]
-"erdpy_wallet/libraries" = "erdpy_wallet/libraries"
+"multiversx_sdk_wallet/libraries" = "multiversx_sdk_wallet/libraries"
 
 [project.urls]
-"Homepage" = "https://github.com/multiversx/mx-sdk-erdpy-wallet"
+"Homepage" = "https://github.com/multiversx/mx-sdk-py-wallet"
