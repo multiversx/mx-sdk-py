@@ -1,8 +1,8 @@
 from typing import Any, Dict
 
-from erdpy_core import Address
+from multiversx_sdk_core import Address
 
-from erdpy_network_providers.proxy_network_provider import (ContractQuery,
+from multiversx_sdk_network_providers.proxy_network_provider import (ContractQuery,
                                                   ProxyNetworkProvider)
 
 

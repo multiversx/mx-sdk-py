@@ -1,6 +1,6 @@
 from typing import Any, Dict
 
-from erdpy_network_providers.interface import IContractQuery
+from multiversx_sdk_network_providers.interface import IContractQuery
 
 
 class ContractQueryRequest:

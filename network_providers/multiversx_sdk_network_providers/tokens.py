@@ -1,10 +1,10 @@
 from typing import Any, Dict, List
 
-from erdpy_core import Address
+from multiversx_sdk_core import Address
 
-from erdpy_network_providers.interface import IAddress
-from erdpy_network_providers.resources import EmptyAddress
-from erdpy_network_providers.utils import decimal_to_padded_hex
+from multiversx_sdk_network_providers.interface import IAddress
+from multiversx_sdk_network_providers.resources import EmptyAddress
+from multiversx_sdk_network_providers.utils import decimal_to_padded_hex
 
 
 class FungibleTokenOfAccountOnNetwork:
