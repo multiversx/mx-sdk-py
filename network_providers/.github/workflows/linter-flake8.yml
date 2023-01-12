@@ -19,5 +19,5 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Lint with flake8
       run: |
-        flake8 erdpy_core
+        flake8 multiversx_sdk_network_providers
       continue-on-error: true

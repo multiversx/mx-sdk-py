@@ -6,13 +6,13 @@ build-backend = "hatchling.build"
 allow-direct-references = true
 
 [project]
-name = "mx-sdk-erdpy-network-providers"
-version = "0.6.3"
+name = "multiversx-sdk-network-providers"
+version = "0.6.4"
 authors = [
   { name="MultiversX" },
 ]
 license = "MIT"
-description = "MultiversX: network providers for erdpy."
+description = "Network providers for MultiversX Python SDK."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -22,8 +22,8 @@ classifiers = [
 ]
 dependencies = [
   "requests==2.24.0",
-  "mx-sdk-erdpy_core==0.3.0"
+  "multiversx-sdk-core==0.3.2"
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/multiversx/mx-sdk-erdpy-network-providers"
+"Homepage" = "https://github.com/multiversx/mx-sdk-py-network-providers"
