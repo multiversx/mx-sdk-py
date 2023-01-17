@@ -1,4 +1,4 @@
 cryptography==36.0.2
 pynacl==1.5.0
 mnemonic==0.20
-git+https://git@github.com/multiversx/mx-sdk-py-core.git@v0.3.2#egg=multiversx_sdk_core
+multiversx_sdk_core==0.3.*
