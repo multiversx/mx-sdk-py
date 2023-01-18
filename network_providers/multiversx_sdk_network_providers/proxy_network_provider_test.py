@@ -61,7 +61,7 @@ class TestProxy:
         assert result.royalties == 75
 
     def test_get_transaction_status(self):
-        result = self.proxy.get_transaction_status('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')
+        result = self.proxy.get_transaction_status('3f6f03c00ff95e02719dc045e9108ce88bc31a4106396164dcac0efa66229f52')
 
         assert result.status == 'success'
 
@@ -93,12 +93,12 @@ class TestProxy:
         assert not result.can_pause
 
     def test_get_transaction(self):
-        result = self.proxy.get_transaction('2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b')
+        result = self.proxy.get_transaction('2e6bd2671dbb57f1f1013c89f044359c2465f1514e0ea718583900e43c1931fe')
 
-        assert result.nonce == 828
-        assert result.block_nonce == 3047400
-        assert result.epoch == 2540
-        assert result.hash == '2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b'
+        assert result.nonce == 829
+        assert result.block_nonce == 3777937
+        assert result.epoch == 3153
+        assert result.hash == '2e6bd2671dbb57f1f1013c89f044359c2465f1514e0ea718583900e43c1931fe'
         assert result.is_completed == True
         assert result.sender.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.contract_results.items == []
@@ -111,8 +111,8 @@ class TestProxy:
         assert result.data == 'issue@54455354@54455354@03e8@00@63616e4d696e74@74727565@63616e4275726e@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565'
     
     def test_get_hyperblock(self):
-        result_by_nonce = self.proxy.get_hyperblock(3825092)
-        result_by_hash = self.proxy.get_hyperblock("0af72ba7b04cc2b5bfac9a01950425dc20c102125cfbacc81bc651151a1b7601")
+        result_by_nonce = self.proxy.get_hyperblock(4199287)
+        result_by_hash = self.proxy.get_hyperblock("41d75def48fcf965cbadee144bc13382adc486737e9237ba1896db83658661ef")
 
         assert result_by_nonce.get("hash") == result_by_hash.get("hash")
         assert result_by_nonce.get("nonce") == result_by_hash.get("nonce")
