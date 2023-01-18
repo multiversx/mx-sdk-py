@@ -1,2 +1,2 @@
 requests==2.24.0
-git+https://git@github.com/multiversx/mx-sdk-py-core.git@v0.3.2#egg=multiversx_sdk_core
+multiversx_sdk_core==0.3.*
