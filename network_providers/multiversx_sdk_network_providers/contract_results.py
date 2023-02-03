@@ -38,8 +38,9 @@ class ContractResultItem:
         self.gas_price: int = 0
         self.call_type: int = 0
         self.return_message: str = ""
+        self.is_refund = False
         self.logs: TransactionLogs = TransactionLogs()
-    
+
     def to_dictionary(self) -> Dict[str, Any]:
         return {
             "hash": self.hash,
@@ -53,7 +54,8 @@ class ContractResultItem:
             "gasLimit": self.gas_limit,
             "gasPrice": self.gas_price,
             "callType": self.call_type,
-            "returnMessage": self.return_message
+            "returnMessage": self.return_message,
+            "isRefund": self.is_refund,
         }
 
     @staticmethod
@@ -92,6 +94,7 @@ class ContractResultItem:
         item.data = response.get("data", "")
         item.call_type = response.get("callType", 0)
         item.return_message = response.get("returnMessage", "")
+        item.is_refund = response.get("isRefund", False)
 
         item.logs = TransactionLogs.from_http_response(response.get("logs", {}))
 
