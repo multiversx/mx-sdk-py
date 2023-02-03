@@ -55,6 +55,7 @@ class ContractResultItem:
             "gasPrice": self.gas_price,
             "callType": self.call_type,
             "returnMessage": self.return_message,
+            "isRefund": self.is_refund,
         }
 
     @staticmethod
