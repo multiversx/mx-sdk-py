@@ -10,7 +10,7 @@ from multiversx_sdk_network_providers.contract_query_requests import ContractQue
 from multiversx_sdk_network_providers.contract_query_response import ContractQueryResponse
 from multiversx_sdk_network_providers.errors import GenericError
 from multiversx_sdk_network_providers.interface import (IAddress, IContractQuery, IPagination,
-                                     ITransaction)
+                                                        ITransaction)
 from multiversx_sdk_network_providers.network_config import NetworkConfig
 from multiversx_sdk_network_providers.network_general_statistics import NetworkGeneralStatistics
 from multiversx_sdk_network_providers.network_stake import NetworkStake
@@ -19,7 +19,7 @@ from multiversx_sdk_network_providers.proxy_network_provider import ProxyNetwork
 from multiversx_sdk_network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from multiversx_sdk_network_providers.tokens import (FungibleTokenOfAccountOnNetwork,
-                                  NonFungibleTokenOfAccountOnNetwork)
+                                                     NonFungibleTokenOfAccountOnNetwork)
 from multiversx_sdk_network_providers.transaction_status import TransactionStatus
 from multiversx_sdk_network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk_network_providers.utils import decimal_to_padded_hex
@@ -114,7 +114,7 @@ class ApiNetworkProvider:
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
 
         return transaction
-    
+
     def get_transactions(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[TransactionOnNetwork]:
         url = f"accounts/{address.bech32()}/transactions?{self._build_pagination_params(pagination)}"
         response = self.do_get_generic_collection(url)
@@ -130,7 +130,7 @@ class ApiNetworkProvider:
         return status
 
     def send_transaction(self, transaction: ITransaction) -> str:
-        url = f'{self.url}/transactions'
+        url = f'transactions'
         response = self.do_post_generic(url, transaction.to_dictionary())
         tx_hash: str = response.get('txHash', '')
 
