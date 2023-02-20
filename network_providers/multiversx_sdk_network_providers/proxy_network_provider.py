@@ -227,8 +227,3 @@ class ContractQuery(IContractQuery):
 
     def get_value(self) -> int:
         return self.value
-
-
-proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
-tx = proxy.get_transaction("b9d2ef81e9d170aed61394d94225b4991892f70c96b4b1be32a7ccc04696dd0c")
-print(tx.to_dictionary())
