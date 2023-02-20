@@ -28,13 +28,21 @@ class TransactionEvent:
 
         return result
 
+    def to_dictionary(self) -> Dict[str, Any]:
+        return {
+            "address": self.address.bech32(),
+            "identifier": self.identifier,
+            "topics": [item.__str__() for item in self.topics],
+            "data": self.data
+        }
+
 
 class TransactionEventTopic:
     def __init__(self, topic: str):
         self.raw = base64.b64decode(topic.encode())
 
     def __str__(self):
-        return self.raw.decode()
+        return base64.b64encode(self.raw).decode()
 
     def hex(self):
         return self.raw.hex()

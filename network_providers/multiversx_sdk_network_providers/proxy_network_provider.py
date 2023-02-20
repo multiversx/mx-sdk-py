@@ -5,7 +5,7 @@ from requests.auth import AuthBase
 
 from multiversx_sdk_network_providers.accounts import AccountOnNetwork
 from multiversx_sdk_network_providers.constants import (DEFAULT_ADDRESS_HRP,
-                                     ESDT_CONTRACT_ADDRESS, METACHAIN_ID)
+                                                        ESDT_CONTRACT_ADDRESS, METACHAIN_ID)
 from multiversx_sdk_network_providers.contract_query_requests import ContractQueryRequest
 from multiversx_sdk_network_providers.contract_query_response import ContractQueryResponse
 from multiversx_sdk_network_providers.errors import GenericError
@@ -16,7 +16,7 @@ from multiversx_sdk_network_providers.resources import GenericResponse, Simulate
 from multiversx_sdk_network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from multiversx_sdk_network_providers.tokens import (FungibleTokenOfAccountOnNetwork,
-                                  NonFungibleTokenOfAccountOnNetwork)
+                                                     NonFungibleTokenOfAccountOnNetwork)
 from multiversx_sdk_network_providers.transaction_status import TransactionStatus
 from multiversx_sdk_network_providers.transactions import TransactionOnNetwork
 
@@ -81,7 +81,7 @@ class ProxyNetworkProvider:
         transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response)
 
         return transaction
-    
+
     def get_account_transactions(self, address: IAddress) -> List[TransactionOnNetwork]:
         url = f"address/{address.bech32()}/transactions"
         response = self.do_get_generic(url).get("transactions", [])
@@ -135,12 +135,12 @@ class ProxyNetworkProvider:
         definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties, self.address_hrp)
 
         return definition
-    
+
     def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
         url = "transaction/simulate"
         response = self.do_post_generic(url, transaction.to_dictionary())
         return SimulateResponse(response)
-    
+
     def get_hyperblock(self, key: Union[int, str]) -> Dict[str, Any]:
         url = f"hyperblock/by-hash/{key}"
         if str(key).isnumeric():
@@ -227,3 +227,8 @@ class ContractQuery(IContractQuery):
 
     def get_value(self) -> int:
         return self.value
+
+
+proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+tx = proxy.get_transaction("b9d2ef81e9d170aed61394d94225b4991892f70c96b4b1be32a7ccc04696dd0c")
+print(tx.to_dictionary())
