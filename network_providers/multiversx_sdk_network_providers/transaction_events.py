@@ -32,7 +32,7 @@ class TransactionEvent:
         return {
             "address": self.address.bech32(),
             "identifier": self.identifier,
-            "topics": [item.__str__() for item in self.topics],
+            "topics": [item.hex() for item in self.topics],
             "data": self.data
         }
 
