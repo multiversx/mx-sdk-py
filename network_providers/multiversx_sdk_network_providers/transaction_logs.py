@@ -37,3 +37,9 @@ class TransactionLogs:
             events = list(filter(predicate, events))
 
         return events
+
+    def to_dictionary(self) -> Dict[str, Any]:
+        return {
+            "address": self.address.bech32(),
+            "events": [item.to_dictionary() for item in self.events]
+        }

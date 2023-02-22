@@ -130,4 +130,6 @@ class TransactionOnNetwork:
             "blockNonce": self.block_nonce,
             "hyperblockNonce": self.hyperblock_nonce,
             "hyperblockHash": self.hyperblock_hash,
+            "smartContractResults": [item.to_dictionary() for item in self.contract_results.items],
+            "logs": self.logs.to_dictionary(),
         }
