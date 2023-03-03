@@ -11,6 +11,8 @@ from multiversx_sdk_wallet.user_signer import UserSigner
 from multiversx_sdk_wallet.user_verifer import UserVerifier
 from multiversx_sdk_wallet.user_wallet import UserWallet
 
+DUMMY_MNEMONIC = "moral volcano peasant pass circle pen over picture flat shop clap goat never lyrics gather prepare woman film husband gravity behind test tiger improve"
+
 
 def test_user_secret_key_create():
     buffer_hex = "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
@@ -145,3 +147,45 @@ def test_pem_save():
 
     assert content_actual == content_expected
     os.remove(path_saved)
+
+
+def test_decrypt_secret_key_from_file_but_without_kind_field():
+    keystore_path = Path("./multiversx_sdk_wallet/testdata/withoutKind.json")
+    secret_key = UserWallet.decrypt_secret_key_from_file(keystore_path, "password")
+    actual_address = Address(secret_key.generate_public_key().buffer, "erd").bech32()
+    assert actual_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+
+def test_create_keystore_file_with_mnemonic():
+    wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "password")
+    keyfile_object = wallet.to_dict()
+
+    assert keyfile_object["version"] == 4
+    assert keyfile_object["kind"] == "mnemonic"
+    assert "bech32" not in keyfile_object
+
+
+def test_create_keystore_with_mnemonic_with_randomness():
+    expected_dummy_wallet_json = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json").read_text()
+    expected_dummy_wallet_dict = json.loads(expected_dummy_wallet_json)
+
+    randomness = Randomness(
+        id="5b448dbc-5c72-4d83-8038-938b1f8dff19",
+        iv=bytes.fromhex("2da5620906634972d9a623bc249d63d4"),
+        salt=bytes.fromhex("aa9e0ba6b188703071a582c10e5331f2756279feb0e2768f1ba0fd38ec77f035")
+    )
+
+    wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "password", randomness)
+    wallet_dict = wallet.to_dict()
+
+    assert wallet_dict == expected_dummy_wallet_dict
+
+
+def test_decrypt_keystore_file_with_mnemonic():
+    keystore_path = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json")
+    mnemonic = UserWallet.decrypt_mnemonic_from_file(keystore_path, "password")
+
+    assert mnemonic.get_text() == DUMMY_MNEMONIC
+    assert mnemonic.derive_key(0).generate_public_key().to_address("erd").bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    assert mnemonic.derive_key(1).generate_public_key().to_address("erd").bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    assert mnemonic.derive_key(2).generate_public_key().to_address("erd").bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
