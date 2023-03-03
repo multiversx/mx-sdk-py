@@ -103,7 +103,7 @@ class UserWallet:
         return self._to_dict_when_kind_is_mnemonic()
 
     def _to_dict_when_kind_is_secret_key(self, address_hrp: str) -> Dict[str, Any]:
-        if not self.public_key_when_kind_is_secret_key:
+        if self.public_key_when_kind_is_secret_key is None:
             raise Exception("Public key isn't available")
 
         crypto_section = self._get_crypto_section_as_dict()
