@@ -19,7 +19,7 @@ from multiversx_sdk_wallet.interfaces import IUserWalletRandomness
 # References:
 # Thanks for this implementation @flyingbasalt
 # https://github.com/flyingbasalt/erdkeys
-def load_from_key_file_object(keystore: Dict[str, Any], password: str) -> Tuple[str, bytes]:
+def load_from_key_file_object(keystore: Dict[str, Any], password: str) -> bytes:
     backend = default_backend()
 
     # derive the decryption key
@@ -58,7 +58,6 @@ def load_from_key_file_object(keystore: Dict[str, Any], password: str) -> Tuple[
     if mac != unhexlify(keystore['crypto']['mac']):
         raise ErrInvalidKeystoreFilePassword()
 
-    address_bech32 = keystore['bech32']
     secret_key = ''.join([pemified_secret_key[i:i + 64].decode() for i in range(0, len(pemified_secret_key), 64)])
 
     key_hex = base64.b64decode(secret_key).decode()
@@ -66,7 +65,7 @@ def load_from_key_file_object(keystore: Dict[str, Any], password: str) -> Tuple[
 
     secret_key = key_bytes[:32]
 
-    return address_bech32, secret_key
+    return secret_key
 
 
 def convert_to_keyfile_object(secret_key: bytes, pubkey: bytes, password: str, randomness: Union[None, IUserWalletRandomness], address_hrp: str) -> Dict[str, Any]:

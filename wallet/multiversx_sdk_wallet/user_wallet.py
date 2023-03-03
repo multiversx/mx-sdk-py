@@ -23,7 +23,7 @@ class UserWallet:
 
     @classmethod
     def decrypt_secret_key(cls, keyfile_object: Any, password: str) -> UserSecretKey:
-        _, buffer = keyfile.load_from_key_file_object(keyfile_object, password)
+        buffer = keyfile.load_from_key_file_object(keyfile_object, password)
         return UserSecretKey(buffer)
 
     def save(self, path: Path, address_hrp: str):
