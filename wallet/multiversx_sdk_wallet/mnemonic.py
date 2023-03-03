@@ -14,8 +14,7 @@ class Mnemonic:
 
     @classmethod
     def assert_text_is_valid(cls, text: str) -> None:
-        ok = cls.is_text_valid(text)
-        if not ok:
+        if not cls.is_text_valid(text):
             raise ErrBadMnemonic()
 
     @classmethod
