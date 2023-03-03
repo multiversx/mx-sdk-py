@@ -3,8 +3,6 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
-from multiversx_sdk_core import Address
-
 from multiversx_sdk_wallet.crypto import (EncryptedData, Randomness, decryptor,
                                           encryptor)
 from multiversx_sdk_wallet.interfaces import IRandomness
@@ -12,7 +10,7 @@ from multiversx_sdk_wallet.mnemonic import Mnemonic
 from multiversx_sdk_wallet.user_keys import UserPublicKey, UserSecretKey
 
 
-class UserWalletKind(Enum):
+class UserWalletKind(str, Enum):
     SECRET_KEY = "secretKey"
     MNEMONIC = "mnemonic"
 
@@ -35,7 +33,7 @@ class UserWallet:
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
         return cls(
-            kind=UserWalletKind.SECRET_KEY.value,
+            kind=UserWalletKind.SECRET_KEY,
             encrypted_data=encrypted_data,
             public_key_when_kind_is_secret_key=public_key
         )
@@ -49,7 +47,7 @@ class UserWallet:
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
         return cls(
-            kind=UserWalletKind.MNEMONIC.value,
+            kind=UserWalletKind.MNEMONIC,
             encrypted_data=encrypted_data
         )
 
