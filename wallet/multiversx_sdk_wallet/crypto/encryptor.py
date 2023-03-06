@@ -3,9 +3,9 @@ from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-from multiversx_sdk_wallet.crypto.constants import (CIPHER_ALGORITHM,
-                                                    ENCRYPTOR_VERSION,
-                                                    KEY_DERIVATION_FUNCTION)
+from multiversx_sdk_wallet.crypto.constants import (
+    CIPHER_ALGORITHM_AES_128_CTR, ENCRYPTOR_VERSION,
+    KEY_DERIVATION_FUNCTION_SCRYPT)
 from multiversx_sdk_wallet.crypto.encrypted_data import (EncryptedData,
                                                          KeyDerivationParams)
 from multiversx_sdk_wallet.interfaces import IRandomness
@@ -34,10 +34,10 @@ def encrypt(data: bytes, password: str, randomness: IRandomness) -> EncryptedDat
     encrypted_data = EncryptedData(
         id=randomness.id,
         version=ENCRYPTOR_VERSION,
-        cipher=CIPHER_ALGORITHM,
+        cipher=CIPHER_ALGORITHM_AES_128_CTR,
         ciphertext=ciphertext.hex(),
         iv=randomness.iv.hex(),
-        kdf=KEY_DERIVATION_FUNCTION,
+        kdf=KEY_DERIVATION_FUNCTION_SCRYPT,
         kdfparams=kdParams,
         salt=randomness.salt.hex(),
         mac=mac.hex()

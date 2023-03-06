@@ -3,8 +3,8 @@ from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-from multiversx_sdk_wallet.crypto.constants import (CIPHER_ALGORITHM,
-                                                    KEY_DERIVATION_FUNCTION)
+from multiversx_sdk_wallet.crypto.constants import (
+    CIPHER_ALGORITHM_AES_128_CTR, KEY_DERIVATION_FUNCTION_SCRYPT)
 from multiversx_sdk_wallet.crypto.encrypted_data import EncryptedData
 from multiversx_sdk_wallet.errors import (ErrInvalidKeystoreFilePassword,
                                           ErrUnknownCipher,
@@ -17,10 +17,10 @@ def decrypt(encrypted_data: EncryptedData, password: str) -> bytes:
     """
     backend = default_backend()
 
-    if encrypted_data.kdf != KEY_DERIVATION_FUNCTION:
+    if encrypted_data.kdf != KEY_DERIVATION_FUNCTION_SCRYPT:
         raise ErrUnknownDerivationFunction()
 
-    if encrypted_data.cipher != CIPHER_ALGORITHM:
+    if encrypted_data.cipher != CIPHER_ALGORITHM_AES_128_CTR:
         raise ErrUnknownCipher(name=encrypted_data.cipher)
 
     salt = bytes.fromhex(encrypted_data.salt)

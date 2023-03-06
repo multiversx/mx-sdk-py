@@ -57,10 +57,7 @@ class UserWallet:
 
         encrypted_data = EncryptedData.from_keyfile_object(keyfile_object)
         buffer = decryptor.decrypt(encrypted_data, password)
-
-        while len(buffer) < 32:
-            buffer = b'\x00' + buffer
-
+        buffer = buffer.rjust(32, b'\x00')
         seed = buffer[:32]
         return UserSecretKey(seed)
 
