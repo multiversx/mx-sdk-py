@@ -1,4 +1,5 @@
 import json
+import logging
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
@@ -73,17 +74,42 @@ class UserWallet:
 
     @classmethod
     def decrypt_secret_key_from_file(cls, path: Path, password: str) -> UserSecretKey:
-        with open(path) as f:
+        with open(path, "r") as f:
             key_file_object = json.load(f)
 
         return cls.decrypt_secret_key(key_file_object, password)
 
     @classmethod
     def decrypt_mnemonic_from_file(cls, path: Path, password: str) -> Mnemonic:
-        with open(path) as f:
+        with open(path, "r") as f:
             key_file_object = json.load(f)
 
         return cls.decrypt_mnemonic(key_file_object, password)
+
+    @classmethod
+    def load_secret_key(cls, path: Path, password: str, address_index: int = 0) -> 'UserSecretKey':
+        """
+        Loads a secret key from a keystore file.
+
+        :param path: The path to the keystore file.
+        :param password: The password to decrypt the keystore file.
+        :param address_index: The index of the address to load. This is only used when the keystore file contains a mnemonic, and the secret key is derived from this mnemonic.
+        """
+        with open(path, "r") as f:
+            key_file_object = json.load(f)
+
+        kind = key_file_object.get("kind", UserWalletKind.SECRET_KEY.value)
+        logging.debug(f"UserWallet.load_secret_key(), kind = {kind}")
+
+        if kind == UserWalletKind.SECRET_KEY.value:
+            secret_key = cls.decrypt_secret_key(key_file_object, password)
+        elif kind == UserWalletKind.MNEMONIC.value:
+            mnemonic = cls.decrypt_mnemonic(key_file_object, password)
+            secret_key = mnemonic.derive_key(address_index)
+        else:
+            raise Exception(f"Unknown kind: {kind}")
+
+        return secret_key
 
     def save(self, path: Path, address_hrp: Optional[str] = None):
         obj = self.to_dict(address_hrp)
