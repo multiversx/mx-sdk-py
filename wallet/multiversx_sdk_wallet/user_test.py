@@ -4,11 +4,14 @@ from pathlib import Path
 
 from multiversx_sdk_core import Address, AddressConverter, Message, Transaction
 
+from multiversx_sdk_wallet.crypto.randomness import Randomness
 from multiversx_sdk_wallet.user_keys import UserSecretKey
 from multiversx_sdk_wallet.user_pem import UserPEM
 from multiversx_sdk_wallet.user_signer import UserSigner
 from multiversx_sdk_wallet.user_verifer import UserVerifier
 from multiversx_sdk_wallet.user_wallet import UserWallet
+
+DUMMY_MNEMONIC = "moral volcano peasant pass circle pen over picture flat shop clap goat never lyrics gather prepare woman film husband gravity behind test tiger improve"
 
 
 def test_user_secret_key_create():
@@ -42,52 +45,52 @@ def test_from_pem_file():
 
 def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_randomness():
     alice_secret_key = UserSecretKey.from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9")
-    alice_wallet = UserWallet(alice_secret_key, "password", DummyRandomness(
+    alice_wallet = UserWallet.from_secret_key(alice_secret_key, "password", Randomness(
         salt=bytes.fromhex("4903bd0e7880baa04fc4f886518ac5c672cdc745a6bd13dcec2b6c12e9bffe8d"),
         iv=bytes.fromhex("033182afaa1ebaafcde9ccc68a5eac31"),
         id="0dc10c02-b59b-4bac-9710-6b2cfa4284ba"
     ))
 
     bob_secret_key = UserSecretKey.from_string("b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639")
-    bob_wallet = UserWallet(bob_secret_key, "password", DummyRandomness(
+    bob_wallet = UserWallet.from_secret_key(bob_secret_key, "password", Randomness(
         salt=bytes.fromhex("18304455ac2dbe2a2018bda162bd03ef95b81622e99d8275c34a6d5e6932a68b"),
         iv=bytes.fromhex("18378411e31f6c4e99f1435d9ab82831"),
         id="85fdc8a7-7119-479d-b7fb-ab4413ed038d"
     ))
 
     carol_secret_key = UserSecretKey.from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436")
-    carol_wallet = UserWallet(carol_secret_key, "password", DummyRandomness(
+    carol_wallet = UserWallet.from_secret_key(carol_secret_key, "password", Randomness(
         salt=bytes.fromhex("4f2f5530ce28dc0210962589b908f52714f75c8fb79ff18bdd0024c43c7a220b"),
         iv=bytes.fromhex("258ed2b4dc506b4dc9d274b0449b0eb0"),
         id="65894f35-d142-41d2-9335-6ad02e0ed0be"
     ))
 
     with open("./multiversx_sdk_wallet/testdata/alice.json") as f:
-        assert json.load(f) == alice_wallet.to_keyfile_object("erd")
+        assert json.load(f) == alice_wallet.to_dict("erd")
 
     with open("./multiversx_sdk_wallet/testdata/bob.json") as f:
-        assert json.load(f) == bob_wallet.to_keyfile_object("erd")
+        assert json.load(f) == bob_wallet.to_dict("erd")
 
     with open("./multiversx_sdk_wallet/testdata/carol.json") as f:
-        assert json.load(f) == carol_wallet.to_keyfile_object("erd")
+        assert json.load(f) == carol_wallet.to_dict("erd")
 
 
 def test_user_wallet_encrypt_then_decrypt():
     alice_secret_key = UserSecretKey.from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9")
-    alice_wallet = UserWallet(alice_secret_key, "password")
-    alice_keyfile_object = alice_wallet.to_keyfile_object("erd")
+    alice_wallet = UserWallet.from_secret_key(alice_secret_key, "password")
+    alice_keyfile_object = alice_wallet.to_dict("erd")
     decrypted_secret_key = UserWallet.decrypt_secret_key(alice_keyfile_object, "password")
     assert decrypted_secret_key.buffer == alice_secret_key.buffer
 
     bob_secret_key = UserSecretKey.from_string("b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639")
-    bob_wallet = UserWallet(bob_secret_key, "password")
-    bob_keyfile_object = bob_wallet.to_keyfile_object("erd")
+    bob_wallet = UserWallet.from_secret_key(bob_secret_key, "password")
+    bob_keyfile_object = bob_wallet.to_dict("erd")
     decrypted_secret_key = UserWallet.decrypt_secret_key(bob_keyfile_object, "password")
     assert decrypted_secret_key.buffer == bob_secret_key.buffer
 
     carol_secret_key = UserSecretKey.from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436")
-    carol_wallet = UserWallet(carol_secret_key, "password")
-    carol_keyfile_object = carol_wallet.to_keyfile_object("erd")
+    carol_wallet = UserWallet.from_secret_key(carol_secret_key, "password")
+    carol_keyfile_object = carol_wallet.to_dict("erd")
     decrypted_secret_key = UserWallet.decrypt_secret_key(carol_keyfile_object, "password")
     assert decrypted_secret_key.buffer == carol_secret_key.buffer
 
@@ -146,8 +149,43 @@ def test_pem_save():
     os.remove(path_saved)
 
 
-class DummyRandomness:
-    def __init__(self, salt: bytes, iv: bytes, id: str) -> None:
-        self.salt = salt
-        self.iv = iv
-        self.id = id
+def test_decrypt_secret_key_from_file_but_without_kind_field():
+    keystore_path = Path("./multiversx_sdk_wallet/testdata/withoutKind.json")
+    secret_key = UserWallet.decrypt_secret_key_from_file(keystore_path, "password")
+    actual_address = Address(secret_key.generate_public_key().buffer, "erd").bech32()
+    assert actual_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+
+def test_create_keystore_file_with_mnemonic():
+    wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "password")
+    keyfile_object = wallet.to_dict()
+
+    assert keyfile_object["version"] == 4
+    assert keyfile_object["kind"] == "mnemonic"
+    assert "bech32" not in keyfile_object
+
+
+def test_create_keystore_with_mnemonic_with_randomness():
+    expected_dummy_wallet_json = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json").read_text()
+    expected_dummy_wallet_dict = json.loads(expected_dummy_wallet_json)
+
+    randomness = Randomness(
+        id="5b448dbc-5c72-4d83-8038-938b1f8dff19",
+        iv=bytes.fromhex("2da5620906634972d9a623bc249d63d4"),
+        salt=bytes.fromhex("aa9e0ba6b188703071a582c10e5331f2756279feb0e2768f1ba0fd38ec77f035")
+    )
+
+    wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "password", randomness)
+    wallet_dict = wallet.to_dict()
+
+    assert wallet_dict == expected_dummy_wallet_dict
+
+
+def test_decrypt_keystore_file_with_mnemonic():
+    keystore_path = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json")
+    mnemonic = UserWallet.decrypt_mnemonic_from_file(keystore_path, "password")
+
+    assert mnemonic.get_text() == DUMMY_MNEMONIC
+    assert mnemonic.derive_key(0).generate_public_key().to_address("erd").bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    assert mnemonic.derive_key(1).generate_public_key().to_address("erd").bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    assert mnemonic.derive_key(2).generate_public_key().to_address("erd").bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"

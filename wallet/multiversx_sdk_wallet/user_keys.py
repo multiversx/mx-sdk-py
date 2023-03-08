@@ -1,10 +1,11 @@
 import nacl.signing
+from multiversx_sdk_core import Address
 
 from multiversx_sdk_wallet.constants import (USER_PUBKEY_LENGTH,
                                              USER_SEED_LENGTH)
 from multiversx_sdk_wallet.errors import (ErrBadPublicKeyLength,
                                           ErrBadSecretKeyLength)
-from multiversx_sdk_wallet.interfaces import ISignature
+from multiversx_sdk_wallet.interfaces import IAddress, ISignature
 
 
 class UserSecretKey:
@@ -60,6 +61,9 @@ class UserPublicKey:
             return True
         except Exception:
             return False
+
+    def to_address(self, hrp: str) -> IAddress:
+        return Address(self.buffer, hrp)
 
     def hex(self) -> str:
         return self.buffer.hex()

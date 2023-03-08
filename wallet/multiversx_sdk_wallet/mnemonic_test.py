@@ -1,4 +1,13 @@
+import pytest
+
+from multiversx_sdk_wallet.errors import ErrBadMnemonic
 from multiversx_sdk_wallet.mnemonic import Mnemonic
+
+
+def test_assert_text_is_valid():
+    with pytest.raises(ErrBadMnemonic):
+        Mnemonic.assert_text_is_valid("bad mnemonic")
+        Mnemonic.assert_text_is_valid("moral volcano peasant pass circle pen over picture")
 
 
 def test_generate():

@@ -14,7 +14,7 @@ class IVerifiable(Protocol):
     def serialize_for_signing(self) -> bytes: ...
 
 
-class IUserWalletRandomness(Protocol):
+class IRandomness(Protocol):
     salt: bytes
     iv: bytes
     id: str

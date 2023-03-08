@@ -8,11 +8,18 @@ from multiversx_sdk_wallet.user_keys import UserSecretKey
 
 class Mnemonic:
     def __init__(self, text: str) -> None:
-        ok = mnemonic.Mnemonic(BIP39_LANGUAGE).check(text)
-        if not ok:
+        text = text.strip()
+        self.assert_text_is_valid(text)
+        self.text = text
+
+    @classmethod
+    def assert_text_is_valid(cls, text: str) -> None:
+        if not cls.is_text_valid(text):
             raise ErrBadMnemonic()
 
-        self.text = text
+    @classmethod
+    def is_text_valid(cls, text: str) -> bool:
+        return mnemonic.Mnemonic(BIP39_LANGUAGE).check(text)
 
     @classmethod
     def generate(cls) -> 'Mnemonic':
