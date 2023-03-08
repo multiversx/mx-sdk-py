@@ -73,27 +73,13 @@ class UserWallet:
         return mnemonic
 
     @classmethod
-    def decrypt_secret_key_from_file(cls, path: Path, password: str) -> UserSecretKey:
-        with open(path, "r") as f:
-            key_file_object = json.load(f)
-
-        return cls.decrypt_secret_key(key_file_object, password)
-
-    @classmethod
-    def decrypt_mnemonic_from_file(cls, path: Path, password: str) -> Mnemonic:
-        with open(path, "r") as f:
-            key_file_object = json.load(f)
-
-        return cls.decrypt_mnemonic(key_file_object, password)
-
-    @classmethod
     def load_secret_key(cls, path: Path, password: str, address_index: int = 0) -> 'UserSecretKey':
         """
         Loads a secret key from a keystore file.
 
         :param path: The path to the keystore file.
         :param password: The password to decrypt the keystore file.
-        :param address_index: The index of the address to load. This is only used when the keystore file contains a mnemonic, and the secret key is derived from this mnemonic.
+        :param address_index: The index of the address to load. This is only used when the keystore file contains a mnemonic, and the secret key has to be derived from this mnemonic.
         """
         with open(path, "r") as f:
             key_file_object = json.load(f)
