@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 
 from multiversx_sdk_wallet import pem_format
 from multiversx_sdk_wallet.validator_keys import ValidatorSecretKey
@@ -11,9 +12,29 @@ class ValidatorPEM:
 
     @classmethod
     def from_file(cls, path: Path, index: int = 0) -> 'ValidatorPEM':
-        entry = pem_format.parse(path, index)
-        secret_key = ValidatorSecretKey(entry.message)
-        return ValidatorPEM(entry.label, secret_key)
+        return cls.from_file_all(path)[index]
+
+    @classmethod
+    def from_file_all(cls, path: Path) -> List['ValidatorPEM']:
+        text = path.expanduser().resolve().read_text()
+        return cls.from_text_all(text)
+
+    @classmethod
+    def from_text(cls, text: str, index: int = 0) -> 'ValidatorPEM':
+        items = cls.from_text_all(text)
+
+        if index >= len(items):
+            raise Exception(f"Cannot get {cls.__name__}: index {index} is out of range")
+
+        return items[index]
+
+    @classmethod
+    def from_text_all(cls, text: str) -> List['ValidatorPEM']:
+        entries = pem_format.parse_text(text)
+        secret_keys = [ValidatorSecretKey(entry.message) for entry in entries]
+        labels = [entry.label for entry in entries]
+        items = [ValidatorPEM(label, secret_key) for label, secret_key in zip(labels, secret_keys)]
+        return items
 
     def save(self, path: Path):
         message = self.secret_key.buffer

@@ -65,7 +65,7 @@ class UserWallet:
     @classmethod
     def decrypt_mnemonic(cls, keyfile_object: Dict[str, Any], password: str) -> Mnemonic:
         if keyfile_object['kind'] != UserWalletKind.MNEMONIC.value:
-            raise Exception(f"Expected kind to be {UserWalletKind.MNEMONIC.value}, but it was {keyfile_object['kind']}.")
+            raise Exception(f"Expected kind to be {UserWalletKind.MNEMONIC.value}, but it was {keyfile_object['kind']}")
 
         encrypted_data = EncryptedData.from_keyfile_object(keyfile_object)
         buffer = decryptor.decrypt(encrypted_data, password)
@@ -81,9 +81,8 @@ class UserWallet:
         :param password: The password to decrypt the keystore file.
         :param address_index: The index of the address to load. This is only used when the keystore file contains a mnemonic, and the secret key has to be derived from this mnemonic.
         """
-        with open(path, "r") as f:
-            key_file_object = json.load(f)
-
+        key_file_json = path.expanduser().resolve().read_text()
+        key_file_object = json.loads(key_file_json)
         kind = key_file_object.get("kind", UserWalletKind.SECRET_KEY.value)
         logging.debug(f"UserWallet.load_secret_key(), kind = {kind}")
 
