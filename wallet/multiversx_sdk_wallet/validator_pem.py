@@ -22,10 +22,6 @@ class ValidatorPEM:
     @classmethod
     def from_text(cls, text: str, index: int = 0) -> 'ValidatorPEM':
         items = cls.from_text_all(text)
-
-        if index >= len(items):
-            raise Exception(f"Cannot get {cls.__name__}: index {index} is out of range")
-
         return items[index]
 
     @classmethod
