@@ -27,10 +27,14 @@ class ValidatorPEM:
     @classmethod
     def from_text_all(cls, text: str) -> List['ValidatorPEM']:
         entries = pem_format.parse_text(text)
-        secret_keys = [ValidatorSecretKey(entry.message) for entry in entries]
-        labels = [entry.label for entry in entries]
-        items = [ValidatorPEM(label, secret_key) for label, secret_key in zip(labels, secret_keys)]
-        return items
+        result_items: List[ValidatorPEM] = []
+
+        for entry in entries:
+            secret_key = ValidatorSecretKey(entry.message)
+            item = ValidatorPEM(entry.label, secret_key)
+            result_items.append(item)
+
+        return result_items
 
     def save(self, path: Path):
         message = self.secret_key.buffer

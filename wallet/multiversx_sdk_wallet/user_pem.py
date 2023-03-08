@@ -29,10 +29,14 @@ class UserPEM:
     @classmethod
     def from_text_all(cls, text: str) -> List['UserPEM']:
         entries = pem_format.parse_text(text)
-        secret_keys = [UserSecretKey(entry.message[0:USER_SEED_LENGTH]) for entry in entries]
-        labels = [entry.label for entry in entries]
-        items = [UserPEM(label, secret_key) for label, secret_key in zip(labels, secret_keys)]
-        return items
+        result_items: List[UserPEM] = []
+
+        for entry in entries:
+            secret_key = UserSecretKey(entry.message[0:USER_SEED_LENGTH])
+            item = UserPEM(entry.label, secret_key)
+            result_items.append(item)
+
+        return result_items
 
     def save(self, path: Path):
         message = self.secret_key.buffer + self.public_key.buffer
