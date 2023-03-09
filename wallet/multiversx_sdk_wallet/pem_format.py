@@ -33,9 +33,9 @@ def parse_text(pem_text: str) -> List[PemEntry]:
 
 
 def _clean_lines(lines: List[str]) -> List[str]:
-    lines = [line.strip() for line in lines]
-    lines = [line for line in lines if line]
-    return lines
+    lines = map(str.strip, lines)
+    lines = filter(None, lines)
+    return list(lines)
 
 
 def _parse_labels(headers: List[str]) -> List[str]:
