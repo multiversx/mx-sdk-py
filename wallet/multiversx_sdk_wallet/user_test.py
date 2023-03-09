@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 
+import pytest
 from multiversx_sdk_core import Address, AddressConverter, Message, Transaction
 
 from multiversx_sdk_wallet.crypto.randomness import Randomness
@@ -154,6 +155,13 @@ def test_load_secret_key_but_without_kind_field():
     secret_key = UserWallet.load_secret_key(keystore_path, "password")
     actual_address = Address(secret_key.generate_public_key().buffer, "erd").bech32()
     assert actual_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+
+def test_load_secret_key_with_unecessary_address_index():
+    keystore_path = Path("./multiversx_sdk_wallet/testdata/alice.json")
+
+    with pytest.raises(Exception, match="address_index must not be provided when kind == 'secretKey'"):
+        UserWallet.load_secret_key(keystore_path, "password", 42)
 
 
 def test_create_keystore_file_with_mnemonic():

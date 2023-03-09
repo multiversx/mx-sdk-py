@@ -73,7 +73,7 @@ class UserWallet:
         return mnemonic
 
     @classmethod
-    def load_secret_key(cls, path: Path, password: str, address_index: int = 0) -> 'UserSecretKey':
+    def load_secret_key(cls, path: Path, password: str, address_index: Optional[int] = None) -> 'UserSecretKey':
         """
         Loads a secret key from a keystore file.
 
@@ -87,10 +87,12 @@ class UserWallet:
         logging.debug(f"UserWallet.load_secret_key(), kind = {kind}")
 
         if kind == UserWalletKind.SECRET_KEY.value:
+            if address_index is not None:
+                raise Exception("address_index must not be provided when kind == 'secretKey'")
             secret_key = cls.decrypt_secret_key(key_file_object, password)
         elif kind == UserWalletKind.MNEMONIC.value:
             mnemonic = cls.decrypt_mnemonic(key_file_object, password)
-            secret_key = mnemonic.derive_key(address_index)
+            secret_key = mnemonic.derive_key(address_index or 0)
         else:
             raise Exception(f"Unknown kind: {kind}")
 
