@@ -11,17 +11,10 @@ class PemEntry:
         self.message: bytes = message
 
 
-def parse(pem_file: Path, index: int = 0) -> PemEntry:
-    pairs = parse_all(pem_file)
-    pair = pairs[index]
-    return pair
+def parse_text(pem_text: str) -> List[PemEntry]:
+    lines = pem_text.splitlines()
+    lines = _clean_lines(lines)
 
-
-def parse_all(pem_file: Path) -> List[PemEntry]:
-    pem_file = pem_file.expanduser()
-    _guard_is_file(pem_file)
-
-    lines = _read_lines(pem_file)
     messages_lines = [list(message_lines) for is_next_entry, message_lines in itertools.groupby(lines, lambda line: "-----" in line)
                       if not is_next_entry]
     messages_base64 = ["".join(message_lines) for message_lines in messages_lines]
@@ -37,6 +30,12 @@ def parse_all(pem_file: Path) -> List[PemEntry]:
         result.append(PemEntry(label, message_bytes))
 
     return result
+
+
+def _clean_lines(lines: List[str]) -> List[str]:
+    lines = [line.strip() for line in lines]
+    lines = list(filter(None, lines))
+    return lines
 
 
 def _parse_labels(headers: List[str]) -> List[str]:
@@ -58,19 +57,6 @@ def write(path: Path, label: str, message: bytes):
     payload = "\n".join(payload_lines)
     content = "\n".join([header, payload, footer])
     _write_file(path, content)
-
-
-def _guard_is_file(input: Path):
-    if not input.is_file():
-        raise Exception(str(input), "is not a valid file")
-
-
-def _read_lines(file: Path) -> List[str]:
-    with open(file) as f:
-        lines = f.readlines()
-    lines = [line.strip() for line in lines]
-    lines = [line for line in lines if line]
-    return lines
 
 
 def _write_file(file_path: Path, text: str):

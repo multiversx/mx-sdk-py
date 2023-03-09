@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 
+import pytest
 from multiversx_sdk_core import Address, AddressConverter, Message, Transaction
 
 from multiversx_sdk_wallet.crypto.randomness import Randomness
@@ -149,11 +150,18 @@ def test_pem_save():
     os.remove(path_saved)
 
 
-def test_decrypt_secret_key_from_file_but_without_kind_field():
+def test_load_secret_key_but_without_kind_field():
     keystore_path = Path("./multiversx_sdk_wallet/testdata/withoutKind.json")
-    secret_key = UserWallet.decrypt_secret_key_from_file(keystore_path, "password")
+    secret_key = UserWallet.load_secret_key(keystore_path, "password")
     actual_address = Address(secret_key.generate_public_key().buffer, "erd").bech32()
     assert actual_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+
+def test_load_secret_key_with_unecessary_address_index():
+    keystore_path = Path("./multiversx_sdk_wallet/testdata/alice.json")
+
+    with pytest.raises(Exception, match="address_index must not be provided when kind == 'secretKey'"):
+        UserWallet.load_secret_key(keystore_path, "password", 42)
 
 
 def test_create_keystore_file_with_mnemonic():
@@ -181,11 +189,9 @@ def test_create_keystore_with_mnemonic_with_randomness():
     assert wallet_dict == expected_dummy_wallet_dict
 
 
-def test_decrypt_keystore_file_with_mnemonic():
+def test_load_secret_key_with_mnemonic():
     keystore_path = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json")
-    mnemonic = UserWallet.decrypt_mnemonic_from_file(keystore_path, "password")
 
-    assert mnemonic.get_text() == DUMMY_MNEMONIC
-    assert mnemonic.derive_key(0).generate_public_key().to_address("erd").bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-    assert mnemonic.derive_key(1).generate_public_key().to_address("erd").bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
-    assert mnemonic.derive_key(2).generate_public_key().to_address("erd").bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    assert UserWallet.load_secret_key(keystore_path, "password", 0).generate_public_key().to_address("erd").bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    assert UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    assert UserWallet.load_secret_key(keystore_path, "password", 2).generate_public_key().to_address("erd").bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"

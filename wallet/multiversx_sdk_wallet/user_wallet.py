@@ -1,4 +1,5 @@
 import json
+import logging
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
@@ -64,7 +65,7 @@ class UserWallet:
     @classmethod
     def decrypt_mnemonic(cls, keyfile_object: Dict[str, Any], password: str) -> Mnemonic:
         if keyfile_object['kind'] != UserWalletKind.MNEMONIC.value:
-            raise Exception(f"Expected kind to be {UserWalletKind.MNEMONIC.value}, but it was {keyfile_object['kind']}.")
+            raise Exception(f"Expected kind to be {UserWalletKind.MNEMONIC.value}, but it was {keyfile_object['kind']}")
 
         encrypted_data = EncryptedData.from_keyfile_object(keyfile_object)
         buffer = decryptor.decrypt(encrypted_data, password)
@@ -72,18 +73,30 @@ class UserWallet:
         return mnemonic
 
     @classmethod
-    def decrypt_secret_key_from_file(cls, path: Path, password: str) -> UserSecretKey:
-        with open(path) as f:
-            key_file_object = json.load(f)
+    def load_secret_key(cls, path: Path, password: str, address_index: Optional[int] = None) -> 'UserSecretKey':
+        """
+        Loads a secret key from a keystore file.
 
-        return cls.decrypt_secret_key(key_file_object, password)
+        :param path: The path to the keystore file.
+        :param password: The password to decrypt the keystore file.
+        :param address_index: The index of the address to load. This is only used when the keystore file contains a mnemonic, and the secret key has to be derived from this mnemonic.
+        """
+        key_file_json = path.expanduser().resolve().read_text()
+        key_file_object = json.loads(key_file_json)
+        kind = key_file_object.get("kind", UserWalletKind.SECRET_KEY.value)
+        logging.debug(f"UserWallet.load_secret_key(), kind = {kind}")
 
-    @classmethod
-    def decrypt_mnemonic_from_file(cls, path: Path, password: str) -> Mnemonic:
-        with open(path) as f:
-            key_file_object = json.load(f)
+        if kind == UserWalletKind.SECRET_KEY.value:
+            if address_index is not None:
+                raise Exception("address_index must not be provided when kind == 'secretKey'")
+            secret_key = cls.decrypt_secret_key(key_file_object, password)
+        elif kind == UserWalletKind.MNEMONIC.value:
+            mnemonic = cls.decrypt_mnemonic(key_file_object, password)
+            secret_key = mnemonic.derive_key(address_index or 0)
+        else:
+            raise Exception(f"Unknown kind: {kind}")
 
-        return cls.decrypt_mnemonic(key_file_object, password)
+        return secret_key
 
     def save(self, path: Path, address_hrp: Optional[str] = None):
         obj = self.to_dict(address_hrp)

@@ -22,7 +22,7 @@ class UserSigner:
 
     @classmethod
     def from_wallet(cls, path: Path, password: str) -> 'UserSigner':
-        secret_key = UserWallet.decrypt_secret_key_from_file(path, password)
+        secret_key = UserWallet.load_secret_key(path, password)
         return UserSigner(secret_key)
 
     def sign(self, signable: ISignable) -> ISignature:
