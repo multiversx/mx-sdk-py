@@ -53,3 +53,21 @@ def test_from_text_all_for_validators():
     entry = entries[3]
     assert entry.label == "12773304cb718250edd89770cedcbf675ccdb7fe2b30bd3185ca65ffa0d516879768ed03f92e41a6e5bc5340b78a9d02655e3b727c79730ead791fb68eaa02b84e1be92a816a9604a1ab9a6d3874b638487e2145239438a4bafac3889348d405"
     assert entry.message.hex() == "8ebeb07d296ad2529400b40687a741a135f8357f79f39fcb2894a6f9703a5816"
+
+
+def test_to_text():
+    text = Path("./multiversx_sdk_wallet/testdata/alice.pem").read_text()
+    assert PemEntry.from_text_all(text)[0].to_text() == text.strip()
+
+    text = Path("./multiversx_sdk_wallet/testdata/validatorKey00.pem").read_text()
+    assert PemEntry.from_text_all(text)[0].to_text() == text.strip()
+
+    text = Path("./multiversx_sdk_wallet/testdata/multipleUserKeys.pem").read_text()
+    entries = PemEntry.from_text_all(text)
+    text_actual = "\n".join([entry.to_text() for entry in entries])
+    assert text_actual == text.strip()
+
+    text = Path("./multiversx_sdk_wallet/testdata/multipleValidatorKeys.pem").read_text()
+    entries = PemEntry.from_text_all(text)
+    text_actual = "\n".join([entry.to_text() for entry in entries])
+    assert text_actual == text.strip()
