@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import List
 
-from multiversx_sdk_wallet import pem_format
 from multiversx_sdk_wallet.constants import USER_SEED_LENGTH
+from multiversx_sdk_wallet.pem_entry import PemEntry
 from multiversx_sdk_wallet.user_keys import UserSecretKey
 
 
@@ -28,7 +28,7 @@ class UserPEM:
 
     @classmethod
     def from_text_all(cls, text: str) -> List['UserPEM']:
-        entries = pem_format.parse_text(text)
+        entries = PemEntry.from_text_all(text)
         result_items: List[UserPEM] = []
 
         for entry in entries:
@@ -39,5 +39,7 @@ class UserPEM:
         return result_items
 
     def save(self, path: Path):
+        path = path.expanduser().resolve()
         message = self.secret_key.buffer + self.public_key.buffer
-        pem_format.write(path, self.label, message)
+        text = PemEntry(self.label, message).to_text()
+        path.write_text(text)

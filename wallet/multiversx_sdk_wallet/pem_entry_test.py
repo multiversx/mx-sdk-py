@@ -1,67 +1,42 @@
 
 from pathlib import Path
 
-from multiversx_sdk_wallet import pem_format
 from multiversx_sdk_wallet.constants import USER_SEED_LENGTH
+from multiversx_sdk_wallet.pem_entry import PemEntry
 
 
-def test_parse():
+def test_from_text_all():
     text = Path("./multiversx_sdk_wallet/testdata/alice.pem").read_text()
-    entry = pem_format.parse_text(text)[0]
+    entries = PemEntry.from_text_all(text)
+    entry = entries[0]
+    assert len(entries) == 1
     assert entry.label == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
     assert entry.message[0:USER_SEED_LENGTH].hex() == "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
 
     text = Path("./multiversx_sdk_wallet/testdata/multipleUserKeys.pem").read_text()
-
-    entry = pem_format.parse_text(text)[0]
+    entries = PemEntry.from_text_all(text)
+    entry = entries[0]
+    assert len(entries) == 3
     assert entry.label == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
     assert entry.message[0:USER_SEED_LENGTH].hex() == "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
 
-    entry = pem_format.parse_text(text)[1]
+    entry = entries[1]
     assert entry.label == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
     assert entry.message[0:USER_SEED_LENGTH].hex() == "b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639"
 
-    entry = pem_format.parse_text(text)[2]
+    entry = entries[2]
     assert entry.label == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
     assert entry.message[0:USER_SEED_LENGTH].hex() == "e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436"
 
 
-def test_parse_all():
-    text = Path("./multiversx_sdk_wallet/testdata/alice.pem").read_text()
-    pairs = pem_format.parse_text(text)
-    assert len(pairs) == 1
-
-    entry = pairs[0]
-    assert entry.label == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-    assert entry.message[0:USER_SEED_LENGTH].hex() == "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
-
-    text = Path("./multiversx_sdk_wallet/testdata/multipleUserKeys.pem").read_text()
-    pairs = pem_format.parse_text(text)
-    assert len(pairs) == 3
-
-    entry = pairs[0]
-    assert entry.label == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-    assert entry.message[0:USER_SEED_LENGTH].hex() == "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
-
-    entry = pairs[1]
-    assert entry.label == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
-    assert entry.message[0:USER_SEED_LENGTH].hex() == "b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639"
-
-    entry = pairs[2]
-    assert entry.label == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
-    assert entry.message[0:USER_SEED_LENGTH].hex() == "e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436"
-
-
-def test_parse_for_validators():
+def test_from_text_all_for_validators():
     text = Path("./multiversx_sdk_wallet/testdata/validatorKey00.pem").read_text()
-    entry = pem_format.parse_text(text)[0]
+    entry = PemEntry.from_text_all(text)[0]
     assert entry.label == "e7beaa95b3877f47348df4dd1cb578a4f7cabf7a20bfeefe5cdd263878ff132b765e04fef6f40c93512b666c47ed7719b8902f6c922c04247989b7137e837cc81a62e54712471c97a2ddab75aa9c2f58f813ed4c0fa722bde0ab718bff382208"
     assert entry.message.hex() == "7cff99bd671502db7d15bc8abc0c9a804fb925406fbdd50f1e4c17a4cd774247"
 
-
-def test_parse_for_validators_all():
     text = Path("./multiversx_sdk_wallet/testdata/multipleValidatorKeys.pem").read_text()
-    entries = pem_format.parse_text(text)
+    entries = PemEntry.from_text_all(text)
 
     entry = entries[0]
     assert entry.label == "f8910e47cf9464777c912e6390758bb39715fffcb861b184017920e4a807b42553f2f21e7f3914b81bcf58b66a72ab16d97013ae1cff807cefc977ef8cbf116258534b9e46d19528042d16ef8374404a89b184e0a4ee18c77c49e454d04eae8d"
