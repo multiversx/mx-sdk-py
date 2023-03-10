@@ -99,10 +99,13 @@ class UserWallet:
         return secret_key
 
     def save(self, path: Path, address_hrp: Optional[str] = None):
-        obj = self.to_dict(address_hrp)
+        path = path.expanduser().resolve()
+        json_content = self.to_json(address_hrp)
+        path.write_text(json_content)
 
-        with open(path, 'w') as json_file:
-            json.dump(obj, json_file, indent=4)
+    def to_json(self, address_hrp: Optional[str] = None) -> str:
+        obj = self.to_dict(address_hrp)
+        return json.dumps(obj, indent=4)
 
     def to_dict(self, address_hrp: Optional[str] = None) -> Dict[str, Any]:
         if self.kind == UserWalletKind.SECRET_KEY.value:
