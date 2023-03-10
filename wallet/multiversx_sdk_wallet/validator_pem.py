@@ -38,6 +38,8 @@ class ValidatorPEM:
 
     def save(self, path: Path):
         path = path.expanduser().resolve()
+        path.write_text(self.to_text())
+
+    def to_text(self):
         message = self.secret_key.buffer
-        text = PemEntry(self.label, message).to_text()
-        path.write_text(text)
+        return PemEntry(self.label, message).to_text()
