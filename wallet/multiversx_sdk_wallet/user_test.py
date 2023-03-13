@@ -1,5 +1,4 @@
 import json
-import os
 from pathlib import Path
 
 import pytest
@@ -31,7 +30,7 @@ def test_user_secret_key_generate_public_key():
     assert UserSecretKey.from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436").generate_public_key().hex() == "b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba"
 
 
-def test_from_pem_file():
+def test_user_signer_from_pem_file():
     converter = AddressConverter()
 
     pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"), 0).get_pubkey()
@@ -66,14 +65,21 @@ def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_rando
         id="65894f35-d142-41d2-9335-6ad02e0ed0be"
     ))
 
-    with open("./multiversx_sdk_wallet/testdata/alice.json") as f:
-        assert json.load(f) == alice_wallet.to_dict("erd")
+    alice_saved_path = Path("./multiversx_sdk_wallet/testdata/alice.saved.json")
+    bob_saved_path = Path("./multiversx_sdk_wallet/testdata/bob.saved.json")
+    carol_saved_path = Path("./multiversx_sdk_wallet/testdata/carol.saved.json")
 
-    with open("./multiversx_sdk_wallet/testdata/bob.json") as f:
-        assert json.load(f) == bob_wallet.to_dict("erd")
+    alice_wallet.save(alice_saved_path, "erd")
+    bob_wallet.save(bob_saved_path, "erd")
+    carol_wallet.save(carol_saved_path, "erd")
 
-    with open("./multiversx_sdk_wallet/testdata/carol.json") as f:
-        assert json.load(f) == carol_wallet.to_dict("erd")
+    assert alice_saved_path.read_text().strip() == Path("./multiversx_sdk_wallet/testdata/alice.json").read_text().strip()
+    assert bob_saved_path.read_text().strip() == Path("./multiversx_sdk_wallet/testdata/bob.json").read_text().strip()
+    assert carol_saved_path.read_text().strip() == Path("./multiversx_sdk_wallet/testdata/carol.json").read_text().strip()
+
+    alice_saved_path.unlink()
+    bob_saved_path.unlink()
+    carol_saved_path.unlink()
 
 
 def test_user_wallet_encrypt_then_decrypt():
@@ -133,21 +139,17 @@ def test_sign_message():
     assert verifier.verify(message)
 
 
-def test_pem_save():
+def test_user_pem_save():
     path = Path("./multiversx_sdk_wallet/testdata/alice.pem")
     path_saved = path.with_suffix(".saved")
-
-    with open(path) as f:
-        content_expected = f.read().strip()
+    content_expected = path.read_text().strip()
 
     pem = UserPEM.from_file(path)
     pem.save(path_saved)
-
-    with open(path_saved) as f:
-        content_actual = f.read().strip()
+    content_actual = path_saved.read_text().strip()
 
     assert content_actual == content_expected
-    os.remove(path_saved)
+    path_saved.unlink()
 
 
 def test_load_secret_key_but_without_kind_field():
