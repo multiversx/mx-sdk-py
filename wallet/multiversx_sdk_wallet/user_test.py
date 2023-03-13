@@ -2,7 +2,8 @@ import json
 from pathlib import Path
 
 import pytest
-from multiversx_sdk_core import Address, AddressConverter, Message, Transaction
+from multiversx_sdk_core import (Address, AddressConverter, MessageV1,
+                                 Transaction)
 
 from multiversx_sdk_wallet.crypto.randomness import Randomness
 from multiversx_sdk_wallet.user_keys import UserSecretKey
@@ -129,13 +130,13 @@ def test_sign_transaction():
 
 
 def test_sign_message():
-    message = Message.from_string("hello")
+    message = MessageV1.from_string("hello")
 
     signer = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
 
     message.signature = signer.sign(message)
-    assert message.signature.hex() == "66dd503199222d3104cb5381da953b14c895ca564579f98934c4e54a45d75f097da2a0c30060c0e7d014928b8e54509335cadc69b2bb1940cd59bd0c1bb80b0b"
+    assert message.signature.hex() == "561bc58f1dc6b10de208b2d2c22c9a474ea5e8cabb59c3d3ce06bbda21cc46454aa71a85d5a60442bd7784effa2e062fcb8fb421c521f898abf7f5ec165e5d0f"
     assert verifier.verify(message)
 
 
