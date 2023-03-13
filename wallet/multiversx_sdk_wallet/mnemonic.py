@@ -1,3 +1,5 @@
+from typing import List
+
 import mnemonic
 
 from multiversx_sdk_wallet import core
@@ -30,10 +32,10 @@ class Mnemonic:
         secret_key = core.derive_keys(self.text, address_index)
         return UserSecretKey(secret_key)
 
-    def get_text(self):
+    def get_text(self) -> str:
         return self.text
 
-    def get_words(self):
+    def get_words(self) -> List[str]:
         return self.text.split()
 
     def __str__(self) -> str:

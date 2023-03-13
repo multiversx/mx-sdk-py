@@ -42,6 +42,6 @@ class UserPEM:
         path = path.expanduser().resolve()
         path.write_text(self.to_text())
 
-    def to_text(self):
+    def to_text(self) -> str:
         message = self.secret_key.buffer + self.public_key.buffer
         return PemEntry(self.label, message).to_text()
