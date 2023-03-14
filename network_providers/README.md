@@ -15,8 +15,8 @@ Network providers for MultiversX Python SDK.
 Create a virtual environment and install the dependencies:
 
 ```
-python3 -m venv ./.venv
-source ./.venv/bin/activate
+python3 -m venv ./venv
+source ./venv/bin/activate
 pip install -r ./requirements.txt --upgrade
 ```
 
@@ -32,7 +32,7 @@ Above, `requirements.txt` should mirror the **dependencies** section of `pyproje
 If using VSCode, restart it or follow these steps:
  - `Ctrl + Shift + P`
  - _Select Interpreter_
- - Choose `./.venv/bin/python`.
+ - Choose `./venv/bin/python`.
  
 ### Tests
 
