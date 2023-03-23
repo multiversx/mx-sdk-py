@@ -1,6 +1,6 @@
 """
 Runtime type-checking is not a good idea, generally speaking. 
-However, some developers may inadvertedly disable static type-checking in their IDEs,
+However, some developers may inadvertently disable static type-checking in their IDEs,
 and this can lead to hard-to-debug errors.
 
 The functions in this module are meant to be **internally** used by some components,
