@@ -1,6 +1,7 @@
 from decimal import ROUND_DOWN, Context, Decimal, localcontext
 from typing import Union
 
+from multiversx_sdk_core import typecheck
 from multiversx_sdk_core.constants import (EGLD_NUM_DECIMALS,
                                            EGLD_TOKEN_IDENTIFIER)
 from multiversx_sdk_core.interfaces import INonce, ITokenIdentifier
@@ -8,6 +9,8 @@ from multiversx_sdk_core.interfaces import INonce, ITokenIdentifier
 
 class TokenPayment:
     def __init__(self, token_identifier: ITokenIdentifier, token_nonce: INonce, amount_as_integer: int, num_decimals: int) -> None:
+        typecheck.assert_is_integer(amount_as_integer, "amount_as_integer must be an integer")
+
         self.token_identifier: ITokenIdentifier = token_identifier
         self.token_nonce: INonce = token_nonce
         self.amount_as_integer: int = amount_as_integer
