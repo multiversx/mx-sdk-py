@@ -26,11 +26,13 @@ class Transaction:
         value: Optional[ITransactionValue] = None,
         data: Optional[ITransactionPayload] = None,
         version: Optional[ITransactionVersion] = None,
-        options: Optional[ITransactionOptions] = None
+        options: Optional[ITransactionOptions] = None,
+        guardian: Optional[IAddress] = None
     ):
         self.chainID: IChainID = chain_id
         self.sender: IAddress = sender
         self.receiver: IAddress = receiver
+        self.guardian = guardian
 
         self.gas_limit: IGasLimit = gas_limit
         self.gas_price: IGasPrice = gas_price or TRANSACTION_MIN_GAS_PRICE
@@ -43,6 +45,7 @@ class Transaction:
         self.options: ITransactionOptions = options or TRANSACTION_OPTIONS_DEFAULT
 
         self.signature: ISignature = bytes()
+        self.guardian_signature: ISignature = bytes()
 
     def serialize_for_signing(self) -> bytes:
         dictionary = self.to_dictionary(with_signature=False)
@@ -71,8 +74,16 @@ class Transaction:
         if self.options:
             dictionary["options"] = self.options
 
+        if self.guardian:
+            dictionary["guardian"] = self.guardian.bech32()
+
+        # When adding signatures, we don't have to follow any ordering,
+        # so we can just add them at the end.
         if with_signature:
             dictionary["signature"] = self.signature.hex()
+
+            if self.guardian_signature:
+                dictionary["guardianSignature"] = self.guardian_signature.hex()
 
         return dictionary
 
