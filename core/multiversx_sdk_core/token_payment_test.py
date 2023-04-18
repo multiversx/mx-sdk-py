@@ -1,5 +1,8 @@
 
 from decimal import Decimal
+from typing import Any
+
+import pytest
 
 from multiversx_sdk_core.token_payment import TokenPayment
 
@@ -67,3 +70,13 @@ def test_with_nft():
     assert payment.to_amount_string() == "1"
     assert payment.token_identifier == identifier
     assert payment.token_nonce == nonce
+
+
+def test_misuse_raises_error():
+    with pytest.raises(ValueError, match="amount_as_integer must be an integer"):
+        amount: Any = "1"
+        TokenPayment.egld_from_integer(amount)
+
+    with pytest.raises(ValueError, match="amount_as_integer must be an integer"):
+        amount: Any = "1"
+        TokenPayment.fungible_from_integer("USDC-c76f1f", amount, 6)
