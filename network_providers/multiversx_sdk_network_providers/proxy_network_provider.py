@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 import requests
 from requests.auth import AuthBase
 
-from multiversx_sdk_network_providers.accounts import AccountOnNetwork
+from multiversx_sdk_network_providers.accounts import AccountOnNetwork, GuardianData
 from multiversx_sdk_network_providers.constants import (DEFAULT_ADDRESS_HRP,
                                                         ESDT_CONTRACT_ADDRESS, METACHAIN_ID)
 from multiversx_sdk_network_providers.contract_query_requests import ContractQueryRequest
@@ -44,6 +44,12 @@ class ProxyNetworkProvider:
         account = AccountOnNetwork.from_http_response(response.get('account', ''))
 
         return account
+
+    def get_guardian_data(self, address: IAddress) -> GuardianData:
+        response = self.do_get_generic(f'address/{address.bech32()}/guardian-data')
+        account_guardian = GuardianData.from_http_response(response.get('guardianData', ''))
+
+        return account_guardian
 
     def get_fungible_tokens_of_account(self, address: IAddress) -> List[FungibleTokenOfAccountOnNetwork]:
         url = f'address/{address.bech32()}/esdt'

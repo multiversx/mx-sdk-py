@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Tuple, Union, cast
 import requests
 from requests.auth import AuthBase
 
-from multiversx_sdk_network_providers.accounts import AccountOnNetwork
+from multiversx_sdk_network_providers.accounts import AccountOnNetwork, GuardianData
 from multiversx_sdk_network_providers.config import DefaultPagination
 from multiversx_sdk_network_providers.constants import DEFAULT_ADDRESS_HRP
 from multiversx_sdk_network_providers.contract_query_requests import ContractQueryRequest
@@ -36,6 +36,9 @@ class ApiNetworkProvider:
 
     def get_network_status(self) -> NetworkStatus:
         return self.backing_proxy.get_network_status()
+
+    def get_guardian_data(self, address: IAddress) -> GuardianData:
+        return self.backing_proxy.get_guardian_data(address)
 
     def get_network_stake_statistics(self) -> NetworkStake:
         response = self.do_get_generic('stake')
