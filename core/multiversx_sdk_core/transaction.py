@@ -32,7 +32,7 @@ class Transaction:
         self.chainID: IChainID = chain_id
         self.sender: IAddress = sender
         self.receiver: IAddress = receiver
-        self.guardian = guardian
+        self.guardian: Optional[IAddress] = guardian
 
         self.gas_limit: IGasLimit = gas_limit
         self.gas_price: IGasPrice = gas_price or TRANSACTION_MIN_GAS_PRICE
