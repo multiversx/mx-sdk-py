@@ -130,13 +130,8 @@ class ApiNetworkProvider:
 
         return transactions
 
-    def get_transactions(self, tx_hashes: List[str], with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
-        hashes = ""
-        for hash in tx_hashes:
-            hashes += hash + ","
-
-        if hashes.endswith(","):
-            hashes = hashes[:-1]
+    def get_bunch_of_transactions(self, tx_hashes: List[str], with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
+        hashes = ",".join(tx_hashes)
 
         url = f"transactions?hashes={hashes}"
 

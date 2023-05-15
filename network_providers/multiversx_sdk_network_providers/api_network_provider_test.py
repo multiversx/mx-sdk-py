@@ -107,7 +107,7 @@ class TestApi:
 
     def test_get_trasactions(self):
         hashes = ["19de07b20873c6b9c77d3666eab532329f16f55a62b9fc961e52e4e0d57835d6", "8e43a0fb73bb97d1cacbca7de6d90ffacd9b7e10773f4ba37c6b8adbad6461dc"]
-        result = self.api.get_transactions(hashes)
+        result = self.api.get_bunch_of_transactions(hashes)
 
         assert len(result) == 2
         assert result[0].status.is_failed()
