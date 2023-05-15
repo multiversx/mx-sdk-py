@@ -22,7 +22,7 @@ from multiversx_sdk_network_providers.transactions import TransactionOnNetwork
 
 
 class ProxyNetworkProvider:
-    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP) -> None:
         self.url = url
         self.auth = auth
         self.address_hrp = address_hrp
@@ -32,6 +32,10 @@ class ProxyNetworkProvider:
         network_config = NetworkConfig.from_http_response(response.get('config', ''))
 
         return network_config
+
+    def get_network_gas_configs(self) -> Dict[str, Any]:
+        response = self.do_get_generic("network/gas-configs").to_dictionary()
+        return response
 
     def get_network_status(self, shard: Optional[int] = METACHAIN_ID) -> NetworkStatus:
         response = self.do_get_generic(f'network/status/{shard}')

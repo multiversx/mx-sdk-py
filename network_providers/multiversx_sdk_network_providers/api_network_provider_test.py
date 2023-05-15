@@ -41,6 +41,14 @@ class TestApi:
         assert result.transactions >= 4330650
         assert result.accounts >= 92270
 
+    def test_get_network_gas_configs(self):
+        result = self.api.get_network_gas_configs()
+        built_in_cost = result["gasConfigs"]["builtInCost"]
+        meta_system_sc_cost = result["gasConfigs"]["metaSystemSCCost"]
+
+        assert built_in_cost["ESDTTransfer"] == 200000
+        assert meta_system_sc_cost["Stake"] == 5000000
+
     def test_get_account(self):
         address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
         result = self.api.get_account(address)
@@ -89,13 +97,27 @@ class TestApi:
         assert result.receiver.bech32() == 'erd1c8tnzykaj7lhrd5cy6jap533afr4dqu7uqcdm6qv4wuwly9lcsqqm9ll4f'
         assert result.value == '10000000000000000000'
 
-    def test_get_transactions(self):
+    def test_get_account_transactions(self):
         address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
         pagination = Pagination(0, 2)
 
-        result = self.api.get_transactions(address, pagination)
+        result = self.api.get_account_transactions(address, pagination)
 
         assert len(result) == 2
+
+    def test_get_trasactions(self):
+        hashes = ["19de07b20873c6b9c77d3666eab532329f16f55a62b9fc961e52e4e0d57835d6", "8e43a0fb73bb97d1cacbca7de6d90ffacd9b7e10773f4ba37c6b8adbad6461dc"]
+        result = self.api.get_transactions(hashes)
+
+        assert len(result) == 2
+        assert result[0].status.is_failed()
+        assert result[1].status.is_successful()
+
+    def test_get_transactions_in_mempool_for_account(self):
+        address = Address.from_bech32("erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7")
+        result = self.api.get_transactions_in_mempool_for_account(address)
+
+        assert len(result) == 0
 
     def test_get_sc_invoking_tx(self):
         result = self.api.get_transaction('cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9')

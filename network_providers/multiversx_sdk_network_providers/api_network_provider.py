@@ -21,18 +21,22 @@ from multiversx_sdk_network_providers.token_definitions import (
 from multiversx_sdk_network_providers.tokens import (FungibleTokenOfAccountOnNetwork,
                                                      NonFungibleTokenOfAccountOnNetwork)
 from multiversx_sdk_network_providers.transaction_status import TransactionStatus
-from multiversx_sdk_network_providers.transactions import TransactionOnNetwork
+from multiversx_sdk_network_providers.transactions import TransactionOnNetwork, TransactionInMempool
 from multiversx_sdk_network_providers.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP):
+    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP) -> None:
         self.url = url
         self.backing_proxy = ProxyNetworkProvider(url, auth, address_hrp)
         self.auth = auth
 
     def get_network_config(self) -> NetworkConfig:
         return self.backing_proxy.get_network_config()
+
+    def get_network_gas_configs(self) -> Dict[str, Any]:
+        response = self.do_get_generic("network/gas-configs")
+        return response["data"]
 
     def get_network_status(self) -> NetworkStatus:
         return self.backing_proxy.get_network_status()
@@ -118,12 +122,45 @@ class ApiNetworkProvider:
 
         return transaction
 
-    def get_transactions(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[TransactionOnNetwork]:
+    def get_account_transactions(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[TransactionOnNetwork]:
         url = f"accounts/{address.bech32()}/transactions?{self._build_pagination_params(pagination)}"
         response = self.do_get_generic_collection(url)
 
         transactions = [TransactionOnNetwork.from_api_http_response(tx.get("txHash", ""), tx) for tx in response]
 
+        return transactions
+
+    def get_transactions(self, tx_hashes: List[str], with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
+        hashes = ""
+        for hash in tx_hashes:
+            hashes += hash + ","
+
+        if hashes.endswith(","):
+            hashes = hashes[:-1]
+
+        url = f"transactions?hashes={hashes}"
+
+        if with_block_info:
+            url += "&withBlockInfo=true"
+
+        if with_results:
+            url += "&withResults=true"
+
+        result = self.do_get_generic_collection(url)
+
+        transactions = [TransactionOnNetwork.from_api_http_response(transaction["txHash"], transaction) for transaction in result]
+        return transactions
+
+    def get_transactions_in_mempool_for_account(self, address: IAddress) -> List[TransactionInMempool]:
+        url = f"transaction/pool?by-sender={address.bech32()}&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
+        response = self.do_get_generic(url)
+        tx_pool = response["data"]["txPool"]
+        mempool_transactions = tx_pool.get("transactions", [])
+
+        if not mempool_transactions:
+            return []
+
+        transactions = [TransactionInMempool.from_http_response(transaction) for transaction in mempool_transactions]
         return transactions
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
