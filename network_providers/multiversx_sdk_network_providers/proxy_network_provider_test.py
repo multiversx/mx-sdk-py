@@ -37,6 +37,14 @@ class TestProxy:
         assert result.nonce_at_epoch_start >= 3435637
         assert result.rounds_per_epoch == 1200
 
+    def test_get_network_gas_configs(self):
+        result = self.proxy.get_network_gas_configs()
+        built_in_cost = result["gasConfigs"]["builtInCost"]
+        meta_system_sc_cost = result["gasConfigs"]["metaSystemSCCost"]
+
+        assert built_in_cost["ESDTTransfer"] == 200000
+        assert meta_system_sc_cost["Stake"] == 5000000
+
     def test_get_account(self):
         address = Address.from_bech32(
             "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
