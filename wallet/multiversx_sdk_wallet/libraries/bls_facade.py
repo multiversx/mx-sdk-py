@@ -88,11 +88,15 @@ class BLSFacade:
 
     def _get_library_path(self):
         os_name = platform.system()
+        processor = platform.processor()
 
         if os_name == "Windows":
             lib_name = "libbls.dll"
         elif os_name == "Darwin":
-            lib_name = "libbls.dylib"
+            if processor == "arm64":
+                lib_name = "libbls_arm64.dylib"
+            else:
+                lib_name = "libbls.dylib"
         elif os_name == "Linux":
             lib_name = "libbls.so"
         else:
