@@ -93,7 +93,7 @@ class BLSFacade:
         if os_name == "Windows":
             lib_name = "libbls.dll"
         elif os_name == "Darwin":
-            if processor == "arm64":
+            if processor == "arm":
                 lib_name = "libbls_arm64.dylib"
             else:
                 lib_name = "libbls.dylib"
