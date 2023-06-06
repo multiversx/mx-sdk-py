@@ -42,7 +42,7 @@ class TransactionEventTopic:
         self.raw = base64.b64decode(topic.encode())
 
     def __str__(self):
-        return base64.b64encode(self.raw).decode()
+        return self.raw.decode()
 
     def hex(self):
         return self.raw.hex()
