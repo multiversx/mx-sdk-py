@@ -3,10 +3,10 @@ from typing import Dict
 
 from multiversx_sdk_wallet import UserPEM
 
-alice_pem = "multiversx_sdk_core/testutils/testwallets/alice.pem"
-bob_pem = "multiversx_sdk_core/testutils/testwallets/bob.pem"
-frank_pem = "multiversx_sdk_core/testutils/testwallets/frank.pem"
-grace_pem = "multiversx_sdk_core/testutils/testwallets/grace.pem"
+alice_pem = Path(__file__).parent / "testwallets" / "alice.pem"
+bob_pem = Path(__file__).parent / "testwallets" / "bob.pem"
+frank_pem = Path(__file__).parent / "testwallets" / "frank.pem"
+grace_pem = Path(__file__).parent / "testwallets" / "grace.pem"
 
 
 def load_wallets():
