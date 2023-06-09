@@ -14,3 +14,8 @@ class ErrBadAddress(Exception):
 class ErrCannotSerializeArgument(Exception):
     def __init__(self, arg: Any) -> None:
         super().__init__(f"Cannot serialize: {arg}")
+
+
+class ErrInvalidRelayerV1BuilderArguments(Exception):
+    def __init__(self) -> None:
+        super().__init__("Invalid arguments for relayed v1 builder")
