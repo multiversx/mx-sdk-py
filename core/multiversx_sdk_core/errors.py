@@ -19,3 +19,13 @@ class ErrCannotSerializeArgument(Exception):
 class ErrInvalidRelayerV1BuilderArguments(Exception):
     def __init__(self) -> None:
         super().__init__("Invalid arguments for relayed v1 builder")
+
+
+class ErrInvalidRelayerV2BuilderArguments(Exception):
+    def __init__(self) -> None:
+        super().__init__("Invalid arguments for relayed v2 builder")
+
+
+class ErrInvalidGasLimitForInnerTransaction(Exception):
+    def __init__(self) -> None:
+        super().__init__("Gas limit should be 0 for the inner transaction for relayed v2")
