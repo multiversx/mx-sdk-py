@@ -10,3 +10,5 @@ INTEGER_MAX_NUM_BYTES = 64
 
 EGLD_TOKEN_IDENTIFIER = "EGLD"
 EGLD_NUM_DECIMALS = 18
+
+DELEGATION_MANAGER_SC_ADDRESS = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"

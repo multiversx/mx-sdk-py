@@ -3,6 +3,8 @@ from multiversx_sdk_core.transaction_builders.contract_builders import (
     ContractCallBuilder, ContractDeploymentBuilder, ContractUpgradeBuilder)
 from multiversx_sdk_core.transaction_builders.default_configuration import \
     DefaultTransactionBuildersConfiguration
+from multiversx_sdk_core.transaction_builders.delegation_factory import \
+    DelegationFactory
 from multiversx_sdk_core.transaction_builders.esdt_builders import \
     ESDTIssueBuilder
 from multiversx_sdk_core.transaction_builders.relayed_v1_builder import \
@@ -20,5 +22,5 @@ __all__ = [
     "DefaultTransactionBuildersConfiguration",
     "ContractCallBuilder", "ContractDeploymentBuilder", "ContractUpgradeBuilder",
     "EGLDTransferBuilder", "ESDTNFTTransferBuilder", "ESDTTransferBuilder", "MultiESDTNFTTransferBuilder",
-    "ESDTIssueBuilder", "RelayedTransactionV1Builder", "RelayedTransactionV2Builder"
+    "ESDTIssueBuilder", "RelayedTransactionV1Builder", "RelayedTransactionV2Builder", "DelegationFactory"
 ]
