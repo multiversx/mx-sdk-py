@@ -41,22 +41,23 @@ class TokenOperationsFactory:
         self._config = config
         self._true_as_hex = arg_to_string("true")
 
-    def issue_fungible(self,
-                       issuer: IAddress,
-                       token_name: str,
-                       token_ticker: str,
-                       initial_supply: int,
-                       num_decimals: int,
-                       can_freeze: bool,
-                       can_wipe: bool,
-                       can_pause: bool,
-                       can_change_owner: bool,
-                       can_upgrade: bool,
-                       can_add_special_roles: bool,
-                       transaction_nonce: Optional[INonce] = None,
-                       gas_price: Optional[IGasPrice] = None,
-                       gas_limit: Optional[IGasLimit] = None
-                       ) -> Transaction:
+    def issue_fungible(
+        self,
+        issuer: IAddress,
+        token_name: str,
+        token_ticker: str,
+        initial_supply: int,
+        num_decimals: int,
+        can_freeze: bool,
+        can_wipe: bool,
+        can_pause: bool,
+        can_change_owner: bool,
+        can_upgrade: bool,
+        can_add_special_roles: bool,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
         parts: List[str] = [
@@ -91,6 +92,212 @@ IMPORTANT!
 ==========
 You are about to issue (register) a new token. This will set the role "ESDTRoleBurnForAll" (globally).
 Once the token is registered, you can unset this role by calling "unsetBurnRoleGlobally" (in a separate transaction).""")
+
+    def issue_semi_fungible(
+        self,
+        issuer: IAddress,
+        token_name: str,
+        token_ticker: str,
+        can_freeze: bool,
+        can_wipe: bool,
+        can_pause: bool,
+        can_transfer_nft_create_role: bool,
+        can_change_owner: bool,
+        can_upgrade: bool,
+        can_add_special_roles: bool,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        self._notify_about_unsetting_burn_role_globally()
+
+        parts: List[str] = [
+            "issueSemiFungible",
+            arg_to_string(token_name),
+            arg_to_string(token_ticker),
+            *([arg_to_string("canFreeze"), self._true_as_hex] if can_freeze else []),
+            *([arg_to_string("canWipe"), self._true_as_hex] if can_wipe else []),
+            *([arg_to_string("canPause"), self._true_as_hex] if can_pause else []),
+            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex] if can_transfer_nft_create_role else []),
+            *([arg_to_string("canChangeOwner"), self._true_as_hex] if can_change_owner else []),
+            *([arg_to_string("canUpgrade"), self._true_as_hex] if can_upgrade else []),
+            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
+        ]
+
+        return self._create_transaction(
+            sender=issuer,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            value=self._config.issue_cost,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_issue,
+            data_parts=parts
+        )
+
+    def issue_non_fungible(
+        self,
+        issuer: IAddress,
+        token_name: str,
+        token_ticker: str,
+        can_freeze: bool,
+        can_wipe: bool,
+        can_pause: bool,
+        can_transfer_nft_create_role: bool,
+        can_change_owner: bool,
+        can_upgrade: bool,
+        can_add_special_roles: bool,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        self._notify_about_unsetting_burn_role_globally()
+
+        parts: List[str] = [
+            "issueNonFungible",
+            arg_to_string(token_name),
+            arg_to_string(token_ticker),
+            *([arg_to_string("canFreeze"), self._true_as_hex] if can_freeze else []),
+            *([arg_to_string("canWipe"), self._true_as_hex] if can_wipe else []),
+            *([arg_to_string("canPause"), self._true_as_hex] if can_pause else []),
+            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex] if can_transfer_nft_create_role else []),
+            *([arg_to_string("canChangeOwner"), self._true_as_hex] if can_change_owner else []),
+            *([arg_to_string("canUpgrade"), self._true_as_hex] if can_upgrade else []),
+            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
+        ]
+
+        return self._create_transaction(
+            sender=issuer,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            value=self._config.issue_cost,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_issue,
+            data_parts=parts
+        )
+
+    def register_meta_esdt(
+        self,
+        issuer: IAddress,
+        token_name: str,
+        token_ticker: str,
+        num_decimals: int,
+        can_freeze: bool,
+        can_wipe: bool,
+        can_pause: bool,
+        can_transfer_nft_create_role: bool,
+        can_change_owner: bool,
+        can_upgrade: bool,
+        can_add_special_roles: bool,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        self._notify_about_unsetting_burn_role_globally()
+
+        parts: List[str] = [
+            "registerMetaESDT",
+            arg_to_string(token_name),
+            arg_to_string(token_ticker),
+            arg_to_string(num_decimals),
+            *([arg_to_string("canFreeze"), self._true_as_hex] if can_freeze else []),
+            *([arg_to_string("canWipe"), self._true_as_hex] if can_wipe else []),
+            *([arg_to_string("canPause"), self._true_as_hex] if can_pause else []),
+            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex] if can_transfer_nft_create_role else []),
+            *([arg_to_string("canChangeOwner"), self._true_as_hex] if can_change_owner else []),
+            *([arg_to_string("canUpgrade"), self._true_as_hex] if can_upgrade else []),
+            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
+        ]
+
+        return self._create_transaction(
+            sender=issuer,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            value=self._config.issue_cost,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_issue,
+            data_parts=parts
+        )
+
+    def register_and_set_all_roles(
+        self,
+        issuer: IAddress,
+        token_name: str,
+        token_ticker: str,
+        token_type: str,
+        num_decimals: int,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        self._notify_about_unsetting_burn_role_globally()
+
+        parts: List[str] = [
+            "registerAndSetAllRoles",
+            arg_to_string(token_name),
+            arg_to_string(token_ticker),
+            arg_to_string(token_type),
+            arg_to_string(num_decimals)
+        ]
+
+        return self._create_transaction(
+            sender=issuer,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            value=self._config.issue_cost,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_issue,
+            data_parts=parts
+        )
+
+    def set_burn_role_globally(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        parts: List[str] = [
+            "setBurnRoleGlobally",
+            arg_to_string(token_identifier)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
+            data_parts=parts
+        )
+
+    def unset_burn_role_globally(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        parts: List[str] = [
+            "unsetBurnRoleGlobally",
+            arg_to_string(token_identifier)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
+            data_parts=parts
+        )
 
     def _create_transaction(
             self,
