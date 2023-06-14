@@ -1,6 +1,6 @@
 
 import logging
-from typing import List, Optional, Protocol, TypedDict
+from typing import List, Optional, Protocol
 
 from multiversx_sdk_core import Transaction, TransactionPayload
 from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
@@ -299,16 +299,113 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
+    def set_special_role_on_fungible(
+        self,
+        manager: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        add_role_local_mint: bool,
+        add_role_local_burn: bool,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        parts: List[str] = [
+            "setSpecialRole",
+            arg_to_string(token_identifier),
+            arg_to_string(user),
+            *([arg_to_string("ESDTRoleLocalMint"), self._true_as_hex] if add_role_local_mint else []),
+            *([arg_to_string("ESDTRoleLocalBurn"), self._true_as_hex] if add_role_local_burn else [])
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_set_special_role,
+            data_parts=parts
+        )
+
+    def set_special_role_on_semi_fungible(
+        self,
+        manager: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        add_role_nft_create: bool,
+        add_role_nft_burn: bool,
+        add_role_nft_add_quantity: bool,
+        add_role_esdt_transfer_role: bool,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        parts: List[str] = [
+            "setSpecialRole",
+            arg_to_string(token_identifier),
+            arg_to_string(user),
+            *([arg_to_string("ESDTRoleNFTCreate"), self._true_as_hex] if add_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn"), self._true_as_hex] if add_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTAddQuantity"), self._true_as_hex] if add_role_nft_add_quantity else []),
+            *([arg_to_string("ESDTTransferRole"), self._true_as_hex] if add_role_esdt_transfer_role else [])
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_set_special_role,
+            data_parts=parts
+        )
+
+    def set_special_role_on_non_fungible(
+        self,
+        manager: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        add_role_nft_create: bool,
+        add_role_nft_burn: bool,
+        add_role_nft_update_attributes: bool,
+        add_role_nft_add_uri: bool,
+        add_role_esdt_transfer_role: bool,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        parts: List[str] = [
+            "setSpecialRole",
+            arg_to_string(token_identifier),
+            arg_to_string(user),
+            *([arg_to_string("ESDTRoleNFTCreate"), self._true_as_hex] if add_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn"), self._true_as_hex] if add_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTUpdateAttributes"), self._true_as_hex] if add_role_nft_update_attributes else []),
+            *([arg_to_string("ESDTRoleNFTAddURI"), self._true_as_hex] if add_role_nft_add_uri else []),
+            *([arg_to_string("ESDTTransferRole"), self._true_as_hex] if add_role_esdt_transfer_role else [])
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_set_special_role,
+            data_parts=parts
+        )
+
     def _create_transaction(
-            self,
-            sender: IAddress,
-            receiver: IAddress,
-            nonce: Optional[INonce],
-            value: Optional[ITransactionValue],
-            gas_price: Optional[IGasPrice],
-            gas_limit_hint: Optional[IGasLimit],
-            execution_gas_limit: IGasLimit,
-            data_parts: List[str]
+        self,
+        sender: IAddress,
+        receiver: IAddress,
+        nonce: Optional[INonce],
+        value: Optional[ITransactionValue],
+        gas_price: Optional[IGasPrice],
+        gas_limit_hint: Optional[IGasLimit],
+        execution_gas_limit: IGasLimit,
+        data_parts: List[str]
     ) -> Transaction:
         payload = self._build_transaction_payload(data_parts)
         gas_limit = gas_limit_hint or self._compute_gas_limit(payload, execution_gas_limit)
