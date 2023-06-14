@@ -43,6 +43,7 @@ class RelayedTransactionV2Builder:
             or not self.network_config
             or not self.relayer_address
             or not self.inner_transaction.signature
+            or not self.inner_transaction_gas_limit
         ):
             raise ErrInvalidRelayerV2BuilderArguments()
 
@@ -63,7 +64,7 @@ class RelayedTransactionV2Builder:
             sender=self.relayer_address,
             receiver=self.inner_transaction.sender,
             value=0,
-            gas_limit=self.inner_transaction.gas_limit + self.network_config.min_gas_limit + self.network_config.gas_per_data_byte * payload.length(),
+            gas_limit=self.inner_transaction_gas_limit + self.network_config.min_gas_limit + self.network_config.gas_per_data_byte * payload.length(),
             chain_id=self.network_config.chain_id,
             data=payload
         )
