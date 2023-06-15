@@ -396,6 +396,298 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
+    def nft_create(
+        self,
+        creator: IAddress,
+        token_identifier: str,
+        initial_quantity: int,
+        name: str,
+        royalties: int,
+        hash: str,
+        attributes: bytes,
+        uris: List[str],
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None
+    ) -> Transaction:
+        parts: List[str] = [
+            "ESDTNFTCreate",
+            arg_to_string(token_identifier),
+            arg_to_string(initial_quantity),
+            arg_to_string(name),
+            arg_to_string(royalties),
+            arg_to_string(hash),
+            arg_to_string(attributes),
+            *map(arg_to_string, uris)
+        ]
+
+        # Note that the following is an approximation (a reasonable one):
+        nft_data = name + hash + attributes.hex() + "".join(uris)
+        storage_gas_limit = len(nft_data) * self._config.gas_limit_store_per_byte
+
+        return self._create_transaction(
+            sender=creator,
+            receiver=creator,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_nft_create + storage_gas_limit,
+            data_parts=parts
+        )
+
+    def pause(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "pause",
+            arg_to_string(token_identifier)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_pausing,
+            data_parts=parts
+        )
+
+    def unpause(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "unPause",
+            arg_to_string(token_identifier)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_pausing,
+            data_parts=parts
+        )
+
+    def freeze(
+        self,
+        manager: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "freeze",
+            arg_to_string(token_identifier),
+            arg_to_string(user)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_freezing,
+            data_parts=parts
+        )
+
+    def unfreeze(
+        self,
+        manager: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "unFreeze",
+            arg_to_string(token_identifier),
+            arg_to_string(user)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_freezing,
+            data_parts=parts
+        )
+
+    def wipe(
+        self,
+        manager: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "wipe",
+            arg_to_string(token_identifier),
+            arg_to_string(user)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=self._config.esdt_contract_address,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_wiping,
+            data_parts=parts
+        )
+
+    def local_mint(
+        self,
+        manager: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        supply_to_mint: int,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "ESDTLocalMint",
+            arg_to_string(token_identifier),
+            arg_to_string(supply_to_mint)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=manager,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_local_minting,
+            data_parts=parts
+        )
+
+    def local_burn(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        supply_to_burn: int,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "ESDTLocalBurn",
+            arg_to_string(token_identifier),
+            arg_to_string(supply_to_burn)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=manager,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_local_burning,
+            data_parts=parts
+        )
+
+    def update_attributes(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        token_nonce: int,
+        attributes: bytes,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "ESDTNFTUpdateAttributes",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce),
+            arg_to_string(attributes)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=manager,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_nft_update_attributes,
+            data_parts=parts
+        )
+
+    def add_quantity(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        token_nonce: int,
+        quantity_to_add: int,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "ESDTNFTAddQuantity",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce),
+            arg_to_string(quantity_to_add)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=manager,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_esdt_nft_add_quantity,
+            data_parts=parts
+        )
+
+    def burn_quantity(
+        self,
+        manager: IAddress,
+        token_identifier: str,
+        token_nonce: int,
+        quantity_to_burn: int,
+        transaction_nonce: Optional[INonce] = None,
+        gas_price: Optional[IGasPrice] = None,
+        gas_limit: Optional[IGasLimit] = None,
+    ) -> Transaction:
+        parts: List[str] = [
+            "ESDTNFTBurn",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce),
+            arg_to_string(quantity_to_burn)
+        ]
+
+        return self._create_transaction(
+            sender=manager,
+            receiver=manager,
+            nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit_hint=gas_limit,
+            execution_gas_limit=self._config.gas_limit_esdt_nft_burn,
+            data_parts=parts
+        )
+
     def _create_transaction(
         self,
         sender: IAddress,
