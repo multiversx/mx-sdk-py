@@ -589,7 +589,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
-            execution_gas_limit=self._config.gas_limit_local_minting,
+            execution_gas_limit=self._config.gas_limit_esdt_local_mint,
             data_parts=parts
         )
 
@@ -615,7 +615,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
-            execution_gas_limit=self._config.gas_limit_local_burning,
+            execution_gas_limit=self._config.gas_limit_esdt_local_burn,
             data_parts=parts
         )
 
@@ -643,7 +643,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
-            execution_gas_limit=self._config.gas_limit_nft_update_attributes,
+            execution_gas_limit=self._config.gas_limit_esdt_nft_update_attributes,
             data_parts=parts
         )
 
