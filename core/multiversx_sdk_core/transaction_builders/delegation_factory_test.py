@@ -104,3 +104,59 @@ class TestDelagationFactory:
         assert transaction.nonce == 777
         assert transaction.signature == b""
         assert str(transaction.data) == "addNodes@e7beaa95b3877f47348df4dd1cb578a4f7cabf7a20bfeefe5cdd263878ff132b765e04fef6f40c93512b666c47ed7719b8902f6c922c04247989b7137e837cc81a62e54712471c97a2ddab75aa9c2f58f813ed4c0fa722bde0ab718bff382208@81109fa1c8d3dc7b6c2d6e65206cc0bc1a83c9b2d1eb91a601d66ad32def430827d5eb52917bd2b0d04ce195738db216"
+
+    def test_remove_nodes(self):
+        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        public_keys = ["notavalidblskeyhexencoded"]
+
+        transaction_nonce = 777
+        gas_limit = None
+        gas_price = None
+        value = None
+
+        transaction = self.factory.remove_nodes(
+            sender=sender,
+            delegation_contract=delegation_contract,
+            bls_keys=public_keys,
+            value=value,
+            transaction_nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit=gas_limit
+        )
+
+        assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.chainID == "D"
+        assert transaction.nonce == 777
+        assert transaction.signature == b""
+        assert str(transaction.data) == "removeNodes@notavalidblskeyhexencoded"
+
+    def test_stake_nodes(self):
+        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        public_keys = ["notavalidblskeyhexencoded"]
+
+        transaction_nonce = 777
+        gas_limit = None
+        gas_price = None
+        value = None
+
+        transaction = self.factory.stake_nodes(
+            sender=sender,
+            delegation_contract=delegation_contract,
+            bls_keys=public_keys,
+            value=value,
+            transaction_nonce=transaction_nonce,
+            gas_price=gas_price,
+            gas_limit=gas_limit
+        )
+
+        assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.chainID == "D"
+        assert transaction.nonce == 777
+        assert transaction.signature == b""
+        assert str(transaction.data) == "stakeNodes@notavalidblskeyhexencoded"
