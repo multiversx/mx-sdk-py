@@ -270,6 +270,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
@@ -293,6 +294,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
@@ -314,14 +316,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             "setSpecialRole",
             arg_to_string(token_identifier),
             arg_to_string(user),
-            *([arg_to_string("ESDTRoleLocalMint"), self._true_as_hex] if add_role_local_mint else []),
-            *([arg_to_string("ESDTRoleLocalBurn"), self._true_as_hex] if add_role_local_burn else [])
+            *([arg_to_string("ESDTRoleLocalMint")] if add_role_local_mint else []),
+            *([arg_to_string("ESDTRoleLocalBurn")] if add_role_local_burn else [])
         ]
 
         return self._create_transaction(
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_set_special_role,
@@ -345,16 +348,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             "setSpecialRole",
             arg_to_string(token_identifier),
             arg_to_string(user),
-            *([arg_to_string("ESDTRoleNFTCreate"), self._true_as_hex] if add_role_nft_create else []),
-            *([arg_to_string("ESDTRoleNFTBurn"), self._true_as_hex] if add_role_nft_burn else []),
-            *([arg_to_string("ESDTRoleNFTAddQuantity"), self._true_as_hex] if add_role_nft_add_quantity else []),
-            *([arg_to_string("ESDTTransferRole"), self._true_as_hex] if add_role_esdt_transfer_role else [])
+            *([arg_to_string("ESDTRoleNFTCreate")] if add_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTAddQuantity")] if add_role_nft_add_quantity else []),
+            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
 
         return self._create_transaction(
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_set_special_role,
@@ -379,17 +383,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             "setSpecialRole",
             arg_to_string(token_identifier),
             arg_to_string(user),
-            *([arg_to_string("ESDTRoleNFTCreate"), self._true_as_hex] if add_role_nft_create else []),
-            *([arg_to_string("ESDTRoleNFTBurn"), self._true_as_hex] if add_role_nft_burn else []),
-            *([arg_to_string("ESDTRoleNFTUpdateAttributes"), self._true_as_hex] if add_role_nft_update_attributes else []),
-            *([arg_to_string("ESDTRoleNFTAddURI"), self._true_as_hex] if add_role_nft_add_uri else []),
-            *([arg_to_string("ESDTTransferRole"), self._true_as_hex] if add_role_esdt_transfer_role else [])
+            *([arg_to_string("ESDTRoleNFTCreate")] if add_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if add_role_nft_update_attributes else []),
+            *([arg_to_string("ESDTRoleNFTAddURI")] if add_role_nft_add_uri else []),
+            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
 
         return self._create_transaction(
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_set_special_role,
@@ -429,9 +434,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=creator,
             receiver=creator,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
-            execution_gas_limit=self._config.gas_limit_nft_create + storage_gas_limit,
+            execution_gas_limit=self._config.gas_limit_esdt_nft_create + storage_gas_limit,
             data_parts=parts
         )
 
@@ -452,6 +458,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_pausing,
@@ -475,6 +482,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_pausing,
@@ -500,6 +508,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_freezing,
@@ -525,6 +534,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_freezing,
@@ -550,6 +560,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=self._config.esdt_contract_address,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_wiping,
@@ -559,7 +570,6 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     def local_mint(
         self,
         manager: IAddress,
-        user: IAddress,
         token_identifier: str,
         supply_to_mint: int,
         transaction_nonce: Optional[INonce] = None,
@@ -576,6 +586,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=manager,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_local_minting,
@@ -601,6 +612,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=manager,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_local_burning,
@@ -628,6 +640,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=manager,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_nft_update_attributes,
@@ -655,6 +668,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=manager,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_nft_add_quantity,
@@ -682,6 +696,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=manager,
             receiver=manager,
             nonce=transaction_nonce,
+            value=None,
             gas_price=gas_price,
             gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_nft_burn,
