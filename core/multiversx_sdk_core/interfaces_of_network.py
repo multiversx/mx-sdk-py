@@ -1,5 +1,5 @@
 
-from typing import Protocol
+from typing import List, Protocol
 
 from multiversx_sdk_core.interfaces import IAddress
 
@@ -11,7 +11,7 @@ class ITransactionOnNetwork(Protocol):
 
 
 class IContractResults(Protocol):
-    items: 'IContractResultItem'
+    items: List['IContractResultItem']
 
 
 class IContractResultItem(Protocol):
@@ -19,13 +19,13 @@ class IContractResultItem(Protocol):
 
 
 class ITransactionLogs(Protocol):
-    events: 'ITransactionEvent'
+    events: List['ITransactionEvent']
 
 
 class ITransactionEvent(Protocol):
     address: IAddress
     identifier: str
-    topics: 'ITransactionEventTopic'
+    topics: List['ITransactionEventTopic']
     data: str
 
 
