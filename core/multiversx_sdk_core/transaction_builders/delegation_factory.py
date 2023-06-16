@@ -10,7 +10,7 @@ from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
                                             ITransactionPayload,
                                             ITransactionValue,
                                             IValidatorPublicKey)
-from multiversx_sdk_core.serializer import arg_to_string, args_to_string
+from multiversx_sdk_core.serializer import arg_to_string
 from multiversx_sdk_core.transaction import Transaction
 
 
@@ -58,7 +58,7 @@ class DelegationFactory:
         transaction = self.create_transaction(
             sender=sender,
             receiver=receiver,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_MANAGER_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -68,11 +68,14 @@ class DelegationFactory:
 
         return transaction
 
-    def _prepare_data_for_create_new_delegation_contract(self, total_delegation_cap: int, service_fee: int) -> TransactionPayload:
+    def _prepare_data_for_create_new_delegation_contract(self, total_delegation_cap: int, service_fee: int) -> List[str]:
         function = "createNewDelegationContract"
-        args_list: List[Any] = [total_delegation_cap, service_fee]
-        data = ARGS_SEPARATOR.join([function, args_to_string(args_list)])
-        return TransactionPayload.from_str(data)
+        args_list: List[Any] = [
+            function,
+            arg_to_string(total_delegation_cap),
+            arg_to_string(service_fee)
+        ]
+        return args_list
 
     def add_nodes(self,
                   sender: IAddress,
@@ -89,7 +92,7 @@ class DelegationFactory:
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -98,15 +101,18 @@ class DelegationFactory:
         )
         return transaction
 
-    def _prepare_data_for_add_nodes(self, public_keys: Sequence[IValidatorPublicKey], signed_messages: List[ISignature]) -> TransactionPayload:
+    def _prepare_data_for_add_nodes(self, public_keys: Sequence[IValidatorPublicKey], signed_messages: List[ISignature]) -> List[str]:
         if len(public_keys) != len(signed_messages):
             raise ErrListsLengthDoNotMatch("The number of public keys should match the number of signed messages")
 
-        add_nodes_data = "addNodes"
-        for i in range(len(public_keys)):
-            add_nodes_data += f"@{public_keys[i].hex()}@{signed_messages[i].hex()}"
+        function = "addNodes"
+        args: List[str] = [function]
 
-        return TransactionPayload.from_str(add_nodes_data)
+        for i in range(len(public_keys)):
+            args.append(public_keys[i].hex())
+            args.append(signed_messages[i].hex())
+
+        return args
 
     def remove_nodes(self,
                      sender: IAddress,
@@ -116,13 +122,15 @@ class DelegationFactory:
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parsed_keys, num_nodes = self._parse_keys(bls_keys)
-        data = TransactionPayload.from_str("removeNodes" + parsed_keys)
+        num_nodes = len(bls_keys)
+
+        data: List[str] = ["removeNodes"]
+        data.extend(bls_keys)
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -140,13 +148,15 @@ class DelegationFactory:
                     transaction_nonce: Optional[INonce] = None,
                     gas_price: Optional[IGasPrice] = None,
                     gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parsed_keys, num_nodes = self._parse_keys(bls_keys)
-        data = TransactionPayload.from_str("stakeNodes" + parsed_keys)
+        num_nodes = len(bls_keys)
+
+        data = ["stakeNodes"]
+        data.extend(bls_keys)
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.STAKE) + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -164,13 +174,15 @@ class DelegationFactory:
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parsed_keys, num_nodes = self._parse_keys(bls_keys)
-        data = TransactionPayload.from_str("unBondNodes" + parsed_keys)
+        num_nodes = len(bls_keys)
+
+        data = ["unBondNodes"]
+        data.extend(bls_keys)
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.UNBOND) + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -188,13 +200,15 @@ class DelegationFactory:
                       transaction_nonce: Optional[INonce] = None,
                       gas_price: Optional[IGasPrice] = None,
                       gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parsed_keys, num_nodes = self._parse_keys(bls_keys)
-        data = TransactionPayload.from_str("unStakeNodes" + parsed_keys)
+        num_nodes = len(bls_keys)
+
+        data = ["unStakeNodes"]
+        data.extend(bls_keys)
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.UNSTAKE) + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -212,13 +226,15 @@ class DelegationFactory:
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parsed_keys, num_nodes = self._parse_keys(bls_keys)
-        data = TransactionPayload.from_str("unJailNodes" + parsed_keys)
+        num_nodes = len(bls_keys)
+
+        data = ["unJailNodes"]
+        data.extend(bls_keys)
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -236,14 +252,15 @@ class DelegationFactory:
                            transaction_nonce: Optional[INonce] = None,
                            gas_price: Optional[IGasPrice] = None,
                            gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        data = "changeServiceFee"
-        data += f"@{arg_to_string(service_fee)}"
-        data = TransactionPayload.from_str(data)
+        data = [
+            "changeServiceFee",
+            arg_to_string(service_fee)
+        ]
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -261,14 +278,15 @@ class DelegationFactory:
                               transaction_nonce: Optional[INonce] = None,
                               gas_price: Optional[IGasPrice] = None,
                               gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        data = "modifyTotalDelegationCap"
-        data += f"@{arg_to_string(delegation_cap)}"
-        data = TransactionPayload.from_str(data)
+        data = [
+            "modifyTotalDelegationCap",
+            arg_to_string(delegation_cap)
+        ]
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -287,20 +305,18 @@ class DelegationFactory:
                              transaction_nonce: Optional[INonce] = None,
                              gas_price: Optional[IGasPrice] = None,
                              gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        data = "setAutomaticActivation"
+        data = ["setAutomaticActivation"]
 
         if set:
-            data += f"@{arg_to_string('true')}"
+            data.append(arg_to_string('true'))
 
         if unset:
-            data += f"@{arg_to_string('false')}"
-
-        data = TransactionPayload.from_str(data)
+            data.append(arg_to_string('false'))
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -319,20 +335,18 @@ class DelegationFactory:
                        transaction_nonce: Optional[INonce] = None,
                        gas_price: Optional[IGasPrice] = None,
                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        data = "setCheckCapOnReDelegateRewards"
+        data = ["setCheckCapOnReDelegateRewards"]
 
         if set:
-            data += f"@{arg_to_string('true')}"
+            data.append(arg_to_string('true'))
 
         if unset:
-            data += f"@{arg_to_string('false')}"
-
-        data = TransactionPayload.from_str(data)
+            data.append(arg_to_string('false'))
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -352,15 +366,17 @@ class DelegationFactory:
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        args = args_to_string([name, website, identifier])
-
-        data = "setMetaData@" + args
-        data = TransactionPayload.from_str(data)
+        data = [
+            "setMetaData",
+            arg_to_string(name),
+            arg_to_string(website),
+            arg_to_string(identifier)
+        ]
 
         transaction = self.create_transaction(
             sender=sender,
             receiver=delegation_contract,
-            data=data,
+            data_parts=data,
             execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
@@ -384,13 +400,14 @@ class DelegationFactory:
             self,
             sender: IAddress,
             receiver: IAddress,
-            data: ITransactionPayload,
+            data_parts: List[str],
             execution_gas_limit: IGasLimit,
             gas_limit_hint: Optional[IGasLimit],
             gas_price: Optional[IGasPrice],
             nonce: Optional[INonce],
             value: Optional[ITransactionValue]
     ) -> Transaction:
+        data = self._build_transaction_payload(data_parts)
         gas_limit = gas_limit_hint or self._compute_gas_limit(data, execution_gas_limit)
         version = TRANSACTION_VERSION_DEFAULT
         options = TRANSACTION_OPTIONS_DEFAULT
@@ -407,3 +424,7 @@ class DelegationFactory:
             version=version,
             options=options
         )
+
+    def _build_transaction_payload(self, parts: List[str]) -> TransactionPayload:
+        data = ARGS_SEPARATOR.join(parts)
+        return TransactionPayload.from_str(data)

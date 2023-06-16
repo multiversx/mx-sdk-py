@@ -22,14 +22,10 @@ class TestDelagationFactory:
     config = Config()
     factory = DelegationFactory(config)
 
-    def test_compute_data_field_for_new_delegation_contract(self):
-        data = self.factory._prepare_data_for_create_new_delegation_contract(total_delegation_cap=5000000000000000000000,
-                                                                             service_fee=10)
-        assert str(data) == "createNewDelegationContract@010f0cf064dd59200000@0a"
-
     def test_compute_gas_limit_for_new_delegation_contract(self):
         data = self.factory._prepare_data_for_create_new_delegation_contract(total_delegation_cap=5000000000000000000000,
                                                                              service_fee=10)
+        data = self.factory._build_transaction_payload(data)
         gas_limit = self.factory._compute_gas_limit(data, MetaChainSystemSCsCost.DELEGATION_MANAGER_OPS)
         assert gas_limit == 50126500
 
@@ -51,22 +47,6 @@ class TestDelagationFactory:
         assert transaction.nonce == 777
         assert transaction.signature == b""
         assert str(transaction.data) == "createNewDelegationContract@010f0cf064dd59200000@0a"
-
-    def test_compute_data_field_for_add_nodes(self):
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
-
-        validator_secret_key = ValidatorSecretKey.from_string("7cff99bd671502db7d15bc8abc0c9a804fb925406fbdd50f1e4c17a4cd774247")
-        validator_signer = ValidatorSigner(validator_secret_key)
-
-        message = ArbitraryMessage(bytes.fromhex(delegation_contract.hex()))
-        signed_message = validator_signer.sign(message)
-        public_key = validator_secret_key.generate_public_key()
-
-        public_keys = [public_key]
-        signed_messages = [signed_message]
-
-        data = self.factory._prepare_data_for_add_nodes(public_keys, signed_messages)
-        assert str(data) == "addNodes@e7beaa95b3877f47348df4dd1cb578a4f7cabf7a20bfeefe5cdd263878ff132b765e04fef6f40c93512b666c47ed7719b8902f6c922c04247989b7137e837cc81a62e54712471c97a2ddab75aa9c2f58f813ed4c0fa722bde0ab718bff382208@81109fa1c8d3dc7b6c2d6e65206cc0bc1a83c9b2d1eb91a601d66ad32def430827d5eb52917bd2b0d04ce195738db216"
 
     def test_add_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
