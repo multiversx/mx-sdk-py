@@ -30,4 +30,4 @@ class ITransactionEvent(Protocol):
 
 
 class ITransactionEventTopic(Protocol):
-    pass
+    raw: bytes

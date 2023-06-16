@@ -1,4 +1,4 @@
-from multiversx_sdk_core.address import Address
+from multiversx_sdk_core.address import DEFAULT_HRP, Address
 from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
                                             IGasPrice, ITransactionValue)
 
@@ -6,6 +6,7 @@ from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
 class TokenOperationsFactoryConfig:
     def __init__(self, chain_id: IChainID) -> None:
         self.chain_id: IChainID = chain_id
+        self.address_hrp: str = DEFAULT_HRP
         self.min_gas_price: IGasPrice = 1000000000
         self.min_gas_limit: IGasLimit = 50_000
         self.gas_limit_per_byte: IGasLimit = 1_500
