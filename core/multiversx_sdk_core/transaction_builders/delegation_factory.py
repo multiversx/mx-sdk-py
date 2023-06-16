@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Protocol, Tuple
+from typing import Any, List, Optional, Protocol, Sequence, Tuple
 
 from multiversx_sdk_core import TransactionPayload
 from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
@@ -77,7 +77,7 @@ class DelegationFactory:
     def add_nodes(self,
                   sender: IAddress,
                   delegation_contract: IAddress,
-                  public_keys: List[IValidatorPublicKey],
+                  public_keys: Sequence[IValidatorPublicKey],
                   signed_messages: List[ISignature],
                   value: ITransactionValue,
                   transaction_nonce: Optional[INonce] = None,
@@ -98,7 +98,7 @@ class DelegationFactory:
         )
         return transaction
 
-    def _prepare_data_for_add_nodes(self, public_keys: List[IValidatorPublicKey], signed_messages: List[ISignature]) -> TransactionPayload:
+    def _prepare_data_for_add_nodes(self, public_keys: Sequence[IValidatorPublicKey], signed_messages: List[ISignature]) -> TransactionPayload:
         if len(public_keys) != len(signed_messages):
             raise ErrListsLengthDoNotMatch("The number of public keys should match the number of signed messages")
 
