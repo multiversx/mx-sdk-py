@@ -36,6 +36,10 @@ class MetaChainSystemSCsCost:
     UNBOND_TOKENS = 5000000
 
 
+ADDITIONAL_GAS_LIMIT_PER_NODE = 6000000
+ADDITIONAL_GAS_FOR_OPERATIONS = 10000000
+
+
 class DelegationFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
@@ -55,7 +59,7 @@ class DelegationFactory:
             sender=sender,
             receiver=receiver,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_MANAGER_OPS,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_MANAGER_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -86,7 +90,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS * num_nodes,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -119,7 +123,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS * num_nodes,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -143,7 +147,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.STAKE) * num_nodes,
+            execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.STAKE) + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -159,7 +163,7 @@ class DelegationFactory:
                      value: ITransactionValue,
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
-                     gas_limit: Optional[IGasLimit] = None):
+                     gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parsed_keys, num_nodes = self._parse_keys(bls_keys)
         data = TransactionPayload.from_str("unBondNodes" + parsed_keys)
 
@@ -167,7 +171,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.UNBOND) * num_nodes,
+            execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.UNBOND) + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -183,7 +187,7 @@ class DelegationFactory:
                       value: ITransactionValue,
                       transaction_nonce: Optional[INonce] = None,
                       gas_price: Optional[IGasPrice] = None,
-                      gas_limit: Optional[IGasLimit] = None):
+                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parsed_keys, num_nodes = self._parse_keys(bls_keys)
         data = TransactionPayload.from_str("unStakeNodes" + parsed_keys)
 
@@ -191,7 +195,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.UNSTAKE) * num_nodes,
+            execution_gas_limit=(MetaChainSystemSCsCost.DELEGATION_OPS + MetaChainSystemSCsCost.UNSTAKE) + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -215,7 +219,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS * num_nodes,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + num_nodes * ADDITIONAL_GAS_LIMIT_PER_NODE,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -240,7 +244,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -265,7 +269,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -297,7 +301,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -329,7 +333,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -357,7 +361,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data=data,
-            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS,
+            execution_gas_limit=MetaChainSystemSCsCost.DELEGATION_OPS + ADDITIONAL_GAS_FOR_OPERATIONS,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
