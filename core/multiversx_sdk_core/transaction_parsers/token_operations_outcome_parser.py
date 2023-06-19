@@ -4,8 +4,8 @@ from typing import List, Protocol
 
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.codec import decode_unsigned_number
-from multiversx_sdk_core.transaction_outcome_parser import (
-    ITransactionEvent, ITransactionOnNetwork, TransactionOutcomeParser)
+from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper import (
+    ITransactionEvent, ITransactionOnNetwork, TransactionOnNetworkWrapper)
 
 
 class IConfig(Protocol):
@@ -95,59 +95,67 @@ class BurnQuantityOutcome:
     burnt_quantity: int
 
 
-class TokenOperationsOutcomeParser(TransactionOutcomeParser):
+class TokenOperationsOutcomeParser:
     def __init__(self, config: IConfig) -> None:
         self._config = config
 
     def parse_issue_fungible(self, transaction: ITransactionOnNetwork) -> ESDTIssueOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "issue")
+        event = wrapper.find_single_event_by_identifier("issue")
         token_identifier = self._extract_token_identifier(event)
         return ESDTIssueOutcome(token_identifier)
 
     def parse_issue_non_fungible(self, transaction: ITransactionOnNetwork) -> ESDTIssueOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "issueNonFungible")
+        event = wrapper.find_single_event_by_identifier("issueNonFungible")
         token_identifier = self._extract_token_identifier(event)
         return ESDTIssueOutcome(token_identifier)
 
     def parse_issue_semi_fungible(self, transaction: ITransactionOnNetwork) -> ESDTIssueOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "issueSemiFungible")
+        event = wrapper.find_single_event_by_identifier("issueSemiFungible")
         token_identifier = self._extract_token_identifier(event)
         return ESDTIssueOutcome(token_identifier)
 
     def parse_register_meta_esdt(self, transaction: ITransactionOnNetwork) -> ESDTIssueOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "registerMetaESDT")
+        event = wrapper.find_single_event_by_identifier("registerMetaESDT")
         token_identifier = self._extract_token_identifier(event)
         return ESDTIssueOutcome(token_identifier)
 
     def parse_register_and_set_all_roles(self, transaction: ITransactionOnNetwork) -> RegisterAndSetAllRolesOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event_register = self._find_single_event_by_identifier(transaction, "registerAndSetAllRoles")
+        event_register = wrapper.find_single_event_by_identifier("registerAndSetAllRoles")
         token_identifier = self._extract_token_identifier(event_register)
 
-        event_set_role = self._find_single_event_by_identifier(transaction, "ESDTSetRole")
+        event_set_role = wrapper.find_single_event_by_identifier("ESDTSetRole")
         roles = [str(topic) for topic in event_set_role.topics[3:]]
 
         return RegisterAndSetAllRolesOutcome(token_identifier, roles)
 
     def parse_set_burn_role_globally(self, transaction: ITransactionOnNetwork) -> None:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
     def parse_unset_burn_role_globally(self, transaction: ITransactionOnNetwork) -> None:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
     def parse_set_special_role(self, transaction: ITransactionOnNetwork) -> SetSpecialRoleOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTSetRole")
+        event = wrapper.find_single_event_by_identifier("ESDTSetRole")
         user_address = event.address.bech32()
         token_identifier = self._extract_token_identifier(event)
         roles = [str(topic) for topic in event.topics[3:]]
@@ -155,9 +163,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return SetSpecialRoleOutcome(user_address, token_identifier, roles)
 
     def parse_nft_create(self, transaction: ITransactionOnNetwork) -> NFTCreateOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTNFTCreate")
+        event = wrapper.find_single_event_by_identifier("ESDTNFTCreate")
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         initial_quantity = self._extract_amount(event)
@@ -165,9 +174,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return NFTCreateOutcome(token_identifier, nonce, initial_quantity)
 
     def parse_local_mint(self, transaction: ITransactionOnNetwork) -> MintOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTLocalMint")
+        event = wrapper.find_single_event_by_identifier("ESDTLocalMint")
         user_address = event.address.bech32()
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
@@ -176,9 +186,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return MintOutcome(user_address, token_identifier, nonce, minted_supply)
 
     def parse_local_burn(self, transaction: ITransactionOnNetwork) -> BurnOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTLocalBurn")
+        event = wrapper.find_single_event_by_identifier("ESDTLocalBurn")
         user_address = event.address.bech32()
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
@@ -187,21 +198,24 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return BurnOutcome(user_address, token_identifier, nonce, burnt_supply)
 
     def parse_pause(self, transaction: ITransactionOnNetwork) -> PausingOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        _ = self._find_single_event_by_identifier(transaction, "ESDTPause")
+        _ = wrapper.find_single_event_by_identifier("ESDTPause")
         return PausingOutcome()
 
     def parse_unpause(self, transaction: ITransactionOnNetwork) -> PausingOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        _ = self._find_single_event_by_identifier(transaction, "ESDTUnPause")
+        _ = wrapper.find_single_event_by_identifier("ESDTUnPause")
         return PausingOutcome()
 
     def parse_freeze(self, transaction: ITransactionOnNetwork) -> FreezingOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTFreeze")
+        event = wrapper.find_single_event_by_identifier("ESDTFreeze")
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         balance = self._extract_amount(event)
@@ -210,9 +224,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return FreezingOutcome(user_address, token_identifier, nonce, balance)
 
     def parse_unfreeze(self, transaction: ITransactionOnNetwork) -> FreezingOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTUnFreeze")
+        event = wrapper.find_single_event_by_identifier("ESDTUnFreeze")
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         balance = self._extract_amount(event)
@@ -221,9 +236,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return FreezingOutcome(user_address, token_identifier, nonce, balance)
 
     def parse_wipe(self, transaction: ITransactionOnNetwork) -> WipingOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTWipe")
+        event = wrapper.find_single_event_by_identifier("ESDTWipe")
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         balance = self._extract_amount(event)
@@ -232,9 +248,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return WipingOutcome(user_address, token_identifier, nonce, balance)
 
     def parse_update_attributes(self, transaction: ITransactionOnNetwork) -> UpdateAttributesOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTNFTUpdateAttributes")
+        event = wrapper.find_single_event_by_identifier("ESDTNFTUpdateAttributes")
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         attributes = event.topics[3].raw
@@ -242,9 +259,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return UpdateAttributesOutcome(token_identifier, nonce, attributes)
 
     def parse_add_quantity(self, transaction: ITransactionOnNetwork) -> AddQuantityOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTNFTAddQuantity")
+        event = wrapper.find_single_event_by_identifier("ESDTNFTAddQuantity")
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         added_quantity = self._extract_amount(event)
@@ -252,9 +270,10 @@ class TokenOperationsOutcomeParser(TransactionOutcomeParser):
         return AddQuantityOutcome(token_identifier, nonce, added_quantity)
 
     def parse_burn_quantity(self, transaction: ITransactionOnNetwork) -> BurnQuantityOutcome:
-        self._ensure_no_error(transaction)
+        wrapper = TransactionOnNetworkWrapper.from_transaction(transaction)
+        wrapper.ensure_no_error()
 
-        event = self._find_single_event_by_identifier(transaction, "ESDTNFTBurn")
+        event = wrapper.find_single_event_by_identifier("ESDTNFTBurn")
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         burnt_quantity = self._extract_amount(event)
