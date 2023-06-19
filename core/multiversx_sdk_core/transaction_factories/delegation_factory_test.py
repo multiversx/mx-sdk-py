@@ -1,13 +1,10 @@
-from typing import List
-
 from multiversx_sdk_wallet import ValidatorSecretKey, ValidatorSigner
 
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.constants import DELEGATION_MANAGER_SC_ADDRESS
-from multiversx_sdk_core.interfaces import IValidatorPublicKey
 from multiversx_sdk_core.messages import ArbitraryMessage
-from multiversx_sdk_core.transaction_builders.delegation_factory import (
-    DelegationFactory, MetaChainSystemSCsCost)
+from multiversx_sdk_core.transaction_factories.delegation_factory import \
+    DelegationFactory
 
 
 class Config:
@@ -16,18 +13,25 @@ class Config:
         self.min_gas_price = 1000000000
         self.min_gas_limit = 50000
         self.gas_limit_per_byte = 1500
+        self.stake = 5000000
+        self.unstake = 5000000
+        self.unbond = 5000000
+        self.claim = 5000000
+        self.get = 5000000
+        self.change_reward_address = 5000000
+        self.change_validator_keys = 5000000
+        self.unjail = 5000000
+        self.delegation_manager_ops = 50000000
+        self.delegation_ops = 1000000
+        self.unstake_tokens = 5000000
+        self.unbond_tokens = 5000000
+        self.additional_gas_limit_per_node = 6000000
+        self.additional_gas_for_operations = 10000000
 
 
-class TestDelagationFactory:
+class TestDelegationFactory:
     config = Config()
     factory = DelegationFactory(config)
-
-    def test_compute_gas_limit_for_new_delegation_contract(self):
-        data = self.factory._prepare_data_for_create_new_delegation_contract(total_delegation_cap=5000000000000000000000,
-                                                                             service_fee=10)
-        data = self.factory._build_transaction_payload(data)
-        gas_limit = self.factory._compute_gas_limit(data, MetaChainSystemSCsCost.DELEGATION_MANAGER_OPS)
-        assert gas_limit == 50126500
 
     def test_create_new_delegation_contract(self):
         transaction = self.factory.create_new_delegation_contract(
@@ -47,6 +51,7 @@ class TestDelagationFactory:
         assert transaction.nonce == 777
         assert transaction.signature == b""
         assert str(transaction.data) == "createNewDelegationContract@010f0cf064dd59200000@0a"
+        assert transaction.gas_limit == 60126500
 
     def test_add_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -59,7 +64,7 @@ class TestDelagationFactory:
         signed_message = validator_signer.sign(message)
         public_key = validator_secret_key.generate_public_key()
 
-        public_keys: List[IValidatorPublicKey] = [public_key]
+        public_keys = [public_key]
         signed_messages = [signed_message]
 
         transaction_nonce = 777
