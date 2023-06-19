@@ -45,3 +45,8 @@ class INetworkConfig(Protocol):
     gas_per_data_byte: IGasPerDataByte
     gas_price_modifier: float
     chain_id: IChainID
+
+
+class IValidatorPublicKey(Protocol):
+    def hex(self) -> str:
+        ...
