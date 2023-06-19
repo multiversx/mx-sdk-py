@@ -4,10 +4,8 @@ from typing import List, Protocol
 
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.codec import decode_unsigned_number
-from multiversx_sdk_core.interfaces_of_network import (ITransactionEvent,
-                                                       ITransactionOnNetwork)
-from multiversx_sdk_core.transaction_outcome_parser import \
-    TransactionOutcomeParser
+from multiversx_sdk_core.transaction_outcome_parser import (
+    ITransactionEvent, ITransactionOnNetwork, TransactionOutcomeParser)
 
 
 class IConfig(Protocol):

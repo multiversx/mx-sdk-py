@@ -1,14 +1,14 @@
 
 
 from multiversx_sdk_core import Address
+from multiversx_sdk_core.token_operations.token_operations_config import \
+    TokenOperationsConfig
 from multiversx_sdk_core.token_operations.token_operations_factory import \
     TokenOperationsFactory
-from multiversx_sdk_core.token_operations.token_operations_factory_config import \
-    TokenOperationsFactoryConfig
 
 frank = Address.from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
 grace = Address.from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede")
-factory = TokenOperationsFactory(TokenOperationsFactoryConfig("T"))
+factory = TokenOperationsFactory(TokenOperationsConfig("T"))
 
 
 def test_register_and_set_all_roles():

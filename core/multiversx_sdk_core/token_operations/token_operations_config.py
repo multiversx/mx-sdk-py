@@ -3,7 +3,7 @@ from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
                                             IGasPrice, ITransactionValue)
 
 
-class TokenOperationsFactoryConfig:
+class TokenOperationsConfig:
     def __init__(self, chain_id: IChainID) -> None:
         self.chain_id: IChainID = chain_id
         self.address_hrp: str = DEFAULT_HRP
