@@ -19,13 +19,13 @@ def load_wallets():
     bob = UserPEM.from_file(Path(bob_pem))
     wallets["bob"] = bob
 
+    carol = UserPEM.from_file(Path(carol_pem))
+    wallets["carol"] = carol
+
     frank = UserPEM.from_file(Path(frank_pem))
     wallets["frank"] = frank
 
     grace = UserPEM.from_file(Path(grace_pem))
     wallets["grace"] = grace
-
-    carol = UserPEM.from_file(Path(carol_pem))
-    wallets["carol"] = carol
 
     return wallets
