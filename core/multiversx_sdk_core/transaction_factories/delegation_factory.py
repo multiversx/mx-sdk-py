@@ -280,22 +280,17 @@ class DelegationFactory:
 
         return transaction
 
-    def automatic_activation(self,
-                             sender: IAddress,
-                             delegation_contract: IAddress,
-                             set: bool,
-                             unset: bool,
-                             value: ITransactionValue,
-                             transaction_nonce: Optional[INonce] = None,
-                             gas_price: Optional[IGasPrice] = None,
-                             gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parts = ["setAutomaticActivation"]
-
-        if set:
-            parts.append(arg_to_string('true'))
-
-        if unset:
-            parts.append(arg_to_string('false'))
+    def set_automatic_activation(self,
+                                 sender: IAddress,
+                                 delegation_contract: IAddress,
+                                 value: ITransactionValue,
+                                 transaction_nonce: Optional[INonce] = None,
+                                 gas_price: Optional[IGasPrice] = None,
+                                 gas_limit: Optional[IGasLimit] = None) -> Transaction:
+        parts = [
+            "setAutomaticActivation",
+            arg_to_string('true')
+        ]
 
         transaction = self.create_transaction(
             sender=sender,
@@ -310,22 +305,67 @@ class DelegationFactory:
 
         return transaction
 
-    def redelegate_cap(self,
-                       sender: IAddress,
-                       delegation_contract: IAddress,
-                       set: bool,
-                       unset: bool,
-                       value: ITransactionValue,
-                       transaction_nonce: Optional[INonce] = None,
-                       gas_price: Optional[IGasPrice] = None,
-                       gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parts = ["setCheckCapOnReDelegateRewards"]
+    def unset_automatic_activation(self,
+                                   sender: IAddress,
+                                   delegation_contract: IAddress,
+                                   value: ITransactionValue,
+                                   transaction_nonce: Optional[INonce] = None,
+                                   gas_price: Optional[IGasPrice] = None,
+                                   gas_limit: Optional[IGasLimit] = None) -> Transaction:
+        parts = [
+            "setAutomaticActivation",
+            arg_to_string('false')
+        ]
 
-        if set:
-            parts.append(arg_to_string('true'))
+        transaction = self.create_transaction(
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=parts,
+            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            gas_limit_hint=gas_limit,
+            gas_price=gas_price,
+            nonce=transaction_nonce,
+            value=value
+        )
 
-        if unset:
-            parts.append(arg_to_string('false'))
+        return transaction
+
+    def set_redelegate_cap(self,
+                           sender: IAddress,
+                           delegation_contract: IAddress,
+                           value: ITransactionValue,
+                           transaction_nonce: Optional[INonce] = None,
+                           gas_price: Optional[IGasPrice] = None,
+                           gas_limit: Optional[IGasLimit] = None) -> Transaction:
+        parts = [
+            "setCheckCapOnReDelegateRewards",
+            arg_to_string('true')
+        ]
+
+        transaction = self.create_transaction(
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=parts,
+            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            gas_limit_hint=gas_limit,
+            gas_price=gas_price,
+            nonce=transaction_nonce,
+            value=value
+        )
+
+        return transaction
+
+    def unset_redelegate_cap(self,
+                             sender: IAddress,
+                             delegation_contract: IAddress,
+                             value: ITransactionValue,
+                             transaction_nonce: Optional[INonce] = None,
+                             gas_price: Optional[IGasPrice] = None,
+                             gas_limit: Optional[IGasLimit] = None) -> Transaction:
+        parts = [
+            "setCheckCapOnReDelegateRewards",
+            arg_to_string('false')
+        ]
 
         transaction = self.create_transaction(
             sender=sender,
