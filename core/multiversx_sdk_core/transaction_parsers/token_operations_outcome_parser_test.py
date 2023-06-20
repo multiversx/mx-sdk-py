@@ -1,7 +1,7 @@
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.codec import encode_unsigned_number
-from multiversx_sdk_core.transaction_factories.token_operations_config import \
-    TokenOperationsConfig
+from multiversx_sdk_core.transaction_factories.transaction_factory_config import \
+    TransactionFactoryConfig
 from multiversx_sdk_core.transaction_parsers.token_operations_outcome_parser import \
     TokenOperationsOutcomeParser
 from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper import (
@@ -11,7 +11,7 @@ from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper impo
 
 frank = Address.from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
 grace = Address.from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede")
-parser = TokenOperationsOutcomeParser(TokenOperationsConfig("D"))
+parser = TokenOperationsOutcomeParser(TransactionFactoryConfig("D"))
 
 
 def test_parse_issue_fungible():

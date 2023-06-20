@@ -3,13 +3,16 @@ from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
                                             IGasPrice, ITransactionValue)
 
 
-class TokenOperationsConfig:
+class TransactionFactoryConfig:
     def __init__(self, chain_id: IChainID) -> None:
+        # General-purpose configuration
         self.chain_id: IChainID = chain_id
         self.address_hrp: str = DEFAULT_HRP
         self.min_gas_price: IGasPrice = 1000000000
         self.min_gas_limit: IGasLimit = 50_000
         self.gas_limit_per_byte: IGasLimit = 1_500
+
+        # Configuration for token operations
         self.gas_limit_issue: IGasLimit = 60_000_000
         self.gas_limit_toggle_burn_role_globally: IGasLimit = 60_000_000
         self.gas_limit_esdt_local_mint: IGasLimit = 300_000
@@ -25,3 +28,18 @@ class TokenOperationsConfig:
         self.gas_limit_store_per_byte: IGasLimit = 50_000
         self.issue_cost: ITransactionValue = 50_000_000_000_000_000
         self.esdt_contract_address: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
+
+        # Configuration for delegation operations
+        self.gas_limit_stake = 5000000
+        self.gas_limit_unstake = 5000000
+        self.gas_limit_unbond = 5000000
+        self.gas_limit_claim = 5000000
+        self.gas_limit_change_reward_address = 5000000
+        self.gas_limit_change_validator_keys = 5000000
+        self.gas_limit_unjail = 5000000
+        self.gas_limit_delegation_manager_ops = 50000000
+        self.gas_limit_delegation_ops = 1000000
+        self.gas_limit_unstake_tokens = 5000000
+        self.gas_limit_unbond_tokens = 5000000
+        self.additional_gas_limit_per_node = 6000000
+        self.additional_gas_for_delegation_operations = 10000000
