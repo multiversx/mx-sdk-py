@@ -1,98 +1,19 @@
 
-from dataclasses import dataclass
-from typing import List, Protocol
+from typing import Protocol
 
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.codec import decode_unsigned_number
+from multiversx_sdk_core.transaction_parsers.token_operations_outcome_parser_types import (
+    AddQuantityOutcome, BurnOutcome, BurnQuantityOutcome, ESDTIssueOutcome,
+    FreezingOutcome, MintOutcome, NFTCreateOutcome, PausingOutcome,
+    RegisterAndSetAllRolesOutcome, SetSpecialRoleOutcome,
+    UpdateAttributesOutcome, WipingOutcome)
 from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper import (
     ITransactionEvent, ITransactionOnNetwork, TransactionOnNetworkWrapper)
 
 
 class IConfig(Protocol):
     address_hrp: str
-
-
-@dataclass
-class ESDTIssueOutcome:
-    token_identifier: str
-
-
-@dataclass
-class RegisterAndSetAllRolesOutcome:
-    token_identifier: str
-    roles: List[str]
-
-
-@dataclass
-class SetSpecialRoleOutcome:
-    user_address: str
-    token_identifier: str
-    roles: List[str]
-
-
-@dataclass
-class NFTCreateOutcome:
-    token_identifier: str
-    nonce: int
-    initial_quantity: int
-
-
-@dataclass
-class MintOutcome:
-    user_address: str
-    token_identifier: str
-    nonce: int
-    minted_supply: int
-
-
-@dataclass
-class BurnOutcome:
-    user_address: str
-    token_identifier: str
-    nonce: int
-    burnt_supply: int
-
-
-@dataclass
-class PausingOutcome:
-    pass
-
-
-@dataclass
-class FreezingOutcome:
-    user_address: str
-    token_identifier: str
-    nonce: int
-    balance: int
-
-
-@dataclass
-class WipingOutcome:
-    user_address: str
-    token_identifier: str
-    nonce: int
-    balance: int
-
-
-@dataclass
-class UpdateAttributesOutcome:
-    token_identifier: str
-    nonce: int
-    attributes: bytes
-
-
-@dataclass
-class AddQuantityOutcome:
-    token_identifier: str
-    nonce: int
-    added_quantity: int
-
-
-@dataclass
-class BurnQuantityOutcome:
-    token_identifier: str
-    nonce: int
-    burnt_quantity: int
 
 
 class TokenOperationsOutcomeParser:

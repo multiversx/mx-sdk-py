@@ -1,51 +1,13 @@
-from typing import List, Protocol, Sequence
+from typing import List, Sequence
 
 from multiversx_sdk_core.interfaces import IAddress
-
-
-class ITransactionOnNetwork(Protocol):
-    @property
-    def contract_results(self) -> 'IContractResults': ...
-    @property
-    def logs(self) -> 'ITransactionLogs': ...
-
-
-class IContractResults(Protocol):
-    @property
-    def items(self) -> Sequence['IContractResultItem']: ...
-
-
-class IContractResultItem(Protocol):
-    @property
-    def logs(self) -> 'ITransactionLogs': ...
-
-
-class ITransactionLogs(Protocol):
-    @property
-    def events(self) -> Sequence['ITransactionEvent']: ...
-
-
-class ITransactionEvent(Protocol):
-    @property
-    def address(self) -> IAddress: ...
-
-    @property
-    def identifier(self) -> str: ...
-
-    @property
-    def topics(self) -> Sequence['ITransactionEventTopic']: ...
-
-    @property
-    def data(self) -> str: ...
-
-
-class ITransactionEventTopic(Protocol):
-    @property
-    def raw(self) -> bytes: ...
+from multiversx_sdk_core.transaction_parsers.interfaces import (
+    IContractResultItem, IContractResults, ITransactionEvent,
+    ITransactionEventTopic, ITransactionLogs, ITransactionOnNetwork)
 
 
 class TransactionOnNetworkWrapper:
-    def __init__(self, contract_results: 'IContractResults', logs: 'ITransactionLogs'):
+    def __init__(self, contract_results: IContractResults, logs: ITransactionLogs):
         self.contract_results: ContractResultsWrapper = ContractResultsWrapper(contract_results.items)
         self.logs: TransactionLogsWrapper = TransactionLogsWrapper(logs.events)
 
@@ -85,7 +47,7 @@ class TransactionOnNetworkWrapper:
 
 
 class ContractResultsWrapper:
-    def __init__(self, items: Sequence['IContractResultItem']):
+    def __init__(self, items: Sequence[IContractResultItem]):
         self.items: List[ContractResultItemWrapper] = [ContractResultItemWrapper(item.logs) for item in items]
 
 
@@ -95,12 +57,12 @@ class ContractResultItemWrapper:
 
 
 class TransactionLogsWrapper:
-    def __init__(self, events: Sequence['ITransactionEvent']):
+    def __init__(self, events: Sequence[ITransactionEvent]):
         self.events: List[TransactionEventWrapper] = [TransactionEventWrapper(event.address, event.identifier, event.topics, event.data) for event in events]
 
 
 class TransactionEventWrapper:
-    def __init__(self, address: IAddress, identifier: str, topics: Sequence['ITransactionEventTopic'], data: str):
+    def __init__(self, address: IAddress, identifier: str, topics: Sequence[ITransactionEventTopic], data: str):
         self.address: IAddress = address
         self.identifier: str = identifier
         self.topics: List[TransactionEventTopicWrapper] = [TransactionEventTopicWrapper(topic.raw) for topic in topics]
