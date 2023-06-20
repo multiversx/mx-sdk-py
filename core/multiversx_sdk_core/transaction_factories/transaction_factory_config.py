@@ -1,6 +1,6 @@
 from multiversx_sdk_core.address import DEFAULT_HRP, Address
 from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
-                                            IGasPrice, ITransactionValue)
+                                            ITransactionValue)
 
 
 class TransactionFactoryConfig:
@@ -8,7 +8,6 @@ class TransactionFactoryConfig:
         # General-purpose configuration
         self.chain_id: IChainID = chain_id
         self.address_hrp: str = DEFAULT_HRP
-        self.min_gas_price: IGasPrice = 1000000000
         self.min_gas_limit: IGasLimit = 50_000
         self.gas_limit_per_byte: IGasLimit = 1_500
 
@@ -33,13 +32,7 @@ class TransactionFactoryConfig:
         self.gas_limit_stake = 5000000
         self.gas_limit_unstake = 5000000
         self.gas_limit_unbond = 5000000
-        self.gas_limit_claim = 5000000
-        self.gas_limit_change_reward_address = 5000000
-        self.gas_limit_change_validator_keys = 5000000
-        self.gas_limit_unjail = 5000000
-        self.gas_limit_delegation_manager_ops = 50000000
-        self.gas_limit_delegation_ops = 1000000
-        self.gas_limit_unstake_tokens = 5000000
-        self.gas_limit_unbond_tokens = 5000000
+        self.gas_limit_create_delegation_contract = 50000000
+        self.gas_limit_delegation_operations = 1000000
         self.additional_gas_limit_per_node = 6000000
         self.additional_gas_for_delegation_operations = 10000000
