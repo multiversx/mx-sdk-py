@@ -34,5 +34,5 @@ class TransactionFactoryConfig:
         self.gas_limit_unbond = 5000000
         self.gas_limit_create_delegation_contract = 50000000
         self.gas_limit_delegation_operations = 1000000
-        self.additional_gas_limit_per_node = 6000000
+        self.additional_gas_limit_per_validator_node = 6000000
         self.additional_gas_for_delegation_operations = 10000000
