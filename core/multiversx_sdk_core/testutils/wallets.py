@@ -7,6 +7,7 @@ alice_pem = Path(__file__).parent / "testwallets" / "alice.pem"
 bob_pem = Path(__file__).parent / "testwallets" / "bob.pem"
 frank_pem = Path(__file__).parent / "testwallets" / "frank.pem"
 grace_pem = Path(__file__).parent / "testwallets" / "grace.pem"
+carol_pem = Path(__file__).parent / "testwallets" / "carol.pem"
 
 
 def load_wallets():
@@ -17,6 +18,9 @@ def load_wallets():
 
     bob = UserPEM.from_file(Path(bob_pem))
     wallets["bob"] = bob
+
+    carol = UserPEM.from_file(Path(carol_pem))
+    wallets["carol"] = carol
 
     frank = UserPEM.from_file(Path(frank_pem))
     wallets["frank"] = frank
