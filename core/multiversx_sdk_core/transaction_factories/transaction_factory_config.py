@@ -29,10 +29,10 @@ class TransactionFactoryConfig:
         self.esdt_contract_address: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
 
         # Configuration for delegation operations
-        self.gas_limit_stake = 5000000
-        self.gas_limit_unstake = 5000000
-        self.gas_limit_unbond = 5000000
-        self.gas_limit_create_delegation_contract = 50000000
-        self.gas_limit_delegation_operations = 1000000
-        self.additional_gas_limit_per_validator_node = 6000000
-        self.additional_gas_for_delegation_operations = 10000000
+        self.gas_limit_stake = 5_000_000
+        self.gas_limit_unstake = 5_000_000
+        self.gas_limit_unbond = 5_000_000
+        self.gas_limit_create_delegation_contract = 50_000_000
+        self.gas_limit_delegation_operations = 1_000_000
+        self.additional_gas_limit_per_validator_node = 6_000_000
+        self.additional_gas_for_delegation_operations = 10_000_000
