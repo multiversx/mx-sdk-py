@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 class IConfig(Protocol):
     chain_id: IChainID
-    min_gas_price: IGasPrice
     min_gas_limit: IGasLimit
     gas_limit_per_byte: IGasLimit
     gas_limit_issue: IGasLimit

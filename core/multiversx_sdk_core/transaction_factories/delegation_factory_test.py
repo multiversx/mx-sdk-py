@@ -5,32 +5,12 @@ from multiversx_sdk_core.constants import DELEGATION_MANAGER_SC_ADDRESS
 from multiversx_sdk_core.messages import ArbitraryMessage
 from multiversx_sdk_core.transaction_factories.delegation_factory import \
     DelegationFactory
-
-
-class Config:
-    def __init__(self) -> None:
-        self.chain_id = "D"
-        self.min_gas_price = 1000000000
-        self.min_gas_limit = 50000
-        self.gas_limit_per_byte = 1500
-        self.stake = 5000000
-        self.unstake = 5000000
-        self.unbond = 5000000
-        self.claim = 5000000
-        self.get = 5000000
-        self.change_reward_address = 5000000
-        self.change_validator_keys = 5000000
-        self.unjail = 5000000
-        self.delegation_manager_ops = 50000000
-        self.delegation_ops = 1000000
-        self.unstake_tokens = 5000000
-        self.unbond_tokens = 5000000
-        self.additional_gas_limit_per_node = 6000000
-        self.additional_gas_for_operations = 10000000
+from multiversx_sdk_core.transaction_factories.transaction_factory_config import \
+    TransactionFactoryConfig
 
 
 class TestDelegationFactory:
-    config = Config()
+    config = TransactionFactoryConfig("D")
     factory = DelegationFactory(config)
 
     def test_create_new_delegation_contract(self):

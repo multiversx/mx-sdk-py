@@ -16,23 +16,15 @@ from multiversx_sdk_core.transaction import Transaction
 
 class IConfig(Protocol):
     chain_id: IChainID
-    min_gas_price: IGasPrice
     min_gas_limit: IGasLimit
     gas_limit_per_byte: IGasLimit
-    stake = 5000000
-    unstake = 5000000
-    unbond = 5000000
-    claim = 5000000
-    get = 5000000
-    change_reward_address = 5000000
-    change_validator_keys = 5000000
-    unjail = 5000000
-    delegation_manager_ops = 50000000
-    delegation_ops = 1000000
-    unstake_tokens = 5000000
-    unbond_tokens = 5000000
-    additional_gas_limit_per_node = 6000000
-    additional_gas_for_operations = 10000000
+    gas_limit_stake = 5000000
+    gas_limit_unstake = 5000000
+    gas_limit_unbond = 5000000
+    gas_limit_create_delegation_contract = 50000000
+    gas_limit_delegation_operations = 1000000
+    additional_gas_limit_per_validator_node = 6000000
+    additional_gas_for_delegation_operations = 10000000
 
 
 class DelegationFactory:
@@ -58,7 +50,7 @@ class DelegationFactory:
             sender=sender,
             receiver=receiver,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_manager_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_create_delegation_contract + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -90,7 +82,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + num_nodes * self.config.additional_gas_limit_per_node,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -115,7 +107,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + num_nodes * self.config.additional_gas_limit_per_node,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -141,7 +133,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.stake + num_nodes * self.config.additional_gas_limit_per_node,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_stake + num_nodes * self.config.additional_gas_limit_per_validator_node,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -167,7 +159,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.unbond + num_nodes * self.config.additional_gas_limit_per_node,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_unbond + num_nodes * self.config.additional_gas_limit_per_validator_node,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -193,7 +185,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.unstake + num_nodes * self.config.additional_gas_limit_per_node,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_unstake + num_nodes * self.config.additional_gas_limit_per_validator_node,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -219,7 +211,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + num_nodes * self.config.additional_gas_limit_per_node,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -245,7 +237,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -271,7 +263,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -296,7 +288,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -321,7 +313,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -346,7 +338,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -371,7 +363,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -401,7 +393,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.delegation_ops + self.config.additional_gas_for_operations,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
