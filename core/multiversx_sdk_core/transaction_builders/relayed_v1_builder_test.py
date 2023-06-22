@@ -1,5 +1,6 @@
 import pytest
 
+from multiversx_sdk_core import TokenPayment
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.errors import ErrInvalidRelayerV1BuilderArguments
 from multiversx_sdk_core.testutils.wallets import load_wallets
@@ -23,6 +24,7 @@ class TestRelayedV1Builder:
     bob = wallets["bob"]
     frank = wallets["frank"]
     grace = wallets["grace"]
+    carol = wallets["carol"]
 
     def test_without_arguments(self):
         relayed_builder = RelayedTransactionV1Builder()
@@ -148,3 +150,36 @@ class TestRelayedV1Builder:
         assert relayed_tx.nonce == 2627
         assert str(relayed_tx.data) == "relayedTx@7b226e6f6e6365223a3139382c2273656e646572223a2267456e574f65576d6d413063306a6b71764d354241707a61644b46574e534f69417643575163776d4750673d222c227265636569766572223a22414141414141414141414146414b565841323879704877692f79693741364c64504b704f68464d386958513d222c2276616c7565223a302c226761735072696365223a313030303030303030302c226761734c696d6974223a36303030303030302c2264617461223a225957526b546e5674596d5679222c227369676e6174757265223a223469724d4b4a656d724d375174344e7635487633544c44683775654779487045564c4371674a3677652f7a662b746a4933354975573452633458543451533433475333356158386c6a533834324a38426854645043673d3d222c22636861696e4944223a2256413d3d222c2276657273696f6e223a322c226f7074696f6e73223a322c22677561726469616e223a22486f714c61306e655733766843716f56696c70715372744c5673774939535337586d7a563868477450684d3d222c22677561726469616e5369676e6174757265223a227353304963797947326261496e376e7a5075316c7871424b6c6732714153676c526b7873797131785a417a3839635454697a6237425855305737374a44613679323370434f2f745355383777336358496652746642413d3d227d"
         assert relayed_tx.signature.hex() == "15fe39045685625d0f1742e34ba7679d225d49fc1f1f2ab363b7e78beddb8d278d11f5658a0d0e996d28ba77c49bc6d614b62a4eb7e74f363546ecaa2a84d905"
+
+    def test_compute_relayedV1_with_usernames(self):
+        network_config = NetworkConfig()
+        inner_tx = Transaction(
+            chain_id=network_config.chain_id,
+            sender=Address.from_bech32(self.carol.label),
+            receiver=Address.from_bech32(self.alice.label),
+            gas_limit=50000,
+            sender_username="carol",
+            receiver_username="alice",
+            nonce=208,
+            value=TokenPayment.egld_from_amount(1)
+        )
+        # version is set to 1 to match the test in sdk-js-core
+        inner_tx.version = 1
+        inner_tx.signature = self.carol.secret_key.sign(inner_tx.serialize_for_signing())
+
+        builder = RelayedTransactionV1Builder()
+        builder.set_inner_transaction(inner_tx)
+        builder.set_relayer_nonce(715)
+        builder.set_network_config(network_config)
+        builder.set_relayer_address(Address.from_bech32(self.frank.label))
+
+        relayed_tx = builder.build()
+
+        # version is set to 1 to match the test in sdk-js-core
+        relayed_tx.version = 1
+
+        relayed_tx.signature = self.frank.secret_key.sign(relayed_tx.serialize_for_signing())
+
+        assert relayed_tx.nonce == 715
+        assert str(relayed_tx.data) == "relayedTx@7b226e6f6e6365223a3230382c2273656e646572223a227371455656633553486b6c45344a717864556e59573068397a536249533141586f3534786f32634969626f3d222c227265636569766572223a2241546c484c76396f686e63616d433877673970645168386b77704742356a6949496f3349484b594e6165453d222c2276616c7565223a313030303030303030303030303030303030302c226761735072696365223a313030303030303030302c226761734c696d6974223a35303030302c2264617461223a22222c227369676e6174757265223a22744d616d736b6f315a574b526663594e4b5673793463797879643335764b754844576a3548706172344167734c2b4a4e585642545a574c754467384867514254476d724a6b49443133637050614c55322f38626644513d3d222c22636861696e4944223a2256413d3d222c2276657273696f6e223a312c22736e64557365724e616d65223a22593246796232773d222c22726376557365724e616d65223a22595778705932553d227d"
+        assert relayed_tx.signature.hex() == "0fbab023085551b7c497e5c52f64df802cb518ebaac93f8897e5cca25a8aff447565fa96570f7b547f7c0d0fceb2c7d12bcb5f37fa92c79725d9b2c69039f00d"
