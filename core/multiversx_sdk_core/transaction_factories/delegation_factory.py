@@ -18,13 +18,13 @@ class IConfig(Protocol):
     chain_id: IChainID
     min_gas_limit: IGasLimit
     gas_limit_per_byte: IGasLimit
-    gas_limit_stake = 5000000
-    gas_limit_unstake = 5000000
-    gas_limit_unbond = 5000000
-    gas_limit_create_delegation_contract = 50000000
-    gas_limit_delegation_operations = 1000000
-    additional_gas_limit_per_validator_node = 6000000
-    additional_gas_for_delegation_operations = 10000000
+    gas_limit_stake: IGasLimit
+    gas_limit_unstake: IGasLimit
+    gas_limit_unbond: IGasLimit
+    gas_limit_create_delegation_contract: IGasLimit
+    gas_limit_delegation_operations: IGasLimit
+    additional_gas_limit_per_validator_node: IGasLimit
+    additional_gas_for_delegation_operations: IGasLimit
 
 
 class DelegationFactory:
