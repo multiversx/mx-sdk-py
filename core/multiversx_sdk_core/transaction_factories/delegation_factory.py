@@ -82,13 +82,16 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node,
+            execution_gas_limit=self._compute_execution_gas_limit_for_nodes_management(num_nodes),
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
             value=value
         )
         return transaction
+
+    def _compute_execution_gas_limit_for_nodes_management(self, num_nodes: int) -> IGasLimit:
+        return self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node
 
     def remove_nodes(self,
                      sender: IAddress,
@@ -107,7 +110,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node,
+            execution_gas_limit=self._compute_execution_gas_limit_for_nodes_management(num_nodes),
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
@@ -211,7 +214,7 @@ class DelegationFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            execution_gas_limit=self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node,
+            execution_gas_limit=self._compute_execution_gas_limit_for_nodes_management(num_nodes),
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
