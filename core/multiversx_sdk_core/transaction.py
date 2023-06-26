@@ -1,8 +1,9 @@
 import json
-from base64 import b64encode
+from base64 import b64decode, b64encode
 from collections import OrderedDict
 from typing import Any, Dict, Optional
 
+from multiversx_sdk_core import Address
 from multiversx_sdk_core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
@@ -99,6 +100,56 @@ class Transaction:
                 dictionary["guardianSignature"] = self.guardian_signature.hex()
 
         return dictionary
+
+    @staticmethod
+    def from_dictionary(dictionary: Dict[str, Any]) -> "Transaction":
+        chain = dictionary["chainID"]
+        sender = Address.from_bech32(dictionary["sender"])
+        receiver = Address.from_bech32(dictionary["receiver"])
+        gas_limit = dictionary["gasLimit"]
+        gas_price = dictionary["gasPrice"]
+        nonce = dictionary["nonce"]
+        value = dictionary["value"]
+        sender_username = dictionary.get("senderUsername", "")
+        receiver_username = dictionary.get("receiverUsername", "")
+        data = dictionary.get("data", "")
+        version = dictionary["version"]
+        options = dictionary.get("options", None)
+        guardian = dictionary.get("guardian", "")
+        signature = dictionary.get("signature", "")
+        guardian_signature = dictionary.get("guardianSignature")
+
+        transaction = Transaction(
+            chain_id=chain,
+            sender=sender,
+            receiver=receiver,
+            gas_limit=gas_limit,
+            gas_price=gas_price,
+            nonce=nonce,
+            value=value,
+            version=version,
+            options=options
+        )
+
+        if sender_username:
+            transaction.sender_username = b64decode(sender_username.encode()).decode()
+
+        if receiver_username:
+            transaction.receiver_username = b64decode(receiver_username.encode()).decode()
+
+        if data:
+            transaction.data = TransactionPayload.from_encoded_str(data)
+
+        if guardian:
+            transaction.guardian = Address.from_bech32(guardian)
+
+        if signature:
+            transaction.signature = bytes.fromhex(signature)
+
+        if guardian_signature:
+            transaction.guardian_signature = bytes.fromhex(guardian_signature)
+
+        return transaction
 
     def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
         serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
