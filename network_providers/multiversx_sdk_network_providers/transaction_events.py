@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from multiversx_sdk_core import Address
 
@@ -12,6 +12,7 @@ class TransactionEvent:
         self.address: IAddress = EmptyAddress()
         self.identifier: str = ''
         self.topics: List[TransactionEventTopic] = []
+        self.data_payload: Optional[TransactionEventData] = None
         self.data: str = ''
 
     @staticmethod
@@ -24,7 +25,10 @@ class TransactionEvent:
         result.identifier = response.get('identifier', '')
         topics = response.get('topics', [])
         result.topics = [TransactionEventTopic(item) for item in topics]
-        result.data = base64.b64decode(response.get('responseData', '')).decode()
+
+        raw_data = base64.b64decode(response.get('responseData', b''))
+        result.data_payload = TransactionEventData(raw_data)
+        result.data = raw_data.decode()
 
         return result
 
@@ -33,8 +37,20 @@ class TransactionEvent:
             "address": self.address.bech32(),
             "identifier": self.identifier,
             "topics": [item.hex() for item in self.topics],
+            "data_payload": self.data_payload.hex() if self.data_payload else "",
             "data": self.data
         }
+
+
+class TransactionEventData:
+    def __init__(self, raw: bytes) -> None:
+        self.raw = raw
+
+    def __str__(self) -> str:
+        return self.raw.decode()
+
+    def hex(self) -> str:
+        return self.raw.hex()
 
 
 class TransactionEventTopic:
