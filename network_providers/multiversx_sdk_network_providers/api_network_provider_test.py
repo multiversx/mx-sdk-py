@@ -113,6 +113,17 @@ class TestApi:
         assert result[0].status.is_failed()
         assert result[1].status.is_successful()
 
+    def test_get_transaction_with_events(self):
+        transaction = self.api.get_transaction("c451566a6168e38d2980fcb83d4ea154f78d53f7abf3264dd51c2c7c585671aa")
+        assert transaction.logs
+        assert transaction.logs.events
+        assert len(transaction.logs.events) == 2
+        assert len(transaction.logs.events[0].topics) == 4
+        assert transaction.logs.events[0].topics[0].hex() == "5745474c442d643763366262"
+        assert transaction.logs.events[0].topics[1].hex() == ""
+        assert transaction.logs.events[0].topics[2].hex() == "0de0b6b3a7640000"
+        assert transaction.logs.events[0].topics[3].hex() == "00000000000000000500e01285f90311fb5925a9623a1dc62eee41fa8c869a0d"
+
     def test_get_transactions_in_mempool_for_account(self):
         address = Address.from_bech32("erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7")
         result = self.api.get_transactions_in_mempool_for_account(address)
@@ -143,7 +154,7 @@ class TestApi:
 
         assert result.identifier == 'ABC-10df96'
         assert result.owner.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
-        assert not result.can_upgrade
+        assert result.can_upgrade
         assert not result.can_freeze
         assert result.decimals == 1
         assert result.supply == 5

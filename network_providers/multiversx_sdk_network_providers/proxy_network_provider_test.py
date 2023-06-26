@@ -146,6 +146,17 @@ class TestProxy:
         )
         assert result.contract_results.items == []
 
+    def test_get_transaction_with_events(self):
+        transaction = self.proxy.get_transaction("c451566a6168e38d2980fcb83d4ea154f78d53f7abf3264dd51c2c7c585671aa")
+        assert transaction.logs
+        assert transaction.logs.events
+        assert len(transaction.logs.events) == 2
+        assert len(transaction.logs.events[0].topics) == 4
+        assert transaction.logs.events[0].topics[0].hex() == "5745474c442d643763366262"
+        assert transaction.logs.events[0].topics[1].hex() == ""
+        assert transaction.logs.events[0].topics[2].hex() == "0de0b6b3a7640000"
+        assert transaction.logs.events[0].topics[3].hex() == "00000000000000000500e01285f90311fb5925a9623a1dc62eee41fa8c869a0d"
+
     def test_get_sc_invoking_tx(self):
         result = self.proxy.get_transaction(
             "cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9"
