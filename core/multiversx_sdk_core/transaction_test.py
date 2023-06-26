@@ -93,7 +93,7 @@ class TestTransaction:
         assert transaction.options == 2
         assert transaction.signature == b"notavalidsignature"
 
-        if transaction.guardian:
-            assert transaction.guardian.bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
 
         assert transaction.guardian_signature == b"notavalidguardiansignature"
