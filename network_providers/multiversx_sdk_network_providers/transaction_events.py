@@ -8,7 +8,7 @@ from multiversx_sdk_network_providers.resources import EmptyAddress
 
 
 class TransactionEvent:
-    def __init__(self):
+    def __init__(self) -> None:
         self.address: IAddress = EmptyAddress()
         self.identifier: str = ''
         self.topics: List[TransactionEventTopic] = []
@@ -46,19 +46,19 @@ class TransactionEventData:
     def __init__(self, raw: bytes) -> None:
         self.raw = raw
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.raw.decode()
 
-    def hex(self):
+    def hex(self) -> str:
         return self.raw.hex()
 
 
 class TransactionEventTopic:
-    def __init__(self, topic: str):
+    def __init__(self, topic: str) -> None:
         self.raw = base64.b64decode(topic.encode())
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.raw.decode()
 
-    def hex(self):
+    def hex(self) -> str:
         return self.raw.hex()
