@@ -143,7 +143,7 @@ class TestApi:
 
         assert result.identifier == 'ABC-10df96'
         assert result.owner.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
-        assert not result.can_upgrade
+        assert result.can_upgrade
         assert not result.can_freeze
         assert result.decimals == 1
         assert result.supply == 5
