@@ -1,5 +1,7 @@
 from multiversx_sdk_core.transaction_factories.delegation_factory import \
     DelegationFactory
+from multiversx_sdk_core.transaction_factories.smart_contract_factory import \
+    SmartContractFactory
 from multiversx_sdk_core.transaction_factories.token_operations_factory import \
     TokenOperationsFactory
 from multiversx_sdk_core.transaction_factories.transaction_factory_config import \
@@ -8,5 +10,6 @@ from multiversx_sdk_core.transaction_factories.transaction_factory_config import
 __all__ = [
     "DelegationFactory",
     "TokenOperationsFactory",
-    "TransactionFactoryConfig"
+    "TransactionFactoryConfig",
+    "SmartContractFactory"
 ]

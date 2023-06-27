@@ -12,3 +12,5 @@ EGLD_TOKEN_IDENTIFIER = "EGLD"
 EGLD_NUM_DECIMALS = 18
 
 DELEGATION_MANAGER_SC_ADDRESS = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"
+DEFAULT_HRP = "erd"
+CONTRACT_DEPLOY_ADDRESS = "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
