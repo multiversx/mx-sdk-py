@@ -3,12 +3,11 @@ from typing import Tuple
 from Cryptodome.Hash import keccak
 
 from multiversx_sdk_core import bech32
-from multiversx_sdk_core.constants import METACHAIN_ID
+from multiversx_sdk_core.constants import DEFAULT_HRP, METACHAIN_ID
 from multiversx_sdk_core.errors import ErrBadAddress, ErrBadPubkeyLength
 from multiversx_sdk_core.interfaces import IAddress, INonce
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
-DEFAULT_HRP = "erd"
 PUBKEY_LENGTH = 32
 PUBKEY_STRING_LENGTH = PUBKEY_LENGTH * 2  # hex-encoded
 BECH32_LENGTH = 62

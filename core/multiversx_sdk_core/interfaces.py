@@ -5,6 +5,8 @@ from typing import Protocol
 class IAddress(Protocol):
     def bech32(self) -> str: ...
 
+    def hex(self) -> str: ...
+
 
 INonce = int
 IGasPrice = int
