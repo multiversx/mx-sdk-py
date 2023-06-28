@@ -69,7 +69,7 @@ class SmartContractFactory:
                 ) -> Transaction:
         parts = [function] + args_to_strings(arguments)
 
-        trasaction = self.create_transaction(
+        transaction = self.create_transaction(
             sender=sender,
             receiver=contract_address,
             data_parts=parts,
@@ -77,7 +77,7 @@ class SmartContractFactory:
             nonce=nonce
         )
 
-        return trasaction
+        return transaction
 
     def upgrade(self,
                 sender: IAddress,
