@@ -11,7 +11,6 @@ from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
 from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
                                             IGasPrice, INonce,
                                             ITransactionValue)
-from multiversx_sdk_core.io import read_binary_file
 from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk_core.transaction import Transaction
 from multiversx_sdk_core.transaction_payload import TransactionPayload
@@ -38,7 +37,7 @@ class SmartContractFactory:
                is_readable: bool = True,
                is_payable: bool = True,
                is_payable_by_sc: bool = True) -> Transaction:
-        bytecode = read_binary_file(bytecode_path)
+        bytecode = bytecode_path.read_bytes()
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
 
         parts = [
@@ -97,7 +96,7 @@ class SmartContractFactory:
                 is_readable: bool = True,
                 is_payable: bool = True,
                 is_payable_by_sc: bool = True) -> Transaction:
-        bytecode = read_binary_file(bytecode_path)
+        bytecode = bytecode_path.read_bytes()
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
 
         parts = [
