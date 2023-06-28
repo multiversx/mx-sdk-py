@@ -33,6 +33,7 @@ class IConfig(Protocol):
     gas_limit_store_per_byte: IGasLimit
     issue_cost: ITransactionValue
     esdt_contract_address: IAddress
+    extra_gas_limit_for_guarded_transactions: IGasLimit
 
 
 class TokenOperationsFactory:
@@ -757,9 +758,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         data_parts: List[str]
     ) -> Transaction:
         payload = self._build_transaction_payload(data_parts)
-        gas_limit = gas_limit_hint or self._compute_gas_limit(payload, execution_gas_limit)
         version = TRANSACTION_VERSION_DEFAULT
         options = TRANSACTION_OPTIONS_DEFAULT
+
+        has_guardian = True if guardian else False
+        gas_limit = gas_limit_hint or self._compute_gas_limit(payload, execution_gas_limit, has_guardian)
 
         return Transaction(
             chain_id=self._config.chain_id,
@@ -779,6 +782,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         data = ARGS_SEPARATOR.join(parts)
         return TransactionPayload.from_str(data)
 
-    def _compute_gas_limit(self, payload: TransactionPayload, execution_gas: IGasLimit) -> IGasLimit:
+    def _compute_gas_limit(self, payload: TransactionPayload, execution_gas: IGasLimit, has_guardian: bool) -> IGasLimit:
         data_movement_gas = self._config.min_gas_limit + self._config.gas_limit_per_byte * payload.length()
-        return data_movement_gas + execution_gas
+        gas = data_movement_gas + execution_gas
+
+        if has_guardian:
+            gas += self._config.extra_gas_limit_for_guarded_transactions
+
+        return gas

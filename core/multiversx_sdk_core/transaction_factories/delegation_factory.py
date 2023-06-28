@@ -25,6 +25,7 @@ class IConfig(Protocol):
     gas_limit_delegation_operations: IGasLimit
     additional_gas_limit_per_validator_node: IGasLimit
     additional_gas_for_delegation_operations: IGasLimit
+    extra_gas_limit_for_guarded_transactions: IGasLimit
 
 
 class DelegationFactory:
@@ -433,9 +434,14 @@ class DelegationFactory:
 
         return transaction
 
-    def _compute_gas_limit(self, payload: ITransactionPayload, execution_gas: IGasLimit) -> IGasLimit:
+    def _compute_gas_limit(self, payload: ITransactionPayload, execution_gas: IGasLimit, has_guardian: bool) -> IGasLimit:
         data_movement_gas = self.config.min_gas_limit + self.config.gas_limit_per_byte * payload.length()
-        return data_movement_gas + execution_gas
+        gas = data_movement_gas + execution_gas
+
+        if has_guardian:
+            gas += self.config.extra_gas_limit_for_guarded_transactions
+
+        return gas
 
     def create_transaction(
             self,
@@ -449,9 +455,11 @@ class DelegationFactory:
             value: Optional[ITransactionValue],
             guardian: Optional[IAddress]) -> Transaction:
         data = self._build_transaction_payload(data_parts)
-        gas_limit = gas_limit_hint or self._compute_gas_limit(data, execution_gas_limit)
         version = TRANSACTION_VERSION_DEFAULT
         options = TRANSACTION_OPTIONS_DEFAULT
+
+        has_guardian = True if guardian else False
+        gas_limit = gas_limit_hint or self._compute_gas_limit(data, execution_gas_limit, has_guardian)
 
         return Transaction(
             chain_id=self.config.chain_id,

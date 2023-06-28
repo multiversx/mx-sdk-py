@@ -34,7 +34,7 @@ class TestDelegationFactory:
         assert transaction.nonce == 777
         assert transaction.signature == b""
         assert str(transaction.data) == "createNewDelegationContract@010f0cf064dd59200000@0a"
-        assert transaction.gas_limit == 60126500
+        assert transaction.gas_limit == 60176500
 
     def test_add_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
