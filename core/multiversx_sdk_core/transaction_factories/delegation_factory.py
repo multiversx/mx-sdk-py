@@ -38,6 +38,7 @@ class DelegationFactory:
                                        service_fee: int,
                                        value: ITransactionValue,
                                        transaction_nonce: Optional[INonce] = None,
+                                       guardian: Optional[IAddress] = None,
                                        gas_price: Optional[IGasPrice] = None,
                                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
@@ -54,7 +55,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -65,6 +67,7 @@ class DelegationFactory:
                   public_keys: Sequence[IValidatorPublicKey],
                   signed_messages: Sequence[ISignature],
                   value: ITransactionValue,
+                  guardian: Optional[IAddress] = None,
                   transaction_nonce: Optional[INonce] = None,
                   gas_price: Optional[IGasPrice] = None,
                   gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -86,7 +89,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
         return transaction
 
@@ -98,6 +102,7 @@ class DelegationFactory:
                      delegation_contract: IAddress,
                      bls_keys: List[str],
                      value: ITransactionValue,
+                     guardian: Optional[IAddress] = None,
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -114,7 +119,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -124,6 +130,7 @@ class DelegationFactory:
                     delegation_contract: IAddress,
                     bls_keys: List[str],
                     value: ITransactionValue,
+                    guardian: Optional[IAddress] = None,
                     transaction_nonce: Optional[INonce] = None,
                     gas_price: Optional[IGasPrice] = None,
                     gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -140,7 +147,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -150,6 +158,7 @@ class DelegationFactory:
                      delegation_contract: IAddress,
                      bls_keys: List[str],
                      value: ITransactionValue,
+                     guardian: Optional[IAddress] = None,
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -166,7 +175,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -176,6 +186,7 @@ class DelegationFactory:
                       delegation_contract: IAddress,
                       bls_keys: List[str],
                       value: ITransactionValue,
+                      guardian: Optional[IAddress] = None,
                       transaction_nonce: Optional[INonce] = None,
                       gas_price: Optional[IGasPrice] = None,
                       gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -192,7 +203,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -202,6 +214,7 @@ class DelegationFactory:
                      delegation_contract: IAddress,
                      bls_keys: List[str],
                      value: ITransactionValue,
+                     guardian: Optional[IAddress] = None,
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -218,7 +231,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -228,6 +242,7 @@ class DelegationFactory:
                            delegation_contract: IAddress,
                            service_fee: int,
                            value: ITransactionValue,
+                           guardian: Optional[IAddress] = None,
                            transaction_nonce: Optional[INonce] = None,
                            gas_price: Optional[IGasPrice] = None,
                            gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -244,7 +259,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -254,6 +270,7 @@ class DelegationFactory:
                               delegation_contract: IAddress,
                               delegation_cap: int,
                               value: ITransactionValue,
+                              guardian: Optional[IAddress] = None,
                               transaction_nonce: Optional[INonce] = None,
                               gas_price: Optional[IGasPrice] = None,
                               gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -270,7 +287,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -279,6 +297,7 @@ class DelegationFactory:
                                  sender: IAddress,
                                  delegation_contract: IAddress,
                                  value: ITransactionValue,
+                                 guardian: Optional[IAddress] = None,
                                  transaction_nonce: Optional[INonce] = None,
                                  gas_price: Optional[IGasPrice] = None,
                                  gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -295,7 +314,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -304,6 +324,7 @@ class DelegationFactory:
                                    sender: IAddress,
                                    delegation_contract: IAddress,
                                    value: ITransactionValue,
+                                   guardian: Optional[IAddress] = None,
                                    transaction_nonce: Optional[INonce] = None,
                                    gas_price: Optional[IGasPrice] = None,
                                    gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -320,7 +341,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -329,6 +351,7 @@ class DelegationFactory:
                            sender: IAddress,
                            delegation_contract: IAddress,
                            value: ITransactionValue,
+                           guardian: Optional[IAddress] = None,
                            transaction_nonce: Optional[INonce] = None,
                            gas_price: Optional[IGasPrice] = None,
                            gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -345,7 +368,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -354,6 +378,7 @@ class DelegationFactory:
                              sender: IAddress,
                              delegation_contract: IAddress,
                              value: ITransactionValue,
+                             guardian: Optional[IAddress] = None,
                              transaction_nonce: Optional[INonce] = None,
                              gas_price: Optional[IGasPrice] = None,
                              gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -370,7 +395,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -382,6 +408,7 @@ class DelegationFactory:
                      website: str,
                      identifier: str,
                      value: ITransactionValue,
+                     guardian: Optional[IAddress] = None,
                      transaction_nonce: Optional[INonce] = None,
                      gas_price: Optional[IGasPrice] = None,
                      gas_limit: Optional[IGasLimit] = None) -> Transaction:
@@ -400,7 +427,8 @@ class DelegationFactory:
             gas_limit_hint=gas_limit,
             gas_price=gas_price,
             nonce=transaction_nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -418,8 +446,8 @@ class DelegationFactory:
             gas_limit_hint: Optional[IGasLimit],
             gas_price: Optional[IGasPrice],
             nonce: Optional[INonce],
-            value: Optional[ITransactionValue]
-    ) -> Transaction:
+            value: Optional[ITransactionValue],
+            guardian: Optional[IAddress]) -> Transaction:
         data = self._build_transaction_payload(data_parts)
         gas_limit = gas_limit_hint or self._compute_gas_limit(data, execution_gas_limit)
         version = TRANSACTION_VERSION_DEFAULT
@@ -435,7 +463,8 @@ class DelegationFactory:
             nonce=nonce,
             data=data,
             version=version,
-            options=options
+            options=options,
+            guardian=guardian
         )
 
     def _build_transaction_payload(self, parts: List[str]) -> TransactionPayload:
