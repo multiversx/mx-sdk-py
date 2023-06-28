@@ -1,51 +1,24 @@
 from pathlib import Path
-from typing import Any, List, Optional, Protocol, Tuple
-
-from Cryptodome.Hash import keccak
+from typing import Any, List, Optional, Protocol
 
 from multiversx_sdk_core.address import Address
+from multiversx_sdk_core.code_metadata import CodeMetadata
 from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
                                            CONTRACT_DEPLOY_ADDRESS,
-                                           DEFAULT_HRP,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT,
                                            VM_TYPE_WASM_VM)
 from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
                                             IGasPrice, INonce,
                                             ITransactionValue)
-from multiversx_sdk_core.serializer import arg_to_string
+from multiversx_sdk_core.io import read_binary_file
+from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk_core.transaction import Transaction
 from multiversx_sdk_core.transaction_payload import TransactionPayload
-from multiversx_sdk_core.utils import read_binary_file
 
 
 class IConfig(Protocol):
     chain_id: IChainID
-
-
-class CodeMetadata:
-    def __init__(self, upgradeable: bool = True, readable: bool = True, payable: bool = False, payable_by_sc: bool = False) -> None:
-        self.upgradeable = upgradeable
-        self.readable = readable
-        self.payable = payable
-        self.payable_by_sc = payable_by_sc
-
-    def to_hex(self) -> str:
-        flag_value_pairs = [
-            (0x01_00, self.upgradeable),
-            (0x04_00, self.readable),
-            (0x00_02, self.payable),
-            (0x00_04, self.payable_by_sc)
-        ]
-        metadata_value = self.sum_flag_values(flag_value_pairs)
-        return f"{metadata_value:04X}"
-
-    def sum_flag_values(self, flag_value_pairs: List[Tuple[int, bool]]) -> int:
-        value_sum = 0
-        for value, flag in flag_value_pairs:
-            if flag:
-                value_sum += value
-        return value_sum
 
 
 class SmartContractFactory:
@@ -54,28 +27,26 @@ class SmartContractFactory:
 
     def deploy(self,
                deployer: IAddress,
-               nonce: INonce,
                bytecode_path: Path,
                gas_limit: IGasLimit,
-               arguments: Optional[List[Any]] = None,
+               arguments: List[Any] = [],
+               nonce: Optional[INonce] = None,
                value: Optional[ITransactionValue] = None,
                gas_price: Optional[IGasPrice] = None,
                is_upgradeable: bool = True,
                is_readable: bool = True,
-               is_payable: bool = False,
-               is_payable_by_sc: bool = False) -> Transaction:
+               is_payable: bool = True,
+               is_payable_by_sc: bool = True) -> Transaction:
         bytecode = read_binary_file(bytecode_path)
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
-        arguments = arguments or []
 
         parts = [
             arg_to_string(bytecode),
             arg_to_string(VM_TYPE_WASM_VM),
-            metadata.to_hex()
+            str(metadata)
         ]
 
-        for arg in arguments:
-            parts.append(arg_to_string(arg))
+        parts += args_to_strings(arguments)
 
         transaction = self.create_transaction(
             sender=deployer,
@@ -94,15 +65,10 @@ class SmartContractFactory:
                 contract_address: IAddress,
                 function: str,
                 gas_limit: IGasLimit,
-                arguments: Optional[List[Any]] = None,
+                arguments: List[Any] = [],
                 nonce: Optional[INonce] = None
                 ) -> Transaction:
-        arguments = arguments or []
-
-        parts = [function]
-
-        for arg in arguments:
-            parts.append(arg_to_string(arg))
+        parts = [function] + args_to_strings(arguments)
 
         trasaction = self.create_transaction(
             sender=sender,
@@ -119,25 +85,23 @@ class SmartContractFactory:
                 contract: IAddress,
                 bytecode_path: Path,
                 gas_limit: IGasLimit,
-                arguments: Optional[List[Any]] = None,
+                arguments: List[Any] = [],
                 nonce: Optional[INonce] = None,
                 is_upgradeable: bool = True,
                 is_readable: bool = True,
-                is_payable: bool = False,
-                is_payable_by_sc: bool = False
+                is_payable: bool = True,
+                is_payable_by_sc: bool = True
                 ) -> Transaction:
-        arguments = arguments or []
         bytecode = read_binary_file(bytecode_path)
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
 
         parts = [
             "upgradeContract",
             arg_to_string(bytecode),
-            metadata.to_hex()
+            str(metadata)
         ]
 
-        for arg in arguments:
-            parts.append(arg_to_string(arg))
+        parts += args_to_strings(arguments)
 
         transaction = self.create_transaction(
             sender=sender,
@@ -148,17 +112,6 @@ class SmartContractFactory:
         )
 
         return transaction
-
-    def compute_contract_address(self, deployer: IAddress, nonce: INonce) -> Address:
-        """
-        8 bytes of zero + 2 bytes for VM type + 20 bytes of hash(owner) + 2 bytes of shard(owner)
-        """
-        owner_bytes = bytes.fromhex(deployer.hex())
-        nonce_bytes = nonce.to_bytes(8, byteorder="little")
-        bytes_to_hash = owner_bytes + nonce_bytes
-        address = keccak.new(digest_bits=256).update(bytes_to_hash).digest()
-        address = bytes([0] * 8) + bytes([5, 0]) + address[10:30] + owner_bytes[30:]
-        return Address(address, DEFAULT_HRP)
 
     def create_transaction(
             self,

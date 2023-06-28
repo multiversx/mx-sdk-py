@@ -34,8 +34,3 @@ class ErrInvalidGasLimitForInnerTransaction(Exception):
 class ErrListsLengthMismatch(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
-
-
-class ErrBadFile(Exception):
-    def __init__(self, filename: str, inner: Exception) -> None:
-        super().__init__(f"Bad file {filename}.", inner)
