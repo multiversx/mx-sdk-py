@@ -31,6 +31,7 @@ class SmartContractFactory:
                                   arguments: List[Any] = [],
                                   nonce: Optional[INonce] = None,
                                   value: Optional[ITransactionValue] = None,
+                                  guardian: Optional[IAddress] = None,
                                   gas_price: Optional[IGasPrice] = None,
                                   is_upgradeable: bool = True,
                                   is_readable: bool = True,
@@ -54,7 +55,8 @@ class SmartContractFactory:
             gas_limit=gas_limit,
             gas_price=gas_price,
             nonce=nonce,
-            value=value
+            value=value,
+            guardian=guardian
         )
 
         return transaction
@@ -65,8 +67,9 @@ class SmartContractFactory:
                                    function: str,
                                    gas_limit: IGasLimit,
                                    arguments: List[Any] = [],
-                                   nonce: Optional[INonce] = None
-                                   ) -> Transaction:
+                                   nonce: Optional[INonce] = None,
+                                   guardian: Optional[IAddress] = None,
+                                   value: Optional[ITransactionValue] = None) -> Transaction:
         parts = [function] + args_to_strings(arguments)
 
         transaction = self.create_transaction(
@@ -74,7 +77,9 @@ class SmartContractFactory:
             receiver=contract_address,
             data_parts=parts,
             gas_limit=gas_limit,
-            nonce=nonce
+            nonce=nonce,
+            guardian=guardian,
+            value=value
         )
 
         return transaction
@@ -86,6 +91,7 @@ class SmartContractFactory:
                                    gas_limit: IGasLimit,
                                    arguments: List[Any] = [],
                                    nonce: Optional[INonce] = None,
+                                   guardian: Optional[IAddress] = None,
                                    is_upgradeable: bool = True,
                                    is_readable: bool = True,
                                    is_payable: bool = True,
@@ -107,7 +113,8 @@ class SmartContractFactory:
             receiver=contract,
             data_parts=parts,
             gas_limit=gas_limit,
-            nonce=nonce
+            nonce=nonce,
+            guardian=guardian
         )
 
         return transaction
@@ -118,10 +125,10 @@ class SmartContractFactory:
             receiver: IAddress,
             data_parts: List[str],
             gas_limit: IGasLimit,
-            gas_price: Optional[IGasPrice] = None,
-            nonce: Optional[INonce] = None,
-            value: Optional[ITransactionValue] = None
-    ) -> Transaction:
+            nonce: Optional[INonce],
+            value: Optional[ITransactionValue] = None,
+            guardian: Optional[IAddress] = None,
+            gas_price: Optional[IGasPrice] = None) -> Transaction:
         data = self._build_transaction_payload(data_parts)
         version = TRANSACTION_VERSION_DEFAULT
         options = TRANSACTION_OPTIONS_DEFAULT
@@ -136,7 +143,8 @@ class SmartContractFactory:
             nonce=nonce,
             data=data,
             version=version,
-            options=options
+            options=options,
+            guardian=guardian
         )
 
     def _build_transaction_payload(self, parts: List[str]) -> TransactionPayload:
