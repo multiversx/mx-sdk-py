@@ -40,7 +40,7 @@ class TokenOperationsFactory:
         self._config = config
         self._true_as_hex = arg_to_string("true")
 
-    def issue_fungible(
+    def create_issue_fungible_transaction(
         self,
         issuer: IAddress,
         token_name: str,
@@ -92,7 +92,7 @@ IMPORTANT!
 You are about to issue (register) a new token. This will set the role "ESDTRoleBurnForAll" (globally).
 Once the token is registered, you can unset this role by calling "unsetBurnRoleGlobally" (in a separate transaction).""")
 
-    def issue_semi_fungible(
+    def create_issue_semi_fungible_transaction(
         self,
         issuer: IAddress,
         token_name: str,
@@ -134,7 +134,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def issue_non_fungible(
+    def create_issue_non_fungible_transaction(
         self,
         issuer: IAddress,
         token_name: str,
@@ -176,7 +176,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def register_meta_esdt(
+    def create_register_meta_esdt_transaction(
         self,
         issuer: IAddress,
         token_name: str,
@@ -220,7 +220,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def register_and_set_all_roles(
+    def create_register_and_set_all_roles_transaction(
         self,
         issuer: IAddress,
         token_name: str,
@@ -252,7 +252,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def set_burn_role_globally(
+    def create_set_burn_role_globally_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -276,7 +276,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def unset_burn_role_globally(
+    def create_unset_burn_role_globally_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -300,7 +300,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def set_special_role_on_fungible(
+    def create_set_special_role_on_fungible_transaction(
         self,
         manager: IAddress,
         user: IAddress,
@@ -330,7 +330,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def set_special_role_on_semi_fungible(
+    def create_set_special_role_on_semi_fungible_transaction(
         self,
         manager: IAddress,
         user: IAddress,
@@ -364,7 +364,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def set_special_role_on_non_fungible(
+    def create_set_special_role_on_non_fungible_transaction(
         self,
         manager: IAddress,
         user: IAddress,
@@ -400,7 +400,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def nft_create(
+    def create_nft_create_transaction(
         self,
         creator: IAddress,
         token_identifier: str,
@@ -440,7 +440,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def pause(
+    def create_pause_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -464,7 +464,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def unpause(
+    def create_unpause_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -488,7 +488,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def freeze(
+    def create_freeze_transaction(
         self,
         manager: IAddress,
         user: IAddress,
@@ -514,7 +514,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def unfreeze(
+    def create_unfreeze_transaction(
         self,
         manager: IAddress,
         user: IAddress,
@@ -540,7 +540,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def wipe(
+    def create_wipe_transaction(
         self,
         manager: IAddress,
         user: IAddress,
@@ -566,7 +566,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def local_mint(
+    def create_local_mint_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -592,7 +592,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def local_burn(
+    def create_local_burn_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -618,7 +618,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def update_attributes(
+    def create_update_attributes_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -646,7 +646,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def add_quantity(
+    def create_add_quantity_transaction(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -674,7 +674,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         )
 
-    def burn_quantity(
+    def create_burn_quantity_transaction(
         self,
         manager: IAddress,
         token_identifier: str,

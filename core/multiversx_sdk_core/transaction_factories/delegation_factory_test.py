@@ -14,7 +14,7 @@ class TestDelegationFactory:
     factory = DelegationFactory(config)
 
     def test_create_new_delegation_contract(self):
-        transaction = self.factory.create_new_delegation_contract(
+        transaction = self.factory.create_new_delegation_contract_transaction(
             sender=Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
             receiver=Address.from_bech32(DELEGATION_MANAGER_SC_ADDRESS),
             transaction_nonce=777,
@@ -52,7 +52,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.add_nodes(
+        transaction = self.factory.create_add_nodes_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             public_keys=public_keys,
@@ -81,7 +81,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.remove_nodes(
+        transaction = self.factory.create_remove_nodes_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             bls_keys=public_keys,
@@ -109,7 +109,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.stake_nodes(
+        transaction = self.factory.create_stake_nodes_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             bls_keys=public_keys,
@@ -137,7 +137,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.unbond_nodes(
+        transaction = self.factory.create_unbond_nodes_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             bls_keys=public_keys,
@@ -165,7 +165,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.unstake_nodes(
+        transaction = self.factory.create_unstake_nodes_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             bls_keys=public_keys,
@@ -193,7 +193,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.unjail_nodes(
+        transaction = self.factory.create_unjail_nodes_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             bls_keys=public_keys,
@@ -219,7 +219,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.change_service_fee(
+        transaction = self.factory.create_change_service_fee_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             service_fee=10,
@@ -245,7 +245,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.modify_delegation_cap(
+        transaction = self.factory.create_modify_delegation_cap_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             delegation_cap=5000000000000000000000,
@@ -271,7 +271,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.set_automatic_activation(
+        transaction = self.factory.create_set_automatic_activation_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             value=value,
@@ -296,7 +296,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.unset_automatic_activation(
+        transaction = self.factory.create_unset_automatic_activation_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             value=value,
@@ -321,7 +321,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.set_redelegate_cap(
+        transaction = self.factory.create_set_redelegate_cap_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             value=value,
@@ -346,7 +346,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.unset_redelegate_cap(
+        transaction = self.factory.create_unset_redelegate_cap_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             value=value,
@@ -371,7 +371,7 @@ class TestDelegationFactory:
         gas_price = None
         value = None
 
-        transaction = self.factory.set_metadata(
+        transaction = self.factory.create_set_metadata_transaction(
             sender=sender,
             delegation_contract=delegation_contract,
             name="name",

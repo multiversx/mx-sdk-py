@@ -19,7 +19,7 @@ class TestSmartContract:
         gas_limit = 6000000
         args = [0]
 
-        transaction = self.factory.deploy(
+        transaction = self.factory.create_deploy_transaction(
             deployer=sender,
             nonce=nonce,
             bytecode_path=contract,
@@ -42,7 +42,7 @@ class TestSmartContract:
         gas_limit = 6000000
         args = [7]
 
-        transaction = self.factory.execute(
+        transaction = self.factory.create_execute_transaction(
             sender=sender,
             contract_address=contract,
             function=function,
@@ -65,7 +65,7 @@ class TestSmartContract:
         gas_limit = 6000000
         args = [0]
 
-        transaction = self.factory.upgrade(
+        transaction = self.factory.create_upgrade_transaction(
             sender=sender,
             contract=contract_address,
             bytecode_path=contract,
