@@ -24,19 +24,19 @@ class SmartContractFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
 
-    def create_deploy_transaction(self,
-                                  deployer: IAddress,
-                                  bytecode_path: Path,
-                                  gas_limit: IGasLimit,
-                                  arguments: List[Any] = [],
-                                  nonce: Optional[INonce] = None,
-                                  value: Optional[ITransactionValue] = None,
-                                  guardian: Optional[IAddress] = None,
-                                  gas_price: Optional[IGasPrice] = None,
-                                  is_upgradeable: bool = True,
-                                  is_readable: bool = True,
-                                  is_payable: bool = True,
-                                  is_payable_by_sc: bool = True) -> Transaction:
+    def create_transaction_for_deploy(self,
+                                      deployer: IAddress,
+                                      bytecode_path: Path,
+                                      gas_limit: IGasLimit,
+                                      arguments: List[Any] = [],
+                                      nonce: Optional[INonce] = None,
+                                      value: Optional[ITransactionValue] = None,
+                                      guardian: Optional[IAddress] = None,
+                                      gas_price: Optional[IGasPrice] = None,
+                                      is_upgradeable: bool = True,
+                                      is_readable: bool = True,
+                                      is_payable: bool = True,
+                                      is_payable_by_sc: bool = True) -> Transaction:
         bytecode = bytecode_path.read_bytes()
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
 
@@ -61,15 +61,15 @@ class SmartContractFactory:
 
         return transaction
 
-    def create_execute_transaction(self,
-                                   sender: IAddress,
-                                   contract_address: IAddress,
-                                   function: str,
-                                   gas_limit: IGasLimit,
-                                   arguments: List[Any] = [],
-                                   nonce: Optional[INonce] = None,
-                                   guardian: Optional[IAddress] = None,
-                                   value: Optional[ITransactionValue] = None) -> Transaction:
+    def create_transaction_for_execute(self,
+                                       sender: IAddress,
+                                       contract_address: IAddress,
+                                       function: str,
+                                       gas_limit: IGasLimit,
+                                       arguments: List[Any] = [],
+                                       nonce: Optional[INonce] = None,
+                                       guardian: Optional[IAddress] = None,
+                                       value: Optional[ITransactionValue] = None) -> Transaction:
         parts = [function] + args_to_strings(arguments)
 
         transaction = self.create_transaction(
@@ -84,19 +84,19 @@ class SmartContractFactory:
 
         return transaction
 
-    def create_upgrade_transaction(self,
-                                   sender: IAddress,
-                                   contract: IAddress,
-                                   bytecode_path: Path,
-                                   gas_limit: IGasLimit,
-                                   arguments: List[Any] = [],
-                                   nonce: Optional[INonce] = None,
-                                   guardian: Optional[IAddress] = None,
-                                   is_upgradeable: bool = True,
-                                   is_readable: bool = True,
-                                   is_payable: bool = True,
-                                   is_payable_by_sc: bool = True
-                                   ) -> Transaction:
+    def create_transaction_for_upgrade(self,
+                                       sender: IAddress,
+                                       contract: IAddress,
+                                       bytecode_path: Path,
+                                       gas_limit: IGasLimit,
+                                       arguments: List[Any] = [],
+                                       nonce: Optional[INonce] = None,
+                                       guardian: Optional[IAddress] = None,
+                                       is_upgradeable: bool = True,
+                                       is_readable: bool = True,
+                                       is_payable: bool = True,
+                                       is_payable_by_sc: bool = True
+                                       ) -> Transaction:
         bytecode = bytecode_path.read_bytes()
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
 

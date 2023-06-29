@@ -32,16 +32,16 @@ class DelegationFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
 
-    def create_new_delegation_contract_transaction(self,
-                                                   sender: IAddress,
-                                                   receiver: IAddress,
-                                                   total_delegation_cap: int,
-                                                   service_fee: int,
-                                                   value: ITransactionValue,
-                                                   transaction_nonce: Optional[INonce] = None,
-                                                   guardian: Optional[IAddress] = None,
-                                                   gas_price: Optional[IGasPrice] = None,
-                                                   gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_new_delegation_contract(self,
+                                                       sender: IAddress,
+                                                       receiver: IAddress,
+                                                       total_delegation_cap: int,
+                                                       service_fee: int,
+                                                       value: ITransactionValue,
+                                                       transaction_nonce: Optional[INonce] = None,
+                                                       guardian: Optional[IAddress] = None,
+                                                       gas_price: Optional[IGasPrice] = None,
+                                                       gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
             "createNewDelegationContract",
             arg_to_string(total_delegation_cap),
@@ -62,16 +62,16 @@ class DelegationFactory:
 
         return transaction
 
-    def create_add_nodes_transaction(self,
-                                     sender: IAddress,
-                                     delegation_contract: IAddress,
-                                     public_keys: Sequence[IValidatorPublicKey],
-                                     signed_messages: Sequence[ISignature],
-                                     value: Optional[ITransactionValue] = None,
-                                     guardian: Optional[IAddress] = None,
-                                     transaction_nonce: Optional[INonce] = None,
-                                     gas_price: Optional[IGasPrice] = None,
-                                     gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_adding_nodes(self,
+                                            sender: IAddress,
+                                            delegation_contract: IAddress,
+                                            public_keys: Sequence[IValidatorPublicKey],
+                                            signed_messages: Sequence[ISignature],
+                                            value: Optional[ITransactionValue] = None,
+                                            guardian: Optional[IAddress] = None,
+                                            transaction_nonce: Optional[INonce] = None,
+                                            gas_price: Optional[IGasPrice] = None,
+                                            gas_limit: Optional[IGasLimit] = None) -> Transaction:
         if len(public_keys) != len(signed_messages):
             raise ErrListsLengthMismatch("The number of public keys should match the number of signed messages")
 
@@ -98,15 +98,15 @@ class DelegationFactory:
     def _compute_execution_gas_limit_for_nodes_management(self, num_nodes: int) -> IGasLimit:
         return self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node
 
-    def create_remove_nodes_transaction(self,
-                                        sender: IAddress,
-                                        delegation_contract: IAddress,
-                                        bls_keys: List[str],
-                                        value: Optional[ITransactionValue] = None,
-                                        guardian: Optional[IAddress] = None,
-                                        transaction_nonce: Optional[INonce] = None,
-                                        gas_price: Optional[IGasPrice] = None,
-                                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_removing_nodes(self,
+                                              sender: IAddress,
+                                              delegation_contract: IAddress,
+                                              bls_keys: List[str],
+                                              value: Optional[ITransactionValue] = None,
+                                              guardian: Optional[IAddress] = None,
+                                              transaction_nonce: Optional[INonce] = None,
+                                              gas_price: Optional[IGasPrice] = None,
+                                              gas_limit: Optional[IGasLimit] = None) -> Transaction:
         num_nodes = len(bls_keys)
 
         parts: List[str] = ["removeNodes"]
@@ -126,15 +126,15 @@ class DelegationFactory:
 
         return transaction
 
-    def create_stake_nodes_transaction(self,
-                                       sender: IAddress,
-                                       delegation_contract: IAddress,
-                                       bls_keys: List[str],
-                                       value: Optional[ITransactionValue] = None,
-                                       guardian: Optional[IAddress] = None,
-                                       transaction_nonce: Optional[INonce] = None,
-                                       gas_price: Optional[IGasPrice] = None,
-                                       gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_staking_nodes(self,
+                                             sender: IAddress,
+                                             delegation_contract: IAddress,
+                                             bls_keys: List[str],
+                                             value: Optional[ITransactionValue] = None,
+                                             guardian: Optional[IAddress] = None,
+                                             transaction_nonce: Optional[INonce] = None,
+                                             gas_price: Optional[IGasPrice] = None,
+                                             gas_limit: Optional[IGasLimit] = None) -> Transaction:
         num_nodes = len(bls_keys)
 
         parts = ["stakeNodes"]
@@ -154,15 +154,15 @@ class DelegationFactory:
 
         return transaction
 
-    def create_unbond_nodes_transaction(self,
-                                        sender: IAddress,
-                                        delegation_contract: IAddress,
-                                        bls_keys: List[str],
-                                        value: Optional[ITransactionValue] = None,
-                                        guardian: Optional[IAddress] = None,
-                                        transaction_nonce: Optional[INonce] = None,
-                                        gas_price: Optional[IGasPrice] = None,
-                                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_unbonding_nodes(self,
+                                               sender: IAddress,
+                                               delegation_contract: IAddress,
+                                               bls_keys: List[str],
+                                               value: Optional[ITransactionValue] = None,
+                                               guardian: Optional[IAddress] = None,
+                                               transaction_nonce: Optional[INonce] = None,
+                                               gas_price: Optional[IGasPrice] = None,
+                                               gas_limit: Optional[IGasLimit] = None) -> Transaction:
         num_nodes = len(bls_keys)
 
         parts = ["unBondNodes"]
@@ -182,15 +182,15 @@ class DelegationFactory:
 
         return transaction
 
-    def create_unstake_nodes_transaction(self,
-                                         sender: IAddress,
-                                         delegation_contract: IAddress,
-                                         bls_keys: List[str],
-                                         value: Optional[ITransactionValue] = None,
-                                         guardian: Optional[IAddress] = None,
-                                         transaction_nonce: Optional[INonce] = None,
-                                         gas_price: Optional[IGasPrice] = None,
-                                         gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_unstaking_nodes(self,
+                                               sender: IAddress,
+                                               delegation_contract: IAddress,
+                                               bls_keys: List[str],
+                                               value: Optional[ITransactionValue] = None,
+                                               guardian: Optional[IAddress] = None,
+                                               transaction_nonce: Optional[INonce] = None,
+                                               gas_price: Optional[IGasPrice] = None,
+                                               gas_limit: Optional[IGasLimit] = None) -> Transaction:
         num_nodes = len(bls_keys)
 
         parts = ["unStakeNodes"]
@@ -210,15 +210,15 @@ class DelegationFactory:
 
         return transaction
 
-    def create_unjail_nodes_transaction(self,
-                                        sender: IAddress,
-                                        delegation_contract: IAddress,
-                                        bls_keys: List[str],
-                                        value: Optional[ITransactionValue] = None,
-                                        guardian: Optional[IAddress] = None,
-                                        transaction_nonce: Optional[INonce] = None,
-                                        gas_price: Optional[IGasPrice] = None,
-                                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_unjailing_nodes(self,
+                                               sender: IAddress,
+                                               delegation_contract: IAddress,
+                                               bls_keys: List[str],
+                                               value: Optional[ITransactionValue] = None,
+                                               guardian: Optional[IAddress] = None,
+                                               transaction_nonce: Optional[INonce] = None,
+                                               gas_price: Optional[IGasPrice] = None,
+                                               gas_limit: Optional[IGasLimit] = None) -> Transaction:
         num_nodes = len(bls_keys)
 
         parts = ["unJailNodes"]
@@ -238,15 +238,15 @@ class DelegationFactory:
 
         return transaction
 
-    def create_change_service_fee_transaction(self,
-                                              sender: IAddress,
-                                              delegation_contract: IAddress,
-                                              service_fee: int,
-                                              value: Optional[ITransactionValue] = None,
-                                              guardian: Optional[IAddress] = None,
-                                              transaction_nonce: Optional[INonce] = None,
-                                              gas_price: Optional[IGasPrice] = None,
-                                              gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_changing_service_fee(self,
+                                                    sender: IAddress,
+                                                    delegation_contract: IAddress,
+                                                    service_fee: int,
+                                                    value: Optional[ITransactionValue] = None,
+                                                    guardian: Optional[IAddress] = None,
+                                                    transaction_nonce: Optional[INonce] = None,
+                                                    gas_price: Optional[IGasPrice] = None,
+                                                    gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
             "changeServiceFee",
             arg_to_string(service_fee)
@@ -266,15 +266,15 @@ class DelegationFactory:
 
         return transaction
 
-    def create_modify_delegation_cap_transaction(self,
-                                                 sender: IAddress,
-                                                 delegation_contract: IAddress,
-                                                 delegation_cap: int,
-                                                 value: Optional[ITransactionValue] = None,
-                                                 guardian: Optional[IAddress] = None,
-                                                 transaction_nonce: Optional[INonce] = None,
-                                                 gas_price: Optional[IGasPrice] = None,
-                                                 gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_modifying_delegation_cap(self,
+                                                        sender: IAddress,
+                                                        delegation_contract: IAddress,
+                                                        delegation_cap: int,
+                                                        value: Optional[ITransactionValue] = None,
+                                                        guardian: Optional[IAddress] = None,
+                                                        transaction_nonce: Optional[INonce] = None,
+                                                        gas_price: Optional[IGasPrice] = None,
+                                                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
             "modifyTotalDelegationCap",
             arg_to_string(delegation_cap)
@@ -294,14 +294,14 @@ class DelegationFactory:
 
         return transaction
 
-    def create_set_automatic_activation_transaction(self,
-                                                    sender: IAddress,
-                                                    delegation_contract: IAddress,
-                                                    value: Optional[ITransactionValue] = None,
-                                                    guardian: Optional[IAddress] = None,
-                                                    transaction_nonce: Optional[INonce] = None,
-                                                    gas_price: Optional[IGasPrice] = None,
-                                                    gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_setting_automatic_activation(self,
+                                                            sender: IAddress,
+                                                            delegation_contract: IAddress,
+                                                            value: Optional[ITransactionValue] = None,
+                                                            guardian: Optional[IAddress] = None,
+                                                            transaction_nonce: Optional[INonce] = None,
+                                                            gas_price: Optional[IGasPrice] = None,
+                                                            gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
             "setAutomaticActivation",
             arg_to_string('true')
@@ -321,7 +321,34 @@ class DelegationFactory:
 
         return transaction
 
-    def create_unset_automatic_activation_transaction(self,
+    def create_transaction_for_unsetting_automatic_activation(self,
+                                                              sender: IAddress,
+                                                              delegation_contract: IAddress,
+                                                              value: Optional[ITransactionValue] = None,
+                                                              guardian: Optional[IAddress] = None,
+                                                              transaction_nonce: Optional[INonce] = None,
+                                                              gas_price: Optional[IGasPrice] = None,
+                                                              gas_limit: Optional[IGasLimit] = None) -> Transaction:
+        parts = [
+            "setAutomaticActivation",
+            arg_to_string('false')
+        ]
+
+        transaction = self.create_transaction(
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=parts,
+            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
+            gas_limit_hint=gas_limit,
+            gas_price=gas_price,
+            nonce=transaction_nonce,
+            value=value,
+            guardian=guardian
+        )
+
+        return transaction
+
+    def create_transaction_for_setting_redelegate_cap(self,
                                                       sender: IAddress,
                                                       delegation_contract: IAddress,
                                                       value: Optional[ITransactionValue] = None,
@@ -330,33 +357,6 @@ class DelegationFactory:
                                                       gas_price: Optional[IGasPrice] = None,
                                                       gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
-            "setAutomaticActivation",
-            arg_to_string('false')
-        ]
-
-        transaction = self.create_transaction(
-            sender=sender,
-            receiver=delegation_contract,
-            data_parts=parts,
-            execution_gas_limit=self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations,
-            gas_limit_hint=gas_limit,
-            gas_price=gas_price,
-            nonce=transaction_nonce,
-            value=value,
-            guardian=guardian
-        )
-
-        return transaction
-
-    def create_set_redelegate_cap_transaction(self,
-                                              sender: IAddress,
-                                              delegation_contract: IAddress,
-                                              value: Optional[ITransactionValue] = None,
-                                              guardian: Optional[IAddress] = None,
-                                              transaction_nonce: Optional[INonce] = None,
-                                              gas_price: Optional[IGasPrice] = None,
-                                              gas_limit: Optional[IGasLimit] = None) -> Transaction:
-        parts = [
             "setCheckCapOnReDelegateRewards",
             arg_to_string('true')
         ]
@@ -375,14 +375,14 @@ class DelegationFactory:
 
         return transaction
 
-    def create_unset_redelegate_cap_transaction(self,
-                                                sender: IAddress,
-                                                delegation_contract: IAddress,
-                                                value: Optional[ITransactionValue] = None,
-                                                guardian: Optional[IAddress] = None,
-                                                transaction_nonce: Optional[INonce] = None,
-                                                gas_price: Optional[IGasPrice] = None,
-                                                gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_unsetting_redelegate_cap(self,
+                                                        sender: IAddress,
+                                                        delegation_contract: IAddress,
+                                                        value: Optional[ITransactionValue] = None,
+                                                        guardian: Optional[IAddress] = None,
+                                                        transaction_nonce: Optional[INonce] = None,
+                                                        gas_price: Optional[IGasPrice] = None,
+                                                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
             "setCheckCapOnReDelegateRewards",
             arg_to_string('false')
@@ -402,17 +402,17 @@ class DelegationFactory:
 
         return transaction
 
-    def create_set_metadata_transaction(self,
-                                        sender: IAddress,
-                                        delegation_contract: IAddress,
-                                        name: str,
-                                        website: str,
-                                        identifier: str,
-                                        value: Optional[ITransactionValue] = None,
-                                        guardian: Optional[IAddress] = None,
-                                        transaction_nonce: Optional[INonce] = None,
-                                        gas_price: Optional[IGasPrice] = None,
-                                        gas_limit: Optional[IGasLimit] = None) -> Transaction:
+    def create_transaction_for_setting_metadata(self,
+                                                sender: IAddress,
+                                                delegation_contract: IAddress,
+                                                name: str,
+                                                website: str,
+                                                identifier: str,
+                                                value: Optional[ITransactionValue] = None,
+                                                guardian: Optional[IAddress] = None,
+                                                transaction_nonce: Optional[INonce] = None,
+                                                gas_price: Optional[IGasPrice] = None,
+                                                gas_limit: Optional[IGasLimit] = None) -> Transaction:
         parts = [
             "setMetaData",
             arg_to_string(name),

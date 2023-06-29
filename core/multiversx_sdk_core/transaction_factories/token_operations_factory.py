@@ -41,7 +41,7 @@ class TokenOperationsFactory:
         self._config = config
         self._true_as_hex = arg_to_string("true")
 
-    def create_issue_fungible_transaction(
+    def create_transaction_for_issuing_fungible(
         self,
         issuer: IAddress,
         token_name: str,
@@ -95,7 +95,7 @@ IMPORTANT!
 You are about to issue (register) a new token. This will set the role "ESDTRoleBurnForAll" (globally).
 Once the token is registered, you can unset this role by calling "unsetBurnRoleGlobally" (in a separate transaction).""")
 
-    def create_issue_semi_fungible_transaction(
+    def create_transaction_for_issuing_semi_fungible(
         self,
         issuer: IAddress,
         token_name: str,
@@ -139,7 +139,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_issue_non_fungible_transaction(
+    def create_transaction_for_issuing_non_fungible(
         self,
         issuer: IAddress,
         token_name: str,
@@ -183,7 +183,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_register_meta_esdt_transaction(
+    def create_transaction_for_registering_meta_esdt(
         self,
         issuer: IAddress,
         token_name: str,
@@ -229,7 +229,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_register_and_set_all_roles_transaction(
+    def create_transaction_for_registering_and_setting_roles(
         self,
         issuer: IAddress,
         token_name: str,
@@ -263,7 +263,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_set_burn_role_globally_transaction(
+    def create_transaction_for_setting_burn_role_globally(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -289,7 +289,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_unset_burn_role_globally_transaction(
+    def create_transaction_for_unsetting_burn_role_globally(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -315,7 +315,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_set_special_role_on_fungible_transaction(
+    def create_transaction_for_setting_special_role_on_fungible_token(
         self,
         manager: IAddress,
         user: IAddress,
@@ -347,7 +347,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_set_special_role_on_semi_fungible_transaction(
+    def create_transaction_for_setting_special_role_on_semi_fungible_token(
         self,
         manager: IAddress,
         user: IAddress,
@@ -383,7 +383,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_set_special_role_on_non_fungible_transaction(
+    def create_transaction_for_setting_special_role_on_non_fungible_token(
         self,
         manager: IAddress,
         user: IAddress,
@@ -421,7 +421,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_nft_create_transaction(
+    def create_transaction_for_creating_nft(
         self,
         creator: IAddress,
         token_identifier: str,
@@ -463,7 +463,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_pause_transaction(
+    def create_transaction_for_pausing(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -489,7 +489,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_unpause_transaction(
+    def create_transaction_for_unpausing(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -515,7 +515,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_freeze_transaction(
+    def create_transaction_for_freezing(
         self,
         manager: IAddress,
         user: IAddress,
@@ -543,7 +543,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_unfreeze_transaction(
+    def create_transaction_for_unfreezing(
         self,
         manager: IAddress,
         user: IAddress,
@@ -571,7 +571,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_wipe_transaction(
+    def create_transaction_for_wiping(
         self,
         manager: IAddress,
         user: IAddress,
@@ -599,7 +599,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_local_mint_transaction(
+    def create_transaction_for_local_minting(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -627,7 +627,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_local_burn_transaction(
+    def create_transaction_for_local_burning(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -655,7 +655,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_update_attributes_transaction(
+    def create_transaction_for_updating_attributes(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -685,7 +685,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_add_quantity_transaction(
+    def create_transaction_for_adding_quantity(
         self,
         manager: IAddress,
         token_identifier: str,
@@ -715,7 +715,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             guardian=guardian
         )
 
-    def create_burn_quantity_transaction(
+    def create_transaction_for_burning_quantity(
         self,
         manager: IAddress,
         token_identifier: str,
