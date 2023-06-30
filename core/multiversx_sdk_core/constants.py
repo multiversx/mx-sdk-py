@@ -14,3 +14,5 @@ EGLD_NUM_DECIMALS = 18
 DELEGATION_MANAGER_SC_ADDRESS = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"
 DEFAULT_HRP = "erd"
 CONTRACT_DEPLOY_ADDRESS = "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
+
+DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION = 50_000

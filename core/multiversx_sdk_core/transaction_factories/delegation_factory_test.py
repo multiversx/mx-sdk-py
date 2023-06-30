@@ -17,6 +17,7 @@ class TestDelegationFactory:
         transaction = self.factory.create_new_delegation_contract(
             sender=Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
             receiver=Address.from_bech32(DELEGATION_MANAGER_SC_ADDRESS),
+            guardian=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
             transaction_nonce=777,
             value=1250000000000000000000,
             total_delegation_cap=5000000000000000000000,
@@ -27,15 +28,18 @@ class TestDelegationFactory:
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == DELEGATION_MANAGER_SC_ADDRESS
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
         assert str(transaction.data) == "createNewDelegationContract@010f0cf064dd59200000@0a"
-        assert transaction.gas_limit == 60126500
+        assert transaction.gas_limit == 60176500
 
     def test_add_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         validator_secret_key = ValidatorSecretKey.from_string("7cff99bd671502db7d15bc8abc0c9a804fb925406fbdd50f1e4c17a4cd774247")
         validator_signer = ValidatorSigner(validator_secret_key)
@@ -57,6 +61,7 @@ class TestDelegationFactory:
             delegation_contract=delegation_contract,
             public_keys=public_keys,
             signed_messages=signed_messages,
+            guardian=guardian,
             value=value,
             transaction_nonce=transaction_nonce,
             gas_price=gas_price,
@@ -65,6 +70,8 @@ class TestDelegationFactory:
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -72,6 +79,7 @@ class TestDelegationFactory:
 
     def test_remove_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded"]
@@ -87,12 +95,15 @@ class TestDelegationFactory:
             bls_keys=public_keys,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -100,6 +111,7 @@ class TestDelegationFactory:
 
     def test_stake_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded"]
@@ -115,12 +127,15 @@ class TestDelegationFactory:
             bls_keys=public_keys,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -128,6 +143,7 @@ class TestDelegationFactory:
 
     def test_unbond_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded"]
@@ -143,6 +159,7 @@ class TestDelegationFactory:
             bls_keys=public_keys,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
@@ -150,12 +167,15 @@ class TestDelegationFactory:
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.chainID == "D"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.nonce == 777
         assert transaction.signature == b""
         assert str(transaction.data) == "unBondNodes@notavalidblskeyhexencoded"
 
     def test_unstake_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded"]
@@ -171,12 +191,15 @@ class TestDelegationFactory:
             bls_keys=public_keys,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -184,6 +207,7 @@ class TestDelegationFactory:
 
     def test_unjail_nodes(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded"]
@@ -199,12 +223,15 @@ class TestDelegationFactory:
             bls_keys=public_keys,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -212,6 +239,7 @@ class TestDelegationFactory:
 
     def test_change_service_fee(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction_nonce = 777
@@ -225,12 +253,15 @@ class TestDelegationFactory:
             service_fee=10,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -238,6 +269,7 @@ class TestDelegationFactory:
 
     def test_modify_delegation_cap(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction_nonce = 777
@@ -251,12 +283,15 @@ class TestDelegationFactory:
             delegation_cap=5000000000000000000000,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -264,6 +299,7 @@ class TestDelegationFactory:
 
     def test_set_automatic_activation(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction_nonce = 777
@@ -276,12 +312,15 @@ class TestDelegationFactory:
             delegation_contract=delegation_contract,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -289,6 +328,7 @@ class TestDelegationFactory:
 
     def test_unset_automatic_activation(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction_nonce = 777
@@ -301,12 +341,15 @@ class TestDelegationFactory:
             delegation_contract=delegation_contract,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -314,6 +357,7 @@ class TestDelegationFactory:
 
     def test_set_redelegate_cap(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction_nonce = 777
@@ -326,12 +370,15 @@ class TestDelegationFactory:
             delegation_contract=delegation_contract,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -339,6 +386,7 @@ class TestDelegationFactory:
 
     def test_unset_redelegate_cap(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction_nonce = 777
@@ -351,12 +399,15 @@ class TestDelegationFactory:
             delegation_contract=delegation_contract,
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
@@ -364,6 +415,7 @@ class TestDelegationFactory:
 
     def test_set_metadata(self):
         sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        guardian = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction_nonce = 777
@@ -379,12 +431,15 @@ class TestDelegationFactory:
             identifier="identifier",
             value=value,
             transaction_nonce=transaction_nonce,
+            guardian=guardian,
             gas_price=gas_price,
             gas_limit=gas_limit
         )
 
         assert transaction.sender.bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.guardian
+        assert transaction.guardian.bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         assert transaction.chainID == "D"
         assert transaction.nonce == 777
         assert transaction.signature == b""
