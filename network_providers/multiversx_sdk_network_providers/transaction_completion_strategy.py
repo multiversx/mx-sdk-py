@@ -1,7 +1,8 @@
 from typing import Protocol
 
 from multiversx_sdk_network_providers.transaction_logs import TransactionLogs
-from multiversx_sdk_network_providers.transaction_status import TransactionStatus
+from multiversx_sdk_network_providers.transaction_status import \
+    TransactionStatus
 from multiversx_sdk_network_providers.utils import is_padded_hex
 
 KNOWN_COMPLETION_EVENTS = ["completedTxEvent", "SCDeploy", "signalError"]
@@ -25,8 +26,8 @@ class TransactionCompletionStrategyOnApi:
         return not transaction.get_status().is_pending()
 
 
-# this class is similar to the one in erdjs-network-providers
-# https://github.com/multiversx/mx-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts
+# this class is similar to the one in sdk-js-network-providers
+# https://github.com/multiversx/mx-sdk-js-network-providers/blob/main/src/transactionCompletionStrategy.ts
 class TransactionCompletionStrategyOnProxy:
     def is_completed(self, transaction: ITransactionOnNetwork) -> bool:
         if transaction.get_status().is_pending():
@@ -46,8 +47,8 @@ class TransactionCompletionStrategyOnProxy:
 
         return False
 
-    # erdjs implementation:
-    # https://github.com/multiversx/mx-sdk-erdjs-network-providers/blob/main/src/transactionCompletionStrategy.ts#L50
+    # sdk-js implementation:
+    # https://github.com/multiversx/mx-sdk-js-network-providers/blob/main/src/transactionCompletionStrategy.ts#L50
     def __is_certainly_move_balance(self, transaction_data: str) -> bool:
         parts = transaction_data.split("@")
         prefix = parts[0]

@@ -100,7 +100,7 @@ class ProxyNetworkProvider:
         return result
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
-        response = self.do_get_generic(f'transaction/{tx_hash}/status')
+        response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
         status = TransactionStatus(response.get('status', ''))
 
         return status

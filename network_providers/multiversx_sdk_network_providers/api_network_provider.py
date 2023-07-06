@@ -117,7 +117,7 @@ class ApiNetworkProvider:
         return ContractQueryResponse.from_http_response(response)
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        response = self.do_get_generic(f'transactions/{tx_hash}')
+        response = self.do_get_generic(f'transactions/{tx_hash}?withProcessStatus=true')
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
 
         return transaction
@@ -159,7 +159,7 @@ class ApiNetworkProvider:
         return transactions
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
-        response = self.do_get_generic(f'transactions/{tx_hash}?fields=status')
+        response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
         status = TransactionStatus(response.get('status', ''))
 
         return status
