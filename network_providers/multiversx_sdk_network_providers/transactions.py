@@ -6,13 +6,11 @@ from multiversx_sdk_core import Address
 from multiversx_sdk_network_providers.contract_results import ContractResults
 from multiversx_sdk_network_providers.interface import IAddress
 from multiversx_sdk_network_providers.resources import EmptyAddress
-from multiversx_sdk_network_providers.transaction_completion_strategy import (
-    TransactionCompletionStrategyOnApi,
-    TransactionCompletionStrategyOnProxy,
-)
 from multiversx_sdk_network_providers.transaction_logs import TransactionLogs
-from multiversx_sdk_network_providers.transaction_receipt import TransactionReceipt
-from multiversx_sdk_network_providers.transaction_status import TransactionStatus
+from multiversx_sdk_network_providers.transaction_receipt import \
+    TransactionReceipt
+from multiversx_sdk_network_providers.transaction_status import \
+    TransactionStatus
 
 
 class TransactionOnNetwork:
@@ -53,22 +51,21 @@ class TransactionOnNetwork:
         result.contract_results = ContractResults.from_api_http_response(
             response.get("results", [])
         )
-        result.is_completed = TransactionCompletionStrategyOnApi().is_completed(result)
+        result.is_completed = not result.get_status().is_pending()
 
         return result
 
     @staticmethod
     def from_proxy_http_response(
-        tx_hash: str, response: Dict[str, Any]
+        tx_hash: str, response: Dict[str, Any], process_status: TransactionStatus
     ) -> "TransactionOnNetwork":
         result = TransactionOnNetwork.from_http_response(tx_hash, response)
 
+        result.status = process_status
         result.contract_results = ContractResults.from_proxy_http_response(
             response.get("smartContractResults", [])
         )
-        result.is_completed = TransactionCompletionStrategyOnProxy().is_completed(
-            result
-        )
+        result.is_completed = True if result.status.is_successful() or result.status.is_failed() else False
 
         return result
 

@@ -2,22 +2,31 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 from requests.auth import AuthBase
+from threading import Thread
 
-from multiversx_sdk_network_providers.accounts import AccountOnNetwork, GuardianData
+from multiversx_sdk_network_providers.accounts import (AccountOnNetwork,
+                                                       GuardianData)
 from multiversx_sdk_network_providers.constants import (DEFAULT_ADDRESS_HRP,
-                                                        ESDT_CONTRACT_ADDRESS, METACHAIN_ID)
-from multiversx_sdk_network_providers.contract_query_requests import ContractQueryRequest
-from multiversx_sdk_network_providers.contract_query_response import ContractQueryResponse
+                                                        ESDT_CONTRACT_ADDRESS,
+                                                        METACHAIN_ID)
+from multiversx_sdk_network_providers.contract_query_requests import \
+    ContractQueryRequest
+from multiversx_sdk_network_providers.contract_query_response import \
+    ContractQueryResponse
 from multiversx_sdk_network_providers.errors import GenericError
-from multiversx_sdk_network_providers.interface import IAddress, IContractQuery, ITransaction
+from multiversx_sdk_network_providers.interface import (IAddress,
+                                                        IContractQuery,
+                                                        ITransaction)
 from multiversx_sdk_network_providers.network_config import NetworkConfig
 from multiversx_sdk_network_providers.network_status import NetworkStatus
-from multiversx_sdk_network_providers.resources import GenericResponse, SimulateResponse
+from multiversx_sdk_network_providers.resources import (GenericResponse,
+                                                        SimulateResponse)
 from multiversx_sdk_network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
-from multiversx_sdk_network_providers.tokens import (FungibleTokenOfAccountOnNetwork,
-                                                     NonFungibleTokenOfAccountOnNetwork)
-from multiversx_sdk_network_providers.transaction_status import TransactionStatus
+from multiversx_sdk_network_providers.tokens import (
+    FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
+from multiversx_sdk_network_providers.transaction_status import \
+    TransactionStatus
 from multiversx_sdk_network_providers.transactions import TransactionOnNetwork
 
 
@@ -86,18 +95,27 @@ class ProxyNetworkProvider:
         return token
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        url = f"transaction/{tx_hash}?withResults=true"
-        response = self.do_get_generic(url).get('transaction', '')
-        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response)
+        data: Dict[str, Any] = {}
+
+        def get_process_status():
+            data["status"] = self.get_transaction_status(tx_hash)
+
+        def get_tx():
+            url = f"transaction/{tx_hash}?withResults=true"
+            data["transaction"] = self.do_get_generic(url).get('transaction', '')
+
+        thread_status = Thread(target=get_process_status)
+        thread_status.start()
+
+        thread_tx = Thread(target=get_tx)
+        thread_tx.start()
+
+        thread_status.join()
+        thread_tx.join()
+
+        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, data['transaction'], data["status"])
 
         return transaction
-
-    def get_account_transactions(self, address: IAddress) -> List[TransactionOnNetwork]:
-        url = f"address/{address.bech32()}/transactions"
-        response = self.do_get_generic(url).get("transactions", [])
-        result = [TransactionOnNetwork.from_proxy_http_response(tx.get("hash", ""), tx) for tx in response]
-
-        return result
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transaction/{tx_hash}/process-status')

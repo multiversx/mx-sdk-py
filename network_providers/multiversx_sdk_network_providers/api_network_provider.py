@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Tuple, Union, cast
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
 from requests.auth import AuthBase
@@ -116,8 +116,8 @@ class ApiNetworkProvider:
 
         return ContractQueryResponse.from_http_response(response)
 
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        response = self.do_get_generic(f'transactions/{tx_hash}?withProcessStatus=true')
+    def get_transaction(self, tx_hash: str, with_process_status: Optional[bool] = False) -> TransactionOnNetwork:
+        response = self.do_get_generic(f'transactions/{tx_hash}?withProcessStatus={with_process_status}')
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
 
         return transaction
@@ -159,7 +159,7 @@ class ApiNetworkProvider:
         return transactions
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
-        response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
+        response = self.do_get_generic(f'transactions/{tx_hash}?fields=status')
         status = TransactionStatus(response.get('status', ''))
 
         return status
