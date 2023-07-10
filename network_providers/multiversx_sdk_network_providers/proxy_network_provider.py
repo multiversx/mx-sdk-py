@@ -1,8 +1,8 @@
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 from requests.auth import AuthBase
-from threading import Thread
 
 from multiversx_sdk_network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
@@ -94,26 +94,23 @@ class ProxyNetworkProvider:
 
         return token
 
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        data: Dict[str, Any] = {}
+    def get_transaction(self, tx_hash: str, with_process_status: Optional[bool] = False) -> TransactionOnNetwork:
+        def get_process_status() -> TransactionStatus:
+            return self.get_transaction_status(tx_hash)
 
-        def get_process_status():
-            data["status"] = self.get_transaction_status(tx_hash)
-
-        def get_tx():
+        def get_tx() -> Dict[str, Any]:
             url = f"transaction/{tx_hash}?withResults=true"
-            data["transaction"] = self.do_get_generic(url).get('transaction', '')
+            return self.do_get_generic(url).get('transaction', '')
 
-        thread_status = Thread(target=get_process_status)
-        thread_status.start()
+        process_status = None
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            if with_process_status:
+                status = executor.submit(get_process_status)
+                process_status = status.result()
 
-        thread_tx = Thread(target=get_tx)
-        thread_tx.start()
+            tx = executor.submit(get_tx)
 
-        thread_status.join()
-        thread_tx.join()
-
-        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, data['transaction'], data["status"])
+        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, tx.result(), process_status)
 
         return transaction
 

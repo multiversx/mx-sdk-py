@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from multiversx_sdk_core import Address
 
@@ -14,8 +14,8 @@ from multiversx_sdk_network_providers.transaction_status import \
 
 
 class TransactionOnNetwork:
-    def __init__(self):
-        self.is_completed: bool = False
+    def __init__(self) -> None:
+        self.is_completed: Optional[bool] = None
         self.hash: str = ""
         self.type: str = ""
         self.nonce: int = 0
@@ -48,6 +48,7 @@ class TransactionOnNetwork:
         tx_hash: str, response: Dict[str, Any]
     ) -> "TransactionOnNetwork":
         result = TransactionOnNetwork.from_http_response(tx_hash, response)
+
         result.contract_results = ContractResults.from_api_http_response(
             response.get("results", [])
         )
@@ -57,15 +58,16 @@ class TransactionOnNetwork:
 
     @staticmethod
     def from_proxy_http_response(
-        tx_hash: str, response: Dict[str, Any], process_status: TransactionStatus
+        tx_hash: str, response: Dict[str, Any], process_status: Optional[TransactionStatus] = None
     ) -> "TransactionOnNetwork":
         result = TransactionOnNetwork.from_http_response(tx_hash, response)
-
-        result.status = process_status
         result.contract_results = ContractResults.from_proxy_http_response(
             response.get("smartContractResults", [])
         )
-        result.is_completed = True if result.status.is_successful() or result.status.is_failed() else False
+
+        if process_status:
+            result.status = process_status
+            result.is_completed = True if result.status.is_successful() or result.status.is_failed() else False
 
         return result
 

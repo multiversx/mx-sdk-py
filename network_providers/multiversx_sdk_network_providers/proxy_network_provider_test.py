@@ -139,7 +139,7 @@ class TestProxy:
             result.hash
             == "2e6bd2671dbb57f1f1013c89f044359c2465f1514e0ea718583900e43c1931fe"
         )
-        assert result.is_completed == True
+        assert result.is_completed == None
         assert (
             result.sender.bech32()
             == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
@@ -159,7 +159,7 @@ class TestProxy:
 
     def test_get_sc_invoking_tx(self):
         result = self.proxy.get_transaction(
-            "cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9"
+            "cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9", True
         )
 
         assert result.is_completed == True
