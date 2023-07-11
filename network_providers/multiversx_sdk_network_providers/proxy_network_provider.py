@@ -102,14 +102,14 @@ class ProxyNetworkProvider:
             url = f"transaction/{tx_hash}?withResults=true"
             return self.do_get_generic(url).get('transaction', '')
 
-        process_status = None
+        status = None
         with ThreadPoolExecutor(max_workers=2) as executor:
             if with_process_status:
                 status = executor.submit(get_process_status)
-                process_status = status.result()
 
             tx = executor.submit(get_tx)
 
+        process_status = status.result() if status else None
         transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, tx.result(), process_status)
 
         return transaction
