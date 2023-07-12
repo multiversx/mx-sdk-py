@@ -1,23 +1,32 @@
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 from requests.auth import AuthBase
 
-from multiversx_sdk_network_providers.accounts import AccountOnNetwork, GuardianData
+from multiversx_sdk_network_providers.accounts import (AccountOnNetwork,
+                                                       GuardianData)
 from multiversx_sdk_network_providers.constants import (DEFAULT_ADDRESS_HRP,
-                                                        ESDT_CONTRACT_ADDRESS, METACHAIN_ID)
-from multiversx_sdk_network_providers.contract_query_requests import ContractQueryRequest
-from multiversx_sdk_network_providers.contract_query_response import ContractQueryResponse
+                                                        ESDT_CONTRACT_ADDRESS,
+                                                        METACHAIN_ID)
+from multiversx_sdk_network_providers.contract_query_requests import \
+    ContractQueryRequest
+from multiversx_sdk_network_providers.contract_query_response import \
+    ContractQueryResponse
 from multiversx_sdk_network_providers.errors import GenericError
-from multiversx_sdk_network_providers.interface import IAddress, IContractQuery, ITransaction
+from multiversx_sdk_network_providers.interface import (IAddress,
+                                                        IContractQuery,
+                                                        ITransaction)
 from multiversx_sdk_network_providers.network_config import NetworkConfig
 from multiversx_sdk_network_providers.network_status import NetworkStatus
-from multiversx_sdk_network_providers.resources import GenericResponse, SimulateResponse
+from multiversx_sdk_network_providers.resources import (GenericResponse,
+                                                        SimulateResponse)
 from multiversx_sdk_network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
-from multiversx_sdk_network_providers.tokens import (FungibleTokenOfAccountOnNetwork,
-                                                     NonFungibleTokenOfAccountOnNetwork)
-from multiversx_sdk_network_providers.transaction_status import TransactionStatus
+from multiversx_sdk_network_providers.tokens import (
+    FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
+from multiversx_sdk_network_providers.transaction_status import \
+    TransactionStatus
 from multiversx_sdk_network_providers.transactions import TransactionOnNetwork
 
 
@@ -85,22 +94,29 @@ class ProxyNetworkProvider:
 
         return token
 
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        url = f"transaction/{tx_hash}?withResults=true"
-        response = self.do_get_generic(url).get('transaction', '')
-        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, response)
+    def get_transaction(self, tx_hash: str, with_process_status: Optional[bool] = False) -> TransactionOnNetwork:
+        def get_process_status() -> TransactionStatus:
+            return self.get_transaction_status(tx_hash)
+
+        def get_tx() -> Dict[str, Any]:
+            url = f"transaction/{tx_hash}?withResults=true"
+            return self.do_get_generic(url).get('transaction', '')
+
+        status_task = None
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            if with_process_status:
+                status_task = executor.submit(get_process_status)
+
+            tx_task = executor.submit(get_tx)
+
+        process_status = status_task.result() if status_task else None
+        tx = tx_task.result()
+        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, tx, process_status)
 
         return transaction
 
-    def get_account_transactions(self, address: IAddress) -> List[TransactionOnNetwork]:
-        url = f"address/{address.bech32()}/transactions"
-        response = self.do_get_generic(url).get("transactions", [])
-        result = [TransactionOnNetwork.from_proxy_http_response(tx.get("hash", ""), tx) for tx in response]
-
-        return result
-
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
-        response = self.do_get_generic(f'transaction/{tx_hash}/status')
+        response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
         status = TransactionStatus(response.get('status', ''))
 
         return status
