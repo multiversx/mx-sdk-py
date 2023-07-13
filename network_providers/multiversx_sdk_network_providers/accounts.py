@@ -13,6 +13,7 @@ class AccountOnNetwork:
         self.balance: int = 0
         self.code: bytes = b''
         self.username: str = ''
+        self.code_hash: str = ''
 
     @staticmethod
     def from_http_response(payload: Dict[str, Any]) -> 'AccountOnNetwork':
@@ -25,6 +26,7 @@ class AccountOnNetwork:
         result.balance = int(payload.get('balance', 0))
         result.code = bytes.fromhex(payload.get('code', ''))
         result.username = payload.get('username', '')
+        result.code_hash = payload.get('codeHash', '')
 
         return result
 
@@ -34,7 +36,8 @@ class AccountOnNetwork:
             "nonce": self.nonce,
             "balance": self.balance,
             "code": self.code.hex(),
-            "username": self.username
+            "username": self.username,
+            "codeHash": self.code_hash
         }
 
 
