@@ -1,4 +1,5 @@
 import json
+from base64 import b64encode
 from collections import OrderedDict
 from typing import Any, Dict, Optional
 
@@ -21,6 +22,8 @@ class Transaction:
         sender: IAddress,
         receiver: IAddress,
         gas_limit: IGasLimit,
+        sender_username: Optional[str] = None,
+        receiver_username: Optional[str] = None,
         gas_price: Optional[IGasPrice] = None,
         nonce: Optional[INonce] = 0,
         value: Optional[ITransactionValue] = None,
@@ -28,10 +31,14 @@ class Transaction:
         version: Optional[ITransactionVersion] = None,
         options: Optional[ITransactionOptions] = None,
         guardian: Optional[IAddress] = None
-    ):
+    ) -> None:
         self.chainID: IChainID = chain_id
         self.sender: IAddress = sender
         self.receiver: IAddress = receiver
+
+        self.sender_username: str = sender_username or ""
+        self.receiver_username: str = receiver_username or ""
+
         self.guardian: Optional[IAddress] = guardian
 
         self.gas_limit: IGasLimit = gas_limit
@@ -59,6 +66,12 @@ class Transaction:
 
         dictionary["receiver"] = self.receiver.bech32()
         dictionary["sender"] = self.sender.bech32()
+
+        if self.sender_username:
+            dictionary["senderUsername"] = b64encode(self.sender_username.encode()).decode()
+
+        if self.receiver_username:
+            dictionary["receiverUsername"] = b64encode(self.receiver_username.encode()).decode()
 
         dictionary["gasPrice"] = self.gas_price
         dictionary["gasLimit"] = self.gas_limit
