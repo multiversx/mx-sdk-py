@@ -5,8 +5,7 @@ from multiversx_sdk_core.constants import (
     ARGS_SEPARATOR, DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION,
     DELEGATION_MANAGER_SC_ADDRESS)
 from multiversx_sdk_core.errors import ErrListsLengthMismatch
-from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
-                                            ITransactionPayload,
+from multiversx_sdk_core.interfaces import (IAddress, ITransactionPayload,
                                             IValidatorPublicKey)
 from multiversx_sdk_core.serializer import arg_to_string
 from multiversx_sdk_core.transaction_intent import TransactionIntent
@@ -14,17 +13,17 @@ from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 class IConfig(Protocol):
-    chain_id: IChainID
-    min_gas_limit: IGasLimit
-    gas_limit_per_byte: IGasLimit
-    gas_limit_stake: IGasLimit
-    gas_limit_unstake: IGasLimit
-    gas_limit_unbond: IGasLimit
-    gas_limit_create_delegation_contract: IGasLimit
-    gas_limit_delegation_operations: IGasLimit
-    additional_gas_limit_per_validator_node: IGasLimit
-    additional_gas_for_delegation_operations: IGasLimit
-    extra_gas_limit_for_guarded_transactions: IGasLimit
+    chain_id: str
+    min_gas_limit: int
+    gas_limit_per_byte: int
+    gas_limit_stake: int
+    gas_limit_unstake: int
+    gas_limit_unbond: int
+    gas_limit_create_delegation_contract: int
+    gas_limit_delegation_operations: int
+    additional_gas_limit_per_validator_node: int
+    additional_gas_for_delegation_operations: int
+    extra_gas_limit_for_guarded_transactions: int
 
 
 class DelegationFactory:
@@ -75,7 +74,7 @@ class DelegationFactory:
         )
         return transaction
 
-    def _compute_execution_gas_limit_for_nodes_management(self, num_nodes: int) -> IGasLimit:
+    def _compute_execution_gas_limit_for_nodes_management(self, num_nodes: int) -> int:
         return self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node
 
     def create_transaction_intent_for_removing_nodes(self,
@@ -299,7 +298,7 @@ class DelegationFactory:
 
         return transaction
 
-    def _compute_gas_limit(self, payload: ITransactionPayload, execution_gas: IGasLimit) -> IGasLimit:
+    def _compute_gas_limit(self, payload: ITransactionPayload, execution_gas: int) -> int:
         data_movement_gas = self.config.min_gas_limit + self.config.gas_limit_per_byte * payload.length()
         gas = data_movement_gas + execution_gas
 
@@ -313,7 +312,7 @@ class DelegationFactory:
             sender: IAddress,
             receiver: IAddress,
             data_parts: List[str],
-            execution_gas_limit: IGasLimit,
+            execution_gas_limit: int,
             value: Optional[Union[str, int]] = None) -> TransactionIntent:
         data = self._build_transaction_payload(data_parts)
         gas_limit = self._compute_gas_limit(data, execution_gas_limit)

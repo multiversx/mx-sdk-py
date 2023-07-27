@@ -6,14 +6,14 @@ from multiversx_sdk_core.code_metadata import CodeMetadata
 from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
                                            CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
-from multiversx_sdk_core.interfaces import IAddress, IChainID, IGasLimit
+from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk_core.transaction_intent import TransactionIntent
 from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 class IConfig(Protocol):
-    chain_id: IChainID
+    chain_id: str
 
 
 class SmartContractFactory:
@@ -106,7 +106,7 @@ class SmartContractFactory:
             sender: IAddress,
             receiver: IAddress,
             data_parts: List[str],
-            gas_limit: IGasLimit) -> TransactionIntent:
+            gas_limit: int) -> TransactionIntent:
         data = self._build_transaction_payload(data_parts)
 
         transaction_intent = TransactionIntent()

@@ -2,38 +2,35 @@
 import logging
 from typing import List, Optional, Protocol
 
-from multiversx_sdk_core import Transaction, TransactionPayload
-from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
-                                           TRANSACTION_OPTIONS_DEFAULT,
-                                           TRANSACTION_VERSION_DEFAULT)
-from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
-                                            IGasPrice, INonce,
-                                            ITransactionValue)
+from multiversx_sdk_core import TransactionPayload
+from multiversx_sdk_core.constants import ARGS_SEPARATOR
+from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string
+from multiversx_sdk_core.transaction_intent import TransactionIntent
 
 logger = logging.getLogger(__name__)
 
 
 class IConfig(Protocol):
-    chain_id: IChainID
-    min_gas_limit: IGasLimit
-    gas_limit_per_byte: IGasLimit
-    gas_limit_issue: IGasLimit
-    gas_limit_toggle_burn_role_globally: IGasLimit
-    gas_limit_esdt_local_mint: IGasLimit
-    gas_limit_esdt_local_burn: IGasLimit
-    gas_limit_set_special_role: IGasLimit
-    gas_limit_pausing: IGasLimit
-    gas_limit_freezing: IGasLimit
-    gas_limit_wiping: IGasLimit
-    gas_limit_esdt_nft_create: IGasLimit
-    gas_limit_esdt_nft_update_attributes: IGasLimit
-    gas_limit_esdt_nft_add_quantity: IGasLimit
-    gas_limit_esdt_nft_burn: IGasLimit
-    gas_limit_store_per_byte: IGasLimit
-    issue_cost: ITransactionValue
+    chain_id: str
+    min_gas_limit: int
+    gas_limit_per_byte: int
+    gas_limit_issue: int
+    gas_limit_toggle_burn_role_globally: int
+    gas_limit_esdt_local_mint: int
+    gas_limit_esdt_local_burn: int
+    gas_limit_set_special_role: int
+    gas_limit_pausing: int
+    gas_limit_freezing: int
+    gas_limit_wiping: int
+    gas_limit_esdt_nft_create: int
+    gas_limit_esdt_nft_update_attributes: int
+    gas_limit_esdt_nft_add_quantity: int
+    gas_limit_esdt_nft_burn: int
+    gas_limit_store_per_byte: int
+    issue_cost: int
     esdt_contract_address: IAddress
-    extra_gas_limit_for_guarded_transactions: IGasLimit
+    extra_gas_limit_for_guarded_transactions: int
 
 
 class TokenOperationsFactory:
@@ -41,9 +38,9 @@ class TokenOperationsFactory:
         self._config = config
         self._true_as_hex = arg_to_string("true")
 
-    def create_transaction_for_issuing_fungible(
+    def create_transaction_intent_for_issuing_fungible(
         self,
-        issuer: IAddress,
+        sender: IAddress,
         token_name: str,
         token_ticker: str,
         initial_supply: int,
@@ -53,12 +50,8 @@ class TokenOperationsFactory:
         can_pause: bool,
         can_change_owner: bool,
         can_upgrade: bool,
-        can_add_special_roles: bool,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        can_add_special_roles: bool
+    ) -> TransactionIntent:
         self._notify_about_unsetting_burn_role_globally()
 
         parts: List[str] = [
@@ -75,16 +68,12 @@ class TokenOperationsFactory:
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction(
-            sender=issuer,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=self._config.issue_cost,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_issue,
             data_parts=parts,
-            guardian=guardian
         )
 
     def _notify_about_unsetting_burn_role_globally(self) -> None:
@@ -95,9 +84,9 @@ IMPORTANT!
 You are about to issue (register) a new token. This will set the role "ESDTRoleBurnForAll" (globally).
 Once the token is registered, you can unset this role by calling "unsetBurnRoleGlobally" (in a separate transaction).""")
 
-    def create_transaction_for_issuing_semi_fungible(
+    def create_transaction_intent_for_issuing_semi_fungible(
         self,
-        issuer: IAddress,
+        sender: IAddress,
         token_name: str,
         token_ticker: str,
         can_freeze: bool,
@@ -106,12 +95,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         can_transfer_nft_create_role: bool,
         can_change_owner: bool,
         can_upgrade: bool,
-        can_add_special_roles: bool,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        can_add_special_roles: bool
+    ) -> TransactionIntent:
         self._notify_about_unsetting_burn_role_globally()
 
         parts: List[str] = [
@@ -127,21 +112,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction(
-            sender=issuer,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=self._config.issue_cost,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_issue,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_issuing_non_fungible(
+    def create_transaction_intent_for_issuing_non_fungible(
         self,
-        issuer: IAddress,
+        sender: IAddress,
         token_name: str,
         token_ticker: str,
         can_freeze: bool,
@@ -150,12 +131,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         can_transfer_nft_create_role: bool,
         can_change_owner: bool,
         can_upgrade: bool,
-        can_add_special_roles: bool,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        can_add_special_roles: bool
+    ) -> TransactionIntent:
         self._notify_about_unsetting_burn_role_globally()
 
         parts: List[str] = [
@@ -171,21 +148,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction(
-            sender=issuer,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=self._config.issue_cost,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_issue,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_registering_meta_esdt(
+    def create_transaction_intent_for_registering_meta_esdt(
         self,
-        issuer: IAddress,
+        sender: IAddress,
         token_name: str,
         token_ticker: str,
         num_decimals: int,
@@ -195,12 +168,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         can_transfer_nft_create_role: bool,
         can_change_owner: bool,
         can_upgrade: bool,
-        can_add_special_roles: bool,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        can_add_special_roles: bool
+    ) -> TransactionIntent:
         self._notify_about_unsetting_burn_role_globally()
 
         parts: List[str] = [
@@ -217,30 +186,22 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction(
-            sender=issuer,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=self._config.issue_cost,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_issue,
             data_parts=parts,
-            guardian=guardian
         )
 
-    def create_transaction_for_registering_and_setting_roles(
+    def create_transaction_intent_for_registering_and_setting_roles(
         self,
-        issuer: IAddress,
+        sender: IAddress,
         token_name: str,
         token_ticker: str,
         token_type: str,
-        num_decimals: int,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        num_decimals: int
+    ) -> TransactionIntent:
         self._notify_about_unsetting_burn_role_globally()
 
         parts: List[str] = [
@@ -251,82 +212,58 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(num_decimals)
         ]
 
-        return self._create_transaction(
-            sender=issuer,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=self._config.issue_cost,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_issue,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_setting_burn_role_globally(
+    def create_transaction_intent_for_setting_burn_role_globally(
         self,
-        manager: IAddress,
-        token_identifier: str,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        sender: IAddress,
+        token_identifier: str
+    ) -> TransactionIntent:
         parts: List[str] = [
             "setBurnRoleGlobally",
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_unsetting_burn_role_globally(
+    def create_transaction_intent_for_unsetting_burn_role_globally(
         self,
-        manager: IAddress,
-        token_identifier: str,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        sender: IAddress,
+        token_identifier: str
+    ) -> TransactionIntent:
         parts: List[str] = [
             "unsetBurnRoleGlobally",
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_setting_special_role_on_fungible_token(
+    def create_transaction_intent_for_setting_special_role_on_fungible_token(
         self,
-        manager: IAddress,
+        sender: IAddress,
         user: IAddress,
         token_identifier: str,
         add_role_local_mint: bool,
-        add_role_local_burn: bool,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        add_role_local_burn: bool
+    ) -> TransactionIntent:
         parts: List[str] = [
             "setSpecialRole",
             arg_to_string(token_identifier),
@@ -335,32 +272,24 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleLocalBurn")] if add_role_local_burn else [])
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_set_special_role,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_setting_special_role_on_semi_fungible_token(
+    def create_transaction_intent_for_setting_special_role_on_semi_fungible_token(
         self,
-        manager: IAddress,
+        sender: IAddress,
         user: IAddress,
         token_identifier: str,
         add_role_nft_create: bool,
         add_role_nft_burn: bool,
         add_role_nft_add_quantity: bool,
-        add_role_esdt_transfer_role: bool,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        add_role_esdt_transfer_role: bool
+    ) -> TransactionIntent:
         parts: List[str] = [
             "setSpecialRole",
             arg_to_string(token_identifier),
@@ -371,33 +300,25 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_set_special_role,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_setting_special_role_on_non_fungible_token(
+    def create_transaction_intent_for_setting_special_role_on_non_fungible_token(
         self,
-        manager: IAddress,
+        sender: IAddress,
         user: IAddress,
         token_identifier: str,
         add_role_nft_create: bool,
         add_role_nft_burn: bool,
         add_role_nft_update_attributes: bool,
         add_role_nft_add_uri: bool,
-        add_role_esdt_transfer_role: bool,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        add_role_esdt_transfer_role: bool
+    ) -> TransactionIntent:
         parts: List[str] = [
             "setSpecialRole",
             arg_to_string(token_identifier),
@@ -409,33 +330,25 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_set_special_role,
             data_parts=parts,
-            guardian=guardian
         )
 
-    def create_transaction_for_creating_nft(
+    def create_transaction_intent_for_creating_nft(
         self,
-        creator: IAddress,
+        sender: IAddress,
         token_identifier: str,
         initial_quantity: int,
         name: str,
         royalties: int,
         hash: str,
         attributes: bytes,
-        uris: List[str],
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None
-    ) -> Transaction:
+        uris: List[str]
+    ) -> TransactionIntent:
         parts: List[str] = [
             "ESDTNFTCreate",
             arg_to_string(token_identifier),
@@ -451,221 +364,157 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         nft_data = name + hash + attributes.hex() + "".join(uris)
         storage_gas_limit = len(nft_data) * self._config.gas_limit_store_per_byte
 
-        return self._create_transaction(
-            sender=creator,
-            receiver=creator,
-            nonce=transaction_nonce,
+        return self._create_transaction_intent(
+            sender=sender,
+            receiver=sender,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_nft_create + storage_gas_limit,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_pausing(
+    def create_transaction_intent_for_pausing(
         self,
-        manager: IAddress,
-        token_identifier: str,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        sender: IAddress,
+        token_identifier: str
+    ) -> TransactionIntent:
         parts: List[str] = [
             "pause",
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_pausing,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_unpausing(
+    def create_transaction_intent_for_unpausing(
         self,
-        manager: IAddress,
-        token_identifier: str,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        sender: IAddress,
+        token_identifier: str
+    ) -> TransactionIntent:
         parts: List[str] = [
             "unPause",
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_pausing,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_freezing(
+    def create_transaction_intent_for_freezing(
         self,
-        manager: IAddress,
+        sender: IAddress,
         user: IAddress,
-        token_identifier: str,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        token_identifier: str
+    ) -> TransactionIntent:
         parts: List[str] = [
             "freeze",
             arg_to_string(token_identifier),
             arg_to_string(user)
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_freezing,
             data_parts=parts,
-            guardian=guardian
         )
 
-    def create_transaction_for_unfreezing(
+    def create_transaction_intent_for_unfreezing(
         self,
-        manager: IAddress,
+        sender: IAddress,
         user: IAddress,
-        token_identifier: str,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        token_identifier: str
+    ) -> TransactionIntent:
         parts: List[str] = [
             "unFreeze",
             arg_to_string(token_identifier),
             arg_to_string(user)
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_freezing,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_wiping(
+    def create_transaction_intent_for_wiping(
         self,
-        manager: IAddress,
+        sender: IAddress,
         user: IAddress,
-        token_identifier: str,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        token_identifier: str
+    ) -> TransactionIntent:
         parts: List[str] = [
             "wipe",
             arg_to_string(token_identifier),
             arg_to_string(user)
         ]
 
-        return self._create_transaction(
-            sender=manager,
+        return self._create_transaction_intent(
+            sender=sender,
             receiver=self._config.esdt_contract_address,
-            nonce=transaction_nonce,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_wiping,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_local_minting(
+    def create_transaction_intent_for_local_minting(
         self,
-        manager: IAddress,
+        sender: IAddress,
         token_identifier: str,
-        supply_to_mint: int,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        supply_to_mint: int
+    ) -> TransactionIntent:
         parts: List[str] = [
             "ESDTLocalMint",
             arg_to_string(token_identifier),
             arg_to_string(supply_to_mint)
         ]
 
-        return self._create_transaction(
-            sender=manager,
-            receiver=manager,
-            nonce=transaction_nonce,
+        return self._create_transaction_intent(
+            sender=sender,
+            receiver=sender,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_local_mint,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_local_burning(
+    def create_transaction_intent_for_local_burning(
         self,
-        manager: IAddress,
+        sender: IAddress,
         token_identifier: str,
-        supply_to_burn: int,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        supply_to_burn: int
+    ) -> TransactionIntent:
         parts: List[str] = [
             "ESDTLocalBurn",
             arg_to_string(token_identifier),
             arg_to_string(supply_to_burn)
         ]
 
-        return self._create_transaction(
-            sender=manager,
-            receiver=manager,
-            nonce=transaction_nonce,
+        return self._create_transaction_intent(
+            sender=sender,
+            receiver=sender,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_local_burn,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_updating_attributes(
+    def create_transaction_intent_for_updating_attributes(
         self,
-        manager: IAddress,
+        sender: IAddress,
         token_identifier: str,
         token_nonce: int,
-        attributes: bytes,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        attributes: bytes
+    ) -> TransactionIntent:
         parts: List[str] = [
             "ESDTNFTUpdateAttributes",
             arg_to_string(token_identifier),
@@ -673,29 +522,21 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(attributes)
         ]
 
-        return self._create_transaction(
-            sender=manager,
-            receiver=manager,
-            nonce=transaction_nonce,
+        return self._create_transaction_intent(
+            sender=sender,
+            receiver=sender,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_nft_update_attributes,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_adding_quantity(
+    def create_transaction_intent_for_adding_quantity(
         self,
-        manager: IAddress,
+        sender: IAddress,
         token_identifier: str,
         token_nonce: int,
-        quantity_to_add: int,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        quantity_to_add: int
+    ) -> TransactionIntent:
         parts: List[str] = [
             "ESDTNFTAddQuantity",
             arg_to_string(token_identifier),
@@ -703,29 +544,21 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(quantity_to_add)
         ]
 
-        return self._create_transaction(
-            sender=manager,
-            receiver=manager,
-            nonce=transaction_nonce,
+        return self._create_transaction_intent(
+            sender=sender,
+            receiver=sender,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_nft_add_quantity,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def create_transaction_for_burning_quantity(
+    def create_transaction_intent_for_burning_quantity(
         self,
-        manager: IAddress,
+        sender: IAddress,
         token_identifier: str,
         token_nonce: int,
-        quantity_to_burn: int,
-        transaction_nonce: Optional[INonce] = None,
-        guardian: Optional[IAddress] = None,
-        gas_price: Optional[IGasPrice] = None,
-        gas_limit: Optional[IGasLimit] = None,
-    ) -> Transaction:
+        quantity_to_burn: int
+    ) -> TransactionIntent:
         parts: List[str] = [
             "ESDTNFTBurn",
             arg_to_string(token_identifier),
@@ -733,60 +566,45 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(quantity_to_burn)
         ]
 
-        return self._create_transaction(
-            sender=manager,
-            receiver=manager,
-            nonce=transaction_nonce,
+        return self._create_transaction_intent(
+            sender=sender,
+            receiver=sender,
             value=None,
-            gas_price=gas_price,
-            gas_limit_hint=gas_limit,
             execution_gas_limit=self._config.gas_limit_esdt_nft_burn,
-            data_parts=parts,
-            guardian=guardian
+            data_parts=parts
         )
 
-    def _create_transaction(
+    def _create_transaction_intent(
         self,
         sender: IAddress,
         receiver: IAddress,
-        nonce: Optional[INonce],
-        value: Optional[ITransactionValue],
-        gas_price: Optional[IGasPrice],
-        gas_limit_hint: Optional[IGasLimit],
-        guardian: Optional[IAddress],
-        execution_gas_limit: IGasLimit,
+        value: Optional[int],
+        execution_gas_limit: int,
         data_parts: List[str]
-    ) -> Transaction:
+    ) -> TransactionIntent:
         payload = self._build_transaction_payload(data_parts)
-        version = TRANSACTION_VERSION_DEFAULT
-        options = TRANSACTION_OPTIONS_DEFAULT
 
-        has_guardian = True if guardian else False
-        gas_limit = gas_limit_hint or self._compute_gas_limit(payload, execution_gas_limit, has_guardian)
+        gas_limit = self._compute_gas_limit(payload, execution_gas_limit)
 
-        return Transaction(
-            chain_id=self._config.chain_id,
-            sender=sender,
-            receiver=receiver,
-            gas_limit=gas_limit,
-            gas_price=gas_price,
-            nonce=nonce or 0,
-            value=value or 0,
-            data=payload,
-            version=version,
-            options=options,
-            guardian=guardian
-        )
+        transaction_intent = TransactionIntent()
+
+        transaction_intent.sender = sender.bech32()
+        transaction_intent.receiver = receiver.bech32()
+        transaction_intent.gas_limit = gas_limit
+        transaction_intent.data = str(payload).encode()
+        transaction_intent.value = str(value) if value else "0"
+
+        return transaction_intent
 
     def _build_transaction_payload(self, parts: List[str]) -> TransactionPayload:
         data = ARGS_SEPARATOR.join(parts)
         return TransactionPayload.from_str(data)
 
-    def _compute_gas_limit(self, payload: TransactionPayload, execution_gas: IGasLimit, has_guardian: bool) -> IGasLimit:
+    def _compute_gas_limit(self, payload: TransactionPayload, execution_gas: int) -> int:
         data_movement_gas = self._config.min_gas_limit + self._config.gas_limit_per_byte * payload.length()
         gas = data_movement_gas + execution_gas
 
-        if has_guardian:
-            gas += self._config.extra_gas_limit_for_guarded_transactions
+        # add gas for guarded transactions by default
+        gas += self._config.extra_gas_limit_for_guarded_transactions
 
         return gas

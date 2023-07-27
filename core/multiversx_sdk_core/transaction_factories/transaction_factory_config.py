@@ -1,34 +1,33 @@
 from multiversx_sdk_core.address import DEFAULT_HRP, Address
 from multiversx_sdk_core.constants import \
     DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION
-from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
-                                            ITransactionValue)
+from multiversx_sdk_core.interfaces import IAddress
 
 
 class TransactionFactoryConfig:
-    def __init__(self, chain_id: IChainID) -> None:
+    def __init__(self, chain_id: str) -> None:
         # General-purpose configuration
-        self.chain_id: IChainID = chain_id
+        self.chain_id: str = chain_id
         self.address_hrp: str = DEFAULT_HRP
-        self.min_gas_limit: IGasLimit = 50_000
-        self.gas_limit_per_byte: IGasLimit = 1_500
-        self.extra_gas_limit_for_guarded_transactions: IGasLimit = DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION
+        self.min_gas_limit: int = 50_000
+        self.gas_limit_per_byte: int = 1_500
+        self.extra_gas_limit_for_guarded_transactions: int = DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION
 
         # Configuration for token operations
-        self.gas_limit_issue: IGasLimit = 60_000_000
-        self.gas_limit_toggle_burn_role_globally: IGasLimit = 60_000_000
-        self.gas_limit_esdt_local_mint: IGasLimit = 300_000
-        self.gas_limit_esdt_local_burn: IGasLimit = 300_000
-        self.gas_limit_set_special_role: IGasLimit = 60_000_000
-        self.gas_limit_pausing: IGasLimit = 60_000_000
-        self.gas_limit_freezing: IGasLimit = 60_000_000
-        self.gas_limit_wiping: IGasLimit = 60_000_000
-        self.gas_limit_esdt_nft_create: IGasLimit = 3_000_000
-        self.gas_limit_esdt_nft_update_attributes: IGasLimit = 1_000_000
-        self.gas_limit_esdt_nft_add_quantity: IGasLimit = 1_000_000
-        self.gas_limit_esdt_nft_burn: IGasLimit = 1_000_000
-        self.gas_limit_store_per_byte: IGasLimit = 50_000
-        self.issue_cost: ITransactionValue = 50_000_000_000_000_000
+        self.gas_limit_issue: int = 60_000_000
+        self.gas_limit_toggle_burn_role_globally: int = 60_000_000
+        self.gas_limit_esdt_local_mint: int = 300_000
+        self.gas_limit_esdt_local_burn: int = 300_000
+        self.gas_limit_set_special_role: int = 60_000_000
+        self.gas_limit_pausing: int = 60_000_000
+        self.gas_limit_freezing: int = 60_000_000
+        self.gas_limit_wiping: int = 60_000_000
+        self.gas_limit_esdt_nft_create: int = 3_000_000
+        self.gas_limit_esdt_nft_update_attributes: int = 1_000_000
+        self.gas_limit_esdt_nft_add_quantity: int = 1_000_000
+        self.gas_limit_esdt_nft_burn: int = 1_000_000
+        self.gas_limit_store_per_byte: int = 50_000
+        self.issue_cost: int = 50_000_000_000_000_000
         self.esdt_contract_address: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
 
         # Configuration for delegation operations
