@@ -30,7 +30,6 @@ class IConfig(Protocol):
     gas_limit_store_per_byte: int
     issue_cost: int
     esdt_contract_address: IAddress
-    extra_gas_limit_for_guarded_transactions: int
 
 
 class TokenOperationsFactory:
@@ -592,7 +591,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         transaction_intent.receiver = receiver.bech32()
         transaction_intent.gas_limit = gas_limit
         transaction_intent.data = str(payload).encode()
-        transaction_intent.value = str(value) if value else "0"
+        transaction_intent.value = value if value else 0
 
         return transaction_intent
 
@@ -603,8 +602,5 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     def _compute_gas_limit(self, payload: TransactionPayload, execution_gas: int) -> int:
         data_movement_gas = self._config.min_gas_limit + self._config.gas_limit_per_byte * payload.length()
         gas = data_movement_gas + execution_gas
-
-        # add gas for guarded transactions by default
-        gas += self._config.extra_gas_limit_for_guarded_transactions
 
         return gas

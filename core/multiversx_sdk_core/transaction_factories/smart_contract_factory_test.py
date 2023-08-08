@@ -18,18 +18,18 @@ class TestSmartContract:
         gas_limit = 6000000
         args = [0]
 
-        transaction = self.factory.create_transaction_intent_for_deploy(
+        intent = self.factory.create_transaction_intent_for_deploy(
             sender=sender,
             bytecode=contract,
             gas_limit=gas_limit,
             arguments=args
         )
 
-        assert transaction.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver == CONTRACT_DEPLOY_ADDRESS
-        assert transaction.gas_limit == 6000000
-        assert transaction.data
-        assert transaction.value == "0"
+        assert intent.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert intent.receiver == CONTRACT_DEPLOY_ADDRESS
+        assert intent.gas_limit == 6000000
+        assert intent.data
+        assert intent.value == 0
 
     def test_smart_contract_call(self):
         sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -38,7 +38,7 @@ class TestSmartContract:
         gas_limit = 6000000
         args = [7]
 
-        transaction = self.factory.create_transaction_intent_for_execute(
+        intent = self.factory.create_transaction_intent_for_execute(
             sender=sender,
             contract_address=contract,
             function=function,
@@ -46,12 +46,12 @@ class TestSmartContract:
             arguments=args
         )
 
-        assert transaction.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver == contract.bech32()
-        assert transaction.gas_limit == 6000000
-        assert transaction.data
-        assert transaction.data.decode() == "add@07"
-        assert transaction.value == "0"
+        assert intent.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert intent.receiver == contract.bech32()
+        assert intent.gas_limit == 6000000
+        assert intent.data
+        assert intent.data.decode() == "add@07"
+        assert intent.value == 0
 
     def test_smart_contract_upgrade(self):
         sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -60,7 +60,7 @@ class TestSmartContract:
         gas_limit = 6000000
         args = [0]
 
-        transaction = self.factory.create_transaction_for_upgrade(
+        intent = self.factory.create_transaction_intent_for_upgrade(
             sender=sender,
             contract=contract_address,
             bytecode=contract,
@@ -68,9 +68,9 @@ class TestSmartContract:
             arguments=args
         )
 
-        assert transaction.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
-        assert transaction.gas_limit == 6000000
-        assert transaction.data
-        assert transaction.data.decode().startswith("upgradeContract@")
-        assert transaction.value == "0"
+        assert intent.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert intent.receiver == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
+        assert intent.gas_limit == 6000000
+        assert intent.data
+        assert intent.data.decode().startswith("upgradeContract@")
+        assert intent.value == 0

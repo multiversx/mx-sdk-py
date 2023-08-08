@@ -68,17 +68,17 @@ class SmartContractFactory:
 
         return transaction
 
-    def create_transaction_for_upgrade(self,
-                                       sender: IAddress,
-                                       contract: IAddress,
-                                       bytecode: Union[Path, bytes],
-                                       gas_limit: int,
-                                       arguments: List[Any] = [],
-                                       is_upgradeable: bool = True,
-                                       is_readable: bool = True,
-                                       is_payable: bool = False,
-                                       is_payable_by_sc: bool = True
-                                       ) -> TransactionIntent:
+    def create_transaction_intent_for_upgrade(self,
+                                              sender: IAddress,
+                                              contract: IAddress,
+                                              bytecode: Union[Path, bytes],
+                                              gas_limit: int,
+                                              arguments: List[Any] = [],
+                                              is_upgradeable: bool = True,
+                                              is_readable: bool = True,
+                                              is_payable: bool = False,
+                                              is_payable_by_sc: bool = True
+                                              ) -> TransactionIntent:
         if isinstance(bytecode, Path):
             bytecode = bytecode.read_bytes()
 

@@ -1,6 +1,4 @@
 from multiversx_sdk_core.address import DEFAULT_HRP, Address
-from multiversx_sdk_core.constants import \
-    DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION
 from multiversx_sdk_core.interfaces import IAddress
 
 
@@ -11,7 +9,6 @@ class TransactionFactoryConfig:
         self.address_hrp: str = DEFAULT_HRP
         self.min_gas_limit: int = 50_000
         self.gas_limit_per_byte: int = 1_500
-        self.extra_gas_limit_for_guarded_transactions: int = DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION
 
         # Configuration for token operations
         self.gas_limit_issue: int = 60_000_000

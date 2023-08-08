@@ -1,9 +1,8 @@
-from typing import List, Optional, Protocol, Sequence, Union
+from typing import List, Optional, Protocol, Sequence
 
 from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.constants import (
-    ARGS_SEPARATOR, DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION,
-    DELEGATION_MANAGER_SC_ADDRESS)
+from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
+                                           DELEGATION_MANAGER_SC_ADDRESS)
 from multiversx_sdk_core.errors import ErrListsLengthMismatch
 from multiversx_sdk_core.interfaces import (IAddress, ITransactionPayload,
                                             IValidatorPublicKey)
@@ -23,7 +22,6 @@ class IConfig(Protocol):
     gas_limit_delegation_operations: int
     additional_gas_limit_per_validator_node: int
     additional_gas_for_delegation_operations: int
-    extra_gas_limit_for_guarded_transactions: int
 
 
 class DelegationFactory:
@@ -34,7 +32,7 @@ class DelegationFactory:
                                                               sender: IAddress,
                                                               total_delegation_cap: int,
                                                               service_fee: int,
-                                                              value: Union[str, int]) -> TransactionIntent:
+                                                              value: int) -> TransactionIntent:
         parts = [
             "createNewDelegationContract",
             arg_to_string(total_delegation_cap),
@@ -302,9 +300,6 @@ class DelegationFactory:
         data_movement_gas = self.config.min_gas_limit + self.config.gas_limit_per_byte * payload.length()
         gas = data_movement_gas + execution_gas
 
-        # add by default extra gas for guarded transactions
-        gas += DEFAULT_EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTION
-
         return gas
 
     def _create_transaction_intent(
@@ -313,7 +308,7 @@ class DelegationFactory:
             receiver: IAddress,
             data_parts: List[str],
             execution_gas_limit: int,
-            value: Optional[Union[str, int]] = None) -> TransactionIntent:
+            value: Optional[int] = None) -> TransactionIntent:
         data = self._build_transaction_payload(data_parts)
         gas_limit = self._compute_gas_limit(data, execution_gas_limit)
 
@@ -323,7 +318,7 @@ class DelegationFactory:
         transaction_intent.receiver = receiver.bech32()
         transaction_intent.gas_limit = gas_limit
         transaction_intent.data = str(data).encode()
-        transaction_intent.value = str(value) if value else "0"
+        transaction_intent.value = value if value else 0
 
         return transaction_intent
 
