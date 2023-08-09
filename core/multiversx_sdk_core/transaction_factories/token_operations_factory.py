@@ -1,11 +1,11 @@
 
 import logging
-from typing import List, Optional, Protocol
+from typing import List, Protocol
 
-from multiversx_sdk_core import TransactionPayload
-from multiversx_sdk_core.constants import ARGS_SEPARATOR
 from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string
+from multiversx_sdk_core.transaction_factories.transaction_intent_builder import \
+    TransactionIntentBuilder
 from multiversx_sdk_core.transaction_intent import TransactionIntent
 
 logger = logging.getLogger(__name__)
@@ -32,7 +32,7 @@ class IConfig(Protocol):
     esdt_contract_address: IAddress
 
 
-class TokenOperationsFactory:
+class TokenOperationsTransactionIntentsFactory:
     def __init__(self, config: IConfig):
         self._config = config
         self._true_as_hex = arg_to_string("true")
@@ -67,13 +67,14 @@ class TokenOperationsFactory:
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=self._config.issue_cost,
             execution_gas_limit=self._config.gas_limit_issue,
             data_parts=parts,
-        )
+        ).build()
 
     def _notify_about_unsetting_burn_role_globally(self) -> None:
         logger.info("""
@@ -111,13 +112,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=self._config.issue_cost,
             execution_gas_limit=self._config.gas_limit_issue,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_issuing_non_fungible(
         self,
@@ -147,13 +149,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=self._config.issue_cost,
             execution_gas_limit=self._config.gas_limit_issue,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_registering_meta_esdt(
         self,
@@ -185,13 +188,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=self._config.issue_cost,
             execution_gas_limit=self._config.gas_limit_issue,
             data_parts=parts,
-        )
+        ).build()
 
     def create_transaction_intent_for_registering_and_setting_roles(
         self,
@@ -211,13 +215,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(num_decimals)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=self._config.issue_cost,
             execution_gas_limit=self._config.gas_limit_issue,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_setting_burn_role_globally(
         self,
@@ -229,13 +234,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_unsetting_burn_role_globally(
         self,
@@ -247,13 +253,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_toggle_burn_role_globally,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_setting_special_role_on_fungible_token(
         self,
@@ -271,13 +278,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleLocalBurn")] if add_role_local_burn else [])
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_set_special_role,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_setting_special_role_on_semi_fungible_token(
         self,
@@ -299,13 +307,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_set_special_role,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_setting_special_role_on_non_fungible_token(
         self,
@@ -329,13 +338,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_set_special_role,
             data_parts=parts,
-        )
+        ).build()
 
     def create_transaction_intent_for_creating_nft(
         self,
@@ -363,13 +373,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         nft_data = name + hash + attributes.hex() + "".join(uris)
         storage_gas_limit = len(nft_data) * self._config.gas_limit_store_per_byte
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=sender,
             value=None,
             execution_gas_limit=self._config.gas_limit_esdt_nft_create + storage_gas_limit,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_pausing(
         self,
@@ -381,13 +392,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_pausing,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_unpausing(
         self,
@@ -399,13 +411,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(token_identifier)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_pausing,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_freezing(
         self,
@@ -419,13 +432,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(user)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_freezing,
             data_parts=parts,
-        )
+        ).build()
 
     def create_transaction_intent_for_unfreezing(
         self,
@@ -439,13 +453,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(user)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_freezing,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_wiping(
         self,
@@ -459,13 +474,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(user)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
             value=None,
             execution_gas_limit=self._config.gas_limit_wiping,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_local_minting(
         self,
@@ -479,13 +495,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(supply_to_mint)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=sender,
             value=None,
             execution_gas_limit=self._config.gas_limit_esdt_local_mint,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_local_burning(
         self,
@@ -499,13 +516,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(supply_to_burn)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=sender,
             value=None,
             execution_gas_limit=self._config.gas_limit_esdt_local_burn,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_updating_attributes(
         self,
@@ -521,13 +539,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(attributes)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=sender,
             value=None,
             execution_gas_limit=self._config.gas_limit_esdt_nft_update_attributes,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_adding_quantity(
         self,
@@ -543,13 +562,14 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(quantity_to_add)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=sender,
             value=None,
             execution_gas_limit=self._config.gas_limit_esdt_nft_add_quantity,
             data_parts=parts
-        )
+        ).build()
 
     def create_transaction_intent_for_burning_quantity(
         self,
@@ -565,42 +585,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             arg_to_string(quantity_to_burn)
         ]
 
-        return self._create_transaction_intent(
+        return TransactionIntentBuilder(
+            config=self._config,
             sender=sender,
             receiver=sender,
             value=None,
             execution_gas_limit=self._config.gas_limit_esdt_nft_burn,
             data_parts=parts
-        )
-
-    def _create_transaction_intent(
-        self,
-        sender: IAddress,
-        receiver: IAddress,
-        value: Optional[int],
-        execution_gas_limit: int,
-        data_parts: List[str]
-    ) -> TransactionIntent:
-        payload = self._build_transaction_payload(data_parts)
-
-        gas_limit = self._compute_gas_limit(payload, execution_gas_limit)
-
-        transaction_intent = TransactionIntent()
-
-        transaction_intent.sender = sender.bech32()
-        transaction_intent.receiver = receiver.bech32()
-        transaction_intent.gas_limit = gas_limit
-        transaction_intent.data = str(payload).encode()
-        transaction_intent.value = value if value else 0
-
-        return transaction_intent
-
-    def _build_transaction_payload(self, parts: List[str]) -> TransactionPayload:
-        data = ARGS_SEPARATOR.join(parts)
-        return TransactionPayload.from_str(data)
-
-    def _compute_gas_limit(self, payload: TransactionPayload, execution_gas: int) -> int:
-        data_movement_gas = self._config.min_gas_limit + self._config.gas_limit_per_byte * payload.length()
-        gas = data_movement_gas + execution_gas
-
-        return gas
+        ).build()

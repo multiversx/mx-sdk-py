@@ -1,16 +1,16 @@
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.transaction_factories.token_operations_factory import \
-    TokenOperationsFactory
+    TokenOperationsTransactionIntentsFactory
 from multiversx_sdk_core.transaction_factories.transaction_factory_config import \
     TransactionFactoryConfig
 
 frank = Address.from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
 grace = Address.from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede")
 alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-factory = TokenOperationsFactory(TransactionFactoryConfig("T"))
+factory = TokenOperationsTransactionIntentsFactory(TransactionFactoryConfig("T"))
 
 
-def test_register_and_set_all_roles():
+def test_create_transaction_intent_for_registering_and_setting_roles():
     intent = factory.create_transaction_intent_for_registering_and_setting_roles(
         sender=frank,
         token_name="TEST",
@@ -26,7 +26,7 @@ def test_register_and_set_all_roles():
     assert intent.value == 50000000000000000
 
 
-def test_issue_fungible():
+def test_create_transaction_intent_for_issuing_fungible():
     intent = factory.create_transaction_intent_for_issuing_fungible(
         sender=frank,
         token_name="FRANK",
@@ -48,7 +48,7 @@ def test_issue_fungible():
     assert intent.value == 50000000000000000
 
 
-def test_issue_semi_fungible():
+def test_create_transaction_intent_for_issuing_semi_fungible():
     intent = factory.create_transaction_intent_for_issuing_semi_fungible(
         sender=frank,
         token_name="FRANK",
@@ -69,7 +69,7 @@ def test_issue_semi_fungible():
     assert intent.value == 50000000000000000
 
 
-def test_issue_non_fungible():
+def test_create_transaction_intent_for_issuing_non_fungible():
     intent = factory.create_transaction_intent_for_issuing_non_fungible(
         sender=frank,
         token_name="FRANK",
@@ -90,7 +90,7 @@ def test_issue_non_fungible():
     assert intent.value == 50000000000000000
 
 
-def test_register_meta_esdt():
+def test_create_transaction_intent_for_registering_meta_esdt():
     intent = factory.create_transaction_intent_for_registering_meta_esdt(
         sender=frank,
         token_name="FRANK",
@@ -112,7 +112,7 @@ def test_register_meta_esdt():
     assert intent.value == 50000000000000000
 
 
-def test_set_special_role():
+def test_create_transaction_intent_for_setting_special_role_on_non_fungible_token():
     intent = factory.create_transaction_intent_for_setting_special_role_on_non_fungible_token(
         sender=frank,
         user=grace,
@@ -131,7 +131,7 @@ def test_set_special_role():
     assert intent.value == 0
 
 
-def test_nft_create():
+def test_create_transaction_intent_for_creating_nft():
     intent = factory.create_transaction_intent_for_creating_nft(
         sender=grace,
         token_identifier="FRANK-aa9e8d",

@@ -3,20 +3,22 @@ from typing import Any, List, Protocol, Union
 
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.code_metadata import CodeMetadata
-from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
-                                           CONTRACT_DEPLOY_ADDRESS,
+from multiversx_sdk_core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
 from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
+from multiversx_sdk_core.transaction_factories.transaction_intent_builder import \
+    TransactionIntentBuilder
 from multiversx_sdk_core.transaction_intent import TransactionIntent
-from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 class IConfig(Protocol):
     chain_id: str
+    min_gas_limit: int
+    gas_limit_per_byte: int
 
 
-class SmartContractFactory:
+class SmartContractTransactionIntentsFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
 
@@ -42,14 +44,15 @@ class SmartContractFactory:
 
         parts += args_to_strings(arguments)
 
-        transaction = self._create_transaction_intent(
+        intent = TransactionIntentBuilder(
+            config=self.config,
             sender=sender,
             receiver=Address.from_bech32(CONTRACT_DEPLOY_ADDRESS),
             data_parts=parts,
-            gas_limit=gas_limit
-        )
+            execution_gas_limit=gas_limit
+        ).build()
 
-        return transaction
+        return intent
 
     def create_transaction_intent_for_execute(self,
                                               sender: IAddress,
@@ -59,14 +62,15 @@ class SmartContractFactory:
                                               arguments: List[Any] = []) -> TransactionIntent:
         parts = [function] + args_to_strings(arguments)
 
-        transaction = self._create_transaction_intent(
+        intent = TransactionIntentBuilder(
+            config=self.config,
             sender=sender,
             receiver=contract_address,
             data_parts=parts,
-            gas_limit=gas_limit
-        )
+            execution_gas_limit=gas_limit
+        ).build()
 
-        return transaction
+        return intent
 
     def create_transaction_intent_for_upgrade(self,
                                               sender: IAddress,
@@ -92,32 +96,12 @@ class SmartContractFactory:
 
         parts += args_to_strings(arguments)
 
-        transaction = self._create_transaction_intent(
+        intent = TransactionIntentBuilder(
+            config=self.config,
             sender=sender,
             receiver=contract,
             data_parts=parts,
-            gas_limit=gas_limit
-        )
+            execution_gas_limit=gas_limit
+        ).build()
 
-        return transaction
-
-    def _create_transaction_intent(
-            self,
-            sender: IAddress,
-            receiver: IAddress,
-            data_parts: List[str],
-            gas_limit: int) -> TransactionIntent:
-        data = self._build_transaction_payload(data_parts)
-
-        transaction_intent = TransactionIntent()
-
-        transaction_intent.sender = sender.bech32()
-        transaction_intent.receiver = receiver.bech32()
-        transaction_intent.gas_limit = gas_limit
-        transaction_intent.data = str(data).encode()
-
-        return transaction_intent
-
-    def _build_transaction_payload(self, parts: List[str]) -> TransactionPayload:
-        data = ARGS_SEPARATOR.join(parts)
-        return TransactionPayload.from_str(data)
+        return intent
