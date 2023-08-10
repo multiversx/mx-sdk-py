@@ -3,14 +3,14 @@ from multiversx_sdk_wallet import ValidatorSecretKey, ValidatorSigner
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.constants import DELEGATION_MANAGER_SC_ADDRESS
 from multiversx_sdk_core.messages import ArbitraryMessage
-from multiversx_sdk_core.transaction_factories.delegation_factory import \
+from multiversx_sdk_core.transaction_intents_factories.delegation_transaction_intents_factory import \
     DelegationTransactionIntentsFactory
-from multiversx_sdk_core.transaction_factories.transaction_factory_config import \
-    TransactionFactoryConfig
+from multiversx_sdk_core.transaction_intents_factories.transaction_intents_factory_config import \
+    TransactionIntentsFactoryConfig
 
 
 class TestDelegationTransactionIntentsFactory:
-    config = TransactionFactoryConfig("D")
+    config = TransactionIntentsFactoryConfig("D")
     factory = DelegationTransactionIntentsFactory(config)
 
     def test_create_transaction_intent_for_new_delegation_contract(self):

@@ -1,13 +1,13 @@
 from multiversx_sdk_core import Address
-from multiversx_sdk_core.transaction_factories.token_operations_factory import \
-    TokenOperationsTransactionIntentsFactory
-from multiversx_sdk_core.transaction_factories.transaction_factory_config import \
-    TransactionFactoryConfig
+from multiversx_sdk_core.transaction_intents_factories.token_management_transaction_intents_factory import \
+    TokenManagementTransactionIntentsFactory
+from multiversx_sdk_core.transaction_intents_factories.transaction_intents_factory_config import \
+    TransactionIntentsFactoryConfig
 
 frank = Address.from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
 grace = Address.from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede")
 alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-factory = TokenOperationsTransactionIntentsFactory(TransactionFactoryConfig("T"))
+factory = TokenManagementTransactionIntentsFactory(TransactionIntentsFactoryConfig("T"))
 
 
 def test_create_transaction_intent_for_registering_and_setting_roles():

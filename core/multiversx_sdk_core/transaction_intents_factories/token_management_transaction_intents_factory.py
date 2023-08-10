@@ -4,9 +4,9 @@ from typing import List, Protocol
 
 from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string
-from multiversx_sdk_core.transaction_factories.transaction_intent_builder import \
-    TransactionIntentBuilder
 from multiversx_sdk_core.transaction_intent import TransactionIntent
+from multiversx_sdk_core.transaction_intents_factories.transaction_intent_builder import \
+    TransactionIntentBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class IConfig(Protocol):
     esdt_contract_address: IAddress
 
 
-class TokenOperationsTransactionIntentsFactory:
+class TokenManagementTransactionIntentsFactory:
     def __init__(self, config: IConfig):
         self._config = config
         self._true_as_hex = arg_to_string("true")

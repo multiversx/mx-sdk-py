@@ -2,14 +2,14 @@ from pathlib import Path
 
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.constants import CONTRACT_DEPLOY_ADDRESS
-from multiversx_sdk_core.transaction_factories.smart_contract_factory import \
+from multiversx_sdk_core.transaction_intents_factories.smart_contract_transaction_intents_factory import \
     SmartContractTransactionIntentsFactory
-from multiversx_sdk_core.transaction_factories.transaction_factory_config import \
-    TransactionFactoryConfig
+from multiversx_sdk_core.transaction_intents_factories.transaction_intents_factory_config import \
+    TransactionIntentsFactoryConfig
 
 
 class TestSmartContract:
-    config = TransactionFactoryConfig("D")
+    config = TransactionIntentsFactoryConfig("D")
     factory = SmartContractTransactionIntentsFactory(config)
 
     def test_create_transaction_intent_for_deploy(self):

@@ -5,7 +5,7 @@ from multiversx_sdk_core.constants import DELEGATION_MANAGER_SC_ADDRESS
 from multiversx_sdk_core.errors import ErrListsLengthMismatch
 from multiversx_sdk_core.interfaces import IAddress, IValidatorPublicKey
 from multiversx_sdk_core.serializer import arg_to_string
-from multiversx_sdk_core.transaction_factories.transaction_intent_builder import \
+from multiversx_sdk_core.transaction_intents_factories.transaction_intent_builder import \
     TransactionIntentBuilder
 from multiversx_sdk_core.transaction_intent import TransactionIntent
 
