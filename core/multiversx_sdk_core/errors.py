@@ -29,3 +29,8 @@ class ErrInvalidRelayerV2BuilderArguments(Exception):
 class ErrInvalidGasLimitForInnerTransaction(Exception):
     def __init__(self) -> None:
         super().__init__("Gas limit should be 0 for the inner transaction for relayed v2")
+
+
+class ErrListsLengthMismatch(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
