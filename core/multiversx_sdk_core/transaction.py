@@ -18,17 +18,17 @@ class Transaction:
                  receiver: str,
                  gas_limit: int,
                  chain_id: str,
-                 nonce: Optional[int],
-                 amount: Optional[int],
-                 sender_username: Optional[str],
-                 receiver_username: Optional[str],
-                 gas_price: Optional[int],
-                 data: Optional[bytes],
-                 version: Optional[int],
-                 options: Optional[int],
-                 guardian: Optional[str],
-                 signature: Optional[bytes],
-                 guardian_signature: Optional[bytes]
+                 nonce: Optional[int] = None,
+                 amount: Optional[int] = None,
+                 sender_username: Optional[str] = None,
+                 receiver_username: Optional[str] = None,
+                 gas_price: Optional[int] = None,
+                 data: Optional[bytes] = None,
+                 version: Optional[int] = None,
+                 options: Optional[int] = None,
+                 guardian: Optional[str] = None,
+                 signature: Optional[bytes] = None,
+                 guardian_signature: Optional[bytes] = None
                  ) -> None:
         self.chainID = chain_id
         self.sender = sender

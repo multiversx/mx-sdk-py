@@ -11,6 +11,8 @@ class ITransaction(Protocol):
     gas_limit: int
     chainID: str
     gas_price: int
+    sender_username: str
+    receiver_username: str
     nonce: int
     amount: int
     data: bytes
@@ -31,9 +33,9 @@ class ProtoSerializer:
         proto_transaction.Nonce = transaction.nonce
         proto_transaction.Value = self.serialize_transaction_value(transaction.amount)
         proto_transaction.RcvAddr = bytes(receiver_pubkey)
-        proto_transaction.RcvUserName = b""
+        proto_transaction.RcvUserName = transaction.sender_username.encode()
         proto_transaction.SndAddr = bytes(sender_pubkey)
-        proto_transaction.SndUserName = b""
+        proto_transaction.SndUserName = transaction.receiver_username.encode()
         proto_transaction.GasPrice = transaction.gas_price
         proto_transaction.GasLimit = transaction.gas_limit
         proto_transaction.Data = transaction.data

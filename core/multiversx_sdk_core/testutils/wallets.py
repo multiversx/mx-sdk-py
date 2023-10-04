@@ -10,7 +10,7 @@ grace_pem = Path(__file__).parent / "testwallets" / "grace.pem"
 carol_pem = Path(__file__).parent / "testwallets" / "carol.pem"
 
 
-def load_wallets():
+def load_wallets() -> dict[str, UserPEM]:
     wallets: Dict[str, UserPEM] = {}
 
     alice = UserPEM.from_file(Path(alice_pem))
