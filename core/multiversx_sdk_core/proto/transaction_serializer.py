@@ -33,18 +33,16 @@ class ProtoSerializer:
         proto_transaction.Nonce = transaction.nonce
         proto_transaction.Value = self.serialize_transaction_value(transaction.amount)
         proto_transaction.RcvAddr = bytes(receiver_pubkey)
-        proto_transaction.RcvUserName = transaction.sender_username.encode()
+        proto_transaction.RcvUserName = transaction.receiver_username.encode()
         proto_transaction.SndAddr = bytes(sender_pubkey)
-        proto_transaction.SndUserName = transaction.receiver_username.encode()
+        proto_transaction.SndUserName = transaction.sender_username.encode()
         proto_transaction.GasPrice = transaction.gas_price
         proto_transaction.GasLimit = transaction.gas_limit
         proto_transaction.Data = transaction.data
         proto_transaction.ChainID = transaction.chainID.encode()
         proto_transaction.Version = transaction.version
         proto_transaction.Signature = transaction.signature
-
-        if transaction.options:
-            proto_transaction.Options = transaction.options
+        proto_transaction.Options = transaction.options
 
         if self._is_guarded_transaction(transaction):
             guardian_address = transaction.guardian
