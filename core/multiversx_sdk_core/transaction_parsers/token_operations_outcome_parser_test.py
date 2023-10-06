@@ -1,6 +1,6 @@
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.codec import encode_unsigned_number
-from multiversx_sdk_core.transaction_intents_factories.transaction_intents_factory_config import \
+from multiversx_sdk_core.transaction_factories.transaction_intents_factory_config import \
     TransactionIntentsFactoryConfig
 from multiversx_sdk_core.transaction_parsers.token_operations_outcome_parser import \
     TokenOperationsOutcomeParser
