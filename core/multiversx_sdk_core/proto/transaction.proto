@@ -20,5 +20,5 @@ message Transaction {
   bytes    Signature      = 12;
   uint32   Options        = 13;
   bytes    GuardAddr      = 14;
-	bytes    GuardSignature = 15;
+  bytes    GuardSignature = 15;
 }
