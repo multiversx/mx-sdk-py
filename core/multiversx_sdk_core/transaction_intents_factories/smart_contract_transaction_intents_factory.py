@@ -10,7 +10,6 @@ from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk_core.transaction_intent import TransactionIntent
 from multiversx_sdk_core.transaction_intents_factories.transaction_intent_builder import \
     TransactionIntentBuilder
-from multiversx_sdk_core.transaction_intent import TransactionIntent
 
 
 class IConfig(Protocol):
