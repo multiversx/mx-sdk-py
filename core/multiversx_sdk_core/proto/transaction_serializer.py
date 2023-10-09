@@ -31,17 +31,14 @@ class IAddressConverter(Protocol):
     def bech32_to_pubkey(self, value: str) -> bytes:
         ...
 
-    def pubkey_to_bech32(self, pubkey: bytes) -> str:
-        ...
-
 
 class ProtoSerializer:
     def __init__(self, converter: IAddressConverter) -> None:
-        self.converter = converter
+        self.address_converter = converter
 
     def serialize_transaction(self, transaction: ITransaction) -> bytes:
-        receiver_pubkey = self.converter.bech32_to_pubkey(transaction.receiver)
-        sender_pubkey = self.converter.bech32_to_pubkey(transaction.sender)
+        receiver_pubkey = self.address_converter.bech32_to_pubkey(transaction.receiver)
+        sender_pubkey = self.address_converter.bech32_to_pubkey(transaction.sender)
 
         proto_transaction = ProtoTransaction.Transaction()
         proto_transaction.Nonce = transaction.nonce
@@ -60,7 +57,7 @@ class ProtoSerializer:
 
         if self._is_guarded_transaction(transaction):
             guardian_address = transaction.guardian
-            proto_transaction.GuardAddr = self.converter.bech32_to_pubkey(guardian_address)
+            proto_transaction.GuardAddr = self.address_converter.bech32_to_pubkey(guardian_address)
             proto_transaction.GuardSignature = transaction.guardian_signature
 
         encoded_tx: bytes = proto_transaction.SerializeToString()
