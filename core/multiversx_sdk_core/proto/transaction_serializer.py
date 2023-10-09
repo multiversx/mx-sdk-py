@@ -1,8 +1,9 @@
 from typing import Protocol
 
 import multiversx_sdk_core.proto.transaction_pb2 as ProtoTransaction
-from multiversx_sdk_core.address import AddressConverter
-from multiversx_sdk_core.constants import TRANSACTION_OPTIONS_TX_GUARDED
+from multiversx_sdk_core.codec import encode_unsigned_number
+from multiversx_sdk_core.constants import (DEFAULT_HRP,
+                                           TRANSACTION_OPTIONS_TX_GUARDED)
 
 
 class ITransaction(Protocol):
@@ -23,11 +24,24 @@ class ITransaction(Protocol):
     guardian_signature: bytes
 
 
+class IAddressConverter(Protocol):
+    def __init__(self, hrp: str = DEFAULT_HRP) -> None:
+        ...
+
+    def bech32_to_pubkey(self, value: str) -> bytes:
+        ...
+
+    def pubkey_to_bech32(self, pubkey: bytes) -> str:
+        ...
+
+
 class ProtoSerializer:
+    def __init__(self, converter: IAddressConverter) -> None:
+        self.converter = converter
+
     def serialize_transaction(self, transaction: ITransaction) -> bytes:
-        converter = AddressConverter()
-        receiver_pubkey = converter.bech32_to_pubkey(transaction.receiver)
-        sender_pubkey = converter.bech32_to_pubkey(transaction.sender)
+        receiver_pubkey = self.converter.bech32_to_pubkey(transaction.receiver)
+        sender_pubkey = self.converter.bech32_to_pubkey(transaction.sender)
 
         proto_transaction = ProtoTransaction.Transaction()
         proto_transaction.Nonce = transaction.nonce
@@ -46,7 +60,7 @@ class ProtoSerializer:
 
         if self._is_guarded_transaction(transaction):
             guardian_address = transaction.guardian
-            proto_transaction.GuardAddr = converter.bech32_to_pubkey(guardian_address)
+            proto_transaction.GuardAddr = self.converter.bech32_to_pubkey(guardian_address)
             proto_transaction.GuardSignature = transaction.guardian_signature
 
         encoded_tx: bytes = proto_transaction.SerializeToString()
@@ -66,28 +80,7 @@ class ProtoSerializer:
         if tx_value == 0:
             return bytes([0, 0])
 
-        buffer = self._big_int_to_buffer(tx_value)
+        buffer = encode_unsigned_number(tx_value)
         buffer = bytes([0x00]) + buffer
 
         return buffer
-
-    # this function is implemented to mimic the mx-sdk-js-core implementation
-    def _big_int_to_buffer(self, value: int):
-        hex_value = self._get_hex_magnitude_of_big_int(value)
-        return bytes.fromhex(hex_value)
-
-    def _get_hex_magnitude_of_big_int(self, value: int):
-        if value == 0:
-            return ""
-
-        if value < 0:
-            value = -value
-
-        return self._number_to_padded_hex(value)
-
-    def _number_to_padded_hex(self, value: int):
-        hex_value = hex(value)[2:]
-        return self._zero_pad_string_if_odd_length(hex_value)
-
-    def _zero_pad_string_if_odd_length(self, input: str):
-        return "0" + input if len(input) % 2 else input

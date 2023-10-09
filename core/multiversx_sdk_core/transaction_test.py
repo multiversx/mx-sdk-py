@@ -1,14 +1,24 @@
 import pytest
 
+from multiversx_sdk_core.address import AddressConverter
+from multiversx_sdk_core.errors import NotEnoughGasError
 from multiversx_sdk_core.testutils.wallets import load_wallets
 from multiversx_sdk_core.transaction import Transaction, TransactionComputer
+
+
+class NetworkConfig:
+    def __init__(self, min_gas_limit: int = 50000) -> None:
+        self.min_gas_limit = min_gas_limit
+        self.gas_per_data_byte = 1500
+        self.gas_price_modifier = 0.01
+        self.chain_id = "D"
 
 
 class TestTransaction:
     wallets = load_wallets()
     alice = wallets["alice"]
     carol = wallets["carol"]
-    transaction_computer = TransactionComputer()
+    transaction_computer = TransactionComputer(address_converter=AddressConverter())
 
     def test_serialize_for_signing(self):
         sender = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
@@ -89,6 +99,43 @@ class TestTransaction:
         )
         tx_hash = self.transaction_computer.compute_transaction_hash(transaction)
         assert tx_hash == "41b5acf7ebaf4a9165a64206b6ebc02021b3adda55ffb2a2698aac2e7004dc29"
+
+    def test_compute_transaction_fee_insufficient(self):
+        transaction = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            gas_limit=50000,
+            chain_id="D",
+            data=b"toolittlegaslimit",
+        )
+
+        with pytest.raises(NotEnoughGasError):
+            self.transaction_computer.compute_transaction_fee(transaction, NetworkConfig())
+
+    def test_compute_transaction_fee(self):
+        transaction = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            gas_price=500,
+            gas_limit=20,
+            chain_id="D",
+        )
+
+        computed_gas = self.transaction_computer.compute_transaction_fee(transaction, NetworkConfig(min_gas_limit=10))
+        assert computed_gas == 5050
+
+    def test_compute_transaction_fee_with_data_field(self):
+        transaction = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            gas_price=500,
+            gas_limit=12010,
+            chain_id="D",
+            data=b"testdata"
+        )
+
+        computed_gas = self.transaction_computer.compute_transaction_fee(transaction, NetworkConfig(min_gas_limit=10))
+        assert computed_gas == 6005000
 
     @pytest.mark.skip("not sure what will happend with `from_dictionary()`")
     def test_tx_from_dictionary(self):
