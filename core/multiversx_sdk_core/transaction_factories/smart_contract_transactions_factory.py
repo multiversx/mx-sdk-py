@@ -20,7 +20,7 @@ class IConfig(Protocol):
     gas_limit_per_byte: int
 
 
-class SmartContractTransactionFactory:
+class SmartContractTransactionsFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
 
@@ -75,23 +75,27 @@ class SmartContractTransactionFactory:
         token_computer = TokenComputer()
         transfer_args: List[str] = []
 
-        if len(token_transfers) != 0:
-            if len(token_transfers) == 1:
-                transfer = token_transfers[0]
+        if len(token_transfers) == 1:
+            transfer = token_transfers[0]
 
-                if token_computer.is_fungible(transfer.token):
-                    transfer_args = self._build_args_for_esdt_transfer(transfer)
-                else:
-                    transfer_args = self._build_args_for_single_esdt_nft_transfer(transfer)
-                    transfer_args.append(contract.hex())
-                    contract = sender
+            if token_computer.is_fungible(transfer.token):
+                transfer_args = self._build_args_for_esdt_transfer(transfer)
+                transfer_args.append(arg_to_string(function))
+                transfer_args.extend(args_to_strings(arguments))
             else:
-                transfer_args = self._build_args_for_multi_esdt_nft_transfer(token_transfers)
-                transfer_args.extend([contract.hex(), arg_to_string(len(token_transfers))])
+                transfer_args = self._build_args_for_single_esdt_nft_transfer(transfer)
+                transfer_args.append(contract.hex())
                 contract = sender
-
-        transfer_args.append(function)
-        transfer_args.extend(args_to_strings(arguments))
+                transfer_args.append(arg_to_string(function))
+                transfer_args.extend(args_to_strings(arguments))
+        elif len(token_transfers) > 1:
+            transfer_args = self._build_args_for_multi_esdt_nft_transfer(contract.hex(), token_transfers)
+            contract = sender
+            transfer_args.append(arg_to_string(function))
+            transfer_args.extend(args_to_strings(arguments))
+        else:
+            transfer_args.append(function)
+            transfer_args.extend(args_to_strings(arguments))
 
         transaction = TransactionBuilder(
             config=self.config,
@@ -105,9 +109,6 @@ class SmartContractTransactionFactory:
 
         return transaction
 
-    def _build_args_for_transfer(self):
-        pass
-
     def _build_args_for_esdt_transfer(self, transfer: TokenTransfer) -> List[str]:
         args: List[str] = ["ESDTTransfer"]
         args.extend(args_to_strings([transfer.token.identifier, transfer.amount]))
@@ -115,14 +116,13 @@ class SmartContractTransactionFactory:
 
     def _build_args_for_single_esdt_nft_transfer(self, transfer: TokenTransfer) -> List[str]:
         args: List[str] = ["ESDTNFTTransfer"]
-
         token = transfer.token
         # check for identifier if is extended; same bellow
         args.extend(args_to_strings([token.identifier, token.nonce, transfer.amount]))
         return args
 
-    def _build_args_for_multi_esdt_nft_transfer(self, transfers: List[TokenTransfer]) -> List[str]:
-        args: List[str] = ["MultiESDTNFTTransfer"]
+    def _build_args_for_multi_esdt_nft_transfer(self, contract: str, transfers: List[TokenTransfer]) -> List[str]:
+        args: List[str] = ["MultiESDTNFTTransfer", contract, arg_to_string(len(transfers))]
 
         for transfer in transfers:
             args.extend(args_to_strings([transfer.token.identifier, transfer.token.nonce, transfer.amount]))
