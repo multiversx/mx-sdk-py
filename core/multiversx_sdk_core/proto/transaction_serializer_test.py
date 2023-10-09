@@ -1,3 +1,4 @@
+from multiversx_sdk_core.address import AddressConverter
 from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
 from multiversx_sdk_core.testutils.wallets import load_wallets
 from multiversx_sdk_core.transaction import Transaction
@@ -8,7 +9,7 @@ class TestProtoSerializer:
     alice = wallets["alice"]
     bob = wallets["bob"]
     carol = wallets["carol"]
-    proto_serializer = ProtoSerializer()
+    proto_serializer = ProtoSerializer(converter=AddressConverter())
 
     def test_serialize_tx_no_data_no_value(self):
         transaction = Transaction(

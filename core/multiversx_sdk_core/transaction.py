@@ -2,14 +2,26 @@ import json
 from base64 import b64encode
 from collections import OrderedDict
 from hashlib import blake2b
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Protocol
 
-from multiversx_sdk_core.constants import (TRANSACTION_MIN_GAS_PRICE,
+from multiversx_sdk_core.constants import (DEFAULT_HRP,
+                                           TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
 from multiversx_sdk_core.errors import NotEnoughGasError
 from multiversx_sdk_core.interfaces import INetworkConfig
 from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
+
+
+class IAddressConverter(Protocol):
+    def __init__(self, hrp: str = DEFAULT_HRP) -> None:
+        ...
+
+    def bech32_to_pubkey(self, value: str) -> bytes:
+        ...
+
+    def pubkey_to_bech32(self, pubkey: bytes) -> str:
+        ...
 
 
 class Transaction:
@@ -52,8 +64,8 @@ class Transaction:
 
 
 class TransactionComputer:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, address_converter: IAddressConverter) -> None:
+        self.address_converter = address_converter
 
     def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
         move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
@@ -76,7 +88,7 @@ class TransactionComputer:
         return serialized
 
     def compute_transaction_hash(self, transaction: Transaction) -> str:
-        proto = ProtoSerializer()
+        proto = ProtoSerializer(self.address_converter)
         serialized_tx = proto.serialize_transaction(transaction)
         tx_hash = blake2b(serialized_tx, digest_size=32).hexdigest()
         return tx_hash
