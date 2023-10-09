@@ -117,17 +117,25 @@ class SmartContractTransactionsFactory:
     def _build_args_for_single_esdt_nft_transfer(self, transfer: TokenTransfer) -> List[str]:
         args: List[str] = ["ESDTNFTTransfer"]
         token = transfer.token
-        # check for identifier if is extended; same bellow
-        args.extend(args_to_strings([token.identifier, token.nonce, transfer.amount]))
+        identifier = self._ensure_identifier_has_correct_structure(token.identifier)
+        args.extend(args_to_strings([identifier, token.nonce, transfer.amount]))
         return args
 
     def _build_args_for_multi_esdt_nft_transfer(self, contract: str, transfers: List[TokenTransfer]) -> List[str]:
         args: List[str] = ["MultiESDTNFTTransfer", contract, arg_to_string(len(transfers))]
 
         for transfer in transfers:
-            args.extend(args_to_strings([transfer.token.identifier, transfer.token.nonce, transfer.amount]))
+            identifier = self._ensure_identifier_has_correct_structure(transfer.token.identifier)
+            args.extend(args_to_strings([identifier, transfer.token.nonce, transfer.amount]))
 
         return args
+
+    def _ensure_identifier_has_correct_structure(self, identifier: str) -> str:
+        if identifier.count("-") == 1:
+            return identifier
+
+        token_computer = TokenComputer()
+        return token_computer.extract_identifier_from_extended_identifier(identifier)
 
     def create_transaction_for_upgrade(self,
                                        sender: IAddress,

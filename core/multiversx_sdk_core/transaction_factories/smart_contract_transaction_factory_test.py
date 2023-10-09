@@ -5,7 +5,7 @@ from multiversx_sdk_core.constants import CONTRACT_DEPLOY_ADDRESS
 from multiversx_sdk_core.custom_tokens import Token, TokenTransfer
 from multiversx_sdk_core.transaction_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
-from multiversx_sdk_core.transaction_factories.transaction_intents_factory_config import \
+from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 
 

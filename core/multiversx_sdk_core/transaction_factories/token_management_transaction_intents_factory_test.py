@@ -1,7 +1,7 @@
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.transaction_factories.token_management_transaction_intents_factory import \
     TokenManagementTransactionIntentsFactory
-from multiversx_sdk_core.transaction_factories.transaction_intents_factory_config import \
+from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
     TransactionIntentsFactoryConfig
 
 frank = Address.from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
