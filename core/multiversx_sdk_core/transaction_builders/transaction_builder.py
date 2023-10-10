@@ -57,13 +57,13 @@ class TransactionBuilder:
 
         return Transaction(
             chain_id=chain_id,
-            sender=sender,
-            receiver=receiver,
+            sender=sender.bech32(),
+            receiver=receiver.bech32(),
             gas_limit=gas_limit,
             gas_price=gas_price,
             nonce=nonce,
-            value=value,
-            data=data,
+            amount=int(str(value)),
+            data=data.data,
             version=version,
             options=options
         )

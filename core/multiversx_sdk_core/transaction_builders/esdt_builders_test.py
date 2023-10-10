@@ -28,7 +28,7 @@ def test_esdt_issue_builder():
 
     assert payload.data == b"issue@464f4f@464f4f@e8d4a51000@08@63616e467265657a65@74727565@63616e4d696e74@74727565@63616e55706772616465@74727565"
     assert tx.chainID == "D"
-    assert tx.sender == issuer
-    assert tx.receiver.bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert tx.sender == issuer.bech32()
+    assert tx.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert tx.gas_limit == 50000 + payload.length() * 1500 + 60000000
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)

@@ -28,10 +28,10 @@ def test_egld_transfer_builder():
     tx = builder.build()
     assert payload.data == b"for the book"
     assert tx.chainID == "D"
-    assert tx.sender == alice
-    assert tx.receiver == bob
+    assert tx.sender == alice.bech32()
+    assert tx.receiver == bob.bech32()
     assert tx.gas_limit == 50000 + payload.length() * 1500
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)
 
     # Without "data" field
     builder = EGLDTransferBuilder(
@@ -45,10 +45,10 @@ def test_egld_transfer_builder():
     tx = builder.build()
     assert payload.data == b""
     assert tx.chainID == "D"
-    assert tx.sender == alice
-    assert tx.receiver == bob
+    assert tx.sender == alice.bech32()
+    assert tx.receiver == bob.bech32()
     assert tx.gas_limit == 50000
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)
 
 
 def test_esdt_transfer_builder():
@@ -67,10 +67,10 @@ def test_esdt_transfer_builder():
     tx = builder.build()
     assert payload.data == b"ESDTTransfer@434f554e5445522d386230323866@2710"
     assert tx.chainID == "D"
-    assert tx.sender == alice
-    assert tx.receiver == bob
+    assert tx.sender == alice.bech32()
+    assert tx.receiver == bob.bech32()
     assert tx.gas_limit == 50000 + payload.length() * 1500 + 100000 + 200000
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)
 
 
 def test_esdt_nft_transfer_builder():
@@ -89,10 +89,10 @@ def test_esdt_nft_transfer_builder():
     tx = builder.build()
     assert payload.data == b"ESDTNFTTransfer@544553542d333866323439@01@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
     assert tx.chainID == "D"
-    assert tx.sender == alice
-    assert tx.receiver == alice
+    assert tx.sender == alice.bech32()
+    assert tx.receiver == alice.bech32()
     assert tx.gas_limit == 50000 + payload.length() * 1500 + 200000 + 800000
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)
 
 
 def test_multi_esdt_nft_transfer_builder():
@@ -113,7 +113,7 @@ def test_multi_esdt_nft_transfer_builder():
     tx = builder.build()
     assert payload.data == b"MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@02@544553542d333866323439@01@01@4241522d633830643239@@8ac7230489e80000"
     assert tx.chainID == "D"
-    assert tx.sender == alice
-    assert tx.receiver == alice
+    assert tx.sender == alice.bech32()
+    assert tx.receiver == alice.bech32()
     assert tx.gas_limit == 50000 + payload.length() * 1500 + 2 * (200000 + 800000)
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)

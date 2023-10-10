@@ -77,15 +77,15 @@ class RelayedTransactionV1Builder:
         )
         relayed_transaction = Transaction(
             chain_id=self.network_config.chain_id,
-            sender=self.relayer_address,
+            sender=self.relayer_address.bech32(),
             receiver=self.inner_transaction.sender,
-            value=0,
+            amount=0,
             nonce=self.relayer_nonce,
             gas_limit=gas_limit,
-            data=payload,
+            data=payload.data,
             version=self.relayed_transaction_version,
             options=self.relayed_transaction_options,
-            guardian=self.relayed_transaction_guardian,
+            guardian=self.relayed_transaction_guardian.bech32() if self.relayed_transaction_guardian else "",
         )
 
         if self.relayer_nonce:
@@ -97,17 +97,17 @@ class RelayedTransactionV1Builder:
         if not self.inner_transaction:
             return ""
 
-        sender = Address.from_bech32(self.inner_transaction.sender.bech32()).hex()
-        receiver = Address.from_bech32(self.inner_transaction.receiver.bech32()).hex()
+        sender = Address.from_bech32(self.inner_transaction.sender).hex()
+        receiver = Address.from_bech32(self.inner_transaction.receiver).hex()
 
         tx: Dict[str, Any] = {
             "nonce": self.inner_transaction.nonce,
             "sender": base64.b64encode(bytes.fromhex(sender)).decode(),
             "receiver": base64.b64encode(bytes.fromhex(receiver)).decode(),
-            "value": int(self.inner_transaction.value.__str__(), 10),
+            "value": int(self.inner_transaction.amount.__str__(), 10),
             "gasPrice": self.inner_transaction.gas_price,
             "gasLimit": self.inner_transaction.gas_limit,
-            "data": base64.b64encode(self.inner_transaction.data.data).decode(),
+            "data": base64.b64encode(self.inner_transaction.data).decode(),
             "signature": base64.b64encode(self.inner_transaction.signature).decode(),
             "chainID": base64.b64encode(
                 self.inner_transaction.chainID.encode()
@@ -119,15 +119,11 @@ class RelayedTransactionV1Builder:
             tx["options"] = self.inner_transaction.options
 
         if self.inner_transaction.guardian:
-            guardian = Address.from_bech32(
-                self.inner_transaction.guardian.bech32()
-            ).hex()
+            guardian = Address.from_bech32(self.inner_transaction.guardian).hex()
             tx["guardian"] = base64.b64encode(bytes.fromhex(guardian)).decode()
 
         if self.inner_transaction.guardian_signature:
-            tx["guardianSignature"] = base64.b64encode(
-                self.inner_transaction.guardian_signature
-            ).decode()
+            tx["guardianSignature"] = base64.b64encode(self.inner_transaction.guardian_signature).decode()
 
         if self.inner_transaction.sender_username:
             tx["sndUserName"] = base64.b64encode(self.inner_transaction.sender_username.encode()).decode()
