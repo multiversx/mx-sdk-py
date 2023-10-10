@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional, Protocol
 
 from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
@@ -11,6 +12,8 @@ from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
                                             ITransactionVersion)
 from multiversx_sdk_core.transaction import Transaction
 from multiversx_sdk_core.transaction_payload import TransactionPayload
+
+logger = logging.getLogger("transaction_builder")
 
 
 class ITransactionBuilderConfiguration(Protocol):
@@ -31,6 +34,8 @@ class TransactionBuilder:
                  value: Optional[ITransactionValue] = None,
                  gas_limit: Optional[IGasLimit] = None,
                  gas_price: Optional[IGasPrice] = None) -> None:
+        logger.warning("The transaction builders are deprecated and will be removed in a later release. Use the transaction factories instead.")
+
         self.chain_id = config.chain_id
         self.min_gas_price = config.min_gas_price
         self.min_gas_limit = config.min_gas_limit
