@@ -4,7 +4,7 @@ from enum import Enum
 from typing import List, Protocol
 
 from multiversx_sdk_core.interfaces import IAddress
-from multiversx_sdk_core.serializer import arg_to_string
+from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk_core.transaction import Transaction
 from multiversx_sdk_core.transaction_factories.transaction_builder import \
     TransactionBuilder
@@ -71,8 +71,8 @@ class TokenManagementTransactionsFactory:
             *([arg_to_string("canWipe"), self._true_as_hex] if can_wipe else []),
             *([arg_to_string("canPause"), self._true_as_hex] if can_pause else []),
             *([arg_to_string("canChangeOwner"), self._true_as_hex] if can_change_owner else []),
-            *([arg_to_string("canUpgrade"), self._true_as_hex] if can_upgrade else []),
-            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
+            *(args_to_strings(["canUpgrade", str(can_upgrade).lower()])),
+            *(args_to_strings(["canAddSpecialRoles", str(can_add_special_roles).lower()]))
         ]
 
         return TransactionBuilder(
@@ -117,8 +117,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canPause"), self._true_as_hex] if can_pause else []),
             *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex] if can_transfer_nft_create_role else []),
             *([arg_to_string("canChangeOwner"), self._true_as_hex] if can_change_owner else []),
-            *([arg_to_string("canUpgrade"), self._true_as_hex] if can_upgrade else []),
-            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
+            *(args_to_strings(["canUpgrade", str(can_upgrade).lower()])),
+            *(args_to_strings(["canAddSpecialRoles", str(can_add_special_roles).lower()]))
         ]
 
         return TransactionBuilder(
@@ -155,8 +155,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canPause"), self._true_as_hex] if can_pause else []),
             *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex] if can_transfer_nft_create_role else []),
             *([arg_to_string("canChangeOwner"), self._true_as_hex] if can_change_owner else []),
-            *([arg_to_string("canUpgrade"), self._true_as_hex] if can_upgrade else []),
-            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex] if can_add_special_roles else []),
+            *(args_to_strings(["canUpgrade", str(can_upgrade).lower()])),
+            *(args_to_strings(["canAddSpecialRoles", str(can_add_special_roles).lower()]))
         ]
 
         return TransactionBuilder(

@@ -58,6 +58,7 @@ class ESDTIssueBuilder(TransactionBuilder):
         return self.gas_limit_esdt_issue
 
     def _build_payload_parts(self) -> List[str]:
+        # the `canUpgrade` and `canAddSpecialRoles` attributes are set to `True` if not explicitly set to `False`
         return [
             "issue",
             arg_to_string(self.token_name),
@@ -70,6 +71,6 @@ class ESDTIssueBuilder(TransactionBuilder):
             *(args_to_strings(["canMint", "true"]) if self.can_mint else []),
             *(args_to_strings(["canBurn", "true"]) if self.can_burn else []),
             *(args_to_strings(["canChangeOwner", "true"]) if self.can_change_owner else []),
-            *(args_to_strings(["canUpgrade", "true"]) if self.can_upgrade else []),
-            *(args_to_strings(["canAddSpecialRoles", "true"]) if self.can_add_special_roles else [])
+            *(args_to_strings(["canUpgrade", str(self.can_upgrade).lower()])),
+            *(args_to_strings(["canAddSpecialRoles", str(self.can_add_special_roles).lower()]))
         ]
