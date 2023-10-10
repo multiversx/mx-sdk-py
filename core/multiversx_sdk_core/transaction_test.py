@@ -137,7 +137,7 @@ class TestTransaction:
         computed_gas = self.transaction_computer.compute_transaction_fee(transaction, NetworkConfig(min_gas_limit=10))
         assert computed_gas == 6005000
 
-    @pytest.mark.skip("not sure what will happend with `from_dictionary()`")
+    @pytest.mark.skip("not sure what will happen with `from_dictionary()`")
     def test_tx_from_dictionary(self):
         tx_as_dict = {
             "nonce": 7,
