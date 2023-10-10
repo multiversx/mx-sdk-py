@@ -4,7 +4,7 @@ from collections import OrderedDict
 from hashlib import blake2b
 from typing import Any, Dict, Optional, Protocol
 
-from multiversx_sdk_core.constants import (DEFAULT_HRP,
+from multiversx_sdk_core.constants import (DEFAULT_HRP, DIGEST_SIZE,
                                            TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
@@ -90,7 +90,7 @@ class TransactionComputer:
     def compute_transaction_hash(self, transaction: Transaction) -> str:
         proto = ProtoSerializer(self.address_converter)
         serialized_tx = proto.serialize_transaction(transaction)
-        tx_hash = blake2b(serialized_tx, digest_size=32).hexdigest()
+        tx_hash = blake2b(serialized_tx, digest_size=DIGEST_SIZE).hexdigest()
         return tx_hash
 
     def _to_dictionary(self, transaction: Transaction) -> Dict[str, Any]:
@@ -127,5 +127,5 @@ class TransactionComputer:
         return dictionary
 
     def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
-        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
+        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf-8")
         return serialized
