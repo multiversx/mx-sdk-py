@@ -8,7 +8,6 @@ from multiversx_sdk_core.interfaces import (IAddress, INetworkConfig, INonce,
                                             ITransactionOptions,
                                             ITransactionVersion)
 from multiversx_sdk_core.transaction import Transaction
-from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 class RelayedTransactionV1Builder:
@@ -68,11 +67,10 @@ class RelayedTransactionV1Builder:
 
         serialized_transaction = self._prepare_inner_transaction()
         data = f"relayedTx@{serialized_transaction.encode().hex()}"
-        payload = TransactionPayload.from_str(data)
 
         gas_limit = (
             self.network_config.min_gas_limit
-            + self.network_config.gas_per_data_byte * payload.length()
+            + self.network_config.gas_per_data_byte * len(data)
             + self.inner_transaction.gas_limit
         )
         relayed_transaction = Transaction(
@@ -82,7 +80,7 @@ class RelayedTransactionV1Builder:
             amount=0,
             nonce=self.relayer_nonce,
             gas_limit=gas_limit,
-            data=payload.data,
+            data=data.encode(),
             version=self.relayed_transaction_version,
             options=self.relayed_transaction_options,
             guardian=self.relayed_transaction_guardian.bech32() if self.relayed_transaction_guardian else "",

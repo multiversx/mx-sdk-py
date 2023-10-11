@@ -7,7 +7,6 @@ from multiversx_sdk_core.testutils.wallets import load_wallets
 from multiversx_sdk_core.transaction import Transaction, TransactionComputer
 from multiversx_sdk_core.transaction_builders.relayed_v2_builder import \
     RelayedTransactionV2Builder
-from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 class NetworkConfig:
@@ -40,7 +39,7 @@ class TestRelayedV2Builder:
             receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             gas_limit=10,
             nonce=15,
-            data=TransactionPayload.from_str("getContractConfig").data
+            data=b"getContractConfig"
         )
         # version is set to 1 to match the test in sdk-js-core
         inner_tx.version = 1
@@ -64,7 +63,7 @@ class TestRelayedV2Builder:
             receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             gas_limit=0,
             nonce=15,
-            data=TransactionPayload.from_str("getContractConfig").data
+            data=b"getContractConfig"
         )
         # version is set to 1 to match the test in sdk-js-core
         inner_tx.version = 1

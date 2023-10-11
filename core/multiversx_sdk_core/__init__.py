@@ -4,8 +4,8 @@ from multiversx_sdk_core.address import (Address, AddressConverter,
 from multiversx_sdk_core.code_metadata import CodeMetadata
 from multiversx_sdk_core.contract_query import ContractQuery
 from multiversx_sdk_core.contract_query_builder import ContractQueryBuilder
-from multiversx_sdk_core.custom_tokens import (Token, TokenComputer,
-                                               TokenTransfer)
+from multiversx_sdk_core.tokens import (Token, TokenComputer,
+                                        TokenTransfer)
 from multiversx_sdk_core.messages import ArbitraryMessage, MessageV1
 from multiversx_sdk_core.token_payment import TokenPayment
 from multiversx_sdk_core.transaction import Transaction, TransactionComputer

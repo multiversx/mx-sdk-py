@@ -17,3 +17,5 @@ CONTRACT_DEPLOY_ADDRESS = "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq
 TRANSACTION_OPTIONS_TX_GUARDED = 0b0010
 
 DIGEST_SIZE = 32
+
+TOKEN_RANDOM_SEQUENCE_LENGTH = 6

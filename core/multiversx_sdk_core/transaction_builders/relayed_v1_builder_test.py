@@ -7,7 +7,6 @@ from multiversx_sdk_core.testutils.wallets import load_wallets
 from multiversx_sdk_core.transaction import Transaction, TransactionComputer
 from multiversx_sdk_core.transaction_builders.relayed_v1_builder import \
     RelayedTransactionV1Builder
-from multiversx_sdk_core.transaction_payload import TransactionPayload
 
 
 class NetworkConfig:
@@ -38,7 +37,7 @@ class TestRelayedV1Builder:
             receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             gas_limit=10000000,
             nonce=15,
-            data=TransactionPayload.from_str("getContractConfig").data
+            data=b"getContractConfig"
         )
         relayed_builder.set_inner_transaction(inner_transaction)
 
@@ -61,7 +60,7 @@ class TestRelayedV1Builder:
             receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             gas_limit=60000000,
             nonce=198,
-            data=TransactionPayload.from_str("getContractConfig").data
+            data=b"getContractConfig"
         )
         # version is set to 1 to match the test in sdk-js-core
         inner_tx.version = 1
@@ -94,7 +93,7 @@ class TestRelayedV1Builder:
             receiver="erd1qqqqqqqqqqqqqpgq54tsxmej537z9leghvp69hfu4f8gg5eu396q83gnnz",
             gas_limit=60000000,
             nonce=198,
-            data=TransactionPayload.from_str("getContractConfig").data,
+            data=b"getContractConfig",
             guardian=self.grace.label,
             version=2,
             options=2
@@ -128,7 +127,7 @@ class TestRelayedV1Builder:
             receiver="erd1qqqqqqqqqqqqqpgq54tsxmej537z9leghvp69hfu4f8gg5eu396q83gnnz",
             gas_limit=60000000,
             nonce=198,
-            data=TransactionPayload.from_str("addNumber").data,
+            data=b"addNumber",
             guardian=self.grace.label,
             version=2,
             options=2
