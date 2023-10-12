@@ -10,6 +10,8 @@ from multiversx_sdk_core.errors import BadUsageError
 from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk_core.tokens import TokenComputer, TokenTransfer
+from multiversx_sdk_core.transaction_factories.token_transfers_data_builder import \
+    TokenTransfersDataBuilder
 from multiversx_sdk_core.transaction_factories.transaction_builder import \
     TransactionBuilder
 
@@ -23,6 +25,7 @@ class IConfig(Protocol):
 class SmartContractTransactionsFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
+        self._data_args_builder = TokenTransfersDataBuilder()
 
     def create_transaction_for_deploy(self,
                                       sender: IAddress,
@@ -79,20 +82,19 @@ class SmartContractTransactionsFactory:
             transfer = token_transfers[0]
 
             if token_computer.is_fungible(transfer.token):
-                transfer_args = self._build_args_for_esdt_transfer(transfer)
-                transfer_args.append(arg_to_string(function))
-                transfer_args.extend(args_to_strings(arguments))
+                transfer_args = self._data_args_builder.build_args_for_esdt_transfer(
+                    transfer=transfer, function=function, arguments=arguments
+                )
             else:
-                transfer_args = self._build_args_for_single_esdt_nft_transfer(transfer)
-                transfer_args.append(contract.hex())
+                transfer_args = self._data_args_builder.build_args_for_single_esdt_nft_transfer(
+                    transfer=transfer, receiver=contract, function=function, arguments=arguments
+                )
                 contract = sender
-                transfer_args.append(arg_to_string(function))
-                transfer_args.extend(args_to_strings(arguments))
         elif len(token_transfers) > 1:
-            transfer_args = self._build_args_for_multi_esdt_nft_transfer(contract.hex(), token_transfers)
+            transfer_args = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(
+                receiver=contract, transfers=token_transfers, function=function, arguments=arguments
+            )
             contract = sender
-            transfer_args.append(arg_to_string(function))
-            transfer_args.extend(args_to_strings(arguments))
         else:
             transfer_args.append(function)
             transfer_args.extend(args_to_strings(arguments))
@@ -108,34 +110,6 @@ class SmartContractTransactionsFactory:
         ).build()
 
         return transaction
-
-    def _build_args_for_esdt_transfer(self, transfer: TokenTransfer) -> List[str]:
-        args: List[str] = ["ESDTTransfer"]
-        args.extend(args_to_strings([transfer.token.identifier, transfer.amount]))
-        return args
-
-    def _build_args_for_single_esdt_nft_transfer(self, transfer: TokenTransfer) -> List[str]:
-        args: List[str] = ["ESDTNFTTransfer"]
-        token = transfer.token
-        identifier = self._ensure_identifier_has_correct_structure(token.identifier)
-        args.extend(args_to_strings([identifier, token.nonce, transfer.amount]))
-        return args
-
-    def _build_args_for_multi_esdt_nft_transfer(self, contract: str, transfers: List[TokenTransfer]) -> List[str]:
-        args: List[str] = ["MultiESDTNFTTransfer", contract, arg_to_string(len(transfers))]
-
-        for transfer in transfers:
-            identifier = self._ensure_identifier_has_correct_structure(transfer.token.identifier)
-            args.extend(args_to_strings([identifier, transfer.token.nonce, transfer.amount]))
-
-        return args
-
-    def _ensure_identifier_has_correct_structure(self, identifier: str) -> str:
-        if identifier.count("-") == 1:
-            return identifier
-
-        token_computer = TokenComputer()
-        return token_computer.extract_identifier_from_extended_identifier(identifier)
 
     def create_transaction_for_upgrade(self,
                                        sender: IAddress,
