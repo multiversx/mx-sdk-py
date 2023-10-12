@@ -2,8 +2,7 @@ from typing import Protocol
 
 import multiversx_sdk_core.proto.transaction_pb2 as ProtoTransaction
 from multiversx_sdk_core.codec import encode_unsigned_number
-from multiversx_sdk_core.constants import (DEFAULT_HRP,
-                                           TRANSACTION_OPTIONS_TX_GUARDED)
+from multiversx_sdk_core.constants import DEFAULT_HRP
 
 
 class ITransaction(Protocol):
@@ -55,7 +54,7 @@ class ProtoSerializer:
         proto_transaction.Signature = transaction.signature
         proto_transaction.Options = transaction.options
 
-        if self._is_guarded_transaction(transaction):
+        if transaction.guardian:
             guardian_address = transaction.guardian
             proto_transaction.GuardAddr = bytes(self.address_converter.bech32_to_pubkey(guardian_address))
             proto_transaction.GuardSignature = transaction.guardian_signature
@@ -63,15 +62,6 @@ class ProtoSerializer:
         encoded_tx: bytes = proto_transaction.SerializeToString()
 
         return encoded_tx
-
-    def _is_guarded_transaction(self, transaction: ITransaction) -> bool:
-        has_guardian = len(transaction.guardian) > 0
-        has_guardian_signature = len(transaction.guardian_signature) > 0
-        has_options_for_guarded_tx = self._check_tx_options_for_guardian(transaction.options)
-        return has_guardian and has_guardian_signature and has_options_for_guarded_tx
-
-    def _check_tx_options_for_guardian(self, options: int) -> bool:
-        return (options & TRANSACTION_OPTIONS_TX_GUARDED) == TRANSACTION_OPTIONS_TX_GUARDED
 
     def serialize_transaction_value(self, tx_value: int):
         if tx_value == 0:

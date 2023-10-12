@@ -1,4 +1,5 @@
 import pytest
+from multiversx_sdk_wallet import UserSecretKey
 
 from multiversx_sdk_core.address import AddressConverter
 from multiversx_sdk_core.errors import NotEnoughGasError
@@ -136,3 +137,30 @@ class TestTransaction:
 
         computed_gas = self.transaction_computer.compute_transaction_fee(transaction, NetworkConfig(min_gas_limit=10))
         assert computed_gas == 6005000
+
+    def test_compute_transaction_with_guardian_fields(self):
+        transaction_computer = TransactionComputer(AddressConverter())
+
+        sender_secret_key_hex = "3964a58b0debd802f67239c30aa2b3a75fff1842c203587cb590d03d20e32415"
+        sender_secret_key = UserSecretKey(bytes.fromhex(sender_secret_key_hex))
+
+        transaction = Transaction(
+            sender="erd1fp4zaxvyc8jh99vauwns99kvs9tn0k6cwrr0zpyz2jvyurcepuhsfzvlar",
+            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            gas_limit=139000,
+            gas_price=1000000000,
+            chain_id="D",
+            nonce=2,
+            amount=1000000000000000000,
+            data=b"this is a test transaction",
+            version=2,
+            options=2,
+            guardian="erd1nn8apn09vmf72l7kzr3nd90rr5r2q74he7hseghs3v68c5p7ud2qhhwf96",
+            guardian_signature=bytes.fromhex("487150c26d38a01fe19fbe26dac20ec2b42ec3abf5763a47a508e62bcd6ad3437c4d404684442e864a1dbad446dc0f852889a09f0650b5fdb55f4ee18147920d")
+        )
+
+        transaction.signature = sender_secret_key.sign(transaction_computer.compute_bytes_for_signing(transaction))
+        assert transaction.signature.hex() == "51434089b93d34ce5dfe9f7c8aa764e5654ed36ee9c54d465ce87d4399d71cf0745ca6c9c680727cf2788a5efbfebdbeececfa7b7497186c64975b7e6eb9f808"
+
+        tx_hash = transaction_computer.compute_transaction_hash(transaction)
+        assert tx_hash == "14a1ea3b73212efdcf4e66543b5e089437e72b8b069330312a0975f31e6c8a93"
