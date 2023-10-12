@@ -30,11 +30,11 @@ def test_contract_deployment_builder():
 
     assert payload.data == b"aabbccdd@0500@0506@2a@74657374"
     assert tx.chainID == "D"
-    assert tx.sender == owner
-    assert tx.receiver.bech32() == "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
+    assert tx.sender == owner.bech32()
+    assert tx.receiver == "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
     assert tx.gas_limit == 10000000
     assert tx.gas_price == 1000000000
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)
 
 
 def test_contract_upgrade_builder():
@@ -57,11 +57,11 @@ def test_contract_upgrade_builder():
 
     assert payload.data == b"upgradeContract@aabbccdd@0506@2a@74657374"
     assert tx.chainID == "D"
-    assert tx.sender == owner
-    assert tx.receiver == contract
+    assert tx.sender == owner.bech32()
+    assert tx.receiver == contract.bech32()
     assert tx.gas_limit == 10000000
     assert tx.gas_price == 1000000000
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)
 
 
 def test_contract_call_builder():
@@ -81,10 +81,10 @@ def test_contract_call_builder():
     tx = builder.build()
 
     assert payload.data == b"foo@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
-    assert tx.sender == caller
-    assert tx.receiver == contract
+    assert tx.sender == caller.bech32()
+    assert tx.receiver == contract.bech32()
     assert tx.gas_limit == 10000000
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.data.decode() == str(payload)
 
 
 def test_contract_call_builder_with_esdt_transfer():
@@ -109,9 +109,9 @@ def test_contract_call_builder_with_esdt_transfer():
     tx = builder.build()
 
     assert payload.data == b"ESDTTransfer@434f554e5445522d386230323866@2710@68656c6c6f@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
-    assert tx.sender == caller
-    assert tx.receiver == contract
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.sender == caller.bech32()
+    assert tx.receiver == contract.bech32()
+    assert tx.data.decode() == str(payload)
 
 
 def test_contract_call_builder_with_esdt_nft_transfer():
@@ -136,9 +136,9 @@ def test_contract_call_builder_with_esdt_nft_transfer():
     tx = builder.build()
 
     assert payload.data == b"ESDTNFTTransfer@544553542d333866323439@01@01@00000000000000000500e0b77f1edfb01cb786a39120f02c31ff5fe40aad8974@68656c6c6f@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
-    assert tx.sender == caller
-    assert tx.receiver == caller
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.sender == caller.bech32()
+    assert tx.receiver == caller.bech32()
+    assert tx.data.decode() == str(payload)
 
 
 def test_contract_call_builder_with_multi_esdt_nft_transfer():
@@ -164,6 +164,6 @@ def test_contract_call_builder_with_multi_esdt_nft_transfer():
     tx = builder.build()
 
     assert payload.data == b"MultiESDTNFTTransfer@00000000000000000500e0b77f1edfb01cb786a39120f02c31ff5fe40aad8974@02@544553542d333866323439@01@01@4241522d633830643239@@8ac7230489e80000@68656c6c6f@2a@74657374@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
-    assert tx.sender == caller
-    assert tx.receiver == caller
-    assert tx.data.encoded() == payload.encoded()
+    assert tx.sender == caller.bech32()
+    assert tx.receiver == caller.bech32()
+    assert tx.data.decode() == str(payload)

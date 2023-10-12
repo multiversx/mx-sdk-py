@@ -1,15 +1,15 @@
 from pathlib import Path
 from typing import Any, List, Protocol, Union
 
+from multiversx_sdk_core import Transaction
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.code_metadata import CodeMetadata
 from multiversx_sdk_core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
 from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
-from multiversx_sdk_core.transaction_intent import TransactionIntent
-from multiversx_sdk_core.transaction_intents_factories.transaction_intent_builder import \
-    TransactionIntentBuilder
+from multiversx_sdk_core.transaction_factories.transaction_builder import \
+    TransactionBuilder
 
 
 class IConfig(Protocol):
@@ -18,19 +18,20 @@ class IConfig(Protocol):
     gas_limit_per_byte: int
 
 
-class SmartContractTransactionIntentsFactory:
+class SmartContractTransactionsFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
 
-    def create_transaction_intent_for_deploy(self,
-                                             sender: IAddress,
-                                             bytecode: Union[Path, bytes],
-                                             gas_limit: int,
-                                             arguments: List[Any] = [],
-                                             is_upgradeable: bool = True,
-                                             is_readable: bool = True,
-                                             is_payable: bool = False,
-                                             is_payable_by_sc: bool = True) -> TransactionIntent:
+    def create_transaction_for_deploy(self,
+                                      sender: IAddress,
+                                      bytecode: Union[Path, bytes],
+                                      gas_limit: int,
+                                      arguments: List[Any] = [],
+                                      native_transfer_amount: int = 0,
+                                      is_upgradeable: bool = True,
+                                      is_readable: bool = True,
+                                      is_payable: bool = False,
+                                      is_payable_by_sc: bool = True) -> Transaction:
         if isinstance(bytecode, Path):
             bytecode = bytecode.read_bytes()
 
@@ -44,45 +45,48 @@ class SmartContractTransactionIntentsFactory:
 
         parts += args_to_strings(arguments)
 
-        intent = TransactionIntentBuilder(
+        transaction = TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=Address.from_bech32(CONTRACT_DEPLOY_ADDRESS),
             data_parts=parts,
-            execution_gas_limit=gas_limit
+            gas_limit=gas_limit,
+            add_data_movement_gas=False,
+            amount=native_transfer_amount
         ).build()
 
-        return intent
+        return transaction
 
     def create_transaction_intent_for_execute(self,
                                               sender: IAddress,
                                               contract_address: IAddress,
                                               function: str,
                                               gas_limit: int,
-                                              arguments: List[Any] = []) -> TransactionIntent:
+                                              arguments: List[Any] = []) -> Transaction:
         parts = [function] + args_to_strings(arguments)
 
-        intent = TransactionIntentBuilder(
+        intent = TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=contract_address,
             data_parts=parts,
-            execution_gas_limit=gas_limit
+            gas_limit=gas_limit,
+            add_data_movement_gas=False
         ).build()
 
         return intent
 
-    def create_transaction_intent_for_upgrade(self,
-                                              sender: IAddress,
-                                              contract: IAddress,
-                                              bytecode: Union[Path, bytes],
-                                              gas_limit: int,
-                                              arguments: List[Any] = [],
-                                              is_upgradeable: bool = True,
-                                              is_readable: bool = True,
-                                              is_payable: bool = False,
-                                              is_payable_by_sc: bool = True
-                                              ) -> TransactionIntent:
+    def create_transaction_for_upgrade(self,
+                                       sender: IAddress,
+                                       contract: IAddress,
+                                       bytecode: Union[Path, bytes],
+                                       gas_limit: int,
+                                       arguments: List[Any] = [],
+                                       native_transfer_amount: int = 0,
+                                       is_upgradeable: bool = True,
+                                       is_readable: bool = True,
+                                       is_payable: bool = False,
+                                       is_payable_by_sc: bool = True) -> Transaction:
         if isinstance(bytecode, Path):
             bytecode = bytecode.read_bytes()
 
@@ -96,12 +100,14 @@ class SmartContractTransactionIntentsFactory:
 
         parts += args_to_strings(arguments)
 
-        intent = TransactionIntentBuilder(
+        intent = TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=contract,
             data_parts=parts,
-            execution_gas_limit=gas_limit
+            gas_limit=gas_limit,
+            add_data_movement_gas=False,
+            amount=native_transfer_amount
         ).build()
 
         return intent

@@ -2,7 +2,7 @@ from multiversx_sdk_core.address import DEFAULT_HRP, Address
 from multiversx_sdk_core.interfaces import IAddress
 
 
-class TransactionIntentsFactoryConfig:
+class TransactionsFactoryConfig:
     def __init__(self, chain_id: str) -> None:
         # General-purpose configuration
         self.chain_id: str = chain_id
