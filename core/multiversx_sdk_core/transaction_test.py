@@ -1,8 +1,11 @@
+from termios import TCXONC
+
 import pytest
 from multiversx_sdk_wallet import UserSecretKey
 
 from multiversx_sdk_core.address import AddressConverter
 from multiversx_sdk_core.errors import NotEnoughGasError
+from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
 from multiversx_sdk_core.testutils.wallets import load_wallets
 from multiversx_sdk_core.transaction import Transaction, TransactionComputer
 
@@ -164,3 +167,34 @@ class TestTransaction:
 
         tx_hash = transaction_computer.compute_transaction_hash(transaction)
         assert tx_hash.hex() == "14a1ea3b73212efdcf4e66543b5e089437e72b8b069330312a0975f31e6c8a93"
+
+    # this test was done to mimic the one in mx-chain-go
+    def test_compute_transaction_with_dummy_guardian(self):
+        tx_computer = TransactionComputer(AddressConverter())
+        alicePrivateKeyHex = "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
+        alice_secret_key = UserSecretKey(bytes.fromhex(alicePrivateKeyHex))
+
+        transaction = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            gas_limit=150000,
+            chain_id="local-testnet",
+            gas_price=1000000000,
+            data=b"test data field",
+            version=2,
+            options=2,
+            nonce=92,
+            amount=123456789000000000000000000000,
+            guardian="erd1x23lzn8483xs2su4fak0r0dqx6w38enpmmqf2yrkylwq7mfnvyhsxqw57y",
+            guardian_signature=bytes([0] * 64)
+        )
+
+        transaction.signature = alice_secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+        assert transaction.signature.hex() == "e574d78b19e1481a6b9575c162e66f2f906a3178aec537509356385c4f1a5330a9b73a87a456fc6d7041e93b5f8a1231a92fb390174872a104a0929215600c0c"
+
+        proto_serializer = ProtoSerializer(AddressConverter())
+        serialized = proto_serializer.serialize_transaction(transaction)
+        assert serialized.hex() == "085c120e00018ee90ff6181f3761632000001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc0340f093094a0f746573742064617461206669656c64520d6c6f63616c2d746573746e657458026240e574d78b19e1481a6b9575c162e66f2f906a3178aec537509356385c4f1a5330a9b73a87a456fc6d7041e93b5f8a1231a92fb390174872a104a0929215600c0c6802722032a3f14cf53c4d0543954f6cf1bda0369d13e661dec095107627dc0f6d33612f7a4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+
+        tx_hash = tx_computer.compute_transaction_hash(transaction)
+        assert tx_hash.hex() == "242022e9dcfa0ee1d8199b0043314dbda8601619f70069ebc441b9f03349a35c"
