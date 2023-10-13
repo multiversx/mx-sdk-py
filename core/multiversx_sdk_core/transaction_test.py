@@ -82,7 +82,7 @@ class TestTransaction:
             signature=bytes.fromhex("eaa9e4dfbd21695d9511e9754bde13e90c5cfb21748a339a79be11f744c71872e9fe8e73c6035c413f5f08eef09e5458e9ea6fc315ff4da0ab6d000b450b2a07")
         )
         tx_hash = self.transaction_computer.compute_transaction_hash(transaction)
-        assert tx_hash == "169b76b752b220a76a93aeebc462a1192db1dc2ec9d17e6b4d7b0dcc91792f03"
+        assert tx_hash.hex() == "169b76b752b220a76a93aeebc462a1192db1dc2ec9d17e6b4d7b0dcc91792f03"
 
     def test_compute_transaction_hash_with_usernames(self):
         transaction = Transaction(
@@ -99,7 +99,7 @@ class TestTransaction:
             signature=bytes.fromhex("807bcd7de5553ea6dfc57c0510e84d46813c5963d90fec50991c500091408fcf6216dca48dae16a579a1611ed8b2834bae8bd0027dc17eb557963f7151b82c07")
         )
         tx_hash = self.transaction_computer.compute_transaction_hash(transaction)
-        assert tx_hash == "41b5acf7ebaf4a9165a64206b6ebc02021b3adda55ffb2a2698aac2e7004dc29"
+        assert tx_hash.hex() == "41b5acf7ebaf4a9165a64206b6ebc02021b3adda55ffb2a2698aac2e7004dc29"
 
     def test_compute_transaction_fee_insufficient(self):
         transaction = Transaction(
@@ -163,4 +163,4 @@ class TestTransaction:
         assert transaction.signature.hex() == "51434089b93d34ce5dfe9f7c8aa764e5654ed36ee9c54d465ce87d4399d71cf0745ca6c9c680727cf2788a5efbfebdbeececfa7b7497186c64975b7e6eb9f808"
 
         tx_hash = transaction_computer.compute_transaction_hash(transaction)
-        assert tx_hash == "14a1ea3b73212efdcf4e66543b5e089437e72b8b069330312a0975f31e6c8a93"
+        assert tx_hash.hex() == "14a1ea3b73212efdcf4e66543b5e089437e72b8b069330312a0975f31e6c8a93"
