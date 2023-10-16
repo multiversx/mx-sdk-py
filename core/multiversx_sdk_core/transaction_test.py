@@ -1,5 +1,3 @@
-from termios import TCXONC
-
 import pytest
 from multiversx_sdk_wallet import UserSecretKey
 
