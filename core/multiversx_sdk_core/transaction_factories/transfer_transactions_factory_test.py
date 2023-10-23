@@ -62,7 +62,7 @@ class TestTransferTransactionsFactory:
         assert transaction.amount == 0
         assert transaction.chainID == "D"
         assert transaction.data.decode() == "ESDTTransfer@464f4f2d313233343536@0f4240"
-        assert transaction.gas_limit == 310_000
+        assert transaction.gas_limit == 410_000
 
     def test_create_transaction_for_nft_transfer(self):
         alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -82,7 +82,7 @@ class TestTransferTransactionsFactory:
         assert transaction.amount == 0
         assert transaction.chainID == "D"
         assert transaction.data.decode() == "ESDTNFTTransfer@4e46542d313233343536@0a@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
-        assert transaction.gas_limit == 410_500
+        assert transaction.gas_limit == 1_210_500
 
     def test_create_transaction_for_multiple_nft_transfers(self):
         alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -105,4 +105,4 @@ class TestTransferTransactionsFactory:
         assert transaction.amount == 0
         assert transaction.chainID == "D"
         assert transaction.data.decode() == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@02@4e46542d313233343536@0a@01@544553542d393837363534@01@01"
-        assert transaction.gas_limit == 466_000
+        assert transaction.gas_limit == 1_466_000

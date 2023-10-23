@@ -9,14 +9,17 @@ from multiversx_sdk_core.transaction_factories.token_transfers_data_builder impo
 from multiversx_sdk_core.transaction_factories.transaction_builder import \
     TransactionBuilder
 
+ADDITIONAL_GAS_FOR_ESDT_TRANSFER = 100000
+ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER = 800000
+
 
 class IConfig(Protocol):
     chain_id: str
     min_gas_limit: int
     gas_limit_per_byte: int
-    esdt_transfer: int
-    esdt_nft_transfer: int
-    multi_esdt_nft_transfer: int
+    gas_limit_esdt_transfer: int
+    gas_limit_esdt_nft_transfer: int
+    gas_limit_multi_esdt_nft_transfer: int
 
 
 class TransferTransactionsFactory:
@@ -57,14 +60,14 @@ class TransferTransactionsFactory:
 
             if token_computer.is_fungible(transfer.token):
                 transfer_args = self._data_args_builder.build_args_for_esdt_transfer(transfer)
-                extra_gas_for_transfer = self.config.esdt_transfer
+                extra_gas_for_transfer = self.config.gas_limit_esdt_transfer + ADDITIONAL_GAS_FOR_ESDT_TRANSFER
             else:
                 transfer_args = self._data_args_builder.build_args_for_single_esdt_nft_transfer(transfer, receiver)
-                extra_gas_for_transfer = self.config.esdt_nft_transfer
+                extra_gas_for_transfer = self.config.gas_limit_esdt_nft_transfer + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
                 receiver = sender
         elif len(token_transfers) > 1:
             transfer_args = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, token_transfers)
-            extra_gas_for_transfer = self.config.multi_esdt_nft_transfer
+            extra_gas_for_transfer = self.config.gas_limit_multi_esdt_nft_transfer * len(token_transfers) + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
             receiver = sender
 
         return TransactionBuilder(

@@ -37,6 +37,6 @@ class TransactionsFactoryConfig:
         self.additional_gas_for_delegation_operations = 10_000_000
 
         # Configuration for token transfers
-        self.esdt_transfer = 200_000
-        self.esdt_nft_transfer = 200_000
-        self.multi_esdt_nft_transfer = 200_000
+        self.gas_limit_esdt_transfer = 200_000
+        self.gas_limit_esdt_nft_transfer = 200_000
+        self.gas_limit_multi_esdt_nft_transfer = 200_000

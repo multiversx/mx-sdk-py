@@ -30,7 +30,7 @@ class TokenComputer:
         parts = identifier.split("-")
 
         self._check_if_extended_identifier_was_provided(parts)
-        self._check_lenght_of_random_sequence(parts[1])
+        self._check_length_of_random_sequence(parts[1])
 
         hex_nonce = bytes.fromhex(parts[2])
         return decode_unsigned_number(hex_nonce)
@@ -39,7 +39,7 @@ class TokenComputer:
         parts = identifier.split("-")
 
         self._check_if_extended_identifier_was_provided(parts)
-        self._check_lenght_of_random_sequence(parts[1])
+        self._check_length_of_random_sequence(parts[1])
 
         return parts[0] + "-" + parts[1]
 
@@ -49,13 +49,13 @@ class TokenComputer:
         if len(token_parts) != EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED:
             raise InvalidTokenIdentifierError("You have not provided the extended identifier")
 
-    def _check_lenght_of_random_sequence(self, random_sequence: str) -> None:
+    def _check_length_of_random_sequence(self, random_sequence: str) -> None:
         if len(random_sequence) != TOKEN_RANDOM_SEQUENCE_LENGTH:
             raise InvalidTokenIdentifierError("The identifier is not valid. The random sequence does not have the right length")
 
     def ensure_identifier_has_correct_structure(self, identifier: str) -> str:
         if identifier.count("-") == 1:
-            self._check_lenght_of_random_sequence(identifier.split("-")[1])
+            self._check_length_of_random_sequence(identifier.split("-")[1])
             return identifier
 
         return self.extract_identifier_from_extended_identifier(identifier)
