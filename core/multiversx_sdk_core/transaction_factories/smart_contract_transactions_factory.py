@@ -71,6 +71,7 @@ class SmartContractTransactionsFactory:
                                        native_transfer_amount: int = 0,
                                        token_transfers: List[TokenTransfer] = []) -> Transaction:
         number_of_tokens = len(token_transfers)
+        receiver = contract
 
         if native_transfer_amount and number_of_tokens:
             raise BadUsageError("Can't send both native token and ESDT/NFT tokens")
@@ -87,14 +88,14 @@ class SmartContractTransactionsFactory:
                 )
             else:
                 transfer_args = self._data_args_builder.build_args_for_single_esdt_nft_transfer(
-                    transfer=transfer, receiver=contract, function=function, arguments=arguments
+                    transfer=transfer, receiver=receiver, function=function, arguments=arguments
                 )
-                contract = sender
+                receiver = sender
         elif len(token_transfers) > 1:
             transfer_args = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(
-                receiver=contract, transfers=token_transfers, function=function, arguments=arguments
+                receiver=receiver, transfers=token_transfers, function=function, arguments=arguments
             )
-            contract = sender
+            receiver = sender
         else:
             transfer_args.append(function)
             transfer_args.extend(args_to_strings(arguments))
@@ -102,7 +103,7 @@ class SmartContractTransactionsFactory:
         transaction = TransactionBuilder(
             config=self.config,
             sender=sender,
-            receiver=contract,
+            receiver=receiver,
             data_parts=transfer_args,
             gas_limit=gas_limit,
             add_data_movement_gas=False,

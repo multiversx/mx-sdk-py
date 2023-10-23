@@ -87,9 +87,6 @@ class TestSmartContractTransactionsFactory:
         token = Token("FOO-6ce17b", 0)
         transfer = TokenTransfer(token, 10)
 
-        hex_foo = "464f4f2d366365313762"
-        hex_dummy_function = "64756d6d79"
-
         transaction = self.factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
@@ -103,7 +100,7 @@ class TestSmartContractTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
         assert transaction.gas_limit == gas_limit
         assert transaction.data
-        assert transaction.data.decode() == f"ESDTTransfer@{hex_foo}@0a@{hex_dummy_function}@07"
+        assert transaction.data.decode() == f"ESDTTransfer@464f4f2d366365313762@0a@64756d6d79@07"
         assert transaction.amount == 0
 
     def test_create_transaction_for_execute_and_send_multiple_esdts(self):
@@ -119,10 +116,6 @@ class TestSmartContractTransactionsFactory:
         bar_token = Token("BAR-5bc08f", 0)
         bar_transfer = TokenTransfer(bar_token, 3140)
 
-        hex_foo = "464f4f2d366365313762"
-        hex_bar = "4241522d356263303866"
-        hex_dummy_function = "64756d6d79"
-
         transaction = self.factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
@@ -136,7 +129,7 @@ class TestSmartContractTransactionsFactory:
         assert transaction.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert transaction.gas_limit == gas_limit
         assert transaction.data
-        assert transaction.data.decode() == f"MultiESDTNFTTransfer@{contract.hex()}@02@{hex_foo}@@0a@{hex_bar}@@0c44@{hex_dummy_function}@07"
+        assert transaction.data.decode() == f"MultiESDTNFTTransfer@00000000000000000500ed8e25a94efa837aae0e593112cfbb01b448755069e1@02@464f4f2d366365313762@@0a@4241522d356263303866@@0c44@64756d6d79@07"
         assert transaction.amount == 0
 
     def test_create_transaction_for_execute_and_send_single_nft(self):
@@ -145,11 +138,8 @@ class TestSmartContractTransactionsFactory:
         function = "dummy"
         gas_limit = 6000000
         args = [7]
-        token = Token("MOS-b9b4b2", 1)
+        token = Token("NFT-123456", 1)
         transfer = TokenTransfer(token, 1)
-
-        hex_token = "4d4f532d623962346232"
-        hex_dummy_function = "64756d6d79"
 
         transaction = self.factory.create_transaction_for_execute(
             sender=sender,
@@ -164,7 +154,7 @@ class TestSmartContractTransactionsFactory:
         assert transaction.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert transaction.gas_limit == gas_limit
         assert transaction.data
-        assert transaction.data.decode() == f"ESDTNFTTransfer@{hex_token}@01@01@{contract.hex()}@{hex_dummy_function}@07"
+        assert transaction.data.decode() == f"ESDTNFTTransfer@4e46542d313233343536@01@01@00000000000000000500b9353fe8407f87310c87e12fa1ac807f0485da39d152@64756d6d79@07"
         assert transaction.amount == 0
 
     def test_create_transaction_for_execute_and_send_multiple_nfts(self):
@@ -174,13 +164,10 @@ class TestSmartContractTransactionsFactory:
         gas_limit = 6000000
         args = [7]
 
-        first_token = Token("MOS-b9b4b2", 1)
+        first_token = Token("NFT-123456", 1)
         first_transfer = TokenTransfer(first_token, 1)
-        second_token = Token("MOS-b9b4b2", 42)
+        second_token = Token("NFT-123456", 42)
         second_transfer = TokenTransfer(second_token, 1)
-
-        hex_token = "4d4f532d623962346232"
-        hex_dummy_function = "64756d6d79"
 
         transaction = self.factory.create_transaction_for_execute(
             sender=sender,
@@ -195,7 +182,7 @@ class TestSmartContractTransactionsFactory:
         assert transaction.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert transaction.gas_limit == gas_limit
         assert transaction.data
-        assert transaction.data.decode() == f"MultiESDTNFTTransfer@{contract.hex()}@02@{hex_token}@01@01@{hex_token}@2a@01@{hex_dummy_function}@07"
+        assert transaction.data.decode() == f"MultiESDTNFTTransfer@00000000000000000500b9353fe8407f87310c87e12fa1ac807f0485da39d152@02@4e46542d313233343536@01@01@4e46542d313233343536@2a@01@64756d6d79@07"
         assert transaction.amount == 0
 
     def test_create_transaction_for_upgrade(self):

@@ -7,7 +7,7 @@ from multiversx_sdk_core.tokens import TokenComputer, TokenTransfer
 
 class TokenTransfersDataBuilder:
     def __init__(self) -> None:
-        pass
+        self.token_computer = TokenComputer()
 
     def build_args_for_esdt_transfer(self,
                                      transfer: TokenTransfer,
@@ -29,7 +29,7 @@ class TokenTransfersDataBuilder:
                                                 arguments: List[Any] = []) -> List[str]:
         args: List[str] = ["ESDTNFTTransfer"]
         token = transfer.token
-        identifier = self._ensure_identifier_has_correct_structure(token.identifier)
+        identifier = self.token_computer.ensure_identifier_has_correct_structure(token.identifier)
         args.extend(args_to_strings([identifier, token.nonce, transfer.amount, receiver]))
 
         if function:
@@ -46,7 +46,7 @@ class TokenTransfersDataBuilder:
         args: List[str] = ["MultiESDTNFTTransfer", arg_to_string(receiver), arg_to_string(len(transfers))]
 
         for transfer in transfers:
-            identifier = self._ensure_identifier_has_correct_structure(transfer.token.identifier)
+            identifier = self.token_computer.ensure_identifier_has_correct_structure(transfer.token.identifier)
             args.extend(args_to_strings([identifier, transfer.token.nonce, transfer.amount]))
 
         if function:
@@ -54,10 +54,3 @@ class TokenTransfersDataBuilder:
             args.extend(args_to_strings(arguments))
 
         return args
-
-    def _ensure_identifier_has_correct_structure(self, identifier: str) -> str:
-        if identifier.count("-") == 1:
-            return identifier
-
-        token_computer = TokenComputer()
-        return token_computer.extract_identifier_from_extended_identifier(identifier)
