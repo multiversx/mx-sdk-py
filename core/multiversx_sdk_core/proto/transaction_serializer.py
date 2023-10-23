@@ -57,7 +57,7 @@ class ProtoSerializer:
 
         if self._is_guarded_transaction(transaction):
             guardian_address = transaction.guardian
-            proto_transaction.GuardAddr = self.address_converter.bech32_to_pubkey(guardian_address)
+            proto_transaction.GuardAddr = bytes(self.address_converter.bech32_to_pubkey(guardian_address))
             proto_transaction.GuardSignature = transaction.guardian_signature
 
         encoded_tx: bytes = proto_transaction.SerializeToString()
