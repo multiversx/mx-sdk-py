@@ -6,11 +6,14 @@ from multiversx_sdk_core.transaction_factories.token_management_transactions_fac
     RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory)
 from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
     TransactionsFactoryConfig
+from multiversx_sdk_core.transaction_factories.transfer_transactions_factory import \
+    TransferTransactionsFactory
 
 __all__ = [
     "DelegationTransactionsFactory",
     "TokenManagementTransactionsFactory",
     "RegisterAndSetAllRolesTokenType",
     "TransactionsFactoryConfig",
-    "SmartContractTransactionsFactory"
+    "SmartContractTransactionsFactory",
+    "TransferTransactionsFactory"
 ]

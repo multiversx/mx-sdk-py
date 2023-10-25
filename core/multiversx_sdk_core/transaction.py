@@ -87,11 +87,11 @@ class TransactionComputer:
         serialized = self._dict_to_json(dictionary)
         return serialized
 
-    def compute_transaction_hash(self, transaction: Transaction) -> str:
+    def compute_transaction_hash(self, transaction: Transaction) -> bytes:
         proto = ProtoSerializer(self.address_converter)
         serialized_tx = proto.serialize_transaction(transaction)
         tx_hash = blake2b(serialized_tx, digest_size=DIGEST_SIZE).hexdigest()
-        return tx_hash
+        return bytes.fromhex(tx_hash)
 
     def _to_dictionary(self, transaction: Transaction) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()

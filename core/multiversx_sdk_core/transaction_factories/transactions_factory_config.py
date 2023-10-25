@@ -35,3 +35,8 @@ class TransactionsFactoryConfig:
         self.gas_limit_delegation_operations = 1_000_000
         self.additional_gas_limit_per_validator_node = 6_000_000
         self.additional_gas_for_delegation_operations = 10_000_000
+
+        # Configuration for token transfers
+        self.gas_limit_esdt_transfer = 200_000
+        self.gas_limit_esdt_nft_transfer = 200_000
+        self.gas_limit_multi_esdt_nft_transfer = 200_000

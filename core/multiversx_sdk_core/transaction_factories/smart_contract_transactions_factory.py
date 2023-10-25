@@ -9,7 +9,9 @@ from multiversx_sdk_core.constants import (CONTRACT_DEPLOY_ADDRESS,
 from multiversx_sdk_core.errors import BadUsageError
 from multiversx_sdk_core.interfaces import IAddress
 from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
-from multiversx_sdk_core.tokens import TokenComputer, TokenTransfer
+from multiversx_sdk_core.tokens import Token, TokenTransfer
+from multiversx_sdk_core.transaction_factories.token_transfers_data_builder import \
+    TokenTransfersDataBuilder
 from multiversx_sdk_core.transaction_factories.transaction_builder import \
     TransactionBuilder
 
@@ -20,9 +22,19 @@ class IConfig(Protocol):
     gas_limit_per_byte: int
 
 
+class ITokenComputer(Protocol):
+    def is_fungible(self, token: Token) -> bool:
+        ...
+
+    def extract_identifier_from_extended_identifier(self, identifier: str) -> str:
+        ...
+
+
 class SmartContractTransactionsFactory:
-    def __init__(self, config: IConfig) -> None:
+    def __init__(self, config: IConfig, token_computer: ITokenComputer) -> None:
         self.config = config
+        self.token_computer = token_computer
+        self._data_args_builder = TokenTransfersDataBuilder(token_computer)
 
     def create_transaction_for_deploy(self,
                                       sender: IAddress,
@@ -68,74 +80,41 @@ class SmartContractTransactionsFactory:
                                        native_transfer_amount: int = 0,
                                        token_transfers: List[TokenTransfer] = []) -> Transaction:
         number_of_tokens = len(token_transfers)
+        receiver = contract
 
         if native_transfer_amount and number_of_tokens:
-            raise BadUsageError("Can't send both native token and ESDT/NFT tokens")
+            raise BadUsageError("Can't send both native token and custom tokens(ESDT/NFT)")
 
-        token_computer = TokenComputer()
-        transfer_args: List[str] = []
+        data_parts: List[str] = []
 
         if len(token_transfers) == 1:
             transfer = token_transfers[0]
 
-            if token_computer.is_fungible(transfer.token):
-                transfer_args = self._build_args_for_esdt_transfer(transfer)
-                transfer_args.append(arg_to_string(function))
-                transfer_args.extend(args_to_strings(arguments))
+            if self.token_computer.is_fungible(transfer.token):
+                data_parts = self._data_args_builder.build_args_for_esdt_transfer(transfer=transfer)
             else:
-                transfer_args = self._build_args_for_single_esdt_nft_transfer(transfer)
-                transfer_args.append(contract.hex())
-                contract = sender
-                transfer_args.append(arg_to_string(function))
-                transfer_args.extend(args_to_strings(arguments))
+                data_parts = self._data_args_builder.build_args_for_single_esdt_nft_transfer(
+                    transfer=transfer, receiver=receiver)
+                receiver = sender
         elif len(token_transfers) > 1:
-            transfer_args = self._build_args_for_multi_esdt_nft_transfer(contract.hex(), token_transfers)
-            contract = sender
-            transfer_args.append(arg_to_string(function))
-            transfer_args.extend(args_to_strings(arguments))
-        else:
-            transfer_args.append(function)
-            transfer_args.extend(args_to_strings(arguments))
+            data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(
+                receiver=receiver, transfers=token_transfers)
+            receiver = sender
+
+        data_parts.append(function) if not data_parts else data_parts.append(arg_to_string(function))
+        data_parts.extend(args_to_strings(arguments))
 
         transaction = TransactionBuilder(
             config=self.config,
             sender=sender,
-            receiver=contract,
-            data_parts=transfer_args,
+            receiver=receiver,
+            data_parts=data_parts,
             gas_limit=gas_limit,
             add_data_movement_gas=False,
             amount=native_transfer_amount
         ).build()
 
         return transaction
-
-    def _build_args_for_esdt_transfer(self, transfer: TokenTransfer) -> List[str]:
-        args: List[str] = ["ESDTTransfer"]
-        args.extend(args_to_strings([transfer.token.identifier, transfer.amount]))
-        return args
-
-    def _build_args_for_single_esdt_nft_transfer(self, transfer: TokenTransfer) -> List[str]:
-        args: List[str] = ["ESDTNFTTransfer"]
-        token = transfer.token
-        identifier = self._ensure_identifier_has_correct_structure(token.identifier)
-        args.extend(args_to_strings([identifier, token.nonce, transfer.amount]))
-        return args
-
-    def _build_args_for_multi_esdt_nft_transfer(self, contract: str, transfers: List[TokenTransfer]) -> List[str]:
-        args: List[str] = ["MultiESDTNFTTransfer", contract, arg_to_string(len(transfers))]
-
-        for transfer in transfers:
-            identifier = self._ensure_identifier_has_correct_structure(transfer.token.identifier)
-            args.extend(args_to_strings([identifier, transfer.token.nonce, transfer.amount]))
-
-        return args
-
-    def _ensure_identifier_has_correct_structure(self, identifier: str) -> str:
-        if identifier.count("-") == 1:
-            return identifier
-
-        token_computer = TokenComputer()
-        return token_computer.extract_identifier_from_extended_identifier(identifier)
 
     def create_transaction_for_upgrade(self,
                                        sender: IAddress,
