@@ -51,7 +51,7 @@ class TokenComputer:
         MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED = 3
 
         if len(token_parts) < MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED or len(token_parts) > MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED:
-            raise InvalidTokenIdentifierError("You have not provided the extended identifier")
+            raise InvalidTokenIdentifierError("Invalid extended token identifier provided")
 
     def _ensure_token_ticker_validity(self, ticker: str) -> None:
         MIN_TICKER_LENGTH = 3
@@ -61,7 +61,7 @@ class TokenComputer:
             raise InvalidTokenIdentifierError(f"The token ticker should be between {MIN_TICKER_LENGTH} and {MAX_TICKER_LENGTH} characters")
 
         if not ticker.isalnum():
-            raise InvalidTokenIdentifierError("The token ticker should contain only alphanumeric characters")
+            raise InvalidTokenIdentifierError("The token ticker should only contain alphanumeric characters")
 
         if not ticker.isupper():
             raise InvalidTokenIdentifierError("The token ticker should be upper case")
