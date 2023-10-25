@@ -1,5 +1,5 @@
 from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.tokens import Token, TokenTransfer
+from multiversx_sdk_core.tokens import Token, TokenComputer, TokenTransfer
 from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk_core.transaction_factories.transfer_transactions_factory import \
@@ -7,7 +7,7 @@ from multiversx_sdk_core.transaction_factories.transfer_transactions_factory imp
 
 
 class TestTransferTransactionsFactory:
-    transfer_factory = TransferTransactionsFactory(TransactionsFactoryConfig("D"))
+    transfer_factory = TransferTransactionsFactory(TransactionsFactoryConfig("D"), TokenComputer())
 
     def test_create_transaction_for_native_token_transfer_no_data(self):
         alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")

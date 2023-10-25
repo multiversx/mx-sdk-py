@@ -2,7 +2,7 @@ from typing import List, Optional, Protocol
 
 from multiversx_sdk_core.errors import BadUsageError
 from multiversx_sdk_core.interfaces import IAddress
-from multiversx_sdk_core.tokens import TokenComputer, TokenTransfer
+from multiversx_sdk_core.tokens import Token, TokenTransfer
 from multiversx_sdk_core.transaction import Transaction
 from multiversx_sdk_core.transaction_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
@@ -22,10 +22,19 @@ class IConfig(Protocol):
     gas_limit_multi_esdt_nft_transfer: int
 
 
+class ITokenComputer(Protocol):
+    def is_fungible(self, token: Token) -> bool:
+        ...
+
+    def extract_identifier_from_extended_identifier(self, identifier: str) -> str:
+        ...
+
+
 class TransferTransactionsFactory:
-    def __init__(self, config: IConfig) -> None:
+    def __init__(self, config: IConfig, token_computer: ITokenComputer) -> None:
         self.config = config
-        self._data_args_builder = TokenTransfersDataBuilder()
+        self.token_computer = token_computer
+        self._data_args_builder = TokenTransfersDataBuilder(token_computer)
 
     def create_transaction_for_native_token_transfer(self,
                                                      sender: IAddress,
@@ -47,26 +56,23 @@ class TransferTransactionsFactory:
                                                    sender: IAddress,
                                                    receiver: IAddress,
                                                    token_transfers: List[TokenTransfer]) -> Transaction:
-        if len(token_transfers) == 0:
-            raise BadUsageError("No token transfers has been provided")
-
-        transfer_args: List[str] = []
+        data_parts: List[str] = []
         extra_gas_for_transfer = 0
 
-        token_computer = TokenComputer()
-
-        if len(token_transfers) == 1:
+        if len(token_transfers) == 0:
+            raise BadUsageError("No token transfers has been provided")
+        elif len(token_transfers) == 1:
             transfer = token_transfers[0]
 
-            if token_computer.is_fungible(transfer.token):
-                transfer_args = self._data_args_builder.build_args_for_esdt_transfer(transfer)
+            if self.token_computer.is_fungible(transfer.token):
+                data_parts = self._data_args_builder.build_args_for_esdt_transfer(transfer)
                 extra_gas_for_transfer = self.config.gas_limit_esdt_transfer + ADDITIONAL_GAS_FOR_ESDT_TRANSFER
             else:
-                transfer_args = self._data_args_builder.build_args_for_single_esdt_nft_transfer(transfer, receiver)
+                data_parts = self._data_args_builder.build_args_for_single_esdt_nft_transfer(transfer, receiver)
                 extra_gas_for_transfer = self.config.gas_limit_esdt_nft_transfer + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
                 receiver = sender
-        elif len(token_transfers) > 1:
-            transfer_args = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, token_transfers)
+        else:
+            data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, token_transfers)
             extra_gas_for_transfer = self.config.gas_limit_multi_esdt_nft_transfer * len(token_transfers) + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
             receiver = sender
 
@@ -74,7 +80,7 @@ class TransferTransactionsFactory:
             config=self.config,
             sender=sender,
             receiver=receiver,
-            data_parts=transfer_args,
+            data_parts=data_parts,
             gas_limit=extra_gas_for_transfer,
             add_data_movement_gas=True
         ).build()
