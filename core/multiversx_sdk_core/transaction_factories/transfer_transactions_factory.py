@@ -60,7 +60,7 @@ class TransferTransactionsFactory:
         extra_gas_for_transfer = 0
 
         if len(token_transfers) == 0:
-            raise BadUsageError("No token transfers has been provided")
+            raise BadUsageError("No token transfer has been provided")
         elif len(token_transfers) == 1:
             transfer = token_transfers[0]
 
