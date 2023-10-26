@@ -32,6 +32,10 @@ class TokenComputer:
         self._check_if_extended_identifier_was_provided(parts)
         self._check_length_of_random_sequence(parts[1])
 
+        # in case the identifier of a fungible token is provided
+        if len(parts) == 2:
+            return 0
+
         hex_nonce = bytes.fromhex(parts[2])
         return decode_unsigned_number(hex_nonce)
 
