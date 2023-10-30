@@ -1,4 +1,4 @@
 pytest
 flake8
 autopep8
-multiversx-sdk-wallet==0.7.0
+multiversx-sdk-wallet @ git+https://github.com/multiversx/mx-sdk-py-wallet@remove-isignable
