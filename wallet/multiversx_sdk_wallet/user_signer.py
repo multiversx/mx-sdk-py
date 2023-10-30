@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from multiversx_sdk_wallet.errors import ErrCannotSign
-from multiversx_sdk_wallet.interfaces import ISignable, ISignature
+from multiversx_sdk_wallet.interfaces import ISignature
 from multiversx_sdk_wallet.user_keys import UserPublicKey, UserSecretKey
 from multiversx_sdk_wallet.user_pem import UserPEM
 from multiversx_sdk_wallet.user_wallet import UserWallet
@@ -25,14 +25,13 @@ class UserSigner:
         secret_key = UserWallet.load_secret_key(path, password)
         return UserSigner(secret_key)
 
-    def sign(self, signable: ISignable) -> ISignature:
+    def sign(self, data: bytes) -> ISignature:
         try:
-            return self._try_sign(signable)
+            return self._try_sign(data)
         except Exception as err:
             raise ErrCannotSign() from err
 
-    def _try_sign(self, signable: ISignable) -> ISignature:
-        data = signable.serialize_for_signing()
+    def _try_sign(self, data: bytes) -> ISignature:
         signature = self.secret_key.sign(data)
         return signature
 

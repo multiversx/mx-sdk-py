@@ -4,16 +4,6 @@ from typing import Protocol
 ISignature = bytes
 
 
-class ISignable(Protocol):
-    def serialize_for_signing(self) -> bytes: ...
-
-
-class IVerifiable(Protocol):
-    signature: ISignature
-
-    def serialize_for_signing(self) -> bytes: ...
-
-
 class IRandomness(Protocol):
     salt: bytes
     iv: bytes
