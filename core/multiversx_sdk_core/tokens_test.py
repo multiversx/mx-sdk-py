@@ -1,3 +1,6 @@
+import pytest
+
+from multiversx_sdk_core.errors import BadUsageError
 from multiversx_sdk_core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts)
 
@@ -47,6 +50,15 @@ class TestTokenComputer:
         assert non_fungible_parts.ticker == "NFT"
         assert non_fungible_parts.random_sequence == "987654"
         assert non_fungible_parts.nonce == 10
+
+    def test_compute_extended_identifier_from_identifier_and_bad_nonce(self):
+        fungible_identifier = "FNG-123456"
+        fungible_nonce = -10
+
+        with pytest.raises(BadUsageError, match="The token nonce can not be less than 0"):
+            self.token_computer.compute_extended_identifier_from_identifier_and_nonce(
+                fungible_identifier, fungible_nonce
+            )
 
     def test_compute_extended_identifier_from_identifier_and_nonce(self):
         fungible_identifier = "FNG-123456"
