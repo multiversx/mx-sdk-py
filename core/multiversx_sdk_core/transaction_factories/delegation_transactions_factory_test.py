@@ -2,7 +2,6 @@ from multiversx_sdk_wallet import ValidatorSecretKey, ValidatorSigner
 
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.constants import DELEGATION_MANAGER_SC_ADDRESS
-from multiversx_sdk_core.messages import ArbitraryMessage
 from multiversx_sdk_core.transaction_factories.delegation_transactions_factory import \
     DelegationTransactionsFactory
 from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
@@ -35,8 +34,7 @@ class TestDelegationTransactionFactory:
         validator_secret_key = ValidatorSecretKey.from_string("7cff99bd671502db7d15bc8abc0c9a804fb925406fbdd50f1e4c17a4cd774247")
         validator_signer = ValidatorSigner(validator_secret_key)
 
-        message = ArbitraryMessage(bytes.fromhex(delegation_contract.hex()))
-        signed_message = validator_signer.sign(message)
+        signed_message = validator_signer.sign(bytes.fromhex(delegation_contract.hex()))
         public_key = validator_secret_key.generate_public_key()
 
         public_keys = [public_key]
