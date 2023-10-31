@@ -1,12 +1,14 @@
 from typing import List
 
-from multiversx_sdk_core.codec import decode_unsigned_number
+from multiversx_sdk_core.codec import (decode_unsigned_number,
+                                       encode_unsigned_number)
 from multiversx_sdk_core.constants import TOKEN_RANDOM_SEQUENCE_LENGTH
-from multiversx_sdk_core.errors import InvalidTokenIdentifierError
+from multiversx_sdk_core.errors import (BadUsageError,
+                                        InvalidTokenIdentifierError)
 
 
 class Token:
-    def __init__(self, identifier: str = "", nonce: int = 0) -> None:
+    def __init__(self, identifier: str, nonce: int = 0) -> None:
         self.identifier = identifier
         self.nonce = nonce
 
@@ -18,7 +20,13 @@ class TokenTransfer:
         self.amount = amount
 
 
-# the rest of the methods will be implemented in a future PR
+class TokenIdentifierParts:
+    def __init__(self, ticker: str, random_sequence: str, nonce: int) -> None:
+        self.ticker = ticker
+        self.random_sequence = random_sequence
+        self.nonce = nonce
+
+
 class TokenComputer:
     def __init__(self) -> None:
         pass
@@ -47,6 +55,42 @@ class TokenComputer:
         self._check_length_of_random_sequence(parts[1])
 
         return parts[0] + "-" + parts[1]
+
+    def extract_ticker_from_identifier(self, identifier: str) -> str:
+        parts = identifier.split("-")
+
+        self._check_length_of_random_sequence(parts[1])
+        self._ensure_token_ticker_validity(parts[0])
+        return parts[0]
+
+    def parse_extended_identifier_parts(self, identifier: str) -> TokenIdentifierParts:
+        parts = identifier.split("-")
+
+        self._check_if_extended_identifier_was_provided(parts)
+        self._check_length_of_random_sequence(parts[1])
+        self._ensure_token_ticker_validity(parts[0])
+
+        nonce = decode_unsigned_number(bytes.fromhex(parts[2])) if len(parts) == 3 else 0
+        return TokenIdentifierParts(parts[0], parts[1], nonce)
+
+    def compute_extended_identifier_from_identifier_and_nonce(self, identifier: str, nonce: int) -> str:
+        identifier_parts = identifier.split("-")
+
+        self._check_length_of_random_sequence(identifier_parts[1])
+        self._ensure_token_ticker_validity(identifier_parts[0])
+
+        if nonce < 0:
+            raise BadUsageError("The token nonce can not be less than 0")
+
+        if nonce == 0:
+            return identifier
+
+        nonce_hex = encode_unsigned_number(nonce).hex()
+        return identifier + "-" + nonce_hex
+
+    def compute_extended_identifier_from_parts(self, parts: TokenIdentifierParts) -> str:
+        identifier = parts.ticker + "-" + parts.random_sequence
+        return self.compute_extended_identifier_from_identifier_and_nonce(identifier, parts.nonce)
 
     def _check_if_extended_identifier_was_provided(self, token_parts: List[str]) -> None:
         # this is for the identifiers of fungible tokens
