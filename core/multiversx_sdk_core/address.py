@@ -12,7 +12,7 @@ PUBKEY_LENGTH = 32
 PUBKEY_STRING_LENGTH = PUBKEY_LENGTH * 2  # hex-encoded
 BECH32_LENGTH = 62
 
-logger = logging.getLogger("Address")
+logger = logging.getLogger("address")
 
 
 class IAddress(Protocol):
@@ -85,8 +85,8 @@ class AddressFactory:
 
 
 class AddressComputer:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, number_of_shards: int = 3) -> None:
+        self.number_of_shards = number_of_shards
 
     def compute_contract_address(self, deployer: IAddress, deployment_nonce: int) -> Address:
         """
@@ -100,7 +100,7 @@ class AddressComputer:
         return Address(contract_pubkey, deployer.get_hrp())
 
     def get_shard_of_address(self, address: IAddress) -> int:
-        return get_shard_of_pubkey(address.get_public_key())
+        return get_shard_of_pubkey(address.get_public_key(), self.number_of_shards)
 
 
 def is_valid_bech32(value: str, expected_hrp: str) -> bool:
@@ -120,8 +120,7 @@ def _decode_bech32(value: str) -> Tuple[str, bytes]:
     return hrp, bytes(bytearray(decoded_bytes))
 
 
-def get_shard_of_pubkey(pubkey: bytes) -> int:
-    num_shards = 3
+def get_shard_of_pubkey(pubkey: bytes, number_of_shards: int) -> int:
     mask_high = int("11", 2)
     mask_low = int("01", 2)
 
@@ -131,7 +130,7 @@ def get_shard_of_pubkey(pubkey: bytes) -> int:
         return METACHAIN_ID
 
     shard = last_byte_of_pubkey & mask_high
-    if shard > num_shards - 1:
+    if shard > number_of_shards - 1:
         shard = last_byte_of_pubkey & mask_low
 
     return shard
