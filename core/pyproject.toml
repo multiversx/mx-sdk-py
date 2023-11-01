@@ -18,7 +18,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "pycryptodomex==3.16.0"
+  "pycryptodomex==3.16.0",
+  "protobuf==3.20.1"
 ]
 
 [project.urls]
