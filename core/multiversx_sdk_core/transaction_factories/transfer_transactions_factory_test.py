@@ -10,8 +10,8 @@ class TestTransferTransactionsFactory:
     transfer_factory = TransferTransactionsFactory(TransactionsFactoryConfig("D"), TokenComputer())
 
     def test_create_transaction_for_native_token_transfer_no_data(self):
-        alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         transaction = self.transfer_factory.create_transaction_for_native_token_transfer(
             sender=alice,
@@ -27,8 +27,8 @@ class TestTransferTransactionsFactory:
         assert transaction.data == b""
 
     def test_create_transaction_for_native_token_transfer_with_data(self):
-        alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         transaction = self.transfer_factory.create_transaction_for_native_token_transfer(
             sender=alice,
@@ -45,8 +45,8 @@ class TestTransferTransactionsFactory:
         assert transaction.data == b"test data"
 
     def test_create_transaction_for_esdt_transfer(self):
-        alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         foo_token = Token("FOO-123456")
         token_transfer = TokenTransfer(foo_token, 1000000)
@@ -65,8 +65,8 @@ class TestTransferTransactionsFactory:
         assert transaction.gas_limit == 410_000
 
     def test_create_transaction_for_nft_transfer(self):
-        alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         nft = Token("NFT-123456", 10)
         token_transfer = TokenTransfer(nft, 1)
@@ -85,8 +85,8 @@ class TestTransferTransactionsFactory:
         assert transaction.gas_limit == 1_210_500
 
     def test_create_transaction_for_multiple_nft_transfers(self):
-        alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        bob = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         first_nft = Token("NFT-123456", 10)
         first_transfer = TokenTransfer(first_nft, 1)

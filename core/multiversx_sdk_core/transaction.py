@@ -64,8 +64,8 @@ class Transaction:
 
 
 class TransactionComputer:
-    def __init__(self, address_converter: IAddressConverter) -> None:
-        self.address_converter = address_converter
+    def __init__(self) -> None:
+        pass
 
     def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
         move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
@@ -88,7 +88,7 @@ class TransactionComputer:
         return serialized
 
     def compute_transaction_hash(self, transaction: Transaction) -> bytes:
-        proto = ProtoSerializer(self.address_converter)
+        proto = ProtoSerializer()
         serialized_tx = proto.serialize_transaction(transaction)
         tx_hash = blake2b(serialized_tx, digest_size=DIGEST_SIZE).hexdigest()
         return bytes.fromhex(tx_hash)

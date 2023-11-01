@@ -52,7 +52,7 @@ class RelayedTransactionV2Builder:
             raise ErrInvalidGasLimitForInnerTransaction()
 
         arguments: List[Any] = [
-            Address.from_bech32(self.inner_transaction.receiver),
+            Address.new_from_bech32(self.inner_transaction.receiver),
             self.inner_transaction.nonce,
             self.inner_transaction.data,
             self.inner_transaction.signature
@@ -62,7 +62,7 @@ class RelayedTransactionV2Builder:
         payload = TransactionPayload.from_str(data)
 
         relayed_transaction = Transaction(
-            sender=self.relayer_address.bech32(),
+            sender=self.relayer_address.to_bech32(),
             receiver=self.inner_transaction.sender,
             amount=0,
             gas_limit=self.inner_transaction_gas_limit + self.network_config.min_gas_limit + self.network_config.gas_per_data_byte * payload.length(),

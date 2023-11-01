@@ -1,3 +1,4 @@
+import logging
 from typing import Protocol, Tuple
 
 from Cryptodome.Hash import keccak
@@ -10,6 +11,8 @@ SC_HEX_PUBKEY_PREFIX = "0" * 16
 PUBKEY_LENGTH = 32
 PUBKEY_STRING_LENGTH = PUBKEY_LENGTH * 2  # hex-encoded
 BECH32_LENGTH = 62
+
+logger = logging.getLogger("Address")
 
 
 class IAddress(Protocol):
@@ -55,6 +58,12 @@ class Address:
 
     def is_smart_contract(self):
         return self.to_hex().startswith(SC_HEX_PUBKEY_PREFIX)
+
+    # this will be removed in v1.0.0; it's here for compatibility reasons with the deprecated transaction builders
+    # the transaction builders will also be removed in v1.0.0
+    def serialize(self) -> bytes:
+        logger.warning("The `serialize()` method is deprecated and will soon be removed")
+        return self.get_public_key()
 
 
 class AddressFactory:
@@ -108,7 +117,7 @@ def _decode_bech32(value: str) -> Tuple[str, bytes]:
     if decoded_bytes is None:
         raise ErrBadAddress(value)
 
-    return hrp, bytearray(decoded_bytes)
+    return hrp, bytes(bytearray(decoded_bytes))
 
 
 def get_shard_of_pubkey(pubkey: bytes) -> int:
@@ -131,11 +140,11 @@ def get_shard_of_pubkey(pubkey: bytes) -> int:
 def _is_pubkey_of_metachain(pubkey: bytes) -> bool:
     metachain_prefix = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     pubkey_prefix = pubkey[0:len(metachain_prefix)]
-    if pubkey_prefix == metachain_prefix:
+    if pubkey_prefix == bytes(metachain_prefix):
         return True
 
     zero_address = bytearray(32)
-    if pubkey == zero_address:
+    if pubkey == bytes(zero_address):
         return True
 
     return False

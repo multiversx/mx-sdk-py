@@ -14,7 +14,7 @@ class TestDelegationTransactionFactory:
 
     def test_create_transaction_for_new_delegation_contract(self):
         transaction = self.factory.create_transaction_for_new_delegation_contract(
-            sender=Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            sender=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
             total_delegation_cap=5000000000000000000000,
             service_fee=10,
             amount=1250000000000000000000
@@ -28,13 +28,13 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 1250000000000000000000
 
     def test_create_transaction_for_adding_nodes(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         validator_secret_key = ValidatorSecretKey.from_string("7cff99bd671502db7d15bc8abc0c9a804fb925406fbdd50f1e4c17a4cd774247")
         validator_signer = ValidatorSigner(validator_secret_key)
 
-        signed_message = validator_signer.sign(bytes.fromhex(delegation_contract.hex()))
+        signed_message = validator_signer.sign(bytes.fromhex(delegation_contract.to_hex()))
         public_key = validator_secret_key.generate_public_key()
 
         public_keys = [public_key]
@@ -54,8 +54,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_removing_nodes(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded".encode()]
 
@@ -72,8 +72,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_staking_nodes(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded".encode()]
 
@@ -90,8 +90,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_unbonding_nodes(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded".encode()]
 
@@ -108,8 +108,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_unstaking_nodes(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded".encode()]
 
@@ -126,8 +126,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_unjailing_nodes(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         public_keys = ["notavalidblskeyhexencoded".encode()]
 
@@ -144,8 +144,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_changing_service_fee(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction = self.factory.create_transaction_for_changing_service_fee(
             sender=sender,
@@ -160,8 +160,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_modifying_delegation_cap(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction = self.factory.create_transaction_for_modifying_delegation_cap(
             sender=sender,
@@ -176,8 +176,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_setting_automatic_activation(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction = self.factory.create_transaction_for_setting_automatic_activation(
             sender=sender,
@@ -191,8 +191,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_unsetting_automatic_activation(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction = self.factory.create_transaction_for_unsetting_automatic_activation(
             sender=sender,
@@ -206,8 +206,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_setting_cap_check_on_redelegate_rewards(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction = self.factory.create_transaction_for_setting_cap_check_on_redelegate_rewards(
             sender=sender,
@@ -221,8 +221,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_unsetting_cap_check_on_redelegate_rewards(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction = self.factory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards(
             sender=sender,
@@ -236,8 +236,8 @@ class TestDelegationTransactionFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_setting_metadata(self):
-        sender = Address.from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
-        delegation_contract = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
         transaction = self.factory.create_transaction_for_setting_metadata(
             sender=sender,

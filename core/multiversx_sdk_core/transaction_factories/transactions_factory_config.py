@@ -25,7 +25,7 @@ class TransactionsFactoryConfig:
         self.gas_limit_esdt_nft_burn: int = 1_000_000
         self.gas_limit_store_per_byte: int = 50_000
         self.issue_cost: int = 50_000_000_000_000_000
-        self.esdt_contract_address: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
+        self.esdt_contract_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
 
         # Configuration for delegation operations
         self.gas_limit_stake = 5_000_000

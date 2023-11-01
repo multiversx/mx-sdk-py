@@ -24,12 +24,13 @@ class TokenTransfersDataBuilder:
         args: List[str] = ["ESDTNFTTransfer"]
         token = transfer.token
         identifier = self.token_computer.extract_identifier_from_extended_identifier(token.identifier)
-        args.extend(args_to_strings([identifier, token.nonce, transfer.amount, receiver]))
+        args.extend(args_to_strings([identifier, token.nonce, transfer.amount]))
+        args.append(receiver.to_hex())
 
         return args
 
     def build_args_for_multi_esdt_nft_transfer(self, receiver: IAddress, transfers: List[TokenTransfer]) -> List[str]:
-        args: List[str] = ["MultiESDTNFTTransfer", arg_to_string(receiver), arg_to_string(len(transfers))]
+        args: List[str] = ["MultiESDTNFTTransfer", receiver.to_hex(), arg_to_string(len(transfers))]
 
         for transfer in transfers:
             identifier = self.token_computer.extract_identifier_from_extended_identifier(transfer.token.identifier)
