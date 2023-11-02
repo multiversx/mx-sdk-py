@@ -1,7 +1,7 @@
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.codec import encode_unsigned_number
-from multiversx_sdk_core.transaction_intents_factories.transaction_intents_factory_config import \
-    TransactionIntentsFactoryConfig
+from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
+    TransactionsFactoryConfig
 from multiversx_sdk_core.transaction_parsers.token_operations_outcome_parser import \
     TokenOperationsOutcomeParser
 from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper import (
@@ -9,9 +9,9 @@ from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper impo
     TransactionEventWrapper, TransactionLogsWrapper,
     TransactionOnNetworkWrapper)
 
-frank = Address.from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
-grace = Address.from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede")
-parser = TokenOperationsOutcomeParser(TransactionIntentsFactoryConfig("D"))
+frank = Address.new_from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
+grace = Address.new_from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede")
+parser = TokenOperationsOutcomeParser(TransactionsFactoryConfig("D"))
 
 
 def test_parse_issue_fungible():
@@ -53,7 +53,7 @@ def test_parse_set_special_role():
     outcome = parser.parse_set_special_role(transaction)
     assert outcome.token_identifier == "FOOBAR"
     assert outcome.roles == ["ESDTRoleLocalMint", "ESDTRoleLocalBurn"]
-    assert outcome.user_address == grace.bech32()
+    assert outcome.user_address == grace.to_bech32()
 
 
 def test_parse_local_mint():
@@ -77,7 +77,7 @@ def test_parse_local_mint():
     assert outcome.token_identifier == "FOOBAR"
     assert outcome.nonce == 0
     assert outcome.minted_supply == 200
-    assert outcome.user_address == grace.bech32()
+    assert outcome.user_address == grace.to_bech32()
 
 
 def test_parse_nft_create():

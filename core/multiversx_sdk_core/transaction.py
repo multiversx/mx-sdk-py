@@ -1,156 +1,131 @@
 import json
-from base64 import b64decode, b64encode
+from base64 import b64encode
 from collections import OrderedDict
-from typing import Any, Dict, Optional
+from hashlib import blake2b
+from typing import Any, Dict, Optional, Protocol
 
-from multiversx_sdk_core import Address
-from multiversx_sdk_core.constants import (TRANSACTION_MIN_GAS_PRICE,
+from multiversx_sdk_core.constants import (DEFAULT_HRP, DIGEST_SIZE,
+                                           TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
-from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
-                                            IGasPrice, INonce, ISignature,
-                                            ITransactionOptions,
-                                            ITransactionPayload,
-                                            ITransactionValue,
-                                            ITransactionVersion)
-from multiversx_sdk_core.transaction_payload import TransactionPayload
+from multiversx_sdk_core.errors import NotEnoughGasError
+from multiversx_sdk_core.interfaces import INetworkConfig
+from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
+
+
+class IAddressConverter(Protocol):
+    def __init__(self, hrp: str = DEFAULT_HRP) -> None:
+        ...
+
+    def bech32_to_pubkey(self, value: str) -> bytes:
+        ...
+
+    def pubkey_to_bech32(self, pubkey: bytes) -> str:
+        ...
 
 
 class Transaction:
-    def __init__(
-        self,
-        chain_id: IChainID,
-        sender: IAddress,
-        receiver: IAddress,
-        gas_limit: IGasLimit,
-        sender_username: Optional[str] = None,
-        receiver_username: Optional[str] = None,
-        gas_price: Optional[IGasPrice] = None,
-        nonce: Optional[INonce] = 0,
-        value: Optional[ITransactionValue] = None,
-        data: Optional[ITransactionPayload] = None,
-        version: Optional[ITransactionVersion] = None,
-        options: Optional[ITransactionOptions] = None,
-        guardian: Optional[IAddress] = None
-    ) -> None:
-        self.chainID: IChainID = chain_id
-        self.sender: IAddress = sender
-        self.receiver: IAddress = receiver
+    def __init__(self,
+                 sender: str,
+                 receiver: str,
+                 gas_limit: int,
+                 chain_id: str,
+                 nonce: Optional[int] = None,
+                 amount: Optional[int] = None,
+                 sender_username: Optional[str] = None,
+                 receiver_username: Optional[str] = None,
+                 gas_price: Optional[int] = None,
+                 data: Optional[bytes] = None,
+                 version: Optional[int] = None,
+                 options: Optional[int] = None,
+                 guardian: Optional[str] = None,
+                 signature: Optional[bytes] = None,
+                 guardian_signature: Optional[bytes] = None
+                 ) -> None:
+        self.chainID = chain_id
+        self.sender = sender
+        self.receiver = receiver
+        self.gas_limit = gas_limit
 
-        self.sender_username: str = sender_username or ""
-        self.receiver_username: str = receiver_username or ""
+        self.nonce = nonce or 0
+        self.amount = amount or 0
+        self.data = data or bytes()
+        self.signature = signature or bytes()
 
-        self.guardian: Optional[IAddress] = guardian
+        self.sender_username = sender_username or ""
+        self.receiver_username = receiver_username or ""
 
-        self.gas_limit: IGasLimit = gas_limit
-        self.gas_price: IGasPrice = gas_price or TRANSACTION_MIN_GAS_PRICE
+        self.gas_price = gas_price or TRANSACTION_MIN_GAS_PRICE
+        self.version = version or TRANSACTION_VERSION_DEFAULT
+        self.options = options or TRANSACTION_OPTIONS_DEFAULT
 
-        self.nonce: INonce = nonce or 0
-        self.value: ITransactionValue = value or 0
-        self.data: ITransactionPayload = data or TransactionPayload.empty()
+        self.guardian = guardian or ""
+        self.guardian_signature = guardian_signature or bytes()
 
-        self.version: ITransactionVersion = version or TRANSACTION_VERSION_DEFAULT
-        self.options: ITransactionOptions = options or TRANSACTION_OPTIONS_DEFAULT
 
-        self.signature: ISignature = bytes()
-        self.guardian_signature: ISignature = bytes()
+class TransactionComputer:
+    def __init__(self) -> None:
+        pass
 
-    def serialize_for_signing(self) -> bytes:
-        dictionary = self.to_dictionary(with_signature=False)
+    def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
+        move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
+        if move_balance_gas > transaction.gas_limit:
+            raise NotEnoughGasError(transaction.gas_limit)
+
+        fee_for_move = move_balance_gas * transaction.gas_price
+        if move_balance_gas == transaction.gas_limit:
+            return int(fee_for_move)
+
+        diff = transaction.gas_limit - move_balance_gas
+        modified_gas_price = transaction.gas_price * network_config.gas_price_modifier
+        processing_fee = diff * modified_gas_price
+
+        return int(fee_for_move + processing_fee)
+
+    def compute_bytes_for_signing(self, transaction: Transaction) -> bytes:
+        dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
-    def to_dictionary(self, with_signature: bool = True) -> Dict[str, Any]:
+    def compute_transaction_hash(self, transaction: Transaction) -> bytes:
+        proto = ProtoSerializer()
+        serialized_tx = proto.serialize_transaction(transaction)
+        tx_hash = blake2b(serialized_tx, digest_size=DIGEST_SIZE).hexdigest()
+        return bytes.fromhex(tx_hash)
+
+    def _to_dictionary(self, transaction: Transaction) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
-        dictionary["nonce"] = self.nonce
-        dictionary["value"] = str(self.value)
+        dictionary["nonce"] = transaction.nonce
+        dictionary["value"] = str(transaction.amount)
 
-        dictionary["receiver"] = self.receiver.bech32()
-        dictionary["sender"] = self.sender.bech32()
+        dictionary["receiver"] = transaction.receiver
+        dictionary["sender"] = transaction.sender
 
-        if self.sender_username:
-            dictionary["senderUsername"] = b64encode(self.sender_username.encode()).decode()
+        if transaction.sender_username:
+            dictionary["senderUsername"] = b64encode(transaction.sender_username.encode()).decode()
 
-        if self.receiver_username:
-            dictionary["receiverUsername"] = b64encode(self.receiver_username.encode()).decode()
+        if transaction.receiver_username:
+            dictionary["receiverUsername"] = b64encode(transaction.receiver_username.encode()).decode()
 
-        dictionary["gasPrice"] = self.gas_price
-        dictionary["gasLimit"] = self.gas_limit
+        dictionary["gasPrice"] = transaction.gas_price
+        dictionary["gasLimit"] = transaction.gas_limit
 
-        if self.data.length():
-            dictionary["data"] = self.data.encoded()
+        if transaction.data:
+            dictionary["data"] = b64encode(transaction.data).decode()
 
-        dictionary["chainID"] = self.chainID
+        dictionary["chainID"] = transaction.chainID
 
-        if self.version:
-            dictionary["version"] = self.version
+        if transaction.version:
+            dictionary["version"] = transaction.version
 
-        if self.options:
-            dictionary["options"] = self.options
+        if transaction.options:
+            dictionary["options"] = transaction.options
 
-        if self.guardian:
-            dictionary["guardian"] = self.guardian.bech32()
-
-        # When adding signatures, we don't have to follow any ordering,
-        # so we can just add them at the end.
-        if with_signature:
-            dictionary["signature"] = self.signature.hex()
-
-            if self.guardian_signature:
-                dictionary["guardianSignature"] = self.guardian_signature.hex()
+        if transaction.guardian:
+            dictionary["guardian"] = transaction.guardian
 
         return dictionary
 
-    @staticmethod
-    def from_dictionary(dictionary: Dict[str, Any]) -> "Transaction":
-        chain = dictionary["chainID"]
-        sender = Address.from_bech32(dictionary["sender"])
-        receiver = Address.from_bech32(dictionary["receiver"])
-        gas_limit = dictionary["gasLimit"]
-        gas_price = dictionary["gasPrice"]
-        nonce = dictionary["nonce"]
-        value = dictionary["value"]
-        sender_username = dictionary.get("senderUsername", "")
-        receiver_username = dictionary.get("receiverUsername", "")
-        data = dictionary.get("data", "")
-        version = dictionary["version"]
-        options = dictionary.get("options", None)
-        guardian = dictionary.get("guardian", "")
-        signature = dictionary.get("signature", "")
-        guardian_signature = dictionary.get("guardianSignature")
-
-        transaction = Transaction(
-            chain_id=chain,
-            sender=sender,
-            receiver=receiver,
-            gas_limit=gas_limit,
-            gas_price=gas_price,
-            nonce=nonce,
-            value=value,
-            version=version,
-            options=options
-        )
-
-        if sender_username:
-            transaction.sender_username = b64decode(sender_username.encode()).decode()
-
-        if receiver_username:
-            transaction.receiver_username = b64decode(receiver_username.encode()).decode()
-
-        if data:
-            transaction.data = TransactionPayload.from_encoded_str(data)
-
-        if guardian:
-            transaction.guardian = Address.from_bech32(guardian)
-
-        if signature:
-            transaction.signature = bytes.fromhex(signature)
-
-        if guardian_signature:
-            transaction.guardian_signature = bytes.fromhex(guardian_signature)
-
-        return transaction
-
     def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
-        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf8")
+        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf-8")
         return serialized

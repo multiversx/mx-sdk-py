@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "multiversx-sdk-core"
-version = "0.6.0"
+version = "0.7.0"
 authors = [
   { name="MultiversX" },
 ]
@@ -18,7 +18,8 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-  "pycryptodomex==3.16.0"
+  "pycryptodomex==3.16.0",
+  "protobuf==3.20.1"
 ]
 
 [project.urls]
