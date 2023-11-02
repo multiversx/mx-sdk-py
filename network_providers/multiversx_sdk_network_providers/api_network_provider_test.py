@@ -1,11 +1,14 @@
-import pytest
 from typing import Any, Dict
 
+import pytest
 from multiversx_sdk_core import Address
-from multiversx_sdk_network_providers.api_network_provider import ApiNetworkProvider
+
+from multiversx_sdk_network_providers.api_network_provider import \
+    ApiNetworkProvider
 from multiversx_sdk_network_providers.errors import GenericError
-from multiversx_sdk_network_providers.proxy_network_provider import ContractQuery
 from multiversx_sdk_network_providers.interface import IPagination
+from multiversx_sdk_network_providers.proxy_network_provider import \
+    ContractQuery
 
 
 class Pagination(IPagination):
@@ -21,7 +24,7 @@ class Pagination(IPagination):
 
 
 class TestApi:
-    api = ApiNetworkProvider('https://devnet-api.multiversx.com')
+    api = ApiNetworkProvider('https://devnet-old-api.multiversx.com')
 
     def test_get_network_stake_statistic(self):
         result = self.api.get_network_stake_statistics()

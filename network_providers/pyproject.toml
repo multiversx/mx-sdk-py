@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "multiversx-sdk-network-providers"
-version = "0.11.0"
+version = "0.11.1"
 authors = [
   { name="MultiversX" },
 ]
@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
   "requests==2.24.0",
-  "multiversx-sdk-core>=0.3"
+  "multiversx-sdk-core>=0.3, <0.7.0"
 ]
 
 [project.urls]
