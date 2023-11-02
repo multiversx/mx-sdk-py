@@ -14,7 +14,7 @@ class TestSmartContractTransactionsFactory:
     factory = SmartContractTransactionsFactory(config, TokenComputer())
 
     def test_create_transaction_for_deploy(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         contract = Path(__file__).parent.parent / "testutils" / "testdata" / "adder.wasm"
         gas_limit = 6000000
         args = [0]
@@ -33,8 +33,8 @@ class TestSmartContractTransactionsFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_execute_no_transfer(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "add"
         gas_limit = 6000000
         args = [7]
@@ -55,8 +55,8 @@ class TestSmartContractTransactionsFactory:
         assert intent.amount == 0
 
     def test_create_transaction_for_execute_and_tranfer_native_token(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "add"
         gas_limit = 6000000
         args = [7]
@@ -79,8 +79,8 @@ class TestSmartContractTransactionsFactory:
         assert transaction.amount == 1000000000000000000
 
     def test_create_transaction_for_execute_and_send_single_esdt(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
         gas_limit = 6000000
         args = [7]
@@ -104,8 +104,8 @@ class TestSmartContractTransactionsFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_execute_and_send_multiple_esdts(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3")
         function = "dummy"
         gas_limit = 6000000
         args = [7]
@@ -133,8 +133,8 @@ class TestSmartContractTransactionsFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_execute_and_send_single_nft(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
         gas_limit = 6000000
         args = [7]
@@ -158,8 +158,8 @@ class TestSmartContractTransactionsFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_execute_and_send_multiple_nfts(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract = Address.from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
         gas_limit = 6000000
         args = [7]
@@ -186,8 +186,8 @@ class TestSmartContractTransactionsFactory:
         assert transaction.amount == 0
 
     def test_create_transaction_for_upgrade(self):
-        sender = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract_address = Address.from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         contract = Path(__file__).parent.parent / "testutils" / "testdata" / "adder.wasm"
         gas_limit = 6000000
         args = [0]

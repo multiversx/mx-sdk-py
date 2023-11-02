@@ -75,7 +75,7 @@ class RelayedTransactionV1Builder:
         )
         relayed_transaction = Transaction(
             chain_id=self.network_config.chain_id,
-            sender=self.relayer_address.bech32(),
+            sender=self.relayer_address.to_bech32(),
             receiver=self.inner_transaction.sender,
             amount=0,
             nonce=self.relayer_nonce,
@@ -83,7 +83,7 @@ class RelayedTransactionV1Builder:
             data=data.encode(),
             version=self.relayed_transaction_version,
             options=self.relayed_transaction_options,
-            guardian=self.relayed_transaction_guardian.bech32() if self.relayed_transaction_guardian else "",
+            guardian=self.relayed_transaction_guardian.to_bech32() if self.relayed_transaction_guardian else "",
         )
 
         if self.relayer_nonce:
@@ -95,8 +95,8 @@ class RelayedTransactionV1Builder:
         if not self.inner_transaction:
             return ""
 
-        sender = Address.from_bech32(self.inner_transaction.sender).hex()
-        receiver = Address.from_bech32(self.inner_transaction.receiver).hex()
+        sender = Address.new_from_bech32(self.inner_transaction.sender).to_hex()
+        receiver = Address.new_from_bech32(self.inner_transaction.receiver).to_hex()
 
         tx: Dict[str, Any] = {
             "nonce": self.inner_transaction.nonce,
@@ -117,7 +117,7 @@ class RelayedTransactionV1Builder:
             tx["options"] = self.inner_transaction.options
 
         if self.inner_transaction.guardian:
-            guardian = Address.from_bech32(self.inner_transaction.guardian).hex()
+            guardian = Address.new_from_bech32(self.inner_transaction.guardian).to_hex()
             tx["guardian"] = base64.b64encode(bytes.fromhex(guardian)).decode()
 
         if self.inner_transaction.guardian_signature:

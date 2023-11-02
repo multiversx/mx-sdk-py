@@ -46,8 +46,8 @@ class TransactionBuilder:
         gas_limit = self.compute_gas_limit(data)
 
         transaction = Transaction(
-            sender=self.sender.bech32(),
-            receiver=self.receiver.bech32(),
+            sender=self.sender.to_bech32(),
+            receiver=self.receiver.to_bech32(),
             gas_limit=gas_limit,
             chain_id=self.config.chain_id,
             data=data,

@@ -1,6 +1,6 @@
 import pytest
 
-from multiversx_sdk_core.address import Address, AddressConverter
+from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.errors import (ErrInvalidGasLimitForInnerTransaction,
                                         ErrInvalidRelayerV2BuilderArguments)
 from multiversx_sdk_core.testutils.wallets import load_wallets
@@ -31,7 +31,7 @@ class TestRelayedV2Builder:
     def test_with_inner_tx_gas_limit(self):
         builder = RelayedTransactionV2Builder()
         network_config = NetworkConfig()
-        transaction_computer = TransactionComputer(AddressConverter())
+        transaction_computer = TransactionComputer()
 
         inner_tx = Transaction(
             chain_id=network_config.chain_id,
@@ -48,14 +48,14 @@ class TestRelayedV2Builder:
         builder.set_network_config(network_config)
         builder.set_inner_transaction_gas_limit(10)
         builder.set_inner_transaction(inner_tx)
-        builder.set_relayer_address(Address.from_bech32(self.alice.label))
+        builder.set_relayer_address(Address.new_from_bech32(self.alice.label))
 
         with pytest.raises(ErrInvalidGasLimitForInnerTransaction):
             builder.build()
 
     def test_compute_relayed_v2_transaction(self):
         network_config = NetworkConfig()
-        transaction_computer = TransactionComputer(AddressConverter())
+        transaction_computer = TransactionComputer()
 
         inner_tx = Transaction(
             chain_id=network_config.chain_id,
@@ -74,7 +74,7 @@ class TestRelayedV2Builder:
         builder.set_inner_transaction_gas_limit(60_000_000)
         builder.set_relayer_nonce(37)
         builder.set_network_config(network_config)
-        builder.set_relayer_address(Address.from_bech32(self.alice.label))
+        builder.set_relayer_address(Address.new_from_bech32(self.alice.label))
 
         relayed_tx = builder.build()
         # version is set to 1 to match the test in sdk-js-core

@@ -62,7 +62,7 @@ class SmartContractTransactionsFactory:
         transaction = TransactionBuilder(
             config=self.config,
             sender=sender,
-            receiver=Address.from_bech32(CONTRACT_DEPLOY_ADDRESS),
+            receiver=Address.new_from_bech32(CONTRACT_DEPLOY_ADDRESS),
             data_parts=parts,
             gas_limit=gas_limit,
             add_data_movement_gas=False,

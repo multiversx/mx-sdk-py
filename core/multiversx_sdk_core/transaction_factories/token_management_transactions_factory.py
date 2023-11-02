@@ -288,7 +288,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         parts: List[str] = [
             "setSpecialRole",
             arg_to_string(token_identifier),
-            arg_to_string(user),
+            user.to_hex(),
             *([arg_to_string("ESDTRoleLocalMint")] if add_role_local_mint else []),
             *([arg_to_string("ESDTRoleLocalBurn")] if add_role_local_burn else [])
         ]
@@ -316,7 +316,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         parts: List[str] = [
             "setSpecialRole",
             arg_to_string(token_identifier),
-            arg_to_string(user),
+            user.to_hex(),
             *([arg_to_string("ESDTRoleNFTCreate")] if add_role_nft_create else []),
             *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
             *([arg_to_string("ESDTRoleNFTAddQuantity")] if add_role_nft_add_quantity else []),
@@ -347,7 +347,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         parts: List[str] = [
             "setSpecialRole",
             arg_to_string(token_identifier),
-            arg_to_string(user),
+            user.to_hex(),
             *([arg_to_string("ESDTRoleNFTCreate")] if add_role_nft_create else []),
             *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
             *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if add_role_nft_update_attributes else []),
@@ -450,7 +450,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         parts: List[str] = [
             "freeze",
             arg_to_string(token_identifier),
-            arg_to_string(user)
+            user.to_hex()
         ]
 
         return TransactionBuilder(
@@ -472,7 +472,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         parts: List[str] = [
             "unFreeze",
             arg_to_string(token_identifier),
-            arg_to_string(user)
+            user.to_hex()
         ]
 
         return TransactionBuilder(
@@ -494,7 +494,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         parts: List[str] = [
             "wipe",
             arg_to_string(token_identifier),
-            arg_to_string(user)
+            user.to_hex()
         ]
 
         return TransactionBuilder(
