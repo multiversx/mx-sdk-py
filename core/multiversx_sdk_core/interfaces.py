@@ -5,6 +5,8 @@ from typing import Protocol
 class IAddress(Protocol):
     def bech32(self) -> str: ...
 
+    def hex(self) -> str: ...
+
 
 INonce = int
 IGasPrice = int
@@ -45,3 +47,8 @@ class INetworkConfig(Protocol):
     gas_per_data_byte: IGasPerDataByte
     gas_price_modifier: float
     chain_id: IChainID
+
+
+class IValidatorPublicKey(Protocol):
+    def hex(self) -> str:
+        ...
