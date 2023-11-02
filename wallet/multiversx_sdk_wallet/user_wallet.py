@@ -126,7 +126,7 @@ class UserWallet:
             "kind": self.kind,
             "id": self.encrypted_data.id,
             "address": self.public_key_when_kind_is_secret_key.hex(),
-            "bech32": self.public_key_when_kind_is_secret_key.to_address(address_hrp).bech32(),
+            "bech32": self.public_key_when_kind_is_secret_key.to_address(address_hrp).to_bech32(),
             "crypto": crypto_section
         }
 

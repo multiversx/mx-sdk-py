@@ -10,7 +10,7 @@ class UserVerifier:
 
     @classmethod
     def from_address(cls, address: IAddress) -> 'UserVerifier':
-        buffer: bytes = Address.from_bech32(address.bech32()).pubkey
+        buffer: bytes = Address.new_from_bech32(address.to_bech32()).get_public_key()
         public_key = UserPublicKey(buffer)
         return UserVerifier(public_key)
 
