@@ -115,14 +115,14 @@ class ContractCallBuilder(TransactionBuilder):
                 arg_to_string(transfer.token_identifier),
                 arg_to_string(transfer.token_nonce),
                 arg_to_string(transfer.amount_as_integer),
-                arg_to_string(self.contract),
+                self.contract.to_hex(),
                 arg_to_string(self.function_name),
                 *args_to_strings(self.call_arguments)
             ]
         elif self._has_multiple_transfers():
             parts = [
                 "MultiESDTNFTTransfer",
-                arg_to_string(self.contract),
+                self.contract.to_hex(),
                 arg_to_string(len(self.esdt_transfers))
             ]
 

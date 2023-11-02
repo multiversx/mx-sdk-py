@@ -34,3 +34,18 @@ class ErrInvalidGasLimitForInnerTransaction(Exception):
 class ErrListsLengthMismatch(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
+
+
+class NotEnoughGasError(Exception):
+    def __init__(self, gas_limit: int) -> None:
+        super().__init__(f"Not enough gas provided: {gas_limit}")
+
+
+class BadUsageError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+
+class InvalidTokenIdentifierError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)

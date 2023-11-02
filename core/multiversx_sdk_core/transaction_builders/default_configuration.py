@@ -19,5 +19,5 @@ class DefaultTransactionBuildersConfiguration:
     additional_gas_for_esdt_transfer = 100000
     additional_gas_for_esdt_nft_transfer = 800000
 
-    esdt_contract_address: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
-    deployment_address: IAddress = Address.from_bech32("erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu")
+    esdt_contract_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
+    deployment_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu")

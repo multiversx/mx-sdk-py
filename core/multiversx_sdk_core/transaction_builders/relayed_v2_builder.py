@@ -1,5 +1,6 @@
 from typing import Any, List, Optional
 
+from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.errors import (ErrInvalidGasLimitForInnerTransaction,
                                         ErrInvalidRelayerV2BuilderArguments)
 from multiversx_sdk_core.interfaces import (IAddress, IGasLimit,
@@ -51,9 +52,9 @@ class RelayedTransactionV2Builder:
             raise ErrInvalidGasLimitForInnerTransaction()
 
         arguments: List[Any] = [
-            self.inner_transaction.receiver,
+            Address.new_from_bech32(self.inner_transaction.receiver),
             self.inner_transaction.nonce,
-            self.inner_transaction.data.data,
+            self.inner_transaction.data,
             self.inner_transaction.signature
         ]
 
@@ -61,12 +62,12 @@ class RelayedTransactionV2Builder:
         payload = TransactionPayload.from_str(data)
 
         relayed_transaction = Transaction(
-            sender=self.relayer_address,
+            sender=self.relayer_address.to_bech32(),
             receiver=self.inner_transaction.sender,
-            value=0,
+            amount=0,
             gas_limit=self.inner_transaction_gas_limit + self.network_config.min_gas_limit + self.network_config.gas_per_data_byte * payload.length(),
             chain_id=self.network_config.chain_id,
-            data=payload
+            data=payload.data
         )
 
         if self.relayer_nonce:
