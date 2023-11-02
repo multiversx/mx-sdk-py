@@ -3,13 +3,11 @@ from typing import Any, Dict
 from multiversx_sdk_core import Address
 
 from multiversx_sdk_network_providers.proxy_network_provider import (
-    ContractQuery,
-    ProxyNetworkProvider,
-)
+    ContractQuery, ProxyNetworkProvider)
 
 
 class TestProxy:
-    proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+    proxy = ProxyNetworkProvider("https://devnet-old-gateway.multiversx.com")
 
     def test_get_network_config(self):
         result = self.proxy.get_network_config()
