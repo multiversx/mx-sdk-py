@@ -77,7 +77,7 @@ class TokenOperationsOutcomeParser:
         wrapper.ensure_no_error()
 
         event = wrapper.find_single_event_by_identifier("ESDTSetRole")
-        user_address = event.address.bech32()
+        user_address = event.address.to_bech32()
         token_identifier = self._extract_token_identifier(event)
         roles = [str(topic) for topic in event.topics[3:]]
 
@@ -99,7 +99,7 @@ class TokenOperationsOutcomeParser:
         wrapper.ensure_no_error()
 
         event = wrapper.find_single_event_by_identifier("ESDTLocalMint")
-        user_address = event.address.bech32()
+        user_address = event.address.to_bech32()
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         minted_supply = self._extract_amount(event)
@@ -111,7 +111,7 @@ class TokenOperationsOutcomeParser:
         wrapper.ensure_no_error()
 
         event = wrapper.find_single_event_by_identifier("ESDTLocalBurn")
-        user_address = event.address.bech32()
+        user_address = event.address.to_bech32()
         token_identifier = self._extract_token_identifier(event)
         nonce = self._extract_nonce(event)
         burnt_supply = self._extract_amount(event)
@@ -211,4 +211,4 @@ class TokenOperationsOutcomeParser:
         return decode_unsigned_number(event.topics[2].raw)
 
     def _extract_address(self, event: ITransactionEvent) -> str:
-        return Address(event.topics[3].raw, self._config.address_hrp).bech32()
+        return Address(event.topics[3].raw, self._config.address_hrp).to_bech32()
