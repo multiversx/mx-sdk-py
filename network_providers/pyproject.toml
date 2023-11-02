@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
   "requests==2.24.0",
-  "multiversx-sdk-core>=0.3"
+  "multiversx-sdk-core>=0.3, <0.7.0"
 ]
 
 [project.urls]
