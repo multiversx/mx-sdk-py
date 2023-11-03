@@ -1,4 +1,4 @@
 pytest
 flake8
 autopep8
-multiversx_sdk_core>=0.4.1
+multiversx_sdk_core>=0.6.0, <0.7.0
