@@ -19,7 +19,7 @@ class TransactionReceipt:
 
         result.value = response.get('value', 0)
         sender = response.get('sender', '')
-        result.sender = Address.from_bech32(sender) if sender else EmptyAddress()
+        result.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
 
         result.data = response.get('data', '')
         result.hash = response.get('txHash', '')

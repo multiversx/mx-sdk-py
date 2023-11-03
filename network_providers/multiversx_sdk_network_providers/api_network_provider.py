@@ -3,25 +3,34 @@ from typing import Any, Dict, List, Tuple, Union, cast
 import requests
 from requests.auth import AuthBase
 
-from multiversx_sdk_network_providers.accounts import AccountOnNetwork, GuardianData
+from multiversx_sdk_network_providers.accounts import (AccountOnNetwork,
+                                                       GuardianData)
 from multiversx_sdk_network_providers.config import DefaultPagination
 from multiversx_sdk_network_providers.constants import DEFAULT_ADDRESS_HRP
-from multiversx_sdk_network_providers.contract_query_requests import ContractQueryRequest
-from multiversx_sdk_network_providers.contract_query_response import ContractQueryResponse
+from multiversx_sdk_network_providers.contract_query_requests import \
+    ContractQueryRequest
+from multiversx_sdk_network_providers.contract_query_response import \
+    ContractQueryResponse
 from multiversx_sdk_network_providers.errors import GenericError
-from multiversx_sdk_network_providers.interface import (IAddress, IContractQuery, IPagination,
+from multiversx_sdk_network_providers.interface import (IAddress,
+                                                        IContractQuery,
+                                                        IPagination,
                                                         ITransaction)
 from multiversx_sdk_network_providers.network_config import NetworkConfig
-from multiversx_sdk_network_providers.network_general_statistics import NetworkGeneralStatistics
+from multiversx_sdk_network_providers.network_general_statistics import \
+    NetworkGeneralStatistics
 from multiversx_sdk_network_providers.network_stake import NetworkStake
 from multiversx_sdk_network_providers.network_status import NetworkStatus
-from multiversx_sdk_network_providers.proxy_network_provider import ProxyNetworkProvider
+from multiversx_sdk_network_providers.proxy_network_provider import \
+    ProxyNetworkProvider
 from multiversx_sdk_network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
-from multiversx_sdk_network_providers.tokens import (FungibleTokenOfAccountOnNetwork,
-                                                     NonFungibleTokenOfAccountOnNetwork)
-from multiversx_sdk_network_providers.transaction_status import TransactionStatus
-from multiversx_sdk_network_providers.transactions import TransactionOnNetwork, TransactionInMempool
+from multiversx_sdk_network_providers.tokens import (
+    FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
+from multiversx_sdk_network_providers.transaction_status import \
+    TransactionStatus
+from multiversx_sdk_network_providers.transactions import (
+    TransactionInMempool, TransactionOnNetwork)
 from multiversx_sdk_network_providers.utils import decimal_to_padded_hex
 
 
@@ -57,27 +66,27 @@ class ApiNetworkProvider:
         return network_stats
 
     def get_account(self, address: IAddress) -> AccountOnNetwork:
-        response = self.do_get_generic(f'accounts/{address.bech32()}')
+        response = self.do_get_generic(f'accounts/{address.to_bech32()}')
         account = AccountOnNetwork.from_http_response(response)
 
         return account
 
     def get_fungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[FungibleTokenOfAccountOnNetwork]:
-        url = f'accounts/{address.bech32()}/tokens?{self._build_pagination_params(pagination)}'
+        url = f'accounts/{address.to_bech32()}/tokens?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(FungibleTokenOfAccountOnNetwork.from_http_response, response)
 
         return list(result)
 
     def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[NonFungibleTokenOfAccountOnNetwork]:
-        url = f'accounts/{address.bech32()}/nfts?{self._build_pagination_params(pagination)}'
+        url = f'accounts/{address.to_bech32()}/nfts?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(NonFungibleTokenOfAccountOnNetwork.from_api_http_response, response)
 
         return list(result)
 
     def get_fungible_token_of_account(self, address: IAddress, token_identifier: str) -> FungibleTokenOfAccountOnNetwork:
-        url = f'accounts/{address.bech32()}/tokens/{token_identifier}'
+        url = f'accounts/{address.to_bech32()}/tokens/{token_identifier}'
         response = self.do_get_generic(url)
         result = FungibleTokenOfAccountOnNetwork.from_http_response(response)
 
@@ -85,7 +94,7 @@ class ApiNetworkProvider:
 
     def get_nonfungible_token_of_account(self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
         nonce_as_hex = decimal_to_padded_hex(nonce)
-        url = f'accounts/{address.bech32()}/nfts/{collection}-{nonce_as_hex}'
+        url = f'accounts/{address.to_bech32()}/nfts/{collection}-{nonce_as_hex}'
         response = self.do_get_generic(url)
         result = NonFungibleTokenOfAccountOnNetwork.from_api_http_response(response)
 
@@ -123,7 +132,7 @@ class ApiNetworkProvider:
         return transaction
 
     def get_account_transactions(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[TransactionOnNetwork]:
-        url = f"accounts/{address.bech32()}/transactions?{self._build_pagination_params(pagination)}"
+        url = f"accounts/{address.to_bech32()}/transactions?{self._build_pagination_params(pagination)}"
         response = self.do_get_generic_collection(url)
 
         transactions = [TransactionOnNetwork.from_api_http_response(tx.get("txHash", ""), tx) for tx in response]
@@ -147,7 +156,7 @@ class ApiNetworkProvider:
         return transactions
 
     def get_transactions_in_mempool_for_account(self, address: IAddress) -> List[TransactionInMempool]:
-        url = f"transaction/pool?by-sender={address.bech32()}&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
+        url = f"transaction/pool?by-sender={address.to_bech32()}&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
         response = self.do_get_generic(url)
         tx_pool = response["data"]["txPool"]
         mempool_transactions = tx_pool.get("transactions", [])

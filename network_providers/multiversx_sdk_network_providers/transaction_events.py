@@ -20,7 +20,7 @@ class TransactionEvent:
         result = TransactionEvent()
 
         address = response.get('address', '')
-        result.address = Address.from_bech32(address) if address else EmptyAddress()
+        result.address = Address.new_from_bech32(address) if address else EmptyAddress()
 
         result.identifier = response.get('identifier', '')
         topics = response.get('topics', [])
@@ -34,7 +34,7 @@ class TransactionEvent:
 
     def to_dictionary(self) -> Dict[str, Any]:
         return {
-            "address": self.address.bech32(),
+            "address": self.address.to_bech32(),
             "identifier": self.identifier,
             "topics": [item.hex() for item in self.topics],
             "data_payload": self.data_payload.hex() if self.data_payload else "",

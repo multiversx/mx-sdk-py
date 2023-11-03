@@ -6,7 +6,7 @@ class ISerializable(Protocol):
 
 
 class IAddress(Protocol):
-    def bech32(self) -> str: ...
+    def to_bech32(self) -> str: ...
 
 
 class ITransaction(ISerializable, Protocol):

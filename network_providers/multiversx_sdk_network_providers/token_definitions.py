@@ -34,7 +34,7 @@ class DefinitionOfFungibleTokenOnNetwork:
         result.ticker = payload.get('ticker', '')
 
         owner = payload.get('owner', '')
-        result.owner = Address.from_bech32(owner) if owner else EmptyAddress()
+        result.owner = Address.new_from_bech32(owner) if owner else EmptyAddress()
 
         result.decimals = payload.get('decimals', 0)
         result.supply = int(payload.get('supply', 0))
@@ -99,7 +99,7 @@ class DefinitionOfTokenCollectionOnNetwork:
         result.ticker = payload.get('ticker', '')
 
         owner = payload.get('owner', '')
-        result.owner = Address.from_bech32(owner) if owner else EmptyAddress()
+        result.owner = Address.new_from_bech32(owner) if owner else EmptyAddress()
 
         result.decimals = payload.get('decimals', 0)
         result.can_pause = payload.get('canPause', False)

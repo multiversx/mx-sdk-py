@@ -85,10 +85,10 @@ class TransactionOnNetwork:
         result.value = response.get("value", 0)
 
         sender = response.get("sender", "")
-        result.sender = Address.from_bech32(sender) if sender else EmptyAddress()
+        result.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
 
         receiver = response.get("receiver", "")
-        result.receiver = Address.from_bech32(receiver) if receiver else EmptyAddress()
+        result.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
 
         result.gas_price = response.get("gasPrice", 0)
         result.gas_limit = response.get("gasLimit", 0)
@@ -120,8 +120,8 @@ class TransactionOnNetwork:
             "round": self.round,
             "epoch": self.epoch,
             "value": self.value,
-            "receiver": self.receiver.bech32(),
-            "sender": self.sender.bech32(),
+            "receiver": self.receiver.to_bech32(),
+            "sender": self.sender.to_bech32(),
             "gasLimit": self.gas_limit,
             "gasPrice": self.gas_price,
             "data": self.data,
@@ -154,10 +154,10 @@ class TransactionInMempool:
 
         transaction.hash = data.get("hash", "")
         sender = data.get("sender", "")
-        transaction.sender = Address.from_bech32(sender) if sender else EmptyAddress()
+        transaction.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
 
         receiver = data.get("receiver", "")
-        transaction.receiver = Address.from_bech32(receiver) if receiver else EmptyAddress()
+        transaction.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
 
         transaction.gas_price = data.get("gasPrice", 0)
         transaction.gas_limit = data.get("gasLimit", 0)
@@ -173,8 +173,8 @@ class TransactionInMempool:
     def to_dictionary(self) -> Dict[str, Any]:
         return {
             "txHash": self.hash,
-            "sender": self.sender.bech32(),
-            "receiver": self.receiver.bech32(),
+            "sender": self.sender.to_bech32(),
+            "receiver": self.receiver.to_bech32(),
             "nonce": self.nonce,
             "value": self.value,
             "gasLimit": self.gas_limit,

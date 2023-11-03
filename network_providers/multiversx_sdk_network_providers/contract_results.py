@@ -46,8 +46,8 @@ class ContractResultItem:
             "hash": self.hash,
             "nonce": self.nonce,
             "value": self.value,
-            "receiver": self.receiver.bech32(),
-            "sender": self.sender.bech32(),
+            "receiver": self.receiver.to_bech32(),
+            "sender": self.sender.to_bech32(),
             "data": self.data,
             "previousHash": self.previous_hash,
             "originalHash": self.original_hash,
@@ -82,10 +82,10 @@ class ContractResultItem:
         item.value = int(response.get("value", 0))
 
         sender = response.get("sender", "")
-        item.sender = Address.from_bech32(sender) if sender else EmptyAddress()
+        item.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
 
         receiver = response.get("receiver", "")
-        item.receiver = Address.from_bech32(receiver) if receiver else EmptyAddress()
+        item.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
 
         item.previous_hash = response.get("prevTxHash", "")
         item.original_hash = response.get("originalTxHash", "")

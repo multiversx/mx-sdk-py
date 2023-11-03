@@ -44,19 +44,19 @@ class TestProxy:
         assert meta_system_sc_cost["Stake"] == 5000000
 
     def test_get_account(self):
-        address = Address.from_bech32(
+        address = Address.new_from_bech32(
             "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
         )
         result = self.proxy.get_account(address)
 
         assert (
-            result.address.bech32()
+            result.address.to_bech32()
             == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
         )
         assert result.username == ""
 
     def test_get_fungible_token_of_account(self):
-        address = Address.from_bech32(
+        address = Address.new_from_bech32(
             "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
         )
         result = self.proxy.get_fungible_token_of_account(address, "ABC-10df96")
@@ -65,7 +65,7 @@ class TestProxy:
         assert result.balance == 50
 
     def test_get_nonfungible_token_of_account(self):
-        address = Address.from_bech32(
+        address = Address.new_from_bech32(
             "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
         )
         result = self.proxy.get_nonfungible_token_of_account(
@@ -88,7 +88,7 @@ class TestProxy:
 
     def test_query_contract(self):
         query = ContractQuery(
-            Address.from_bech32(
+            Address.new_from_bech32(
                 "erd1qqqqqqqqqqqqqpgquykqja5c4v33zdmnwglj3jphqwrelzdn396qlc9g33"
             ),
             "getSum",
@@ -104,7 +104,7 @@ class TestProxy:
 
         assert result.identifier == "ABC-10df96"
         assert (
-            result.owner.bech32()
+            result.owner.to_bech32()
             == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
         )
         assert result.can_upgrade
@@ -117,7 +117,7 @@ class TestProxy:
 
         assert result.collection == "ASDASD-510041"
         assert (
-            result.owner.bech32()
+            result.owner.to_bech32()
             == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
         )
         assert result.type == "NonFungibleESDT"
@@ -139,7 +139,7 @@ class TestProxy:
         )
         assert result.is_completed == None
         assert (
-            result.sender.bech32()
+            result.sender.to_bech32()
             == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
         )
         assert result.contract_results.items == []

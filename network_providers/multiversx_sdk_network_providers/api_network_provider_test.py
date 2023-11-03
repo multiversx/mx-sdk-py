@@ -53,10 +53,10 @@ class TestApi:
         assert meta_system_sc_cost["Stake"] == 5000000
 
     def test_get_account(self):
-        address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
+        address = Address.new_from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
         result = self.api.get_account(address)
 
-        assert result.address.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
+        assert result.address.to_bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.username == ''
 
     def test_get_generic_with_bad_address(self):
@@ -65,13 +65,13 @@ class TestApi:
             self.api.do_get_generic(url)
 
     def test_get_fungible_token_of_account(self):
-        address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
+        address = Address.new_from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
         result = self.api.get_fungible_token_of_account(address, 'ABC-10df96')
 
         assert result.identifier == 'ABC-10df96'
 
     def test_get_nonfungible_token_of_account(self):
-        address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
+        address = Address.new_from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
         result = self.api.get_nonfungible_token_of_account(address, 'ASDASD-510041', 2)
 
         assert result.balance == 0
@@ -82,7 +82,7 @@ class TestApi:
         assert result.royalties == 75
 
     def test_get_meta_esdt(self):
-        adr = Address.from_bech32('erd1dk5urklhptgjp69k684wzapjxdp40fu0a3jn39rtcc78wxhewkyscp53au')
+        adr = Address.new_from_bech32('erd1dk5urklhptgjp69k684wzapjxdp40fu0a3jn39rtcc78wxhewkyscp53au')
         result = self.api.get_nonfungible_token_of_account(adr, 'EGLDRIDEF-9cf6f6', 4)
 
         assert result.balance != 0
@@ -96,13 +96,13 @@ class TestApi:
         assert result.hash == '2cb813be9d5e5040abb2522da75fa5c8d94f72caa510ff51d7525659f398298b'
         assert result.nonce == 828
         assert result.is_completed
-        assert result.sender.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
-        assert result.receiver.bech32() == 'erd1c8tnzykaj7lhrd5cy6jap533afr4dqu7uqcdm6qv4wuwly9lcsqqm9ll4f'
+        assert result.sender.to_bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
+        assert result.receiver.to_bech32() == 'erd1c8tnzykaj7lhrd5cy6jap533afr4dqu7uqcdm6qv4wuwly9lcsqqm9ll4f'
         assert result.value == '10000000000000000000'
         assert str(result.status) == "success"
 
     def test_get_account_transactions(self):
-        address = Address.from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
+        address = Address.new_from_bech32('erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7')
         pagination = Pagination(0, 2)
 
         result = self.api.get_account_transactions(address, pagination)
@@ -129,7 +129,7 @@ class TestApi:
         assert transaction.logs.events[0].topics[3].hex() == "00000000000000000500e01285f90311fb5925a9623a1dc62eee41fa8c869a0d"
 
     def test_get_transactions_in_mempool_for_account(self):
-        address = Address.from_bech32("erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7")
+        address = Address.new_from_bech32("erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7")
         result = self.api.get_transactions_in_mempool_for_account(address)
 
         assert len(result) == 0
@@ -147,7 +147,7 @@ class TestApi:
         assert result.status == 'success'
 
     def test_query_contract(self):
-        query = ContractQuery(Address.from_bech32('erd1qqqqqqqqqqqqqpgquykqja5c4v33zdmnwglj3jphqwrelzdn396qlc9g33'),
+        query = ContractQuery(Address.new_from_bech32('erd1qqqqqqqqqqqqqpgquykqja5c4v33zdmnwglj3jphqwrelzdn396qlc9g33'),
                               'getSum', 0, [])
         result = self.api.query_contract(query)
 
@@ -157,7 +157,7 @@ class TestApi:
         result = self.api.get_definition_of_fungible_token('ABC-10df96')
 
         assert result.identifier == 'ABC-10df96'
-        assert result.owner.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
+        assert result.owner.to_bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.can_upgrade
         assert not result.can_freeze
         assert result.decimals == 1
@@ -167,7 +167,7 @@ class TestApi:
         result = self.api.get_definition_of_token_collection('ASDASD-510041')
 
         assert result.collection == 'ASDASD-510041'
-        assert result.owner.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
+        assert result.owner.to_bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.type == 'NonFungibleESDT'
         assert result.decimals == 0
         assert result.can_freeze
@@ -180,7 +180,7 @@ class TestApi:
         assert result.nonce == 2
         assert result.identifier == 'ASDASD-510041-02'
         assert result.collection == 'ASDASD-510041'
-        assert result.creator.bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
+        assert result.creator.to_bech32() == 'erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7'
         assert result.balance == 0
         assert result.royalties != 0
         assert result.timestamp != 0

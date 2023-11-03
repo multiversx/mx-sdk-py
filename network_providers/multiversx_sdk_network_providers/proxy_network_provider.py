@@ -53,19 +53,19 @@ class ProxyNetworkProvider:
         return network_status
 
     def get_account(self, address: IAddress) -> AccountOnNetwork:
-        response = self.do_get_generic(f'address/{address.bech32()}')
+        response = self.do_get_generic(f'address/{address.to_bech32()}')
         account = AccountOnNetwork.from_http_response(response.get('account', ''))
 
         return account
 
     def get_guardian_data(self, address: IAddress) -> GuardianData:
-        response = self.do_get_generic(f'address/{address.bech32()}/guardian-data')
+        response = self.do_get_generic(f'address/{address.to_bech32()}/guardian-data')
         account_guardian = GuardianData.from_http_response(response.get('guardianData', ''))
 
         return account_guardian
 
     def get_fungible_tokens_of_account(self, address: IAddress) -> List[FungibleTokenOfAccountOnNetwork]:
-        url = f'address/{address.bech32()}/esdt'
+        url = f'address/{address.to_bech32()}/esdt'
         response = self.do_get_generic(url)
         items = response.get('esdts')
         esdts = [items[key] for key in items.keys() if items[key].get('nonce', '') == '']
@@ -74,7 +74,7 @@ class ProxyNetworkProvider:
         return list(tokens)
 
     def get_nonfungible_tokens_of_account(self, address: IAddress) -> List[NonFungibleTokenOfAccountOnNetwork]:
-        url = f'address/{address.bech32()}/esdt'
+        url = f'address/{address.to_bech32()}/esdt'
         response = self.do_get_generic(url)
         items = response.get('esdts')
         nfts = [items[key] for key in items.keys() if items[key].get('nonce', -1) > 0]
@@ -83,13 +83,13 @@ class ProxyNetworkProvider:
         return list(result)
 
     def get_fungible_token_of_account(self, address: IAddress, identifier: str) -> FungibleTokenOfAccountOnNetwork:
-        response = self.do_get_generic(f'address/{address.bech32()}/esdt/{identifier}')
+        response = self.do_get_generic(f'address/{address.to_bech32()}/esdt/{identifier}')
         token = FungibleTokenOfAccountOnNetwork.from_http_response(response.get('tokenData'))
 
         return token
 
     def get_nonfungible_token_of_account(self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
-        response = self.do_get_generic(f'address/{address.bech32()}/nft/{collection}/nonce/{nonce}')
+        response = self.do_get_generic(f'address/{address.to_bech32()}/nft/{collection}/nonce/{nonce}')
         token = NonFungibleTokenOfAccountOnNetwork.from_proxy_http_response_by_nonce(response.get('tokenData', ''))
 
         return token
