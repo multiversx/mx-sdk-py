@@ -37,18 +37,36 @@ class Address:
         return cls(pubkey, hrp)
 
     @classmethod
+    def from_bech32(cls, value: str) -> 'Address':
+        logger.warning("The `from_bech32()` method is deprecated. Please use `new_from_bech32()` instead")
+        return Address.new_from_bech32(value)
+
+    @classmethod
     def new_from_hex(cls, value: str, hrp: str) -> 'Address':
         pubkey = bytes.fromhex(value)
         return cls(pubkey, hrp)
 
+    @classmethod
+    def from_hex(cls, value: str, hrp: str) -> 'Address':
+        logger.warning("The `from_hex()` method is deprecated. Please use `new_from_hex()` instead")
+        return Address.new_from_hex(value, hrp)
+
     def to_hex(self) -> str:
         return self.pubkey.hex()
+
+    def hex(self) -> str:
+        logger.warning("The `hex()` method is deprecated. Please use `to_hex()` instead")
+        return self.to_hex()
 
     def to_bech32(self) -> str:
         converted = bech32.convertbits(self.pubkey, 8, 5)
         assert converted is not None
         encoded = bech32.bech32_encode(self.hrp, converted)
         return encoded
+
+    def bech32(self) -> str:
+        logger.warning("The `bech32()` method is deprecated. Please us `to_bech32()` instead")
+        return self.to_bech32()
 
     def get_public_key(self) -> bytes:
         return self.pubkey
