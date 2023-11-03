@@ -1,7 +1,5 @@
-from typing import Any, Dict
-
 import pytest
-from multiversx_sdk_core import Address
+from multiversx_sdk_core import Address, Transaction
 
 from multiversx_sdk_network_providers.api_network_provider import \
     ApiNetworkProvider
@@ -186,30 +184,19 @@ class TestApi:
         assert result.timestamp != 0
 
     def test_send_transaction(self):
-        transaction = DummyTransaction(
-            {
-                "nonce": 42,
-                "value": "1",
-                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
-                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
-                "gasPrice": 1000000000,
-                "gasLimit": 50000,
-                "chainID": "D",
-                "version": 1,
-                "signature": "c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900",
-            }
+        transaction = Transaction(
+            sender="erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
+            receiver="erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
+            gas_limit=50000,
+            chain_id="D",
+            amount=1,
+            nonce=42,
+            gas_price=1000000000,
+            version=1,
+            signature=bytes.fromhex("c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900")
         )
-
         expected_hash = (
             "6e2fa63ea02937f00d7549f3e4eb9af241e4ac13027aa65a5300816163626c01"
         )
 
         assert self.api.send_transaction(transaction) == expected_hash
-
-
-class DummyTransaction:
-    def __init__(self, transaction: Dict[str, Any]) -> None:
-        self.transaction = transaction
-
-    def to_dictionary(self) -> Dict[str, Any]:
-        return self.transaction

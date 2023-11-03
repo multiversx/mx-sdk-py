@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Protocol
 
 from multiversx_sdk_core import Address
 
@@ -11,6 +11,44 @@ from multiversx_sdk_network_providers.transaction_receipt import \
     TransactionReceipt
 from multiversx_sdk_network_providers.transaction_status import \
     TransactionStatus
+
+
+class ITransactionDto(Protocol):
+    sender: str
+    receiver: str
+    gas_limit: int
+    chain_id: str
+    nonce: int
+    amount: int
+    sender_username: str
+    receiver_username: str
+    gas_price: int
+    data: bytes
+    version: int
+    options: int
+    guardian: str
+    signature: bytes
+    guardian_signature: bytes
+
+
+def transaction_to_dictionary(transaction: ITransactionDto) -> Dict[str, Any]:
+    dictionary: Dict[str, Any] = {}
+    dictionary["nonce"] = transaction.nonce
+    dictionary["value"] = str(transaction.amount)
+    dictionary["receiver"] = transaction.receiver
+    dictionary["sender"] = transaction.sender
+    dictionary["gasPrice"] = transaction.gas_price
+    dictionary["gasLimit"] = transaction.gas_limit
+    dictionary["chainID"] = transaction.chain_id
+    dictionary["senderUsername"] = base64.b64encode(transaction.sender_username.encode()).decode()
+    dictionary["receiverUsername"] = base64.b64encode(transaction.receiver_username.encode()).decode()
+    dictionary["data"] = transaction.data.decode()
+    dictionary["version"] = transaction.version
+    dictionary["options"] = transaction.options
+    dictionary["guardian"] = transaction.guardian
+    dictionary["signature"] = transaction.signature.hex()
+    dictionary["guardianSignature"] = transaction.guardian_signature.hex()
+    return dictionary
 
 
 class TransactionOnNetwork:

@@ -1,6 +1,4 @@
-from typing import Any, Dict
-
-from multiversx_sdk_core import Address
+from multiversx_sdk_core import Address, Transaction
 
 from multiversx_sdk_network_providers.proxy_network_provider import (
     ContractQuery, ProxyNetworkProvider)
@@ -182,58 +180,57 @@ class TestProxy:
         assert result_by_nonce.get("timestamp") == result_by_hash.get("timestamp")
 
     def test_send_transaction(self):
-        transaction = DummyTransaction(
-            {
-                "nonce": 42,
-                "value": "1",
-                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
-                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
-                "gasPrice": 1000000000,
-                "gasLimit": 50000,
-                "chainID": "D",
-                "version": 1,
-                "signature": "c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900",
-            }
+        transaction = Transaction(
+            sender="erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
+            receiver="erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
+            gas_limit=50000,
+            chain_id="D",
+            nonce=42,
+            amount=1,
+            gas_price=1000000000,
+            version=1,
+            signature=bytes.fromhex("c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900")
         )
 
         expected_hash = (
             "6e2fa63ea02937f00d7549f3e4eb9af241e4ac13027aa65a5300816163626c01"
         )
-
         assert self.proxy.send_transaction(transaction) == expected_hash
 
     def test_send_transactions(self):
-        first_tx = DummyTransaction(
-            {
-                "nonce": 42,
-                "value": "1",
-                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
-                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
-                "gasPrice": 1000000000,
-                "gasLimit": 50000,
-                "chainID": "D",
-                "version": 1,
-                "signature": "c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900",
-            }
+        first_tx = Transaction(
+            sender="erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
+            receiver="erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
+            gas_limit=50000,
+            chain_id="D",
+            nonce=42,
+            amount=1,
+            gas_price=1000000000,
+            version=1,
+            signature=bytes.fromhex("c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900")
         )
 
-        second_tx = DummyTransaction(
-            {
-                "nonce": 43,
-                "value": "1",
-                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
-                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
-                "gasPrice": 1000000000,
-                "gasLimit": 50000,
-                "chainID": "D",
-                "version": 1,
-                "signature": "9c4c22d0ae1b5a10c39583a5ab9020b00b27aa69d4ac8ab4922620dbf0df4036ed890f9946d38a9d0c85d6ac485c0d9b2eac0005e752f249fd0ad863b0471d02",
-            }
+        second_tx = Transaction(
+            sender="erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
+            receiver="erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
+            gas_limit=50000,
+            chain_id="D",
+            nonce=43,
+            amount=1,
+            gas_price=1000000000,
+            version=1,
+            signature=bytes.fromhex("9c4c22d0ae1b5a10c39583a5ab9020b00b27aa69d4ac8ab4922620dbf0df4036ed890f9946d38a9d0c85d6ac485c0d9b2eac0005e752f249fd0ad863b0471d02")
         )
 
-        third_tx = DummyTransaction({"nonce": 44})
+        invalid_tx = Transaction(
+            sender="",
+            receiver="",
+            gas_limit=50000,
+            chain_id="D",
+            nonce=44
+        )
 
-        transactions = [first_tx, second_tx, third_tx]
+        transactions = [first_tx, second_tx, invalid_tx]
 
         expected_hashes = [
             "6e2fa63ea02937f00d7549f3e4eb9af241e4ac13027aa65a5300816163626c01",
@@ -244,11 +241,3 @@ class TestProxy:
             2,
             {"0": f"{expected_hashes[0]}", "1": f"{expected_hashes[1]}"},
         )
-
-
-class DummyTransaction:
-    def __init__(self, transaction: Dict[str, Any]) -> None:
-        self.transaction = transaction
-
-    def to_dictionary(self) -> Dict[str, Any]:
-        return self.transaction

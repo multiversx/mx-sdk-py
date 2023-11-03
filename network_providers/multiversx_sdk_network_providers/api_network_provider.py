@@ -14,8 +14,7 @@ from multiversx_sdk_network_providers.contract_query_response import \
 from multiversx_sdk_network_providers.errors import GenericError
 from multiversx_sdk_network_providers.interface import (IAddress,
                                                         IContractQuery,
-                                                        IPagination,
-                                                        ITransaction)
+                                                        IPagination)
 from multiversx_sdk_network_providers.network_config import NetworkConfig
 from multiversx_sdk_network_providers.network_general_statistics import \
     NetworkGeneralStatistics
@@ -30,7 +29,8 @@ from multiversx_sdk_network_providers.tokens import (
 from multiversx_sdk_network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk_network_providers.transactions import (
-    TransactionInMempool, TransactionOnNetwork)
+    ITransactionDto, TransactionInMempool, TransactionOnNetwork,
+    transaction_to_dictionary)
 from multiversx_sdk_network_providers.utils import decimal_to_padded_hex
 
 
@@ -56,40 +56,34 @@ class ApiNetworkProvider:
     def get_network_stake_statistics(self) -> NetworkStake:
         response = self.do_get_generic('stake')
         network_stake = NetworkStake.from_http_response(response)
-
         return network_stake
 
     def get_network_general_statistics(self) -> NetworkGeneralStatistics:
         response = self.do_get_generic('stats')
         network_stats = NetworkGeneralStatistics.from_http_response(response)
-
         return network_stats
 
     def get_account(self, address: IAddress) -> AccountOnNetwork:
         response = self.do_get_generic(f'accounts/{address.to_bech32()}')
         account = AccountOnNetwork.from_http_response(response)
-
         return account
 
     def get_fungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[FungibleTokenOfAccountOnNetwork]:
         url = f'accounts/{address.to_bech32()}/tokens?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(FungibleTokenOfAccountOnNetwork.from_http_response, response)
-
         return list(result)
 
     def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[NonFungibleTokenOfAccountOnNetwork]:
         url = f'accounts/{address.to_bech32()}/nfts?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(NonFungibleTokenOfAccountOnNetwork.from_api_http_response, response)
-
         return list(result)
 
     def get_fungible_token_of_account(self, address: IAddress, token_identifier: str) -> FungibleTokenOfAccountOnNetwork:
         url = f'accounts/{address.to_bech32()}/tokens/{token_identifier}'
         response = self.do_get_generic(url)
         result = FungibleTokenOfAccountOnNetwork.from_http_response(response)
-
         return result
 
     def get_nonfungible_token_of_account(self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
@@ -97,51 +91,42 @@ class ApiNetworkProvider:
         url = f'accounts/{address.to_bech32()}/nfts/{collection}-{nonce_as_hex}'
         response = self.do_get_generic(url)
         result = NonFungibleTokenOfAccountOnNetwork.from_api_http_response(response)
-
         return result
 
     def get_definition_of_fungible_token(self, token_identifier: str) -> DefinitionOfFungibleTokenOnNetwork:
         response = self.do_get_generic(f'tokens/{token_identifier}')
         result = DefinitionOfFungibleTokenOnNetwork.from_api_http_response(response)
-
         return result
 
     def get_definition_of_token_collection(self, collection: str) -> DefinitionOfTokenCollectionOnNetwork:
         response = self.do_get_generic(f'collections/{collection}')
         result = DefinitionOfTokenCollectionOnNetwork.from_api_http_response(response)
-
         return result
 
     def get_non_fungible_token(self, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
         nonce_as_hex = decimal_to_padded_hex(nonce)
         response = self.do_get_generic(f'nfts/{collection}-{nonce_as_hex}')
         result = NonFungibleTokenOfAccountOnNetwork.from_api_http_response(response)
-
         return result
 
     def query_contract(self, query: IContractQuery) -> ContractQueryResponse:
         request = ContractQueryRequest(query).to_http_request()
         response = self.do_post_generic('query', request)
-
         return ContractQueryResponse.from_http_response(response)
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
         response = self.do_get_generic(f'transactions/{tx_hash}')
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
-
         return transaction
 
     def get_account_transactions(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[TransactionOnNetwork]:
         url = f"accounts/{address.to_bech32()}/transactions?{self._build_pagination_params(pagination)}"
         response = self.do_get_generic_collection(url)
-
         transactions = [TransactionOnNetwork.from_api_http_response(tx.get("txHash", ""), tx) for tx in response]
-
         return transactions
 
     def get_bunch_of_transactions(self, tx_hashes: List[str], with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
         hashes = ",".join(tx_hashes)
-
         url = f"transactions?hashes={hashes}"
 
         if with_block_info:
@@ -151,7 +136,6 @@ class ApiNetworkProvider:
             url += "&withResults=true"
 
         result = self.do_get_generic_collection(url)
-
         transactions = [TransactionOnNetwork.from_api_http_response(transaction["txHash"], transaction) for transaction in result]
         return transactions
 
@@ -170,19 +154,16 @@ class ApiNetworkProvider:
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transactions/{tx_hash}?fields=status')
         status = TransactionStatus(response.get('status', ''))
-
         return status
 
-    def send_transaction(self, transaction: ITransaction) -> str:
+    def send_transaction(self, transaction: ITransactionDto) -> str:
         url = f'transactions'
-        response = self.do_post_generic(url, transaction.to_dictionary())
+        response = self.do_post_generic(url, transaction_to_dictionary(transaction))
         tx_hash: str = response.get('txHash', '')
-
         return tx_hash
 
-    def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, str]:
+    def send_transactions(self, transactions: List[ITransactionDto]) -> Tuple[int, str]:
         response = self.backing_proxy.send_transactions(transactions)
-
         return response
 
     def _build_pagination_params(self, pagination: IPagination) -> str:
