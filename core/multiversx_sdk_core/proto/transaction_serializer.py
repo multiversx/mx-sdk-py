@@ -9,7 +9,7 @@ class ITransaction(Protocol):
     sender: str
     receiver: str
     gas_limit: int
-    chainID: str
+    chain_id: str
     gas_price: int
     sender_username: str
     receiver_username: str
@@ -41,7 +41,7 @@ class ProtoSerializer:
         proto_transaction.GasPrice = transaction.gas_price
         proto_transaction.GasLimit = transaction.gas_limit
         proto_transaction.Data = transaction.data
-        proto_transaction.ChainID = transaction.chainID.encode()
+        proto_transaction.ChainID = transaction.chain_id.encode()
         proto_transaction.Version = transaction.version
         proto_transaction.Signature = transaction.signature
         proto_transaction.Options = transaction.options

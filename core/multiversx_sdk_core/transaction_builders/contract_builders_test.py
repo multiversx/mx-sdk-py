@@ -29,7 +29,7 @@ def test_contract_deployment_builder():
     tx = builder.build()
 
     assert payload.data == b"aabbccdd@0500@0506@2a@74657374"
-    assert tx.chainID == "D"
+    assert tx.chain_id == "D"
     assert tx.sender == owner.to_bech32()
     assert tx.receiver == "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
     assert tx.gas_limit == 10000000
@@ -56,7 +56,7 @@ def test_contract_upgrade_builder():
     tx = builder.build()
 
     assert payload.data == b"upgradeContract@aabbccdd@0506@2a@74657374"
-    assert tx.chainID == "D"
+    assert tx.chain_id == "D"
     assert tx.sender == owner.to_bech32()
     assert tx.receiver == contract.to_bech32()
     assert tx.gas_limit == 10000000

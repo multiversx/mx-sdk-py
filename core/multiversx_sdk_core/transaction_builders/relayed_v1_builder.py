@@ -108,7 +108,7 @@ class RelayedTransactionV1Builder:
             "data": base64.b64encode(self.inner_transaction.data).decode(),
             "signature": base64.b64encode(self.inner_transaction.signature).decode(),
             "chainID": base64.b64encode(
-                self.inner_transaction.chainID.encode()
+                self.inner_transaction.chain_id.encode()
             ).decode(),
             "version": self.inner_transaction.version,
         }

@@ -42,7 +42,7 @@ class Transaction:
                  signature: Optional[bytes] = None,
                  guardian_signature: Optional[bytes] = None
                  ) -> None:
-        self.chainID = chain_id
+        self.chain_id = chain_id
         self.sender = sender
         self.receiver = receiver
         self.gas_limit = gas_limit
@@ -113,7 +113,7 @@ class TransactionComputer:
         if transaction.data:
             dictionary["data"] = b64encode(transaction.data).decode()
 
-        dictionary["chainID"] = transaction.chainID
+        dictionary["chainID"] = transaction.chain_id
 
         if transaction.version:
             dictionary["version"] = transaction.version
