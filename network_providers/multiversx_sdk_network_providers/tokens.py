@@ -83,7 +83,7 @@ class NonFungibleTokenOfAccountOnNetwork:
         result.name = payload.get('name', '')
 
         creator = payload.get('creator', '')
-        result.creator = Address.from_bech32(creator) if creator else EmptyAddress()
+        result.creator = Address.new_from_bech32(creator) if creator else EmptyAddress()
 
         result.decimals = payload.get('decimals', 0)
         result.supply = payload.get('supply', 1)

@@ -20,7 +20,7 @@ class AccountOnNetwork:
         result = AccountOnNetwork()
 
         address = payload.get('address', '')
-        result.address = Address.from_bech32(address) if address else EmptyAddress()
+        result.address = Address.new_from_bech32(address) if address else EmptyAddress()
 
         result.nonce = payload.get('nonce', 0)
         result.balance = int(payload.get('balance', 0))
@@ -32,7 +32,7 @@ class AccountOnNetwork:
 
     def to_dictionary(self) -> Dict[str, Any]:
         return {
-            "address": self.address.bech32(),
+            "address": self.address.to_bech32(),
             "nonce": self.nonce,
             "balance": self.balance,
             "code": self.code.hex(),
@@ -78,7 +78,7 @@ class Guardian:
         result = Guardian()
 
         result.activation_epoch = int(response.get('activationEpoch', 0))
-        result.address = Address.from_bech32(response.get('address', ''))
+        result.address = Address.new_from_bech32(response.get('address', ''))
         result.service_uid = response.get('serviceUID', '')
 
         return result

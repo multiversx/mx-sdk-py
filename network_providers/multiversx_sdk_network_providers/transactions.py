@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Protocol
 
 from multiversx_sdk_core import Address
 
@@ -11,6 +11,44 @@ from multiversx_sdk_network_providers.transaction_receipt import \
     TransactionReceipt
 from multiversx_sdk_network_providers.transaction_status import \
     TransactionStatus
+
+
+class ITransactionDto(Protocol):
+    sender: str
+    receiver: str
+    gas_limit: int
+    chain_id: str
+    nonce: int
+    amount: int
+    sender_username: str
+    receiver_username: str
+    gas_price: int
+    data: bytes
+    version: int
+    options: int
+    guardian: str
+    signature: bytes
+    guardian_signature: bytes
+
+
+def transaction_to_dictionary(transaction: ITransactionDto) -> Dict[str, Any]:
+    dictionary: Dict[str, Any] = {}
+    dictionary["nonce"] = transaction.nonce
+    dictionary["value"] = str(transaction.amount)
+    dictionary["receiver"] = transaction.receiver
+    dictionary["sender"] = transaction.sender
+    dictionary["gasPrice"] = transaction.gas_price
+    dictionary["gasLimit"] = transaction.gas_limit
+    dictionary["chainID"] = transaction.chain_id
+    dictionary["senderUsername"] = base64.b64encode(transaction.sender_username.encode()).decode()
+    dictionary["receiverUsername"] = base64.b64encode(transaction.receiver_username.encode()).decode()
+    dictionary["data"] = transaction.data.decode()
+    dictionary["version"] = transaction.version
+    dictionary["options"] = transaction.options
+    dictionary["guardian"] = transaction.guardian
+    dictionary["signature"] = transaction.signature.hex()
+    dictionary["guardianSignature"] = transaction.guardian_signature.hex()
+    return dictionary
 
 
 class TransactionOnNetwork:
@@ -85,10 +123,10 @@ class TransactionOnNetwork:
         result.value = response.get("value", 0)
 
         sender = response.get("sender", "")
-        result.sender = Address.from_bech32(sender) if sender else EmptyAddress()
+        result.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
 
         receiver = response.get("receiver", "")
-        result.receiver = Address.from_bech32(receiver) if receiver else EmptyAddress()
+        result.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
 
         result.gas_price = response.get("gasPrice", 0)
         result.gas_limit = response.get("gasLimit", 0)
@@ -120,8 +158,8 @@ class TransactionOnNetwork:
             "round": self.round,
             "epoch": self.epoch,
             "value": self.value,
-            "receiver": self.receiver.bech32(),
-            "sender": self.sender.bech32(),
+            "receiver": self.receiver.to_bech32(),
+            "sender": self.sender.to_bech32(),
             "gasLimit": self.gas_limit,
             "gasPrice": self.gas_price,
             "data": self.data,
@@ -154,10 +192,10 @@ class TransactionInMempool:
 
         transaction.hash = data.get("hash", "")
         sender = data.get("sender", "")
-        transaction.sender = Address.from_bech32(sender) if sender else EmptyAddress()
+        transaction.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
 
         receiver = data.get("receiver", "")
-        transaction.receiver = Address.from_bech32(receiver) if receiver else EmptyAddress()
+        transaction.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
 
         transaction.gas_price = data.get("gasPrice", 0)
         transaction.gas_limit = data.get("gasLimit", 0)
@@ -173,8 +211,8 @@ class TransactionInMempool:
     def to_dictionary(self) -> Dict[str, Any]:
         return {
             "txHash": self.hash,
-            "sender": self.sender.bech32(),
-            "receiver": self.receiver.bech32(),
+            "sender": self.sender.to_bech32(),
+            "receiver": self.receiver.to_bech32(),
             "nonce": self.nonce,
             "value": self.value,
             "gasLimit": self.gas_limit,

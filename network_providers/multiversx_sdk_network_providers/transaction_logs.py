@@ -4,7 +4,8 @@ from multiversx_sdk_core import Address
 
 from multiversx_sdk_network_providers.interface import IAddress
 from multiversx_sdk_network_providers.resources import EmptyAddress
-from multiversx_sdk_network_providers.transaction_events import TransactionEvent
+from multiversx_sdk_network_providers.transaction_events import \
+    TransactionEvent
 
 
 class TransactionLogs:
@@ -17,7 +18,7 @@ class TransactionLogs:
         result = TransactionLogs()
 
         address = logs.get('address', '')
-        result.address = Address.from_bech32(address) if address else EmptyAddress()
+        result.address = Address.new_from_bech32(address) if address else EmptyAddress()
 
         events = logs.get('events', [])
         result.events = [TransactionEvent.from_http_response(item) for item in events]
@@ -40,6 +41,6 @@ class TransactionLogs:
 
     def to_dictionary(self) -> Dict[str, Any]:
         return {
-            "address": self.address.bech32(),
+            "address": self.address.to_bech32(),
             "events": [item.to_dictionary() for item in self.events]
         }

@@ -1,13 +1,11 @@
-from typing import Any, Dict
-
-from multiversx_sdk_core import Address
+from multiversx_sdk_core import Address, Transaction
 
 from multiversx_sdk_network_providers.proxy_network_provider import (
     ContractQuery, ProxyNetworkProvider)
 
 
 class TestProxy:
-    proxy = ProxyNetworkProvider("https://devnet-old-gateway.multiversx.com")
+    proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 
     def test_get_network_config(self):
         result = self.proxy.get_network_config()
@@ -15,7 +13,7 @@ class TestProxy:
         assert result.chain_id == "D"
         assert result.gas_per_data_byte == 1500
         assert result.round_duration == 6000
-        assert result.rounds_per_epoch == 1200
+        assert result.rounds_per_epoch == 2400
         assert result.min_gas_limit == 50000
         assert result.min_gas_price == 1_000_000_000
         assert result.min_transaction_version == 1
@@ -25,15 +23,15 @@ class TestProxy:
     def test_get_network_status(self):
         result = self.proxy.get_network_status()
 
-        assert result.nonce >= 3436532
-        assert result.current_round >= 3472246
-        assert result.epoch_number >= 2863
-        assert result.round_at_epoch_start >= 3471351
+        assert result.nonce > 0
+        assert result.current_round > 0
+        assert result.epoch_number > 0
+        assert result.round_at_epoch_start > 0
         assert result.rounds_passed_in_current_epcoch > 0
         assert result.nonces_passed_in_current_epoch > 0
-        assert result.highest_final_nonce >= 3436531
-        assert result.nonce_at_epoch_start >= 3435637
-        assert result.rounds_per_epoch == 1200
+        assert result.highest_final_nonce > 0
+        assert result.nonce_at_epoch_start > 0
+        assert result.rounds_per_epoch == 2400
 
     def test_get_network_gas_configs(self):
         result = self.proxy.get_network_gas_configs()
@@ -44,134 +42,131 @@ class TestProxy:
         assert meta_system_sc_cost["Stake"] == 5000000
 
     def test_get_account(self):
-        address = Address.from_bech32(
-            "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
+        address = Address.new_from_bech32(
+            "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         )
         result = self.proxy.get_account(address)
 
         assert (
-            result.address.bech32()
-            == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
+            result.address.to_bech32()
+            == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         )
         assert result.username == ""
 
     def test_get_fungible_token_of_account(self):
-        address = Address.from_bech32(
-            "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
+        address = Address.new_from_bech32(
+            "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         )
-        result = self.proxy.get_fungible_token_of_account(address, "ABC-10df96")
+        result = self.proxy.get_fungible_token_of_account(address, "TEST-ff155e")
 
-        assert result.identifier == "ABC-10df96"
-        assert result.balance == 50
+        assert result.identifier == "TEST-ff155e"
+        assert result.balance == 100000000000000000
 
     def test_get_nonfungible_token_of_account(self):
-        address = Address.from_bech32(
-            "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
+        address = Address.new_from_bech32(
+            "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         )
         result = self.proxy.get_nonfungible_token_of_account(
-            address, "ASDASD-510041", 2
+            address, "NFTEST-ec88b8", 1
         )
 
         assert result.balance == 1
-        assert result.nonce == 2
-        assert result.collection == "ASDASD-510041"
-        assert result.identifier == "ASDASD-510041-02"
+        assert result.nonce == 1
+        assert result.collection == "NFTEST-ec88b8"
+        assert result.identifier == "NFTEST-ec88b8-01"
         assert result.type == ""
-        assert result.royalties == 75
+        assert result.royalties == 25
 
     def test_get_transaction_status(self):
         result = self.proxy.get_transaction_status(
-            "3f6f03c00ff95e02719dc045e9108ce88bc31a4106396164dcac0efa66229f52"
+            "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
         )
-
         assert result.status == "success"
 
     def test_query_contract(self):
         query = ContractQuery(
-            Address.from_bech32(
-                "erd1qqqqqqqqqqqqqpgquykqja5c4v33zdmnwglj3jphqwrelzdn396qlc9g33"
+            Address.new_from_bech32(
+                "erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4"
             ),
             "getSum",
             0,
             [],
         )
         result = self.proxy.query_contract(query)
-
         assert len(result.return_data) == 1
 
     def test_get_definition_of_fungible_token(self):
-        result = self.proxy.get_definition_of_fungible_token("ABC-10df96")
+        result = self.proxy.get_definition_of_fungible_token("TEST-ff155e")
 
-        assert result.identifier == "ABC-10df96"
+        assert result.identifier == "TEST-ff155e"
         assert (
-            result.owner.bech32()
-            == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
+            result.owner.to_bech32()
+            == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         )
         assert result.can_upgrade
         assert not result.can_freeze
-        assert result.decimals == 1
-        assert result.supply == 5
+        assert result.decimals == 6
+        assert result.supply == 100000000000
 
     def test_get_definition_of_token_collection(self):
-        result = self.proxy.get_definition_of_token_collection("ASDASD-510041")
+        result = self.proxy.get_definition_of_token_collection("NFTEST-ec88b8")
 
-        assert result.collection == "ASDASD-510041"
+        assert result.collection == "NFTEST-ec88b8"
         assert (
-            result.owner.bech32()
-            == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
+            result.owner.to_bech32()
+            == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         )
         assert result.type == "NonFungibleESDT"
         assert result.decimals == 0
-        assert result.can_freeze
+        assert not result.can_freeze
         assert not result.can_pause
 
     def test_get_transaction(self):
         result = self.proxy.get_transaction(
-            "2e6bd2671dbb57f1f1013c89f044359c2465f1514e0ea718583900e43c1931fe"
+            "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
         )
 
-        assert result.nonce == 829
-        assert result.block_nonce == 3777937
-        assert result.epoch == 3153
+        assert result.nonce == 0
+        assert result.block_nonce == 835600
+        assert result.epoch == 348
         assert (
             result.hash
-            == "2e6bd2671dbb57f1f1013c89f044359c2465f1514e0ea718583900e43c1931fe"
+            == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
         )
         assert result.is_completed == None
         assert (
-            result.sender.bech32()
-            == "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7"
+            result.sender.to_bech32()
+            == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         )
         assert result.contract_results.items == []
 
     def test_get_transaction_with_events(self):
-        transaction = self.proxy.get_transaction("c451566a6168e38d2980fcb83d4ea154f78d53f7abf3264dd51c2c7c585671aa")
+        transaction = self.proxy.get_transaction("6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb")
         assert transaction.logs
         assert transaction.logs.events
         assert len(transaction.logs.events) == 2
-        assert len(transaction.logs.events[0].topics) == 4
-        assert transaction.logs.events[0].topics[0].hex() == "5745474c442d643763366262"
+        assert len(transaction.logs.events[0].topics) == 8
+        assert transaction.logs.events[0].topics[0].hex() == "544553542d666631353565"
         assert transaction.logs.events[0].topics[1].hex() == ""
-        assert transaction.logs.events[0].topics[2].hex() == "0de0b6b3a7640000"
-        assert transaction.logs.events[0].topics[3].hex() == "00000000000000000500e01285f90311fb5925a9623a1dc62eee41fa8c869a0d"
+        assert transaction.logs.events[0].topics[2].hex() == "63616e4368616e67654f776e6572"
 
     def test_get_sc_invoking_tx(self):
         result = self.proxy.get_transaction(
-            "cd2da63a51fd422c8b69a1b5ebcb9edbbf0eb9750c3fe8e199d39ed5d82000e9", True
+            "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb", True
         )
 
         assert result.is_completed == True
         assert len(result.contract_results.items) > 0
         assert (
             result.data
-            == "issue@54455354@54455354@03e8@00@63616e4d696e74@74727565@63616e4275726e@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565"
+            == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
         )
         assert sum([r.is_refund for r in result.contract_results.items]) == 1
 
     def test_get_hyperblock(self):
-        result_by_nonce = self.proxy.get_hyperblock(4199287)
+        result_by_nonce = self.proxy.get_hyperblock(835683)
         result_by_hash = self.proxy.get_hyperblock(
-            "41d75def48fcf965cbadee144bc13382adc486737e9237ba1896db83658661ef"
+            "55ef33845c94111c09233d3882f17023a18f6bb86a1b7e7a5ba0c5b5030e1957"
         )
 
         assert result_by_nonce.get("hash") == result_by_hash.get("hash")
@@ -182,73 +177,60 @@ class TestProxy:
         assert result_by_nonce.get("timestamp") == result_by_hash.get("timestamp")
 
     def test_send_transaction(self):
-        transaction = DummyTransaction(
-            {
-                "nonce": 42,
-                "value": "1",
-                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
-                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
-                "gasPrice": 1000000000,
-                "gasLimit": 50000,
-                "chainID": "D",
-                "version": 1,
-                "signature": "c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900",
-            }
+        transaction = Transaction(
+            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            gas_limit=50000,
+            chain_id="D",
+            amount=5000000000000000000,
+            nonce=100,
+            gas_price=1000000000,
+            version=2,
+            signature=bytes.fromhex("faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05")
         )
-
         expected_hash = (
-            "6e2fa63ea02937f00d7549f3e4eb9af241e4ac13027aa65a5300816163626c01"
+            "fc914860c1d137ed8baa602e561381f97c7bad80d150c5bf90760d3cfd3a4cea"
         )
-
         assert self.proxy.send_transaction(transaction) == expected_hash
 
     def test_send_transactions(self):
-        first_tx = DummyTransaction(
-            {
-                "nonce": 42,
-                "value": "1",
-                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
-                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
-                "gasPrice": 1000000000,
-                "gasLimit": 50000,
-                "chainID": "D",
-                "version": 1,
-                "signature": "c8eb539e486db7d703d8c70cab3b7679113f77c4685d8fcc94db027ceacc6b8605115034355386dffd7aa12e63dbefa03251a2f1b1d971f52250187298d12900",
-            }
+        first_tx = Transaction(
+            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            gas_limit=50000,
+            chain_id="D",
+            nonce=103,
+            gas_price=1000000000,
+            version=2,
+            signature=bytes.fromhex("498d5abb9f8eb69cc75f24320e8929dadbfa855ffac220d5e92175a83be68e0437801af3a1411e3d839738230097a1c38da5c8c4df3f345defc5d40300675900")
         )
 
-        second_tx = DummyTransaction(
-            {
-                "nonce": 43,
-                "value": "1",
-                "receiver": "erd1testnlersh4z0wsv8kjx39me4rmnvjkwu8dsaea7ukdvvc9z396qykv7z7",
-                "sender": "erd15x2panzqvfxul2lvstfrmdcl5t4frnsylfrhng8uunwdssxw4y9succ9sq",
-                "gasPrice": 1000000000,
-                "gasLimit": 50000,
-                "chainID": "D",
-                "version": 1,
-                "signature": "9c4c22d0ae1b5a10c39583a5ab9020b00b27aa69d4ac8ab4922620dbf0df4036ed890f9946d38a9d0c85d6ac485c0d9b2eac0005e752f249fd0ad863b0471d02",
-            }
+        second_tx = Transaction(
+            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            gas_limit=50000,
+            chain_id="D",
+            nonce=104,
+            gas_price=1000000000,
+            version=2,
+            signature=bytes.fromhex("341a2f3b738fbd20692e3bbd1cb36cb5f4ce9c0a9acc0cf4322269c0fcf34fd6bb59cd94062a9a4730e47f41b1ef3e29b69c6ab2a2a4dca9c9a7724681bc1708")
         )
 
-        third_tx = DummyTransaction({"nonce": 44})
+        invalid_tx = Transaction(
+            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            gas_limit=50000,
+            chain_id="D",
+            nonce=77
+        )
 
-        transactions = [first_tx, second_tx, third_tx]
+        transactions = [first_tx, second_tx, invalid_tx]
 
         expected_hashes = [
-            "6e2fa63ea02937f00d7549f3e4eb9af241e4ac13027aa65a5300816163626c01",
-            "37d7e84313a5baea2a61c6ab10bb29b52bc54f7ac9e3918a9faeb1e08f42081c",
+            "61b4f2561fc57bfb8b8971ed23cd64259b664bc0404ea7a0449def8ceef24b08",
+            "30274b60b5635f981fa89ccfe726a34ca7121caa5d34123021c77a5c64cc9163",
         ]
 
-        assert self.proxy.send_transactions(transactions) == (
-            2,
-            {"0": f"{expected_hashes[0]}", "1": f"{expected_hashes[1]}"},
-        )
-
-
-class DummyTransaction:
-    def __init__(self, transaction: Dict[str, Any]) -> None:
-        self.transaction = transaction
-
-    def to_dictionary(self) -> Dict[str, Any]:
-        return self.transaction
+        num_txs, hashes = self.proxy.send_transactions(transactions)
+        assert num_txs == 2
+        assert hashes == {"0": f"{expected_hashes[0]}", "1": f"{expected_hashes[1]}"}

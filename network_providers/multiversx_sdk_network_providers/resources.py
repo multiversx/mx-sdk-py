@@ -13,7 +13,7 @@ class GenericResponse:
 
 
 class EmptyAddress:
-    def bech32(self) -> str:
+    def to_bech32(self) -> str:
         return ""
 
 
