@@ -11,5 +11,4 @@ class IRandomness(Protocol):
 
 
 class IAddress(Protocol):
-    def bech32(self) -> str: ...
-    # `to_bech32()` will replace the above method in v1.0.0, when the packages will be merged together
+    def to_bech32(self) -> str: ...
