@@ -1,3 +1,2 @@
 requests==2.31.0
-multiversx_sdk_core @ git+https://github.com/multiversx/mx-sdk-py-core@export-class
-# multiversx_sdk_core>=0.7.0,<0.8.0
+multiversx_sdk_core>=0.7.0,<0.8.0
