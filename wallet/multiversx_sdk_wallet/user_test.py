@@ -2,8 +2,8 @@ import json
 from pathlib import Path
 
 import pytest
-from multiversx_sdk_core import (Address, AddressConverter, MessageV1,
-                                 Transaction)
+from multiversx_sdk_core import (Address, Message, MessageComputer,
+                                 Transaction, TransactionComputer)
 
 from multiversx_sdk_wallet.crypto.randomness import Randomness
 from multiversx_sdk_wallet.user_keys import UserSecretKey
@@ -32,16 +32,14 @@ def test_user_secret_key_generate_public_key():
 
 
 def test_user_signer_from_pem_file():
-    converter = AddressConverter()
-
     pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"), 0).get_pubkey()
-    assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    assert Address(pubkey.buffer, "erd").to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
     pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/bob.pem"), 0).get_pubkey()
-    assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    assert Address(pubkey.buffer, "erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
 
     pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/carol.pem"), 0).get_pubkey()
-    assert converter.pubkey_to_bech32(pubkey.buffer) == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    assert Address(pubkey.buffer, "erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
 
 
 def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_randomness():
@@ -110,9 +108,9 @@ def test_sign_transaction():
 
     tx = Transaction(
         nonce=89,
-        value="0",
-        receiver=Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
-        sender=Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+        amount=0,
+        receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+        sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
         data=None,
         gas_price=1000000000,
         gas_limit=50000,
@@ -122,22 +120,24 @@ def test_sign_transaction():
     )
 
     signer = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"))
-    verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+    verifier = UserVerifier.from_address(Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+    transaction_computer = TransactionComputer()
 
-    tx.signature = signer.sign(tx.serialize_for_signing())
+    tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(tx))
     assert tx.signature.hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
-    assert verifier.verify(tx.serialize_for_signing(), tx.signature)
+    assert verifier.verify(transaction_computer.compute_bytes_for_signing(tx), tx.signature)
 
 
 def test_sign_message():
-    message = MessageV1.from_string("hello")
+    message = Message("hello".encode())
+    message_computer = MessageComputer()
 
     signer = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"))
-    verifier = UserVerifier.from_address(Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+    verifier = UserVerifier.from_address(Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
 
-    message.signature = signer.sign(message.serialize_for_signing())
+    message.signature = signer.sign(message_computer.compute_bytes_for_signing(message))
     assert message.signature.hex() == "561bc58f1dc6b10de208b2d2c22c9a474ea5e8cabb59c3d3ce06bbda21cc46454aa71a85d5a60442bd7784effa2e062fcb8fb421c521f898abf7f5ec165e5d0f"
-    assert verifier.verify(message.serialize_for_signing(), message.signature)
+    assert verifier.verify(message_computer.compute_bytes_for_signing(message), message.signature)
 
 
 def test_user_pem_save():
@@ -156,7 +156,7 @@ def test_user_pem_save():
 def test_load_secret_key_but_without_kind_field():
     keystore_path = Path("./multiversx_sdk_wallet/testdata/withoutKind.json")
     secret_key = UserWallet.load_secret_key(keystore_path, "password")
-    actual_address = Address(secret_key.generate_public_key().buffer, "erd").bech32()
+    actual_address = (secret_key.generate_public_key().to_address("erd")).to_bech32()
     assert actual_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
 
@@ -195,6 +195,6 @@ def test_create_keystore_with_mnemonic_with_randomness():
 def test_load_secret_key_with_mnemonic():
     keystore_path = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json")
 
-    assert UserWallet.load_secret_key(keystore_path, "password", 0).generate_public_key().to_address("erd").bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-    assert UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
-    assert UserWallet.load_secret_key(keystore_path, "password", 2).generate_public_key().to_address("erd").bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    assert UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    assert UserWallet.load_secret_key(keystore_path, "password", 2).generate_public_key().to_address("erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    assert UserWallet.load_secret_key(keystore_path, "password", 0).generate_public_key().to_address("erd").to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
