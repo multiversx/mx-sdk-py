@@ -1,4 +1,3 @@
-import pytest
 from multiversx_sdk_core import Address, Transaction
 
 from multiversx_sdk_network_providers.proxy_network_provider import (
@@ -194,7 +193,6 @@ class TestProxy:
         )
         assert self.proxy.send_transaction(transaction) == expected_hash
 
-    @pytest.mark.skip
     def test_send_transactions(self):
         first_tx = Transaction(
             sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
@@ -202,10 +200,9 @@ class TestProxy:
             gas_limit=50000,
             chain_id="D",
             nonce=103,
-            amount=5000000000000000000,
             gas_price=1000000000,
-            version=1,
-            signature=bytes.fromhex("fe444941b3d90457c5acd2441cc8be1fd7e2a42171ad074d7eb7f7536651e025a698595a04210224572b74f6588c4c0a2e6cada26dec27b7472be5803ae09705")
+            version=2,
+            signature=bytes.fromhex("498d5abb9f8eb69cc75f24320e8929dadbfa855ffac220d5e92175a83be68e0437801af3a1411e3d839738230097a1c38da5c8c4df3f345defc5d40300675900")
         )
 
         second_tx = Transaction(
@@ -214,10 +211,9 @@ class TestProxy:
             gas_limit=50000,
             chain_id="D",
             nonce=104,
-            amount=5000000000000000000,
             gas_price=1000000000,
-            version=1,
-            signature=bytes.fromhex("a1501d95da8f5518f0a60abc4970638a25d2919b1f901a89b924cd9b873fbe29a6f501fd7773216691850215178a8050e1469168f31455373dd85bab55eaa006")
+            version=2,
+            signature=bytes.fromhex("341a2f3b738fbd20692e3bbd1cb36cb5f4ce9c0a9acc0cf4322269c0fcf34fd6bb59cd94062a9a4730e47f41b1ef3e29b69c6ab2a2a4dca9c9a7724681bc1708")
         )
 
         invalid_tx = Transaction(
@@ -231,10 +227,10 @@ class TestProxy:
         transactions = [first_tx, second_tx, invalid_tx]
 
         expected_hashes = [
-            "7e1db7f5254c5c75bec6d454aa7160d191eb0e27ad45db4c164f2c3a5b51a169",
-            "b5117f1c9461162c73b12ffd43e238b6dfce70687ed3aeb02c7f6a4a0a68938f",
+            "61b4f2561fc57bfb8b8971ed23cd64259b664bc0404ea7a0449def8ceef24b08",
+            "30274b60b5635f981fa89ccfe726a34ca7121caa5d34123021c77a5c64cc9163",
         ]
-        assert self.proxy.send_transactions(transactions) == (
-            2,
-            {"0": f"{expected_hashes[0]}", "1": f"{expected_hashes[1]}"},
-        )
+
+        num_txs, hashes = self.proxy.send_transactions(transactions)
+        assert num_txs == 2
+        assert hashes == {"0": f"{expected_hashes[0]}", "1": f"{expected_hashes[1]}"}
