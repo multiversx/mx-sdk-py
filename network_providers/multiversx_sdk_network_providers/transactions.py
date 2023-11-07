@@ -42,7 +42,7 @@ def transaction_to_dictionary(transaction: ITransactionDto) -> Dict[str, Any]:
     dictionary["chainID"] = transaction.chain_id
     dictionary["senderUsername"] = base64.b64encode(transaction.sender_username.encode()).decode()
     dictionary["receiverUsername"] = base64.b64encode(transaction.receiver_username.encode()).decode()
-    dictionary["data"] = transaction.data.decode()
+    dictionary["data"] = base64.b64encode(transaction.data).decode()
     dictionary["version"] = transaction.version
     dictionary["options"] = transaction.options
     dictionary["guardian"] = transaction.guardian
