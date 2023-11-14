@@ -1,5 +1,7 @@
 from Cryptodome.Hash import keccak
 
+from multiversx_sdk_core.interfaces import IMessage
+
 
 class Message:
     def __init__(self, data: bytes, signature: bytes = b"") -> None:
@@ -17,7 +19,7 @@ class MessageComputer:
     def __init__(self) -> None:
         pass
 
-    def compute_bytes_for_signing(self, message: Message) -> bytes:
+    def compute_bytes_for_signing(self, message: IMessage) -> bytes:
         PREFIX = bytes.fromhex("17456c726f6e64205369676e6564204d6573736167653a0a")
         size = str(len(message.data)).encode()
         content = PREFIX + size + message.data

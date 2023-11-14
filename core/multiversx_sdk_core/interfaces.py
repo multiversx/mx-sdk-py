@@ -8,6 +8,48 @@ class IAddress(Protocol):
     def to_hex(self) -> str: ...
 
 
+class ITransaction(Protocol):
+    sender: str
+    receiver: str
+    gas_limit: int
+    chain_id: str
+    nonce: int
+    amount: int
+    sender_username: str
+    receiver_username: str
+    gas_price: int
+    data: bytes
+    version: int
+    options: int
+    guardian: str
+    signature: bytes
+    guardian_signature: bytes
+
+
+class IMessage(Protocol):
+    data: bytes
+    signature: bytes
+
+
+class IToken(Protocol):
+    identifier: str
+    nonce: int
+
+
+class ITokenTransfer(Protocol):
+    @property
+    def token(self) -> IToken:
+        ...
+
+    amount: int
+
+
+class ITokenIdentifierParts(Protocol):
+    ticker: str
+    random_sequence: str
+    nonce: int
+
+
 INonce = int
 IGasPrice = int
 IGasLimit = int

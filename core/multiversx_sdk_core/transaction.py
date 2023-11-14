@@ -9,7 +9,7 @@ from multiversx_sdk_core.constants import (DEFAULT_HRP, DIGEST_SIZE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
 from multiversx_sdk_core.errors import NotEnoughGasError
-from multiversx_sdk_core.interfaces import INetworkConfig
+from multiversx_sdk_core.interfaces import INetworkConfig, ITransaction
 from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
 
 
@@ -67,7 +67,7 @@ class TransactionComputer:
     def __init__(self) -> None:
         pass
 
-    def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
+    def compute_transaction_fee(self, transaction: ITransaction, network_config: INetworkConfig) -> int:
         move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
         if move_balance_gas > transaction.gas_limit:
             raise NotEnoughGasError(transaction.gas_limit)
@@ -82,18 +82,18 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: Transaction) -> bytes:
+    def compute_bytes_for_signing(self, transaction: ITransaction) -> bytes:
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
-    def compute_transaction_hash(self, transaction: Transaction) -> bytes:
+    def compute_transaction_hash(self, transaction: ITransaction) -> bytes:
         proto = ProtoSerializer()
         serialized_tx = proto.serialize_transaction(transaction)
         tx_hash = blake2b(serialized_tx, digest_size=DIGEST_SIZE).hexdigest()
         return bytes.fromhex(tx_hash)
 
-    def _to_dictionary(self, transaction: Transaction) -> Dict[str, Any]:
+    def _to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.amount)
