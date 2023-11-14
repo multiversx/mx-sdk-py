@@ -15,7 +15,7 @@ class Token:
 
 
 class TokenTransfer:
-    def __init__(self, token: Token, amount: int) -> None:
+    def __init__(self, token: IToken, amount: int) -> None:
         """`amount` should always be in atomic units: 1.000000 "USDC-c76f1f" = "1000000"""
         self.token = token
         self.amount = amount
