@@ -5,6 +5,7 @@ from multiversx_sdk_core.codec import (decode_unsigned_number,
 from multiversx_sdk_core.constants import TOKEN_RANDOM_SEQUENCE_LENGTH
 from multiversx_sdk_core.errors import (BadUsageError,
                                         InvalidTokenIdentifierError)
+from multiversx_sdk_core.interfaces import IToken, ITokenIdentifierParts
 
 
 class Token:
@@ -14,7 +15,7 @@ class Token:
 
 
 class TokenTransfer:
-    def __init__(self, token: Token, amount: int) -> None:
+    def __init__(self, token: IToken, amount: int) -> None:
         """`amount` should always be in atomic units: 1.000000 "USDC-c76f1f" = "1000000"""
         self.token = token
         self.amount = amount
@@ -31,7 +32,7 @@ class TokenComputer:
     def __init__(self) -> None:
         pass
 
-    def is_fungible(self, token: Token) -> bool:
+    def is_fungible(self, token: IToken) -> bool:
         return token.nonce == 0
 
     def extract_nonce_from_extended_identifier(self, identifier: str) -> int:
@@ -88,7 +89,7 @@ class TokenComputer:
         nonce_hex = encode_unsigned_number(nonce).hex()
         return identifier + "-" + nonce_hex
 
-    def compute_extended_identifier_from_parts(self, parts: TokenIdentifierParts) -> str:
+    def compute_extended_identifier_from_parts(self, parts: ITokenIdentifierParts) -> str:
         identifier = parts.ticker + "-" + parts.random_sequence
         return self.compute_extended_identifier_from_identifier_and_nonce(identifier, parts.nonce)
 

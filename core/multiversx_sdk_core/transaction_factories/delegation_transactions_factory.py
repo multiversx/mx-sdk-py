@@ -1,4 +1,4 @@
-from typing import List, Protocol, Sequence
+from typing import Protocol, Sequence
 
 from multiversx_sdk_core.address import Address
 from multiversx_sdk_core.constants import DELEGATION_MANAGER_SC_ADDRESS
@@ -54,7 +54,7 @@ class DelegationTransactionsFactory:
                                             sender: IAddress,
                                             delegation_contract: IAddress,
                                             public_keys: Sequence[IValidatorPublicKey],
-                                            signed_messages: List[bytes]) -> Transaction:
+                                            signed_messages: Sequence[bytes]) -> Transaction:
         if len(public_keys) != len(signed_messages):
             raise ErrListsLengthMismatch("The number of public keys should match the number of signed messages")
 
@@ -85,7 +85,7 @@ class DelegationTransactionsFactory:
                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
-        parts: List[str] = ["removeNodes"]
+        parts = ["removeNodes"]
         for public_key in public_keys:
             parts.append(public_key.hex())
 
