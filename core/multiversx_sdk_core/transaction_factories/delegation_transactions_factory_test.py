@@ -252,3 +252,85 @@ class TestDelegationTransactionFactory:
         assert transaction.data
         assert transaction.data.decode() == "setMetaData@6e616d65@77656273697465@6964656e746966696572"
         assert transaction.amount == 0
+
+    def test_create_transaction_for_delegating(self):
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        transaction = self.factory.create_transaction_for_delegating(
+            sender=sender,
+            delegation_contract=delegation_contract,
+            amount=1000000000000000000
+        )
+
+        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.data
+        assert transaction.data.decode() == "delegate"
+        assert transaction.amount == 1000000000000000000
+        assert transaction.gas_limit == 12000000
+
+    def test_create_transaction_for_claiming_rewards(self):
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        transaction = self.factory.create_transaction_for_claiming_rewards(
+            sender=sender,
+            delegation_contract=delegation_contract
+        )
+
+        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.data
+        assert transaction.data.decode() == "claimRewards"
+        assert transaction.amount == 0
+        assert transaction.gas_limit == 6000000
+
+    def test_create_transaction_for_redelegating_rewards(self):
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        transaction = self.factory.create_transaction_for_redelegating_rewards(
+            sender=sender,
+            delegation_contract=delegation_contract
+        )
+
+        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.data
+        assert transaction.data.decode() == "reDelegateRewards"
+        assert transaction.amount == 0
+        assert transaction.gas_limit == 12000000
+
+    def test_create_transaction_for_undelegating(self):
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        transaction = self.factory.create_transaction_for_undelegating(
+            sender=sender,
+            delegation_contract=delegation_contract,
+            amount=1000000000000000000
+        )
+
+        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.data
+        assert transaction.data.decode() == "unDelegate@0de0b6b3a7640000"
+        assert transaction.amount == 0
+        assert transaction.gas_limit == 12000000
+
+    def test_create_transaction_for_withdrawing(self):
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        transaction = self.factory.create_transaction_for_withdrawing(
+            sender=sender,
+            delegation_contract=delegation_contract
+        )
+
+        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.data
+        assert transaction.data.decode() == "withdraw"
+        assert transaction.amount == 0
+        assert transaction.gas_limit == 12000000

@@ -323,3 +323,70 @@ class DelegationTransactionsFactory:
         ).build()
 
         return transaction
+
+    def create_transaction_for_delegating(self,
+                                          sender: IAddress,
+                                          delegation_contract: IAddress,
+                                          amount: int) -> Transaction:
+        return TransactionBuilder(
+            config=self.config,
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=["delegate"],
+            gas_limit=12000000,
+            add_data_movement_gas=False,
+            amount=amount
+        ).build()
+
+    def create_transaction_for_claiming_rewards(self,
+                                                sender: IAddress,
+                                                delegation_contract: IAddress) -> Transaction:
+        return TransactionBuilder(
+            config=self.config,
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=["claimRewards"],
+            gas_limit=6000000,
+            add_data_movement_gas=False,
+            amount=0
+        ).build()
+
+    def create_transaction_for_redelegating_rewards(self,
+                                                    sender: IAddress,
+                                                    delegation_contract: IAddress) -> Transaction:
+        return TransactionBuilder(
+            config=self.config,
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=["reDelegateRewards"],
+            gas_limit=12000000,
+            add_data_movement_gas=False,
+            amount=0
+        ).build()
+
+    def create_transaction_for_undelegating(self,
+                                            sender: IAddress,
+                                            delegation_contract: IAddress,
+                                            amount: int) -> Transaction:
+        return TransactionBuilder(
+            config=self.config,
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=["unDelegate", arg_to_string(amount)],
+            gas_limit=12000000,
+            add_data_movement_gas=False,
+            amount=0
+        ).build()
+
+    def create_transaction_for_withdrawing(self,
+                                           sender: IAddress,
+                                           delegation_contract: IAddress) -> Transaction:
+        return TransactionBuilder(
+            config=self.config,
+            sender=sender,
+            receiver=delegation_contract,
+            data_parts=["withdraw"],
+            gas_limit=12000000,
+            add_data_movement_gas=False,
+            amount=0
+        ).build()
