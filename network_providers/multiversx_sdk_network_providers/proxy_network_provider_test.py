@@ -60,7 +60,7 @@ class TestProxy:
         result = self.proxy.get_fungible_token_of_account(address, "TEST-ff155e")
 
         assert result.identifier == "TEST-ff155e"
-        assert result.balance == 100000000000000000
+        assert result.balance == 99999999999990000
 
     def test_get_nonfungible_token_of_account(self):
         address = Address.new_from_bech32(

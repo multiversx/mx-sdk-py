@@ -162,7 +162,7 @@ class ApiNetworkProvider:
         tx_hash: str = response.get('txHash', '')
         return tx_hash
 
-    def send_transactions(self, transactions: List[ITransactionDto]) -> Tuple[int, str]:
+    def send_transactions(self, transactions: List[ITransactionDto]) -> Tuple[int, Dict[str, str]]:
         response = self.backing_proxy.send_transactions(transactions)
         return response
 
