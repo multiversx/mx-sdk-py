@@ -198,3 +198,11 @@ def test_load_secret_key_with_mnemonic():
     assert UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
     assert UserWallet.load_secret_key(keystore_path, "password", 2).generate_public_key().to_address("erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
     assert UserWallet.load_secret_key(keystore_path, "password", 0).generate_public_key().to_address("erd").to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+
+def test_decrypt_secret_key_with_keystore_mnemonic():
+    user_wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "")
+    mnemonic_json = user_wallet.to_dict()
+
+    with pytest.raises(Exception):
+        UserWallet.decrypt_secret_key(mnemonic_json, "")
