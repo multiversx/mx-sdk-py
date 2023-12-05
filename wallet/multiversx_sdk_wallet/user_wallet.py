@@ -34,7 +34,7 @@ class UserWallet:
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
         return cls(
-            kind=UserWalletKind.SECRET_KEY,
+            kind=UserWalletKind.SECRET_KEY.value,
             encrypted_data=encrypted_data,
             public_key_when_kind_is_secret_key=public_key
         )
@@ -48,7 +48,7 @@ class UserWallet:
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
         return cls(
-            kind=UserWalletKind.MNEMONIC,
+            kind=UserWalletKind.MNEMONIC.value,
             encrypted_data=encrypted_data
         )
 

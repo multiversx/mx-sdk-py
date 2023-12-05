@@ -204,5 +204,5 @@ def test_decrypt_secret_key_with_keystore_mnemonic():
     user_wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "")
     mnemonic_json = user_wallet.to_dict()
 
-    with pytest.raises(Exception):
+    with pytest.raises(Exception, match="Expected kind to be secretKey, but it was mnemonic"):
         UserWallet.decrypt_secret_key(mnemonic_json, "")
