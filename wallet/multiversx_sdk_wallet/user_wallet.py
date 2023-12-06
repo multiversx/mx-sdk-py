@@ -34,7 +34,7 @@ class UserWallet:
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
         return cls(
-            kind=UserWalletKind.SECRET_KEY,
+            kind=UserWalletKind.SECRET_KEY.value,
             encrypted_data=encrypted_data,
             public_key_when_kind_is_secret_key=public_key
         )
@@ -48,13 +48,16 @@ class UserWallet:
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
         return cls(
-            kind=UserWalletKind.MNEMONIC,
+            kind=UserWalletKind.MNEMONIC.value,
             encrypted_data=encrypted_data
         )
 
     @classmethod
     def decrypt_secret_key(cls, keyfile_object: Dict[str, Any], password: str) -> UserSecretKey:
-        # Here, we do not check the "kind" field. Older keystore files (holding only secret keys) do not have this field.
+        # Here, we check the "kind" field only for files that have it. Older keystore files (holding only secret keys) do not have this field.
+        kind = keyfile_object.get("kind", None)
+        if kind and kind != UserWalletKind.SECRET_KEY.value:
+            raise Exception(f"Expected kind to be {UserWalletKind.SECRET_KEY.value}, but it was {kind}")
 
         encrypted_data = EncryptedData.from_keyfile_object(keyfile_object)
         buffer = decryptor.decrypt(encrypted_data, password)
