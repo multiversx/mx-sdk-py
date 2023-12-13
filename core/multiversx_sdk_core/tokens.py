@@ -95,11 +95,11 @@ class TokenComputer:
 
     def _check_if_extended_identifier_was_provided(self, token_parts: List[str]) -> None:
         # this is for the identifiers of fungible tokens
-        MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED = 2
+        MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT = 2
         # this is for the identifiers of nft, sft and meta-esdt
-        MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED = 3
+        MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT = 3
 
-        if len(token_parts) < MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED or len(token_parts) > MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLITTED:
+        if len(token_parts) < MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT or len(token_parts) > MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT:
             raise InvalidTokenIdentifierError("Invalid extended token identifier provided")
 
     def _ensure_token_ticker_validity(self, ticker: str) -> None:
