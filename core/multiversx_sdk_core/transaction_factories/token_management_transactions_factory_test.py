@@ -148,3 +148,165 @@ def test_create_transaction_for_creating_nft():
     assert transaction.sender == grace.to_bech32()
     assert transaction.receiver == grace.to_bech32()
     assert transaction.amount == 0
+
+
+def test_create_transaction_for_setting_special_role_on_fungible_token():
+    transaction = factory.create_transaction_for_setting_special_role_on_fungible_token(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+        add_role_local_mint=True,
+        add_role_local_burn=False,
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654c6f63616c4d696e74"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_setting_special_role_on_semi_fungible_token():
+    transaction = factory.create_transaction_for_setting_special_role_on_semi_fungible_token(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+        add_role_nft_create=True,
+        add_role_nft_burn=True,
+        add_role_nft_add_quantity=True,
+        add_role_esdt_transfer_role=True,
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e46544275726e@45534454526f6c654e46544164645175616e74697479@455344545472616e73666572526f6c65"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_pausing():
+    transaction = factory.create_transaction_for_pausing(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "pause@4652414e4b2d313163653365"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_unpausing():
+    transaction = factory.create_transaction_for_unpausing(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "unPause@4652414e4b2d313163653365"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_freezing():
+    transaction = factory.create_transaction_for_freezing(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "freeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_unfreezing():
+    transaction = factory.create_transaction_for_unfreezing(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "unFreeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_local_minting():
+    transaction = factory.create_transaction_for_local_minting(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+        supply_to_mint=10
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "ESDTLocalMint@4652414e4b2d313163653365@0a"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_local_burning():
+    transaction = factory.create_transaction_for_local_burning(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+        supply_to_burn=10
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "ESDTLocalBurn@4652414e4b2d313163653365@0a"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_updating_attributes():
+    transaction = factory.create_transaction_for_updating_attributes(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+        token_nonce=10,
+        attributes=bytes("test", "utf-8"),
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "ESDTNFTUpdateAttributes@4652414e4b2d313163653365@0a@74657374"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_adding_quantity():
+    transaction = factory.create_transaction_for_adding_quantity(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+        token_nonce=10,
+        quantity_to_add=10
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "ESDTNFTAddQuantity@4652414e4b2d313163653365@0a@0a"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_burning_quantity():
+    transaction = factory.create_transaction_for_burning_quantity(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+        token_nonce=10,
+        quantity_to_burn=10
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "ESDTNFTBurn@4652414e4b2d313163653365@0a@0a"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_setting_burn_role_globally():
+    transaction = factory.create_transaction_for_setting_burn_role_globally(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "setBurnRoleGlobally@4652414e4b2d313163653365"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
