@@ -36,7 +36,7 @@ class TestRelayedTransactionsFactory:
         inner_transaction.gas_limit = 0
         inner_transaction.signature = b"invalidsignature"
 
-        with pytest.raises(InvalidInnerTransactionError, match="The gas limit is not set for inner transaction"):
+        with pytest.raises(InvalidInnerTransactionError, match="The gas limit is not set for the inner transaction"):
             self.factory.create_relayed_v1_transaction(
                 inner_transaction=inner_transaction,
                 relayer_address=Address.from_bech32(self.wallets["bob"].label)
@@ -183,7 +183,7 @@ class TestRelayedTransactionsFactory:
             chain_id=self.config.chain_id
         )
 
-        with pytest.raises(InvalidInnerTransactionError, match="The gas limit should not be set for inner transaction"):
+        with pytest.raises(InvalidInnerTransactionError, match="The gas limit should not be set for the inner transaction"):
             self.factory.create_relayed_v2_transaction(
                 inner_transaction=inner_transaction,
                 inner_transaction_gas_limit=50000,

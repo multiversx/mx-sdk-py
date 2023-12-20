@@ -46,7 +46,7 @@ class RelayedTransactionsFactory:
                                       inner_transaction_gas_limit: int,
                                       relayer_address: IAddress) -> Transaction:
         if inner_transaction.gas_limit:
-            raise InvalidInnerTransactionError("The gas limit should not be set for inner transaction")
+            raise InvalidInnerTransactionError("The gas limit should not be set for the inner transaction")
 
         if not inner_transaction.signature:
             raise InvalidInnerTransactionError("The inner transaction is not signed")
