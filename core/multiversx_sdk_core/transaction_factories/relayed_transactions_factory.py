@@ -22,11 +22,11 @@ class RelayedTransactionsFactory:
     def create_relayed_v1_transaction(self,
                                       inner_transaction: ITransaction,
                                       relayer_address: IAddress) -> Transaction:
-        if not inner_transaction.signature:
-            raise InvalidInnerTransactionError("The inner transaction is not signed")
-
         if not inner_transaction.gas_limit:
             raise InvalidInnerTransactionError("The gas limit is not set for inner transaction")
+
+        if not inner_transaction.signature:
+            raise InvalidInnerTransactionError("The inner transaction is not signed")
 
         serialized_transaction = self._prepare_inner_transaction_for_relayed_v1(inner_transaction)
         data = f"relayedTx@{serialized_transaction.encode().hex()}"
