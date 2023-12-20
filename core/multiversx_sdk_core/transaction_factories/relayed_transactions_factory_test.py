@@ -170,3 +170,58 @@ class TestRelayedTransactionsFactory:
 
         assert relayed_transaction.data.decode() == "relayedTx@7b226e6f6e6365223a3139382c2273656e646572223a2267456e574f65576d6d413063306a6b71764d354241707a61644b46574e534f69417643575163776d4750673d222c227265636569766572223a22414141414141414141414146414b565841323879704877692f79693741364c64504b704f68464d386958513d222c2276616c7565223a302c226761735072696365223a313030303030303030302c226761734c696d6974223a36303030303030302c2264617461223a225957526b546e5674596d5679222c227369676e6174757265223a223469724d4b4a656d724d375174344e7635487633544c44683775654779487045564c4371674a3677652f7a662b746a4933354975573452633458543451533433475333356158386c6a533834324a38426854645043673d3d222c22636861696e4944223a2256413d3d222c2276657273696f6e223a322c226f7074696f6e73223a322c22677561726469616e223a22486f714c61306e655733766843716f56696c70715372744c5673774939535337586d7a563868477450684d3d222c22677561726469616e5369676e6174757265223a2270424754394e674a78307539624c56796b654d78786a454865374269696c37764932324a46676f32787a6e2f496e3032463769546563356b44395045324f747065386c475335412b532f4a36417762576834446744673d3d227d"
         assert relayed_transaction.signature.hex() == "8ede1bbeed96b102344dffeac12c2592c62b7313cdeb132e8c8bf11d2b1d3bb8189d257a6dbcc99e222393d9b9ec77656c349dae97a32e68bdebd636066bf706"
+
+    def test_create_relayed_v2_with_invalid_inner_tx(self):
+        alice = self.wallets["alice"]
+        bob = self.wallets["bob"]
+        carol = self.wallets["carol"]
+
+        inner_transaction = Transaction(
+            sender=alice.label,
+            receiver=bob.label,
+            gas_limit=50000,
+            chain_id=self.config.chain_id
+        )
+
+        with pytest.raises(InvalidInnerTransactionError, match="The gas limit should not be set for inner transaction"):
+            self.factory.create_relayed_v2_transaction(
+                inner_transaction=inner_transaction,
+                inner_transaction_gas_limit=50000,
+                relayer_address=Address.from_bech32(carol.label)
+            )
+
+        inner_transaction.gas_limit = 0
+        with pytest.raises(InvalidInnerTransactionError, match="The inner transaction is not signed"):
+            self.factory.create_relayed_v2_transaction(
+                inner_transaction=inner_transaction,
+                inner_transaction_gas_limit=50000,
+                relayer_address=Address.from_bech32(carol.label)
+            )
+
+    def test_compute_relayed_v2_transaction(self):
+        alice = self.wallets["alice"]
+        bob = self.wallets["bob"]
+
+        inner_transaction = Transaction(
+            sender=bob.label,
+            receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            data=b"getContractConfig",
+            nonce=15
+        )
+
+        serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
+        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction)
+
+        relayed_transaction = self.factory.create_relayed_v2_transaction(
+            inner_transaction=inner_transaction,
+            inner_transaction_gas_limit=60_000_000,
+            relayer_address=Address.from_bech32(alice.label)
+        )
+        relayed_transaction.nonce = 37
+
+        serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction)
+        relayed_transaction.signature = alice.secret_key.sign(serialized_relayed_transaction)
+
+        assert relayed_transaction.data.decode() == "relayedTxV2@000000000000000000010000000000000000000000000000000000000002ffff@0f@676574436f6e7472616374436f6e666967@fc3ed87a51ee659f937c1a1ed11c1ae677e99629fae9cc289461f033e6514d1a8cfad1144ae9c1b70f28554d196bd6ba1604240c1c1dc19c959e96c1c3b62d0c"

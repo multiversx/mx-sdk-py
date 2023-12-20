@@ -1,10 +1,11 @@
 import base64
 import json
-from typing import Any, Dict, Protocol
+from typing import Any, Dict, List, Protocol
 
 from multiversx_sdk_core import Address
 from multiversx_sdk_core.errors import InvalidInnerTransactionError
 from multiversx_sdk_core.interfaces import IAddress, ITransaction
+from multiversx_sdk_core.serializer import args_to_string
 from multiversx_sdk_core.transaction import Transaction
 
 
@@ -37,6 +38,35 @@ class RelayedTransactionsFactory:
             sender=relayer_address.to_bech32(),
             receiver=inner_transaction.sender,
             gas_limit=gas_limit,
+            data=data.encode()
+        )
+
+    def create_relayed_v2_transaction(self,
+                                      inner_transaction: ITransaction,
+                                      inner_transaction_gas_limit: int,
+                                      relayer_address: IAddress) -> Transaction:
+        if inner_transaction.gas_limit:
+            raise InvalidInnerTransactionError("The gas limit should not be set for inner transaction")
+
+        if not inner_transaction.signature:
+            raise InvalidInnerTransactionError("The inner transaction is not signed")
+
+        arguments: List[Any] = [
+            Address.new_from_bech32(inner_transaction.receiver),
+            inner_transaction.nonce,
+            inner_transaction.data,
+            inner_transaction.signature
+        ]
+
+        data = f"relayedTxV2@{args_to_string(arguments)}"
+        gas_limit = inner_transaction_gas_limit + self._config.min_gas_limit + self._config.gas_limit_per_byte * len(data)
+
+        return Transaction(
+            sender=relayer_address.to_bech32(),
+            receiver=inner_transaction.sender,
+            amount=0,
+            gas_limit=gas_limit,
+            chain_id=self._config.chain_id,
             data=data.encode()
         )
 
@@ -74,9 +104,3 @@ class RelayedTransactionsFactory:
             tx[f"rcvUserName"] = base64.b64encode(inner_transaction.receiver_username.encode()).decode()
 
         return json.dumps(tx, separators=(",", ":"))
-
-    def create_relayed_v2_transaction(self,
-                                      inner_transaction: ITransaction,
-                                      inner_transaction_gas_limit: int,
-                                      relayer_address: IAddress) -> Transaction:
-        pass
