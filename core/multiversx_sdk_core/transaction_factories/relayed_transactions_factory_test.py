@@ -42,7 +42,7 @@ class TestRelayedTransactionsFactory:
                 relayer_address=Address.from_bech32(self.wallets["bob"].label)
             )
 
-    def test_create_realyed_v1_transaction(self):
+    def test_create_relayed_v1_transaction(self):
         alice = self.wallets["alice"]
         bob = self.wallets["bob"]
 
@@ -70,7 +70,7 @@ class TestRelayedTransactionsFactory:
         assert relayed_transaction.data.decode() == "relayedTx@7b226e6f6e6365223a3139382c2273656e646572223a2267456e574f65576d6d413063306a6b71764d354241707a61644b46574e534f69417643575163776d4750673d222c227265636569766572223a22414141414141414141414141415141414141414141414141414141414141414141414141414141432f2f383d222c2276616c7565223a302c226761735072696365223a313030303030303030302c226761734c696d6974223a36303030303030302c2264617461223a225a3256305132397564484a68593352446232356d6157633d222c227369676e6174757265223a2272525455544858677a4273496e4f6e454b6b7869642b354e66524d486e33534948314673746f577352434c434b3258514c41614f4e704449346531476173624c5150616130566f364144516d4f2b52446b6f364a43413d3d222c22636861696e4944223a2256413d3d222c2276657273696f6e223a327d"
         assert relayed_transaction.signature.hex() == "128e7cdc14c2b9beee2f3ff7a7fa5d1f5ef31a654a0c92e223c90ab28265fa277d306f23a06536248cf9573e828017004fb639617fade4d68a37524aafca710d"
 
-    def test_create_realyed_v1_transaction_with_usernames(self):
+    def test_create_relayed_v1_transaction_with_usernames(self):
         alice = self.wallets["alice"]
         carol = self.wallets["carol"]
         frank = self.wallets["frank"]
