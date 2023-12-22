@@ -8,7 +8,7 @@ from multiversx_sdk_core.transaction_factories.transactions_factory_config impor
     TransactionsFactoryConfig
 
 
-class TestDelegationTransactionFactory:
+class TestDelegationTransactionsFactory:
     config = TransactionsFactoryConfig("D")
     factory = DelegationTransactionsFactory(config)
 
