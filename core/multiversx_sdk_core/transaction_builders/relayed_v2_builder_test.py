@@ -67,8 +67,6 @@ class TestRelayedV2Builder:
             version=1,
             options=0
         )
-        # version is set to 1 to match the test in sdk-js-core
-        inner_tx.version = 1
         inner_tx.signature = self.bob.secret_key.sign(transaction_computer.compute_bytes_for_signing(inner_tx))
 
         builder = RelayedTransactionV2Builder()
