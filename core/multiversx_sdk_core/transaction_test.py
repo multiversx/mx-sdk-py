@@ -63,11 +63,9 @@ class TestTransaction:
             receiver_username="alice",
             amount=1000000000000000000
         )
-        # needs to match the test from sdk-js-core
-        transaction.version = 1
 
         transaction.signature = self.carol.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
-        assert transaction.signature.hex() == "5966dd6b98fc5ecbcd203fa38fac7059ba5c17683099071883b0ad6697386769321d851388a99cb8b81aab625aa2d7e13621432dbd8ab334c5891cd7c7755200"
+        assert transaction.signature.hex() == "51e6cd78fb3ab4b53ff7ad6864df27cb4a56d70603332869d47a5cf6ea977c30e696103e41e8dddf2582996ad335229fdf4acb726564dbc1a0bc9e705b511f06"
 
     def test_compute_transaction_hash(self):
         transaction = Transaction(
