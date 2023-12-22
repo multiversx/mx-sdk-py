@@ -67,7 +67,9 @@ class RelayedTransactionV2Builder:
             amount=0,
             gas_limit=self.inner_transaction_gas_limit + self.network_config.min_gas_limit + self.network_config.gas_per_data_byte * payload.length(),
             chain_id=self.network_config.chain_id,
-            data=payload.data
+            data=payload.data,
+            version=self.inner_transaction.version,
+            options=self.inner_transaction.options
         )
 
         if self.relayer_nonce:
