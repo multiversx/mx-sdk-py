@@ -208,7 +208,9 @@ class TestRelayedTransactionsFactory:
             gas_limit=0,
             chain_id=self.config.chain_id,
             data=b"getContractConfig",
-            nonce=15
+            nonce=15,
+            version=2,
+            options=0
         )
 
         serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
@@ -224,4 +226,6 @@ class TestRelayedTransactionsFactory:
         serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction)
         relayed_transaction.signature = alice.secret_key.sign(serialized_relayed_transaction)
 
+        assert relayed_transaction.version == 2
+        assert relayed_transaction.options == 0
         assert relayed_transaction.data.decode() == "relayedTxV2@000000000000000000010000000000000000000000000000000000000002ffff@0f@676574436f6e7472616374436f6e666967@fc3ed87a51ee659f937c1a1ed11c1ae677e99629fae9cc289461f033e6514d1a8cfad1144ae9c1b70f28554d196bd6ba1604240c1c1dc19c959e96c1c3b62d0c"

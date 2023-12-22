@@ -67,7 +67,9 @@ class RelayedTransactionsFactory:
             amount=0,
             gas_limit=gas_limit,
             chain_id=self._config.chain_id,
-            data=data.encode()
+            data=data.encode(),
+            version=inner_transaction.version,
+            options=inner_transaction.options
         )
 
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:
