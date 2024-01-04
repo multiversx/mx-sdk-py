@@ -17,7 +17,7 @@ class TestProtoSerializer:
             gas_limit=50000,
             chain_id="local-testnet",
             nonce=89,
-            amount=0,
+            value=0,
         )
         # we do this to match the test in mx-sdk-js-core
         transaction.version = 1
@@ -52,7 +52,7 @@ class TestProtoSerializer:
             chain_id="local-testnet",
             nonce=92,
             data=b"for the spaceship",
-            amount=123456789000000000000000000000
+            value=123456789000000000000000000000
         )
         # we do this to match the test in mx-sdk-js-core
         transaction.version = 1
@@ -69,7 +69,7 @@ class TestProtoSerializer:
             chain_id="local-testnet",
             gas_limit=80000,
             nonce=0,
-            amount=0,
+            value=0,
             data=b"hello",
             version=1
         )
@@ -86,7 +86,7 @@ class TestProtoSerializer:
             gas_limit=50000,
             chain_id="T",
             nonce=204,
-            amount=1000000000000000000,
+            value=1000000000000000000,
             sender_username="carol",
             receiver_username="alice"
         )

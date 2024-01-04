@@ -23,7 +23,7 @@ def test_create_transaction_for_registering_and_setting_roles():
     assert transaction.data.decode() == "registerAndSetAllRoles@54455354@54455354@464e47@02"
     assert transaction.sender == frank.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.amount == 50000000000000000
+    assert transaction.value == 50000000000000000
 
 
 def test_create_transaction_for_issuing_fungible():
@@ -45,7 +45,7 @@ def test_create_transaction_for_issuing_fungible():
     assert transaction.data.decode() == "issue@4652414e4b@4652414e4b@64@@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
     assert transaction.sender == frank.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.amount == 50000000000000000
+    assert transaction.value == 50000000000000000
 
 
 def test_create_transaction_for_issuing_semi_fungible():
@@ -66,7 +66,7 @@ def test_create_transaction_for_issuing_semi_fungible():
     assert transaction.data.decode() == "issueSemiFungible@4652414e4b@4652414e4b@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
     assert transaction.sender == frank.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.amount == 50000000000000000
+    assert transaction.value == 50000000000000000
 
 
 def test_create_transaction_for_issuing_non_fungible():
@@ -87,7 +87,7 @@ def test_create_transaction_for_issuing_non_fungible():
     assert transaction.data.decode() == "issueNonFungible@4652414e4b@4652414e4b@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
     assert transaction.sender == frank.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.amount == 50000000000000000
+    assert transaction.value == 50000000000000000
 
 
 def test_create_transaction_for_registering_meta_esdt():
@@ -109,7 +109,7 @@ def test_create_transaction_for_registering_meta_esdt():
     assert transaction.data.decode() == "registerMetaESDT@4652414e4b@4652414e4b@0a@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
     assert transaction.sender == frank.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.amount == 50000000000000000
+    assert transaction.value == 50000000000000000
 
 
 def test_create_transaction_for_setting_special_role_on_non_fungible_token():
@@ -128,7 +128,7 @@ def test_create_transaction_for_setting_special_role_on_non_fungible_token():
     assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e465455706461746541747472696275746573@45534454526f6c654e4654416464555249"
     assert transaction.sender == frank.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_creating_nft():
@@ -147,7 +147,7 @@ def test_create_transaction_for_creating_nft():
     assert transaction.data.decode() == "ESDTNFTCreate@4652414e4b2d616139653864@01@74657374@03e8@61626261@74657374@61@62"
     assert transaction.sender == grace.to_bech32()
     assert transaction.receiver == grace.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_setting_special_role_on_fungible_token():
@@ -162,7 +162,7 @@ def test_create_transaction_for_setting_special_role_on_fungible_token():
     assert transaction.data
     assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654c6f63616c4d696e74"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_setting_special_role_on_semi_fungible_token():
@@ -179,7 +179,7 @@ def test_create_transaction_for_setting_special_role_on_semi_fungible_token():
     assert transaction.data
     assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e46544275726e@45534454526f6c654e46544164645175616e74697479@455344545472616e73666572526f6c65"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_pausing():
@@ -191,7 +191,7 @@ def test_create_transaction_for_pausing():
     assert transaction.data
     assert transaction.data.decode() == "pause@4652414e4b2d313163653365"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_unpausing():
@@ -203,7 +203,7 @@ def test_create_transaction_for_unpausing():
     assert transaction.data
     assert transaction.data.decode() == "unPause@4652414e4b2d313163653365"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_freezing():
@@ -216,7 +216,7 @@ def test_create_transaction_for_freezing():
     assert transaction.data
     assert transaction.data.decode() == "freeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_unfreezing():
@@ -229,7 +229,7 @@ def test_create_transaction_for_unfreezing():
     assert transaction.data
     assert transaction.data.decode() == "unFreeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_local_minting():
@@ -242,7 +242,7 @@ def test_create_transaction_for_local_minting():
     assert transaction.data
     assert transaction.data.decode() == "ESDTLocalMint@4652414e4b2d313163653365@0a"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_local_burning():
@@ -255,7 +255,7 @@ def test_create_transaction_for_local_burning():
     assert transaction.data
     assert transaction.data.decode() == "ESDTLocalBurn@4652414e4b2d313163653365@0a"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_updating_attributes():
@@ -269,7 +269,7 @@ def test_create_transaction_for_updating_attributes():
     assert transaction.data
     assert transaction.data.decode() == "ESDTNFTUpdateAttributes@4652414e4b2d313163653365@0a@74657374"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_adding_quantity():
@@ -283,7 +283,7 @@ def test_create_transaction_for_adding_quantity():
     assert transaction.data
     assert transaction.data.decode() == "ESDTNFTAddQuantity@4652414e4b2d313163653365@0a@0a"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_burning_quantity():
@@ -297,7 +297,7 @@ def test_create_transaction_for_burning_quantity():
     assert transaction.data
     assert transaction.data.decode() == "ESDTNFTBurn@4652414e4b2d313163653365@0a@0a"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_setting_burn_role_globally():
@@ -309,7 +309,7 @@ def test_create_transaction_for_setting_burn_role_globally():
     assert transaction.data
     assert transaction.data.decode() == "setBurnRoleGlobally@4652414e4b2d313163653365"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_unsetting_burn_role_globally():
@@ -321,7 +321,7 @@ def test_create_transaction_for_unsetting_burn_role_globally():
     assert transaction.data
     assert transaction.data.decode() == "unsetBurnRoleGlobally@4652414e4b2d313163653365"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0
 
 
 def test_create_transaction_for_wiping():
@@ -334,4 +334,4 @@ def test_create_transaction_for_wiping():
     assert transaction.data
     assert transaction.data.decode() == "wipe@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
     assert transaction.sender == frank.to_bech32()
-    assert transaction.amount == 0
+    assert transaction.value == 0

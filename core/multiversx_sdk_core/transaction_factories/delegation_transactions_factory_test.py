@@ -25,7 +25,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.data
         assert transaction.data.decode() == "createNewDelegationContract@010f0cf064dd59200000@0a"
         assert transaction.gas_limit == 60126500
-        assert transaction.amount == 1250000000000000000000
+        assert transaction.value == 1250000000000000000000
 
     def test_create_transaction_for_adding_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -51,7 +51,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "addNodes@e7beaa95b3877f47348df4dd1cb578a4f7cabf7a20bfeefe5cdd263878ff132b765e04fef6f40c93512b666c47ed7719b8902f6c922c04247989b7137e837cc81a62e54712471c97a2ddab75aa9c2f58f813ed4c0fa722bde0ab718bff382208@81109fa1c8d3dc7b6c2d6e65206cc0bc1a83c9b2d1eb91a601d66ad32def430827d5eb52917bd2b0d04ce195738db216"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_removing_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -69,7 +69,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "removeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_staking_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -87,7 +87,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "stakeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_unbonding_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -105,7 +105,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unBondNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_unstaking_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -123,7 +123,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unStakeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_unjailing_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -141,7 +141,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unJailNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_changing_service_fee(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -157,7 +157,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "changeServiceFee@0a"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_modifying_delegation_cap(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -173,7 +173,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "modifyTotalDelegationCap@010f0cf064dd59200000"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_setting_automatic_activation(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -188,7 +188,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setAutomaticActivation@74727565"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_unsetting_automatic_activation(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -203,7 +203,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setAutomaticActivation@66616c7365"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_setting_cap_check_on_redelegate_rewards(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -218,7 +218,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setCheckCapOnReDelegateRewards@74727565"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_unsetting_cap_check_on_redelegate_rewards(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -233,7 +233,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setCheckCapOnReDelegateRewards@66616c7365"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_setting_metadata(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -251,7 +251,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setMetaData@6e616d65@77656273697465@6964656e746966696572"
-        assert transaction.amount == 0
+        assert transaction.value == 0
 
     def test_create_transaction_for_delegating(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -267,7 +267,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "delegate"
-        assert transaction.amount == 1000000000000000000
+        assert transaction.value == 1000000000000000000
         assert transaction.gas_limit == 12000000
 
     def test_create_transaction_for_claiming_rewards(self):
@@ -283,7 +283,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "claimRewards"
-        assert transaction.amount == 0
+        assert transaction.value == 0
         assert transaction.gas_limit == 6000000
 
     def test_create_transaction_for_redelegating_rewards(self):
@@ -299,7 +299,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "reDelegateRewards"
-        assert transaction.amount == 0
+        assert transaction.value == 0
         assert transaction.gas_limit == 12000000
 
     def test_create_transaction_for_undelegating(self):
@@ -316,7 +316,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unDelegate@0de0b6b3a7640000"
-        assert transaction.amount == 0
+        assert transaction.value == 0
         assert transaction.gas_limit == 12000000
 
     def test_create_transaction_for_withdrawing(self):
@@ -332,5 +332,5 @@ class TestDelegationTransactionsFactory:
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "withdraw"
-        assert transaction.amount == 0
+        assert transaction.value == 0
         assert transaction.gas_limit == 12000000

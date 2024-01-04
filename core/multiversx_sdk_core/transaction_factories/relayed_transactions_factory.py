@@ -64,7 +64,7 @@ class RelayedTransactionsFactory:
         return Transaction(
             sender=relayer_address.to_bech32(),
             receiver=inner_transaction.sender,
-            amount=0,
+            value=0,
             gas_limit=gas_limit,
             chain_id=self._config.chain_id,
             data=data.encode(),
@@ -80,7 +80,7 @@ class RelayedTransactionsFactory:
             "nonce": inner_transaction.nonce,
             "sender": base64.b64encode(bytes.fromhex(sender)).decode(),
             "receiver": base64.b64encode(bytes.fromhex(receiver)).decode(),
-            "value": inner_transaction.amount,
+            "value": inner_transaction.value,
             "gasPrice": inner_transaction.gas_price,
             "gasLimit": inner_transaction.gas_limit,
             "data": base64.b64encode(inner_transaction.data).decode(),

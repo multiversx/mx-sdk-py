@@ -162,7 +162,7 @@ class TestRelayedV1Builder:
             sender_username="carol",
             receiver_username="alice",
             nonce=208,
-            amount=TokenPayment.egld_from_amount(1).amount_as_integer
+            value=TokenPayment.egld_from_amount(1).amount_as_integer
         )
         # version is set to 1 to match the test in sdk-js-core
         inner_tx.version = 1

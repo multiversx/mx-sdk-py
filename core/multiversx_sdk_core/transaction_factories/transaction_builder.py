@@ -51,7 +51,7 @@ class TransactionBuilder:
             gas_limit=gas_limit,
             chain_id=self.config.chain_id,
             data=data,
-            amount=self.amount
+            value=self.amount
         )
 
         return transaction
