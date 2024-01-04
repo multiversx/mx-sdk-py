@@ -310,3 +310,28 @@ def test_create_transaction_for_setting_burn_role_globally():
     assert transaction.data.decode() == "setBurnRoleGlobally@4652414e4b2d313163653365"
     assert transaction.sender == frank.to_bech32()
     assert transaction.amount == 0
+
+
+def test_create_transaction_for_unsetting_burn_role_globally():
+    transaction = factory.create_transaction_for_unsetting_burn_role_globally(
+        sender=frank,
+        token_identifier="FRANK-11ce3e",
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "unsetBurnRoleGlobally@4652414e4b2d313163653365"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
+
+
+def test_create_transaction_for_wiping():
+    transaction = factory.create_transaction_for_wiping(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e"
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "wipe@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.amount == 0
