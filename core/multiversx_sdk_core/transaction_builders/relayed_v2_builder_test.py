@@ -41,8 +41,6 @@ class TestRelayedV2Builder:
             nonce=15,
             data=b"getContractConfig"
         )
-        # version is set to 1 to match the test in sdk-js-core
-        inner_tx.version = 1
         inner_tx.signature = self.alice.secret_key.sign(transaction_computer.compute_bytes_for_signing(inner_tx))
 
         builder.set_network_config(network_config)
@@ -63,9 +61,7 @@ class TestRelayedV2Builder:
             receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             gas_limit=0,
             nonce=15,
-            data=b"getContractConfig",
-            version=1,
-            options=0
+            data=b"getContractConfig"
         )
         inner_tx.signature = self.bob.secret_key.sign(transaction_computer.compute_bytes_for_signing(inner_tx))
 
@@ -81,7 +77,7 @@ class TestRelayedV2Builder:
         relayed_tx.sender = self.alice.label
         relayed_tx.signature = self.alice.secret_key.sign(transaction_computer.compute_bytes_for_signing(relayed_tx))
 
-        assert relayed_tx.version == 1
+        assert relayed_tx.version == 2
         assert relayed_tx.options == 0
         assert relayed_tx.nonce == 37
-        assert relayed_tx.data.decode() == "relayedTxV2@000000000000000000010000000000000000000000000000000000000002ffff@0f@676574436f6e7472616374436f6e666967@b6c5262d9837853e2201de357c1cc4c9803988a42d7049d26b7785dd0ac2bd4c6a8804b6fd9cf845fe2c2a622774b1a2dbd0a417c9a0bc3f0563a85bd15e710a"
+        assert relayed_tx.data.decode() == "relayedTxV2@000000000000000000010000000000000000000000000000000000000002ffff@0f@676574436f6e7472616374436f6e666967@fc3ed87a51ee659f937c1a1ed11c1ae677e99629fae9cc289461f033e6514d1a8cfad1144ae9c1b70f28554d196bd6ba1604240c1c1dc19c959e96c1c3b62d0c"

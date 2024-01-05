@@ -1,6 +1,6 @@
 from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
 from multiversx_sdk_core.testutils.wallets import load_wallets
-from multiversx_sdk_core.transaction import Transaction
+from multiversx_sdk_core.transaction import Transaction, TransactionComputer
 
 
 class TestProtoSerializer:
@@ -9,6 +9,7 @@ class TestProtoSerializer:
     bob = wallets["bob"]
     carol = wallets["carol"]
     proto_serializer = ProtoSerializer()
+    transaction_computer = TransactionComputer()
 
     def test_serialize_tx_no_data_no_value(self):
         transaction = Transaction(
@@ -19,13 +20,10 @@ class TestProtoSerializer:
             nonce=89,
             value=0,
         )
-        # we do this to match the test in mx-sdk-js-core
-        transaction.version = 1
+        transaction.signature = self.alice.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
-        transaction.signature = bytes.fromhex("b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109")
         serialized_transaction = self.proto_serializer.serialize_transaction(transaction)
-
-        assert serialized_transaction.hex() == "0859120200001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc0340d08603520d6c6f63616c2d746573746e657458016240b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+        assert serialized_transaction.hex() == "0859120200001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc0340d08603520d6c6f63616c2d746573746e6574580262403f08a1dd64fbb627d10b048e0b45b1390f29bb0e457762a2ccb710b029f299022a67a4b8e45cf62f4314afec2e56b5574c71e38df96cc41fae757b7ee5062503"
 
     def test_serialize_tx_with_data_no_value(self):
         transaction = Transaction(
@@ -36,13 +34,10 @@ class TestProtoSerializer:
             data=b"hello",
             nonce=90
         )
-        # we do this to match the test in mx-sdk-js-core
-        transaction.version = 1
+        transaction.signature = self.alice.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
-        transaction.signature = bytes.fromhex("e47fd437fc17ac9a69f7bf5f85bafa9e7628d851c4f69bd9fedc7e36029708b2e6d168d5cd652ea78beedd06d4440974ca46c403b14071a1a148d4188f6f2c0d")
         serialized_transaction = self.proto_serializer.serialize_transaction(transaction)
-
-        assert serialized_transaction.hex() == "085a120200001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc034080f1044a0568656c6c6f520d6c6f63616c2d746573746e657458016240e47fd437fc17ac9a69f7bf5f85bafa9e7628d851c4f69bd9fedc7e36029708b2e6d168d5cd652ea78beedd06d4440974ca46c403b14071a1a148d4188f6f2c0d"
+        assert serialized_transaction.hex() == "085a120200001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc034080f1044a0568656c6c6f520d6c6f63616c2d746573746e657458026240f9e8c1caf7f36b99e7e76ee1118bf71b55cde11a2356e2b3adf15f4ad711d2e1982469cbba7eb0afbf74e8a8f78e549b9410cd86eeaa88fcba62611ac9f6e30e"
 
     def test_serialize_tx_with_data_and_value(self):
         transaction = Transaction(
@@ -54,13 +49,10 @@ class TestProtoSerializer:
             data=b"for the spaceship",
             value=123456789000000000000000000000
         )
-        # we do this to match the test in mx-sdk-js-core
-        transaction.version = 1
+        transaction.signature = self.alice.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
-        transaction.signature = bytes.fromhex("39938d15812708475dfc8125b5d41dbcea0b2e3e7aabbbfceb6ce4f070de3033676a218b73facd88b1432d7d4accab89c6130b3abe5cc7bbbb5146e61d355b03")
         serialized_transaction = self.proto_serializer.serialize_transaction(transaction)
-
-        assert serialized_transaction.hex() == "085c120e00018ee90ff6181f3761632000001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc0340a08d064a11666f722074686520737061636573686970520d6c6f63616c2d746573746e65745801624039938d15812708475dfc8125b5d41dbcea0b2e3e7aabbbfceb6ce4f070de3033676a218b73facd88b1432d7d4accab89c6130b3abe5cc7bbbb5146e61d355b03"
+        assert serialized_transaction.hex() == "085c120e00018ee90ff6181f3761632000001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc0340a08d064a11666f722074686520737061636573686970520d6c6f63616c2d746573746e65745802624001f05aa8cb0614e12a94ab9dcbde5e78370a4e05d23ef25a1fb9d5fcf1cb3b1f33b919cd8dafb1704efb18fa233a8aa0d3344fb6ee9b613a7d7a403786ffbd0a"
 
     def test_serialize_tx_with_nonce_zero(self):
         transaction = Transaction(
@@ -73,10 +65,9 @@ class TestProtoSerializer:
             data=b"hello",
             version=1
         )
+        transaction.signature = self.alice.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
-        transaction.signature = bytes.fromhex("dfa3e9f2fdec60dcb353bac3b3435b4a2ff251e7e98eaf8620f46c731fc70c8ba5615fd4e208b05e75fe0f7dc44b7a99567e29f94fcd91efac7e67b182cd2a04")
         serialized_transaction = self.proto_serializer.serialize_transaction(transaction)
-
         assert serialized_transaction.hex() == "120200001a208049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f82a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1388094ebdc034080f1044a0568656c6c6f520d6c6f63616c2d746573746e657458016240dfa3e9f2fdec60dcb353bac3b3435b4a2ff251e7e98eaf8620f46c731fc70c8ba5615fd4e208b05e75fe0f7dc44b7a99567e29f94fcd91efac7e67b182cd2a04"
 
     def test_serialized_tx_with_usernames(self):
@@ -90,10 +81,7 @@ class TestProtoSerializer:
             sender_username="carol",
             receiver_username="alice"
         )
-        # we do this to match the test in mx-sdk-js-core
-        transaction.version = 1
+        transaction.signature = self.carol.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
-        transaction.signature = bytes.fromhex("5966dd6b98fc5ecbcd203fa38fac7059ba5c17683099071883b0ad6697386769321d851388a99cb8b81aab625aa2d7e13621432dbd8ab334c5891cd7c7755200")
         serialized_transaction = self.proto_serializer.serialize_transaction(transaction)
-
-        assert serialized_transaction.hex() == "08cc011209000de0b6b3a76400001a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e12205616c6963652a20b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba32056361726f6c388094ebdc0340d08603520154580162405966dd6b98fc5ecbcd203fa38fac7059ba5c17683099071883b0ad6697386769321d851388a99cb8b81aab625aa2d7e13621432dbd8ab334c5891cd7c7755200"
+        assert serialized_transaction.hex() == "08cc011209000de0b6b3a76400001a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e12205616c6963652a20b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba32056361726f6c388094ebdc0340d086035201545802624051e6cd78fb3ab4b53ff7ad6864df27cb4a56d70603332869d47a5cf6ea977c30e696103e41e8dddf2582996ad335229fdf4acb726564dbc1a0bc9e705b511f06"
