@@ -67,7 +67,7 @@ class TransactionBuilder:
             gas_limit=gas_limit,
             gas_price=gas_price,
             nonce=nonce,
-            amount=int(str(value)),
+            value=int(str(value)),
             data=data.data,
             version=version,
             options=options

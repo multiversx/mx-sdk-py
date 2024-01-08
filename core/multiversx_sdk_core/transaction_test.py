@@ -29,7 +29,7 @@ class TestTransaction:
             nonce=89,
             sender=sender,
             receiver=receiver,
-            amount=0,
+            value=0,
             gas_limit=50000,
             gas_price=1000000000,
             chain_id="D",
@@ -42,7 +42,7 @@ class TestTransaction:
             nonce=90,
             sender=sender,
             receiver=receiver,
-            amount=1000000000000000000,
+            value=1000000000000000000,
             data=b"hello",
             gas_limit=70000,
             gas_price=1000000000,
@@ -61,7 +61,7 @@ class TestTransaction:
             gas_limit=50000,
             sender_username="carol",
             receiver_username="alice",
-            amount=1000000000000000000
+            value=1000000000000000000
         )
 
         transaction.signature = self.carol.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
@@ -74,7 +74,7 @@ class TestTransaction:
             gas_limit=100000,
             chain_id="D",
             nonce=17243,
-            amount=1000000000000,
+            value=1000000000000,
             data=b"testtx",
             version=2,
             signature=bytes.fromhex("eaa9e4dfbd21695d9511e9754bde13e90c5cfb21748a339a79be11f744c71872e9fe8e73c6035c413f5f08eef09e5458e9ea6fc315ff4da0ab6d000b450b2a07")
@@ -89,7 +89,7 @@ class TestTransaction:
             gas_limit=100000,
             chain_id="D",
             nonce=17244,
-            amount=1000000000000,
+            value=1000000000000,
             data=b"testtx",
             version=2,
             sender_username="alice",
@@ -148,7 +148,7 @@ class TestTransaction:
             gas_price=1000000000,
             chain_id="D",
             nonce=2,
-            amount=1000000000000000000,
+            value=1000000000000000000,
             data=b"this is a test transaction",
             version=2,
             options=2,
@@ -177,7 +177,7 @@ class TestTransaction:
             version=2,
             options=2,
             nonce=92,
-            amount=123456789000000000000000000000,
+            value=123456789000000000000000000000,
             guardian="erd1x23lzn8483xs2su4fak0r0dqx6w38enpmmqf2yrkylwq7mfnvyhsxqw57y",
             guardian_signature=bytes([0] * 64)
         )

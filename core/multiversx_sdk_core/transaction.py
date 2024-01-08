@@ -31,7 +31,7 @@ class Transaction:
                  gas_limit: int,
                  chain_id: str,
                  nonce: Optional[int] = None,
-                 amount: Optional[int] = None,
+                 value: Optional[int] = None,
                  sender_username: Optional[str] = None,
                  receiver_username: Optional[str] = None,
                  gas_price: Optional[int] = None,
@@ -48,7 +48,7 @@ class Transaction:
         self.gas_limit = gas_limit
 
         self.nonce = nonce or 0
-        self.amount = amount or 0
+        self.value = value or 0
         self.data = data or bytes()
         self.signature = signature or bytes()
 
@@ -96,7 +96,7 @@ class TransactionComputer:
     def _to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
-        dictionary["value"] = str(transaction.amount)
+        dictionary["value"] = str(transaction.value)
 
         dictionary["receiver"] = transaction.receiver
         dictionary["sender"] = transaction.sender

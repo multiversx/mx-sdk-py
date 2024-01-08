@@ -83,7 +83,7 @@ class TestRelayedTransactionsFactory:
             nonce=208,
             sender_username="carol",
             receiver_username="alice",
-            amount=1000000000000000000
+            value=1000000000000000000
         )
 
         inner_tx_bytes = self.transaction_computer.compute_bytes_for_signing(inner_transaction)

@@ -14,7 +14,7 @@ class ITransaction(Protocol):
     sender_username: str
     receiver_username: str
     nonce: int
-    amount: int
+    value: int
     data: bytes
     version: int
     signature: bytes
@@ -33,7 +33,7 @@ class ProtoSerializer:
 
         proto_transaction = ProtoTransaction.Transaction()
         proto_transaction.Nonce = transaction.nonce
-        proto_transaction.Value = self.serialize_transaction_value(transaction.amount)
+        proto_transaction.Value = self.serialize_transaction_value(transaction.value)
         proto_transaction.RcvAddr = receiver_pubkey
         proto_transaction.RcvUserName = transaction.receiver_username.encode()
         proto_transaction.SndAddr = sender_pubkey
