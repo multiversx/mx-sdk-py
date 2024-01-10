@@ -9,7 +9,7 @@ def test_contract_query_builder():
     builder = ContractQueryBuilder(
         contract=contract,
         function="getFoobar",
-        call_arguments=[42, "test"],
+        call_arguments=[42, "test", -836623209073744937290891644],
         caller=caller,
         value=1
     )
@@ -18,6 +18,6 @@ def test_contract_query_builder():
 
     assert query.contract == contract
     assert query.function == "getFoobar"
-    assert query.encoded_arguments == ["2a", "74657374"]
+    assert query.encoded_arguments == ["2a", "74657374", "fd4bf624f561bc2894c6fe84"]
     assert query.caller == caller
     assert query.value == 1

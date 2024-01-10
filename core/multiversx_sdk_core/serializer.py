@@ -1,6 +1,6 @@
 from typing import Any, List, Protocol, Sequence, runtime_checkable
 
-from multiversx_sdk_core.codec import encode_unsigned_number
+from multiversx_sdk_core.codec import encode_unsigned_number, encode_signed_number
 from multiversx_sdk_core.constants import ARGS_SEPARATOR
 from multiversx_sdk_core.errors import ErrCannotSerializeArgument
 
@@ -33,6 +33,8 @@ def arg_to_buffer(arg: Any) -> bytes:
     if isinstance(arg, str):
         return arg.encode("utf-8")
     if isinstance(arg, int):
+        if arg < 0:
+            return encode_signed_number(arg)
         return encode_unsigned_number(arg)
     if isinstance(arg, bytes):
         return arg
