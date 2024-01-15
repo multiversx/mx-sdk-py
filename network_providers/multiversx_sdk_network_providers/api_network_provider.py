@@ -29,7 +29,7 @@ from multiversx_sdk_network_providers.tokens import (
 from multiversx_sdk_network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk_network_providers.transactions import (
-    ITransactionDto, TransactionInMempool, TransactionOnNetwork,
+    ITransaction, TransactionInMempool, TransactionOnNetwork,
     transaction_to_dictionary)
 from multiversx_sdk_network_providers.utils import decimal_to_padded_hex
 
@@ -156,13 +156,13 @@ class ApiNetworkProvider:
         status = TransactionStatus(response.get('status', ''))
         return status
 
-    def send_transaction(self, transaction: ITransactionDto) -> str:
+    def send_transaction(self, transaction: ITransaction) -> str:
         url = f'transactions'
         response = self.do_post_generic(url, transaction_to_dictionary(transaction))
         tx_hash: str = response.get('txHash', '')
         return tx_hash
 
-    def send_transactions(self, transactions: List[ITransactionDto]) -> Tuple[int, Dict[str, str]]:
+    def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, Dict[str, str]]:
         response = self.backing_proxy.send_transactions(transactions)
         return response
 

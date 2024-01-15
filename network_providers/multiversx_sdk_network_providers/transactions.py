@@ -13,13 +13,13 @@ from multiversx_sdk_network_providers.transaction_status import \
     TransactionStatus
 
 
-class ITransactionDto(Protocol):
+class ITransaction(Protocol):
     sender: str
     receiver: str
     gas_limit: int
     chain_id: str
     nonce: int
-    amount: int
+    value: int
     sender_username: str
     receiver_username: str
     gas_price: int
@@ -31,10 +31,10 @@ class ITransactionDto(Protocol):
     guardian_signature: bytes
 
 
-def transaction_to_dictionary(transaction: ITransactionDto) -> Dict[str, Any]:
+def transaction_to_dictionary(transaction: ITransaction) -> Dict[str, Any]:
     dictionary: Dict[str, Any] = {}
     dictionary["nonce"] = transaction.nonce
-    dictionary["value"] = str(transaction.amount)
+    dictionary["value"] = str(transaction.value)
     dictionary["receiver"] = transaction.receiver
     dictionary["sender"] = transaction.sender
     dictionary["gasPrice"] = transaction.gas_price

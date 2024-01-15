@@ -60,7 +60,7 @@ class TestProxy:
         result = self.proxy.get_fungible_token_of_account(address, "TEST-ff155e")
 
         assert result.identifier == "TEST-ff155e"
-        assert result.balance == 99999999999990000
+        assert result.balance == 99999999999980000
 
     def test_get_nonfungible_token_of_account(self):
         address = Address.new_from_bech32(
@@ -182,7 +182,7 @@ class TestProxy:
             receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
             gas_limit=50000,
             chain_id="D",
-            amount=5000000000000000000,
+            value=5000000000000000000,
             nonce=100,
             gas_price=1000000000,
             version=2,

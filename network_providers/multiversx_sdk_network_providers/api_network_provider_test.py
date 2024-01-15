@@ -184,7 +184,7 @@ class TestApi:
             receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
             gas_limit=50000,
             chain_id="D",
-            amount=5000000000000000000,
+            value=5000000000000000000,
             nonce=100,
             gas_price=1000000000,
             version=2,
