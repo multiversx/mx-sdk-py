@@ -26,7 +26,7 @@ from multiversx_sdk_network_providers.tokens import (
 from multiversx_sdk_network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk_network_providers.transactions import (
-    ITransactionDto, TransactionOnNetwork, transaction_to_dictionary)
+    ITransaction, TransactionOnNetwork, transaction_to_dictionary)
 
 
 class ProxyNetworkProvider:
@@ -111,11 +111,11 @@ class ProxyNetworkProvider:
         status = TransactionStatus(response.get('status', ''))
         return status
 
-    def send_transaction(self, transaction: ITransactionDto) -> str:
+    def send_transaction(self, transaction: ITransaction) -> str:
         response = self.do_post_generic('transaction/send', transaction_to_dictionary(transaction))
         return response.get('txHash', '')
 
-    def send_transactions(self, transactions: Sequence[ITransactionDto]) -> Tuple[int, Dict[str, str]]:
+    def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
         transactions_as_dictionaries = [transaction_to_dictionary(transaction) for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         # Proxy and Observers have different response format:
@@ -145,7 +145,7 @@ class ProxyNetworkProvider:
         definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties, self.address_hrp)
         return definition
 
-    def simulate_transaction(self, transaction: ITransactionDto) -> SimulateResponse:
+    def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
         url = "transaction/simulate"
         response = self.do_post_generic(url, transaction_to_dictionary(transaction))
         return SimulateResponse(response)
