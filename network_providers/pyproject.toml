@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project]
+name = "multiversx-sdk-network-providers"
+version = "0.13.0"
+authors = [
+  { name="MultiversX" },
+]
+license = "MIT"
+description = "Network providers for MultiversX Python SDK."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "requests==2.31.0",
+  "multiversx-sdk-core>=0.8.0,<0.9.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/multiversx/mx-sdk-py-network-providers"

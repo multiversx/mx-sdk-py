@@ -1,0 +1,17 @@
+{
+"python.testing.pytestArgs": [
+    "multiversx_sdk_network_providers"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "editor.defaultFormatter": "ms-python.autopep8",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "files.insertFinalNewline": true,
+  "python.languageServer": "Pylance"
+}
