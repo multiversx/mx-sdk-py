@@ -1,5 +1,5 @@
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.contract_query_builder import ContractQueryBuilder
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.contract_query_builder import ContractQueryBuilder
 
 
 def test_contract_query_builder():

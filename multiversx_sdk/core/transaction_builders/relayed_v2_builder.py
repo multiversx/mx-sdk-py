@@ -1,13 +1,13 @@
 from typing import Any, List, Optional
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.errors import (ErrInvalidGasLimitForInnerTransaction,
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.errors import (ErrInvalidGasLimitForInnerTransaction,
                                         ErrInvalidRelayerV2BuilderArguments)
-from multiversx_sdk_core.interfaces import (IAddress, IGasLimit,
+from multiversx_sdk.core.interfaces import (IAddress, IGasLimit,
                                             INetworkConfig, INonce)
-from multiversx_sdk_core.serializer import args_to_string
-from multiversx_sdk_core.transaction import Transaction
-from multiversx_sdk_core.transaction_payload import TransactionPayload
+from multiversx_sdk.core.serializer import args_to_string
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_payload import TransactionPayload
 
 
 class RelayedTransactionV2Builder:

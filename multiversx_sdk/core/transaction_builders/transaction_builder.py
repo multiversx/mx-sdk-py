@@ -1,17 +1,17 @@
 import logging
 from typing import List, Optional, Protocol
 
-from multiversx_sdk_core.constants import (ARGS_SEPARATOR,
+from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
-from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasLimit,
+from multiversx_sdk.core.interfaces import (IAddress, IChainID, IGasLimit,
                                             IGasPrice, INonce,
                                             ITransactionOptions,
                                             ITransactionPayload,
                                             ITransactionValue,
                                             ITransactionVersion)
-from multiversx_sdk_core.transaction import Transaction
-from multiversx_sdk_core.transaction_payload import TransactionPayload
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_payload import TransactionPayload
 
 logger = logging.getLogger("transaction_builder")
 

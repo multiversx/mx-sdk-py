@@ -1,6 +1,6 @@
 
 
-from multiversx_sdk_core.code_metadata import CodeMetadata
+from multiversx_sdk.core.code_metadata import CodeMetadata
 
 
 def test_code_metadata_serialize():

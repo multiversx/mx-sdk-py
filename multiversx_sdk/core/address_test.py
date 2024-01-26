@@ -1,9 +1,9 @@
 
 import pytest
 
-from multiversx_sdk_core.address import (Address, AddressComputer,
+from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory, is_valid_bech32)
-from multiversx_sdk_core.errors import ErrBadAddress, ErrBadPubkeyLength
+from multiversx_sdk.core.errors import ErrBadAddress, ErrBadPubkeyLength
 
 
 def test_address():

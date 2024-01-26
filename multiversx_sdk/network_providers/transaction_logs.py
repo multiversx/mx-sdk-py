@@ -1,10 +1,9 @@
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from multiversx_sdk_core import Address
-
-from multiversx_sdk_network_providers.interface import IAddress
-from multiversx_sdk_network_providers.resources import EmptyAddress
-from multiversx_sdk_network_providers.transaction_events import \
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.network_providers.interface import IAddress
+from multiversx_sdk.network_providers.resources import EmptyAddress
+from multiversx_sdk.network_providers.transaction_events import \
     TransactionEvent
 
 

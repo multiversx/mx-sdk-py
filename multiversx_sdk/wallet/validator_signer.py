@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from multiversx_sdk_wallet.errors import ErrCannotSign
-from multiversx_sdk_wallet.interfaces import ISignature
-from multiversx_sdk_wallet.validator_keys import (ValidatorPublicKey,
+from multiversx_sdk.wallet.errors import ErrCannotSign
+from multiversx_sdk.wallet.interfaces import ISignature
+from multiversx_sdk.wallet.validator_keys import (ValidatorPublicKey,
                                                   ValidatorSecretKey)
-from multiversx_sdk_wallet.validator_pem import ValidatorPEM
+from multiversx_sdk.wallet.validator_pem import ValidatorPEM
 
 
 class ValidatorSigner:

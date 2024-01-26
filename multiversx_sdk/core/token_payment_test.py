@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from multiversx_sdk_core.token_payment import TokenPayment
+from multiversx_sdk.core.token_payment import TokenPayment
 
 
 def test_with_egld():

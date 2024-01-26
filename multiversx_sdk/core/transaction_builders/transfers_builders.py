@@ -1,10 +1,10 @@
 from typing import List, Optional, Protocol, Sequence
 
-from multiversx_sdk_core.interfaces import (IAddress, IGasLimit, IGasPrice,
+from multiversx_sdk.core.interfaces import (IAddress, IGasLimit, IGasPrice,
                                             INonce, ITokenPayment,
                                             ITransactionValue)
-from multiversx_sdk_core.serializer import arg_to_string
-from multiversx_sdk_core.transaction_builders.transaction_builder import (
+from multiversx_sdk.core.serializer import arg_to_string
+from multiversx_sdk.core.transaction_builders.transaction_builder import (
     ITransactionBuilderConfiguration, TransactionBuilder)
 
 

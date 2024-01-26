@@ -1,7 +1,7 @@
 from typing import List, Protocol, Sequence
 
-from multiversx_sdk_core.interfaces import IAddress, ITokenTransfer
-from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
+from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
+from multiversx_sdk.core.serializer import arg_to_string, args_to_strings
 
 
 class ITokenComputer(Protocol):

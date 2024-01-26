@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import List
 
-from multiversx_sdk_wallet.pem_entry import PemEntry
-from multiversx_sdk_wallet.validator_keys import ValidatorSecretKey
+from multiversx_sdk.wallet.pem_entry import PemEntry
+from multiversx_sdk.wallet.validator_keys import ValidatorSecretKey
 
 
 class ValidatorPEM:

@@ -1,11 +1,11 @@
 from typing import List, Optional, Protocol, Sequence
 
-from multiversx_sdk_core.errors import BadUsageError
-from multiversx_sdk_core.interfaces import IAddress, IToken, ITokenTransfer
-from multiversx_sdk_core.transaction import Transaction
-from multiversx_sdk_core.transaction_factories.token_transfers_data_builder import \
+from multiversx_sdk.core.errors import BadUsageError
+from multiversx_sdk.core.interfaces import IAddress, IToken, ITokenTransfer
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
-from multiversx_sdk_core.transaction_factories.transaction_builder import \
+from multiversx_sdk.core.transaction_factories.transaction_builder import \
     TransactionBuilder
 
 ADDITIONAL_GAS_FOR_ESDT_TRANSFER = 100000

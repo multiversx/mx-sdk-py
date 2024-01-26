@@ -1,11 +1,12 @@
 import pytest
-from multiversx_sdk_core import Address, Transaction
 
-from multiversx_sdk_network_providers.api_network_provider import \
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
-from multiversx_sdk_network_providers.errors import GenericError
-from multiversx_sdk_network_providers.interface import IPagination
-from multiversx_sdk_network_providers.proxy_network_provider import \
+from multiversx_sdk.network_providers.errors import GenericError
+from multiversx_sdk.network_providers.interface import IPagination
+from multiversx_sdk.network_providers.proxy_network_provider import \
     ContractQuery
 
 

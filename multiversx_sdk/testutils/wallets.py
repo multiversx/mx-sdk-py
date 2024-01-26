@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Dict
 
-from multiversx_sdk_wallet import UserPEM
+from multiversx_sdk.wallet.user_pem import UserPEM
 
 alice_pem = Path(__file__).parent / "testwallets" / "alice.pem"
 bob_pem = Path(__file__).parent / "testwallets" / "bob.pem"

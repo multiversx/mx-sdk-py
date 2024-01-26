@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.interfaces import (IAddress, IChainID, IGasPrice,
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.interfaces import (IAddress, IChainID, IGasPrice,
                                             ITransactionValue)
 
 

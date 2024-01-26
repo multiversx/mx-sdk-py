@@ -1,11 +1,10 @@
 import base64
 from typing import Any, Dict, List
 
-from multiversx_sdk_core import Address
-
-from multiversx_sdk_network_providers.interface import IAddress
-from multiversx_sdk_network_providers.resources import EmptyAddress
-from multiversx_sdk_network_providers.transaction_logs import TransactionLogs
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.network_providers.interface import IAddress
+from multiversx_sdk.network_providers.resources import EmptyAddress
+from multiversx_sdk.network_providers.transaction_logs import TransactionLogs
 
 
 class ContractResults:

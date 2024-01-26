@@ -1,11 +1,11 @@
 from typing import List
 
-from multiversx_sdk_core.codec import (decode_unsigned_number,
+from multiversx_sdk.core.codec import (decode_unsigned_number,
                                        encode_unsigned_number)
-from multiversx_sdk_core.constants import TOKEN_RANDOM_SEQUENCE_LENGTH
-from multiversx_sdk_core.errors import (BadUsageError,
+from multiversx_sdk.core.constants import TOKEN_RANDOM_SEQUENCE_LENGTH
+from multiversx_sdk.core.errors import (BadUsageError,
                                         InvalidTokenIdentifierError)
-from multiversx_sdk_core.interfaces import IToken, ITokenIdentifierParts
+from multiversx_sdk.core.interfaces import IToken, ITokenIdentifierParts
 
 
 class Token:

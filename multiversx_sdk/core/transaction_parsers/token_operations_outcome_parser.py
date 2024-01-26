@@ -1,14 +1,14 @@
 
 from typing import Protocol
 
-from multiversx_sdk_core import Address
-from multiversx_sdk_core.codec import decode_unsigned_number
-from multiversx_sdk_core.transaction_parsers.token_operations_outcome_parser_types import (
+from multiversx_sdk.core import Address
+from multiversx_sdk.core.codec import decode_unsigned_number
+from multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types import (
     AddQuantityOutcome, BurnOutcome, BurnQuantityOutcome, ESDTIssueOutcome,
     FreezingOutcome, MintOutcome, NFTCreateOutcome, PausingOutcome,
     RegisterAndSetAllRolesOutcome, SetSpecialRoleOutcome,
     UpdateAttributesOutcome, WipingOutcome)
-from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper import (
+from multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper import (
     ITransactionEvent, ITransactionOnNetwork, TransactionOnNetworkWrapper)
 
 

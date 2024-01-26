@@ -1,12 +1,12 @@
 import pytest
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.errors import (ErrInvalidGasLimitForInnerTransaction,
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.errors import (ErrInvalidGasLimitForInnerTransaction,
                                         ErrInvalidRelayerV2BuilderArguments)
-from multiversx_sdk_core.testutils.wallets import load_wallets
-from multiversx_sdk_core.transaction import Transaction, TransactionComputer
-from multiversx_sdk_core.transaction_builders.relayed_v2_builder import \
+from multiversx_sdk.core.transaction import Transaction, TransactionComputer
+from multiversx_sdk.core.transaction_builders.relayed_v2_builder import \
     RelayedTransactionV2Builder
+from multiversx_sdk.testutils.wallets import load_wallets
 
 
 class NetworkConfig:

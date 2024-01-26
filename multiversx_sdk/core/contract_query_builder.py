@@ -2,9 +2,9 @@
 
 from typing import Any, Optional, Sequence
 
-from multiversx_sdk_core.contract_query import ContractQuery
-from multiversx_sdk_core.interfaces import IAddress
-from multiversx_sdk_core.serializer import args_to_strings
+from multiversx_sdk.core.contract_query import ContractQuery
+from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.core.serializer import args_to_strings
 
 
 class ContractQueryBuilder():

@@ -1,10 +1,10 @@
-from multiversx_sdk_core import Address
-from multiversx_sdk_core.codec import encode_unsigned_number
-from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
+from multiversx_sdk.core import Address
+from multiversx_sdk.core.codec import encode_unsigned_number
+from multiversx_sdk.core.transaction_factories.transactions_factory_config import \
     TransactionsFactoryConfig
-from multiversx_sdk_core.transaction_parsers.token_operations_outcome_parser import \
+from multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser import \
     TokenOperationsOutcomeParser
-from multiversx_sdk_core.transaction_parsers.transaction_on_network_wrapper import (
+from multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper import (
     ContractResultsWrapper, TransactionEventTopicWrapper,
     TransactionEventWrapper, TransactionLogsWrapper,
     TransactionOnNetworkWrapper)

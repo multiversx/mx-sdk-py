@@ -1,8 +1,8 @@
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.transaction_builders.default_configuration import \
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.transaction_builders.default_configuration import \
     DefaultTransactionBuildersConfiguration
-from multiversx_sdk_core.transaction_builders.esdt_builders import \
+from multiversx_sdk.core.transaction_builders.esdt_builders import \
     ESDTIssueBuilder
 
 dummyConfig = DefaultTransactionBuildersConfiguration(chain_id="D")

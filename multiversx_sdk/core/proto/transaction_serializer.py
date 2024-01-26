@@ -1,8 +1,8 @@
 from typing import Protocol
 
-import multiversx_sdk_core.proto.transaction_pb2 as ProtoTransaction
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.codec import encode_unsigned_number
+import multiversx_sdk.core.proto.transaction_pb2 as ProtoTransaction
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.codec import encode_unsigned_number
 
 
 class ITransaction(Protocol):

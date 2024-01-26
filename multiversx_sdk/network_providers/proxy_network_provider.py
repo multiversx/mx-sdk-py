@@ -4,28 +4,28 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 import requests
 from requests.auth import AuthBase
 
-from multiversx_sdk_network_providers.accounts import (AccountOnNetwork,
+from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
-from multiversx_sdk_network_providers.constants import (DEFAULT_ADDRESS_HRP,
+from multiversx_sdk.network_providers.constants import (DEFAULT_ADDRESS_HRP,
                                                         ESDT_CONTRACT_ADDRESS,
                                                         METACHAIN_ID)
-from multiversx_sdk_network_providers.contract_query_requests import \
+from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
-from multiversx_sdk_network_providers.contract_query_response import \
+from multiversx_sdk.network_providers.contract_query_response import \
     ContractQueryResponse
-from multiversx_sdk_network_providers.errors import GenericError
-from multiversx_sdk_network_providers.interface import IAddress, IContractQuery
-from multiversx_sdk_network_providers.network_config import NetworkConfig
-from multiversx_sdk_network_providers.network_status import NetworkStatus
-from multiversx_sdk_network_providers.resources import (GenericResponse,
+from multiversx_sdk.network_providers.errors import GenericError
+from multiversx_sdk.network_providers.interface import IAddress, IContractQuery
+from multiversx_sdk.network_providers.network_config import NetworkConfig
+from multiversx_sdk.network_providers.network_status import NetworkStatus
+from multiversx_sdk.network_providers.resources import (GenericResponse,
                                                         SimulateResponse)
-from multiversx_sdk_network_providers.token_definitions import (
+from multiversx_sdk.network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
-from multiversx_sdk_network_providers.tokens import (
+from multiversx_sdk.network_providers.tokens import (
     FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
-from multiversx_sdk_network_providers.transaction_status import \
+from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
-from multiversx_sdk_network_providers.transactions import (
+from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionOnNetwork, transaction_to_dictionary)
 
 

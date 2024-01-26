@@ -2,15 +2,15 @@ import json
 from pathlib import Path
 
 import pytest
-from multiversx_sdk_core import (Address, Message, MessageComputer,
-                                 Transaction, TransactionComputer)
 
-from multiversx_sdk_wallet.crypto.randomness import Randomness
-from multiversx_sdk_wallet.user_keys import UserSecretKey
-from multiversx_sdk_wallet.user_pem import UserPEM
-from multiversx_sdk_wallet.user_signer import UserSigner
-from multiversx_sdk_wallet.user_verifer import UserVerifier
-from multiversx_sdk_wallet.user_wallet import UserWallet
+from multiversx_sdk.core import (Address, Message, MessageComputer,
+                                 Transaction, TransactionComputer)
+from multiversx_sdk.wallet.crypto.randomness import Randomness
+from multiversx_sdk.wallet.user_keys import UserSecretKey
+from multiversx_sdk.wallet.user_pem import UserPEM
+from multiversx_sdk.wallet.user_signer import UserSigner
+from multiversx_sdk.wallet.user_verifer import UserVerifier
+from multiversx_sdk.wallet.user_wallet import UserWallet
 
 DUMMY_MNEMONIC = "moral volcano peasant pass circle pen over picture flat shop clap goat never lyrics gather prepare woman film husband gravity behind test tiger improve"
 
@@ -32,13 +32,13 @@ def test_user_secret_key_generate_public_key():
 
 
 def test_user_signer_from_pem_file():
-    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"), 0).get_pubkey()
+    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk.wallet/testdata/alice.pem"), 0).get_pubkey()
     assert Address(pubkey.buffer, "erd").to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
-    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/bob.pem"), 0).get_pubkey()
+    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk.wallet/testdata/bob.pem"), 0).get_pubkey()
     assert Address(pubkey.buffer, "erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
 
-    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/carol.pem"), 0).get_pubkey()
+    pubkey = UserSigner.from_pem_file(Path("./multiversx_sdk.wallet/testdata/carol.pem"), 0).get_pubkey()
     assert Address(pubkey.buffer, "erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
 
 
@@ -64,17 +64,17 @@ def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_rando
         id="65894f35-d142-41d2-9335-6ad02e0ed0be"
     ))
 
-    alice_saved_path = Path("./multiversx_sdk_wallet/testdata/alice.saved.json")
-    bob_saved_path = Path("./multiversx_sdk_wallet/testdata/bob.saved.json")
-    carol_saved_path = Path("./multiversx_sdk_wallet/testdata/carol.saved.json")
+    alice_saved_path = Path("./multiversx_sdk.wallet/testdata/alice.saved.json")
+    bob_saved_path = Path("./multiversx_sdk.wallet/testdata/bob.saved.json")
+    carol_saved_path = Path("./multiversx_sdk.wallet/testdata/carol.saved.json")
 
     alice_wallet.save(alice_saved_path, "erd")
     bob_wallet.save(bob_saved_path, "erd")
     carol_wallet.save(carol_saved_path, "erd")
 
-    assert alice_saved_path.read_text().strip() == Path("./multiversx_sdk_wallet/testdata/alice.json").read_text().strip()
-    assert bob_saved_path.read_text().strip() == Path("./multiversx_sdk_wallet/testdata/bob.json").read_text().strip()
-    assert carol_saved_path.read_text().strip() == Path("./multiversx_sdk_wallet/testdata/carol.json").read_text().strip()
+    assert alice_saved_path.read_text().strip() == Path("./multiversx_sdk.wallet/testdata/alice.json").read_text().strip()
+    assert bob_saved_path.read_text().strip() == Path("./multiversx_sdk.wallet/testdata/bob.json").read_text().strip()
+    assert carol_saved_path.read_text().strip() == Path("./multiversx_sdk.wallet/testdata/carol.json").read_text().strip()
 
     alice_saved_path.unlink()
     bob_saved_path.unlink()
@@ -119,7 +119,7 @@ def test_sign_transaction():
         options=0
     )
 
-    signer = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"))
+    signer = UserSigner.from_pem_file(Path("./multiversx_sdk.wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
     transaction_computer = TransactionComputer()
 
@@ -132,7 +132,7 @@ def test_sign_message():
     message = Message("hello".encode())
     message_computer = MessageComputer()
 
-    signer = UserSigner.from_pem_file(Path("./multiversx_sdk_wallet/testdata/alice.pem"))
+    signer = UserSigner.from_pem_file(Path("./multiversx_sdk.wallet/testdata/alice.pem"))
     verifier = UserVerifier.from_address(Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
 
     message.signature = signer.sign(message_computer.compute_bytes_for_signing(message))
@@ -141,7 +141,7 @@ def test_sign_message():
 
 
 def test_user_pem_save():
-    path = Path("./multiversx_sdk_wallet/testdata/alice.pem")
+    path = Path("./multiversx_sdk.wallet/testdata/alice.pem")
     path_saved = path.with_suffix(".saved")
     content_expected = path.read_text().strip()
 
@@ -154,14 +154,14 @@ def test_user_pem_save():
 
 
 def test_load_secret_key_but_without_kind_field():
-    keystore_path = Path("./multiversx_sdk_wallet/testdata/withoutKind.json")
+    keystore_path = Path("./multiversx_sdk.wallet/testdata/withoutKind.json")
     secret_key = UserWallet.load_secret_key(keystore_path, "password")
     actual_address = (secret_key.generate_public_key().to_address("erd")).to_bech32()
     assert actual_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
 
 def test_load_secret_key_with_unecessary_address_index():
-    keystore_path = Path("./multiversx_sdk_wallet/testdata/alice.json")
+    keystore_path = Path("./multiversx_sdk.wallet/testdata/alice.json")
 
     with pytest.raises(Exception, match="address_index must not be provided when kind == 'secretKey'"):
         UserWallet.load_secret_key(keystore_path, "password", 42)
@@ -177,7 +177,7 @@ def test_create_keystore_file_with_mnemonic():
 
 
 def test_create_keystore_with_mnemonic_with_randomness():
-    expected_dummy_wallet_json = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json").read_text()
+    expected_dummy_wallet_json = Path("./multiversx_sdk.wallet/testdata/withDummyMnemonic.json").read_text()
     expected_dummy_wallet_dict = json.loads(expected_dummy_wallet_json)
 
     randomness = Randomness(
@@ -193,7 +193,7 @@ def test_create_keystore_with_mnemonic_with_randomness():
 
 
 def test_load_secret_key_with_mnemonic():
-    keystore_path = Path("./multiversx_sdk_wallet/testdata/withDummyMnemonic.json")
+    keystore_path = Path("./multiversx_sdk.wallet/testdata/withDummyMnemonic.json")
 
     assert UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
     assert UserWallet.load_secret_key(keystore_path, "password", 2).generate_public_key().to_address("erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"

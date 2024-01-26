@@ -1,6 +1,6 @@
 import base64
 
-from multiversx_sdk_core.interfaces import ITransactionPayload
+from multiversx_sdk.core.interfaces import ITransactionPayload
 
 
 class TransactionPayload(ITransactionPayload):

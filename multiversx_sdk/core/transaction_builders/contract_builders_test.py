@@ -1,12 +1,12 @@
 from typing import List
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.code_metadata import CodeMetadata
-from multiversx_sdk_core.interfaces import ITokenPayment
-from multiversx_sdk_core.token_payment import TokenPayment
-from multiversx_sdk_core.transaction_builders.contract_builders import (
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.code_metadata import CodeMetadata
+from multiversx_sdk.core.interfaces import ITokenPayment
+from multiversx_sdk.core.token_payment import TokenPayment
+from multiversx_sdk.core.transaction_builders.contract_builders import (
     ContractCallBuilder, ContractDeploymentBuilder, ContractUpgradeBuilder)
-from multiversx_sdk_core.transaction_builders.default_configuration import \
+from multiversx_sdk.core.transaction_builders.default_configuration import \
     DefaultTransactionBuildersConfiguration
 
 dummyConfig = DefaultTransactionBuildersConfiguration(chain_id="D")

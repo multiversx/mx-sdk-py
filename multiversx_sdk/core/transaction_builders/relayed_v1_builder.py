@@ -2,12 +2,12 @@ import base64
 import json
 from typing import Any, Dict, Optional
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.errors import ErrInvalidRelayerV1BuilderArguments
-from multiversx_sdk_core.interfaces import (IAddress, INetworkConfig, INonce,
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.errors import ErrInvalidRelayerV1BuilderArguments
+from multiversx_sdk.core.interfaces import (IAddress, INetworkConfig, INonce,
                                             ITransactionOptions,
                                             ITransactionVersion)
-from multiversx_sdk_core.transaction import Transaction
+from multiversx_sdk.core.transaction import Transaction
 
 
 class RelayedTransactionV1Builder:

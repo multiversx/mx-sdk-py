@@ -1,7 +1,7 @@
 from typing import List, Sequence
 
-from multiversx_sdk_core.interfaces import IAddress
-from multiversx_sdk_core.transaction_parsers.interfaces import (
+from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.core.transaction_parsers.interfaces import (
     IContractResultItem, IContractResults, ITransactionEvent,
     ITransactionEventTopic, ITransactionLogs, ITransactionOnNetwork)
 

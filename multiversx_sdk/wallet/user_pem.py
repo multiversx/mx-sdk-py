@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import List
 
-from multiversx_sdk_wallet.constants import USER_SEED_LENGTH
-from multiversx_sdk_wallet.pem_entry import PemEntry
-from multiversx_sdk_wallet.user_keys import UserSecretKey
+from multiversx_sdk.wallet.constants import USER_SEED_LENGTH
+from multiversx_sdk.wallet.pem_entry import PemEntry
+from multiversx_sdk.wallet.user_keys import UserSecretKey
 
 
 class UserPEM:

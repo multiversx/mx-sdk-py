@@ -1,7 +1,7 @@
 import pytest
 
-from multiversx_sdk_core.errors import BadUsageError
-from multiversx_sdk_core.tokens import (Token, TokenComputer,
+from multiversx_sdk.core.errors import BadUsageError
+from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts)
 
 

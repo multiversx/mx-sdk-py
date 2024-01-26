@@ -1,7 +1,7 @@
 import pytest
 
-from multiversx_sdk_wallet.errors import ErrBadMnemonic
-from multiversx_sdk_wallet.mnemonic import Mnemonic
+from multiversx_sdk.wallet.errors import ErrBadMnemonic
+from multiversx_sdk.wallet.mnemonic import Mnemonic
 
 
 def test_assert_text_is_valid():
