@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project]
+name = "multiversx-sdk-wallet"
+version = "0.9.1"
+authors = [
+  { name="MultiversX" },
+]
+license = "MIT"
+description = "Wallet & crypto components of MultiversX Python SDK."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "pynacl==1.5.0",
+  "cryptography==36.0.2",
+  "mnemonic==0.20",
+  "multiversx-sdk-core>=0.8.0,<0.9.0"
+]
+
+[tool.hatch.build]
+include = [
+  "multiversx_sdk_wallet/**"
+]
+exclude = [
+  "multiversx_sdk_wallet/testdata/**"
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+"multiversx_sdk_wallet/libraries" = "multiversx_sdk_wallet/libraries"
+
+[project.urls]
+"Homepage" = "https://github.com/multiversx/mx-sdk-py-wallet"
