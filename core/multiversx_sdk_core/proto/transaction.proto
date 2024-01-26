@@ -1,0 +1,24 @@
+
+// This file holds the transaction data structure that will be used for computing hashes
+syntax = "proto3";
+
+package proto;
+
+// Transaction holds all the data needed for a value transfer or SC call
+message Transaction {
+  uint64   Nonce          = 1;
+  bytes    Value          = 2;
+  bytes    RcvAddr        = 3;
+  bytes    RcvUserName    = 4;
+  bytes    SndAddr        = 5;
+  bytes    SndUserName    = 6;
+  uint64   GasPrice       = 7;
+  uint64   GasLimit       = 8;
+  bytes    Data           = 9;
+  bytes    ChainID        = 10;
+  uint32   Version        = 11;
+  bytes    Signature      = 12;
+  uint32   Options        = 13;
+  bytes    GuardAddr      = 14;
+  bytes    GuardSignature = 15;
+}
