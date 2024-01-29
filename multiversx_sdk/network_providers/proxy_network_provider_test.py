@@ -1,5 +1,5 @@
-from multiversx_sdk.core import Transaction
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.network_providers.proxy_network_provider import (
     ContractQuery, ProxyNetworkProvider)
 

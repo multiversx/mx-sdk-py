@@ -1,4 +1,4 @@
-from multiversx_sdk.core import Address
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.wallet.interfaces import IAddress, ISignature
 from multiversx_sdk.wallet.user_keys import UserPublicKey
 
