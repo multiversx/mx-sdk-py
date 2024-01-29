@@ -1,0 +1,27 @@
+repos:
+    repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - # Formatter
+    repo: https://github.com/hhatto/autopep8
+    rev: 2.0.4
+    hooks:
+    -   id: autopep8
+        args:
+          - "--max-line-length=100"
+  - # Import order
+    repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort (python)
+  - # Static analysis
+    repo: https://github.com/PyCQA/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args:
+          - "--config=.flake8"
