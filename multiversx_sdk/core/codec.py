@@ -7,7 +7,8 @@ def encode_unsigned_number(arg: int) -> bytes:
 
 
 def encode_signed_number(arg: int) -> bytes:
-    return arg.to_bytes(INTEGER_MAX_NUM_BYTES, byteorder="big", signed=True).lstrip(bytes([255]))
+    length = (arg.bit_length() + 7) // 8
+    return arg.to_bytes(length, byteorder="big", signed=True)
 
 
 def decode_unsigned_number(arg: bytes) -> int:
