@@ -1,6 +1,7 @@
-from typing import Any, Dict, List
 import base64
-from multiversx_sdk_network_providers.constants import MAX_UINT64
+from typing import Any, Dict, List
+
+from multiversx_sdk.network_providers.constants import MAX_UINT64
 
 
 class ContractQueryResponse:
@@ -28,7 +29,7 @@ class ContractQueryResponse:
 
     def get_return_data_parts(self) -> List[bytes]:
         return [base64.b64decode(item) for item in self.return_data]
-    
+
     def to_dictionary(self) -> Dict[str, Any]:
         return {
             "returnData": self.return_data,

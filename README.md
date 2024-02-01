@@ -1,6 +1,6 @@
 # mx-sdk-py
 
-The Python SDK for interacting with MultiversX.
+The Python SDK for interacting with MultiversX. It's an all in one sdk that can be used to create transactions (including smart contract calls and deployments), sign and broadcast transactions, create wallets and many more.
 
 ## Development setup
 

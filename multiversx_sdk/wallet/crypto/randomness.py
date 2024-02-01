@@ -2,7 +2,7 @@ import os
 from typing import Optional
 from uuid import uuid4
 
-from multiversx_sdk_wallet.crypto.constants import (RANDOM_IV_LENGTH,
+from multiversx_sdk.wallet.crypto.constants import (RANDOM_IV_LENGTH,
                                                     RANDOM_SALT_LENGTH)
 
 

@@ -1,19 +1,21 @@
 
 from pathlib import Path
 
-from multiversx_sdk_wallet.constants import USER_SEED_LENGTH
-from multiversx_sdk_wallet.pem_entry import PemEntry
+from multiversx_sdk.wallet.constants import USER_SEED_LENGTH
+from multiversx_sdk.wallet.pem_entry import PemEntry
+
+testwallets = Path(__file__).parent.parent / "testutils" / "testwallets"
 
 
 def test_from_text_all():
-    text = Path("./multiversx_sdk_wallet/testdata/alice.pem").read_text()
+    text = (testwallets / "alice.pem").read_text()
     entries = PemEntry.from_text_all(text)
     entry = entries[0]
     assert len(entries) == 1
     assert entry.label == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
     assert entry.message[0:USER_SEED_LENGTH].hex() == "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
 
-    text = Path("./multiversx_sdk_wallet/testdata/multipleUserKeys.pem").read_text()
+    text = (testwallets / "multipleUserKeys.pem").read_text()
     entries = PemEntry.from_text_all(text)
     entry = entries[0]
     assert len(entries) == 3
@@ -30,12 +32,12 @@ def test_from_text_all():
 
 
 def test_from_text_all_for_validators():
-    text = Path("./multiversx_sdk_wallet/testdata/validatorKey00.pem").read_text()
+    text = (testwallets / "validatorKey00.pem").read_text()
     entry = PemEntry.from_text_all(text)[0]
     assert entry.label == "e7beaa95b3877f47348df4dd1cb578a4f7cabf7a20bfeefe5cdd263878ff132b765e04fef6f40c93512b666c47ed7719b8902f6c922c04247989b7137e837cc81a62e54712471c97a2ddab75aa9c2f58f813ed4c0fa722bde0ab718bff382208"
     assert entry.message.hex() == "7cff99bd671502db7d15bc8abc0c9a804fb925406fbdd50f1e4c17a4cd774247"
 
-    text = Path("./multiversx_sdk_wallet/testdata/multipleValidatorKeys.pem").read_text()
+    text = (testwallets / "multipleValidatorKeys.pem").read_text()
     entries = PemEntry.from_text_all(text)
 
     entry = entries[0]
@@ -56,18 +58,18 @@ def test_from_text_all_for_validators():
 
 
 def test_to_text():
-    text = Path("./multiversx_sdk_wallet/testdata/alice.pem").read_text()
+    text = (testwallets / "alice.pem").read_text()
     assert PemEntry.from_text_all(text)[0].to_text() == text.strip()
 
-    text = Path("./multiversx_sdk_wallet/testdata/validatorKey00.pem").read_text()
+    text = (testwallets / "validatorKey00.pem").read_text()
     assert PemEntry.from_text_all(text)[0].to_text() == text.strip()
 
-    text = Path("./multiversx_sdk_wallet/testdata/multipleUserKeys.pem").read_text()
+    text = (testwallets / "multipleUserKeys.pem").read_text()
     entries = PemEntry.from_text_all(text)
     text_actual = "\n".join([entry.to_text() for entry in entries])
     assert text_actual == text.strip()
 
-    text = Path("./multiversx_sdk_wallet/testdata/multipleValidatorKeys.pem").read_text()
+    text = (testwallets / "multipleValidatorKeys.pem").read_text()
     entries = PemEntry.from_text_all(text)
     text_actual = "\n".join([entry.to_text() for entry in entries])
     assert text_actual == text.strip()

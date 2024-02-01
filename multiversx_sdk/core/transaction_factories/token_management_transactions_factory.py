@@ -3,10 +3,10 @@ import logging
 from enum import Enum
 from typing import List, Protocol
 
-from multiversx_sdk_core.interfaces import IAddress
-from multiversx_sdk_core.serializer import arg_to_string
-from multiversx_sdk_core.transaction import Transaction
-from multiversx_sdk_core.transaction_factories.transaction_builder import \
+from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.core.serializer import arg_to_string
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_factories.transaction_builder import \
     TransactionBuilder
 
 logger = logging.getLogger(__name__)

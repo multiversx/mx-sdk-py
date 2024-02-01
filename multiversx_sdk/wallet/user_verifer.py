@@ -1,7 +1,6 @@
-from multiversx_sdk_core import Address
-
-from multiversx_sdk_wallet.interfaces import IAddress, ISignature
-from multiversx_sdk_wallet.user_keys import UserPublicKey
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.wallet.interfaces import IAddress, ISignature
+from multiversx_sdk.wallet.user_keys import UserPublicKey
 
 
 class UserVerifier:

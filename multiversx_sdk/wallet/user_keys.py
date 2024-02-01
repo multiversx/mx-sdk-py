@@ -1,11 +1,11 @@
 import nacl.signing
-from multiversx_sdk_core import Address
 
-from multiversx_sdk_wallet.constants import (USER_PUBKEY_LENGTH,
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.wallet.constants import (USER_PUBKEY_LENGTH,
                                              USER_SEED_LENGTH)
-from multiversx_sdk_wallet.errors import (ErrBadPublicKeyLength,
+from multiversx_sdk.wallet.errors import (ErrBadPublicKeyLength,
                                           ErrBadSecretKeyLength)
-from multiversx_sdk_wallet.interfaces import IAddress, ISignature
+from multiversx_sdk.wallet.interfaces import IAddress, ISignature
 
 
 class UserSecretKey:

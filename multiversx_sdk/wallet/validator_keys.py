@@ -1,8 +1,8 @@
-from multiversx_sdk_wallet.constants import (VALIDATOR_PUBKEY_LENGTH,
+from multiversx_sdk.wallet.constants import (VALIDATOR_PUBKEY_LENGTH,
                                              VALIDATOR_SECRETKEY_LENGTH)
-from multiversx_sdk_wallet.errors import ErrBadSecretKeyLength
-from multiversx_sdk_wallet.interfaces import ISignature
-from multiversx_sdk_wallet.libraries.bls_facade import BLSFacade
+from multiversx_sdk.wallet.errors import ErrBadSecretKeyLength
+from multiversx_sdk.wallet.interfaces import ISignature
+from multiversx_sdk.wallet.libraries.bls_facade import BLSFacade
 
 
 class ValidatorSecretKey:

@@ -4,13 +4,13 @@ from collections import OrderedDict
 from hashlib import blake2b
 from typing import Any, Dict, Optional, Protocol
 
-from multiversx_sdk_core.constants import (DEFAULT_HRP, DIGEST_SIZE,
+from multiversx_sdk.core.constants import (DEFAULT_HRP, DIGEST_SIZE,
                                            TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
-from multiversx_sdk_core.errors import NotEnoughGasError
-from multiversx_sdk_core.interfaces import INetworkConfig, ITransaction
-from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
+from multiversx_sdk.core.errors import NotEnoughGasError
+from multiversx_sdk.core.interfaces import INetworkConfig, ITransaction
+from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
 
 
 class IAddressConverter(Protocol):

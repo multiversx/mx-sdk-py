@@ -1,10 +1,10 @@
 import pytest
-from multiversx_sdk_wallet import UserSecretKey
 
-from multiversx_sdk_core.errors import NotEnoughGasError
-from multiversx_sdk_core.proto.transaction_serializer import ProtoSerializer
-from multiversx_sdk_core.testutils.wallets import load_wallets
-from multiversx_sdk_core.transaction import Transaction, TransactionComputer
+from multiversx_sdk.core.errors import NotEnoughGasError
+from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
+from multiversx_sdk.core.transaction import Transaction, TransactionComputer
+from multiversx_sdk.testutils.wallets import load_wallets
+from multiversx_sdk.wallet import UserSecretKey
 
 
 class NetworkConfig:

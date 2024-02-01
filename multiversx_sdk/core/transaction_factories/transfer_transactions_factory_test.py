@@ -1,8 +1,8 @@
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.tokens import Token, TokenComputer, TokenTransfer
-from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.tokens import Token, TokenComputer, TokenTransfer
+from multiversx_sdk.core.transaction_factories.transactions_factory_config import \
     TransactionsFactoryConfig
-from multiversx_sdk_core.transaction_factories.transfer_transactions_factory import \
+from multiversx_sdk.core.transaction_factories.transfer_transactions_factory import \
     TransferTransactionsFactory
 
 

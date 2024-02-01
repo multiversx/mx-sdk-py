@@ -1,5 +1,5 @@
 
-from multiversx_sdk_core.interfaces import INonce
+from multiversx_sdk.core.interfaces import INonce
 
 
 class AccountNonceHolder():

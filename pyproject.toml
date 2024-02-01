@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project]
+name = "multiversx-sdk"
+version = "0.1.0"
+authors = [
+  { name="MultiversX" },
+]
+license = "MIT"
+description = "The MultiversX Python SDK."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "pycryptodomex==3.16.0",
+  "protobuf==3.20.1",
+  "cryptography==36.0.2",
+  "pynacl==1.5.0",
+  "mnemonic==0.20",
+  "requests==2.31.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/multiversx/mx-sdk-py"

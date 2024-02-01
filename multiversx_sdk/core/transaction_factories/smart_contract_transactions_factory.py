@@ -1,17 +1,17 @@
 from pathlib import Path
 from typing import Any, List, Protocol, Sequence, Union
 
-from multiversx_sdk_core import Transaction
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.code_metadata import CodeMetadata
-from multiversx_sdk_core.constants import (CONTRACT_DEPLOY_ADDRESS,
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.code_metadata import CodeMetadata
+from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
-from multiversx_sdk_core.errors import BadUsageError
-from multiversx_sdk_core.interfaces import IAddress, IToken, ITokenTransfer
-from multiversx_sdk_core.serializer import arg_to_string, args_to_strings
-from multiversx_sdk_core.transaction_factories.token_transfers_data_builder import \
+from multiversx_sdk.core.errors import BadUsageError
+from multiversx_sdk.core.interfaces import IAddress, IToken, ITokenTransfer
+from multiversx_sdk.core.serializer import arg_to_string, args_to_strings
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
-from multiversx_sdk_core.transaction_factories.transaction_builder import \
+from multiversx_sdk.core.transaction_factories.transaction_builder import \
     TransactionBuilder
 
 

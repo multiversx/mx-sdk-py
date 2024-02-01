@@ -1,10 +1,10 @@
 from decimal import ROUND_DOWN, Context, Decimal, localcontext
 from typing import Union
 
-from multiversx_sdk_core import typecheck
-from multiversx_sdk_core.constants import (EGLD_NUM_DECIMALS,
+from multiversx_sdk.core import typecheck
+from multiversx_sdk.core.constants import (EGLD_NUM_DECIMALS,
                                            EGLD_TOKEN_IDENTIFIER)
-from multiversx_sdk_core.interfaces import INonce, ITokenIdentifier
+from multiversx_sdk.core.interfaces import INonce, ITokenIdentifier
 
 
 class TokenPayment:

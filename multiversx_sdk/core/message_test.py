@@ -1,4 +1,4 @@
-from multiversx_sdk_core.message import Message, MessageComputer
+from multiversx_sdk.core.message import Message, MessageComputer
 
 
 def test_message_v1_serialize_for_signing():

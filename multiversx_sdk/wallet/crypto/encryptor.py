@@ -3,12 +3,12 @@ from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-from multiversx_sdk_wallet.crypto.constants import (
+from multiversx_sdk.wallet.crypto.constants import (
     CIPHER_ALGORITHM_AES_128_CTR, ENCRYPTOR_VERSION,
     KEY_DERIVATION_FUNCTION_SCRYPT)
-from multiversx_sdk_wallet.crypto.encrypted_data import (EncryptedData,
+from multiversx_sdk.wallet.crypto.encrypted_data import (EncryptedData,
                                                          KeyDerivationParams)
-from multiversx_sdk_wallet.interfaces import IRandomness
+from multiversx_sdk.wallet.interfaces import IRandomness
 
 
 def encrypt(data: bytes, password: str, randomness: IRandomness) -> EncryptedData:

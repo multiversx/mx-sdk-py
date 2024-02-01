@@ -1,6 +1,6 @@
 from typing import Protocol, Sequence
 
-from multiversx_sdk_core.interfaces import IAddress
+from multiversx_sdk.core.interfaces import IAddress
 
 
 class ITransactionOnNetwork(Protocol):

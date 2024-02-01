@@ -1,8 +1,8 @@
 from typing import List, Optional, Protocol
 
-from multiversx_sdk_core.constants import ARGS_SEPARATOR
-from multiversx_sdk_core.interfaces import IAddress
-from multiversx_sdk_core.transaction import Transaction
+from multiversx_sdk.core.constants import ARGS_SEPARATOR
+from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.core.transaction import Transaction
 
 
 class IConfig(Protocol):

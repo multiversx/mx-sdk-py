@@ -1,12 +1,12 @@
 from typing import Protocol, Sequence
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.constants import DELEGATION_MANAGER_SC_ADDRESS
-from multiversx_sdk_core.errors import ErrListsLengthMismatch
-from multiversx_sdk_core.interfaces import IAddress, IValidatorPublicKey
-from multiversx_sdk_core.serializer import arg_to_string
-from multiversx_sdk_core.transaction import Transaction
-from multiversx_sdk_core.transaction_factories.transaction_builder import \
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
+from multiversx_sdk.core.errors import ErrListsLengthMismatch
+from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
+from multiversx_sdk.core.serializer import arg_to_string
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_factories.transaction_builder import \
     TransactionBuilder
 
 

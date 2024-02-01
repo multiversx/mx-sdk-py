@@ -1,4 +1,4 @@
-from multiversx_sdk_network_providers.interface import IPagination
+from multiversx_sdk.network_providers.interface import IPagination
 
 
 class DefaultPagination(IPagination):

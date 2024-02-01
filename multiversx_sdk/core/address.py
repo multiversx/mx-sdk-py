@@ -3,9 +3,9 @@ from typing import Protocol, Tuple
 
 from Cryptodome.Hash import keccak
 
-from multiversx_sdk_core import bech32
-from multiversx_sdk_core.constants import DEFAULT_HRP, METACHAIN_ID
-from multiversx_sdk_core.errors import ErrBadAddress, ErrBadPubkeyLength
+from multiversx_sdk.core import bech32
+from multiversx_sdk.core.constants import DEFAULT_HRP, METACHAIN_ID
+from multiversx_sdk.core.errors import ErrBadAddress, ErrBadPubkeyLength
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 PUBKEY_LENGTH = 32

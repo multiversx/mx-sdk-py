@@ -1,15 +1,14 @@
 import base64
 from typing import Any, Dict, Optional, Protocol
 
-from multiversx_sdk_core import Address
-
-from multiversx_sdk_network_providers.contract_results import ContractResults
-from multiversx_sdk_network_providers.interface import IAddress
-from multiversx_sdk_network_providers.resources import EmptyAddress
-from multiversx_sdk_network_providers.transaction_logs import TransactionLogs
-from multiversx_sdk_network_providers.transaction_receipt import \
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.network_providers.contract_results import ContractResults
+from multiversx_sdk.network_providers.interface import IAddress
+from multiversx_sdk.network_providers.resources import EmptyAddress
+from multiversx_sdk.network_providers.transaction_logs import TransactionLogs
+from multiversx_sdk.network_providers.transaction_receipt import \
     TransactionReceipt
-from multiversx_sdk_network_providers.transaction_status import \
+from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 
 

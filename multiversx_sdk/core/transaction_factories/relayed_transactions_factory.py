@@ -2,11 +2,11 @@ import base64
 import json
 from typing import Any, Dict, List, Protocol
 
-from multiversx_sdk_core import Address
-from multiversx_sdk_core.errors import InvalidInnerTransactionError
-from multiversx_sdk_core.interfaces import IAddress, ITransaction
-from multiversx_sdk_core.serializer import args_to_string
-from multiversx_sdk_core.transaction import Transaction
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.errors import InvalidInnerTransactionError
+from multiversx_sdk.core.interfaces import IAddress, ITransaction
+from multiversx_sdk.core.serializer import args_to_string
+from multiversx_sdk.core.transaction import Transaction
 
 
 class IConfig(Protocol):

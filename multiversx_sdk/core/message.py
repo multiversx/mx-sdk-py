@@ -1,6 +1,6 @@
 from Cryptodome.Hash import keccak
 
-from multiversx_sdk_core.interfaces import IMessage
+from multiversx_sdk.core.interfaces import IMessage
 
 
 class Message:
@@ -11,7 +11,7 @@ class Message:
 
 class MessageComputer:
     """
-    Also see: 
+    Also see:
      - https://github.com/multiversx/mx-sdk-js-core/blob/v11.2.0/src/signableMessage.ts
      - https://eips.ethereum.org/EIPS/eip-712 (in the past, it served as a basis for the implementation)
     """

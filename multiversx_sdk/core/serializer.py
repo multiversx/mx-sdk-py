@@ -1,8 +1,9 @@
 from typing import Any, List, Protocol, Sequence, runtime_checkable
 
-from multiversx_sdk_core.codec import encode_unsigned_number, encode_signed_number
-from multiversx_sdk_core.constants import ARGS_SEPARATOR
-from multiversx_sdk_core.errors import ErrCannotSerializeArgument
+from multiversx_sdk.core.codec import (encode_signed_number,
+                                       encode_unsigned_number)
+from multiversx_sdk.core.constants import ARGS_SEPARATOR
+from multiversx_sdk.core.errors import ErrCannotSerializeArgument
 
 
 @runtime_checkable

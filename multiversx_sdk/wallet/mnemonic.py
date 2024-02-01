@@ -2,10 +2,10 @@ from typing import List
 
 import mnemonic
 
-from multiversx_sdk_wallet import core
-from multiversx_sdk_wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
-from multiversx_sdk_wallet.errors import ErrBadMnemonic
-from multiversx_sdk_wallet.user_keys import UserSecretKey
+from multiversx_sdk.wallet import core
+from multiversx_sdk.wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
+from multiversx_sdk.wallet.errors import ErrBadMnemonic
+from multiversx_sdk.wallet.user_keys import UserSecretKey
 
 
 class Mnemonic:

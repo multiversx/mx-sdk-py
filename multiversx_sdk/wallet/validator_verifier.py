@@ -1,5 +1,5 @@
-from multiversx_sdk_wallet.interfaces import ISignature
-from multiversx_sdk_wallet.validator_keys import ValidatorPublicKey
+from multiversx_sdk.wallet.interfaces import ISignature
+from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
 class ValidatorVerifier:

@@ -1,4 +1,4 @@
-from multiversx_sdk_core.transaction_builders.default_configuration import \
+from multiversx_sdk.core.transaction_builders.default_configuration import \
     DefaultTransactionBuildersConfiguration
 
 

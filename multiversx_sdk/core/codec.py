@@ -1,5 +1,5 @@
 
-from multiversx_sdk_core.constants import INTEGER_MAX_NUM_BYTES
+from multiversx_sdk.core.constants import INTEGER_MAX_NUM_BYTES
 
 
 def encode_unsigned_number(arg: int) -> bytes:

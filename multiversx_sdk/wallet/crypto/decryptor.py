@@ -3,10 +3,10 @@ from cryptography.hazmat.primitives import hashes, hmac
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-from multiversx_sdk_wallet.crypto.constants import (
+from multiversx_sdk.wallet.crypto.constants import (
     CIPHER_ALGORITHM_AES_128_CTR, KEY_DERIVATION_FUNCTION_SCRYPT)
-from multiversx_sdk_wallet.crypto.encrypted_data import EncryptedData
-from multiversx_sdk_wallet.errors import (ErrInvalidKeystoreFilePassword,
+from multiversx_sdk.wallet.crypto.encrypted_data import EncryptedData
+from multiversx_sdk.wallet.errors import (ErrInvalidKeystoreFilePassword,
                                           ErrUnknownCipher,
                                           ErrUnknownDerivationFunction)
 

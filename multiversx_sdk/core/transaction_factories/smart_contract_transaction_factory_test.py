@@ -1,21 +1,22 @@
 from pathlib import Path
 
-from multiversx_sdk_core.address import Address
-from multiversx_sdk_core.constants import CONTRACT_DEPLOY_ADDRESS
-from multiversx_sdk_core.tokens import Token, TokenComputer, TokenTransfer
-from multiversx_sdk_core.transaction_factories.smart_contract_transactions_factory import \
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
+from multiversx_sdk.core.tokens import Token, TokenComputer, TokenTransfer
+from multiversx_sdk.core.transaction_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
-from multiversx_sdk_core.transaction_factories.transactions_factory_config import \
+from multiversx_sdk.core.transaction_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 
 
 class TestSmartContractTransactionsFactory:
     config = TransactionsFactoryConfig("D")
     factory = SmartContractTransactionsFactory(config, TokenComputer())
+    testdata = Path(__file__).parent.parent.parent / "testutils" / "testdata"
 
     def test_create_transaction_for_deploy(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        contract = Path(__file__).parent.parent / "testutils" / "testdata" / "adder.wasm"
+        contract = self.testdata / "adder.wasm"
         gas_limit = 6000000
         args = [0]
 
@@ -188,7 +189,7 @@ class TestSmartContractTransactionsFactory:
     def test_create_transaction_for_upgrade(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
-        contract = Path(__file__).parent.parent / "testutils" / "testdata" / "adder.wasm"
+        contract = self.testdata / "adder.wasm"
         gas_limit = 6000000
         args = [0]
 
