@@ -8,3 +8,7 @@ def test_encode_signed_number():
     assert codec.encode_signed_number(-1) == bytes([0xFF])
     assert codec.encode_signed_number(0) == bytes([])
     assert codec.encode_signed_number(1) == bytes([0x01])
+    assert codec.encode_signed_number(256) == bytes([0x01, 0x00])
+    assert codec.encode_signed_number(127) == bytes([0x7F])
+    assert codec.encode_signed_number(0x11) == bytes([0x11])
+    assert codec.encode_signed_number(255) == bytes([0xFF])
