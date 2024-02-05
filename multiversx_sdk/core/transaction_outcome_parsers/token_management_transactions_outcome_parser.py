@@ -2,6 +2,7 @@ import base64
 from typing import List
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.codec import decode_unsigned_number
 from multiversx_sdk.core.constants import DEFAULT_HRP
 from multiversx_sdk.core.errors import ParseTransactionOutcomeError
 from multiversx_sdk.core.transaction_outcome_parsers.resources import (
@@ -236,17 +237,17 @@ class TokenManagementTransactionsOutcomeParser:
             return bytes.fromhex(hex_ticker).decode()
         return ""
 
-    def extract_nonce(self, event: TransactionEvent) -> str:
+    def extract_nonce(self, event: TransactionEvent) -> int:
         if event.topics[1]:
-            hex_nonce = base64.b64decode(event.topics[1]).hex()
-            return str(int(hex_nonce, 16))
-        return ""
+            nonce = base64.b64decode(event.topics[1])
+            return decode_unsigned_number(nonce)
+        return 0
 
-    def extract_amount(self, event: TransactionEvent) -> str:
+    def extract_amount(self, event: TransactionEvent) -> int:
         if event.topics[2]:
-            hex_amount = base64.b64decode(event.topics[2]).hex()
-            return str(int(hex_amount, 16))
-        return ""
+            amount = base64.b64decode(event.topics[2])
+            return decode_unsigned_number(amount)
+        return 0
 
     def extract_address(self, event: TransactionEvent) -> str:
         if event.topics[3]:

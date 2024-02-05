@@ -38,24 +38,24 @@ class SetSpecialRoleOutcome:
 @dataclass
 class NFTCreateOutcome:
     token_identifier: str
-    nonce: str
-    initial_quantity: str
+    nonce: int
+    initial_quantity: int
 
 
 @dataclass
 class MintOutcome:
     user_address: str
     token_identifier: str
-    nonce: str
-    minted_supply: str
+    nonce: int
+    minted_supply: int
 
 
 @dataclass
 class BurnOutcome:
     user_address: str
     token_identifier: str
-    nonce: str
-    burnt_supply: str
+    nonce: int
+    burnt_supply: int
 
 
 @dataclass
@@ -72,39 +72,42 @@ class UnPauseOutcome:
 class FreezeOutcome:
     user_address: str
     token_identifier: str
-    nonce: str
-    balance: str
+    nonce: int
+    balance: int
 
 
 @dataclass
-class UnFreezeOutcome(FreezeOutcome):
-    pass
+class UnFreezeOutcome:
+    user_address: str
+    token_identifier: str
+    nonce: int
+    balance: int
 
 
 @dataclass
 class WipeOutcome:
     user_address: str
     token_identifier: str
-    nonce: str
-    balance: str
+    nonce: int
+    balance: int
 
 
 @dataclass
 class UpdateAttributesOutcome:
     token_identifier: str
-    nonce: str
+    nonce: int
     attributes: bytes
 
 
 @dataclass
 class AddQuantityOutcome:
     token_identifier: str
-    nonce: str
-    added_quantity: str
+    nonce: int
+    added_quantity: int
 
 
 @dataclass
 class BurnQuantityOutcome:
     token_identifier: str
-    nonce: str
-    burnt_quantity: str
+    nonce: int
+    burnt_quantity: int

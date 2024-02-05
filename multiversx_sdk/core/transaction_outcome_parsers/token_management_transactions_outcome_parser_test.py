@@ -208,8 +208,8 @@ class TestTokenManagementTransactionsOutcomeParser:
 
         outcome = self.parser.parse_nft_create(tx_results_and_logs)
         assert outcome.token_identifier == "NFT-f01d1e"
-        assert outcome.nonce == "1"
-        assert outcome.initial_quantity == "1"
+        assert outcome.nonce == 1
+        assert outcome.initial_quantity == 1
 
     def test_parse_local_mint(self):
         event = TransactionEvent(
@@ -228,8 +228,8 @@ class TestTokenManagementTransactionsOutcomeParser:
         outcome = self.parser.parse_local_mint(tx_results_and_logs)
         assert outcome.user_address == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert outcome.token_identifier == "AAA-29c4c9"
-        assert outcome.nonce == ""
-        assert outcome.minted_supply == "100000"
+        assert outcome.nonce == 0
+        assert outcome.minted_supply == 100000
 
     def test_parse_local_burn(self):
         event = TransactionEvent(
@@ -248,8 +248,8 @@ class TestTokenManagementTransactionsOutcomeParser:
         outcome = self.parser.parse_local_burn(tx_results_and_logs)
         assert outcome.user_address == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert outcome.token_identifier == "AAA-29c4c9"
-        assert outcome.nonce == ""
-        assert outcome.burnt_supply == "100000"
+        assert outcome.nonce == 0
+        assert outcome.burnt_supply == 100000
 
     def test_parse_pause(self):
         event = TransactionEvent(
@@ -308,8 +308,8 @@ class TestTokenManagementTransactionsOutcomeParser:
         outcome = self.parser.parse_freeze(tx_results_and_logs)
         assert outcome.user_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert outcome.token_identifier == "AAA-29c4c9"
-        assert outcome.nonce == ""
-        assert outcome.balance == "10000000"
+        assert outcome.nonce == 0
+        assert outcome.balance == 10000000
 
     def test_parse_unfreeze(self):
         event = TransactionEvent(
@@ -338,8 +338,8 @@ class TestTokenManagementTransactionsOutcomeParser:
         outcome = self.parser.parse_unfreeze(tx_results_and_logs)
         assert outcome.user_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert outcome.token_identifier == "AAA-29c4c9"
-        assert outcome.nonce == ""
-        assert outcome.balance == "10000000"
+        assert outcome.nonce == 0
+        assert outcome.balance == 10000000
 
     def test_parse_wipe(self):
         event = TransactionEvent(
@@ -368,8 +368,8 @@ class TestTokenManagementTransactionsOutcomeParser:
         outcome = self.parser.parse_wipe(tx_results_and_logs)
         assert outcome.user_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert outcome.token_identifier == "AAA-29c4c9"
-        assert outcome.nonce == ""
-        assert outcome.balance == "10000000"
+        assert outcome.nonce == 0
+        assert outcome.balance == 10000000
 
     def test_parse_update_attributes(self):
         event = TransactionEvent(
@@ -388,7 +388,7 @@ class TestTokenManagementTransactionsOutcomeParser:
 
         outcome = self.parser.parse_update_attributes(tx_results_and_logs)
         assert outcome.token_identifier == "NFT-f01d1e"
-        assert outcome.nonce == "1"
+        assert outcome.nonce == 1
         assert outcome.attributes.decode() == "metadata:ipfsCID/test.json;tags:tag1,tag2"
 
     def test_parse_add_quantity(self):
@@ -407,8 +407,8 @@ class TestTokenManagementTransactionsOutcomeParser:
 
         outcome = self.parser.parse_add_quantity(tx_results_and_logs)
         assert outcome.token_identifier == "SEMIFNG-2c6d9f"
-        assert outcome.nonce == "1"
-        assert outcome.added_quantity == "10"
+        assert outcome.nonce == 1
+        assert outcome.added_quantity == 10
 
     def test_parse_burn_quantity(self):
         event = TransactionEvent(
@@ -426,5 +426,5 @@ class TestTokenManagementTransactionsOutcomeParser:
 
         outcome = self.parser.parse_burn_quantity(tx_results_and_logs)
         assert outcome.token_identifier == "SEMIFNG-2c6d9f"
-        assert outcome.nonce == "1"
-        assert outcome.burnt_quantity == "16"
+        assert outcome.nonce == 1
+        assert outcome.burnt_quantity == 16
