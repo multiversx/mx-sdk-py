@@ -10,6 +10,8 @@ from multiversx_sdk.network_providers.api_response_schemes.account_detailed impo
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.query_builder import (
     build_query_for_account, build_query_for_accounts)
+from multiversx_sdk.network_providers.transactions import (
+    ITransaction, transaction_to_dictionary)
 
 
 class ApiProviderNext:
@@ -32,7 +34,7 @@ class ApiProviderNext:
                      with_scr_count: Optional[bool] = None,
                      exclude_tags: Optional[List[str]] = None,
                      has_assets: Optional[bool] = None) -> List[Account]:
-        route = "/accounts"
+        route = "accounts"
         query_params = build_query_for_accounts(
             start,
             size,
@@ -49,7 +51,7 @@ class ApiProviderNext:
             exclude_tags,
             has_assets
         )
-        response = self.do_get_generic_collection(f"{self.url}/{route}{query_params}")
+        response = self.do_get_generic_collection(route + query_params)
         accounts = [Account.from_response(account) for account in response]
         return accounts
 
@@ -57,12 +59,24 @@ class ApiProviderNext:
                     address: str,
                     with_guardian_info: bool = False,
                     fields: Optional[List[str]] = None) -> AccountDetailed:
-        route = f"/accounts/{address}"
-        querry_params = build_query_for_account(with_guardian_info, fields)
+        route = f"accounts/{address}"
+        query_params = build_query_for_account(with_guardian_info, fields)
 
-        response = self.do_get_generic(f"{self.url}/{route}{querry_params}")
+        response = self.do_get_generic(route + query_params)
         account = AccountDetailed.from_response(response)
         return account
+
+    def get_transaction(self,
+                        tx_hash: str,
+                        fields: Optional[List[str]] = None):
+        pass
+
+    def send_transaction(self, transaction: ITransaction) -> str:
+        """Returns the transaction hash"""
+        route = "transactions"
+        response = self.do_post_generic(route, transaction_to_dictionary(transaction))
+        tx_hash: str = response.get("txHash", "")
+        return tx_hash
 
     def do_get_generic(self, resource_url: str) -> Dict[str, Any]:
         url = f'{self.url}/{resource_url}'

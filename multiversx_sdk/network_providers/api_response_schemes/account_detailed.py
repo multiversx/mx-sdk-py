@@ -1,6 +1,8 @@
 from typing import Any, Dict, List, Protocol
 
 from multiversx_sdk.network_providers.api_response_schemes.asset import Asset
+from multiversx_sdk.network_providers.api_response_schemes.scam_info import \
+    ScamInfo
 
 
 class IAsset(Protocol):
@@ -16,19 +18,6 @@ class IAsset(Protocol):
 class IScamInfo(Protocol):
     type: str
     info: str
-
-
-class ScamInfo:
-    def __init__(self) -> None:
-        self.type = ""
-        self.info = ""
-
-    @classmethod
-    def from_response(cls, response: Dict[str, Any]) -> "ScamInfo":
-        scam_info = ScamInfo()
-        scam_info.type = response.get("type", "")
-        scam_info.info = response.get("info", "")
-        return scam_info
 
 
 class AccountDetailed:
