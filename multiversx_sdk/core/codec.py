@@ -10,10 +10,7 @@ def encode_signed_number(arg: int) -> bytes:
     if arg == 0:
         return b''
     length = ((arg + (arg < 0)).bit_length() + 7 + 1) // 8
-    if arg > 0:
-        return arg.to_bytes(length, byteorder="big")
-    else:
-        return arg.to_bytes(length, byteorder="big", signed=True)
+    return arg.to_bytes(length, byteorder="big", signed=True)
 
 
 def decode_unsigned_number(arg: bytes) -> int:
