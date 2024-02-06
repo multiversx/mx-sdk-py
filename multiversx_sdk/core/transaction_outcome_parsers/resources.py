@@ -28,16 +28,12 @@ class SmartContractResult:
                  sender: str = "",
                  receiver: str = "",
                  data: str = "",
-                 original_tx_hash: str = "",
-                 miniblock_hash: str = "",
                  logs: TransactionLogs = TransactionLogs()) -> None:
         self.hash = hash
         self.timestamp = timestamp
         self.sender = sender
         self.receiver = receiver
         self.data = data
-        self.original_tx_hash = original_tx_hash
-        self.miniblock_hash = miniblock_hash
         self.logs = logs
 
 

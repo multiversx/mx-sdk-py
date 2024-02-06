@@ -232,25 +232,29 @@ class TokenManagementTransactionsOutcomeParser:
         return all_events
 
     def extract_token_identifier(self, event: TransactionEvent) -> str:
-        if event.topics[0]:
-            hex_ticker = base64.b64decode(event.topics[0]).hex()
-            return bytes.fromhex(hex_ticker).decode()
-        return ""
+        if not event.topics[0]:
+            return ""
+
+        ticker = base64.b64decode(event.topics[0])
+        return ticker.decode()
 
     def extract_nonce(self, event: TransactionEvent) -> int:
-        if event.topics[1]:
-            nonce = base64.b64decode(event.topics[1])
-            return decode_unsigned_number(nonce)
-        return 0
+        if not event.topics[1]:
+            return 0
+
+        nonce = base64.b64decode(event.topics[1])
+        return decode_unsigned_number(nonce)
 
     def extract_amount(self, event: TransactionEvent) -> int:
-        if event.topics[2]:
-            amount = base64.b64decode(event.topics[2])
-            return decode_unsigned_number(amount)
-        return 0
+        if not event.topics[2]:
+            return 0
+
+        amount = base64.b64decode(event.topics[2])
+        return decode_unsigned_number(amount)
 
     def extract_address(self, event: TransactionEvent) -> str:
-        if event.topics[3]:
-            hex_address = base64.b64decode(event.topics[3]).hex()
-            return Address.new_from_hex(hex_address, DEFAULT_HRP).to_bech32()
-        return ""
+        if not event.topics[3]:
+            return ""
+
+        address = base64.b64decode(event.topics[3])
+        return Address(address, DEFAULT_HRP).to_bech32()
