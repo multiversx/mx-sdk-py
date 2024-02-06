@@ -3,14 +3,11 @@ import re
 
 import pytest
 
-from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.codec import decode_unsigned_number
 from multiversx_sdk.core.errors import ParseTransactionOutcomeError
 from multiversx_sdk.core.transaction_outcome_parsers.resources import (
     SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
 from multiversx_sdk.core.transaction_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
-from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
 
 
 class TestTokenManagementTransactionsOutcomeParser:
@@ -37,11 +34,14 @@ class TestTokenManagementTransactionsOutcomeParser:
         self.parser.ensure_no_error([event])
 
     def test_parse_issue_fungible(self):
+        identifier = "ZZZ-9ee87d"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="issue",
             topics=[
-                "WlpaLTllZTg3ZA==",
+                identifier_base64,
                 "U0VDT05E",
                 "Wlpa",
                 "RnVuZ2libGVFU0RU",
@@ -53,9 +53,12 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_issue_fungible(tx_results_and_logs)
-        assert outcome.identifier == base64.b64decode(event.topics[0]).decode()
+        assert outcome.identifier == identifier
 
     def test_parse_issue_non_fungible(self):
+        identifier = "NFT-f01d1e"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+
         first_event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="upgradeProperties",
@@ -81,7 +84,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         third_event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="issueNonFungible",
-            topics=["TkZULWYwMWQxZQ==",
+            topics=[identifier_base64,
                     "TkZURVNU",
                     "TkZU",
                     "Tm9uRnVuZ2libGVFU0RU"
@@ -92,14 +95,17 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_issue_non_fungible(tx_results_and_logs)
-        assert outcome.identifier == base64.b64decode(third_event.topics[0]).decode()
+        assert outcome.identifier == identifier
 
     def test_parse_issue_semi_fungible(self):
+        identifier = "SEMIFNG-2c6d9f"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="issueSemiFungible",
             topics=[
-                "U0VNSUZORy0yYzZkOWY=",
+                identifier_base64,
                 "U0VNSQ==",
                 "U0VNSUZORw==",
                 "U2VtaUZ1bmdpYmxlRVNEVA=="
@@ -110,14 +116,17 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_issue_semi_fungible(tx_results_and_logs)
-        assert outcome.identifier == base64.b64decode(event.topics[0]).decode()
+        assert outcome.identifier == identifier
 
     def test_parse_register_meta_esdt(self):
+        identifier = "METATEST-e05d11"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="registerMetaESDT",
             topics=[
-                "TUVUQVRFU1QtZTA1ZDEx",
+                identifier_base64,
                 "TUVURVNU",
                 "TUVUQVRFU1Q=",
                 "TWV0YUVTRFQ="
@@ -128,14 +137,18 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_register_meta_esdt(tx_results_and_logs)
-        assert outcome.identifier == base64.b64decode(event.topics[0]).decode()
+        assert outcome.identifier == identifier
 
     def test_parse_register_and_set_all_roles(self):
+        identifier = "LMAO-d9f892"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        roles = ["ESDTRoleLocalMint", "ESDTRoleLocalBurn"]
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="registerAndSetAllRoles",
             topics=[
-                "TE1BTy1kOWY4OTI=",
+                identifier_base64,
                 "TE1BTw==",
                 "TE1BTw==",
                 "RnVuZ2libGVFU0RU",
@@ -168,15 +181,19 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([sc_result], tx_log)
         outcome = self.parser.parse_register_and_set_all_roles(tx_results_and_logs)
 
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.roles == [base64.b64decode(result_event.topics[3]).decode(), base64.b64decode(result_event.topics[4]).decode()]
+        assert outcome.token_identifier == identifier
+        assert outcome.roles == roles
 
     def test_parse_set_special_role(self):
+        identifier = "METATEST-e05d11"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        roles = ["ESDTRoleNFTCreate", "ESDTRoleNFTAddQuantity", "ESDTRoleNFTBurn"]
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTSetRole",
             topics=[
-                "TUVUQVRFU1QtZTA1ZDEx",
+                identifier_base64,
                 "",
                 "",
                 "RVNEVFJvbGVORlRDcmVhdGU=",
@@ -190,19 +207,20 @@ class TestTokenManagementTransactionsOutcomeParser:
 
         outcome = self.parser.parse_set_special_role(tx_results_and_logs)
         assert outcome.user_address == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.roles == [
-            base64.b64decode(event.topics[3]).decode(),
-            base64.b64decode(event.topics[4]).decode(),
-            base64.b64decode(event.topics[5]).decode()
-        ]
+        assert outcome.token_identifier == identifier
+        assert outcome.roles == roles
 
     def test_parse_nft_create(self):
+        identifier = "NFT-f01d1e"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 1
+        initial_quantity = 1
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTNFTCreate",
             topics=[
-                "TkZULWYwMWQxZQ==",
+                identifier_base64,
                 "AQ==",
                 "AQ==",
                 "CAESAgABIuUBCAESCE5GVEZJUlNUGiA8NdfqyxqZpKDMqlN+8MwK4Qn0H2wrQCID5jO/uwcfXCDEEyouUW1ZM3ZKQ3NVcWpNM3hxeGR3VWczemJoVFNMUWZoN0szbW5aWXhyaGNRRFl4RzJDaHR0cHM6Ly9pcGZzLmlvL2lwZnMvUW1ZM3ZKQ3NVcWpNM3hxeGR3VWczemJoVFNMUWZoN0szbW5aWXhyaGNRRFl4Rzo9dGFnczo7bWV0YWRhdGE6UW1SY1A5NGtYcjV6WmpSR3ZpN21KNnVuN0xweFVoWVZSNFI0UnBpY3h6Z1lrdA=="
@@ -213,16 +231,21 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_nft_create(tx_results_and_logs)
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == decode_unsigned_number(base64.b64decode(event.topics[1]))
-        assert outcome.initial_quantity == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.initial_quantity == initial_quantity
 
     def test_parse_local_mint(self):
+        identifier = "AAA-29c4c9"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 0
+        minted_supply = 100000
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTLocalMint",
             topics=[
-                "QUFBLTI5YzRjOQ==",
+                identifier_base64,
                 "",
                 "AYag"
             ]
@@ -233,16 +256,21 @@ class TestTokenManagementTransactionsOutcomeParser:
 
         outcome = self.parser.parse_local_mint(tx_results_and_logs)
         assert outcome.user_address == event.address
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == 0
-        assert outcome.minted_supply == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.minted_supply == minted_supply
 
     def test_parse_local_burn(self):
+        identifier = "AAA-29c4c9"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 0
+        burnt_supply = 100000
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTLocalBurn",
             topics=[
-                "QUFBLTI5YzRjOQ==",
+                identifier_base64,
                 "",
                 "AYag"
             ]
@@ -253,16 +281,19 @@ class TestTokenManagementTransactionsOutcomeParser:
 
         outcome = self.parser.parse_local_burn(tx_results_and_logs)
         assert outcome.user_address == event.address
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == 0
-        assert outcome.burnt_supply == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.burnt_supply == burnt_supply
 
     def test_parse_pause(self):
+        identifier = "AAA-29c4c9"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTPause",
             topics=[
-                "QUFBLTI5YzRjOQ=="
+                identifier_base64
             ]
         )
         empty_result = SmartContractResult()
@@ -270,14 +301,17 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_pause(tx_results_and_logs)
-        assert outcome.identifier == base64.b64decode(event.topics[0]).decode()
+        assert outcome.identifier == identifier
 
     def test_parse_unpause(self):
+        identifier = "AAA-29c4c9"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTUnPause",
             topics=[
-                "QUFBLTI5YzRjOQ=="
+                identifier_base64
             ]
         )
         empty_result = SmartContractResult()
@@ -285,14 +319,20 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_unpause(tx_results_and_logs)
-        assert outcome.identifier == base64.b64decode(event.topics[0]).decode()
+        assert outcome.identifier == identifier
 
     def test_parse_freeze(self):
+        identifier = "AAA-29c4c9"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 0
+        balance = 10000000
+        address = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
         event = TransactionEvent(
             address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             identifier="ESDTFreeze",
             topics=[
-                "QUFBLTI5YzRjOQ==",
+                identifier_base64,
                 "",
                 "mJaA",
                 "ATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeE="
@@ -310,17 +350,23 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
 
         outcome = self.parser.parse_freeze(tx_results_and_logs)
-        assert outcome.user_address == Address(base64.b64decode(event.topics[3]), DEFAULT_ADDRESS_HRP).to_bech32()
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == 0
-        assert outcome.balance == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.user_address == address
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.balance == balance
 
     def test_parse_unfreeze(self):
+        identifier = "AAA-29c4c9"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 0
+        balance = 10000000
+        address = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
         event = TransactionEvent(
             address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             identifier="ESDTUnFreeze",
             topics=[
-                "QUFBLTI5YzRjOQ==",
+                identifier_base64,
                 "",
                 "mJaA",
                 "ATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeE="
@@ -338,17 +384,23 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
 
         outcome = self.parser.parse_unfreeze(tx_results_and_logs)
-        assert outcome.user_address == Address(base64.b64decode(event.topics[3]), DEFAULT_ADDRESS_HRP).to_bech32()
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == 0
-        assert outcome.balance == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.user_address == address
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.balance == balance
 
     def test_parse_wipe(self):
+        identifier = "AAA-29c4c9"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 0
+        balance = 10000000
+        address = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
         event = TransactionEvent(
             address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             identifier="ESDTWipe",
             topics=[
-                "QUFBLTI5YzRjOQ==",
+                identifier_base64,
                 "",
                 "mJaA",
                 "ATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeE="
@@ -366,20 +418,26 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
 
         outcome = self.parser.parse_wipe(tx_results_and_logs)
-        assert outcome.user_address == Address(base64.b64decode(event.topics[3]), DEFAULT_ADDRESS_HRP).to_bech32()
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == 0
-        assert outcome.balance == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.user_address == address
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.balance == balance
 
     def test_parse_update_attributes(self):
+        identifier = "NFT-f01d1e"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 1
+        attributes = "metadata:ipfsCID/test.json;tags:tag1,tag2"
+        attributes_base64 = base64.b64encode(attributes.encode()).decode()
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTNFTUpdateAttributes",
             topics=[
-                "TkZULWYwMWQxZQ==",
+                identifier_base64,
                 "AQ==",
                 "",
-                "bWV0YWRhdGE6aXBmc0NJRC90ZXN0Lmpzb247dGFnczp0YWcxLHRhZzI="
+                attributes_base64
             ]
         )
         tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
@@ -387,17 +445,21 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([tx_result], tx_log)
 
         outcome = self.parser.parse_update_attributes(tx_results_and_logs)
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == decode_unsigned_number(base64.b64decode(event.topics[1]))
-        assert outcome.attributes == base64.b64decode(event.topics[3])
-        assert outcome.attributes.decode() == "metadata:ipfsCID/test.json;tags:tag1,tag2"
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.attributes.decode() == attributes
 
     def test_parse_add_quantity(self):
+        identifier = "NFT-f01d1e"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 1
+        added_quantity = 10
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTNFTAddQuantity",
             topics=[
-                "U0VNSUZORy0yYzZkOWY=",
+                identifier_base64,
                 "AQ==",
                 "Cg=="
             ]
@@ -407,16 +469,21 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([tx_result], tx_log)
 
         outcome = self.parser.parse_add_quantity(tx_results_and_logs)
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == decode_unsigned_number(base64.b64decode(event.topics[1]))
-        assert outcome.added_quantity == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.added_quantity == added_quantity
 
     def test_parse_burn_quantity(self):
+        identifier = "NFT-f01d1e"
+        identifier_base64 = base64.b64encode(identifier.encode()).decode()
+        nonce = 1
+        burnt_quantity = 16
+
         event = TransactionEvent(
             address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             identifier="ESDTNFTBurn",
             topics=[
-                "U0VNSUZORy0yYzZkOWY=",
+                identifier_base64,
                 "AQ==",
                 "EA=="
             ]
@@ -426,6 +493,6 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([tx_result], tx_log)
 
         outcome = self.parser.parse_burn_quantity(tx_results_and_logs)
-        assert outcome.token_identifier == base64.b64decode(event.topics[0]).decode()
-        assert outcome.nonce == decode_unsigned_number(base64.b64decode(event.topics[1]))
-        assert outcome.burnt_quantity == decode_unsigned_number(base64.b64decode(event.topics[2]))
+        assert outcome.token_identifier == identifier
+        assert outcome.nonce == nonce
+        assert outcome.burnt_quantity == burnt_quantity
