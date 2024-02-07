@@ -31,3 +31,9 @@ dependencies = [
 
 [project.urls]
 "Homepage" = "https://github.com/multiversx/mx-sdk-py"
+
+exclude = [
+  ".github",
+  "./examples",
+  ".vscode"
+]
