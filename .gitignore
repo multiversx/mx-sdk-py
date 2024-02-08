@@ -137,3 +137,5 @@ typings/**
 !libbls.so
 !libbls.dylib
 !libbls.dll
+
+examples/output

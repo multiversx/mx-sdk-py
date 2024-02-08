@@ -35,5 +35,6 @@ dependencies = [
 exclude = [
   ".github",
   "./examples",
-  ".vscode"
+  ".vscode",
+  "./multiversx_sdk/testutils/testdata"
 ]
