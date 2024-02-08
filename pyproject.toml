@@ -36,5 +36,5 @@ exclude = [
   ".github",
   "./examples",
   ".vscode",
-  "./multiversx_sdk/testutils/testdata"
+  "./multiversx_sdk/testutils/"
 ]
