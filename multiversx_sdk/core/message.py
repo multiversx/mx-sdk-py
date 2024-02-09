@@ -1,12 +1,17 @@
+from typing import Any, Dict
+
 from Cryptodome.Hash import keccak
 
-from multiversx_sdk.core.interfaces import IMessage
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.interfaces import IAddress, IMessage
 
 
 class Message:
-    def __init__(self, data: bytes, signature: bytes = b"") -> None:
+    def __init__(self, data: bytes, address: IAddress, signature: bytes = b"", version: int = 1) -> None:
         self.data = data
         self.signature = signature
+        self.address = address
+        self.version = version
 
 
 class MessageComputer:
@@ -26,3 +31,33 @@ class MessageComputer:
         content_hash = keccak.new(digest_bits=256).update(content).digest()
 
         return content_hash
+
+    def compute_bytes_for_verifying(self, message: IMessage) -> bytes:
+        return self.compute_bytes_for_signing(message)
+
+    def pack(self, message: IMessage) -> Dict[str, Any]:
+        return {
+            "address": message.address.to_bech32(),
+            "message": message.data.hex(),
+            "signature": message.signature.hex(),
+            "version": message.version
+        }
+
+    def unpack(self, packed_message: Dict[str, Any]) -> Message:
+        data: str = packed_message["message"]
+        if data.startswith("0x") or data.startswith("0X"):
+            data = data[2:]
+
+        signature: str = packed_message["signature"]
+        if signature.startswith("0x") or signature.startswith("0X"):
+            signature = signature[2:]
+
+        address = Address.from_bech32(packed_message["address"])
+        version = packed_message["version"]
+
+        return Message(
+            data=bytes.fromhex(data),
+            address=address,
+            signature=bytes.fromhex(signature),
+            version=version
+        )
