@@ -54,3 +54,8 @@ class InvalidTokenIdentifierError(Exception):
 class InvalidInnerTransactionError(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
+
+
+class ParseTransactionOutcomeError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
