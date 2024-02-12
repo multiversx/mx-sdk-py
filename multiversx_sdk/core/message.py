@@ -3,11 +3,15 @@ from typing import Any, Dict, Optional
 from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import DEFAULT_MESSAGE_VERSION
 from multiversx_sdk.core.interfaces import IAddress, IMessage
 
 
 class Message:
-    def __init__(self, data: bytes, signature: bytes = b"", address: Optional[IAddress] = None, version: int = 1) -> None:
+    def __init__(self, data: bytes,
+                 signature: bytes = b"",
+                 address: Optional[IAddress] = None,
+                 version: int = DEFAULT_MESSAGE_VERSION) -> None:
         self.data = data
         self.signature = signature
         self.address = address
@@ -53,7 +57,7 @@ class MessageComputer:
         address = packed_message.get("address", "")
         address = Address.from_bech32(address) if address else None
 
-        version = packed_message.get("version", 1)
+        version = packed_message.get("version", DEFAULT_MESSAGE_VERSION)
 
         return Message(
             data=bytes.fromhex(data),
