@@ -21,17 +21,13 @@ class TestTokenManagementTransactionsOutcomeParser:
             data="QDc1NzM2NTcyMjA2NTcyNzI2Zjcy"
         )
 
-        with pytest.raises(ParseTransactionOutcomeError, match=re.escape("encountered signalError: ticker name is not valid (user error)")):
-            self.parser.ensure_no_error([event])
+        sc_result = SmartContractResult()
+        logs = TransactionLogs("", [event])
 
-        event = TransactionEvent(
-            address="erd1qqqqqqqqqqqqqpgq50wpucem6hvn0g8mwa670fznqz4n38h9d8ss564tlz",
-            identifier="writeLog",
-            topics=["ATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeE=",
-                    "QHRvbyBtdWNoIGdhcyBwcm92aWRlZCBmb3IgcHJvY2Vzc2luZzogZ2FzIHByb3ZpZGVkID0gOTc4MzIwMDAsIGdhcyB1c2VkID0gNTg5MTc1"],
-            data="QDc1NzM2NTcyMjA2NTcyNzI2Zjcy"
-        )
-        self.parser.ensure_no_error([event])
+        tx_outcome = TransactionOutcome([sc_result], logs)
+
+        with pytest.raises(ParseTransactionOutcomeError, match=re.escape("encountered signalError: ticker name is not valid (user error)")):
+            self.parser.parse_issue_fungible(tx_outcome)
 
     def test_parse_issue_fungible(self):
         identifier = "ZZZ-9ee87d"
@@ -170,8 +166,6 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         result_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [result_event])
         sc_result = SmartContractResult(
-            hash="777a55e938a76ae57c832e235ee6360c03f4d80e7fee10ed5e71a9ba293d1ea2",
-            timestamp=1706171168,
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
             data="RVNEVFNldFJvbGVANGM0ZDQxNGYyZDY0Mzk2NjM4MzkzMkA0NTUzNDQ1NDUyNmY2YzY1NGM2ZjYzNjE2YzRkNjk2ZTc0QDQ1NTM0NDU0NTI2ZjZjNjU0YzZmNjM2MTZjNDI3NTcyNmU=",
@@ -340,8 +334,6 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
         sc_result = SmartContractResult(
-            hash="db39f9a792f56641aff6196d542d6aff437a6cb8b39c78c6b8b48b5a7830d714",
-            timestamp=1706177672,
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==",
@@ -374,8 +366,6 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
         sc_result = SmartContractResult(
-            hash="db39f9a792f56641aff6196d542d6aff437a6cb8b39c78c6b8b48b5a7830d714",
-            timestamp=1706177672,
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==",
@@ -408,8 +398,6 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
         sc_result = SmartContractResult(
-            hash="6e5baf006ee871d856360ae7ac4e4e3b3ad756db532b218601f236461583c511",
-            timestamp=1706177672,
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==",

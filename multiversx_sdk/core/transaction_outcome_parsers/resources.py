@@ -23,14 +23,10 @@ class TransactionLogs:
 
 class SmartContractResult:
     def __init__(self,
-                 hash: str = "",
-                 timestamp: int = 0,
                  sender: str = "",
                  receiver: str = "",
                  data: str = "",
                  logs: TransactionLogs = TransactionLogs()) -> None:
-        self.hash = hash
-        self.timestamp = timestamp
         self.sender = sender
         self.receiver = receiver
         self.data = data
