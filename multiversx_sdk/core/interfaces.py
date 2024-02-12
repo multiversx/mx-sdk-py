@@ -1,5 +1,4 @@
-
-from typing import Protocol
+from typing import Optional, Protocol
 
 
 class IAddress(Protocol):
@@ -31,7 +30,7 @@ class ITransaction(Protocol):
 class IMessage(Protocol):
     data: bytes
     signature: bytes
-    address: IAddress
+    address: Optional[IAddress]
     version: int
 
 
