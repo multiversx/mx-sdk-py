@@ -6,7 +6,7 @@ from multiversx_sdk.core.errors import ErrListsLengthMismatch
 from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
 from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transaction_factories.transaction_builder import \
+from multiversx_sdk.core.transactions_factories.transaction_builder import \
     TransactionBuilder
 
 

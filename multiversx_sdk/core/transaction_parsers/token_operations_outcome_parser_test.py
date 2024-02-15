@@ -1,13 +1,13 @@
 from multiversx_sdk.core import Address
 from multiversx_sdk.core.codec import encode_unsigned_number
-from multiversx_sdk.core.transaction_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
 from multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser import \
     TokenOperationsOutcomeParser
 from multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper import (
     ContractResultsWrapper, TransactionEventTopicWrapper,
     TransactionEventWrapper, TransactionLogsWrapper,
     TransactionOnNetworkWrapper)
+from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
+    TransactionsFactoryConfig
 
 frank = Address.new_from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
 grace = Address.new_from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede")

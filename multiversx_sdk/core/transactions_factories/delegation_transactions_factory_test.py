@@ -1,8 +1,8 @@
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
-from multiversx_sdk.core.transaction_factories.delegation_transactions_factory import \
+from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
     DelegationTransactionsFactory
-from multiversx_sdk.core.transaction_factories.transactions_factory_config import \
+from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk.wallet import ValidatorSecretKey, ValidatorSigner
 

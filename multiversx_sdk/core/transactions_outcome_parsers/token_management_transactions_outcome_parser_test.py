@@ -4,9 +4,9 @@ import re
 import pytest
 
 from multiversx_sdk.core.errors import ParseTransactionOutcomeError
-from multiversx_sdk.core.transaction_outcome_parsers.resources import (
+from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
-from multiversx_sdk.core.transaction_outcome_parsers.token_management_transactions_outcome_parser import \
+from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
 
 
@@ -18,7 +18,7 @@ class TestTokenManagementTransactionsOutcomeParser:
             address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             identifier="signalError",
             topics=["Avk0jZ1kR+l9c76wQQoYcu4hvXPz+jxxTdqQeaCrbX8=", "dGlja2VyIG5hbWUgaXMgbm90IHZhbGlk"],
-            data="QDc1NzM2NTcyMjA2NTcyNzI2Zjcy"
+            data="QDc1NzM2NTcyMjA2NTcyNzI2Zjcy".encode()
         )
 
         sc_result = SmartContractResult()
@@ -49,7 +49,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_issue_fungible(tx_results_and_logs)
-        assert outcome.identifier == identifier
+        assert outcome.token_identifier == identifier
 
     def test_parse_issue_non_fungible(self):
         identifier = "NFT-f01d1e"
@@ -91,7 +91,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_issue_non_fungible(tx_results_and_logs)
-        assert outcome.identifier == identifier
+        assert outcome.token_identifier == identifier
 
     def test_parse_issue_semi_fungible(self):
         identifier = "SEMIFNG-2c6d9f"
@@ -112,7 +112,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_issue_semi_fungible(tx_results_and_logs)
-        assert outcome.identifier == identifier
+        assert outcome.token_identifier == identifier
 
     def test_parse_register_meta_esdt(self):
         identifier = "METATEST-e05d11"
@@ -133,7 +133,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_register_meta_esdt(tx_results_and_logs)
-        assert outcome.identifier == identifier
+        assert outcome.token_identifier == identifier
 
     def test_parse_register_and_set_all_roles(self):
         identifier = "LMAO-d9f892"
@@ -168,7 +168,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         sc_result = SmartContractResult(
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
-            data="RVNEVFNldFJvbGVANGM0ZDQxNGYyZDY0Mzk2NjM4MzkzMkA0NTUzNDQ1NDUyNmY2YzY1NGM2ZjYzNjE2YzRkNjk2ZTc0QDQ1NTM0NDU0NTI2ZjZjNjU0YzZmNjM2MTZjNDI3NTcyNmU=",
+            data="RVNEVFNldFJvbGVANGM0ZDQxNGYyZDY0Mzk2NjM4MzkzMkA0NTUzNDQ1NDUyNmY2YzY1NGM2ZjYzNjE2YzRkNjk2ZTc0QDQ1NTM0NDU0NTI2ZjZjNjU0YzZmNjM2MTZjNDI3NTcyNmU=".encode(),
             logs=result_log
         )
 
@@ -295,7 +295,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_pause(tx_results_and_logs)
-        assert outcome.identifier == identifier
+        assert outcome.token_identifier == identifier
 
     def test_parse_unpause(self):
         identifier = "AAA-29c4c9"
@@ -313,7 +313,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
 
         outcome = self.parser.parse_unpause(tx_results_and_logs)
-        assert outcome.identifier == identifier
+        assert outcome.token_identifier == identifier
 
     def test_parse_freeze(self):
         identifier = "AAA-29c4c9"
@@ -336,7 +336,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         sc_result = SmartContractResult(
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==",
+            data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
         tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
@@ -368,7 +368,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         sc_result = SmartContractResult(
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==",
+            data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
         tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
@@ -400,7 +400,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         sc_result = SmartContractResult(
             sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==",
+            data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
         tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())

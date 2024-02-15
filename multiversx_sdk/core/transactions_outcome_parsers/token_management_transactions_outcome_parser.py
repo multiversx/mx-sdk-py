@@ -5,9 +5,9 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.codec import decode_unsigned_number
 from multiversx_sdk.core.constants import DEFAULT_HRP
 from multiversx_sdk.core.errors import ParseTransactionOutcomeError
-from multiversx_sdk.core.transaction_outcome_parsers.resources import (
+from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     TransactionEvent, TransactionOutcome)
-from multiversx_sdk.core.transaction_outcome_parsers.token_management_transactions_outcome_parser_types import (
+from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_types import (
     AddQuantityOutcome, BurnOutcome, BurnQuantityOutcome, FreezeOutcome,
     IssueFungibleOutcome, IssueNonFungibleOutcome, IssueSemiFungibleOutcome,
     MintOutcome, NFTCreateOutcome, PauseOutcome, RegisterAndSetAllRolesOutcome,

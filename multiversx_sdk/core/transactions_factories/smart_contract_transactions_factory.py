@@ -9,9 +9,9 @@ from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.interfaces import IAddress, IToken, ITokenTransfer
 from multiversx_sdk.core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transaction_factories.token_transfers_data_builder import \
+from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
-from multiversx_sdk.core.transaction_factories.transaction_builder import \
+from multiversx_sdk.core.transactions_factories.transaction_builder import \
     TransactionBuilder
 
 

@@ -4,22 +4,22 @@ from typing import List
 
 @dataclass
 class IssueFungibleOutcome:
-    identifier: str
+    token_identifier: str
 
 
 @dataclass
 class IssueNonFungibleOutcome:
-    identifier: str
+    token_identifier: str
 
 
 @dataclass
 class IssueSemiFungibleOutcome:
-    identifier: str
+    token_identifier: str
 
 
 @dataclass
 class RegisterMetaEsdtOutcome:
-    identifier: str
+    token_identifier: str
 
 
 @dataclass
@@ -60,12 +60,12 @@ class BurnOutcome:
 
 @dataclass
 class PauseOutcome:
-    identifier: str
+    token_identifier: str
 
 
 @dataclass
 class UnPauseOutcome:
-    identifier: str
+    token_identifier: str
 
 
 @dataclass

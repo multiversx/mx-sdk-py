@@ -3,9 +3,9 @@ import pytest
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
 from multiversx_sdk.core.transaction import Transaction, TransactionComputer
-from multiversx_sdk.core.transaction_factories.relayed_transactions_factory import \
+from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
     RelayedTransactionsFactory
-from multiversx_sdk.core.transaction_factories.transactions_factory_config import \
+from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk.testutils.wallets import load_wallets
 

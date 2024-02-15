@@ -3,9 +3,9 @@ from pathlib import Path
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
 from multiversx_sdk.core.tokens import Token, TokenComputer, TokenTransfer
-from multiversx_sdk.core.transaction_factories.smart_contract_transactions_factory import \
+from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
-from multiversx_sdk.core.transaction_factories.transactions_factory_config import \
+from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 
 
