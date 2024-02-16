@@ -6,7 +6,7 @@ class TransactionEvent:
                  address: str = "",
                  identifier: str = "",
                  topics: List[str] = [],
-                 data: str = "") -> None:
+                 data: bytes = b"") -> None:
         self.address = address
         self.identifier = identifier
         self.topics = topics
@@ -25,7 +25,7 @@ class SmartContractResult:
     def __init__(self,
                  sender: str = "",
                  receiver: str = "",
-                 data: str = "",
+                 data: bytes = b"",
                  logs: TransactionLogs = TransactionLogs()) -> None:
         self.sender = sender
         self.receiver = receiver

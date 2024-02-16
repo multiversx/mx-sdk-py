@@ -103,6 +103,6 @@ class RelayedTransactionsFactory:
             tx["sndUserName"] = base64.b64encode(inner_transaction.sender_username.encode()).decode()
 
         if inner_transaction.receiver_username:
-            tx[f"rcvUserName"] = base64.b64encode(inner_transaction.receiver_username.encode()).decode()
+            tx["rcvUserName"] = base64.b64encode(inner_transaction.receiver_username.encode()).decode()
 
         return json.dumps(tx, separators=(",", ":"))
