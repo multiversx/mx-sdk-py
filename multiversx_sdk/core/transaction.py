@@ -40,8 +40,7 @@ class Transaction:
                  options: Optional[int] = None,
                  guardian: Optional[str] = None,
                  signature: Optional[bytes] = None,
-                 guardian_signature: Optional[bytes] = None
-                 ) -> None:
+                 guardian_signature: Optional[bytes] = None) -> None:
         self.chain_id = chain_id
         self.sender = sender
         self.receiver = receiver

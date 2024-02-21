@@ -6,7 +6,14 @@ from multiversx_sdk.wallet.user_verifer import UserVerifier
 from multiversx_sdk.wallet.user_wallet import UserWallet
 from multiversx_sdk.wallet.validator_keys import (ValidatorPublicKey,
                                                   ValidatorSecretKey)
+from multiversx_sdk.wallet.validator_pem import ValidatorPEM
 from multiversx_sdk.wallet.validator_signer import ValidatorSigner
 from multiversx_sdk.wallet.validator_verifier import ValidatorVerifier
 
-__all__ = ["UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey", "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "UserWallet", "UserPEM"]
+__all__ = [
+    "UserSigner", "Mnemonic", "UserSecretKey",
+    "UserPublicKey", "ValidatorSecretKey",
+    "ValidatorPublicKey", "UserVerifier",
+    "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
+    "UserWallet", "UserPEM"
+]

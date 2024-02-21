@@ -10,6 +10,22 @@ from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
 from multiversx_sdk.core.transaction import Transaction, TransactionComputer
 from multiversx_sdk.core.transaction_payload import TransactionPayload
+from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
+    DelegationTransactionsFactory
+from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
+    RelayedTransactionsFactory
+from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
+    SmartContractTransactionsFactory
+from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
+    RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory)
+from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
+    TransactionsFactoryConfig
+from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
+    TransferTransactionsFactory
+from multiversx_sdk.core.transactions_outcome_parsers.resources import (
+    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
+from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
+    TokenManagementTransactionsOutcomeParser
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.errors import GenericError
@@ -24,6 +40,7 @@ from multiversx_sdk.wallet.user_verifer import UserVerifier
 from multiversx_sdk.wallet.user_wallet import UserWallet
 from multiversx_sdk.wallet.validator_keys import (ValidatorPublicKey,
                                                   ValidatorSecretKey)
+from multiversx_sdk.wallet.validator_pem import ValidatorPEM
 from multiversx_sdk.wallet.validator_signer import ValidatorSigner
 from multiversx_sdk.wallet.validator_verifier import ValidatorVerifier
 
@@ -33,7 +50,14 @@ __all__ = [
     "Message", "MessageComputer", "CodeMetadata", "TokenPayment",
     "ContractQuery", "ContractQueryBuilder",
     "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",
+    "TokenManagementTransactionsOutcomeParser", "SmartContractResult",
+    "TransactionEvent", "TransactionLogs", "TransactionOutcome",
+    "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
+    "RegisterAndSetAllRolesTokenType", "TransactionsFactoryConfig",
+    "SmartContractTransactionsFactory", "TransferTransactionsFactory",
+    "RelayedTransactionsFactory",
     "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
-    "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "UserWallet", "UserPEM"
+    "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
+    "UserWallet", "UserPEM"
 ]
