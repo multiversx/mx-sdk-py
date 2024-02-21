@@ -1,5 +1,7 @@
 from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
     DelegationTransactionsFactory
+from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
+    RelayedTransactionsFactory
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
@@ -15,5 +17,6 @@ __all__ = [
     "RegisterAndSetAllRolesTokenType",
     "TransactionsFactoryConfig",
     "SmartContractTransactionsFactory",
-    "TransferTransactionsFactory"
+    "TransferTransactionsFactory",
+    "RelayedTransactionsFactory"
 ]
