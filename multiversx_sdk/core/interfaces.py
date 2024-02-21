@@ -1,11 +1,12 @@
-
-from typing import Protocol
+from typing import Optional, Protocol
 
 
 class IAddress(Protocol):
-    def to_bech32(self) -> str: ...
+    def to_bech32(self) -> str:
+        ...
 
-    def to_hex(self) -> str: ...
+    def to_hex(self) -> str:
+        ...
 
 
 class ITransaction(Protocol):
@@ -29,6 +30,8 @@ class ITransaction(Protocol):
 class IMessage(Protocol):
     data: bytes
     signature: bytes
+    address: Optional[IAddress]
+    version: int
 
 
 class IToken(Protocol):
@@ -66,22 +69,31 @@ class ITokenPayment(Protocol):
     token_nonce: INonce
     amount_as_integer: int
 
-    def is_egld(self) -> bool: ...
-    def is_fungible(self) -> bool: ...
+    def is_egld(self) -> bool:
+        ...
+
+    def is_fungible(self) -> bool:
+        ...
 
 
 class ITransactionValue(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...
 
 
 class ITransactionPayload(Protocol):
     data: bytes
-    def encoded(self) -> str: ...
-    def length(self) -> int: ...
+
+    def encoded(self) -> str:
+        ...
+
+    def length(self) -> int:
+        ...
 
 
 class ICodeMetadata(Protocol):
-    def serialize(self) -> bytes: ...
+    def serialize(self) -> bytes:
+        ...
 
 
 class INetworkConfig(Protocol):

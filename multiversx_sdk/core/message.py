@@ -1,12 +1,21 @@
+from typing import Any, Dict, Optional
+
 from Cryptodome.Hash import keccak
 
-from multiversx_sdk.core.interfaces import IMessage
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import DEFAULT_MESSAGE_VERSION
+from multiversx_sdk.core.interfaces import IAddress, IMessage
 
 
 class Message:
-    def __init__(self, data: bytes, signature: bytes = b"") -> None:
+    def __init__(self, data: bytes,
+                 signature: bytes = b"",
+                 address: Optional[IAddress] = None,
+                 version: int = DEFAULT_MESSAGE_VERSION) -> None:
         self.data = data
         self.signature = signature
+        self.address = address
+        self.version = version
 
 
 class MessageComputer:
@@ -26,3 +35,38 @@ class MessageComputer:
         content_hash = keccak.new(digest_bits=256).update(content).digest()
 
         return content_hash
+
+    def compute_bytes_for_verifying(self, message: IMessage) -> bytes:
+        return self.compute_bytes_for_signing(message)
+
+    def pack_message(self, message: IMessage) -> Dict[str, Any]:
+        return {
+            "address": message.address.to_bech32() if message.address else "",
+            "message": message.data.hex(),
+            "signature": message.signature.hex(),
+            "version": message.version
+        }
+
+    def unpack_message(self, packed_message: Dict[str, Any]) -> Message:
+        data = packed_message.get("message", "")
+        data = self._trim_hex_prefix(data)
+
+        signature = packed_message.get("signature", "")
+        signature = self._trim_hex_prefix(signature)
+
+        address = packed_message.get("address", "")
+        address = Address.from_bech32(address) if address else None
+
+        version = packed_message.get("version", DEFAULT_MESSAGE_VERSION)
+
+        return Message(
+            data=bytes.fromhex(data),
+            address=address,
+            signature=bytes.fromhex(signature),
+            version=version
+        )
+
+    def _trim_hex_prefix(self, data: str) -> str:
+        if data.startswith("0x") or data.startswith("0X"):
+            return data[2:]
+        return data

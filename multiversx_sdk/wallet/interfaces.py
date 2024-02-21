@@ -11,4 +11,8 @@ class IRandomness(Protocol):
 
 
 class IAddress(Protocol):
-    def to_bech32(self) -> str: ...
+    def to_bech32(self) -> str:
+        ...
+
+    def to_hex(self) -> str:
+        ...

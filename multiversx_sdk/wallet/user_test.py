@@ -130,7 +130,7 @@ def test_sign_transaction():
 
 
 def test_sign_message():
-    message = Message("hello".encode())
+    message = Message("hello".encode(), address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
     message_computer = MessageComputer()
 
     signer = UserSigner.from_pem_file(testwallets / "alice.pem")
