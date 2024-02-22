@@ -5,7 +5,7 @@ from multiversx_sdk.wallet.constants import (USER_PUBKEY_LENGTH,
                                              USER_SEED_LENGTH)
 from multiversx_sdk.wallet.errors import (ErrBadPublicKeyLength,
                                           ErrBadSecretKeyLength)
-from multiversx_sdk.wallet.interfaces import IAddress, ISignature
+from multiversx_sdk.wallet.interfaces import ISignature
 
 
 class UserSecretKey:
@@ -62,7 +62,7 @@ class UserPublicKey:
         except Exception:
             return False
 
-    def to_address(self, hrp: str) -> IAddress:
+    def to_address(self, hrp: str) -> Address:
         return Address(self.buffer, hrp)
 
     def hex(self) -> str:
