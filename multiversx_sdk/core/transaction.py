@@ -7,6 +7,8 @@ from typing import Any, Dict, Optional, Protocol
 from multiversx_sdk.core.constants import (DEFAULT_HRP, DIGEST_SIZE,
                                            TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
+                                           TRANSACTION_OPTIONS_TX_GUARDED,
+                                           TRANSACTION_OPTIONS_TX_HASH_SIGN,
                                            TRANSACTION_VERSION_DEFAULT)
 from multiversx_sdk.core.errors import NotEnoughGasError
 from multiversx_sdk.core.interfaces import INetworkConfig, ITransaction
@@ -91,6 +93,17 @@ class TransactionComputer:
         serialized_tx = proto.serialize_transaction(transaction)
         tx_hash = blake2b(serialized_tx, digest_size=DIGEST_SIZE).hexdigest()
         return bytes.fromhex(tx_hash)
+
+    def has_options_set_for_guarded_transaction(self, transaction: ITransaction) -> bool:
+        return (transaction.options & TRANSACTION_OPTIONS_TX_GUARDED) == TRANSACTION_OPTIONS_TX_GUARDED
+
+    def has_options_set_for_hash_signing(self, transaction: ITransaction) -> bool:
+        return (transaction.options & TRANSACTION_OPTIONS_TX_HASH_SIGN) == TRANSACTION_OPTIONS_TX_HASH_SIGN
+
+    def apply_guardian(self, transaction: ITransaction, guardian: str) -> None:
+        transaction.version = 2
+        transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_GUARDED
+        transaction.guardian = guardian
 
     def _to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()

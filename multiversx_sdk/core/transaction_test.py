@@ -191,3 +191,34 @@ class TestTransaction:
 
         tx_hash = self.transaction_computer.compute_transaction_hash(transaction)
         assert tx_hash.hex() == "242022e9dcfa0ee1d8199b0043314dbda8601619f70069ebc441b9f03349a35c"
+
+    def test_tx_computer_has_options_set(self):
+        tx = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            gas_limit=50000,
+            chain_id="D",
+            options=3
+        )
+
+        assert self.transaction_computer.has_options_set_for_guarded_transaction(tx)
+        assert self.transaction_computer.has_options_set_for_hash_signing(tx)
+
+    def test_tx_computer_apply_guardian(self):
+        tx = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            gas_limit=200000,
+            chain_id="D",
+            version=1,
+            options=1
+        )
+
+        self.transaction_computer.apply_guardian(
+            transaction=tx,
+            guardian="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+        )
+
+        assert tx.version == 2
+        assert tx.options == 3
+        assert tx.guardian == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"

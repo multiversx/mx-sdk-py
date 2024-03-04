@@ -15,6 +15,7 @@ DELEGATION_MANAGER_SC_ADDRESS = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqq
 DEFAULT_HRP = "erd"
 CONTRACT_DEPLOY_ADDRESS = "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
 TRANSACTION_OPTIONS_TX_GUARDED = 0b0010
+TRANSACTION_OPTIONS_TX_HASH_SIGN = 0b0001
 
 DIGEST_SIZE = 32
 
