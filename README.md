@@ -31,6 +31,12 @@ If using VSCode, restart it or follow these steps:
 
 Run the tests as follows:
 
+This command runs all tests:
 ```
 pytest .
+```
+
+If you want to skip network interaction tests run:
+```
+pytest -m "not networkInteraction"
 ```

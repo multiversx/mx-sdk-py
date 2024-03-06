@@ -22,6 +22,7 @@ class Pagination(IPagination):
         return self.size
 
 
+@pytest.mark.networkInteraction
 class TestApi:
     api = ApiNetworkProvider('https://devnet-api.multiversx.com')
 
@@ -133,7 +134,7 @@ class TestApi:
     def test_get_sc_invoking_tx(self):
         result = self.api.get_transaction('6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb')
 
-        assert result.is_completed == True
+        assert result.is_completed is True
         assert len(result.contract_results.items) > 0
         assert result.data == 'issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565'
 
