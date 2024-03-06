@@ -207,3 +207,33 @@ class TestSmartContractTransactionsFactory:
         assert transaction.data.decode().startswith("upgradeContract@")
         assert transaction.gas_limit == gas_limit
         assert transaction.value == 0
+
+    def test_create_transaction_for_claiming_developer_rewards(self):
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+
+        transaction = self.factory.create_transaction_for_claiming_developer_rewards(
+            sender=sender,
+            contract=contract_address
+        )
+
+        assert transaction.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
+        assert transaction.data.decode() == "ClaimDeveloperRewards"
+        assert transaction.gas_limit == 6_000_000
+
+    def test_create_transaction_for_changing_owner_address(self):
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        new_owner = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+
+        transaction = self.factory.create_transaction_for_changing_owner_address(
+            sender=sender,
+            contract=contract_address,
+            new_owner=new_owner
+        )
+
+        assert transaction.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
+        assert transaction.data.decode() == "ChangeOwnerAddress@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+        assert transaction.gas_limit == 6_000_000
