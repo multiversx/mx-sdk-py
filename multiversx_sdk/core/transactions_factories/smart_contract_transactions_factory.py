@@ -19,6 +19,8 @@ class IConfig(Protocol):
     chain_id: str
     min_gas_limit: int
     gas_limit_per_byte: int
+    gas_limit_claim_developer_rewards: int
+    gas_limit_change_owner_address: int
 
 
 class ITokenComputer(Protocol):
@@ -155,7 +157,7 @@ class SmartContractTransactionsFactory:
             sender=sender,
             receiver=contract,
             data_parts=data_parts,
-            gas_limit=6_000_000,
+            gas_limit=self.config.gas_limit_claim_developer_rewards,
             add_data_movement_gas=False
         ).build()
 
@@ -170,6 +172,6 @@ class SmartContractTransactionsFactory:
             sender=sender,
             receiver=contract,
             data_parts=data_parts,
-            gas_limit=6_000_000,
+            gas_limit=self.config.gas_limit_change_owner_address,
             add_data_movement_gas=False,
         ).build()

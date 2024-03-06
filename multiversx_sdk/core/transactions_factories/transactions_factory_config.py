@@ -50,3 +50,7 @@ class TransactionsFactoryConfig:
         self.gas_limit_guard_account = 250_000
         self.gas_limit_unguard_account = 250_000
         self.extra_gas_limit_for_guarded_transaction = 50_000
+
+        # Configuration for smart contract operations
+        self.gas_limit_claim_developer_rewards = 6_000_000
+        self.gas_limit_change_owner_address = 6_000_000
