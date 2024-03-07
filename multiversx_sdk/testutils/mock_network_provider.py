@@ -4,6 +4,7 @@ from typing import Any, Callable, Dict, List
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction, TransactionComputer
+from multiversx_sdk.network_providers.accounts import AccountOnNetwork
 from multiversx_sdk.network_providers.contract_query_response import \
     ContractQueryResponse
 from multiversx_sdk.network_providers.contract_results import (
@@ -12,14 +13,7 @@ from multiversx_sdk.network_providers.interface import IContractQuery
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
-from multiversx_sdk.testutils.interface_of_network import IAccountOnNetwork
 from multiversx_sdk.testutils.utils import create_account_egld_balance
-
-
-class AccountOnNetwork(IAccountOnNetwork):
-    def __init__(self, nonce: int, balance: str | int) -> None:
-        self.nonce = nonce
-        self.balance = create_account_egld_balance(balance)
 
 
 class MockNetworkProvider:
@@ -29,15 +23,31 @@ class MockNetworkProvider:
 
     def __init__(self) -> None:
         self.transactions: Dict[str, TransactionOnNetwork] = {}
-        self.accounts: Dict[str, IAccountOnNetwork] = {
-            MockNetworkProvider.alice.to_bech32(): AccountOnNetwork(nonce=0, balance=1000),
-            MockNetworkProvider.bob.to_bech32(): AccountOnNetwork(nonce=5, balance=500),
-            MockNetworkProvider.carol.to_bech32(): AccountOnNetwork(nonce=42, balance=300)
+
+        alice_account = AccountOnNetwork()
+        alice_account.address = MockNetworkProvider.alice
+        alice_account.nonce = 0
+        alice_account.balance = create_account_egld_balance(1000)
+
+        bob_account = AccountOnNetwork()
+        bob_account.address = MockNetworkProvider.bob
+        bob_account.nonce = 5
+        bob_account.balance = create_account_egld_balance(500)
+
+        carol_account = AccountOnNetwork()
+        carol_account.address = MockNetworkProvider.carol
+        carol_account.nonce = 42
+        carol_account.balance = create_account_egld_balance(300)
+
+        self.accounts: Dict[str, AccountOnNetwork] = {
+            MockNetworkProvider.alice.to_bech32(): alice_account,
+            MockNetworkProvider.bob.to_bech32(): bob_account,
+            MockNetworkProvider.carol.to_bech32(): carol_account
         }
         self.query_contract_responders: List[QueryContractResponder] = []
         self.get_transaction_responders: List[GetTransactionResponder] = []
 
-    def mock_update_account(self, address: Address, mutate: Callable[[IAccountOnNetwork], None]) -> None:
+    def mock_update_account(self, address: Address, mutate: Callable[[AccountOnNetwork], None]) -> None:
         account = self.accounts.get(address.to_bech32(), None)
 
         if account:
@@ -59,7 +69,7 @@ class MockNetworkProvider:
 
         self.query_contract_responders.append(QueryContractResponder(predicate, response))
 
-    def mock_get_transaction_with_any_hash_as_notarized_with_one_result(self, return_code_and_data: str) -> None:
+    def mock_get_transaction_with_any_hash_as_completed_with_one_result(self, return_code_and_data: str) -> None:
         contract_result_item = ContractResultItem()
         contract_result_item.nonce = 1
         contract_result_item.data = return_code_and_data
@@ -87,16 +97,16 @@ class MockNetworkProvider:
 
                 self.mock_update_transaction(hash, set_tx_status)
 
-            elif isinstance(point, MarkCompleted):
+            elif isinstance(point, TimelinePointMarkCompleted):
                 def mark_tx_as_completed(transaction: TransactionOnNetwork):
                     transaction.is_completed = True
 
                 self.mock_update_transaction(hash, mark_tx_as_completed)
 
-            elif isinstance(point, Wait):
+            elif isinstance(point, TimelinePointWait):
                 await asyncio.sleep(point.milliseconds)
 
-    def get_account(self, address: IAddress) -> IAccountOnNetwork:
+    def get_account(self, address: IAddress) -> AccountOnNetwork:
         account = self.accounts.get(address.to_bech32(), None)
 
         if account:
@@ -139,10 +149,10 @@ class GetTransactionResponder:
         self.response = response
 
 
-class Wait:
+class TimelinePointWait:
     def __init__(self, time_in_milliseconds: int) -> None:
         self.milliseconds = time_in_milliseconds
 
 
-class MarkCompleted:
+class TimelinePointMarkCompleted:
     pass

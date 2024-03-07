@@ -2,6 +2,8 @@ import base64
 
 import pytest
 
+from multiversx_sdk.core.adapters.query_runner_adapter import \
+    QueryRunnerAdapter
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
@@ -15,7 +17,8 @@ from multiversx_sdk.testutils.mock_network_provider import MockNetworkProvider
 
 class TestSmartContractQueriesController:
     provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-    controller = SmartContractQueriesController(network_provider=provider)
+    query_runner = QueryRunnerAdapter(network_provider=provider)
+    controller = SmartContractQueriesController(query_runner=query_runner)
 
     def test_create_query_without_arguments(self):
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
@@ -49,7 +52,8 @@ class TestSmartContractQueriesController:
 
     def test_run_query_with_mock_provider(self):
         network_provider = MockNetworkProvider()
-        controller = SmartContractQueriesController(network_provider)
+        query_runner = QueryRunnerAdapter(network_provider=network_provider)
+        controller = SmartContractQueriesController(query_runner)
 
         contract_query_response = ContractQueryResponse()
         contract_query_response.return_code = "ok"
@@ -69,7 +73,8 @@ class TestSmartContractQueriesController:
 
     def test_parse_query_response(self):
         network_provider = MockNetworkProvider()
-        controller = SmartContractQueriesController(network_provider)
+        query_runner = QueryRunnerAdapter(network_provider=network_provider)
+        controller = SmartContractQueriesController(query_runner)
 
         response = SmartContractQueryResponse(
             function="bar",
@@ -81,7 +86,7 @@ class TestSmartContractQueriesController:
         parsed = controller.parse_query_response(response)
         assert parsed == ["abba".encode()]
 
-    @pytest.mark.skip("Depends on the actual contract deployed on Devnet")
+    @pytest.mark.networkInteraction
     def test_run_query_on_network(self):
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
