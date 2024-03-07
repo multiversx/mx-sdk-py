@@ -1,4 +1,6 @@
 from multiversx_sdk.core.account import AccountNonceHolder
+from multiversx_sdk.core.adapters.query_runner_adapter import \
+    QueryRunnerAdapter
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata
@@ -40,5 +42,5 @@ __all__ = [
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
     "RegisterAndSetAllRolesTokenType", "TransactionsFactoryConfig",
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
-    "RelayedTransactionsFactory", "AccountTransactionsFactory"
+    "RelayedTransactionsFactory", "AccountTransactionsFactory", "QueryRunnerAdapter"
 ]
