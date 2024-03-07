@@ -19,6 +19,8 @@ class IConfig(Protocol):
     chain_id: str
     min_gas_limit: int
     gas_limit_per_byte: int
+    gas_limit_claim_developer_rewards: int
+    gas_limit_change_owner_address: int
 
 
 class ITokenComputer(Protocol):
@@ -58,7 +60,7 @@ class SmartContractTransactionsFactory:
 
         parts += args_to_strings(arguments)
 
-        transaction = TransactionBuilder(
+        return TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=Address.new_from_bech32(CONTRACT_DEPLOY_ADDRESS),
@@ -67,8 +69,6 @@ class SmartContractTransactionsFactory:
             add_data_movement_gas=False,
             amount=native_transfer_amount
         ).build()
-
-        return transaction
 
     def create_transaction_for_execute(self,
                                        sender: IAddress,
@@ -103,7 +103,7 @@ class SmartContractTransactionsFactory:
         data_parts.append(function) if not data_parts else data_parts.append(arg_to_string(function))
         data_parts.extend(args_to_strings(arguments))
 
-        transaction = TransactionBuilder(
+        return TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=receiver,
@@ -112,8 +112,6 @@ class SmartContractTransactionsFactory:
             add_data_movement_gas=False,
             amount=native_transfer_amount
         ).build()
-
-        return transaction
 
     def create_transaction_for_upgrade(self,
                                        sender: IAddress,
@@ -139,7 +137,7 @@ class SmartContractTransactionsFactory:
 
         parts += args_to_strings(arguments)
 
-        intent = TransactionBuilder(
+        return TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=contract,
@@ -149,4 +147,31 @@ class SmartContractTransactionsFactory:
             amount=native_transfer_amount
         ).build()
 
-        return intent
+    def create_transaction_for_claiming_developer_rewards(self,
+                                                          sender: IAddress,
+                                                          contract: IAddress) -> Transaction:
+        data_parts = ["ClaimDeveloperRewards"]
+
+        return TransactionBuilder(
+            config=self.config,
+            sender=sender,
+            receiver=contract,
+            data_parts=data_parts,
+            gas_limit=self.config.gas_limit_claim_developer_rewards,
+            add_data_movement_gas=False
+        ).build()
+
+    def create_transaction_for_changing_owner_address(self,
+                                                      sender: IAddress,
+                                                      contract: IAddress,
+                                                      new_owner: IAddress) -> Transaction:
+        data_parts = ["ChangeOwnerAddress", new_owner.to_hex()]
+
+        return TransactionBuilder(
+            config=self.config,
+            sender=sender,
+            receiver=contract,
+            data_parts=data_parts,
+            gas_limit=self.config.gas_limit_change_owner_address,
+            add_data_movement_gas=False,
+        ).build()
