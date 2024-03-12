@@ -1,3 +1,5 @@
+from multiversx_sdk.core.transactions_factories.account_transactions_factory import \
+    AccountTransactionsFactory
 from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
     DelegationTransactionsFactory
 from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
@@ -18,5 +20,6 @@ __all__ = [
     "TransactionsFactoryConfig",
     "SmartContractTransactionsFactory",
     "TransferTransactionsFactory",
-    "RelayedTransactionsFactory"
+    "RelayedTransactionsFactory",
+    "AccountTransactionsFactory"
 ]

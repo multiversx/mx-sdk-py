@@ -1,4 +1,6 @@
 from multiversx_sdk.core.account import AccountNonceHolder
+from multiversx_sdk.core.adapters.query_runner_adapter import \
+    QueryRunnerAdapter
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata
@@ -10,6 +12,8 @@ from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
 from multiversx_sdk.core.transaction import Transaction, TransactionComputer
 from multiversx_sdk.core.transaction_payload import TransactionPayload
+from multiversx_sdk.core.transactions_factories.account_transactions_factory import \
+    AccountTransactionsFactory
 from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
     DelegationTransactionsFactory
 from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
@@ -55,9 +59,9 @@ __all__ = [
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
     "RegisterAndSetAllRolesTokenType", "TransactionsFactoryConfig",
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
-    "RelayedTransactionsFactory",
+    "RelayedTransactionsFactory", "AccountTransactionsFactory",
     "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
     "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
-    "UserWallet", "UserPEM"
+    "UserWallet", "UserPEM", "QueryRunnerAdapter"
 ]

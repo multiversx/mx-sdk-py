@@ -1,9 +1,12 @@
+import pytest
+
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.network_providers.proxy_network_provider import (
     ContractQuery, ProxyNetworkProvider)
 
 
+@pytest.mark.networkInteraction
 class TestProxy:
     proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 
@@ -47,10 +50,7 @@ class TestProxy:
         )
         result = self.proxy.get_account(address)
 
-        assert (
-            result.address.to_bech32()
-            == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        )
+        assert result.address.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         assert result.username == ""
 
     def test_get_fungible_token_of_account(self):
@@ -99,10 +99,7 @@ class TestProxy:
         result = self.proxy.get_definition_of_fungible_token("TEST-ff155e")
 
         assert result.identifier == "TEST-ff155e"
-        assert (
-            result.owner.to_bech32()
-            == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        )
+        assert result.owner.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         assert result.can_upgrade
         assert not result.can_freeze
         assert result.decimals == 6
@@ -112,10 +109,7 @@ class TestProxy:
         result = self.proxy.get_definition_of_token_collection("NFTEST-ec88b8")
 
         assert result.collection == "NFTEST-ec88b8"
-        assert (
-            result.owner.to_bech32()
-            == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        )
+        assert result.owner.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         assert result.type == "NonFungibleESDT"
         assert result.decimals == 0
         assert not result.can_freeze
@@ -129,15 +123,9 @@ class TestProxy:
         assert result.nonce == 0
         assert result.block_nonce == 835600
         assert result.epoch == 348
-        assert (
-            result.hash
-            == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
-        )
-        assert result.is_completed == None
-        assert (
-            result.sender.to_bech32()
-            == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        )
+        assert result.hash == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
+        assert result.is_completed is None
+        assert result.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert result.contract_results.items == []
 
     def test_get_transaction_with_events(self):
@@ -155,12 +143,9 @@ class TestProxy:
             "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb", True
         )
 
-        assert result.is_completed == True
+        assert result.is_completed is True
         assert len(result.contract_results.items) > 0
-        assert (
-            result.data
-            == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
-        )
+        assert result.data == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
         assert sum([r.is_refund for r in result.contract_results.items]) == 1
 
     def test_get_hyperblock(self):

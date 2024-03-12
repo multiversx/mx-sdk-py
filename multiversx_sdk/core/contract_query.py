@@ -1,5 +1,3 @@
-
-
 from typing import List, Optional, Sequence
 
 from multiversx_sdk.core.interfaces import IAddress
