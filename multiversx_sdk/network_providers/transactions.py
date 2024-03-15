@@ -30,26 +30,6 @@ class ITransaction(Protocol):
     guardian_signature: bytes
 
 
-def transaction_to_dictionary(transaction: ITransaction) -> Dict[str, Any]:
-    dictionary: Dict[str, Any] = {}
-    dictionary["nonce"] = transaction.nonce
-    dictionary["value"] = str(transaction.value)
-    dictionary["receiver"] = transaction.receiver
-    dictionary["sender"] = transaction.sender
-    dictionary["gasPrice"] = transaction.gas_price
-    dictionary["gasLimit"] = transaction.gas_limit
-    dictionary["chainID"] = transaction.chain_id
-    dictionary["senderUsername"] = base64.b64encode(transaction.sender_username.encode()).decode()
-    dictionary["receiverUsername"] = base64.b64encode(transaction.receiver_username.encode()).decode()
-    dictionary["data"] = base64.b64encode(transaction.data).decode()
-    dictionary["version"] = transaction.version
-    dictionary["options"] = transaction.options
-    dictionary["guardian"] = transaction.guardian
-    dictionary["signature"] = transaction.signature.hex()
-    dictionary["guardianSignature"] = transaction.guardian_signature.hex()
-    return dictionary
-
-
 class TransactionOnNetwork:
     def __init__(self) -> None:
         self.is_completed: Optional[bool] = None

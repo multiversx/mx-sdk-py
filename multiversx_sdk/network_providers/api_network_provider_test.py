@@ -1,5 +1,7 @@
 import pytest
 
+from multiversx_sdk.converters.transactions_converter import \
+    TransactionConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.network_providers.api_network_provider import \
@@ -24,7 +26,7 @@ class Pagination(IPagination):
 
 @pytest.mark.networkInteraction
 class TestApi:
-    api = ApiNetworkProvider('https://devnet-api.multiversx.com')
+    api = ApiNetworkProvider('https://devnet-api.multiversx.com', TransactionConverter())
 
     def test_get_network_stake_statistic(self):
         result = self.api.get_network_stake_statistics()

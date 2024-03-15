@@ -3,9 +3,10 @@ import pytest
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import (ErrInvalidGasLimitForInnerTransaction,
                                         ErrInvalidRelayerV2BuilderArguments)
-from multiversx_sdk.core.transaction import Transaction, TransactionComputer
+from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_builders.relayed_v2_builder import \
     RelayedTransactionV2Builder
+from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
