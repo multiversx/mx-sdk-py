@@ -29,7 +29,7 @@ from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionOnNetwork)
 
 
-class ITransactionConverter(Protocol):
+class ITransactionsConverter(Protocol):
     def transaction_to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
         ...
 
@@ -38,12 +38,12 @@ class ProxyNetworkProvider:
     def __init__(
             self,
             url: str,
-            transaction_converter: ITransactionConverter,
+            transactions_converter: ITransactionsConverter,
             auth: Union[AuthBase, None] = None,
             address_hrp: str = DEFAULT_ADDRESS_HRP
     ) -> None:
         self.url = url
-        self.transaction_converter = transaction_converter
+        self.transactions_converter = transactions_converter
         self.auth = auth
         self.address_hrp = address_hrp
 
@@ -124,11 +124,11 @@ class ProxyNetworkProvider:
         return status
 
     def send_transaction(self, transaction: ITransaction) -> str:
-        response = self.do_post_generic('transaction/send', self.transaction_converter.transaction_to_dictionary(transaction))
+        response = self.do_post_generic('transaction/send', self.transactions_converter.transaction_to_dictionary(transaction))
         return response.get('txHash', '')
 
     def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
-        transactions_as_dictionaries = [self.transaction_converter.transaction_to_dictionary(transaction) for transaction in transactions]
+        transactions_as_dictionaries = [self.transactions_converter.transaction_to_dictionary(transaction) for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         # Proxy and Observers have different response format:
         num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
@@ -159,7 +159,7 @@ class ProxyNetworkProvider:
 
     def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
         url = "transaction/simulate"
-        response = self.do_post_generic(url, self.transaction_converter.transaction_to_dictionary(transaction))
+        response = self.do_post_generic(url, self.transactions_converter.transaction_to_dictionary(transaction))
         return SimulateResponse(response)
 
     def get_hyperblock(self, key: Union[int, str]) -> Dict[str, Any]:

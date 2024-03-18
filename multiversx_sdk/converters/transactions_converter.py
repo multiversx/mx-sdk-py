@@ -1,6 +1,7 @@
 import base64
 from typing import Any, Dict
 
+from multiversx_sdk.converters.errors import MissingFieldError
 from multiversx_sdk.core.interfaces import ITransaction
 from multiversx_sdk.core.transaction import Transaction
 
@@ -29,6 +30,8 @@ class TransactionConverter:
         }
 
     def dictionary_to_transaction(self, dictionary: Dict[str, Any]) -> Transaction:
+        self._ensure_mandatory_fields_for_transaction(dictionary)
+
         return Transaction(
             nonce=dictionary.get("nonce", None),
             value=int(dictionary.get("value", None)),
@@ -47,25 +50,41 @@ class TransactionConverter:
             guardian_signature=self._bytes_from_hex(dictionary.get("guardianSignature", ""))
         )
 
+    def _ensure_mandatory_fields_for_transaction(self, dictionary: Dict[str, Any]) -> None:
+        sender = dictionary.get("sender", None)
+        if sender is None:
+            raise MissingFieldError("The 'sender' key is missing from the dictionary")
+
+        receiver = dictionary.get("receiver", None)
+        if receiver is None:
+            raise MissingFieldError("The 'receiver' key is missing from the dictionary")
+
+        chain_id = dictionary.get("chainID", None)
+        if chain_id is None:
+            raise MissingFieldError("The 'chainID' key is missing from the dictionary")
+
+        gas_limit = dictionary.get("gasLimit", None)
+        if gas_limit is None:
+            raise MissingFieldError("The 'gasLimit' key is missing from the dictionary")
+
     def _value_to_b64_or_empty(self, value: str | bytes) -> str:
         value_as_bytes = value.encode() if isinstance(value, str) else value
 
-        if value and len(value):
+        if len(value):
             return base64.b64encode(value_as_bytes).decode()
         return ""
 
     def _value_to_hex_or_empty(self, value: bytes) -> str:
-        if value and len(value):
+        if len(value):
             return value.hex()
         return ""
 
     def _bytes_from_b64(self, value: str) -> bytes:
-        if value and len(value):
+        if len(value):
             return base64.b64decode(value.encode())
         return b""
 
     def _bytes_from_hex(self, value: str) -> bytes:
-        print(value)
-        if value and len(value):
+        if len(value):
             return bytes.fromhex(value)
         return b""

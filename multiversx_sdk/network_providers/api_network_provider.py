@@ -33,7 +33,7 @@ from multiversx_sdk.network_providers.transactions import (
 from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 
-class ITransactionConverter(Protocol):
+class ITransactionsConverter(Protocol):
     def transaction_to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
         ...
 
@@ -42,13 +42,13 @@ class ApiNetworkProvider:
     def __init__(
             self,
             url: str,
-            transaction_converter: ITransactionConverter,
+            transactions_converter: ITransactionsConverter,
             auth: Union[AuthBase, None] = None,
             address_hrp: str = DEFAULT_ADDRESS_HRP
     ) -> None:
         self.url = url
-        self.backing_proxy = ProxyNetworkProvider(url, transaction_converter, auth, address_hrp)
-        self.transaction_converter = transaction_converter
+        self.backing_proxy = ProxyNetworkProvider(url, transactions_converter, auth, address_hrp)
+        self.transactions_converter = transactions_converter
         self.auth = auth
 
     def get_network_config(self) -> NetworkConfig:
@@ -169,7 +169,7 @@ class ApiNetworkProvider:
 
     def send_transaction(self, transaction: ITransaction) -> str:
         url = 'transactions'
-        response = self.do_post_generic(url, self.transaction_converter.transaction_to_dictionary(transaction))
+        response = self.do_post_generic(url, self.transactions_converter.transaction_to_dictionary(transaction))
         tx_hash: str = response.get('txHash', '')
         return tx_hash
 
