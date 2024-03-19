@@ -6,7 +6,7 @@ from multiversx_sdk.core.interfaces import ITransaction
 from multiversx_sdk.core.transaction import Transaction
 
 
-class TransactionConverter:
+class TransactionsConverter:
     def __init__(self) -> None:
         pass
 

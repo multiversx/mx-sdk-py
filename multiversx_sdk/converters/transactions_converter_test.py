@@ -1,5 +1,5 @@
 from multiversx_sdk.converters.transactions_converter import \
-    TransactionConverter
+    TransactionsConverter
 from multiversx_sdk.core.transaction import Transaction
 
 
@@ -28,7 +28,7 @@ class TransactionMatcher:
 
 
 def test_transaction_converter():
-    converter = TransactionConverter()
+    converter = TransactionsConverter()
 
     transaction = Transaction(
         nonce=90,

@@ -1,7 +1,5 @@
 import pytest
 
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.network_providers.proxy_network_provider import (
@@ -10,7 +8,7 @@ from multiversx_sdk.network_providers.proxy_network_provider import (
 
 @pytest.mark.networkInteraction
 class TestProxy:
-    proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com", TransactionConverter())
+    proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
 
     def test_get_network_config(self):
         result = self.proxy.get_network_config()
