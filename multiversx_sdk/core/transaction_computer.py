@@ -4,10 +4,12 @@ from collections import OrderedDict
 from hashlib import blake2b
 from typing import Any, Dict
 
+from Cryptodome.Hash import keccak
+
 from multiversx_sdk.core.constants import (DIGEST_SIZE,
                                            TRANSACTION_OPTIONS_TX_GUARDED,
                                            TRANSACTION_OPTIONS_TX_HASH_SIGN)
-from multiversx_sdk.core.errors import NotEnoughGasError
+from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
 from multiversx_sdk.core.interfaces import INetworkConfig, ITransaction
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
 
@@ -32,9 +34,19 @@ class TransactionComputer:
         return int(fee_for_move + processing_fee)
 
     def compute_bytes_for_signing(self, transaction: ITransaction) -> bytes:
+        self._ensure_fields(transaction)
+
+        if transaction.version >= 2 and self.has_options_set_for_hash_signing(transaction):
+            return self.compute_hash_for_signing(transaction)
+
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
         return serialized
+
+    def compute_hash_for_signing(self, transaction: ITransaction) -> bytes:
+        dictionary = self._to_dictionary(transaction)
+        serialized = self._dict_to_json(dictionary)
+        return keccak.new(digest_bits=256).update(serialized).digest()
 
     def compute_transaction_hash(self, transaction: ITransaction) -> bytes:
         proto = ProtoSerializer()
@@ -52,6 +64,16 @@ class TransactionComputer:
         transaction.version = 2
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_GUARDED
         transaction.guardian = guardian
+
+    def _ensure_fields(self, transaction: ITransaction) -> None:
+        if not len(transaction.sender):
+            raise BadUsageError("The `sender` field is not set")
+
+        if not len(transaction.receiver):
+            raise BadUsageError("The `receiver` field is not set")
+
+        if not len(transaction.chain_id):
+            raise BadUsageError("The `chainID` field is not set")
 
     def _to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from multiversx_sdk.core.errors import NotEnoughGasError
@@ -6,6 +8,7 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.testutils.wallets import load_wallets
 from multiversx_sdk.wallet import UserSecretKey
+from multiversx_sdk.wallet.user_pem import UserPEM
 
 
 class NetworkConfig:
@@ -223,3 +226,22 @@ class TestTransaction:
         assert tx.version == 2
         assert tx.options == 3
         assert tx.guardian == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+
+    def test_sign_transaction_by_hash(self):
+        parent = Path(__file__).parent.parent
+        pem = UserPEM.from_file(parent / "testutils" / "testwallets" / "alice.pem")
+
+        tx = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            value=0,
+            gas_limit=50000,
+            version=2,
+            options=1,
+            chain_id="integration tests chain ID",
+            nonce=89
+        )
+        serialized = self.transaction_computer.compute_bytes_for_signing(tx)
+        tx.signature = pem.secret_key.sign(serialized)
+
+        assert tx.signature.hex() == "f0c81f2393b1ec5972c813f817bae8daa00ade91c6f75ea604ab6a4d2797aca4378d783023ff98f1a02717fe4f24240cdfba0b674ee9abb18042203d713bc70a"
