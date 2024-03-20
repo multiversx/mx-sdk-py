@@ -6,7 +6,7 @@ from typing import Any, Dict
 
 from Cryptodome.Hash import keccak
 
-from multiversx_sdk.core.constants import (DIGEST_SIZE,
+from multiversx_sdk.core.constants import (BECH32_ADDRESS_LENGTH, DIGEST_SIZE,
                                            TRANSACTION_OPTIONS_TX_GUARDED,
                                            TRANSACTION_OPTIONS_TX_HASH_SIGN)
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
@@ -66,11 +66,11 @@ class TransactionComputer:
         transaction.guardian = guardian
 
     def _ensure_fields(self, transaction: ITransaction) -> None:
-        if not len(transaction.sender):
-            raise BadUsageError("The `sender` field is not set")
+        if len(transaction.sender) != BECH32_ADDRESS_LENGTH:
+            raise BadUsageError("The `sender` field is invalid. Should be set to the bech32 address of the sender.")
 
-        if not len(transaction.receiver):
-            raise BadUsageError("The `receiver` field is not set")
+        if len(transaction.receiver) != BECH32_ADDRESS_LENGTH:
+            raise BadUsageError("The `receiver` field is invalid. Should be set to the bech32 address of the receiver.")
 
         if not len(transaction.chain_id):
             raise BadUsageError("The `chainID` field is not set")
