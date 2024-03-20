@@ -67,10 +67,10 @@ class TransactionComputer:
 
     def _ensure_fields(self, transaction: ITransaction) -> None:
         if len(transaction.sender) != BECH32_ADDRESS_LENGTH:
-            raise BadUsageError("The `sender` field is invalid. Should be set to the bech32 address of the sender.")
+            raise BadUsageError("Invalid `sender` field. Should be the bech32 address of the sender.")
 
         if len(transaction.receiver) != BECH32_ADDRESS_LENGTH:
-            raise BadUsageError("The `receiver` field is invalid. Should be set to the bech32 address of the receiver.")
+            raise BadUsageError("Invalid `receiver` field. Should be the bech32 address of the receiver.")
 
         if not len(transaction.chain_id):
             raise BadUsageError("The `chainID` field is not set")
