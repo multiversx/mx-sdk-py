@@ -2,7 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from multiversx_sdk.core.errors import NotEnoughGasError
+from multiversx_sdk.core.constants import \
+    MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
+from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
@@ -22,6 +24,7 @@ class NetworkConfig:
 class TestTransaction:
     wallets = load_wallets()
     alice = wallets["alice"]
+    bob = wallets["bob"]
     carol = wallets["carol"]
     transaction_computer = TransactionComputer()
 
@@ -245,3 +248,47 @@ class TestTransaction:
         tx.signature = pem.secret_key.sign(serialized)
 
         assert tx.signature.hex() == "f0c81f2393b1ec5972c813f817bae8daa00ade91c6f75ea604ab6a4d2797aca4378d783023ff98f1a02717fe4f24240cdfba0b674ee9abb18042203d713bc70a"
+
+    def test_apply_guardian_with_hash_signing(self):
+        tx = Transaction(
+            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            value=0,
+            gas_limit=50000,
+            version=1,
+            chain_id="localnet",
+            nonce=89
+        )
+
+        self.transaction_computer.apply_options_for_hash_signing(tx)
+        assert tx.version == 2
+        assert tx.options == 1
+
+        self.transaction_computer.apply_guardian(transaction=tx, guardian=self.carol.label)
+        assert tx.version == 2
+        assert tx.options == 3
+
+    def test_ensure_transaction_is_valid(self):
+        tx = Transaction(
+            sender="invalid_sender",
+            receiver=self.bob.label,
+            gas_limit=50000,
+            chain_id=""
+        )
+
+        with pytest.raises(BadUsageError, match="Invalid `sender` field. Should be the bech32 address of the sender."):
+            self.transaction_computer.compute_bytes_for_signing(tx)
+
+        tx.sender = self.alice.label
+        with pytest.raises(BadUsageError, match="The `chainID` field is not set"):
+            self.transaction_computer.compute_bytes_for_signing(tx)
+
+        tx.chain_id = "localnet"
+        tx.version = 1
+        tx.options = 2
+        with pytest.raises(BadUsageError, match=f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}"):
+            self.transaction_computer.compute_bytes_for_signing(tx)
+
+        self.transaction_computer.apply_options_for_hash_signing(tx)
+        assert tx.version == 2
+        assert tx.options == 3

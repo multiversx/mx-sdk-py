@@ -6,9 +6,10 @@ from typing import Any, Dict
 
 from Cryptodome.Hash import keccak
 
-from multiversx_sdk.core.constants import (BECH32_ADDRESS_LENGTH, DIGEST_SIZE,
-                                           TRANSACTION_OPTIONS_TX_GUARDED,
-                                           TRANSACTION_OPTIONS_TX_HASH_SIGN)
+from multiversx_sdk.core.constants import (
+    BECH32_ADDRESS_LENGTH, DIGEST_SIZE,
+    MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS,
+    TRANSACTION_OPTIONS_TX_GUARDED, TRANSACTION_OPTIONS_TX_HASH_SIGN)
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
 from multiversx_sdk.core.interfaces import INetworkConfig, ITransaction
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
@@ -61,9 +62,17 @@ class TransactionComputer:
         return (transaction.options & TRANSACTION_OPTIONS_TX_HASH_SIGN) == TRANSACTION_OPTIONS_TX_HASH_SIGN
 
     def apply_guardian(self, transaction: ITransaction, guardian: str) -> None:
-        transaction.version = 2
+        if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
+            transaction.version = MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
+
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_GUARDED
         transaction.guardian = guardian
+
+    def apply_options_for_hash_signing(self, transaction: ITransaction) -> None:
+        if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
+            transaction.version = MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
+
+        transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_HASH_SIGN
 
     def _ensure_fields(self, transaction: ITransaction) -> None:
         if len(transaction.sender) != BECH32_ADDRESS_LENGTH:
@@ -74,6 +83,10 @@ class TransactionComputer:
 
         if not len(transaction.chain_id):
             raise BadUsageError("The `chainID` field is not set")
+
+        if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
+            if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(transaction):
+                raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
 
     def _to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
