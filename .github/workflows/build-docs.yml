@@ -4,7 +4,10 @@ name: Build-sphinx-docs
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -26,7 +29,12 @@ jobs:
           cd docs/
           make html
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_build/html/
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git checkout gh-pages || git checkout --orphan gh-pages
+          git rm -rf .
+          mv ./_build/html
+          git add .
+          git commit -m "Deploy documentation from GitHub Actions"
+          git push origin gh-pages

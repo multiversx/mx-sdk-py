@@ -1,5 +1,5 @@
 .. multiversx-sdk documentation master file, created by
-   sphinx-quickstart on Tue Apr  2 15:36:13 2024.
+   sphinx-quickstart on Tue Apr  2 16:32:28 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
