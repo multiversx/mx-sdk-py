@@ -37,7 +37,8 @@ jobs:
           ls
           git rm -rf .
           ls
-          $ echo "$PWD"
+          echo "$PWD"
+          echo ${{ github.workspace }}
           mv ./_build/html ./
           git add .
           git commit -m "Deploy documentation from GitHub Actions"
