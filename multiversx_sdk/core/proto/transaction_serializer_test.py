@@ -1,5 +1,6 @@
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
-from multiversx_sdk.core.transaction import Transaction, TransactionComputer
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.testutils.wallets import load_wallets
 
 

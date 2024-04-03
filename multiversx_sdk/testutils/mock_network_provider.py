@@ -3,7 +3,8 @@ from typing import Any, Callable, Dict, List
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.interfaces import IAddress
-from multiversx_sdk.core.transaction import Transaction, TransactionComputer
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.accounts import AccountOnNetwork
 from multiversx_sdk.network_providers.contract_query_response import \
     ContractQueryResponse

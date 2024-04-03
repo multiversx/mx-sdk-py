@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Tuple, Union, cast
 import requests
 from requests.auth import AuthBase
 
+from multiversx_sdk.converters.transactions_converter import \
+    TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import DefaultPagination
@@ -29,13 +31,17 @@ from multiversx_sdk.network_providers.tokens import (
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
-    ITransaction, TransactionInMempool, TransactionOnNetwork,
-    transaction_to_dictionary)
+    ITransaction, TransactionInMempool, TransactionOnNetwork)
 from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(self, url: str, auth: Union[AuthBase, None] = None, address_hrp: str = DEFAULT_ADDRESS_HRP) -> None:
+    def __init__(
+            self,
+            url: str,
+            auth: Union[AuthBase, None] = None,
+            address_hrp: str = DEFAULT_ADDRESS_HRP
+    ) -> None:
         self.url = url
         self.backing_proxy = ProxyNetworkProvider(url, auth, address_hrp)
         self.auth = auth
@@ -157,8 +163,9 @@ class ApiNetworkProvider:
         return status
 
     def send_transaction(self, transaction: ITransaction) -> str:
-        url = f'transactions'
-        response = self.do_post_generic(url, transaction_to_dictionary(transaction))
+        url = 'transactions'
+        transactions_converter = TransactionsConverter()
+        response = self.do_post_generic(url, transactions_converter.transaction_to_dictionary(transaction))
         tx_hash: str = response.get('txHash', '')
         return tx_hash
 

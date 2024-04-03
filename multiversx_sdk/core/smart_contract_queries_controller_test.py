@@ -2,8 +2,7 @@ import base64
 
 import pytest
 
-from multiversx_sdk.core.adapters.query_runner_adapter import \
-    QueryRunnerAdapter
+from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
