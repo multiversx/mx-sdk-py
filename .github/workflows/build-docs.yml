@@ -31,16 +31,16 @@ jobs:
         with:
           ref: "gh-pages"
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          path: "docs"
+          path: "gh-pages-docs"
 
       - name: Deploy to GitHub Pages
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           ls
-          rm -rf ./docs/*
-          mv -f ${{ github.workspace }}/docs/_build/html/* ./docs
-          cd ./docs
+          rm -rf ./gh-pages-docs/*
+          mv -f ${{ github.workspace }}/docs/_build/html/* ./gh-pages-docs
+          cd ./gh-pages-docs
           ls
           touch .nojekyll
           git add .
