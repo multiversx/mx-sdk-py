@@ -28,6 +28,7 @@ jobs:
         run: |
           cd docs/
           make html
+          ls ./_build/html/
 
       - uses: actions/checkout@v4
         with:
