@@ -13,14 +13,6 @@ Subpackages
 Submodules
 ----------
 
-multiversx\_sdk.wallet.constants module
----------------------------------------
-
-.. automodule:: multiversx_sdk.wallet.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.wallet.core module
 ----------------------------------
 
@@ -53,26 +45,10 @@ multiversx\_sdk.wallet.mnemonic module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.wallet.mnemonic\_test module
---------------------------------------------
-
-.. automodule:: multiversx_sdk.wallet.mnemonic_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.wallet.pem\_entry module
 ----------------------------------------
 
 .. automodule:: multiversx_sdk.wallet.pem_entry
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.wallet.pem\_entry\_test module
-----------------------------------------------
-
-.. automodule:: multiversx_sdk.wallet.pem_entry_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -97,14 +73,6 @@ multiversx\_sdk.wallet.user\_signer module
 ------------------------------------------
 
 .. automodule:: multiversx_sdk.wallet.user_signer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.wallet.user\_test module
-----------------------------------------
-
-.. automodule:: multiversx_sdk.wallet.user_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -145,14 +113,6 @@ multiversx\_sdk.wallet.validator\_signer module
 -----------------------------------------------
 
 .. automodule:: multiversx_sdk.wallet.validator_signer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.wallet.validator\_test module
----------------------------------------------
-
-.. automodule:: multiversx_sdk.wallet.validator_test
    :members:
    :undoc-members:
    :show-inheritance:

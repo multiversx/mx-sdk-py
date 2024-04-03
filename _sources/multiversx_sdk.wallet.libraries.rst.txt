@@ -12,14 +12,6 @@ multiversx\_sdk.wallet.libraries.bls\_facade module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.wallet.libraries.bls\_facade\_test module
----------------------------------------------------------
-
-.. automodule:: multiversx_sdk.wallet.libraries.bls_facade_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.wallet.libraries.libbls module
 ----------------------------------------------
 

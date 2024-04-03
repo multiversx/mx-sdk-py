@@ -4,14 +4,6 @@ multiversx\_sdk.wallet.crypto package
 Submodules
 ----------
 
-multiversx\_sdk.wallet.crypto.constants module
-----------------------------------------------
-
-.. automodule:: multiversx_sdk.wallet.crypto.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.wallet.crypto.decryptor module
 ----------------------------------------------
 

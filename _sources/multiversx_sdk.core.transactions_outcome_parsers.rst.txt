@@ -20,14 +20,6 @@ multiversx\_sdk.core.transactions\_outcome\_parsers.token\_management\_transacti
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.transactions\_outcome\_parsers.token\_management\_transactions\_outcome\_parser\_test module
------------------------------------------------------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.transactions\_outcome\_parsers.token\_management\_transactions\_outcome\_parser\_types module
 ------------------------------------------------------------------------------------------------------------------
 
