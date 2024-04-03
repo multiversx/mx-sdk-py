@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.core.bech32 &mdash; multiversx-sdk 0.9.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=39bb1c6d"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.core.bech32</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.core.bech32</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2017 Pieter Wuille</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="c1"># THE SOFTWARE.</span>
+
+<span class="sd">&quot;&quot;&quot;Reference implementation for Bech32 and segwit addresses.&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="n">CHARSET</span> <span class="o">=</span> <span class="s2">&quot;qpzry9x8gf2tvdw0s3jn54khce6mua7l&quot;</span>
+
+
+<div class="viewcode-block" id="bech32_polymod">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_polymod">[docs]</a>
+<span class="k">def</span> <span class="nf">bech32_polymod</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal function that computes the Bech32 checksum.&quot;&quot;&quot;</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x3b6a57b2</span><span class="p">,</span> <span class="mh">0x26508e6d</span><span class="p">,</span> <span class="mh">0x1ea119fa</span><span class="p">,</span> <span class="mh">0x3d4233dd</span><span class="p">,</span> <span class="mh">0x2a1462b3</span><span class="p">]</span>
+    <span class="n">chk</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="n">chk</span> <span class="o">&gt;&gt;</span> <span class="mi">25</span>
+        <span class="n">chk</span> <span class="o">=</span> <span class="p">(</span><span class="n">chk</span> <span class="o">&amp;</span> <span class="mh">0x1ffffff</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span> <span class="o">^</span> <span class="n">value</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="n">chk</span> <span class="o">^=</span> <span class="n">generator</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="p">((</span><span class="n">top</span> <span class="o">&gt;&gt;</span> <span class="n">i</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">chk</span></div>
+
+
+
+<div class="viewcode-block" id="bech32_hrp_expand">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_hrp_expand">[docs]</a>
+<span class="k">def</span> <span class="nf">bech32_hrp_expand</span><span class="p">(</span><span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand the HRP into values for checksum computation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hrp</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">31</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">hrp</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="bech32_verify_checksum">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_verify_checksum">[docs]</a>
+<span class="k">def</span> <span class="nf">bech32_verify_checksum</span><span class="p">(</span><span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify a checksum given HRP and converted data characters.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">bech32_polymod</span><span class="p">(</span><span class="n">bech32_hrp_expand</span><span class="p">(</span><span class="n">hrp</span><span class="p">)</span> <span class="o">+</span> <span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="bech32_create_checksum">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_create_checksum">[docs]</a>
+<span class="k">def</span> <span class="nf">bech32_create_checksum</span><span class="p">(</span><span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the checksum values given HRP and data.&quot;&quot;&quot;</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">bech32_hrp_expand</span><span class="p">(</span><span class="n">hrp</span><span class="p">)</span> <span class="o">+</span> <span class="n">data</span>
+    <span class="n">polymod</span> <span class="o">=</span> <span class="n">bech32_polymod</span><span class="p">(</span><span class="n">values</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">^</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">polymod</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">5</span> <span class="o">-</span> <span class="n">i</span><span class="p">))</span> <span class="o">&amp;</span> <span class="mi">31</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span></div>
+
+
+
+<div class="viewcode-block" id="bech32_encode">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_encode">[docs]</a>
+<span class="k">def</span> <span class="nf">bech32_encode</span><span class="p">(</span><span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a Bech32 string given HRP and data values.&quot;&quot;&quot;</span>
+    <span class="n">combined</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="n">bech32_create_checksum</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hrp</span> <span class="o">+</span> <span class="s1">&#39;1&#39;</span> <span class="o">+</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">CHARSET</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">combined</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="bech32_decode">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_decode">[docs]</a>
+<span class="k">def</span> <span class="nf">bech32_decode</span><span class="p">(</span><span class="n">bech</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate a Bech32 string, and determine HRP and data.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nb">any</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">33</span> <span class="ow">or</span> <span class="nb">ord</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">126</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bech</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="n">bech</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="n">bech</span> <span class="ow">and</span> <span class="n">bech</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="n">bech</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">bech</span> <span class="o">=</span> <span class="n">bech</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">bech</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bech</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">bech</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">CHARSET</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bech</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">hrp</span> <span class="o">=</span> <span class="n">bech</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">CHARSET</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bech</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bech32_verify_checksum</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="n">data</span><span class="p">[:</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="convertbits">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.convertbits">[docs]</a>
+<span class="k">def</span> <span class="nf">convertbits</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">frombits</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">tobits</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">pad</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;General power-of-2 base conversion.&quot;&quot;&quot;</span>
+    <span class="n">acc</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ret</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">maxv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">tobits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">max_acc</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">frombits</span> <span class="o">+</span> <span class="n">tobits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="n">frombits</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="p">((</span><span class="n">acc</span> <span class="o">&lt;&lt;</span> <span class="n">frombits</span><span class="p">)</span> <span class="o">|</span> <span class="n">value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">max_acc</span>
+        <span class="n">bits</span> <span class="o">+=</span> <span class="n">frombits</span>
+        <span class="k">while</span> <span class="n">bits</span> <span class="o">&gt;=</span> <span class="n">tobits</span><span class="p">:</span>
+            <span class="n">bits</span> <span class="o">-=</span> <span class="n">tobits</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">acc</span> <span class="o">&gt;&gt;</span> <span class="n">bits</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">maxv</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pad</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">bits</span><span class="p">:</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">acc</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">tobits</span> <span class="o">-</span> <span class="n">bits</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">maxv</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">bits</span> <span class="o">&gt;=</span> <span class="n">frombits</span> <span class="ow">or</span> <span class="p">((</span><span class="n">acc</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">tobits</span> <span class="o">-</span> <span class="n">bits</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">maxv</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<div class="viewcode-block" id="decode">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.decode">[docs]</a>
+<span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decode a segwit address.&quot;&quot;&quot;</span>
+    <span class="n">hrpgot</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bech32_decode</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hrpgot</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hrpgot</span> <span class="o">!=</span> <span class="n">hrp</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">decoded</span> <span class="o">=</span> <span class="n">convertbits</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">decoded</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">40</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">20</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">decoded</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="encode">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.encode">[docs]</a>
+<span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">witver</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">witprog</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Encode a segwit address.&quot;&quot;&quot;</span>
+    <span class="n">converted</span> <span class="o">=</span> <span class="n">convertbits</span><span class="p">(</span><span class="n">witprog</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">converted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">bech32_encode</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="p">[</span><span class="n">witver</span><span class="p">]</span> <span class="o">+</span> <span class="n">converted</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">decode</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

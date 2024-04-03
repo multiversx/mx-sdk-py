@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.core.transaction_parsers package &mdash; multiversx-sdk 0.9.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=39bb1c6d"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="multiversx_sdk.core.transactions_factories package" href="multiversx_sdk.core.transactions_factories.html" />
+    <link rel="prev" title="multiversx_sdk.core.transaction_builders package" href="multiversx_sdk.core.transaction_builders.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">multiversx_sdk</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="multiversx_sdk.html">multiversx_sdk package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="multiversx_sdk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html">multiversx_sdk.network_providers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.html">multiversx_sdk.wallet package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#module-multiversx_sdk">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">multiversx_sdk</a></li>
+          <li class="breadcrumb-item"><a href="multiversx_sdk.html">multiversx_sdk package</a></li>
+          <li class="breadcrumb-item"><a href="multiversx_sdk.core.html">multiversx_sdk.core package</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.core.transaction_parsers package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/multiversx_sdk.core.transaction_parsers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="multiversx-sdk-core-transaction-parsers-package">
+<h1>multiversx_sdk.core.transaction_parsers package<a class="headerlink" href="#multiversx-sdk-core-transaction-parsers-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-multiversx_sdk.core.transaction_parsers.interfaces">
+<span id="multiversx-sdk-core-transaction-parsers-interfaces-module"></span><h2>multiversx_sdk.core.transaction_parsers.interfaces module<a class="headerlink" href="#module-multiversx_sdk.core.transaction_parsers.interfaces" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.interfaces.</span></span><span class="sig-name descname"><span class="pre">IContractResultItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/interfaces.html#IContractResultItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem.logs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs"><span class="pre">ITransactionLogs</span></a></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem.logs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.IContractResults">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.interfaces.</span></span><span class="sig-name descname"><span class="pre">IContractResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/interfaces.html#IContractResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResults" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.IContractResults.items">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">items</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem" title="multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem"><span class="pre">IContractResultItem</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResults.items" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.interfaces.</span></span><span class="sig-name descname"><span class="pre">ITransactionEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/interfaces.html#ITransactionEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.address">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IAddress" title="multiversx_sdk.core.interfaces.IAddress"><span class="pre">IAddress</span></a></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.identifier">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.topics">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">topics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic"><span class="pre">ITransactionEventTopic</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent.topics" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.interfaces.</span></span><span class="sig-name descname"><span class="pre">ITransactionEventTopic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/interfaces.html#ITransactionEventTopic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic.raw">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">raw</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic.raw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.interfaces.</span></span><span class="sig-name descname"><span class="pre">ITransactionLogs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/interfaces.html#ITransactionLogs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs.events">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent"><span class="pre">ITransactionEvent</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs.events" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.interfaces.</span></span><span class="sig-name descname"><span class="pre">ITransactionOnNetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/interfaces.html#ITransactionOnNetwork"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork.contract_results">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">contract_results</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResults" title="multiversx_sdk.core.transaction_parsers.interfaces.IContractResults"><span class="pre">IContractResults</span></a></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork.contract_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork.logs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs"><span class="pre">ITransactionLogs</span></a></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork.logs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser">
+<span id="multiversx-sdk-core-transaction-parsers-token-operations-outcome-parser-module"></span><h2>multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser module<a class="headerlink" href="#module-multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.</span></span><span class="sig-name descname"><span class="pre">IConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#IConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig.address_hrp">
+<span class="sig-name descname"><span class="pre">address_hrp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig.address_hrp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.</span></span><span class="sig-name descname"><span class="pre">TokenOperationsOutcomeParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig"><span class="pre">IConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_add_quantity">
+<span class="sig-name descname"><span class="pre">parse_add_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome"><span class="pre">AddQuantityOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_add_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_add_quantity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_burn_quantity">
+<span class="sig-name descname"><span class="pre">parse_burn_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome"><span class="pre">BurnQuantityOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_burn_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_burn_quantity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_freeze">
+<span class="sig-name descname"><span class="pre">parse_freeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome"><span class="pre">FreezingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_freeze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_freeze" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_issue_fungible">
+<span class="sig-name descname"><span class="pre">parse_issue_fungible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_issue_fungible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_issue_fungible" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_issue_non_fungible">
+<span class="sig-name descname"><span class="pre">parse_issue_non_fungible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_issue_non_fungible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_issue_non_fungible" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_issue_semi_fungible">
+<span class="sig-name descname"><span class="pre">parse_issue_semi_fungible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_issue_semi_fungible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_issue_semi_fungible" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_local_burn">
+<span class="sig-name descname"><span class="pre">parse_local_burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome"><span class="pre">BurnOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_local_burn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_local_burn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_local_mint">
+<span class="sig-name descname"><span class="pre">parse_local_mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome"><span class="pre">MintOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_local_mint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_local_mint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_nft_create">
+<span class="sig-name descname"><span class="pre">parse_nft_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome"><span class="pre">NFTCreateOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_nft_create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_nft_create" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_pause">
+<span class="sig-name descname"><span class="pre">parse_pause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome"><span class="pre">PausingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_pause"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_pause" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_register_and_set_all_roles">
+<span class="sig-name descname"><span class="pre">parse_register_and_set_all_roles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome"><span class="pre">RegisterAndSetAllRolesOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_register_and_set_all_roles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_register_and_set_all_roles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_register_meta_esdt">
+<span class="sig-name descname"><span class="pre">parse_register_meta_esdt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_register_meta_esdt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_register_meta_esdt" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_set_burn_role_globally">
+<span class="sig-name descname"><span class="pre">parse_set_burn_role_globally</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_set_burn_role_globally"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_set_burn_role_globally" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_set_special_role">
+<span class="sig-name descname"><span class="pre">parse_set_special_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome"><span class="pre">SetSpecialRoleOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_set_special_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_set_special_role" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_unfreeze">
+<span class="sig-name descname"><span class="pre">parse_unfreeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome"><span class="pre">FreezingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_unfreeze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_unfreeze" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_unpause">
+<span class="sig-name descname"><span class="pre">parse_unpause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome"><span class="pre">PausingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_unpause"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_unpause" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_unset_burn_role_globally">
+<span class="sig-name descname"><span class="pre">parse_unset_burn_role_globally</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_unset_burn_role_globally"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_unset_burn_role_globally" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_update_attributes">
+<span class="sig-name descname"><span class="pre">parse_update_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome"><span class="pre">UpdateAttributesOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_update_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_update_attributes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_wipe">
+<span class="sig-name descname"><span class="pre">parse_wipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome"><span class="pre">WipingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_wipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.TokenOperationsOutcomeParser.parse_wipe" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test">
+<span id="multiversx-sdk-core-transaction-parsers-token-operations-outcome-parser-test-module"></span><h2>multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test module<a class="headerlink" href="#module-multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_issue_fungible">
+<span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.</span></span><span class="sig-name descname"><span class="pre">test_parse_issue_fungible</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_test.html#test_parse_issue_fungible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_issue_fungible" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_local_mint">
+<span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.</span></span><span class="sig-name descname"><span class="pre">test_parse_local_mint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_test.html#test_parse_local_mint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_local_mint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_nft_create">
+<span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.</span></span><span class="sig-name descname"><span class="pre">test_parse_nft_create</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_test.html#test_parse_nft_create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_nft_create" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_set_special_role">
+<span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.</span></span><span class="sig-name descname"><span class="pre">test_parse_set_special_role</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_test.html#test_parse_set_special_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_test.test_parse_set_special_role" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types">
+<span id="multiversx-sdk-core-transaction-parsers-token-operations-outcome-parser-types-module"></span><h2>multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types module<a class="headerlink" href="#module-multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">AddQuantityOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added_quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#AddQuantityOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome.added_quantity">
+<span class="sig-name descname"><span class="pre">added_quantity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome.added_quantity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">BurnOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">burnt_supply</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#BurnOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.burnt_supply">
+<span class="sig-name descname"><span class="pre">burnt_supply</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.burnt_supply" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.user_address">
+<span class="sig-name descname"><span class="pre">user_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome.user_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">BurnQuantityOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">burnt_quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#BurnQuantityOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome.burnt_quantity">
+<span class="sig-name descname"><span class="pre">burnt_quantity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome.burnt_quantity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">ESDTIssueOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#ESDTIssueOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">FreezingOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#FreezingOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.balance">
+<span class="sig-name descname"><span class="pre">balance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.balance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.user_address">
+<span class="sig-name descname"><span class="pre">user_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome.user_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">MintOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minted_supply</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#MintOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.minted_supply">
+<span class="sig-name descname"><span class="pre">minted_supply</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.minted_supply" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.user_address">
+<span class="sig-name descname"><span class="pre">user_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome.user_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">NFTCreateOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_quantity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#NFTCreateOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome.initial_quantity">
+<span class="sig-name descname"><span class="pre">initial_quantity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome.initial_quantity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">PausingOutcome</span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#PausingOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">RegisterAndSetAllRolesOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#RegisterAndSetAllRolesOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome.roles">
+<span class="sig-name descname"><span class="pre">roles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome.roles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">SetSpecialRoleOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#SetSpecialRoleOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome.roles">
+<span class="sig-name descname"><span class="pre">roles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome.roles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome.user_address">
+<span class="sig-name descname"><span class="pre">user_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome.user_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">UpdateAttributesOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#UpdateAttributesOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome.attributes">
+<span class="sig-name descname"><span class="pre">attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome.attributes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.</span></span><span class="sig-name descname"><span class="pre">WipingOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser_types.html#WipingOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.balance">
+<span class="sig-name descname"><span class="pre">balance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.balance" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.nonce">
+<span class="sig-name descname"><span class="pre">nonce</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.nonce" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.token_identifier">
+<span class="sig-name descname"><span class="pre">token_identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.token_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.user_address">
+<span class="sig-name descname"><span class="pre">user_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome.user_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper">
+<span id="multiversx-sdk-core-transaction-parsers-transaction-on-network-wrapper-module"></span><h2>multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper module<a class="headerlink" href="#module-multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.ContractResultItemWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.</span></span><span class="sig-name descname"><span class="pre">ContractResultItemWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs"><span class="pre">ITransactionLogs</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#ContractResultItemWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.ContractResultItemWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.ContractResultsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.</span></span><span class="sig-name descname"><span class="pre">ContractResultsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem" title="multiversx_sdk.core.transaction_parsers.interfaces.IContractResultItem"><span class="pre">IContractResultItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#ContractResultsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.ContractResultsWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventTopicWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.</span></span><span class="sig-name descname"><span class="pre">TransactionEventTopicWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionEventTopicWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventTopicWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.</span></span><span class="sig-name descname"><span class="pre">TransactionEventWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IAddress" title="multiversx_sdk.core.interfaces.IAddress"><span class="pre">IAddress</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEventTopic"><span class="pre">ITransactionEventTopic</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionEventWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionLogsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.</span></span><span class="sig-name descname"><span class="pre">TransactionLogsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionEvent"><span class="pre">ITransactionEvent</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionLogsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionLogsWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.</span></span><span class="sig-name descname"><span class="pre">TransactionOnNetworkWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contract_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.IContractResults" title="multiversx_sdk.core.transaction_parsers.interfaces.IContractResults"><span class="pre">IContractResults</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionLogs"><span class="pre">ITransactionLogs</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionOnNetworkWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.ensure_no_error">
+<span class="sig-name descname"><span class="pre">ensure_no_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionOnNetworkWrapper.ensure_no_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.ensure_no_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.find_single_event_by_identifier">
+<span class="sig-name descname"><span class="pre">find_single_event_by_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventWrapper" title="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventWrapper"><span class="pre">TransactionEventWrapper</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionOnNetworkWrapper.find_single_event_by_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.find_single_event_by_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.from_transaction">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_on_network</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper" title="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper"><span class="pre">TransactionOnNetworkWrapper</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionOnNetworkWrapper.from_transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.from_transaction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.gather_all_events">
+<span class="sig-name descname"><span class="pre">gather_all_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventWrapper" title="multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionEventWrapper"><span class="pre">TransactionEventWrapper</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/transaction_on_network_wrapper.html#TransactionOnNetworkWrapper.gather_all_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper.TransactionOnNetworkWrapper.gather_all_events" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.core.transaction_parsers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-multiversx_sdk.core.transaction_parsers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.transaction_parsers.</span></span><span class="sig-name descname"><span class="pre">TokenOperationsOutcomeParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser.IConfig"><span class="pre">IConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_add_quantity">
+<span class="sig-name descname"><span class="pre">parse_add_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.AddQuantityOutcome"><span class="pre">AddQuantityOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_add_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_add_quantity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_burn_quantity">
+<span class="sig-name descname"><span class="pre">parse_burn_quantity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnQuantityOutcome"><span class="pre">BurnQuantityOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_burn_quantity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_burn_quantity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_freeze">
+<span class="sig-name descname"><span class="pre">parse_freeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome"><span class="pre">FreezingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_freeze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_freeze" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_issue_fungible">
+<span class="sig-name descname"><span class="pre">parse_issue_fungible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_issue_fungible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_issue_fungible" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_issue_non_fungible">
+<span class="sig-name descname"><span class="pre">parse_issue_non_fungible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_issue_non_fungible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_issue_non_fungible" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_issue_semi_fungible">
+<span class="sig-name descname"><span class="pre">parse_issue_semi_fungible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_issue_semi_fungible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_issue_semi_fungible" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_local_burn">
+<span class="sig-name descname"><span class="pre">parse_local_burn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.BurnOutcome"><span class="pre">BurnOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_local_burn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_local_burn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_local_mint">
+<span class="sig-name descname"><span class="pre">parse_local_mint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.MintOutcome"><span class="pre">MintOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_local_mint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_local_mint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_nft_create">
+<span class="sig-name descname"><span class="pre">parse_nft_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.NFTCreateOutcome"><span class="pre">NFTCreateOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_nft_create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_nft_create" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_pause">
+<span class="sig-name descname"><span class="pre">parse_pause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome"><span class="pre">PausingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_pause"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_pause" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_register_and_set_all_roles">
+<span class="sig-name descname"><span class="pre">parse_register_and_set_all_roles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.RegisterAndSetAllRolesOutcome"><span class="pre">RegisterAndSetAllRolesOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_register_and_set_all_roles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_register_and_set_all_roles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_register_meta_esdt">
+<span class="sig-name descname"><span class="pre">parse_register_meta_esdt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.ESDTIssueOutcome"><span class="pre">ESDTIssueOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_register_meta_esdt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_register_meta_esdt" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_set_burn_role_globally">
+<span class="sig-name descname"><span class="pre">parse_set_burn_role_globally</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_set_burn_role_globally"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_set_burn_role_globally" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_set_special_role">
+<span class="sig-name descname"><span class="pre">parse_set_special_role</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.SetSpecialRoleOutcome"><span class="pre">SetSpecialRoleOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_set_special_role"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_set_special_role" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_unfreeze">
+<span class="sig-name descname"><span class="pre">parse_unfreeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.FreezingOutcome"><span class="pre">FreezingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_unfreeze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_unfreeze" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_unpause">
+<span class="sig-name descname"><span class="pre">parse_unpause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.PausingOutcome"><span class="pre">PausingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_unpause"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_unpause" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_unset_burn_role_globally">
+<span class="sig-name descname"><span class="pre">parse_unset_burn_role_globally</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_unset_burn_role_globally"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_unset_burn_role_globally" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_update_attributes">
+<span class="sig-name descname"><span class="pre">parse_update_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.UpdateAttributesOutcome"><span class="pre">UpdateAttributesOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_update_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_update_attributes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_wipe">
+<span class="sig-name descname"><span class="pre">parse_wipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork" title="multiversx_sdk.core.transaction_parsers.interfaces.ITransactionOnNetwork"><span class="pre">ITransactionOnNetwork</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome" title="multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_types.WipingOutcome"><span class="pre">WipingOutcome</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_parsers/token_operations_outcome_parser.html#TokenOperationsOutcomeParser.parse_wipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.transaction_parsers.TokenOperationsOutcomeParser.parse_wipe" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="multiversx_sdk.core.transaction_builders.html" class="btn btn-neutral float-left" title="multiversx_sdk.core.transaction_builders package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="multiversx_sdk.core.transactions_factories.html" class="btn btn-neutral float-right" title="multiversx_sdk.core.transactions_factories package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

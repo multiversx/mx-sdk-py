@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.core.transactions_factories.token_management_transactions_factory &mdash; multiversx-sdk 0.9.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=39bb1c6d"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.core.transactions_factories.token_management_transactions_factory</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.core.transactions_factories.token_management_transactions_factory</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Protocol</span>
+
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.serializer</span> <span class="kn">import</span> <span class="n">arg_to_string</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_factories.transaction_builder</span> <span class="kn">import</span> \
+    <span class="n">TransactionBuilder</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="IConfig">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.IConfig">[docs]</a>
+<span class="k">class</span> <span class="nc">IConfig</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">min_gas_limit</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_per_byte</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_issue</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_esdt_local_mint</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_esdt_local_burn</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_set_special_role</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_pausing</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_freezing</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_wiping</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_esdt_nft_create</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_esdt_nft_burn</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_limit_store_per_byte</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">issue_cost</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">esdt_contract_address</span><span class="p">:</span> <span class="n">IAddress</span></div>
+
+
+
+<div class="viewcode-block" id="RegisterAndSetAllRolesTokenType">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.RegisterAndSetAllRolesTokenType">[docs]</a>
+<span class="k">class</span> <span class="nc">RegisterAndSetAllRolesTokenType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NFT</span> <span class="o">=</span> <span class="s2">&quot;NFT&quot;</span>
+    <span class="n">SFT</span> <span class="o">=</span> <span class="s2">&quot;SFT&quot;</span>
+    <span class="n">META</span> <span class="o">=</span> <span class="s2">&quot;META&quot;</span>
+    <span class="n">FNG</span> <span class="o">=</span> <span class="s2">&quot;FNG&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory">[docs]</a>
+<span class="k">class</span> <span class="nc">TokenManagementTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">IConfig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="o">=</span> <span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span> <span class="o">=</span> <span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;false&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_issuing_fungible">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_fungible">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_issuing_fungible</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">initial_supply</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_decimals</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
+
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">initial_supply</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">num_decimals</span><span class="p">),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canFreeze&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_freeze</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canWipe&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_wipe</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canPause&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_pause</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canChangeOwner&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_change_owner</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canUpgrade&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_upgrade</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canAddSpecialRoles&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_add_special_roles</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_notify_about_unsetting_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">==========</span>
+<span class="s2">IMPORTANT!</span>
+<span class="s2">==========</span>
+<span class="s2">You are about to issue (register) a new token. This will set the role &quot;ESDTRoleBurnForAll&quot; (globally).</span>
+<span class="s2">Once the token is registered, you can unset this role by calling &quot;unsetBurnRoleGlobally&quot; (in a separate transaction).&quot;&quot;&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_issuing_semi_fungible">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_semi_fungible">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_issuing_semi_fungible</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_transfer_nft_create_role</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
+
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;issueSemiFungible&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canFreeze&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_freeze</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canWipe&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_wipe</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canPause&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_pause</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canTransferNFTCreateRole&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_transfer_nft_create_role</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canChangeOwner&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_change_owner</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canUpgrade&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_upgrade</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canAddSpecialRoles&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_add_special_roles</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_issuing_non_fungible">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_non_fungible">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_issuing_non_fungible</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_transfer_nft_create_role</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
+
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;issueNonFungible&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canFreeze&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_freeze</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canWipe&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_wipe</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canPause&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_pause</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canTransferNFTCreateRole&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_transfer_nft_create_role</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canChangeOwner&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_change_owner</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canUpgrade&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_upgrade</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canAddSpecialRoles&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_add_special_roles</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_meta_esdt">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_meta_esdt">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_registering_meta_esdt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">num_decimals</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_transfer_nft_create_role</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
+
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;registerMetaESDT&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">num_decimals</span><span class="p">),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canFreeze&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_freeze</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canWipe&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_wipe</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canPause&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_pause</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canTransferNFTCreateRole&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_transfer_nft_create_role</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canChangeOwner&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_change_owner</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canUpgrade&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_upgrade</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;canAddSpecialRoles&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_true_as_hex</span> <span class="k">if</span> <span class="n">can_add_special_roles</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_false_as_hex</span><span class="p">])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_and_setting_roles">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_and_setting_roles">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_registering_and_setting_roles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_type</span><span class="p">:</span> <span class="n">RegisterAndSetAllRolesTokenType</span><span class="p">,</span>
+        <span class="n">num_decimals</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
+
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;registerAndSetAllRoles&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_type</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">num_decimals</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_burn_role_globally">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_burn_role_globally">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_setting_burn_role_globally</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;setBurnRoleGlobally&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_burn_role_globally">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_burn_role_globally">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_burn_role_globally</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;unsetBurnRoleGlobally&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_setting_special_role_on_fungible_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">add_role_local_mint</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_local_burn</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleLocalMint&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_local_mint</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleLocalBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_local_burn</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_setting_special_role_on_semi_fungible_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">add_role_nft_create</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_nft_add_quantity</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTCreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_create</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_burn</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTAddQuantity&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_add_quantity</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_non_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_non_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_setting_special_role_on_non_fungible_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">add_role_nft_create</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_nft_update_attributes</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_nft_add_uri</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTCreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_create</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_burn</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTUpdateAttributes&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_update_attributes</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTAddURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_add_uri</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_creating_nft">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_creating_nft">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_creating_nft</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">initial_quantity</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">royalties</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="nb">hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
+        <span class="n">uris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;ESDTNFTCreate&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">initial_quantity</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">royalties</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="nb">hash</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">attributes</span><span class="p">),</span>
+            <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="n">arg_to_string</span><span class="p">,</span> <span class="n">uris</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Note that the following is an approximation (a reasonable one):</span>
+        <span class="n">nft_data</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="nb">hash</span> <span class="o">+</span> <span class="n">attributes</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uris</span><span class="p">)</span>
+        <span class="n">storage_gas_limit</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nft_data</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_store_per_byte</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_create</span> <span class="o">+</span> <span class="n">storage_gas_limit</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_pausing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_pausing">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_pausing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;pause&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_pausing</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unpausing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unpausing">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_unpausing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;unPause&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_pausing</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_freezing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_freezing">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_freezing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;freeze&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freezing</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unfreezing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unfreezing">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_unfreezing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;unFreeze&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freezing</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_wiping">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_wiping">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_wiping</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;wipe&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_wiping</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_local_minting">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_local_minting">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_local_minting</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">supply_to_mint</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;ESDTLocalMint&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">supply_to_mint</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_local_mint</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_local_burning">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_local_burning">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_local_burning</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">supply_to_burn</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;ESDTLocalBurn&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">supply_to_burn</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_local_burn</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_updating_attributes">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_updating_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_updating_attributes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;ESDTNFTUpdateAttributes&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_adding_quantity">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_adding_quantity">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_adding_quantity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">quantity_to_add</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;ESDTNFTAddQuantity&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">quantity_to_add</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_burning_quantity">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_burning_quantity">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_burning_quantity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">quantity_to_burn</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;ESDTNFTBurn&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">quantity_to_burn</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_burn</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

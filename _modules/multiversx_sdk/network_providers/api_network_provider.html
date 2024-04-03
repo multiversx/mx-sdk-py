@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.network_providers.api_network_provider &mdash; multiversx-sdk 0.9.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=39bb1c6d"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.network_providers.api_network_provider</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.network_providers.api_network_provider</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">requests.auth</span> <span class="kn">import</span> <span class="n">AuthBase</span>
+
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.accounts</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AccountOnNetwork</span><span class="p">,</span>
+                                                       <span class="n">GuardianData</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.config</span> <span class="kn">import</span> <span class="n">DefaultPagination</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_ADDRESS_HRP</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.contract_query_requests</span> <span class="kn">import</span> \
+    <span class="n">ContractQueryRequest</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.contract_query_response</span> <span class="kn">import</span> \
+    <span class="n">ContractQueryResponse</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.errors</span> <span class="kn">import</span> <span class="n">GenericError</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.interface</span> <span class="kn">import</span> <span class="p">(</span><span class="n">IAddress</span><span class="p">,</span>
+                                                        <span class="n">IContractQuery</span><span class="p">,</span>
+                                                        <span class="n">IPagination</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.network_config</span> <span class="kn">import</span> <span class="n">NetworkConfig</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.network_general_statistics</span> <span class="kn">import</span> \
+    <span class="n">NetworkGeneralStatistics</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.network_stake</span> <span class="kn">import</span> <span class="n">NetworkStake</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.network_status</span> <span class="kn">import</span> <span class="n">NetworkStatus</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.proxy_network_provider</span> <span class="kn">import</span> \
+    <span class="n">ProxyNetworkProvider</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.token_definitions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DefinitionOfFungibleTokenOnNetwork</span><span class="p">,</span> <span class="n">DefinitionOfTokenCollectionOnNetwork</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.tokens</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FungibleTokenOfAccountOnNetwork</span><span class="p">,</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transaction_status</span> <span class="kn">import</span> \
+    <span class="n">TransactionStatus</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transactions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ITransaction</span><span class="p">,</span> <span class="n">TransactionInMempool</span><span class="p">,</span> <span class="n">TransactionOnNetwork</span><span class="p">,</span>
+    <span class="n">transaction_to_dictionary</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.utils</span> <span class="kn">import</span> <span class="n">decimal_to_padded_hex</span>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider">[docs]</a>
+<span class="k">class</span> <span class="nc">ApiNetworkProvider</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">auth</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AuthBase</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_ADDRESS_HRP</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span> <span class="o">=</span> <span class="n">ProxyNetworkProvider</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">auth</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">auth</span>
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_network_config">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_network_config">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_network_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkConfig</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span><span class="o">.</span><span class="n">get_network_config</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_network_gas_configs">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_network_gas_configs">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_network_gas_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="s2">&quot;network/gas-configs&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_network_status">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_network_status">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_network_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span><span class="o">.</span><span class="n">get_network_status</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_guardian_data">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_guardian_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_guardian_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GuardianData</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span><span class="o">.</span><span class="n">get_guardian_data</span><span class="p">(</span><span class="n">address</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_network_stake_statistics">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_network_stake_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_network_stake_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkStake</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="s1">&#39;stake&#39;</span><span class="p">)</span>
+        <span class="n">network_stake</span> <span class="o">=</span> <span class="n">NetworkStake</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">network_stake</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_network_general_statistics">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_network_general_statistics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_network_general_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkGeneralStatistics</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="s1">&#39;stats&#39;</span><span class="p">)</span>
+        <span class="n">network_stats</span> <span class="o">=</span> <span class="n">NetworkGeneralStatistics</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">network_stats</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">AccountOnNetwork</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">account</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_fungible_tokens_of_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_fungible_tokens_of_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fungible_tokens_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">pagination</span><span class="p">:</span> <span class="n">IPagination</span> <span class="o">=</span> <span class="n">DefaultPagination</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FungibleTokenOfAccountOnNetwork</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/tokens?</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_pagination_params</span><span class="p">(</span><span class="n">pagination</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic_collection</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">FungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_nonfungible_tokens_of_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_nonfungible_tokens_of_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_nonfungible_tokens_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">pagination</span><span class="p">:</span> <span class="n">IPagination</span> <span class="o">=</span> <span class="n">DefaultPagination</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/nfts?</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_pagination_params</span><span class="p">(</span><span class="n">pagination</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic_collection</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_fungible_token_of_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_fungible_token_of_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fungible_token_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FungibleTokenOfAccountOnNetwork</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/tokens/</span><span class="si">{</span><span class="n">token_identifier</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">FungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_nonfungible_token_of_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_nonfungible_token_of_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_nonfungible_token_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="p">:</span>
+        <span class="n">nonce_as_hex</span> <span class="o">=</span> <span class="n">decimal_to_padded_hex</span><span class="p">(</span><span class="n">nonce</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;accounts/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/nfts/</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">nonce_as_hex</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_definition_of_fungible_token">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_definition_of_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_definition_of_fungible_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefinitionOfFungibleTokenOnNetwork</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tokens/</span><span class="si">{</span><span class="n">token_identifier</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">DefinitionOfFungibleTokenOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_definition_of_token_collection">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_definition_of_token_collection">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_definition_of_token_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefinitionOfTokenCollectionOnNetwork</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;collections/</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">DefinitionOfTokenCollectionOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_non_fungible_token">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_non_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_non_fungible_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="p">:</span>
+        <span class="n">nonce_as_hex</span> <span class="o">=</span> <span class="n">decimal_to_padded_hex</span><span class="p">(</span><span class="n">nonce</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;nfts/</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">nonce_as_hex</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.query_contract">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.query_contract">[docs]</a>
+    <span class="k">def</span> <span class="nf">query_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">IContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContractQueryResponse</span><span class="p">:</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ContractQueryRequest</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">to_http_request</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ContractQueryResponse</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_transaction">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_transaction">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;transactions/</span><span class="si">{</span><span class="n">tx_hash</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_account_transactions">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_account_transactions">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_account_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">pagination</span><span class="p">:</span> <span class="n">IPagination</span> <span class="o">=</span> <span class="n">DefaultPagination</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionOnNetwork</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;accounts/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/transactions?</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_build_pagination_params</span><span class="p">(</span><span class="n">pagination</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic_collection</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="p">[</span><span class="n">TransactionOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">(</span><span class="n">tx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;txHash&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">tx</span><span class="p">)</span> <span class="k">for</span> <span class="n">tx</span> <span class="ow">in</span> <span class="n">response</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">transactions</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_bunch_of_transactions">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_bunch_of_transactions">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_bunch_of_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hashes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">with_block_info</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">with_results</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionOnNetwork</span><span class="p">]:</span>
+        <span class="n">hashes</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tx_hashes</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;transactions?hashes=</span><span class="si">{</span><span class="n">hashes</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">with_block_info</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="s2">&quot;&amp;withBlockInfo=true&quot;</span>
+
+        <span class="k">if</span> <span class="n">with_results</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="s2">&quot;&amp;withResults=true&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic_collection</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="p">[</span><span class="n">TransactionOnNetwork</span><span class="o">.</span><span class="n">from_api_http_response</span><span class="p">(</span><span class="n">transaction</span><span class="p">[</span><span class="s2">&quot;txHash&quot;</span><span class="p">],</span> <span class="n">transaction</span><span class="p">)</span> <span class="k">for</span> <span class="n">transaction</span> <span class="ow">in</span> <span class="n">result</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">transactions</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_transactions_in_mempool_for_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_transactions_in_mempool_for_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_transactions_in_mempool_for_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionInMempool</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;transaction/pool?by-sender=</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">&amp;fields=sender,receiver,gaslimit,gasprice,value,nonce,data&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">tx_pool</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;txPool&quot;</span><span class="p">]</span>
+        <span class="n">mempool_transactions</span> <span class="o">=</span> <span class="n">tx_pool</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;transactions&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mempool_transactions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">transactions</span> <span class="o">=</span> <span class="p">[</span><span class="n">TransactionInMempool</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span> <span class="k">for</span> <span class="n">transaction</span> <span class="ow">in</span> <span class="n">mempool_transactions</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">transactions</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.get_transaction_status">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_transaction_status">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_transaction_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionStatus</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;transactions/</span><span class="si">{</span><span class="n">tx_hash</span><span class="si">}</span><span class="s1">?fields=status&#39;</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">TransactionStatus</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">status</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.send_transaction">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.send_transaction">[docs]</a>
+    <span class="k">def</span> <span class="nf">send_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;transactions&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span>
+        <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;txHash&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tx_hash</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.send_transactions">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.send_transactions">[docs]</a>
+    <span class="k">def</span> <span class="nf">send_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ITransaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span><span class="o">.</span><span class="n">send_transactions</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_build_pagination_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pagination</span><span class="p">:</span> <span class="n">IPagination</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;from=</span><span class="si">{</span><span class="n">pagination</span><span class="o">.</span><span class="n">get_start</span><span class="p">()</span><span class="si">}</span><span class="s1">&amp;size=</span><span class="si">{</span><span class="n">pagination</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+
+<div class="viewcode-block" id="ApiNetworkProvider.do_get_generic">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.do_get_generic">[docs]</a>
+    <span class="k">def</span> <span class="nf">do_get_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">resource_url</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__do_get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.do_get_generic_collection">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.do_get_generic_collection">[docs]</a>
+    <span class="k">def</span> <span class="nf">do_get_generic_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">resource_url</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__do_get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="ApiNetworkProvider.do_post_generic">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.do_post_generic">[docs]</a>
+    <span class="k">def</span> <span class="nf">do_post_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">resource_url</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__do_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">error_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_error_from_response</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">error_data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ApiNetworkProvider.do_post">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.do_post">[docs]</a>
+    <span class="k">def</span> <span class="nf">do_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">error_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_error_from_response</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">error_data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">Any</span><span class="p">,</span> <span class="n">parsed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;statusCode&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;code:</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">, error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">parsed</span>
+
+    <span class="k">def</span> <span class="nf">_extract_error_from_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

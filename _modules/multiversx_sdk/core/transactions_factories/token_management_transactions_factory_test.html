@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test &mdash; multiversx-sdk 0.9.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=39bb1c6d"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_factories.token_management_transactions_factory</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RegisterAndSetAllRolesTokenType</span><span class="p">,</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_factories.transactions_factory_config</span> <span class="kn">import</span> \
+    <span class="n">TransactionsFactoryConfig</span>
+
+<span class="n">frank</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="s2">&quot;erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv&quot;</span><span class="p">)</span>
+<span class="n">grace</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="s2">&quot;erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede&quot;</span><span class="p">)</span>
+<span class="n">alice</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="s2">&quot;erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th&quot;</span><span class="p">)</span>
+<span class="n">factory</span> <span class="o">=</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="test_create_transaction_for_registering_and_setting_roles">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_registering_and_setting_roles">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_registering_and_setting_roles</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_registering_and_setting_roles</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="o">=</span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="o">=</span><span class="s2">&quot;TEST&quot;</span><span class="p">,</span>
+        <span class="n">token_type</span><span class="o">=</span><span class="n">RegisterAndSetAllRolesTokenType</span><span class="o">.</span><span class="n">FNG</span><span class="p">,</span>
+        <span class="n">num_decimals</span><span class="o">=</span><span class="mi">2</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;registerAndSetAllRoles@54455354@54455354@464e47@02&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span> <span class="o">==</span> <span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">50000000000000000</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_issuing_fungible">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_issuing_fungible">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_issuing_fungible</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_issuing_fungible</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">initial_supply</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">num_decimals</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;issue@4652414e4b@4652414e4b@64@@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span> <span class="o">==</span> <span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">50000000000000000</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_issuing_semi_fungible">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_issuing_semi_fungible">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_issuing_semi_fungible</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_issuing_semi_fungible</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_transfer_nft_create_role</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;issueSemiFungible@4652414e4b@4652414e4b@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span> <span class="o">==</span> <span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">50000000000000000</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_issuing_non_fungible">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_issuing_non_fungible">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_issuing_non_fungible</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_issuing_non_fungible</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_transfer_nft_create_role</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;issueNonFungible@4652414e4b@4652414e4b@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span> <span class="o">==</span> <span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">50000000000000000</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_registering_meta_esdt">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_registering_meta_esdt">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_registering_meta_esdt</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_registering_meta_esdt</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_name</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">token_ticker</span><span class="o">=</span><span class="s2">&quot;FRANK&quot;</span><span class="p">,</span>
+        <span class="n">num_decimals</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">can_freeze</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_wipe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_pause</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_transfer_nft_create_role</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_change_owner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">can_upgrade</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">can_add_special_roles</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;registerMetaESDT@4652414e4b@4652414e4b@0a@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span> <span class="o">==</span> <span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">50000000000000000</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_setting_special_role_on_non_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_setting_special_role_on_non_fungible_token">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_setting_special_role_on_non_fungible_token</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_special_role_on_non_fungible_token</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">add_role_nft_create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_role_nft_burn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_nft_update_attributes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_role_nft_add_uri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_role_esdt_transfer_role</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e465455706461746541747472696275746573@45534454526f6c654e4654416464555249&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span> <span class="o">==</span> <span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_creating_nft">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_creating_nft">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_creating_nft</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_creating_nft</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-aa9e8d&quot;</span><span class="p">,</span>
+        <span class="n">initial_quantity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
+        <span class="n">royalties</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="nb">hash</span><span class="o">=</span><span class="s2">&quot;abba&quot;</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+        <span class="n">uris</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ESDTNFTCreate@4652414e4b2d616139653864@01@74657374@03e8@61626261@74657374@61@62&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">grace</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span> <span class="o">==</span> <span class="n">grace</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_setting_special_role_on_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_setting_special_role_on_fungible_token">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_setting_special_role_on_fungible_token</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_special_role_on_fungible_token</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">add_role_local_mint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_role_local_burn</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654c6f63616c4d696e74&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_setting_special_role_on_semi_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_setting_special_role_on_semi_fungible_token">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_setting_special_role_on_semi_fungible_token</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_special_role_on_semi_fungible_token</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">add_role_nft_create</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_role_nft_burn</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_role_nft_add_quantity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">add_role_esdt_transfer_role</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e46544275726e@45534454526f6c654e46544164645175616e74697479@455344545472616e73666572526f6c65&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_pausing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_pausing">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_pausing</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_pausing</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;pause@4652414e4b2d313163653365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_unpausing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_unpausing">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_unpausing</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unpausing</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;unPause@4652414e4b2d313163653365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_freezing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_freezing">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_freezing</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_freezing</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;freeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_unfreezing">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_unfreezing">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_unfreezing</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unfreezing</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;unFreeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_local_minting">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_local_minting">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_local_minting</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_local_minting</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">supply_to_mint</span><span class="o">=</span><span class="mi">10</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ESDTLocalMint@4652414e4b2d313163653365@0a&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_local_burning">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_local_burning">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_local_burning</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_local_burning</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">supply_to_burn</span><span class="o">=</span><span class="mi">10</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ESDTLocalBurn@4652414e4b2d313163653365@0a&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_updating_attributes">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_updating_attributes">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_updating_attributes</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_updating_attributes</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">token_nonce</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ESDTNFTUpdateAttributes@4652414e4b2d313163653365@0a@74657374&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_adding_quantity">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_adding_quantity">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_adding_quantity</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_adding_quantity</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">token_nonce</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">quantity_to_add</span><span class="o">=</span><span class="mi">10</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ESDTNFTAddQuantity@4652414e4b2d313163653365@0a@0a&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_burning_quantity">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_burning_quantity">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_burning_quantity</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_burning_quantity</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+        <span class="n">token_nonce</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">quantity_to_burn</span><span class="o">=</span><span class="mi">10</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ESDTNFTBurn@4652414e4b2d313163653365@0a@0a&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_setting_burn_role_globally">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_setting_burn_role_globally">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_setting_burn_role_globally</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_burn_role_globally</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;setBurnRoleGlobally@4652414e4b2d313163653365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_unsetting_burn_role_globally">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_unsetting_burn_role_globally">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_unsetting_burn_role_globally</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unsetting_burn_role_globally</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;unsetBurnRoleGlobally@4652414e4b2d313163653365&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="test_create_transaction_for_wiping">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.token_management_transactions_factory_test.test_create_transaction_for_wiping">[docs]</a>
+<span class="k">def</span> <span class="nf">test_create_transaction_for_wiping</span><span class="p">():</span>
+    <span class="n">transaction</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_wiping</span><span class="p">(</span>
+        <span class="n">sender</span><span class="o">=</span><span class="n">frank</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">grace</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="o">=</span><span class="s2">&quot;FRANK-11ce3e&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;wipe@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13&quot;</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span> <span class="o">==</span> <span class="n">frank</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">transaction</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

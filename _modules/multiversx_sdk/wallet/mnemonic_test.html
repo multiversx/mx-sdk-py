@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.wallet.mnemonic_test &mdash; multiversx-sdk 0.9.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=39bb1c6d"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.wallet.mnemonic_test</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.wallet.mnemonic_test</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.errors</span> <span class="kn">import</span> <span class="n">ErrBadMnemonic</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.mnemonic</span> <span class="kn">import</span> <span class="n">Mnemonic</span>
+
+
+<div class="viewcode-block" id="test_assert_text_is_valid">
+<a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.mnemonic_test.test_assert_text_is_valid">[docs]</a>
+<span class="k">def</span> <span class="nf">test_assert_text_is_valid</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">ErrBadMnemonic</span><span class="p">):</span>
+        <span class="n">Mnemonic</span><span class="o">.</span><span class="n">assert_text_is_valid</span><span class="p">(</span><span class="s2">&quot;bad mnemonic&quot;</span><span class="p">)</span>
+        <span class="n">Mnemonic</span><span class="o">.</span><span class="n">assert_text_is_valid</span><span class="p">(</span><span class="s2">&quot;moral volcano peasant pass circle pen over picture&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_generate">
+<a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.mnemonic_test.test_generate">[docs]</a>
+<span class="k">def</span> <span class="nf">test_generate</span><span class="p">():</span>
+    <span class="n">mnemonic</span> <span class="o">=</span> <span class="n">Mnemonic</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">get_words</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">==</span> <span class="mi">24</span></div>
+
+
+
+<div class="viewcode-block" id="test_derive_keys">
+<a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.mnemonic_test.test_derive_keys">[docs]</a>
+<span class="k">def</span> <span class="nf">test_derive_keys</span><span class="p">():</span>
+    <span class="n">mnemonic</span> <span class="o">=</span> <span class="n">Mnemonic</span><span class="p">(</span><span class="s2">&quot;moral volcano peasant pass circle pen over picture flat shop clap goat never lyrics gather prepare woman film husband gravity behind test tiger improve&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">derive_key</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9&quot;</span>
+    <span class="k">assert</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">derive_key</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639&quot;</span>
+    <span class="k">assert</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">derive_key</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
