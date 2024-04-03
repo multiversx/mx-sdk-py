@@ -1,8 +1,6 @@
 name: Build and deploy sphinx docs
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: main
   pull_request:
@@ -28,17 +26,18 @@ jobs:
         run: |
           cd docs/
           make html
-          ls ./_build/html/
 
       - uses: actions/checkout@v4
         with:
           ref: "gh-pages"
           repository: ${{ github.event.pull_request.head.repo.full_name }}
+          path: "docs"
 
       - name: Deploy to GitHub Pages
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
+          cd ./docs
           mv -f ${{ github.workspace }}/docs/_build/html/* .
           touch .nojekyll
           git add .
