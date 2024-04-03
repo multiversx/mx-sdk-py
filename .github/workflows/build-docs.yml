@@ -1,4 +1,4 @@
-name: Build-sphinx-docs
+name: Build and deploy sphinx docs
 
 # Controls when the workflow will run
 on:
@@ -15,8 +15,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          ref: "gh-pages"
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v3
