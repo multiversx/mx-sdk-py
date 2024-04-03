@@ -2,6 +2,11 @@
 
 The Python SDK for interacting with MultiversX. It's an all in one sdk that can be used to create transactions (including smart contract calls and deployments), sign and broadcast transactions, create wallets and many more.
 
+## Documentation
+
+- [Cookbook](./examples/Cookbook.ipynb)
+- [Auto-generated documentation](https://multiversx.github.io/mx-sdk-py-incubator/)
+
 ## Development setup
 
 ### Virtual environment
