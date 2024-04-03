@@ -40,3 +40,14 @@ If you want to skip network interaction tests run:
 ```
 pytest -m "not networkInteraction"
 ```
+
+### Regenerating the docs
+
+Each time a new module/submodule is added it needs to be added to the docs, as well. To do `cd` in the root directory then run the following command:
+```bash
+sphinx-apidoc -f -o docs/ multiversx_sdk/ *_test.py *constants.py
+```
+
+This command will regenerate the `.rst` files for each module, excluding the tests.
+
+Also, each time a new version is released, the [**conf.py**](/docs/conf.py) file should be updated accordingly.

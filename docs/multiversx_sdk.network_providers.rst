@@ -20,26 +20,10 @@ multiversx\_sdk.network\_providers.api\_network\_provider module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.network\_providers.api\_network\_provider\_test module
-----------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.api_network_provider_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.network\_providers.config module
 ------------------------------------------------
 
 .. automodule:: multiversx_sdk.network_providers.config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.constants module
----------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.constants
    :members:
    :undoc-members:
    :show-inheritance:
@@ -120,14 +104,6 @@ multiversx\_sdk.network\_providers.proxy\_network\_provider module
 ------------------------------------------------------------------
 
 .. automodule:: multiversx_sdk.network_providers.proxy_network_provider
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.proxy\_network\_provider\_test module
-------------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.proxy_network_provider_test
    :members:
    :undoc-members:
    :show-inheritance:

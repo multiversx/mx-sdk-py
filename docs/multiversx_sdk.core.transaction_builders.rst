@@ -12,14 +12,6 @@ multiversx\_sdk.core.transaction\_builders.contract\_builders module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.transaction\_builders.contract\_builders\_test module
---------------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transaction_builders.contract_builders_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.transaction\_builders.default\_configuration module
 ------------------------------------------------------------------------
 
@@ -28,26 +20,10 @@ multiversx\_sdk.core.transaction\_builders.default\_configuration module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.transaction\_builders.default\_configuration\_test module
-------------------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transaction_builders.default_configuration_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.transaction\_builders.esdt\_builders module
 ----------------------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.transaction_builders.esdt_builders
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.transaction\_builders.esdt\_builders\_test module
-----------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transaction_builders.esdt_builders_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -68,26 +44,10 @@ multiversx\_sdk.core.transaction\_builders.relayed\_v1\_builder module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.transaction\_builders.relayed\_v1\_builder\_test module
-----------------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transaction_builders.relayed_v1_builder_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.transaction\_builders.relayed\_v2\_builder module
 ----------------------------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.transaction_builders.relayed_v2_builder
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.transaction\_builders.relayed\_v2\_builder\_test module
-----------------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transaction_builders.relayed_v2_builder_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -104,14 +64,6 @@ multiversx\_sdk.core.transaction\_builders.transfers\_builders module
 ---------------------------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.transaction_builders.transfers_builders
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.transaction\_builders.transfers\_builders\_test module
----------------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transaction_builders.transfers_builders_test
    :members:
    :undoc-members:
    :show-inheritance:

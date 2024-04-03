@@ -20,14 +20,6 @@ multiversx\_sdk.core.proto.transaction\_serializer module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.proto.transaction\_serializer\_test module
----------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.proto.transaction_serializer_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

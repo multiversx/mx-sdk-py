@@ -25,26 +25,10 @@ multiversx\_sdk.core.account module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.account\_test module
------------------------------------------
-
-.. automodule:: multiversx_sdk.core.account_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.address module
 -----------------------------------
 
 .. automodule:: multiversx_sdk.core.address
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.address\_test module
------------------------------------------
-
-.. automodule:: multiversx_sdk.core.address_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -65,34 +49,10 @@ multiversx\_sdk.core.code\_metadata module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.code\_metadata\_test module
-------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.code_metadata_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.codec module
 ---------------------------------
 
 .. automodule:: multiversx_sdk.core.codec
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.codec\_test module
----------------------------------------
-
-.. automodule:: multiversx_sdk.core.codec_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.constants module
--------------------------------------
-
-.. automodule:: multiversx_sdk.core.constants
    :members:
    :undoc-members:
    :show-inheritance:
@@ -109,14 +69,6 @@ multiversx\_sdk.core.contract\_query\_builder module
 ----------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.contract_query_builder
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.contract\_query\_builder\_test module
-----------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.contract_query_builder_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -145,14 +97,6 @@ multiversx\_sdk.core.message module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.message\_test module
------------------------------------------
-
-.. automodule:: multiversx_sdk.core.message_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.serializer module
 --------------------------------------
 
@@ -165,14 +109,6 @@ multiversx\_sdk.core.smart\_contract\_queries\_controller module
 ----------------------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.smart_contract_queries_controller
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.smart\_contract\_queries\_controller\_test module
-----------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.smart_contract_queries_controller_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -193,26 +129,10 @@ multiversx\_sdk.core.token\_payment module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.token\_payment\_test module
-------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.token_payment_test
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.tokens module
 ----------------------------------
 
 .. automodule:: multiversx_sdk.core.tokens
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.tokens\_test module
-----------------------------------------
-
-.. automodule:: multiversx_sdk.core.tokens_test
    :members:
    :undoc-members:
    :show-inheritance:
@@ -229,14 +149,6 @@ multiversx\_sdk.core.transaction\_payload module
 ------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.transaction_payload
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.transaction\_test module
----------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transaction_test
    :members:
    :undoc-members:
    :show-inheritance:
