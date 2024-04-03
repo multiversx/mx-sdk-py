@@ -17,11 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-        with:
-          ref: "gh-pages"
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-
       - name: Set up Python
         uses: actions/setup-python@v3
       - name: Install dependencies
@@ -33,12 +28,16 @@ jobs:
         run: |
           cd docs/
           make html
+
+      - uses: actions/checkout@v4
+        with:
+          ref: "gh-pages"
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
       - name: Deploy to GitHub Pages
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git checkout gh-pages
-          git pull origin gh-pages
           rm -rf *
           mv -f ${{ github.workspace }}/docs/_build/html/* .
           touch .nojekyll
