@@ -37,11 +37,9 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          ls
           rm -rf ./gh-pages-docs/*
           mv -f ${{ github.workspace }}/docs/_build/html/* ./gh-pages-docs
           cd ./gh-pages-docs
-          ls
           touch .nojekyll
           git add .
           git commit -m "Deploy documentation from GitHub Actions" --allow-empty
