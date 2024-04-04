@@ -42,11 +42,7 @@ class TransactionComputer:
         return serialized
 
     def compute_hash_for_signing(self, transaction: ITransaction) -> bytes:
-        self._ensure_fields(transaction)
-
-        dictionary = self._to_dictionary(transaction)
-        serialized = self._dict_to_json(dictionary)
-        return keccak.new(digest_bits=256).update(serialized).digest()
+        return keccak.new(digest_bits=256).update(self.compute_bytes_for_signing(transaction)).digest()
 
     def compute_transaction_hash(self, transaction: ITransaction) -> bytes:
         proto = ProtoSerializer()
