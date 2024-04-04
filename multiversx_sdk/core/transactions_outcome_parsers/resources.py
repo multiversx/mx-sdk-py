@@ -1,7 +1,5 @@
 from typing import Callable, List
 
-from multiversx_sdk.core.errors import ParseTransactionOutcomeError
-
 
 class TransactionEvent:
     def __init__(self,
