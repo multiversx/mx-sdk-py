@@ -71,21 +71,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.transaction</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">base64</span> <span class="kn">import</span> <span class="n">b64encode</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">blake2b</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DEFAULT_HRP</span><span class="p">,</span> <span class="n">DIGEST_SIZE</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DEFAULT_HRP</span><span class="p">,</span>
                                            <span class="n">TRANSACTION_MIN_GAS_PRICE</span><span class="p">,</span>
                                            <span class="n">TRANSACTION_OPTIONS_DEFAULT</span><span class="p">,</span>
-                                           <span class="n">TRANSACTION_OPTIONS_TX_GUARDED</span><span class="p">,</span>
-                                           <span class="n">TRANSACTION_OPTIONS_TX_HASH_SIGN</span><span class="p">,</span>
                                            <span class="n">TRANSACTION_VERSION_DEFAULT</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">NotEnoughGasError</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">INetworkConfig</span><span class="p">,</span> <span class="n">ITransaction</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.proto.transaction_serializer</span> <span class="kn">import</span> <span class="n">ProtoSerializer</span>
 
 
 <div class="viewcode-block" id="IAddressConverter">
@@ -146,106 +137,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guardian_signature</span> <span class="o">=</span> <span class="n">guardian_signature</span> <span class="ow">or</span> <span class="nb">bytes</span><span class="p">()</span></div>
-
-
-
-<div class="viewcode-block" id="TransactionComputer">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer">[docs]</a>
-<span class="k">class</span> <span class="nc">TransactionComputer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">pass</span>
-
-<div class="viewcode-block" id="TransactionComputer.compute_transaction_fee">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_transaction_fee">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_transaction_fee</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">,</span> <span class="n">network_config</span><span class="p">:</span> <span class="n">INetworkConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">move_balance_gas</span> <span class="o">=</span> <span class="n">network_config</span><span class="o">.</span><span class="n">min_gas_limit</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="n">network_config</span><span class="o">.</span><span class="n">gas_per_data_byte</span>
-        <span class="k">if</span> <span class="n">move_balance_gas</span> <span class="o">&gt;</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NotEnoughGasError</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span><span class="p">)</span>
-
-        <span class="n">fee_for_move</span> <span class="o">=</span> <span class="n">move_balance_gas</span> <span class="o">*</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_price</span>
-        <span class="k">if</span> <span class="n">move_balance_gas</span> <span class="o">==</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">fee_for_move</span><span class="p">)</span>
-
-        <span class="n">diff</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span> <span class="o">-</span> <span class="n">move_balance_gas</span>
-        <span class="n">modified_gas_price</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_price</span> <span class="o">*</span> <span class="n">network_config</span><span class="o">.</span><span class="n">gas_price_modifier</span>
-        <span class="n">processing_fee</span> <span class="o">=</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">modified_gas_price</span>
-
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">fee_for_move</span> <span class="o">+</span> <span class="n">processing_fee</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TransactionComputer.compute_bytes_for_signing">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_bytes_for_signing">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_bytes_for_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="n">dictionary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
-        <span class="n">serialized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict_to_json</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">serialized</span></div>
-
-
-<div class="viewcode-block" id="TransactionComputer.compute_transaction_hash">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_transaction_hash">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_transaction_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="n">proto</span> <span class="o">=</span> <span class="n">ProtoSerializer</span><span class="p">()</span>
-        <span class="n">serialized_tx</span> <span class="o">=</span> <span class="n">proto</span><span class="o">.</span><span class="n">serialize_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
-        <span class="n">tx_hash</span> <span class="o">=</span> <span class="n">blake2b</span><span class="p">(</span><span class="n">serialized_tx</span><span class="p">,</span> <span class="n">digest_size</span><span class="o">=</span><span class="n">DIGEST_SIZE</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TransactionComputer.has_options_set_for_guarded_transaction">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.has_options_set_for_guarded_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_options_set_for_guarded_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">options</span> <span class="o">&amp;</span> <span class="n">TRANSACTION_OPTIONS_TX_GUARDED</span><span class="p">)</span> <span class="o">==</span> <span class="n">TRANSACTION_OPTIONS_TX_GUARDED</span></div>
-
-
-<div class="viewcode-block" id="TransactionComputer.has_options_set_for_hash_signing">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.has_options_set_for_hash_signing">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_options_set_for_hash_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">options</span> <span class="o">&amp;</span> <span class="n">TRANSACTION_OPTIONS_TX_HASH_SIGN</span><span class="p">)</span> <span class="o">==</span> <span class="n">TRANSACTION_OPTIONS_TX_HASH_SIGN</span></div>
-
-
-<div class="viewcode-block" id="TransactionComputer.apply_guardian">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.apply_guardian">[docs]</a>
-    <span class="k">def</span> <span class="nf">apply_guardian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">,</span> <span class="n">guardian</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">transaction</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">transaction</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span> <span class="o">|</span> <span class="n">TRANSACTION_OPTIONS_TX_GUARDED</span>
-        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span></div>
-
-
-    <span class="k">def</span> <span class="nf">_to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="n">dictionary</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;nonce&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;receiver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span>
-
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender_username</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;senderUsername&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver_username</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;receiverUsername&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_price</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;gasLimit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span>
-
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;chainID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span>
-
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span>
-
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span>
-
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;guardian&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span>
-
-        <span class="k">return</span> <span class="n">dictionary</span>
-
-    <span class="k">def</span> <span class="nf">_dict_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="n">serialized</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">serialized</span></div>
 
 </pre></div>
 

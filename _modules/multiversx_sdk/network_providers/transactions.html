@@ -106,29 +106,6 @@
 
 
 
-<div class="viewcode-block" id="transaction_to_dictionary">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.transactions.transaction_to_dictionary">[docs]</a>
-<span class="k">def</span> <span class="nf">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="n">dictionary</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;nonce&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;receiver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_price</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;gasLimit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;chainID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;senderUsername&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;receiverUsername&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;guardian&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;signature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
-    <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;guardianSignature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian_signature</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">dictionary</span></div>
-
-
-
 <div class="viewcode-block" id="TransactionOnNetwork">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.transactions.TransactionOnNetwork">[docs]</a>
 <span class="k">class</span> <span class="nc">TransactionOnNetwork</span><span class="p">:</span>
