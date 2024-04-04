@@ -1,9 +1,11 @@
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Dict, List, Optional, Protocol, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 from requests.auth import AuthBase
 
+from multiversx_sdk.converters.transactions_converter import \
+    TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.constants import (DEFAULT_ADDRESS_HRP,
@@ -29,21 +31,14 @@ from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionOnNetwork)
 
 
-class ITransactionsConverter(Protocol):
-    def transaction_to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
-        ...
-
-
 class ProxyNetworkProvider:
     def __init__(
             self,
             url: str,
-            transactions_converter: ITransactionsConverter,
             auth: Union[AuthBase, None] = None,
             address_hrp: str = DEFAULT_ADDRESS_HRP
     ) -> None:
         self.url = url
-        self.transactions_converter = transactions_converter
         self.auth = auth
         self.address_hrp = address_hrp
 
@@ -124,11 +119,13 @@ class ProxyNetworkProvider:
         return status
 
     def send_transaction(self, transaction: ITransaction) -> str:
-        response = self.do_post_generic('transaction/send', self.transactions_converter.transaction_to_dictionary(transaction))
+        transactions_converter = TransactionsConverter()
+        response = self.do_post_generic('transaction/send', transactions_converter.transaction_to_dictionary(transaction))
         return response.get('txHash', '')
 
     def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
-        transactions_as_dictionaries = [self.transactions_converter.transaction_to_dictionary(transaction) for transaction in transactions]
+        transactions_converter = TransactionsConverter()
+        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(transaction) for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         # Proxy and Observers have different response format:
         num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
@@ -159,7 +156,8 @@ class ProxyNetworkProvider:
 
     def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
         url = "transaction/simulate"
-        response = self.do_post_generic(url, self.transactions_converter.transaction_to_dictionary(transaction))
+        transactions_converter = TransactionsConverter()
+        response = self.do_post_generic(url, transactions_converter.transaction_to_dictionary(transaction))
         return SimulateResponse(response)
 
     def get_hyperblock(self, key: Union[int, str]) -> Dict[str, Any]:

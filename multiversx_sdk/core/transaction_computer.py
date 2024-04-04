@@ -37,17 +37,12 @@ class TransactionComputer:
     def compute_bytes_for_signing(self, transaction: ITransaction) -> bytes:
         self._ensure_fields(transaction)
 
-        if transaction.version >= 2 and self.has_options_set_for_hash_signing(transaction):
-            return self.compute_hash_for_signing(transaction)
-
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
     def compute_hash_for_signing(self, transaction: ITransaction) -> bytes:
-        dictionary = self._to_dictionary(transaction)
-        serialized = self._dict_to_json(dictionary)
-        return keccak.new(digest_bits=256).update(serialized).digest()
+        return keccak.new(digest_bits=256).update(self.compute_bytes_for_signing(transaction)).digest()
 
     def compute_transaction_hash(self, transaction: ITransaction) -> bytes:
         proto = ProtoSerializer()

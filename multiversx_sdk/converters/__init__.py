@@ -1,4 +1,4 @@
 from multiversx_sdk.converters.transactions_converter import \
-    TransactionConverter
+    TransactionsConverter
 
-__all__ = ["TransactionConverter"]
+__all__ = ["TransactionsConverter"]

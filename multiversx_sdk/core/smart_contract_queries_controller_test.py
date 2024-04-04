@@ -3,8 +3,6 @@ import base64
 import pytest
 
 from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionConverter
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
@@ -17,7 +15,7 @@ from multiversx_sdk.testutils.mock_network_provider import MockNetworkProvider
 
 
 class TestSmartContractQueriesController:
-    provider = ProxyNetworkProvider("https://devnet-api.multiversx.com", TransactionConverter())
+    provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
     query_runner = QueryRunnerAdapter(network_provider=provider)
     controller = SmartContractQueriesController(query_runner=query_runner)
 
