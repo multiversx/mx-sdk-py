@@ -56,12 +56,7 @@ class SmartContractCallOutcome:
 
 
 def find_events_by_identifier(transaction_outcome: TransactionOutcome, identifier: str) -> List[TransactionEvent]:
-    events = find_events_by_predicate(transaction_outcome, lambda event: event.identifier == identifier)
-
-    if len(events) == 0:
-        raise ParseTransactionOutcomeError(f"cannot find event of type {identifier}")
-
-    return events
+    return find_events_by_predicate(transaction_outcome, lambda event: event.identifier == identifier)
 
 
 def find_events_by_predicate(
@@ -76,6 +71,6 @@ def gather_all_events(transaction_outcome: TransactionOutcome) -> List[Transacti
     all_events = [*transaction_outcome.logs.events]
 
     for result in transaction_outcome.transaction_results:
-        all_events.extend([*result.logs.events])
+        all_events.extend(result.logs.events)
 
     return all_events

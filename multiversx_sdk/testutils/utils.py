@@ -10,4 +10,4 @@ def create_account_egld_balance(egld: int) -> int:
 
 
 def base64_topics_to_bytes(topics: List[str]) -> List[bytes]:
-    return [base64.b64decode(topic.encode()) for topic in topics]
+    return [base64.b64decode(topic) for topic in topics]

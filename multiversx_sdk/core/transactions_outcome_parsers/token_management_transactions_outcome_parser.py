@@ -49,7 +49,7 @@ class TokenManagementTransactionsOutcomeParser:
         set_role_events = find_events_by_identifier(transaction_outcome, "ESDTSetRole")
 
         if len(register_events) != len(set_role_events):
-            raise ParseTransactionOutcomeError("Register Events and Set Role events mismatch. Should have the same number of events.")
+            raise ParseTransactionOutcomeError("The number of `registerAndSetAllRoles` events and `ESDTSetRole` events do not match")
 
         result: List[RegisterAndSetAllRolesOutcome] = []
         for register_event, set_role_event in zip(register_events, set_role_events):
