@@ -3,6 +3,9 @@ name: Build and deploy sphinx docs
 on:
   push:
     branches: main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
