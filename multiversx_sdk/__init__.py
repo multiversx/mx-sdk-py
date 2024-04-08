@@ -28,8 +28,11 @@ from multiversx_sdk.core.transactions_factories.transactions_factory_config impo
     TransactionsFactoryConfig
 from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
     TransferTransactionsFactory
+from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import \
+    DelegationTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
+    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
+    find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
 from multiversx_sdk.network_providers.api_network_provider import \
@@ -65,5 +68,6 @@ __all__ = [
     "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
     "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
-    "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter"
+    "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
+    "find_events_by_identifier"
 ]

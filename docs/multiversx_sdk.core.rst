@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   multiversx_sdk.core.adapters
    multiversx_sdk.core.proto
    multiversx_sdk.core.transaction_builders
    multiversx_sdk.core.transaction_parsers
@@ -141,6 +140,14 @@ multiversx\_sdk.core.transaction module
 ---------------------------------------
 
 .. automodule:: multiversx_sdk.core.transaction
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+multiversx\_sdk.core.transaction\_computer module
+-------------------------------------------------
+
+.. automodule:: multiversx_sdk.core.transaction_computer
    :members:
    :undoc-members:
    :show-inheritance:
