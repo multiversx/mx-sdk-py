@@ -139,3 +139,5 @@ typings/**
 !libbls.dll
 
 examples/output
+
+./docs/_build/*

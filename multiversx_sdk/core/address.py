@@ -24,7 +24,14 @@ class IAddress(Protocol):
 
 
 class Address:
+    """An Address, as an immutable object."""
+
     def __init__(self, pubkey: bytes, hrp: str) -> None:
+        """Creates an address object, given a sequence of bytes and the human readable part(hrp).
+
+        Args:
+            pubkey (bytes): the sequence of bytes\n
+            hrp (str): the human readable part"""
         if len(pubkey) != PUBKEY_LENGTH:
             raise ErrBadPubkeyLength(len(pubkey), PUBKEY_LENGTH)
 
@@ -33,6 +40,10 @@ class Address:
 
     @classmethod
     def new_from_bech32(cls, value: str) -> 'Address':
+        """Creates an address object from the bech32 representation of an address.
+
+        Args:
+            value (str): the bech32 address representation"""
         hrp, pubkey = _decode_bech32(value)
         return cls(pubkey, hrp)
 
@@ -43,6 +54,11 @@ class Address:
 
     @classmethod
     def new_from_hex(cls, value: str, hrp: str) -> 'Address':
+        """Creates an address object from the hexed sequence of bytes and the human readable part(hrp).
+
+        Args:
+            value (str): the sequence of bytes as a hex string\n
+            hrp (str): the human readable part"""
         pubkey = bytes.fromhex(value)
         return cls(pubkey, hrp)
 
@@ -52,6 +68,7 @@ class Address:
         return Address.new_from_hex(value, hrp)
 
     def to_hex(self) -> str:
+        """Returns the hex representation of the address (pubkey)"""
         return self.pubkey.hex()
 
     def hex(self) -> str:
@@ -59,6 +76,7 @@ class Address:
         return self.to_hex()
 
     def to_bech32(self) -> str:
+        """Returns the bech32 representation of the address"""
         converted = bech32.convertbits(self.pubkey, 8, 5)
         assert converted is not None
         encoded = bech32.bech32_encode(self.hrp, converted)
@@ -69,26 +87,37 @@ class Address:
         return self.to_bech32()
 
     def get_public_key(self) -> bytes:
+        """Returns the pubkey as bytes"""
         return self.pubkey
 
     def get_hrp(self) -> str:
+        """Returns the human-readable-part of the bech32 address"""
         return self.hrp
 
-    def is_smart_contract(self):
+    def is_smart_contract(self) -> bool:
+        """Returns whether the address is a smart contract address"""
         return self.to_hex().startswith(SC_HEX_PUBKEY_PREFIX)
 
     # this will be removed in v1.0.0; it's here for compatibility reasons with the deprecated transaction builders
     # the transaction builders will also be removed in v1.0.0
     def serialize(self) -> bytes:
+        """This method is deprecated and will soon be removed. Also displays a deprecation warning when used."""
         logger.warning("The `serialize()` method is deprecated and will soon be removed")
         return self.get_public_key()
 
 
 class AddressFactory:
+    """A factory used to create address objects."""
+
     def __init__(self, hrp: str = DEFAULT_HRP) -> None:
+        """All the addresses created with the factory have the same human readable part
+
+        Args:
+            hrp (str): the human readable part of the address (default: erd)"""
         self.hrp = hrp
 
     def create_from_bech32(self, value: str) -> Address:
+        """Creates an address object from the bech32 representation of an address"""
         hrp, pubkey = _decode_bech32(value)
         if hrp != self.hrp:
             raise ErrBadAddress(value)
@@ -96,20 +125,35 @@ class AddressFactory:
         return Address(pubkey, hrp)
 
     def create_from_public_key(self, pubkey: bytes) -> Address:
+        """Creates an address object from the sequence of bytes"""
         return Address(pubkey, self.hrp)
 
     def create_from_hex(self, value: str) -> Address:
+        """Creates an address object from the hexed sequence of bytes"""
         return Address.new_from_hex(value, self.hrp)
 
 
 class AddressComputer:
+    """A class for computing contract addresses and getting shard numbers."""
+
     def __init__(self, number_of_shards: int = 3) -> None:
+        """Initializes the AddressComputer with the number of shards.
+
+        Args:
+            number_of_shards (int): The number of shards in the network (default: 3)."""
         self.number_of_shards = number_of_shards
 
     def compute_contract_address(self, deployer: IAddress, deployment_nonce: int) -> Address:
-        """
-        8 bytes of zero + 2 bytes for VM type + 20 bytes of hash(owner) + 2 bytes of shard(owner)
-        """
+        """Computes the contract address based on the deployer's address and deployment nonce.
+
+        Args:
+            deployer (IAddress): The address of the deployer\n
+            deployment_nonce (int): The nonce of the deployment
+
+        Returns:
+            Address: The computed contract address as below:
+
+            8 bytes of zero + 2 bytes for VM type + 20 bytes of hash(owner) + 2 bytes of shard(owner)"""
         deployer_pubkey = deployer.get_public_key()
         nonce_bytes = deployment_nonce.to_bytes(8, byteorder="little")
         bytes_to_hash = deployer_pubkey + nonce_bytes
@@ -118,6 +162,13 @@ class AddressComputer:
         return Address(contract_pubkey, deployer.get_hrp())
 
     def get_shard_of_address(self, address: IAddress) -> int:
+        """Returns the shard number of a given address.
+
+        Args:
+            address (IAddress): The address for which to determine the shard.
+
+        Returns:
+            int: The shard number."""
         return get_shard_of_pubkey(address.get_public_key(), self.number_of_shards)
 
 
