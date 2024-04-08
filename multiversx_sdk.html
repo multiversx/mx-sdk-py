@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="multiversx_sdk.core package" href="multiversx_sdk.core.html" />
+    <link rel="next" title="multiversx_sdk.adapters package" href="multiversx_sdk.adapters.html" />
     <link rel="prev" title="multiversx_sdk" href="modules.html" /> 
 </head>
 
@@ -49,6 +49,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">multiversx_sdk</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">multiversx_sdk package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html">multiversx_sdk.adapters package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.converters.html">multiversx_sdk.converters package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html">multiversx_sdk.network_providers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.html">multiversx_sdk.wallet package</a></li>
@@ -65,6 +67,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ContractQuery"><code class="docutils literal notranslate"><span class="pre">ContractQuery</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ContractQueryBuilder"><code class="docutils literal notranslate"><span class="pre">ContractQueryBuilder</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.DelegationTransactionsFactory"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsFactory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.DelegationTransactionsOutcomeParser"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.GenericError"><code class="docutils literal notranslate"><span class="pre">GenericError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.GenericResponse"><code class="docutils literal notranslate"><span class="pre">GenericResponse</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.Message"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
@@ -103,6 +106,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ValidatorSecretKey"><code class="docutils literal notranslate"><span class="pre">ValidatorSecretKey</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ValidatorSigner"><code class="docutils literal notranslate"><span class="pre">ValidatorSigner</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ValidatorVerifier"><code class="docutils literal notranslate"><span class="pre">ValidatorVerifier</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.find_events_by_identifier"><code class="docutils literal notranslate"><span class="pre">find_events_by_identifier()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -142,14 +146,70 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.adapters.html">multiversx_sdk.core.adapters package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.adapters.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.adapters.html#multiversx-sdk-core-adapters-query-runner-adapter-module">multiversx_sdk.core.adapters.query_runner_adapter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.adapters.html#module-contents">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiversx_sdk.adapters.html">multiversx_sdk.adapters package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.adapters.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.adapters.html#module-multiversx_sdk.adapters.query_runner_adapter">multiversx_sdk.adapters.query_runner_adapter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.INetworkProvider"><code class="docutils literal notranslate"><span class="pre">INetworkProvider</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.INetworkProvider.query_contract"><code class="docutils literal notranslate"><span class="pre">INetworkProvider.query_contract()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQuery"><code class="docutils literal notranslate"><span class="pre">IQuery</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQuery.get_caller"><code class="docutils literal notranslate"><span class="pre">IQuery.get_caller()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQuery.get_contract"><code class="docutils literal notranslate"><span class="pre">IQuery.get_contract()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQuery.get_encoded_arguments"><code class="docutils literal notranslate"><span class="pre">IQuery.get_encoded_arguments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQuery.get_function"><code class="docutils literal notranslate"><span class="pre">IQuery.get_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQuery.get_value"><code class="docutils literal notranslate"><span class="pre">IQuery.get_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQueryResponse"><code class="docutils literal notranslate"><span class="pre">IQueryResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQueryResponse.gas_used"><code class="docutils literal notranslate"><span class="pre">IQueryResponse.gas_used</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQueryResponse.get_return_data_parts"><code class="docutils literal notranslate"><span class="pre">IQueryResponse.get_return_data_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQueryResponse.return_code"><code class="docutils literal notranslate"><span class="pre">IQueryResponse.return_code</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQueryResponse.return_data"><code class="docutils literal notranslate"><span class="pre">IQueryResponse.return_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.IQueryResponse.return_message"><code class="docutils literal notranslate"><span class="pre">IQueryResponse.return_message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.QueryRunnerAdapter"><code class="docutils literal notranslate"><span class="pre">QueryRunnerAdapter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.QueryRunnerAdapter.run_query"><code class="docutils literal notranslate"><span class="pre">QueryRunnerAdapter.run_query()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.adapters.html#module-multiversx_sdk.adapters">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.QueryRunnerAdapter"><code class="docutils literal notranslate"><span class="pre">QueryRunnerAdapter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.QueryRunnerAdapter.run_query"><code class="docutils literal notranslate"><span class="pre">QueryRunnerAdapter.run_query()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multiversx_sdk.converters.html">multiversx_sdk.converters package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.converters.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.converters.html#module-multiversx_sdk.converters.errors">multiversx_sdk.converters.errors module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.converters.html#multiversx_sdk.converters.errors.MissingFieldError"><code class="docutils literal notranslate"><span class="pre">MissingFieldError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.converters.html#module-multiversx_sdk.converters.transactions_converter">multiversx_sdk.converters.transactions_converter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.converters.html#multiversx_sdk.converters.transactions_converter.TransactionsConverter"><code class="docutils literal notranslate"><span class="pre">TransactionsConverter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.converters.html#multiversx_sdk.converters.transactions_converter.TransactionsConverter.dictionary_to_transaction"><code class="docutils literal notranslate"><span class="pre">TransactionsConverter.dictionary_to_transaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.converters.html#multiversx_sdk.converters.transactions_converter.TransactionsConverter.transaction_to_dictionary"><code class="docutils literal notranslate"><span class="pre">TransactionsConverter.transaction_to_dictionary()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.converters.html#module-multiversx_sdk.converters">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.converters.html#multiversx_sdk.converters.TransactionsConverter"><code class="docutils literal notranslate"><span class="pre">TransactionsConverter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.converters.html#multiversx_sdk.converters.TransactionsConverter.dictionary_to_transaction"><code class="docutils literal notranslate"><span class="pre">TransactionsConverter.dictionary_to_transaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.converters.html#multiversx_sdk.converters.TransactionsConverter.transaction_to_dictionary"><code class="docutils literal notranslate"><span class="pre">TransactionsConverter.transaction_to_dictionary()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.proto.html">multiversx_sdk.core.proto package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.proto.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.proto.html#module-multiversx_sdk.core.proto.transaction_pb2">multiversx_sdk.core.proto.transaction_pb2 module</a></li>
@@ -195,6 +255,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html">multiversx_sdk.core.transactions_outcome_parsers package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#module-multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser">multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#module-multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types">multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#module-multiversx_sdk.core.transactions_outcome_parsers.resources">multiversx_sdk.core.transactions_outcome_parsers.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#module-multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser">multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#module-multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_types">multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_types module</a></li>
@@ -481,6 +543,20 @@
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction.Transaction"><code class="docutils literal notranslate"><span class="pre">Transaction</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.transaction_computer">multiversx_sdk.core.transaction_computer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer"><code class="docutils literal notranslate"><span class="pre">TransactionComputer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.apply_guardian"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.apply_guardian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.apply_options_for_hash_signing"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.apply_options_for_hash_signing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.compute_bytes_for_signing"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.compute_bytes_for_signing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.compute_hash_for_signing"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.compute_hash_for_signing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.compute_transaction_fee"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.compute_transaction_fee()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.compute_transaction_hash"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.compute_transaction_hash()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.has_options_set_for_guarded_transaction"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.has_options_set_for_guarded_transaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.has_options_set_for_hash_signing"><code class="docutils literal notranslate"><span class="pre">TransactionComputer.has_options_set_for_hash_signing()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.transaction_payload">multiversx_sdk.core.transaction_payload module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_payload.TransactionPayload"><code class="docutils literal notranslate"><span class="pre">TransactionPayload</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_payload.TransactionPayload.empty"><code class="docutils literal notranslate"><span class="pre">TransactionPayload.empty()</span></code></a></li>
@@ -572,6 +648,10 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.DelegationTransactionsFactory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsFactory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.DelegationTransactionsFactory.create_transaction_for_unstaking_nodes"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsFactory.create_transaction_for_unstaking_nodes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.DelegationTransactionsFactory.create_transaction_for_withdrawing"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsFactory.create_transaction_for_withdrawing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.DelegationTransactionsOutcomeParser"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.DelegationTransactionsOutcomeParser.parse_create_new_delegation_contract"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_create_new_delegation_contract()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.Message"><code class="docutils literal notranslate"><span class="pre">Message</span></code></a></li>
@@ -706,6 +786,7 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransferTransactionsFactory.create_transaction_for_native_token_transfer"><code class="docutils literal notranslate"><span class="pre">TransferTransactionsFactory.create_transaction_for_native_token_transfer()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.find_events_by_identifier"><code class="docutils literal notranslate"><span class="pre">find_events_by_identifier()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1887,6 +1968,17 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.DelegationTransactionsOutcomeParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">DelegationTransactionsOutcomeParser</span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/delegation_transactions_outcome_parser.html#DelegationTransactionsOutcomeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.DelegationTransactionsOutcomeParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.DelegationTransactionsOutcomeParser.parse_create_new_delegation_contract">
+<span class="sig-name descname"><span class="pre">parse_create_new_delegation_contract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_outcome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionOutcome" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionOutcome"><span class="pre">TransactionOutcome</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types.CreateNewDelegationContractOutcome" title="multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types.CreateNewDelegationContractOutcome"><span class="pre">CreateNewDelegationContractOutcome</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/delegation_transactions_outcome_parser.html#DelegationTransactionsOutcomeParser.parse_create_new_delegation_contract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.DelegationTransactionsOutcomeParser.parse_create_new_delegation_contract" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py exception">
 <dt class="sig sig-object py" id="multiversx_sdk.GenericError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">GenericError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/network_providers/errors.html#GenericError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.GenericError" title="Link to this definition"></a></dt>
@@ -2107,7 +2199,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.QueryRunnerAdapter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">QueryRunnerAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">INetworkProvider</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/adapters/query_runner_adapter.html#QueryRunnerAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.QueryRunnerAdapter" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">QueryRunnerAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.adapters.html#multiversx_sdk.adapters.query_runner_adapter.INetworkProvider" title="multiversx_sdk.adapters.query_runner_adapter.INetworkProvider"><span class="pre">INetworkProvider</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/adapters/query_runner_adapter.html#QueryRunnerAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.QueryRunnerAdapter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.QueryRunnerAdapter.run_query">
@@ -2988,6 +3080,11 @@
 
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="multiversx_sdk.find_events_by_identifier">
+<span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">find_events_by_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_outcome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionOutcome" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionOutcome"><span class="pre">TransactionOutcome</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent"><span class="pre">TransactionEvent</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/resources.html#find_events_by_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.find_events_by_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 </section>
 
@@ -2996,7 +3093,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="modules.html" class="btn btn-neutral float-left" title="multiversx_sdk" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="multiversx_sdk.core.html" class="btn btn-neutral float-right" title="multiversx_sdk.core package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="multiversx_sdk.adapters.html" class="btn btn-neutral float-right" title="multiversx_sdk.adapters package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

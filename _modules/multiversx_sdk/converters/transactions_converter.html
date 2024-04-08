@@ -80,13 +80,13 @@
 
 
 <div class="viewcode-block" id="TransactionsConverter">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TransactionsConverter">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.converters.html#multiversx_sdk.TransactionsConverter">[docs]</a>
 <span class="k">class</span> <span class="nc">TransactionsConverter</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="TransactionsConverter.transaction_to_dictionary">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TransactionsConverter.transaction_to_dictionary">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.converters.html#multiversx_sdk.TransactionsConverter.transaction_to_dictionary">[docs]</a>
     <span class="k">def</span> <span class="nf">transaction_to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;nonce&quot;</span><span class="p">:</span> <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span><span class="p">,</span>
@@ -108,7 +108,7 @@
 
 
 <div class="viewcode-block" id="TransactionsConverter.dictionary_to_transaction">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TransactionsConverter.dictionary_to_transaction">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.converters.html#multiversx_sdk.TransactionsConverter.dictionary_to_transaction">[docs]</a>
     <span class="k">def</span> <span class="nf">dictionary_to_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_mandatory_fields_for_transaction</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
 

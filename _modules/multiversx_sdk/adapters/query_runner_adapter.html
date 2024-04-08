@@ -80,46 +80,76 @@
     <span class="n">SmartContractQuery</span><span class="p">,</span> <span class="n">SmartContractQueryResponse</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="IQuery">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQuery">[docs]</a>
 <span class="k">class</span> <span class="nc">IQuery</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="IQuery.get_contract">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQuery.get_contract">[docs]</a>
     <span class="k">def</span> <span class="nf">get_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IAddress</span><span class="p">:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
 
+
+<div class="viewcode-block" id="IQuery.get_function">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQuery.get_function">[docs]</a>
     <span class="k">def</span> <span class="nf">get_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
 
+
+<div class="viewcode-block" id="IQuery.get_encoded_arguments">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQuery.get_encoded_arguments">[docs]</a>
     <span class="k">def</span> <span class="nf">get_encoded_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
 
+
+<div class="viewcode-block" id="IQuery.get_caller">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQuery.get_caller">[docs]</a>
     <span class="k">def</span> <span class="nf">get_caller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IAddress</span><span class="p">]:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
 
+
+<div class="viewcode-block" id="IQuery.get_value">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQuery.get_value">[docs]</a>
     <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
+</div>
 
 
+
+<div class="viewcode-block" id="IQueryResponse">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQueryResponse">[docs]</a>
 <span class="k">class</span> <span class="nc">IQueryResponse</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
     <span class="n">return_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">return_code</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">return_message</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">gas_used</span><span class="p">:</span> <span class="nb">int</span>
 
+<div class="viewcode-block" id="IQueryResponse.get_return_data_parts">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.IQueryResponse.get_return_data_parts">[docs]</a>
     <span class="k">def</span> <span class="nf">get_return_data_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
+</div>
 
 
+
+<div class="viewcode-block" id="INetworkProvider">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.INetworkProvider">[docs]</a>
 <span class="k">class</span> <span class="nc">INetworkProvider</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="INetworkProvider.query_contract">
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.INetworkProvider.query_contract">[docs]</a>
     <span class="k">def</span> <span class="nf">query_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">IQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IQueryResponse</span><span class="p">:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="QueryRunnerAdapter">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.QueryRunnerAdapter">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.QueryRunnerAdapter">[docs]</a>
 <span class="k">class</span> <span class="nc">QueryRunnerAdapter</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_provider</span><span class="p">:</span> <span class="n">INetworkProvider</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span> <span class="o">=</span> <span class="n">network_provider</span>
 
 <div class="viewcode-block" id="QueryRunnerAdapter.run_query">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.QueryRunnerAdapter.run_query">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.adapters.html#multiversx_sdk.QueryRunnerAdapter.run_query">[docs]</a>
     <span class="k">def</span> <span class="nf">run_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
         <span class="n">adapted_query</span> <span class="o">=</span> <span class="n">ContractQuery</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">contract</span><span class="p">),</span>

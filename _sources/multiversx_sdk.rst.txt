@@ -7,6 +7,8 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   multiversx_sdk.adapters
+   multiversx_sdk.converters
    multiversx_sdk.core
    multiversx_sdk.network_providers
    multiversx_sdk.wallet
