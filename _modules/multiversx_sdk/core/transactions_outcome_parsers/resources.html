@@ -71,7 +71,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.transactions_outcome_parsers.resources</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
 
 
 <div class="viewcode-block" id="TransactionEvent">
@@ -80,12 +80,12 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">address</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                  <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                 <span class="n">topics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
-                 <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">topics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+                 <span class="n">data_items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">topics</span> <span class="o">=</span> <span class="n">topics</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_items</span> <span class="o">=</span> <span class="n">data_items</span></div>
 
 
 
@@ -122,7 +122,52 @@
                  <span class="n">transaction_results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SmartContractResult</span><span class="p">],</span>
                  <span class="n">transaction_logs</span><span class="p">:</span> <span class="n">TransactionLogs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transaction_results</span> <span class="o">=</span> <span class="n">transaction_results</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_logs</span> <span class="o">=</span> <span class="n">transaction_logs</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="n">transaction_logs</span></div>
+
+
+
+<div class="viewcode-block" id="SmartContractCallOutcome">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.SmartContractCallOutcome">[docs]</a>
+<span class="k">class</span> <span class="nc">SmartContractCallOutcome</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">return_data_parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+                 <span class="n">return_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">return_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_data_parts</span> <span class="o">=</span> <span class="n">return_data_parts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_message</span> <span class="o">=</span> <span class="n">return_message</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span></div>
+
+
+
+<div class="viewcode-block" id="find_events_by_identifier">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.find_events_by_identifier">[docs]</a>
+<span class="k">def</span> <span class="nf">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionEvent</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">find_events_by_predicate</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">identifier</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="find_events_by_predicate">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.find_events_by_predicate">[docs]</a>
+<span class="k">def</span> <span class="nf">find_events_by_predicate</span><span class="p">(</span>
+    <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">,</span>
+    <span class="n">predicate</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">TransactionEvent</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionEvent</span><span class="p">]:</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">gather_all_events</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">events</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="gather_all_events">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.gather_all_events">[docs]</a>
+<span class="k">def</span> <span class="nf">gather_all_events</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionEvent</span><span class="p">]:</span>
+    <span class="n">all_events</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_results</span><span class="p">:</span>
+        <span class="n">all_events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">all_events</span></div>
 
 </pre></div>
 

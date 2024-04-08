@@ -71,15 +71,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.codec</span> <span class="kn">import</span> <span class="n">decode_unsigned_number</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_HRP</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">ParseTransactionOutcomeError</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_outcome_parsers.resources</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">TransactionEvent</span><span class="p">,</span> <span class="n">TransactionOutcome</span><span class="p">)</span>
+    <span class="n">TransactionEvent</span><span class="p">,</span> <span class="n">TransactionOutcome</span><span class="p">,</span> <span class="n">find_events_by_identifier</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_types</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AddQuantityOutcome</span><span class="p">,</span> <span class="n">BurnOutcome</span><span class="p">,</span> <span class="n">BurnQuantityOutcome</span><span class="p">,</span> <span class="n">FreezeOutcome</span><span class="p">,</span>
     <span class="n">IssueFungibleOutcome</span><span class="p">,</span> <span class="n">IssueNonFungibleOutcome</span><span class="p">,</span> <span class="n">IssueSemiFungibleOutcome</span><span class="p">,</span>
@@ -96,300 +95,291 @@
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_issue_fungible">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_fungible">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_issue_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IssueFungibleOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_issue_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">IssueFungibleOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;issue&quot;</span><span class="p">)</span>
-        <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">IssueFungibleOutcome</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;issue&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">IssueFungibleOutcome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">))</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_issue_non_fungible">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_non_fungible">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_issue_non_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IssueNonFungibleOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_issue_non_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">IssueNonFungibleOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;issueNonFungible&quot;</span><span class="p">)</span>
-        <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">IssueNonFungibleOutcome</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;issueNonFungible&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">IssueNonFungibleOutcome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">))</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_issue_semi_fungible">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_semi_fungible">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_issue_semi_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IssueSemiFungibleOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_issue_semi_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">IssueSemiFungibleOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;issueSemiFungible&quot;</span><span class="p">)</span>
-        <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">IssueSemiFungibleOutcome</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;issueSemiFungible&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">IssueSemiFungibleOutcome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">))</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_register_meta_esdt">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_meta_esdt">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_register_meta_esdt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RegisterMetaEsdtOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_register_meta_esdt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">RegisterMetaEsdtOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;registerMetaESDT&quot;</span><span class="p">)</span>
-        <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">RegisterMetaEsdtOutcome</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;registerMetaESDT&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">RegisterMetaEsdtOutcome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">))</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_register_and_set_all_roles">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_and_set_all_roles">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_register_and_set_all_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_register_and_set_all_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">register_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;registerAndSetAllRoles&quot;</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">register_event</span><span class="p">)</span>
+        <span class="n">register_events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;registerAndSetAllRoles&quot;</span><span class="p">)</span>
+        <span class="n">set_role_events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTSetRole&quot;</span><span class="p">)</span>
 
-        <span class="n">set_role_event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTSetRole&quot;</span><span class="p">)</span>
-        <span class="n">encoded_roles</span> <span class="o">=</span> <span class="n">set_role_event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">register_events</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">set_role_events</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ParseTransactionOutcomeError</span><span class="p">(</span><span class="s2">&quot;The number of `registerAndSetAllRoles` events and `ESDTSetRole` events do not match&quot;</span><span class="p">)</span>
 
-        <span class="n">roles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">encoded_roles</span><span class="p">:</span>
-            <span class="n">hex_encoded_role</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">role</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
-            <span class="n">roles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">hex_encoded_role</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">register_event</span><span class="p">,</span> <span class="n">set_role_event</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">register_events</span><span class="p">,</span> <span class="n">set_role_events</span><span class="p">):</span>
+            <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">register_event</span><span class="p">)</span>
+            <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_roles</span><span class="p">(</span><span class="n">set_role_event</span><span class="p">)</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">roles</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">roles</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_set_burn_role_globally">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_set_burn_role_globally">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_set_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_unset_burn_role_globally">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unset_burn_role_globally">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_unset_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_set_special_role">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_set_special_role">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_set_special_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SetSpecialRoleOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_set_special_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTSetRole&quot;</span><span class="p">)</span>
-        <span class="n">user_address</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">address</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="n">encoded_roles</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
-        <span class="n">roles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">encoded_roles</span><span class="p">:</span>
-            <span class="n">hex_encoded_role</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">role</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
-            <span class="n">roles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">hex_encoded_role</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-
-        <span class="k">return</span> <span class="n">SetSpecialRoleOutcome</span><span class="p">(</span><span class="n">user_address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">,</span> <span class="n">roles</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTSetRole&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">SetSpecialRoleOutcome</span><span class="p">(</span>
+                <span class="n">user_address</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">roles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_decode_roles</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_nft_create">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_nft_create">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_nft_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NFTCreateOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_nft_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NFTCreateOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTCreate&quot;</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">amount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTCreate&quot;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">NFTCreateOutcome</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">amount</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">NFTCreateOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">initial_quantity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_local_mint">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_local_mint">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_local_mint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MintOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_local_mint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MintOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTLocalMint&quot;</span><span class="p">)</span>
-        <span class="n">user_address</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">address</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">minted_supply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">MintOutcome</span><span class="p">(</span><span class="n">user_address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">minted_supply</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTLocalMint&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">MintOutcome</span><span class="p">(</span>
+                <span class="n">user_address</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">minted_supply</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_local_burn">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_local_burn">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_local_burn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BurnOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_local_burn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BurnOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTLocalBurn&quot;</span><span class="p">)</span>
-        <span class="n">user_address</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">address</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">burnt_supply</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">BurnOutcome</span><span class="p">(</span><span class="n">user_address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">burnt_supply</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTLocalBurn&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">BurnOutcome</span><span class="p">(</span>
+                <span class="n">user_address</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">burnt_supply</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_pause">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_pause">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_pause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PauseOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_pause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PauseOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTPause&quot;</span><span class="p">)</span>
-        <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">PauseOutcome</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTPause&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">PauseOutcome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">))</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_unpause">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unpause">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_unpause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnPauseOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_unpause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">UnPauseOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTUnPause&quot;</span><span class="p">)</span>
-        <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">UnPauseOutcome</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTUnPause&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">UnPauseOutcome</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">))</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_freeze">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_freeze">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FreezeOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FreezeOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTFreeze&quot;</span><span class="p">)</span>
-        <span class="n">user_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_address</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">balance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">FreezeOutcome</span><span class="p">(</span><span class="n">user_address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">balance</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTFreeze&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">FreezeOutcome</span><span class="p">(</span>
+                <span class="n">user_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_address</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">balance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_unfreeze">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unfreeze">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_unfreeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnFreezeOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_unfreeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">UnFreezeOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTUnFreeze&quot;</span><span class="p">)</span>
-        <span class="n">user_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_address</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">balance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">UnFreezeOutcome</span><span class="p">(</span><span class="n">user_address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">balance</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTUnFreeze&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">UnFreezeOutcome</span><span class="p">(</span>
+                <span class="n">user_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_address</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">balance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_wipe">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_wipe">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_wipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WipeOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_wipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">WipeOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTWipe&quot;</span><span class="p">)</span>
-        <span class="n">user_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_address</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">balance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">WipeOutcome</span><span class="p">(</span><span class="n">user_address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">balance</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTWipe&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">WipeOutcome</span><span class="p">(</span>
+                <span class="n">user_address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_address</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">balance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_update_attributes">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_update_attributes">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_update_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UpdateAttributesOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_update_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">UpdateAttributesOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTUpdateAttributes&quot;</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">attributes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="n">UpdateAttributesOutcome</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTUpdateAttributes&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">UpdateAttributesOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">attributes</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_add_quantity">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_add_quantity">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_add_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AddQuantityOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_add_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">AddQuantityOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTAddQuantity&quot;</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">added_quantity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">AddQuantityOutcome</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">added_quantity</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTAddQuantity&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">AddQuantityOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">added_quantity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_burn_quantity">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_burn_quantity">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_burn_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BurnQuantityOutcome</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">parse_burn_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BurnQuantityOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
-        <span class="n">event</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_single_event_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTBurn&quot;</span><span class="p">)</span>
-        <span class="n">token_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="n">burnt_quantity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">BurnQuantityOutcome</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">burnt_quantity</span><span class="p">)</span></div>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;ESDTNFTBurn&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">BurnQuantityOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">burnt_quantity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
 
 
     <span class="k">def</span> <span class="nf">_ensure_no_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">transaction_events</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="s2">&quot;signalError&quot;</span><span class="p">:</span>
-                <span class="n">hex_data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">hex_data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">data_items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">data_items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
-                <span class="n">hex_message</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">hex_message</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+                <span class="k">raise</span> <span class="n">ParseTransactionOutcomeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;encountered signalError: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
-                <span class="k">raise</span> <span class="n">ParseTransactionOutcomeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;encountered signalError: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_find_single_event_by_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionEvent</span><span class="p">:</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gather_all_events</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">)</span>
-        <span class="n">events_with_matching_id</span> <span class="o">=</span> <span class="p">[</span><span class="n">event</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">identifier</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">events_with_matching_id</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ParseTransactionOutcomeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot find event of type </span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">events_with_matching_id</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ParseTransactionOutcomeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;found more than one event of type </span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">events_with_matching_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">_gather_all_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionEvent</span><span class="p">]:</span>
-        <span class="n">all_events</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_logs</span><span class="o">.</span><span class="n">events</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">transaction_outcome</span><span class="o">.</span><span class="n">transaction_results</span><span class="p">:</span>
-            <span class="n">all_events</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="o">*</span><span class="n">result</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">])</span>
-
-        <span class="k">return</span> <span class="n">all_events</span>
+    <span class="k">def</span> <span class="nf">_decode_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TransactionEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">encoded_roles</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">role</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">for</span> <span class="n">role</span> <span class="ow">in</span> <span class="n">encoded_roles</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_extract_token_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TransactionEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="n">ticker</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">ticker</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_extract_nonce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TransactionEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="k">return</span> <span class="mi">0</span>
 
-        <span class="n">nonce</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">decode_unsigned_number</span><span class="p">(</span><span class="n">nonce</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decode_unsigned_number</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_extract_amount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TransactionEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
             <span class="k">return</span> <span class="mi">0</span>
 
-        <span class="n">amount</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">decode_unsigned_number</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decode_unsigned_number</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_extract_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TransactionEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="n">address</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">Address</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">DEFAULT_HRP</span><span class="p">)</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">Address</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">DEFAULT_HRP</span><span class="p">)</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span></div>
 
 </pre></div>
 
