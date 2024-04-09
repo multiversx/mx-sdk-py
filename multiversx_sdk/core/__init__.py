@@ -25,8 +25,11 @@ from multiversx_sdk.core.transactions_factories.transactions_factory_config impo
     TransactionsFactoryConfig
 from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
     TransferTransactionsFactory
+from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import \
+    DelegationTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
+    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
+    find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
 
@@ -41,5 +44,6 @@ __all__ = [
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
     "RegisterAndSetAllRolesTokenType", "TransactionsFactoryConfig",
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
-    "RelayedTransactionsFactory", "AccountTransactionsFactory"
+    "RelayedTransactionsFactory", "AccountTransactionsFactory", "DelegationTransactionsOutcomeParser",
+    "find_events_by_identifier"
 ]
