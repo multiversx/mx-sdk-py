@@ -1,5 +1,7 @@
 import base64
 
+import pytest
+
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.address import Address
@@ -12,6 +14,8 @@ from multiversx_sdk.network_providers.contract_results import \
     ContractResultItem as ContractResultItemOnNetwork
 from multiversx_sdk.network_providers.contract_results import \
     ContractResults as ContractResultOnNetwork
+from multiversx_sdk.network_providers.proxy_network_provider import \
+    ProxyNetworkProvider
 from multiversx_sdk.network_providers.transaction_events import \
     TransactionEvent as TxEventOnNetwork
 from multiversx_sdk.network_providers.transaction_events import \
@@ -114,5 +118,31 @@ class TestSmartContractTransactionsOutcomeParser:
 
         assert parsed.return_code == ""
         assert parsed.return_message == ""
+        assert len(parsed.contracts) == 0
+        assert parsed.contracts == []
+
+    @pytest.mark.networkInteraction
+    def test_parse_successful_deploy(self):
+        successful_tx_hash = "30bc4f262543e235b73ae6db7bcbf3a54513fe3c1ed7a86af688a8f0e7fe8655"
+        proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+        tx_converter = TransactionsConverter()
+
+        tx_on_network = proxy.get_transaction(successful_tx_hash)
+        tx_outcome = tx_converter.transaction_on_network_to_outcome(tx_on_network)
+
+        parsed = self.parser.parse_deploy(tx_outcome)
+        assert parsed.contracts[0].address == "erd1qqqqqqqqqqqqqpgq29deu3uhcvuk7jhxd5cxrvh23xulkcewd8ssyf38ec"
+        assert parsed.contracts[0].owner_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+    @pytest.mark.networkInteraction
+    def test_parse_failed_deploy(self):
+        faied_tx_hash = "832780459c6c9589035dbbe5b8d1d86ca9674f4aab8379cbca9a94978e604ffd"
+        proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+        tx_converter = TransactionsConverter()
+
+        tx_on_network = proxy.get_transaction(faied_tx_hash)
+        tx_outcome = tx_converter.transaction_on_network_to_outcome(tx_on_network)
+
+        parsed = self.parser.parse_deploy(tx_outcome)
         assert len(parsed.contracts) == 0
         assert parsed.contracts == []
