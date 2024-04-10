@@ -11,6 +11,7 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.testutils.wallets import load_wallets
 from multiversx_sdk.wallet import UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
+from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
 class NetworkConfig:
@@ -292,3 +293,55 @@ class TestTransaction:
         self.transaction_computer.apply_options_for_hash_signing(tx)
         assert tx.version == 2
         assert tx.options == 3
+
+    def test_compute_bytes_for_verifying_signature(self):
+        tx = Transaction(
+            sender=self.alice.label,
+            receiver=self.bob.label,
+            gas_limit=50000,
+            chain_id="D",
+            nonce=7
+        )
+
+        tx.signature = self.alice.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(tx))
+
+        user_verifier = UserVerifier(self.alice.public_key)
+        is_signed_by_alice = user_verifier.verify(
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature
+        )
+
+        wrong_verifier = UserVerifier(self.bob.public_key)
+        is_signed_by_bob = wrong_verifier.verify(
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature
+        )
+
+        assert is_signed_by_alice == True
+        assert is_signed_by_bob == False
+
+    def test_compute_bytes_for_verifying_transaction_signed_by_hash(self):
+        tx = Transaction(
+            sender=self.alice.label,
+            receiver=self.bob.label,
+            gas_limit=50000,
+            chain_id="D",
+            nonce=7
+        )
+        self.transaction_computer.apply_options_for_hash_signing(tx)
+        tx.signature = self.alice.secret_key.sign(self.transaction_computer.compute_hash_for_signing(tx))
+
+        user_verifier = UserVerifier(self.alice.public_key)
+        is_signed_by_alice = user_verifier.verify(
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature
+        )
+
+        wrong_verifier = UserVerifier(self.bob.public_key)
+        is_signed_by_bob = wrong_verifier.verify(
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature
+        )
+
+        assert is_signed_by_alice == True
+        assert is_signed_by_bob == False

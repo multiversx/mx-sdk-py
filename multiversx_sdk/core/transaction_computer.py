@@ -41,6 +41,14 @@ class TransactionComputer:
         serialized = self._dict_to_json(dictionary)
         return serialized
 
+    def compute_bytes_for_verifying(self, transaction: ITransaction) -> bytes:
+        is_signed_by_hash = self.has_options_set_for_hash_signing(transaction)
+
+        if is_signed_by_hash:
+            return self.compute_hash_for_signing(transaction)
+
+        return self.compute_bytes_for_signing(transaction)
+
     def compute_hash_for_signing(self, transaction: ITransaction) -> bytes:
         return keccak.new(digest_bits=256).update(self.compute_bytes_for_signing(transaction)).digest()
 

@@ -2,7 +2,7 @@ from pathlib import Path
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
-from multiversx_sdk.core.tokens import Token, TokenComputer, TokenTransfer
+from multiversx_sdk.core.tokens import Token, TokenTransfer
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
@@ -11,7 +11,7 @@ from multiversx_sdk.core.transactions_factories.transactions_factory_config impo
 
 class TestSmartContractTransactionsFactory:
     config = TransactionsFactoryConfig("D")
-    factory = SmartContractTransactionsFactory(config, TokenComputer())
+    factory = SmartContractTransactionsFactory(config)
     testdata = Path(__file__).parent.parent.parent / "testutils" / "testdata"
 
     def test_create_transaction_for_deploy(self):
