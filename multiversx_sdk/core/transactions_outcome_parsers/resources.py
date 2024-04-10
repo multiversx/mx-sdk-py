@@ -33,14 +33,6 @@ class SmartContractResult:
         self.logs = logs
 
 
-class TransactionOutcome:
-    def __init__(self,
-                 transaction_results: List[SmartContractResult],
-                 transaction_logs: TransactionLogs) -> None:
-        self.transaction_results = transaction_results
-        self.logs = transaction_logs
-
-
 class SmartContractCallOutcome:
     def __init__(self,
                  function: str = "",
@@ -51,6 +43,16 @@ class SmartContractCallOutcome:
         self.return_data_parts = return_data_parts
         self.return_message = return_message
         self.return_code = return_code
+
+
+class TransactionOutcome:
+    def __init__(self,
+                 direct_smart_contract_call_outcome: SmartContractCallOutcome = SmartContractCallOutcome(),
+                 transaction_results: List[SmartContractResult] = [],
+                 transaction_logs: TransactionLogs = TransactionLogs()) -> None:
+        self.direct_smart_contract_call = direct_smart_contract_call_outcome
+        self.transaction_results = transaction_results
+        self.logs = transaction_logs
 
 
 def find_events_by_identifier(transaction_outcome: TransactionOutcome, identifier: str) -> List[TransactionEvent]:

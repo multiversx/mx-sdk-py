@@ -47,6 +47,7 @@ class TransactionOnNetwork:
         self.signature: str = ""
         self.status: TransactionStatus = TransactionStatus()
         self.timestamp: int = 0
+        self.function: str = ""
 
         self.block_nonce: int = 0
         self.hyperblock_nonce: int = 0
@@ -111,6 +112,7 @@ class TransactionOnNetwork:
         result.gas_limit = response.get("gasLimit", 0)
 
         data = response.get("data", "") or ""
+        result.function = response.get("function", "")
 
         result.data = base64.b64decode(data).decode()
         result.status = TransactionStatus(response.get("status"))
