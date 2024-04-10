@@ -80,13 +80,13 @@
 
 
 <div class="viewcode-block" id="SmartContractTransactionsOutcomeParser">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser.SmartContractTransactionsOutcomeParser">[docs]</a>
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.SmartContractTransactionsOutcomeParser">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartContractTransactionsOutcomeParser</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="SmartContractTransactionsOutcomeParser.parse_deploy">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser.SmartContractTransactionsOutcomeParser.parse_deploy">[docs]</a>
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.SmartContractTransactionsOutcomeParser.parse_deploy">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractDeployOutcome</span><span class="p">:</span>
         <span class="n">direct_call_outcome</span> <span class="o">=</span> <span class="n">transaction_outcome</span><span class="o">.</span><span class="n">direct_smart_contract_call</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="s2">&quot;SCDeploy&quot;</span><span class="p">)</span>
