@@ -77,7 +77,7 @@
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DEFAULT_MESSAGE_VERSION</span><span class="p">,</span>
-                                           <span class="n">SDK_PY_SIGNER</span><span class="p">)</span>
+                                           <span class="n">SDK_PY_SIGNER</span><span class="p">,</span> <span class="n">UNKNOWN_SIGNER</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">IMessage</span>
 
 
@@ -152,7 +152,7 @@
         <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">from_bech32</span><span class="p">(</span><span class="n">address</span><span class="p">)</span> <span class="k">if</span> <span class="n">address</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="n">version</span> <span class="o">=</span> <span class="n">packed_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="n">DEFAULT_MESSAGE_VERSION</span><span class="p">)</span>
-        <span class="n">signer</span> <span class="o">=</span> <span class="n">packed_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;signer&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">)</span>
+        <span class="n">signer</span> <span class="o">=</span> <span class="n">packed_message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;signer&quot;</span><span class="p">,</span> <span class="n">UNKNOWN_SIGNER</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Message</span><span class="p">(</span>
             <span class="n">data</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
