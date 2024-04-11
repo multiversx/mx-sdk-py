@@ -3,19 +3,23 @@ from typing import Any, Dict, Optional
 from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import DEFAULT_MESSAGE_VERSION
+from multiversx_sdk.core.constants import (DEFAULT_MESSAGE_VERSION,
+                                           SDK_PY_SIGNER)
 from multiversx_sdk.core.interfaces import IAddress, IMessage
 
 
 class Message:
-    def __init__(self, data: bytes,
+    def __init__(self,
+                 data: bytes,
                  signature: bytes = b"",
                  address: Optional[IAddress] = None,
-                 version: int = DEFAULT_MESSAGE_VERSION) -> None:
+                 version: int = DEFAULT_MESSAGE_VERSION,
+                 signer: str = SDK_PY_SIGNER) -> None:
         self.data = data
         self.signature = signature
         self.address = address
         self.version = version
+        self.signer = signer
 
 
 class MessageComputer:
@@ -44,7 +48,8 @@ class MessageComputer:
             "address": message.address.to_bech32() if message.address else "",
             "message": message.data.hex(),
             "signature": message.signature.hex(),
-            "version": message.version
+            "version": message.version,
+            "signer": message.signer
         }
 
     def unpack_message(self, packed_message: Dict[str, Any]) -> Message:
@@ -58,12 +63,14 @@ class MessageComputer:
         address = Address.from_bech32(address) if address else None
 
         version = packed_message.get("version", DEFAULT_MESSAGE_VERSION)
+        signer = packed_message.get("signer", "unknown")
 
         return Message(
             data=bytes.fromhex(data),
             address=address,
             signature=bytes.fromhex(signature),
-            version=version
+            version=version,
+            signer=signer
         )
 
     def _trim_hex_prefix(self, data: str) -> str:
