@@ -4,7 +4,7 @@ from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (DEFAULT_MESSAGE_VERSION,
-                                           SDK_PY_SIGNER)
+                                           SDK_PY_SIGNER, UNKNOWN_SIGNER)
 from multiversx_sdk.core.interfaces import IAddress, IMessage
 
 
@@ -63,7 +63,7 @@ class MessageComputer:
         address = Address.from_bech32(address) if address else None
 
         version = packed_message.get("version", DEFAULT_MESSAGE_VERSION)
-        signer = packed_message.get("signer", "unknown")
+        signer = packed_message.get("signer", UNKNOWN_SIGNER)
 
         return Message(
             data=bytes.fromhex(data),
