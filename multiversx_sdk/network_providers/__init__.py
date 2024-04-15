@@ -4,7 +4,7 @@ from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 from multiversx_sdk.network_providers.resources import GenericResponse
-from multiversx_sdk.network_providers.transaction_watcher import \
-    TransactionWatcher
+from multiversx_sdk.network_providers.transaction_awaiter import \
+    TransactionAwaiter
 
-__all__ = ["GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider", "TransactionWatcher"]
+__all__ = ["GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider", "TransactionAwaiter"]

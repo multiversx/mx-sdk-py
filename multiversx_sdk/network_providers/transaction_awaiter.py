@@ -11,8 +11,8 @@ class ITransactionFetcher(Protocol):
         ...
 
 
-class TransactionWatcher:
-    """TransactionWatcher allows one to continuously watch (monitor), by means of polling, the status of a given transaction."""
+class TransactionAwaiter:
+    """TransactionAwaiter allows one to continuously watch (monitor), by means of polling, the status of a given transaction."""
     default_polling_interval = 6000
     default_timeout = default_polling_interval * 15
     default_patience = 0
@@ -25,17 +25,17 @@ class TransactionWatcher:
         self.fetcher = fetcher
 
         if polling_interval_in_milliseconds is None:
-            self.polling_interval_in_milliseconds = TransactionWatcher.default_polling_interval
+            self.polling_interval_in_milliseconds = TransactionAwaiter.default_polling_interval
         else:
             self.polling_interval_in_milliseconds = polling_interval_in_milliseconds
 
         if timeout_interval_in_milliseconds is None:
-            self.timeout_interval_in_milliseconds = TransactionWatcher.default_timeout
+            self.timeout_interval_in_milliseconds = TransactionAwaiter.default_timeout
         else:
             self.timeout_interval_in_milliseconds = timeout_interval_in_milliseconds
 
         if patience_time_in_milliseconds is None:
-            self.patience_time_in_milliseconds = TransactionWatcher.default_patience
+            self.patience_time_in_milliseconds = TransactionAwaiter.default_patience
         else:
             self.patience_time_in_milliseconds = patience_time_in_milliseconds
 

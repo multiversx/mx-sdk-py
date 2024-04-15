@@ -5,10 +5,10 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
+from multiversx_sdk.network_providers.transaction_awaiter import \
+    TransactionAwaiter
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
-from multiversx_sdk.network_providers.transaction_watcher import \
-    TransactionWatcher
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.testutils.mock_network_provider import (
     MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
@@ -29,9 +29,9 @@ class ProxyWrapper:
         return self.proxy.send_transaction(transaction)
 
 
-class TestTransactionWatcher:
+class TestTransactionAwaiter:
     provider = MockNetworkProvider()
-    watcher = TransactionWatcher(
+    watcher = TransactionAwaiter(
         fetcher=provider,
         polling_interval_in_milliseconds=42,
         timeout_interval_in_milliseconds=42 * 42
@@ -64,7 +64,7 @@ class TestTransactionWatcher:
         )
 
         proxy = ProxyWrapper(ProxyNetworkProvider("https://devnet-api.multiversx.com"))
-        watcher = TransactionWatcher(proxy)
+        watcher = TransactionAwaiter(proxy)
 
         transaction.nonce = proxy.get_nonce(Address.new_from_bech32(alice.label))
 
