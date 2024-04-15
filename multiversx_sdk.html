@@ -92,6 +92,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionLogs"><code class="docutils literal notranslate"><span class="pre">TransactionLogs</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionOutcome"><code class="docutils literal notranslate"><span class="pre">TransactionOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionPayload"><code class="docutils literal notranslate"><span class="pre">TransactionPayload</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionWatcher"><code class="docutils literal notranslate"><span class="pre">TransactionWatcher</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionsConverter"><code class="docutils literal notranslate"><span class="pre">TransactionsConverter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionsFactoryConfig"><code class="docutils literal notranslate"><span class="pre">TransactionsFactoryConfig</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransferTransactionsFactory"><code class="docutils literal notranslate"><span class="pre">TransferTransactionsFactory</span></code></a></li>
@@ -1173,6 +1174,13 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.ProxyNetworkProvider.send_transaction"><code class="docutils literal notranslate"><span class="pre">ProxyNetworkProvider.send_transaction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.ProxyNetworkProvider.send_transactions"><code class="docutils literal notranslate"><span class="pre">ProxyNetworkProvider.send_transactions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.ProxyNetworkProvider.simulate_transaction"><code class="docutils literal notranslate"><span class="pre">ProxyNetworkProvider.simulate_transaction()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.TransactionWatcher"><code class="docutils literal notranslate"><span class="pre">TransactionWatcher</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.TransactionWatcher.await_completed"><code class="docutils literal notranslate"><span class="pre">TransactionWatcher.await_completed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.TransactionWatcher.default_patience"><code class="docutils literal notranslate"><span class="pre">TransactionWatcher.default_patience</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.TransactionWatcher.default_polling_interval"><code class="docutils literal notranslate"><span class="pre">TransactionWatcher.default_polling_interval</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.TransactionWatcher.default_timeout"><code class="docutils literal notranslate"><span class="pre">TransactionWatcher.default_timeout</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -2726,6 +2734,34 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.TransactionPayload.length">
 <span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transaction_payload.html#TransactionPayload.length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.TransactionPayload.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionWatcher">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">TransactionWatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fetcher</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ITransactionFetcher</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polling_interval_in_milliseconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout_interval_in_milliseconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience_time_in_milliseconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/network_providers/transaction_watcher.html#TransactionWatcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.TransactionWatcher" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>TransactionWatcher allows one to continuously watch (monitor), by means of polling, the status of a given transaction.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionWatcher.await_completed">
+<span class="sig-name descname"><span class="pre">await_completed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.transactions.TransactionOnNetwork" title="multiversx_sdk.network_providers.transactions.TransactionOnNetwork"><span class="pre">TransactionOnNetwork</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/network_providers/transaction_watcher.html#TransactionWatcher.await_completed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.TransactionWatcher.await_completed" title="Link to this definition"></a></dt>
+<dd><p>Waits until the transaction is completely processed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionWatcher.default_patience">
+<span class="sig-name descname"><span class="pre">default_patience</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#multiversx_sdk.TransactionWatcher.default_patience" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionWatcher.default_polling_interval">
+<span class="sig-name descname"><span class="pre">default_polling_interval</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6000</span></em><a class="headerlink" href="#multiversx_sdk.TransactionWatcher.default_polling_interval" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionWatcher.default_timeout">
+<span class="sig-name descname"><span class="pre">default_timeout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">90000</span></em><a class="headerlink" href="#multiversx_sdk.TransactionWatcher.default_timeout" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
