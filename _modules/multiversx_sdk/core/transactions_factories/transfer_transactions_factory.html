@@ -74,7 +74,8 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">BadUsageError</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">IToken</span><span class="p">,</span> <span class="n">ITokenTransfer</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">ITokenTransfer</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.tokens</span> <span class="kn">import</span> <span class="n">TokenComputer</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_factories.token_transfers_data_builder</span> <span class="kn">import</span> \
     <span class="n">TokenTransfersDataBuilder</span>
@@ -97,30 +98,13 @@
 
 
 
-<div class="viewcode-block" id="ITokenComputer">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.ITokenComputer">[docs]</a>
-<span class="k">class</span> <span class="nc">ITokenComputer</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<div class="viewcode-block" id="ITokenComputer.is_fungible">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.ITokenComputer.is_fungible">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">IToken</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="o">...</span></div>
-
-
-<div class="viewcode-block" id="ITokenComputer.extract_identifier_from_extended_identifier">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.ITokenComputer.extract_identifier_from_extended_identifier">[docs]</a>
-    <span class="k">def</span> <span class="nf">extract_identifier_from_extended_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="o">...</span></div>
-</div>
-
-
-
 <div class="viewcode-block" id="TransferTransactionsFactory">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TransferTransactionsFactory">[docs]</a>
 <span class="k">class</span> <span class="nc">TransferTransactionsFactory</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">IConfig</span><span class="p">,</span> <span class="n">token_computer</span><span class="p">:</span> <span class="n">ITokenComputer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">IConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">token_computer</span> <span class="o">=</span> <span class="n">token_computer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data_args_builder</span> <span class="o">=</span> <span class="n">TokenTransfersDataBuilder</span><span class="p">(</span><span class="n">token_computer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">token_computer</span> <span class="o">=</span> <span class="n">TokenComputer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_args_builder</span> <span class="o">=</span> <span class="n">TokenTransfersDataBuilder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_computer</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TransferTransactionsFactory.create_transaction_for_native_token_transfer">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TransferTransactionsFactory.create_transaction_for_native_token_transfer">[docs]</a>

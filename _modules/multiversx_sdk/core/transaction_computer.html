@@ -122,6 +122,17 @@
         <span class="k">return</span> <span class="n">serialized</span></div>
 
 
+<div class="viewcode-block" id="TransactionComputer.compute_bytes_for_verifying">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_bytes_for_verifying">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_bytes_for_verifying</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">is_signed_by_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_options_set_for_hash_signing</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_signed_by_hash</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_hash_for_signing</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_bytes_for_signing</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="TransactionComputer.compute_hash_for_signing">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_hash_for_signing">[docs]</a>
     <span class="k">def</span> <span class="nf">compute_hash_for_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
