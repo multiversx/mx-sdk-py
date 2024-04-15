@@ -6,8 +6,9 @@ from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
 from multiversx_sdk.core.errors import BadUsageError
-from multiversx_sdk.core.interfaces import IAddress, IToken, ITokenTransfer
+from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
 from multiversx_sdk.core.serializer import arg_to_string, args_to_strings
+from multiversx_sdk.core.tokens import TokenComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
@@ -23,19 +24,11 @@ class IConfig(Protocol):
     gas_limit_change_owner_address: int
 
 
-class ITokenComputer(Protocol):
-    def is_fungible(self, token: IToken) -> bool:
-        ...
-
-    def extract_identifier_from_extended_identifier(self, identifier: str) -> str:
-        ...
-
-
 class SmartContractTransactionsFactory:
-    def __init__(self, config: IConfig, token_computer: ITokenComputer) -> None:
+    def __init__(self, config: IConfig) -> None:
         self.config = config
-        self.token_computer = token_computer
-        self._data_args_builder = TokenTransfersDataBuilder(token_computer)
+        self.token_computer = TokenComputer()
+        self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
 
     def create_transaction_for_deploy(self,
                                       sender: IAddress,

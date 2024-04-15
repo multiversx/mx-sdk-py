@@ -1,20 +1,8 @@
-from typing import Optional, Protocol
+from typing import Optional
 
-from multiversx_sdk.core.constants import (DEFAULT_HRP,
-                                           TRANSACTION_MIN_GAS_PRICE,
+from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
-
-
-class IAddressConverter(Protocol):
-    def __init__(self, hrp: str = DEFAULT_HRP) -> None:
-        ...
-
-    def bech32_to_pubkey(self, value: str) -> bytes:
-        ...
-
-    def pubkey_to_bech32(self, pubkey: bytes) -> str:
-        ...
 
 
 class Transaction:
