@@ -387,14 +387,16 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">add_role_local_mint</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="n">add_role_local_burn</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="n">add_role_local_burn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
             <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleLocalMint&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_local_mint</span> <span class="k">else</span> <span class="p">[]),</span>
-            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleLocalBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_local_burn</span> <span class="k">else</span> <span class="p">[])</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleLocalBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_local_burn</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[])</span>
         <span class="p">]</span>
 
         <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
