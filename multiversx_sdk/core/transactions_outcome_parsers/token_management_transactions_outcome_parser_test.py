@@ -26,7 +26,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         sc_result = SmartContractResult()
         logs = TransactionLogs("", [event])
 
-        tx_outcome = TransactionOutcome([sc_result], logs)
+        tx_outcome = TransactionOutcome(transaction_results=[sc_result], transaction_logs=logs)
 
         with pytest.raises(ParseTransactionOutcomeError, match=re.escape("encountered signalError: ticker name is not valid (user error)")):
             self.parser.parse_issue_fungible(tx_outcome)
@@ -49,7 +49,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_issue_fungible(tx_results_and_logs)
         assert len(outcome) == 1
@@ -98,7 +98,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [first_event, second_event, third_event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_issue_non_fungible(tx_results_and_logs)
         assert len(outcome) == 1
@@ -121,7 +121,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_issue_semi_fungible(tx_results_and_logs)
         assert len(outcome) == 1
@@ -144,7 +144,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_register_meta_esdt(tx_results_and_logs)
         assert len(outcome) == 1
@@ -214,7 +214,7 @@ class TestTokenManagementTransactionsOutcomeParser:
             logs=result_logs
         )
 
-        tx_results_and_logs = TransactionOutcome([sc_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result], transaction_logs=tx_log)
         outcome = self.parser.parse_register_and_set_all_roles(tx_results_and_logs)
 
         assert len(outcome) == 2
@@ -243,7 +243,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_set_special_role(tx_results_and_logs)
         assert len(outcome) == 1
@@ -270,7 +270,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_nft_create(tx_results_and_logs)
         assert len(outcome) == 1
@@ -296,7 +296,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_local_mint(tx_results_and_logs)
         assert len(outcome) == 1
@@ -323,7 +323,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_local_burn(tx_results_and_logs)
         assert len(outcome) == 1
@@ -343,7 +343,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_pause(tx_results_and_logs)
         assert len(outcome) == 1
@@ -360,7 +360,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         empty_result = SmartContractResult()
         tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome([empty_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_unpause(tx_results_and_logs)
         assert len(outcome) == 1
@@ -391,7 +391,7 @@ class TestTokenManagementTransactionsOutcomeParser:
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
-        tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
+        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result])
 
         outcome = self.parser.parse_freeze(tx_results_and_logs)
         assert len(outcome) == 1
@@ -425,7 +425,7 @@ class TestTokenManagementTransactionsOutcomeParser:
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
-        tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
+        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result])
 
         outcome = self.parser.parse_unfreeze(tx_results_and_logs)
         assert len(outcome) == 1
@@ -459,7 +459,7 @@ class TestTokenManagementTransactionsOutcomeParser:
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
-        tx_results_and_logs = TransactionOutcome([sc_result], TransactionLogs())
+        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result])
 
         outcome = self.parser.parse_wipe(tx_results_and_logs)
         assert len(outcome) == 1
@@ -488,7 +488,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
         tx_result = SmartContractResult()
-        tx_results_and_logs = TransactionOutcome([tx_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[tx_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_update_attributes(tx_results_and_logs)
         assert len(outcome) == 1
@@ -514,7 +514,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
         tx_result = SmartContractResult()
-        tx_results_and_logs = TransactionOutcome([tx_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[tx_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_add_quantity(tx_results_and_logs)
         assert len(outcome) == 1
@@ -540,7 +540,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
         tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
         tx_result = SmartContractResult()
-        tx_results_and_logs = TransactionOutcome([tx_result], tx_log)
+        tx_results_and_logs = TransactionOutcome(transaction_results=[tx_result], transaction_logs=tx_log)
 
         outcome = self.parser.parse_burn_quantity(tx_results_and_logs)
         assert len(outcome) == 1
