@@ -115,17 +115,6 @@
 
 
 
-<div class="viewcode-block" id="TransactionOutcome">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TransactionOutcome">[docs]</a>
-<span class="k">class</span> <span class="nc">TransactionOutcome</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">transaction_results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SmartContractResult</span><span class="p">],</span>
-                 <span class="n">transaction_logs</span><span class="p">:</span> <span class="n">TransactionLogs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_results</span> <span class="o">=</span> <span class="n">transaction_results</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="n">transaction_logs</span></div>
-
-
-
 <div class="viewcode-block" id="SmartContractCallOutcome">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.SmartContractCallOutcome">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartContractCallOutcome</span><span class="p">:</span>
@@ -138,6 +127,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">return_data_parts</span> <span class="o">=</span> <span class="n">return_data_parts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_message</span> <span class="o">=</span> <span class="n">return_message</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span></div>
+
+
+
+<div class="viewcode-block" id="TransactionOutcome">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.TransactionOutcome">[docs]</a>
+<span class="k">class</span> <span class="nc">TransactionOutcome</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">direct_smart_contract_call_outcome</span><span class="p">:</span> <span class="n">SmartContractCallOutcome</span> <span class="o">=</span> <span class="n">SmartContractCallOutcome</span><span class="p">(),</span>
+                 <span class="n">transaction_results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SmartContractResult</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+                 <span class="n">transaction_logs</span><span class="p">:</span> <span class="n">TransactionLogs</span> <span class="o">=</span> <span class="n">TransactionLogs</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direct_smart_contract_call</span> <span class="o">=</span> <span class="n">direct_smart_contract_call_outcome</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_results</span> <span class="o">=</span> <span class="n">transaction_results</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logs</span> <span class="o">=</span> <span class="n">transaction_logs</span></div>
 
 
 
