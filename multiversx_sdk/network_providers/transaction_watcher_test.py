@@ -3,11 +3,12 @@ import pytest
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transaction_watcher import TransactionWatcher
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
+from multiversx_sdk.network_providers.transaction_watcher import \
+    TransactionWatcher
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.testutils.mock_network_provider import (
     MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
@@ -53,21 +54,21 @@ class TestTransactionWatcher:
     @pytest.mark.networkInteraction
     @pytest.mark.skip
     def test_on_network(self):
+        alice = load_wallets()["alice"]
+
         transaction = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=alice.label,
+            receiver=alice.label,
             gas_limit=50000,
             chain_id="D",
         )
-
-        alice = load_wallets()["alice"]
-        tx_computer = TransactionComputer()
 
         proxy = ProxyWrapper(ProxyNetworkProvider("https://devnet-api.multiversx.com"))
         watcher = TransactionWatcher(proxy)
 
         transaction.nonce = proxy.get_nonce(Address.new_from_bech32(alice.label))
 
+        tx_computer = TransactionComputer()
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         hash = proxy.send_transaction(transaction)

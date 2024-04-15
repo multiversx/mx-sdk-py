@@ -41,6 +41,8 @@ from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 from multiversx_sdk.network_providers.resources import GenericResponse
+from multiversx_sdk.network_providers.transaction_watcher import \
+    TransactionWatcher
 from multiversx_sdk.wallet.mnemonic import Mnemonic
 from multiversx_sdk.wallet.user_keys import UserPublicKey, UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
@@ -69,5 +71,5 @@ __all__ = [
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
     "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
     "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
-    "find_events_by_identifier"
+    "find_events_by_identifier", "TransactionWatcher"
 ]
