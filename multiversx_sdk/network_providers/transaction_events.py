@@ -13,6 +13,7 @@ class TransactionEvent:
         self.topics: List[TransactionEventTopic] = []
         self.data_payload: Optional[TransactionEventData] = None
         self.data: str = ''
+        self.additional_data: List[TransactionEventData] = []
 
     @staticmethod
     def from_http_response(response: Dict[str, Any]) -> 'TransactionEvent':
@@ -29,6 +30,11 @@ class TransactionEvent:
         result.data_payload = TransactionEventData(raw_data)
         result.data = raw_data.decode()
 
+        additional_data: Any = response.get("additionalData", [])
+        if additional_data is None:
+            additional_data = []
+        result.additional_data = [TransactionEventData(base64.b64decode(data)) for data in additional_data]
+
         return result
 
     def to_dictionary(self) -> Dict[str, Any]:
@@ -37,7 +43,8 @@ class TransactionEvent:
             "identifier": self.identifier,
             "topics": [item.hex() for item in self.topics],
             "data_payload": self.data_payload.hex() if self.data_payload else "",
-            "data": self.data
+            "data": self.data,
+            "additional_data": [data.hex() for data in self.additional_data]
         }
 
 

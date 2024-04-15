@@ -32,6 +32,7 @@ class IMessage(Protocol):
     signature: bytes
     address: Optional[IAddress]
     version: int
+    signer: str
 
 
 class IToken(Protocol):
