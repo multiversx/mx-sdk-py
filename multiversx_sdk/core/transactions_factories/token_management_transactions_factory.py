@@ -283,14 +283,16 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         user: IAddress,
         token_identifier: str,
         add_role_local_mint: bool,
-        add_role_local_burn: bool
+        add_role_local_burn: bool,
+        add_role_esdt_transfer_role: bool
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
             arg_to_string(token_identifier),
             user.to_hex(),
             *([arg_to_string("ESDTRoleLocalMint")] if add_role_local_mint else []),
-            *([arg_to_string("ESDTRoleLocalBurn")] if add_role_local_burn else [])
+            *([arg_to_string("ESDTRoleLocalBurn")] if add_role_local_burn else []),
+            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
 
         return TransactionBuilder(

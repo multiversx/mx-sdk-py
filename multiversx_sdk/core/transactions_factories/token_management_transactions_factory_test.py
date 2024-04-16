@@ -1,4 +1,5 @@
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
     RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory)
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
@@ -151,16 +152,39 @@ def test_create_transaction_for_creating_nft():
 
 
 def test_create_transaction_for_setting_special_role_on_fungible_token():
+    mint_role_as_hex = arg_to_string("ESDTRoleLocalMint")
+
     transaction = factory.create_transaction_for_setting_special_role_on_fungible_token(
         sender=frank,
         user=grace,
         token_identifier="FRANK-11ce3e",
         add_role_local_mint=True,
         add_role_local_burn=False,
+        add_role_esdt_transfer_role=False
     )
 
     assert transaction.data
-    assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654c6f63616c4d696e74"
+    assert transaction.data.decode() == f"setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@{mint_role_as_hex}"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.value == 0
+
+
+def test_set_all_roles_on_fungible_token():
+    mint_role_as_hex = arg_to_string("ESDTRoleLocalMint")
+    burn_role_as_hex = arg_to_string("ESDTRoleLocalBurn")
+    transfer_role_as_hex = arg_to_string("ESDTTransferRole")
+
+    transaction = factory.create_transaction_for_setting_special_role_on_fungible_token(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+        add_role_local_mint=True,
+        add_role_local_burn=True,
+        add_role_esdt_transfer_role=True
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == f"setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@{mint_role_as_hex}@{burn_role_as_hex}@{transfer_role_as_hex}"
     assert transaction.sender == frank.to_bech32()
     assert transaction.value == 0
 
