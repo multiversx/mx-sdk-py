@@ -42,7 +42,7 @@ class TestAccountTransactionsFactory:
         assert tx.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.data.decode() == "SetGuardian@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@4d756c7469766572735854435353657276696365"
-        assert tx.gas_limit == 525500
+        assert tx.gas_limit == 475500
 
     def test_guard_account(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -51,7 +51,7 @@ class TestAccountTransactionsFactory:
         assert tx.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.data.decode() == "GuardAccount"
-        assert tx.gas_limit == 368000
+        assert tx.gas_limit == 318000
 
     def test_unguard_account(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -60,4 +60,4 @@ class TestAccountTransactionsFactory:
         assert tx.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.data.decode() == "UnGuardAccount"
-        assert tx.gas_limit == 371000
+        assert tx.gas_limit == 321000
