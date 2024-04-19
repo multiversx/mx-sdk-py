@@ -99,7 +99,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_burn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_store_per_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_store_per_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50_000_000_000_000_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">:</span> <span class="n">IAddress</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span><span class="p">)</span>
 
@@ -120,9 +120,11 @@
         <span class="c1"># Configuration for account operations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_save_key_value</span> <span class="o">=</span> <span class="mi">100_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_persist_per_byte</span> <span class="o">=</span> <span class="mi">1_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_store_per_byte</span> <span class="o">=</span> <span class="mi">10_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_set_guardian</span> <span class="o">=</span> <span class="mi">250_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_guard_account</span> <span class="o">=</span> <span class="mi">250_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_unguard_account</span> <span class="o">=</span> <span class="mi">250_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_gas_limit_for_guarded_transaction</span> <span class="o">=</span> <span class="mi">50_000</span>
 
         <span class="c1"># Configuration for smart contract operations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_claim_developer_rewards</span> <span class="o">=</span> <span class="mi">6_000_000</span>
