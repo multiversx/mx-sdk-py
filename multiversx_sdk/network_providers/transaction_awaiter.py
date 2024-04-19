@@ -12,7 +12,7 @@ class ITransactionFetcher(Protocol):
 
 
 class TransactionAwaiter:
-    """TransactionAwaiter allows one to continuously watch (monitor), by means of polling, the status of a given transaction."""
+    """TransactionAwaiter allows one to await until a specific event (such as transaction completion) occurs on a given transaction."""
     default_polling_interval = 6000
     default_timeout = default_polling_interval * 15
     default_patience = 0
