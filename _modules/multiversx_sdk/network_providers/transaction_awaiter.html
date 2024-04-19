@@ -74,9 +74,11 @@
 <span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ExpectedTransactionStatusNotReached</span><span class="p">,</span>
-                                        <span class="n">IsCompletedFieldMissingOnTransaction</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.errors</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ExpectedTransactionStatusNotReached</span><span class="p">,</span> <span class="n">IsCompletedFieldMissingOnTransaction</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transactions</span> <span class="kn">import</span> <span class="n">TransactionOnNetwork</span>
+
+<span class="n">ONE_SECOND_IN_MILLISECONDS</span> <span class="o">=</span> <span class="mi">1000</span>
 
 
 <span class="k">class</span> <span class="nc">ITransactionFetcher</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
@@ -154,13 +156,13 @@
                 <span class="k">raise</span> <span class="n">ex</span>
 
             <span class="n">number_of_retries</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polling_interval_in_milliseconds</span> <span class="o">//</span> <span class="mi">1000</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polling_interval_in_milliseconds</span> <span class="o">/</span> <span class="n">ONE_SECOND_IN_MILLISECONDS</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">fetched_data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_condition_satisfied</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">error</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">patience_time_in_milliseconds</span><span class="p">:</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patience_time_in_milliseconds</span> <span class="o">//</span> <span class="mi">1000</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patience_time_in_milliseconds</span> <span class="o">/</span> <span class="n">ONE_SECOND_IN_MILLISECONDS</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">do_fetch</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">fetched_data</span></div>
