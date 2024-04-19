@@ -14,8 +14,8 @@ class TestAccountTransactionsFactory:
     def test_save_key_value(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         pairs: Dict[bytes, bytes] = {}
-        key = bytes.fromhex("6b657930")
-        value = bytes.fromhex("76616c756530")
+        key = "key0".encode()
+        value = "value0".encode()
         pairs[key] = value
 
         tx = self.factory.create_transaction_for_saving_key_value(
