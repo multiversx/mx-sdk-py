@@ -59,13 +59,3 @@ class InvalidInnerTransactionError(Exception):
 class ParseTransactionOutcomeError(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
-
-
-class ExpectedTransactionStatusNotReached(Exception):
-    def __init__(self) -> None:
-        super().__init__("The expected transaction status was not reached")
-
-
-class IsCompletedFieldMissingOnTransaction(Exception):
-    def __init__(self) -> None:
-        super().__init__("The transaction watcher requires the `is_completed` property to be defined on the transaction object. Perhaps you've used the sdk-network-provider's `ProxyNetworkProvider.get_transaction()` and in that case you should also pass `with_process_status=True`")

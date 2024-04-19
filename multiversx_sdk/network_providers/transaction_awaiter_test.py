@@ -19,14 +19,8 @@ class ProxyWrapper:
     def __init__(self, proxy: ProxyNetworkProvider) -> None:
         self.proxy = proxy
 
-    def get_nonce(self, address: Address) -> int:
-        return self.proxy.get_account(address).nonce
-
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
         return self.proxy.get_transaction(tx_hash, True)
-
-    def send_transaction(self, transaction: Transaction) -> str:
-        return self.proxy.send_transaction(transaction)
 
 
 class TestTransactionAwaiter:
@@ -55,6 +49,10 @@ class TestTransactionAwaiter:
     @pytest.mark.skip
     def test_on_network(self):
         alice = load_wallets()["alice"]
+        proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
+        proxy_wrapper = ProxyWrapper(proxy)
+        watcher = TransactionAwaiter(proxy_wrapper)
+        tx_computer = TransactionComputer()
 
         transaction = Transaction(
             sender=alice.label,
@@ -62,13 +60,7 @@ class TestTransactionAwaiter:
             gas_limit=50000,
             chain_id="D",
         )
-
-        proxy = ProxyWrapper(ProxyNetworkProvider("https://devnet-api.multiversx.com"))
-        watcher = TransactionAwaiter(proxy)
-
-        transaction.nonce = proxy.get_nonce(Address.new_from_bech32(alice.label))
-
-        tx_computer = TransactionComputer()
+        transaction.nonce = proxy.get_account(Address.new_from_bech32(alice.label)).nonce
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         hash = proxy.send_transaction(transaction)

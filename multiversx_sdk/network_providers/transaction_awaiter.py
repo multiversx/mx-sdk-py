@@ -1,9 +1,11 @@
 import time
 from typing import Callable, Optional, Protocol
 
-from multiversx_sdk.core.errors import (ExpectedTransactionStatusNotReached,
-                                        IsCompletedFieldMissingOnTransaction)
+from multiversx_sdk.network_providers.errors import (
+    ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction)
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
+
+ONE_SECOND_IN_MILLISECONDS = 1000
 
 
 class ITransactionFetcher(Protocol):
@@ -76,13 +78,13 @@ class TransactionAwaiter:
                 raise ex
 
             number_of_retries += 1
-            time.sleep(self.polling_interval_in_milliseconds // 1000)
+            time.sleep(self.polling_interval_in_milliseconds / ONE_SECOND_IN_MILLISECONDS)
 
         if fetched_data is None or not is_condition_satisfied:
             raise error
 
         if self.patience_time_in_milliseconds:
-            time.sleep(self.patience_time_in_milliseconds // 1000)
+            time.sleep(self.patience_time_in_milliseconds / ONE_SECOND_IN_MILLISECONDS)
             return do_fetch()
 
         return fetched_data
