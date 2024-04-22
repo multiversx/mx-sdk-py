@@ -16,7 +16,6 @@ class IConfig(Protocol):
     gas_limit_set_guardian: int
     gas_limit_guard_account: int
     gas_limit_unguard_account: int
-    extra_gas_limit_for_guarded_transaction: int
 
 
 class AccountTransactionsFactory:
@@ -56,42 +55,36 @@ class AccountTransactionsFactory:
             service_id.encode().hex()
         ]
 
-        gas_limit = self.config.gas_limit_set_guardian + self.config.extra_gas_limit_for_guarded_transaction
-
         return TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=sender,
             data_parts=data_parts,
-            gas_limit=gas_limit,
+            gas_limit=self.config.gas_limit_set_guardian,
             add_data_movement_gas=True
         ).build()
 
     def create_transaction_for_guarding_account(self, sender: IAddress) -> Transaction:
         data_parts = ["GuardAccount"]
 
-        gas_limit = self.config.gas_limit_guard_account + self.config.extra_gas_limit_for_guarded_transaction
-
         return TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=sender,
             data_parts=data_parts,
-            gas_limit=gas_limit,
+            gas_limit=self.config.gas_limit_guard_account,
             add_data_movement_gas=True
         ).build()
 
     def create_transaction_for_unguarding_account(self, sender: IAddress) -> Transaction:
         data_parts = ["UnGuardAccount"]
 
-        gas_limit = self.config.gas_limit_unguard_account + self.config.extra_gas_limit_for_guarded_transaction
-
         transaction = TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=sender,
             data_parts=data_parts,
-            gas_limit=gas_limit,
+            gas_limit=self.config.gas_limit_unguard_account,
             add_data_movement_gas=True
         ).build()
         transaction.options = 2
