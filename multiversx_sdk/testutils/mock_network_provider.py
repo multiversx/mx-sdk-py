@@ -1,4 +1,5 @@
-import asyncio
+import threading
+import time
 from typing import Any, Callable, Dict, List
 
 from multiversx_sdk.core.address import Address
@@ -85,27 +86,31 @@ class MockNetworkProvider:
 
         self.get_transaction_responders.insert(0, GetTransactionResponder(predicate, response))
 
-    async def mock_transaction_timeline(self, transaction: Transaction, timeline_points: List[Any]) -> None:
+    def mock_transaction_timeline(self, transaction: Transaction, timeline_points: List[Any]) -> None:
         tx_computer = TransactionComputer()
         tx_hash = tx_computer.compute_transaction_hash(transaction).hex()
-        await self.mock_transaction_timeline_by_hash(tx_hash, timeline_points)
+        self.mock_transaction_timeline_by_hash(tx_hash, timeline_points)
 
-    async def mock_transaction_timeline_by_hash(self, hash: str, timeline_points: List[Any]) -> None:
-        for point in timeline_points:
-            if isinstance(point, TransactionStatus):
-                def set_tx_status(transaction: TransactionOnNetwork):
-                    transaction.status = point
+    def mock_transaction_timeline_by_hash(self, hash: str, timeline_points: List[Any]) -> None:
+        def fn():
+            for point in timeline_points:
+                if isinstance(point, TransactionStatus):
+                    def set_tx_status(transaction: TransactionOnNetwork):
+                        transaction.status = point
 
-                self.mock_update_transaction(hash, set_tx_status)
+                    self.mock_update_transaction(hash, set_tx_status)
 
-            elif isinstance(point, TimelinePointMarkCompleted):
-                def mark_tx_as_completed(transaction: TransactionOnNetwork):
-                    transaction.is_completed = True
+                elif isinstance(point, TimelinePointMarkCompleted):
+                    def mark_tx_as_completed(transaction: TransactionOnNetwork):
+                        transaction.is_completed = True
 
-                self.mock_update_transaction(hash, mark_tx_as_completed)
+                    self.mock_update_transaction(hash, mark_tx_as_completed)
 
-            elif isinstance(point, TimelinePointWait):
-                await asyncio.sleep(point.milliseconds)
+                elif isinstance(point, TimelinePointWait):
+                    time.sleep(point.milliseconds // 1000)
+
+        thread = threading.Thread(target=fn)
+        thread.start()
 
     def get_account(self, address: IAddress) -> AccountOnNetwork:
         account = self.accounts.get(address.to_bech32(), None)
