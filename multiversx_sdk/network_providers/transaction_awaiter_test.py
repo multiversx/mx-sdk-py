@@ -66,3 +66,20 @@ class TestTransactionAwaiter:
         hash = proxy.send_transaction(transaction)
         tx_on_network = watcher.await_completed(hash)
         assert tx_on_network.status.is_executed()
+
+    def test_await_on_condition(self):
+        tx_hash = "abbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba"
+        tx_on_network = TransactionOnNetwork()
+        tx_on_network.status = TransactionStatus("unknown")
+        self.provider.mock_put_transaction(tx_hash, tx_on_network)
+
+        self.provider.mock_transaction_timeline_by_hash(
+            tx_hash,
+            [TimelinePointWait(40), TransactionStatus("pending"), TimelinePointWait(40), TransactionStatus("pending"), TimelinePointWait(40), TransactionStatus("failed")]
+        )
+
+        def condition(tx: TransactionOnNetwork) -> bool:
+            return tx.status.is_failed()
+
+        tx_from_network = self.watcher.await_on_condition(tx_hash, condition)
+        assert tx_from_network.status.is_failed()

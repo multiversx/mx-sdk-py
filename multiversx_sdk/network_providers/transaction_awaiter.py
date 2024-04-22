@@ -24,6 +24,13 @@ class TransactionAwaiter:
                  polling_interval_in_milliseconds: Optional[int] = None,
                  timeout_interval_in_milliseconds: Optional[int] = None,
                  patience_time_in_milliseconds: Optional[int] = None) -> None:
+        """
+        Args:
+            fetcher (ITransactionFetcher): Used to fetch the transaction of the network.
+            polling_interval_in_milliseconds (Optional[int]): The polling interval, in milliseconds.
+            timeout_interval_in_milliseconds (Optional[int]): The timeout, in milliseconds.
+            patience_time_in_milliseconds (Optional[int]): The patience, an extra time (in milliseconds) to wait, after the transaction has reached its desired status. Currently there's a delay between the moment a transaction is marked as "completed" and the moment its outcome (contract results, events and logs) is available.
+        """
         self.fetcher = fetcher
 
         if polling_interval_in_milliseconds is None:
@@ -54,6 +61,17 @@ class TransactionAwaiter:
 
         return self._await_conditionally(
             is_satisfied=is_completed,
+            do_fetch=do_fetch,
+            error=ExpectedTransactionStatusNotReached()
+        )
+
+    def await_on_condition(self, tx_hash: str, condition: Callable[[TransactionOnNetwork], bool]) -> TransactionOnNetwork:
+        """Waits until the condition is satisfied."""
+        def do_fetch():
+            return self.fetcher.get_transaction(tx_hash)
+
+        return self._await_conditionally(
+            is_satisfied=condition,
             do_fetch=do_fetch,
             error=ExpectedTransactionStatusNotReached()
         )
