@@ -32,6 +32,7 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/multiversx/mx-sdk-py"
 
+[tool.hatch.build]
 exclude = [
   ".github",
   "./examples",
