@@ -12,3 +12,17 @@ class ICodec(Protocol):
     @property
     def pubkey_length(self) -> int:
         ...
+
+
+class INumericalValue(Protocol):
+    """
+    For internal use only.
+    """
+
+    @property
+    def value(self) -> int:
+        ...
+
+    @value.setter
+    def value(self, value: int) -> None:
+        ...
