@@ -4,18 +4,18 @@ import struct
 from multiversx_sdk.abi.constants import STRUCT_PACKING_FORMAT_FOR_UINT32
 
 
-def encode_length(writer: io.BufferedWriter, length: int):
+def encode_length(writer: io.BytesIO, length: int):
     bytes = struct.pack(STRUCT_PACKING_FORMAT_FOR_UINT32, length)
     writer.write(bytes)
 
 
-def decode_length(reader: io.BufferedReader) -> int:
+def decode_length(reader: io.BytesIO) -> int:
     bytes = read_bytes_exactly(reader, 4)
     (length,) = struct.unpack(STRUCT_PACKING_FORMAT_FOR_UINT32, bytes)
     return length
 
 
-def read_bytes_exactly(reader: io.BufferedReader, num_bytes: int):
+def read_bytes_exactly(reader: io.BytesIO, num_bytes: int):
     if num_bytes == 0:
         return b''
 
