@@ -69,6 +69,11 @@ class AddressValue:
         return cls(address.get_public_key())
 
 
+class StringValue:
+    def __init__(self, value: str) -> None:
+        self.value = value
+
+
 class BoolValue:
     def __init__(self, value: bool) -> None:
         self.value = value

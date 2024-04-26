@@ -9,7 +9,11 @@ from multiversx_sdk.abi.codec_for_simple_values_boolean import (
     decode_nested_bool, decode_top_level_bool, encode_nested_bool,
     encode_top_level_bool)
 from multiversx_sdk.abi.codec_for_simple_values_numerical import (
-    encode_nested_number, encode_top_level_number)
+    decode_nested_number, decode_top_level_number, encode_nested_number,
+    encode_top_level_number)
+from multiversx_sdk.abi.codec_for_simple_values_string import (
+    decode_nested_string, decode_top_level_string, encode_nested_string,
+    encode_top_level_string)
 from multiversx_sdk.abi.values_single import *
 
 
@@ -46,6 +50,8 @@ class Codec:
             encode_nested_number(writer, value.value, True, 8)
         elif isinstance(value, AddressValue):
             encode_nested_address(self, writer, value)
+        elif isinstance(value, StringValue):
+            encode_nested_string(writer, value)
         else:
             raise ValueError(f"unsupported type for nested encoding: {type(value)}")
 
@@ -75,6 +81,8 @@ class Codec:
             encode_top_level_number(writer, value.value, True)
         elif isinstance(value, AddressValue):
             encode_top_level_address(self, writer, value)
+        elif isinstance(value, StringValue):
+            encode_top_level_string(writer, value)
         else:
             raise ValueError(f"unsupported type for top-level encoding: {type(value)}")
 
@@ -89,8 +97,26 @@ class Codec:
     def do_decode_nested(self, reader: io.BytesIO, value: Any) -> None:
         if isinstance(value, BoolValue):
             decode_nested_bool(reader, value)
+        elif isinstance(value, U8Value):
+            decode_nested_number(reader, value, False, 1)
+        elif isinstance(value, U16Value):
+            decode_nested_number(reader, value, False, 2)
+        elif isinstance(value, U32Value):
+            decode_nested_number(reader, value, False, 4)
+        elif isinstance(value, U64Value):
+            decode_nested_number(reader, value, False, 8)
+        elif isinstance(value, I8Value):
+            decode_nested_number(reader, value, True, 1)
+        elif isinstance(value, I16Value):
+            decode_nested_number(reader, value, True, 2)
+        elif isinstance(value, I32Value):
+            decode_nested_number(reader, value, True, 4)
+        elif isinstance(value, I64Value):
+            decode_nested_number(reader, value, True, 8)
         elif isinstance(value, AddressValue):
             decode_nested_address(self, reader, value)
+        elif isinstance(value, StringValue):
+            decode_nested_string(reader, value)
         else:
             raise ValueError(f"unsupported type for nested decoding: {type(value)}")
 
@@ -103,8 +129,26 @@ class Codec:
     def do_decode_top_level(self, data: bytes, value: Any) -> None:
         if isinstance(value, BoolValue):
             decode_top_level_bool(data, value)
+        elif isinstance(value, U8Value):
+            decode_top_level_number(data, value, False, 1)
+        elif isinstance(value, U16Value):
+            decode_top_level_number(data, value, False, 2)
+        elif isinstance(value, U32Value):
+            decode_top_level_number(data, value, False, 4)
+        elif isinstance(value, U64Value):
+            decode_top_level_number(data, value, False, 8)
+        elif isinstance(value, I8Value):
+            decode_top_level_number(data, value, True, 1)
+        elif isinstance(value, I16Value):
+            decode_top_level_number(data, value, True, 2)
+        elif isinstance(value, I32Value):
+            decode_top_level_number(data, value, True, 4)
+        elif isinstance(value, I64Value):
+            decode_top_level_number(data, value, True, 8)
         elif isinstance(value, AddressValue):
             decode_top_level_address(self, data, value)
+        elif isinstance(value, StringValue):
+            decode_top_level_string(data, value)
         else:
             raise ValueError(f"unsupported type for top-level decoding: {type(value)}")
 
