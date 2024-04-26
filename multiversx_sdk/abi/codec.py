@@ -2,12 +2,21 @@
 import io
 from typing import Any
 
+from multiversx_sdk.abi.codec_for_custom_type_enum import (
+    decode_nested_enum, decode_top_level_enum, encode_nested_enum,
+    encode_top_level_enum)
+from multiversx_sdk.abi.codec_for_custom_type_struct import (
+    decode_nested_struct, decode_top_level_struct, encode_nested_struct,
+    encode_top_level_struct)
 from multiversx_sdk.abi.codec_for_simple_values_address import (
     decode_nested_address, decode_top_level_address, encode_nested_address,
     encode_top_level_address)
 from multiversx_sdk.abi.codec_for_simple_values_boolean import (
     decode_nested_bool, decode_top_level_bool, encode_nested_bool,
     encode_top_level_bool)
+from multiversx_sdk.abi.codec_for_simple_values_bytes import (
+    decode_nested_bytes, decode_top_level_bytes, encode_nested_bytes,
+    encode_top_level_bytes)
 from multiversx_sdk.abi.codec_for_simple_values_numerical import (
     decode_nested_number, decode_top_level_number, encode_nested_number,
     encode_top_level_number)
@@ -52,6 +61,12 @@ class Codec:
             encode_nested_address(self, writer, value)
         elif isinstance(value, StringValue):
             encode_nested_string(writer, value)
+        elif isinstance(value, BytesValue):
+            encode_nested_bytes(writer, value)
+        elif isinstance(value, StructValue):
+            encode_nested_struct(self, writer, value)
+        elif isinstance(value, EnumValue):
+            encode_nested_enum(self, writer, value)
         else:
             raise ValueError(f"unsupported type for nested encoding: {type(value)}")
 
@@ -83,6 +98,12 @@ class Codec:
             encode_top_level_address(self, writer, value)
         elif isinstance(value, StringValue):
             encode_top_level_string(writer, value)
+        elif isinstance(value, BytesValue):
+            encode_top_level_bytes(writer, value)
+        elif isinstance(value, StructValue):
+            encode_top_level_struct(self, writer, value)
+        elif isinstance(value, EnumValue):
+            encode_top_level_enum(self, writer, value)
         else:
             raise ValueError(f"unsupported type for top-level encoding: {type(value)}")
 
@@ -117,6 +138,12 @@ class Codec:
             decode_nested_address(self, reader, value)
         elif isinstance(value, StringValue):
             decode_nested_string(reader, value)
+        elif isinstance(value, BytesValue):
+            decode_nested_bytes(reader, value)
+        elif isinstance(value, StructValue):
+            decode_nested_struct(self, reader, value)
+        elif isinstance(value, EnumValue):
+            decode_nested_enum(self, reader, value)
         else:
             raise ValueError(f"unsupported type for nested decoding: {type(value)}")
 
@@ -149,6 +176,12 @@ class Codec:
             decode_top_level_address(self, data, value)
         elif isinstance(value, StringValue):
             decode_top_level_string(data, value)
+        elif isinstance(value, BytesValue):
+            decode_top_level_bytes(data, value)
+        elif isinstance(value, StructValue):
+            decode_top_level_struct(self, data, value)
+        elif isinstance(value, EnumValue):
+            decode_top_level_enum(self, data, value)
         else:
             raise ValueError(f"unsupported type for top-level decoding: {type(value)}")
 

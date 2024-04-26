@@ -1,3 +1,4 @@
+import io
 from typing import Any, Protocol
 
 
@@ -6,7 +7,10 @@ class ICodec(Protocol):
     For internal use only.
     """
 
-    def encode_nested(self, value: Any) -> bytes:
+    def do_encode_nested(self, writer: io.BytesIO, value: Any) -> None:
+        ...
+
+    def do_decode_nested(self, reader: io.BytesIO, value: Any) -> None:
         ...
 
     @property
