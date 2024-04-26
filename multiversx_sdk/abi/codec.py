@@ -20,6 +20,9 @@ from multiversx_sdk.abi.codec_for_simple_values_bytes import (
 from multiversx_sdk.abi.codec_for_simple_values_numerical import (
     decode_nested_number, decode_top_level_number, encode_nested_number,
     encode_top_level_number)
+from multiversx_sdk.abi.codec_for_simple_values_numerical_big import (
+    decode_nested_big_number, decode_top_level_big_number,
+    encode_nested_big_number, encode_top_level_big_number)
 from multiversx_sdk.abi.codec_for_simple_values_string import (
     decode_nested_string, decode_top_level_string, encode_nested_string,
     encode_top_level_string)
@@ -57,6 +60,10 @@ class Codec:
             encode_nested_number(writer, value.value, True, 4)
         elif isinstance(value, I64Value):
             encode_nested_number(writer, value.value, True, 8)
+        elif isinstance(value, BigUIntValue):
+            encode_nested_big_number(writer, value.value, False)
+        elif isinstance(value, BigIntValue):
+            encode_nested_big_number(writer, value.value, True)
         elif isinstance(value, AddressValue):
             encode_nested_address(self, writer, value)
         elif isinstance(value, StringValue):
@@ -94,6 +101,10 @@ class Codec:
             encode_top_level_number(writer, value.value, True)
         elif isinstance(value, I64Value):
             encode_top_level_number(writer, value.value, True)
+        elif isinstance(value, BigUIntValue):
+            encode_top_level_big_number(writer, value.value, False)
+        elif isinstance(value, BigIntValue):
+            encode_top_level_big_number(writer, value.value, True)
         elif isinstance(value, AddressValue):
             encode_top_level_address(self, writer, value)
         elif isinstance(value, StringValue):
@@ -134,6 +145,10 @@ class Codec:
             decode_nested_number(reader, value, True, 4)
         elif isinstance(value, I64Value):
             decode_nested_number(reader, value, True, 8)
+        elif isinstance(value, BigUIntValue):
+            decode_nested_big_number(reader, value, False)
+        elif isinstance(value, BigIntValue):
+            decode_nested_big_number(reader, value, True)
         elif isinstance(value, AddressValue):
             decode_nested_address(self, reader, value)
         elif isinstance(value, StringValue):
@@ -172,6 +187,10 @@ class Codec:
             decode_top_level_number(data, value, True, 4)
         elif isinstance(value, I64Value):
             decode_top_level_number(data, value, True, 8)
+        elif isinstance(value, BigUIntValue):
+            decode_top_level_big_number(data, value, False)
+        elif isinstance(value, BigIntValue):
+            decode_top_level_big_number(data, value, True)
         elif isinstance(value, AddressValue):
             decode_top_level_address(self, data, value)
         elif isinstance(value, StringValue):
