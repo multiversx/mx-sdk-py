@@ -2,6 +2,12 @@
 import io
 from typing import Any
 
+from multiversx_sdk.abi.codec_for_composite_types_list import (
+    decode_nested_list, decode_top_level_list, encode_nested_list,
+    encode_top_level_list)
+from multiversx_sdk.abi.codec_for_composite_types_option import (
+    decode_nested_option, decode_top_level_option, encode_nested_option,
+    encode_top_level_option)
 from multiversx_sdk.abi.codec_for_custom_type_enum import (
     decode_nested_enum, decode_top_level_enum, encode_nested_enum,
     encode_top_level_enum)
@@ -74,6 +80,10 @@ class Codec:
             encode_nested_struct(self, writer, value)
         elif isinstance(value, EnumValue):
             encode_nested_enum(self, writer, value)
+        elif isinstance(value, OptionValue):
+            encode_nested_option(self, writer, value)
+        elif isinstance(value, InputListValue):
+            encode_nested_list(self, writer, value)
         else:
             raise ValueError(f"unsupported type for nested encoding: {type(value)}")
 
@@ -115,6 +125,10 @@ class Codec:
             encode_top_level_struct(self, writer, value)
         elif isinstance(value, EnumValue):
             encode_top_level_enum(self, writer, value)
+        elif isinstance(value, OptionValue):
+            encode_top_level_option(self, writer, value)
+        elif isinstance(value, InputListValue):
+            encode_top_level_list(self, writer, value)
         else:
             raise ValueError(f"unsupported type for top-level encoding: {type(value)}")
 
@@ -159,6 +173,10 @@ class Codec:
             decode_nested_struct(self, reader, value)
         elif isinstance(value, EnumValue):
             decode_nested_enum(self, reader, value)
+        elif isinstance(value, OptionValue):
+            decode_nested_option(self, reader, value)
+        elif isinstance(value, OutputListValue):
+            decode_nested_list(self, reader, value)
         else:
             raise ValueError(f"unsupported type for nested decoding: {type(value)}")
 
@@ -201,7 +219,9 @@ class Codec:
             decode_top_level_struct(self, data, value)
         elif isinstance(value, EnumValue):
             decode_top_level_enum(self, data, value)
+        elif isinstance(value, OptionValue):
+            decode_top_level_option(self, data, value)
+        elif isinstance(value, OutputListValue):
+            decode_top_level_list(self, data, value)
         else:
             raise ValueError(f"unsupported type for top-level decoding: {type(value)}")
-
-
