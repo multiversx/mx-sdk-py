@@ -1,4 +1,4 @@
-from typing import Any, List, Protocol
+from typing import Any, Callable, List, Optional, Protocol
 
 
 class BoolValue:
@@ -99,3 +99,19 @@ class EnumValue:
     def __init__(self, discriminant: int, fields: List[Field]) -> None:
         self.discriminant = discriminant
         self.fields = fields
+
+
+class OptionValue:
+    def __init__(self, value: Optional[Any] = None) -> None:
+        self.value = value
+
+
+class InputListValue:
+    def __init__(self, items: List[Any]) -> None:
+        self.items = items
+
+
+class OutputListValue:
+    def __init__(self, item_creator: Callable[[], Any]) -> None:
+        self.items: List[Any] = []
+        self.item_creator = item_creator
