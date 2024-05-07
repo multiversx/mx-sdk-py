@@ -8,12 +8,12 @@ from multiversx_sdk.abi.values_single import AddressValue
 
 
 def encode_nested_address(codec: ICodec, writer: io.BytesIO, value: AddressValue):
-    encode_top_level_address(codec, writer, value)
+    check_pub_key_length(codec, value.value)
+    writer.write(value.value)
 
 
 def encode_top_level_address(codec: ICodec, writer: io.BytesIO, value: AddressValue):
-    check_pub_key_length(codec, value.value)
-    writer.write(value.value)
+    encode_nested_address(codec, writer, value)
 
 
 def decode_nested_address(codec: ICodec, reader: io.BytesIO, value: AddressValue):

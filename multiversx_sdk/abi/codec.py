@@ -24,11 +24,15 @@ from multiversx_sdk.abi.codec_for_simple_values_bytes import (
     decode_nested_bytes, decode_top_level_bytes, encode_nested_bytes,
     encode_top_level_bytes)
 from multiversx_sdk.abi.codec_for_simple_values_numerical import (
-    decode_nested_number, decode_top_level_number, encode_nested_number,
-    encode_top_level_number)
+    decode_nested_signed_number, decode_nested_unsigned_number,
+    decode_top_level_signed_number, decode_top_level_unsigned_number,
+    encode_nested_signed_number, encode_nested_unsigned_number,
+    encode_top_level_signed_number, encode_top_level_unsigned_number)
 from multiversx_sdk.abi.codec_for_simple_values_numerical_big import (
-    decode_nested_big_number, decode_top_level_big_number,
-    encode_nested_big_number, encode_top_level_big_number)
+    decode_nested_signed_big_number, decode_nested_unsigned_big_number,
+    decode_top_level_signed_big_number, decode_top_level_unsigned_big_number,
+    encode_nested_signed_big_number, encode_nested_unsigned_big_number,
+    encode_top_level_signed_big_number, encode_top_level_unsigned_big_number)
 from multiversx_sdk.abi.codec_for_simple_values_string import (
     decode_nested_string, decode_top_level_string, encode_nested_string,
     encode_top_level_string)
@@ -51,25 +55,25 @@ class Codec:
         if isinstance(value, BoolValue):
             encode_nested_bool(writer, value)
         elif isinstance(value, U8Value):
-            encode_nested_number(writer, value.value, False, 1)
+            encode_nested_unsigned_number(writer, value.value, 1)
         elif isinstance(value, U16Value):
-            encode_nested_number(writer, value.value, False, 2)
+            encode_nested_unsigned_number(writer, value.value, 2)
         elif isinstance(value, U32Value):
-            encode_nested_number(writer, value.value, False, 4)
+            encode_nested_unsigned_number(writer, value.value, 4)
         elif isinstance(value, U64Value):
-            encode_nested_number(writer, value.value, False, 8)
+            encode_nested_unsigned_number(writer, value.value, 8)
         elif isinstance(value, I8Value):
-            encode_nested_number(writer, value.value, True, 1)
+            encode_nested_signed_number(writer, value.value, 1)
         elif isinstance(value, I16Value):
-            encode_nested_number(writer, value.value, True, 2)
+            encode_nested_signed_number(writer, value.value, 2)
         elif isinstance(value, I32Value):
-            encode_nested_number(writer, value.value, True, 4)
+            encode_nested_signed_number(writer, value.value, 4)
         elif isinstance(value, I64Value):
-            encode_nested_number(writer, value.value, True, 8)
+            encode_nested_signed_number(writer, value.value, 8)
         elif isinstance(value, BigUIntValue):
-            encode_nested_big_number(writer, value.value, False)
+            encode_nested_unsigned_big_number(writer, value.value)
         elif isinstance(value, BigIntValue):
-            encode_nested_big_number(writer, value.value, True)
+            encode_nested_signed_big_number(writer, value.value)
         elif isinstance(value, AddressValue):
             encode_nested_address(self, writer, value)
         elif isinstance(value, StringValue):
@@ -96,25 +100,25 @@ class Codec:
         if isinstance(value, BoolValue):
             encode_top_level_bool(writer, value)
         elif isinstance(value, U8Value):
-            encode_top_level_number(writer, value.value, False)
+            encode_top_level_unsigned_number(writer, value.value)
         elif isinstance(value, U16Value):
-            encode_top_level_number(writer, value.value, False)
+            encode_top_level_unsigned_number(writer, value.value)
         elif isinstance(value, U32Value):
-            encode_top_level_number(writer, value.value, False)
+            encode_top_level_unsigned_number(writer, value.value)
         elif isinstance(value, U64Value):
-            encode_top_level_number(writer, value.value, False)
+            encode_top_level_unsigned_number(writer, value.value)
         elif isinstance(value, I8Value):
-            encode_top_level_number(writer, value.value, True)
+            encode_top_level_signed_number(writer, value.value)
         elif isinstance(value, I16Value):
-            encode_top_level_number(writer, value.value, True)
+            encode_top_level_signed_number(writer, value.value)
         elif isinstance(value, I32Value):
-            encode_top_level_number(writer, value.value, True)
+            encode_top_level_signed_number(writer, value.value)
         elif isinstance(value, I64Value):
-            encode_top_level_number(writer, value.value, True)
+            encode_top_level_signed_number(writer, value.value)
         elif isinstance(value, BigUIntValue):
-            encode_top_level_big_number(writer, value.value, False)
+            encode_top_level_unsigned_big_number(writer, value.value)
         elif isinstance(value, BigIntValue):
-            encode_top_level_big_number(writer, value.value, True)
+            encode_top_level_signed_big_number(writer, value.value)
         elif isinstance(value, AddressValue):
             encode_top_level_address(self, writer, value)
         elif isinstance(value, StringValue):
@@ -144,25 +148,25 @@ class Codec:
         if isinstance(value, BoolValue):
             decode_nested_bool(reader, value)
         elif isinstance(value, U8Value):
-            decode_nested_number(reader, value, False, 1)
+            decode_nested_unsigned_number(reader, value, 1)
         elif isinstance(value, U16Value):
-            decode_nested_number(reader, value, False, 2)
+            decode_nested_unsigned_number(reader, value, 2)
         elif isinstance(value, U32Value):
-            decode_nested_number(reader, value, False, 4)
+            decode_nested_unsigned_number(reader, value, 4)
         elif isinstance(value, U64Value):
-            decode_nested_number(reader, value, False, 8)
+            decode_nested_unsigned_number(reader, value, 8)
         elif isinstance(value, I8Value):
-            decode_nested_number(reader, value, True, 1)
+            decode_nested_signed_number(reader, value, 1)
         elif isinstance(value, I16Value):
-            decode_nested_number(reader, value, True, 2)
+            decode_nested_signed_number(reader, value, 2)
         elif isinstance(value, I32Value):
-            decode_nested_number(reader, value, True, 4)
+            decode_nested_signed_number(reader, value, 4)
         elif isinstance(value, I64Value):
-            decode_nested_number(reader, value, True, 8)
+            decode_nested_signed_number(reader, value, 8)
         elif isinstance(value, BigUIntValue):
-            decode_nested_big_number(reader, value, False)
+            decode_nested_unsigned_big_number(reader, value)
         elif isinstance(value, BigIntValue):
-            decode_nested_big_number(reader, value, True)
+            decode_nested_signed_big_number(reader, value)
         elif isinstance(value, AddressValue):
             decode_nested_address(self, reader, value)
         elif isinstance(value, StringValue):
@@ -190,25 +194,25 @@ class Codec:
         if isinstance(value, BoolValue):
             decode_top_level_bool(data, value)
         elif isinstance(value, U8Value):
-            decode_top_level_number(data, value, False, 1)
+            decode_top_level_unsigned_number(data, value, 1)
         elif isinstance(value, U16Value):
-            decode_top_level_number(data, value, False, 2)
+            decode_top_level_unsigned_number(data, value, 2)
         elif isinstance(value, U32Value):
-            decode_top_level_number(data, value, False, 4)
+            decode_top_level_unsigned_number(data, value, 4)
         elif isinstance(value, U64Value):
-            decode_top_level_number(data, value, False, 8)
+            decode_top_level_unsigned_number(data, value, 8)
         elif isinstance(value, I8Value):
-            decode_top_level_number(data, value, True, 1)
+            decode_top_level_signed_number(data, value, 1)
         elif isinstance(value, I16Value):
-            decode_top_level_number(data, value, True, 2)
+            decode_top_level_signed_number(data, value, 2)
         elif isinstance(value, I32Value):
-            decode_top_level_number(data, value, True, 4)
+            decode_top_level_signed_number(data, value, 4)
         elif isinstance(value, I64Value):
-            decode_top_level_number(data, value, True, 8)
+            decode_top_level_signed_number(data, value, 8)
         elif isinstance(value, BigUIntValue):
-            decode_top_level_big_number(data, value, False)
+            decode_top_level_unsigned_big_number(data, value)
         elif isinstance(value, BigIntValue):
-            decode_top_level_big_number(data, value, True)
+            decode_top_level_signed_big_number(data, value)
         elif isinstance(value, AddressValue):
             decode_top_level_address(self, data, value)
         elif isinstance(value, StringValue):
