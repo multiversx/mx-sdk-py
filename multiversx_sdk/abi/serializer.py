@@ -28,7 +28,7 @@ class Serializer:
         return self._encode_parts(parts)
 
     def serialize_to_parts(self, input_values: List[Any]) -> List[bytes]:
-        parts_holder = PartsHolder()
+        parts_holder = PartsHolder([])
         self._do_serialize(parts_holder, input_values)
         return parts_holder.get_parts()
 

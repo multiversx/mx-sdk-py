@@ -9,7 +9,7 @@ class PartsHolder:
     Both functionalities (building and reading) are kept within this single abstraction, for convenience.
     """
 
-    def __init__(self, parts: List[bytes] = []):
+    def __init__(self, parts: List[bytes]):
         """
         Creates a new PartsHolder, which has the given parts.
         Focus is on the first part, if any, or "beyond the last part" otherwise.

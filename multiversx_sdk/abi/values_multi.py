@@ -23,7 +23,7 @@ class OutputVariadicValues:
 
 
 class InputOptionalValue:
-    def __init__(self, value: Any):
+    def __init__(self, value: Any = None):
         self.value = value
 
 
