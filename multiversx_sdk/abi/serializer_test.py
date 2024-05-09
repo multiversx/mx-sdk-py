@@ -126,3 +126,182 @@ def test_serialize():
 
     assert data == "41@42@43"
 
+
+def test_deserialize():
+    serializer = Serializer(parts_separator="@", pub_key_length=32)
+
+    # nil destination
+    with pytest.raises(ValueError, match="^cannot deserialize into nil value$"):
+        serializer.deserialize("", [None])
+
+    # u8
+    output_values = [
+        U8Value(),
+    ]
+
+    serializer.deserialize("42", output_values)
+
+    assert output_values == [
+        U8Value(0x42),
+    ]
+
+    # u16
+    output_values = [
+        U16Value(),
+    ]
+
+    serializer.deserialize("4243", output_values)
+
+    assert output_values == [
+        U16Value(0x4243),
+    ]
+
+    # u8, u16
+    output_values = [
+        U8Value(),
+        U16Value(),
+    ]
+
+    serializer.deserialize("42@4243", output_values)
+
+    assert output_values == [
+        U8Value(0x42),
+        U16Value(0x4243),
+    ]
+
+    # optional (missing)
+    output_values = [
+        U8Value(),
+        OutputOptionalValue(U8Value()),
+    ]
+
+    serializer.deserialize("42", output_values)
+
+    assert output_values == [
+        U8Value(0x42),
+        OutputOptionalValue(value=None),
+    ]
+
+    # optional (provided)
+    output_values = [
+        U8Value(),
+        OutputOptionalValue(U8Value()),
+    ]
+
+    serializer.deserialize("42@43", output_values)
+
+    assert output_values == [
+        U8Value(0x42),
+        OutputOptionalValue(U8Value(0x43)),
+    ]
+
+    # optional: should err because optional must be last
+    with pytest.raises(ValueError, match="^an optional value must be last among output values$"):
+        output_values = [
+            OutputOptionalValue(U8Value()),
+            U8Value(),
+        ]
+
+        serializer.deserialize("43@42", output_values)
+
+    # multi<u8, u16, u32>
+    output_values = [
+        OutputMultiValue([
+            U8Value(),
+            U16Value(),
+            U32Value(),
+        ]),
+    ]
+
+    serializer.deserialize("42@4243@42434445", output_values)
+
+    assert output_values == [
+        OutputMultiValue([
+            U8Value(0x42),
+            U16Value(0x4243),
+            U32Value(0x42434445),
+        ]),
+    ]
+
+    # u8, multi<u8, u16, u32>
+    output_values = [
+        U8Value(),
+        OutputMultiValue([
+            U8Value(),
+            U16Value(),
+            U32Value(),
+        ]),
+    ]
+
+    serializer.deserialize("42@42@4243@42434445", output_values)
+
+    assert output_values == [
+        U8Value(0x42),
+        OutputMultiValue([
+            U8Value(0x42),
+            U16Value(0x4243),
+            U32Value(0x42434445),
+        ]),
+    ]
+
+    # empty: u8
+    destination = OutputVariadicValues(
+        item_creator=lambda: U8Value(),
+        items=[]
+    )
+
+    serializer.deserialize("", [destination])
+
+    assert destination.items == [U8Value(0)]
+
+    # variadic<u8>
+    destination = OutputVariadicValues(
+        item_creator=lambda: U8Value(),
+        items=[],
+    )
+
+    serializer.deserialize("2A@2B@2C", [destination])
+
+    assert destination.items == [
+        U8Value(0x2A),
+        U8Value(0x2B),
+        U8Value(0x2C),
+    ]
+
+    # variadic<u8>, with empty items
+    destination = OutputVariadicValues(
+        item_creator=lambda: U8Value(),
+        items=[],
+    )
+
+    serializer.deserialize("@01@00@", [destination])
+
+    assert destination.items == [
+        U8Value(0x00),
+        U8Value(0x01),
+        U8Value(0x00),
+        U8Value(0x00),
+    ]
+
+    # variadic<u32>
+    destination = OutputVariadicValues(
+        item_creator=lambda: U32Value(),
+        items=[],
+    )
+
+    serializer.deserialize("AABBCCDD@DDCCBBAA", [destination])
+
+    assert destination.items == [
+        U32Value(0xAABBCCDD),
+        U32Value(0xDDCCBBAA),
+    ]
+
+    # variadic<u8>, u8: should err because decoded value is too large
+    with pytest.raises(ValueError, match="^cannot decode \\(top-level\\) U8Value, because of: decoded value is too large or invalid \\(does not fit into 1 byte\\(s\\)\\): 256$"):
+        destination = OutputVariadicValues(
+            item_creator=lambda: U8Value(),
+            items=[],
+        )
+
+        serializer.deserialize("0100", [destination])
+

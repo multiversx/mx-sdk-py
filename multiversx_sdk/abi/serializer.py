@@ -107,6 +107,7 @@ class Serializer:
 
     def _deserialize_output_optional_value(self, parts_holder: PartsHolder, value: OutputOptionalValue):
         if parts_holder.is_focused_beyond_last_part():
+            value.value = None
             return
 
         self._do_deserialize(parts_holder, [value.value])

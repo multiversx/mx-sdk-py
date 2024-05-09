@@ -75,7 +75,7 @@ class Codec:
         elif isinstance(value, InputListValue):
             self.codec_for_list.encode_nested(writer, value)
         else:
-            raise ValueError(f"unsupported type for nested encoding: {type(value)}")
+            raise ValueError(f"unsupported type for nested encoding: {type(value).__name__}")
 
     def encode_top_level(self, value: Any) -> bytes:
         buffer = io.BytesIO()
@@ -120,7 +120,7 @@ class Codec:
         elif isinstance(value, InputListValue):
             self.codec_for_list.encode_top_level(writer, value)
         else:
-            raise ValueError(f"unsupported type for top-level encoding: {type(value)}")
+            raise ValueError(f"unsupported type for top-level encoding: {type(value).__name__}")
 
     def decode_nested(self, data: bytes, value: Any) -> None:
         reader = io.BytesIO(data)
@@ -168,13 +168,13 @@ class Codec:
         elif isinstance(value, OutputListValue):
             self.codec_for_list.decode_nested(reader, value)
         else:
-            raise ValueError(f"unsupported type for nested decoding: {type(value)}")
+            raise ValueError(f"unsupported type for nested decoding: {type(value).__name__}")
 
     def decode_top_level(self, data: bytes, value: Any) -> None:
         try:
             self.do_decode_top_level(data, value)
         except ValueError as e:
-            raise ValueError(f"cannot decode (top-level) {type(value)}, because of: {e}")
+            raise ValueError(f"cannot decode (top-level) {type(value).__name__}, because of: {e}")
 
     def do_decode_top_level(self, data: bytes, value: Any) -> None:
         if isinstance(value, BoolValue):
@@ -214,4 +214,4 @@ class Codec:
         elif isinstance(value, OutputListValue):
             self.codec_for_list.decode_top_level(data, value)
         else:
-            raise ValueError(f"unsupported type for top-level decoding: {type(value)}")
+            raise ValueError(f"unsupported type for top-level decoding: {type(value).__name__}")

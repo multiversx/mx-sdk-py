@@ -47,7 +47,7 @@ class CodecForSmallInt:
         try:
             value.value.to_bytes(num_bytes, byteorder="big", signed=False)
         except OverflowError:
-            raise ValueError(f"decoded value is too large or invalid (does not fit into {num_bytes} bytes): {value.value}")
+            raise ValueError(f"decoded value is too large or invalid (does not fit into {num_bytes} byte(s)): {value.value}")
 
     def decode_top_level_signed(self, data: bytes, value: INumericalValue, num_bytes: int):
         value.value = int.from_bytes(data, byteorder="big", signed=True)
@@ -56,4 +56,4 @@ class CodecForSmallInt:
         try:
             value.value.to_bytes(num_bytes, byteorder="big", signed=True)
         except OverflowError:
-            raise ValueError(f"decoded value is too large or invalid (does not fit into {num_bytes} bytes): {value.value}")
+            raise ValueError(f"decoded value is too large or invalid (does not fit into {num_bytes} byte(s)): {value.value}")
