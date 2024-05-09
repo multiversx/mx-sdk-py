@@ -8,6 +8,10 @@ from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.contract_query import ContractQuery
 from multiversx_sdk.core.contract_query_builder import ContractQueryBuilder
 from multiversx_sdk.core.message import Message, MessageComputer
+from multiversx_sdk.core.smart_contract_queries_controller import \
+    SmartContractQueriesController
+from multiversx_sdk.core.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.token_payment import TokenPayment
 from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
@@ -45,6 +49,8 @@ from multiversx_sdk.network_providers.proxy_network_provider import \
 from multiversx_sdk.network_providers.resources import GenericResponse
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
+from multiversx_sdk.network_providers.transaction_decoder import (
+    TransactionDecoder, TransactionMetadata)
 from multiversx_sdk.wallet.mnemonic import Mnemonic
 from multiversx_sdk.wallet.user_keys import UserPublicKey, UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
@@ -73,5 +79,7 @@ __all__ = [
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
     "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
     "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
-    "find_events_by_identifier", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter"
+    "find_events_by_identifier", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
+    "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse",
+    "TransactionDecoder", "TransactionMetadata"
 ]
