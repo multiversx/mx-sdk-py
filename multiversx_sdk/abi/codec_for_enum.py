@@ -1,8 +1,7 @@
 import io
 
-from values_single import EnumValue, U8Value
-
 from multiversx_sdk.abi.interface import ICodec
+from multiversx_sdk.abi.values_single import EnumValue, U8Value
 
 
 class CodecForEnum:
@@ -10,7 +9,7 @@ class CodecForEnum:
         self.general_codec = general_codec
 
     def encode_nested(self, writer: io.BytesIO, value: EnumValue):
-        self.general_codec.do_decode_nested(writer, U8Value(value.discriminant))
+        self.general_codec.do_encode_nested(writer, U8Value(value.discriminant))
 
         for field in value.fields:
             try:
