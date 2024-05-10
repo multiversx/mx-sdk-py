@@ -78,10 +78,10 @@
 
 
 <div class="viewcode-block" id="IQueryRunner">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.IQueryRunner">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner">[docs]</a>
 <span class="k">class</span> <span class="nc">IQueryRunner</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <div class="viewcode-block" id="IQueryRunner.run_query">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.IQueryRunner.run_query">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner.run_query">[docs]</a>
     <span class="k">def</span> <span class="nf">run_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
         <span class="o">...</span></div>
 </div>
@@ -89,13 +89,13 @@
 
 
 <div class="viewcode-block" id="SmartContractQueriesController">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.SmartContractQueriesController">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartContractQueriesController</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_runner</span><span class="p">:</span> <span class="n">IQueryRunner</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query_runner</span> <span class="o">=</span> <span class="n">query_runner</span>
 
 <div class="viewcode-block" id="SmartContractQueriesController.create_query">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController.create_query">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.SmartContractQueriesController.create_query">[docs]</a>
     <span class="k">def</span> <span class="nf">create_query</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">contract</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -114,14 +114,14 @@
 
 
 <div class="viewcode-block" id="SmartContractQueriesController.run_query">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController.run_query">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.SmartContractQueriesController.run_query">[docs]</a>
     <span class="k">def</span> <span class="nf">run_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
         <span class="n">query_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_runner</span><span class="o">.</span><span class="n">run_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">query_response</span></div>
 
 
 <div class="viewcode-block" id="SmartContractQueriesController.parse_query_response">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController.parse_query_response">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.SmartContractQueriesController.parse_query_response">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_query_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">SmartContractQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">return_data_parts</span></div>
 </div>
