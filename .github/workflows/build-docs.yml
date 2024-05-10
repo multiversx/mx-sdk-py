@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: "gh-pages"
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          repository: ${{ GITHUB_REPOSITORY }}
           path: "gh-pages-docs"
 
       - name: Deploy to GitHub Pages
