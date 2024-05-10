@@ -99,7 +99,7 @@ class IAddress(Protocol):
 
 
 class AddressValue:
-    def __init__(self, value: bytes) -> None:
+    def __init__(self, value: bytes = b"") -> None:
         self.value = value
 
     @classmethod
@@ -111,7 +111,7 @@ class AddressValue:
 
 
 class StringValue:
-    def __init__(self, value: str) -> None:
+    def __init__(self, value: str = "") -> None:
         self.value = value
 
     def __eq__(self, other: Any) -> bool:
@@ -119,7 +119,7 @@ class StringValue:
 
 
 class BytesValue:
-    def __init__(self, value: bytes) -> None:
+    def __init__(self, value: bytes = b"") -> None:
         self.value = value
 
     def __eq__(self, other: Any) -> bool:

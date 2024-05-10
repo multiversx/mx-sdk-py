@@ -4,6 +4,10 @@ from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.values_multi import *
 from multiversx_sdk.abi.values_single import *
 
+alice_pub_key = bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
+bob_pub_key = bytes.fromhex("8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8")
+one_quintillion = 1_000_000_000_000_000_000
+
 
 def test_serialize():
     serializer = Serializer(parts_separator="@", pub_key_length=32)
@@ -246,8 +250,7 @@ def test_deserialize():
 
     # empty: u8
     destination = OutputVariadicValues(
-        item_creator=lambda: U8Value(),
-        items=[]
+        item_creator=lambda: U8Value()
     )
 
     serializer.deserialize("", [destination])
@@ -256,8 +259,7 @@ def test_deserialize():
 
     # variadic<u8>
     destination = OutputVariadicValues(
-        item_creator=lambda: U8Value(),
-        items=[],
+        item_creator=lambda: U8Value()
     )
 
     serializer.deserialize("2A@2B@2C", [destination])
@@ -270,8 +272,7 @@ def test_deserialize():
 
     # variadic<u8>, with empty items
     destination = OutputVariadicValues(
-        item_creator=lambda: U8Value(),
-        items=[],
+        item_creator=lambda: U8Value()
     )
 
     serializer.deserialize("@01@00@", [destination])
@@ -285,8 +286,7 @@ def test_deserialize():
 
     # variadic<u32>
     destination = OutputVariadicValues(
-        item_creator=lambda: U32Value(),
-        items=[],
+        item_creator=lambda: U32Value()
     )
 
     serializer.deserialize("AABBCCDD@DDCCBBAA", [destination])
@@ -299,9 +299,145 @@ def test_deserialize():
     # variadic<u8>, u8: should err because decoded value is too large
     with pytest.raises(ValueError, match="^cannot decode \\(top-level\\) U8Value, because of: decoded value is too large or invalid \\(does not fit into 1 byte\\(s\\)\\): 256$"):
         destination = OutputVariadicValues(
-            item_creator=lambda: U8Value(),
-            items=[],
+            item_creator=lambda: U8Value()
         )
 
         serializer.deserialize("0100", [destination])
 
+
+def test_real_world_multisig_propose_batch():
+    """
+    serialize input of multisig.proposeBatch(variadic<Action>
+    """
+
+    serializer = Serializer(parts_separator="@", pub_key_length=32)
+
+    def create_esdt_token_payment(token_identifier: str, token_nonce: int, amount: int) -> StructValue:
+        return StructValue([
+            Field("token_identifier", StringValue(token_identifier)),
+            Field("token_nonce", U64Value(token_nonce)),
+            Field("amount", BigUIntValue(amount)),
+        ])
+
+    # First action: SendTransferExecuteEgld
+    first_action = EnumValue(
+        discriminant=5,
+        fields=[
+            Field("to", AddressValue(alice_pub_key)),
+            Field("egld_amount", BigUIntValue(one_quintillion)),
+            Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
+            Field("endpoint_name", BytesValue(b"example")),
+            Field("arguments", InputListValue([
+                BytesValue(bytes([0x03, 0x42])),
+                BytesValue(bytes([0x07, 0x43])),
+            ])),
+        ],
+    )
+
+    # Second action: SendTransferExecuteEsdt
+    second_action = EnumValue(
+        discriminant=6,
+        fields=[
+            Field("to", AddressValue(alice_pub_key)),
+            Field("tokens", InputListValue([
+                create_esdt_token_payment("beer", 0, one_quintillion),
+                create_esdt_token_payment("chocolate", 0, one_quintillion),
+            ])),
+            Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
+            Field("endpoint_name", BytesValue(b"example")),
+            Field("arguments", InputListValue([
+                BytesValue(bytes([0x03, 0x42])),
+                BytesValue(bytes([0x07, 0x43])),
+            ])),
+        ],
+    )
+
+    data = serializer.serialize([
+        first_action,
+        second_action,
+    ])
+
+    data_expected = "@".join([
+        "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
+        "06|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|00000002|0000000462656572|0000000000000000|000000080de0b6b3a7640000|0000000963686f636f6c617465|0000000000000000|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
+    ])
+
+    # Drop the delimiters (were added for readability)
+    data_expected = data_expected.replace("|", "")
+
+    assert data == data_expected
+
+
+def test_real_world_multisig_get_pending_action_full_info():
+    """
+    deserialize output of multisig.getPendingActionFullInfo() -> variadic<ActionFullInfo>
+    """
+
+    serializer = Serializer(parts_separator="@", pub_key_length=32)
+
+    data_hex = "".join([
+        "0000002A",
+        "0000002A",
+        "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
+        "00000002|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8",
+    ])
+
+    # Drop the delimiters (were added for readability)
+    data = data_hex.replace("|", "")
+
+    action_id = U32Value()
+    group_id = U32Value()
+
+    action_to = AddressValue()
+    action_egld_amount = BigUIntValue()
+    action_gas_limit = U64Value()
+    action_endpoint_name = BytesValue()
+    action_arguments = OutputListValue(
+        item_creator=lambda: BytesValue()
+    )
+
+    action = EnumValue(
+        discriminant=0,
+        fields=[
+            Field("to", action_to),
+            Field("egld_amount", action_egld_amount),
+            Field("opt_gas_limit", OptionValue(action_gas_limit)),
+            Field("endpoint_name", action_endpoint_name),
+            Field("arguments", action_arguments),
+        ],
+    )
+
+    signers = OutputListValue(
+        item_creator=lambda: AddressValue()
+    )
+
+    destination = OutputVariadicValues(
+        item_creator=lambda: StructValue([
+            Field("action_id", action_id),
+            Field("group_id", group_id),
+            Field("action_data", action),
+            Field("signers", signers),
+        ]),
+    )
+
+    serializer.deserialize(data, [destination])
+
+    assert len(destination.items) == 1
+
+    # result[0].action_id and result[0].group_id
+    assert action_id.value == 42
+    assert group_id.value == 42
+
+    # result[0].action_data
+    assert action.discriminant == 5
+    assert action_to.value == alice_pub_key
+    assert action_egld_amount.value == one_quintillion
+    assert action_gas_limit.value == 15_000_000
+    assert action_endpoint_name.value == b"example"
+    assert len(action_arguments.items) == 2
+    assert action_arguments.items[0].value == bytes([0x03, 0x42])
+    assert action_arguments.items[1].value == bytes([0x07, 0x43])
+
+    # result[0].signers
+    assert signers.items[0].value == alice_pub_key
+    assert signers.items[1].value == bob_pub_key

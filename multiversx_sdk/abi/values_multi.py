@@ -26,9 +26,9 @@ class InputVariadicValues:
 
 
 class OutputVariadicValues:
-    def __init__(self, item_creator: Callable[[], Any], items: List[Any]):
+    def __init__(self, item_creator: Callable[[], Any]):
         self.item_creator = item_creator
-        self.items = items
+        self.items: List[Any] = []
 
     def __eq__(self, other: Any) -> bool:
         return (
