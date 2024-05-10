@@ -41,11 +41,11 @@ class TestSmartContractQueriesController:
         query = self.controller.create_query(
             contract=contract,
             function=function,
-            arguments=[int.to_bytes(7), "abba".encode()]
+            arguments=[int.to_bytes(7, length=4, byteorder="big"), "abba".encode()]
         )
         assert query.contract == contract
         assert query.function == function
-        assert query.arguments == [int.to_bytes(7), "abba".encode()]
+        assert query.arguments == [int.to_bytes(7, length=4, byteorder="big"), "abba".encode()]
         assert query.caller is None
         assert query.value is None
 
