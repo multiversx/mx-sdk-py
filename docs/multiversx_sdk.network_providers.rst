@@ -140,6 +140,14 @@ multiversx\_sdk.network\_providers.transaction\_awaiter module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.network\_providers.transaction\_decoder module
+--------------------------------------------------------------
+
+.. automodule:: multiversx_sdk.network_providers.transaction_decoder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.network\_providers.transaction\_events module
 -------------------------------------------------------------
 
