@@ -132,6 +132,14 @@ multiversx\_sdk.network\_providers.tokens module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.network\_providers.transaction\_awaiter module
+--------------------------------------------------------------
+
+.. automodule:: multiversx_sdk.network_providers.transaction_awaiter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.network\_providers.transaction\_events module
 -------------------------------------------------------------
 
