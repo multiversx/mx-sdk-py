@@ -1,3 +1,5 @@
+from typing import Any
+
 from multiversx_sdk.core import codec
 
 test_vectors_1 = [
@@ -36,7 +38,7 @@ test_vectors_3 = [
     [-128, 0x80],
 ]
 
-test_vectors_4 = [
+test_vectors_4: Any = [
     [128, [0x00, 0x80]],
     [129, [0x00, 0x81]],
     [-129, [0xFF, 0x7F]],
