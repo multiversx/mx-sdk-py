@@ -32,7 +32,7 @@ jobs:
             pip install -r requirements-dev.txt
 
       - name: Launch tests & generate report
-        run: coverage run pytest .
+        run: coverage run -m pytest .
 
       - name: Coverage comment
         id: coverage_comment
