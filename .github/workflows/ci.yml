@@ -3,12 +3,20 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main, feat/* ]
+    branches: [main, feat/*]
 
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
     name: Check coverage
+    permissions:
+      # Gives the action the necessary permissions for publishing new
+      # comments in pull requests.
+      pull-requests: write
+      # Gives the action the necessary permissions for pushing data to the
+      # python-coverage-comment-action branch, and for editing existing
+      # comments (to avoid publishing multiple comments in the same PR)
+      contents: write
     steps:
       - uses: actions/checkout@v3
 
@@ -24,17 +32,16 @@ jobs:
             pip install -r requirements-dev.txt
 
       - name: Launch tests & generate report
-        run: pytest .
+        run: pytest
 
       - name: Coverage comment
         id: coverage_comment
         uses: py-cov-action/python-coverage-comment-action@v3
         with:
           GITHUB_TOKEN: ${{ github.token }}
-          VERBOSE: true
 
       - name: Store Pull Request comment to be posted
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         with:
           # If you use a different name, update COMMENT_ARTIFACT_NAME accordingly
