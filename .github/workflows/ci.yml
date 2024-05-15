@@ -6,7 +6,7 @@ on:
     branches: [main, feat/*]
 
 jobs:
-  hello_world_job:
+  coverage:
     runs-on: ubuntu-latest
     name: Check coverage
     permissions:
@@ -24,7 +24,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.11
 
       - name: Install deps
         run: |
