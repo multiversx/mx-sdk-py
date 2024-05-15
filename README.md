@@ -46,6 +46,23 @@ If you want to skip network interaction tests run:
 pytest -m "not networkInteraction"
 ```
 
+### Generate test coverage report
+
+First, we run the tests using coverage:
+```sh
+coverage run -m pytest .
+```
+
+Then, we can generate a report in the terminal using:
+```sh
+coverage report
+```
+
+We can also generate a html report using:
+```sh
+coverage html
+```
+
 ### Regenerating the docs
 
 Each time a new module/submodule is added it needs to be added to the docs, as well. To do so `cd` in the root directory then run the following command:
