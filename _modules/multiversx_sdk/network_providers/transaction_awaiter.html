@@ -72,7 +72,7 @@
              
   <h1>Source code for multiversx_sdk.network_providers.transaction_awaiter</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.errors</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ExpectedTransactionStatusNotReached</span><span class="p">,</span> <span class="n">IsCompletedFieldMissingOnTransaction</span><span class="p">)</span>
@@ -168,7 +168,7 @@
                              <span class="n">do_fetch</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">TransactionOnNetwork</span><span class="p">],</span>
                              <span class="n">error</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
         <span class="n">is_condition_satisfied</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">fetched_data</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">fetched_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TransactionOnNetwork</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">max_number_of_retries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_interval_in_milliseconds</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">polling_interval_in_milliseconds</span>
 
         <span class="n">number_of_retries</span> <span class="o">=</span> <span class="mi">0</span>
