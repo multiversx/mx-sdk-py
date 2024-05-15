@@ -1,5 +1,5 @@
 import time
-from typing import Callable, Optional, Protocol
+from typing import Callable, Optional, Protocol, Union
 
 from multiversx_sdk.network_providers.errors import (
     ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction)
@@ -81,7 +81,7 @@ class TransactionAwaiter:
                              do_fetch: Callable[[], TransactionOnNetwork],
                              error: Exception) -> TransactionOnNetwork:
         is_condition_satisfied = False
-        fetched_data: TransactionOnNetwork | None = None
+        fetched_data: Union[TransactionOnNetwork, None] = None
         max_number_of_retries = self.timeout_interval_in_milliseconds // self.polling_interval_in_milliseconds
 
         number_of_retries = 0
