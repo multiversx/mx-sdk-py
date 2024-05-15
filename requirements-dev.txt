@@ -6,3 +6,4 @@ pre-commit
 ipykernel
 sphinx
 sphinx-rtd-theme
+coverage
