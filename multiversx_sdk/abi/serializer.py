@@ -2,12 +2,7 @@ from typing import Any, List
 
 from multiversx_sdk.abi.codec import Codec
 from multiversx_sdk.abi.parts import PartsHolder
-from multiversx_sdk.abi.values_multi import (InputMultiValue,
-                                             InputOptionalValue,
-                                             InputVariadicValues,
-                                             OutputMultiValue,
-                                             OutputOptionalValue,
-                                             OutputVariadicValues)
+from multiversx_sdk.abi.values_multi import *
 
 
 class Serializer:
@@ -37,40 +32,40 @@ class Serializer:
             if value is None:
                 raise ValueError("cannot serialize nil value")
 
-            if isinstance(value, InputOptionalValue):
+            if isinstance(value, OptionalValue):
                 if i != len(input_values) - 1:
                     # Usage of multiple optional values is not recommended:
                     # https://docs.multiversx.com/developers/data/multi-values
                     # Thus, here, we disallow them.
                     raise ValueError("an optional value must be last among input values")
 
-                self._serialize_input_optional_value(parts_holder, value)
-            elif isinstance(value, InputMultiValue):
-                self._serialize_input_multi_value(parts_holder, value)
-            elif isinstance(value, InputVariadicValues):
+                self._serialize_optional_value(parts_holder, value)
+            elif isinstance(value, MultiValue):
+                self._serialize_multi_value(parts_holder, value)
+            elif isinstance(value, VariadicValues):
                 if i != len(input_values) - 1:
                     raise ValueError("variadic values must be last among input values")
 
-                self._serialize_input_variadic_values(parts_holder, value)
+                self._serialize_variadic_values(parts_holder, value)
             else:
                 parts_holder.append_empty_part()
-                self._serialize_directly_encodable_value(parts_holder, value)
+                self._serialize_single_value(parts_holder, value)
 
-    def _serialize_input_optional_value(self, parts_holder: PartsHolder, value: InputOptionalValue):
+    def _serialize_optional_value(self, parts_holder: PartsHolder, value: OptionalValue):
         if value.value is None:
             return
 
         self._do_serialize(parts_holder, [value.value])
 
-    def _serialize_input_multi_value(self, parts_holder: PartsHolder, value: InputMultiValue):
+    def _serialize_multi_value(self, parts_holder: PartsHolder, value: MultiValue):
         for item in value.items:
             self._do_serialize(parts_holder, [item])
 
-    def _serialize_input_variadic_values(self, parts_holder: PartsHolder, value: InputVariadicValues):
+    def _serialize_variadic_values(self, parts_holder: PartsHolder, value: VariadicValues):
         for item in value.items:
             self._do_serialize(parts_holder, [item])
 
-    def _serialize_directly_encodable_value(self, parts_holder: PartsHolder, value: Any):
+    def _serialize_single_value(self, parts_holder: PartsHolder, value: Any):
         data = self.codec.encode_top_level(value)
         parts_holder.append_to_last_part(data)
 
@@ -87,36 +82,39 @@ class Serializer:
             if value is None:
                 raise ValueError("cannot deserialize into nil value")
 
-            if isinstance(value, OutputOptionalValue):
+            if isinstance(value, OptionalValue):
                 if i != len(output_values) - 1:
                     # Usage of multiple optional values is not recommended:
                     # https://docs.multiversx.com/developers/data/multi-values
                     # Thus, here, we disallow them.
                     raise ValueError("an optional value must be last among output values")
 
-                self._deserialize_output_optional_value(parts_holder, value)
-            elif isinstance(value, OutputMultiValue):
-                self._deserialize_output_multi_value(parts_holder, value)
-            elif isinstance(value, OutputVariadicValues):
+                self._deserialize_optional_value(parts_holder, value)
+            elif isinstance(value, MultiValue):
+                self._deserialize_multi_value(parts_holder, value)
+            elif isinstance(value, VariadicValues):
                 if i != len(output_values) - 1:
                     raise ValueError("variadic values must be last among output values")
 
-                self._deserialize_output_variadic_values(parts_holder, value)
+                self._deserialize_variadic_values(parts_holder, value)
             else:
-                self._deserialize_directly_encodable_value(parts_holder, value)
+                self._deserialize_single_value(parts_holder, value)
 
-    def _deserialize_output_optional_value(self, parts_holder: PartsHolder, value: OutputOptionalValue):
+    def _deserialize_optional_value(self, parts_holder: PartsHolder, value: OptionalValue):
         if parts_holder.is_focused_beyond_last_part():
             value.value = None
             return
 
         self._do_deserialize(parts_holder, [value.value])
 
-    def _deserialize_output_multi_value(self, parts_holder: PartsHolder, value: OutputMultiValue):
+    def _deserialize_multi_value(self, parts_holder: PartsHolder, value: MultiValue):
         for item in value.items:
             self._do_deserialize(parts_holder, [item])
 
-    def _deserialize_output_variadic_values(self, parts_holder: PartsHolder, value: OutputVariadicValues):
+    def _deserialize_variadic_values(self, parts_holder: PartsHolder, value: VariadicValues):
+        if value.item_creator is None:
+            raise Exception("cannot decode list: item creator is None")
+
         while not parts_holder.is_focused_beyond_last_part():
             new_item = value.item_creator()
 
@@ -124,7 +122,7 @@ class Serializer:
 
             value.items.append(new_item)
 
-    def _deserialize_directly_encodable_value(self, parts_holder: PartsHolder, value: Any):
+    def _deserialize_single_value(self, parts_holder: PartsHolder, value: Any):
         part = parts_holder.read_whole_focused_part()
         self.codec.decode_top_level(part, value)
         parts_holder.focus_on_next_part()

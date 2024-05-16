@@ -48,7 +48,7 @@ def test_serialize():
     # optional (missing)
     data = serializer.serialize([
         U8Value(0x42),
-        InputOptionalValue(),
+        OptionalValue(),
     ])
 
     assert data == "42"
@@ -56,7 +56,7 @@ def test_serialize():
     # optional (provided)
     data = serializer.serialize([
         U8Value(0x42),
-        InputOptionalValue(U8Value(0x43)),
+        OptionalValue(U8Value(0x43)),
     ])
 
     assert data == "42@43"
@@ -64,13 +64,13 @@ def test_serialize():
     # optional: should err because optional must be last
     with pytest.raises(ValueError, match="^an optional value must be last among input values$"):
         serializer.serialize([
-            InputOptionalValue(U8Value(0x43)),
+            OptionalValue(U8Value(0x43)),
             U8Value(0x42),
         ])
 
     # multi<u8, u16, u32>
     data = serializer.serialize([
-        InputMultiValue([
+        MultiValue([
             U8Value(0x42),
             U16Value(0x4243),
             U32Value(0x42434445),
@@ -82,7 +82,7 @@ def test_serialize():
     # u8, multi<u8, u16, u32>
     data = serializer.serialize([
         U8Value(0x42),
-        InputMultiValue([
+        MultiValue([
             U8Value(0x42),
             U16Value(0x4243),
             U32Value(0x42434445),
@@ -93,12 +93,12 @@ def test_serialize():
 
     # multi<multi<u8, u16>, multi<u8, u16>>
     data = serializer.serialize([
-        InputMultiValue([
-            InputMultiValue([
+        MultiValue([
+            MultiValue([
                 U8Value(0x42),
                 U16Value(0x4243),
             ]),
-            InputMultiValue([
+            MultiValue([
                 U8Value(0x44),
                 U16Value(0x4445),
             ]),
@@ -109,7 +109,7 @@ def test_serialize():
 
     # variadic, of different types
     data = serializer.serialize([
-        InputVariadicValues([
+        VariadicValues([
             U8Value(0x42),
             U16Value(0x4243),
         ]),
@@ -123,7 +123,7 @@ def test_serialize():
     # variadic<u8>, u8: should err because variadic must be last
     with pytest.raises(ValueError, match="^variadic values must be last among input values$"):
         serializer.serialize([
-            InputVariadicValues([
+            VariadicValues([
                 U8Value(0x42),
                 U8Value(0x43),
             ]),
@@ -133,7 +133,7 @@ def test_serialize():
     # u8, variadic<u8>
     data = serializer.serialize([
         U8Value(0x41),
-        InputVariadicValues([
+        VariadicValues([
             U8Value(0x42),
             U8Value(0x43),
         ]),
@@ -187,33 +187,33 @@ def test_deserialize():
     # optional (missing)
     output_values = [
         U8Value(),
-        OutputOptionalValue(U8Value()),
+        OptionalValue(U8Value()),
     ]
 
     serializer.deserialize("42", output_values)
 
     assert output_values == [
         U8Value(0x42),
-        OutputOptionalValue(value=None),
+        OptionalValue(value=None),
     ]
 
     # optional (provided)
     output_values = [
         U8Value(),
-        OutputOptionalValue(U8Value()),
+        OptionalValue(U8Value()),
     ]
 
     serializer.deserialize("42@43", output_values)
 
     assert output_values == [
         U8Value(0x42),
-        OutputOptionalValue(U8Value(0x43)),
+        OptionalValue(U8Value(0x43)),
     ]
 
     # optional: should err because optional must be last
     with pytest.raises(ValueError, match="^an optional value must be last among output values$"):
         output_values = [
-            OutputOptionalValue(U8Value()),
+            OptionalValue(U8Value()),
             U8Value(),
         ]
 
@@ -221,7 +221,7 @@ def test_deserialize():
 
     # multi<u8, u16, u32>
     output_values = [
-        OutputMultiValue([
+        MultiValue([
             U8Value(),
             U16Value(),
             U32Value(),
@@ -231,7 +231,7 @@ def test_deserialize():
     serializer.deserialize("42@4243@42434445", output_values)
 
     assert output_values == [
-        OutputMultiValue([
+        MultiValue([
             U8Value(0x42),
             U16Value(0x4243),
             U32Value(0x42434445),
@@ -241,7 +241,7 @@ def test_deserialize():
     # u8, multi<u8, u16, u32>
     output_values = [
         U8Value(),
-        OutputMultiValue([
+        MultiValue([
             U8Value(),
             U16Value(),
             U32Value(),
@@ -252,7 +252,7 @@ def test_deserialize():
 
     assert output_values == [
         U8Value(0x42),
-        OutputMultiValue([
+        MultiValue([
             U8Value(0x42),
             U16Value(0x4243),
             U32Value(0x42434445),
@@ -260,7 +260,7 @@ def test_deserialize():
     ]
 
     # empty: u8
-    destination = OutputVariadicValues(
+    destination = VariadicValues(
         item_creator=lambda: U8Value()
     )
 
@@ -269,7 +269,7 @@ def test_deserialize():
     assert destination.items == [U8Value(0)]
 
     # variadic<u8>
-    destination = OutputVariadicValues(
+    destination = VariadicValues(
         item_creator=lambda: U8Value()
     )
 
@@ -282,7 +282,7 @@ def test_deserialize():
     ]
 
     # variadic<u8>, with empty items
-    destination = OutputVariadicValues(
+    destination = VariadicValues(
         item_creator=lambda: U8Value()
     )
 
@@ -296,7 +296,7 @@ def test_deserialize():
     ]
 
     # variadic<u32>
-    destination = OutputVariadicValues(
+    destination = VariadicValues(
         item_creator=lambda: U32Value()
     )
 
@@ -309,7 +309,7 @@ def test_deserialize():
 
     # variadic<u8>, u8: should err because decoded value is too large
     with pytest.raises(ValueError, match="^cannot decode \\(top-level\\) U8Value, because of: decoded value is too large or invalid \\(does not fit into 1 byte\\(s\\)\\): 256$"):
-        destination = OutputVariadicValues(
+        destination = VariadicValues(
             item_creator=lambda: U8Value()
         )
 
@@ -422,7 +422,7 @@ def test_real_world_multisig_get_pending_action_full_info():
         item_creator=lambda: AddressValue()
     )
 
-    destination = OutputVariadicValues(
+    destination = VariadicValues(
         item_creator=lambda: StructValue([
             Field("action_id", action_id),
             Field("group_id", group_id),
