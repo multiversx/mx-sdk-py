@@ -1,8 +1,19 @@
+from typing import cast
+
 import pytest
 
+from multiversx_sdk.abi.address_value import AddressValue
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.enum_value import EnumValue
+from multiversx_sdk.abi.field import *
+from multiversx_sdk.abi.list_value import ListValue
+from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.small_int_values import *
+from multiversx_sdk.abi.string_value import StringValue
+from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.values_multi import *
-from multiversx_sdk.abi.values_single import *
 
 alice_pub_key = bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
 bob_pub_key = bytes.fromhex("8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8")
@@ -327,7 +338,7 @@ def test_real_world_multisig_propose_batch():
             Field("egld_amount", BigUIntValue(one_quintillion)),
             Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
             Field("endpoint_name", BytesValue(b"example")),
-            Field("arguments", InputListValue([
+            Field("arguments", ListValue([
                 BytesValue(bytes([0x03, 0x42])),
                 BytesValue(bytes([0x07, 0x43])),
             ])),
@@ -339,13 +350,13 @@ def test_real_world_multisig_propose_batch():
         discriminant=6,
         fields=[
             Field("to", AddressValue(alice_pub_key)),
-            Field("tokens", InputListValue([
+            Field("tokens", ListValue([
                 create_esdt_token_payment("beer", 0, one_quintillion),
                 create_esdt_token_payment("chocolate", 0, one_quintillion),
             ])),
             Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
             Field("endpoint_name", BytesValue(b"example")),
-            Field("arguments", InputListValue([
+            Field("arguments", ListValue([
                 BytesValue(bytes([0x03, 0x42])),
                 BytesValue(bytes([0x07, 0x43])),
             ])),
@@ -392,7 +403,7 @@ def test_real_world_multisig_get_pending_action_full_info():
     action_egld_amount = BigUIntValue()
     action_gas_limit = U64Value()
     action_endpoint_name = BytesValue()
-    action_arguments = OutputListValue(
+    action_arguments = ListValue(
         item_creator=lambda: BytesValue()
     )
 
@@ -407,7 +418,7 @@ def test_real_world_multisig_get_pending_action_full_info():
         ],
     )
 
-    signers = OutputListValue(
+    signers = ListValue(
         item_creator=lambda: AddressValue()
     )
 
@@ -435,9 +446,9 @@ def test_real_world_multisig_get_pending_action_full_info():
     assert action_gas_limit.value == 15_000_000
     assert action_endpoint_name.value == b"example"
     assert len(action_arguments.items) == 2
-    assert action_arguments.items[0].value == bytes([0x03, 0x42])
-    assert action_arguments.items[1].value == bytes([0x07, 0x43])
+    assert cast(BytesValue, action_arguments.items[0]).value == bytes([0x03, 0x42])
+    assert cast(BytesValue, action_arguments.items[1]).value == bytes([0x07, 0x43])
 
     # result[0].signers
-    assert signers.items[0].value == alice_pub_key
-    assert signers.items[1].value == bob_pub_key
+    assert cast(AddressValue, signers.items[0]).value == alice_pub_key
+    assert cast(AddressValue, signers.items[1]).value == bob_pub_key

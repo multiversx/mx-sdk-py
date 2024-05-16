@@ -21,7 +21,7 @@ class Serializer:
             raise ValueError("cannot create serializer: parts separator must not be empty")
 
         self.parts_separator = parts_separator
-        self.codec = Codec(pub_key_length)
+        self.codec = Codec()
 
     def serialize(self, input_values: List[Any]) -> str:
         parts = self.serialize_to_parts(input_values)

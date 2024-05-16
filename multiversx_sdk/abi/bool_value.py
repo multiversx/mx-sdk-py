@@ -1,35 +1,38 @@
 import io
+from typing import Any
 
 from multiversx_sdk.abi.constants import FALS_AS_BYTE, TRUE_AS_BYTE
 from multiversx_sdk.abi.shared import read_bytes_exactly
-from multiversx_sdk.abi.values_single import BoolValue
 
 
-class CodecForBool:
-    def encode_nested(self, writer: io.BytesIO, value: BoolValue):
-        if value.value:
+class BoolValue:
+    def __init__(self, value: bool = False) -> None:
+        self.value = value
+
+    def encode_nested(self, writer: io.BytesIO):
+        if self.value:
             writer.write(bytes([TRUE_AS_BYTE]))
             return
 
         writer.write(bytes([FALS_AS_BYTE]))
 
-    def encode_top_level(self, writer: io.BytesIO, value: BoolValue):
-        if value.value:
+    def encode_top_level(self, writer: io.BytesIO):
+        if self.value:
             writer.write(bytes([TRUE_AS_BYTE]))
 
         # For "false", write nothing.
 
-    def decode_nested(self, reader: io.BytesIO, value: BoolValue):
+    def decode_nested(self, reader: io.BytesIO):
         data = read_bytes_exactly(reader, 1)
-        value.value = self._byte_to_bool(data[0])
+        self.value = self._byte_to_bool(data[0])
 
-    def decode_top_level(self, data: bytes, value: BoolValue):
+    def decode_top_level(self, data: bytes):
         if len(data) == 0:
-            value.value = False
+            self.value = False
             return
 
         if len(data) == 1:
-            value.value = self._byte_to_bool(data[0])
+            self.value = self._byte_to_bool(data[0])
             return
 
         raise ValueError(f"unexpected boolean value: {data}")
@@ -42,3 +45,6 @@ class CodecForBool:
             return False
 
         raise ValueError(f"unexpected boolean value: {data}")
+
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, BoolValue) and self.value == other.value

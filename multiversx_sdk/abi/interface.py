@@ -1,32 +1,16 @@
 import io
-from typing import Any, Protocol
+from typing import Protocol
 
 
-class ICodec(Protocol):
-    """
-    For internal use only.
-    """
-
-    def do_encode_nested(self, writer: io.BytesIO, value: Any) -> None:
+class SingleValue(Protocol):
+    def encode_nested(self, writer: io.BytesIO):
         ...
 
-    def do_decode_nested(self, reader: io.BytesIO, value: Any) -> None:
+    def encode_top_level(self, writer: io.BytesIO):
         ...
 
-    @property
-    def pubkey_length(self) -> int:
+    def decode_nested(self, reader: io.BytesIO):
         ...
 
-
-class INumericalValue(Protocol):
-    """
-    For internal use only.
-    """
-
-    @property
-    def value(self) -> int:
-        ...
-
-    @value.setter
-    def value(self, value: int) -> None:
+    def decode_top_level(self, data: bytes):
         ...
