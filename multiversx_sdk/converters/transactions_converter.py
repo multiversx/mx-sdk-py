@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from multiversx_sdk.converters.errors import MissingFieldError
 from multiversx_sdk.core.interfaces import ITransaction
@@ -116,7 +116,7 @@ class TransactionsConverter:
         if gas_limit is None:
             raise MissingFieldError("The 'gasLimit' key is missing from the dictionary")
 
-    def _value_to_b64_or_empty(self, value: str | bytes) -> str:
+    def _value_to_b64_or_empty(self, value: Union[str, bytes]) -> str:
         value_as_bytes = value.encode() if isinstance(value, str) else value
 
         if len(value):
