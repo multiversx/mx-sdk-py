@@ -1,14 +1,18 @@
 import io
-from typing import Any, List
+from typing import Any, Callable, List, Optional
 
 from multiversx_sdk.abi.field import Field
 from multiversx_sdk.abi.small_int_values import U8Value
 
 
 class EnumValue:
-    def __init__(self, discriminant: int, fields: List[Field]) -> None:
+    def __init__(self,
+                 discriminant: int = 0,
+                 fields: Optional[List[Field]] = None,
+                 fields_provider: Optional[Callable[[int], List[Field]]] = None) -> None:
         self.discriminant = discriminant
-        self.fields = fields
+        self.fields = fields or []
+        self.fields_provider = fields_provider
 
     def encode_nested(self, writer: io.BytesIO):
         discriminant = U8Value(self.discriminant)
@@ -28,9 +32,13 @@ class EnumValue:
         self.encode_nested(writer)
 
     def decode_nested(self, reader: io.BytesIO):
+        if self.fields_provider is None:
+            raise Exception("cannot decode enum: fields provider is None")
+
         discriminant = U8Value()
         discriminant.decode_nested(reader)
         self.discriminant = discriminant.value
+        self.fields = self.fields_provider(self.discriminant)
 
         for field in self.fields:
             try:

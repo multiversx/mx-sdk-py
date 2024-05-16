@@ -407,15 +407,20 @@ def test_real_world_multisig_get_pending_action_full_info():
         item_creator=lambda: BytesValue()
     )
 
+    def action_fields_provider(discriminant: int) -> List[Field]:
+        if discriminant == 5:
+            return [
+                Field("to", action_to),
+                Field("egld_amount", action_egld_amount),
+                Field("opt_gas_limit", OptionValue(action_gas_limit)),
+                Field("endpoint_name", action_endpoint_name),
+                Field("arguments", action_arguments),
+            ]
+
+        return []
+
     action = EnumValue(
-        discriminant=0,
-        fields=[
-            Field("to", action_to),
-            Field("egld_amount", action_egld_amount),
-            Field("opt_gas_limit", OptionValue(action_gas_limit)),
-            Field("endpoint_name", action_endpoint_name),
-            Field("arguments", action_arguments),
-        ],
+        fields_provider=action_fields_provider
     )
 
     signers = ListValue(
