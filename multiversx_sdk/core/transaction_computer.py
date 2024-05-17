@@ -111,6 +111,9 @@ class TransactionComputer:
         if transaction.data:
             dictionary["data"] = b64encode(transaction.data).decode()
 
+        if transaction.signature:
+            dictionary["signature"] = transaction.signature.hex()
+
         dictionary["chainID"] = transaction.chain_id
 
         if transaction.version:
@@ -121,6 +124,16 @@ class TransactionComputer:
 
         if transaction.guardian:
             dictionary["guardian"] = transaction.guardian
+
+        if transaction.relayer:
+            dictionary["relayer"] = transaction.relayer
+
+        if len(transaction.inner_transactions):
+            inner_transactions = []
+            for inner_transaction in transaction.inner_transactions:
+                inner_transactions.append(self._to_dictionary(inner_transaction))
+
+            dictionary["innerTransactions"] = inner_transactions
 
         return dictionary
 
