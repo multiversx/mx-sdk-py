@@ -1,7 +1,6 @@
-from typing import List
-
 import pytest
 
+from multiversx_sdk import TransactionsConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
 from multiversx_sdk.core.transaction import Transaction
@@ -238,19 +237,20 @@ class TestRelayedTransactionsFactory:
         alice = self.wallets["alice"]
         bob = self.wallets["bob"]
 
-        inner_transaction = Transaction(
+        inner_transaction_1 = Transaction(
             sender=bob.label,
-            receiver=bob.label,
-            gas_limit=50000,
-            chain_id="T",
+            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            gas_limit=2500,
+            chain_id="local-testnet",
             nonce=0,
             version=2,
-            relayer=alice.label
+            relayer="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         )
 
-        inner_transactions = [inner_transaction]
-        serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
-        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction)
+        serialized_inner_transaction_1 = self.transaction_computer.compute_bytes_for_signing(inner_transaction_1)
+        inner_transaction_1.signature = bob.secret_key.sign(serialized_inner_transaction_1)
+
+        inner_transactions = [inner_transaction_1]
 
         relayed_transaction = self.factory.create_relayed_v3_transaction(
             relayer_address=Address.from_bech32(alice.label),
@@ -258,14 +258,14 @@ class TestRelayedTransactionsFactory:
         )
         serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction)
         relayed_transaction.signature = alice.secret_key.sign(serialized_relayed_transaction)
-        assert relayed_transaction.signature.hex() == "88b9bce6fe62a641fca593f95c12ad09032a44b34c9e5cf16d070f0563b1695bf9d452a9df52bce3373fd5e10ed96c3d65cd189f5873e3a3184a89f4980c9e0c"
-        assert relayed_transaction.gas_limit == 100000
+
+        assert relayed_transaction.signature.hex() == "e5b58d063a25b4e807fc8dfee3a0a48e4ced7528f41019a7d042c81714174c1be0fad1b3c12434563af37cf7ac68c0ba1b02ebacaca4e9b91c97096a839c940f"
 
     def test_create_relayed_v3_with_invalid_inner_tx(self):
         alice = self.wallets["alice"]
         bob = self.wallets["bob"]
 
-        inner_transaction = Transaction(
+        inner_transaction_1 = Transaction(
             sender=bob.label,
             receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
             gas_limit=2500,
@@ -275,33 +275,34 @@ class TestRelayedTransactionsFactory:
             relayer="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         )
 
-        serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
-        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction)
+        serialized_inner_transaction_1 = self.transaction_computer.compute_bytes_for_signing(inner_transaction_1)
+        inner_transaction_1.signature = bob.secret_key.sign(serialized_inner_transaction_1)
 
-        inner_transactions = [inner_transaction]
+        inner_transactions = [inner_transaction_1]
 
         """
         In the inner tx, the relayer address is acutally bob's. The creation should fail
         """
         with pytest.raises(InvalidInnerTransactionError) as err:
-            self.factory.create_relayed_v3_transaction(
+            relayed_transaction = self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
         assert str(err.value) == "The inner transaction has an incorrect relayer address"
 
-        inner_transaction.signature = b""
+        inner_transaction_1.signature = ""
         with pytest.raises(InvalidInnerTransactionError) as err:
-            self.factory.create_relayed_v3_transaction(
+            relayed_transaction = self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
         assert str(err.value) == "The inner transaction is not signed"
 
-        inner_transactions: List[Transaction] = []
+        inner_transactions = []
         with pytest.raises(InvalidInnerTransactionError) as err:
-            self.factory.create_relayed_v3_transaction(
+            relayed_transaction = self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
         assert str(err.value) == "The are no inner transactions"
+

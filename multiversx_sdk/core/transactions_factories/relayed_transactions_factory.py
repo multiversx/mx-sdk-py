@@ -1,12 +1,14 @@
 import base64
 import json
-from typing import Any, Dict, List, Protocol, Sequence
+from typing import Any, Dict, List, Protocol
 
+from multiversx_sdk.wallet.user_pem import UserPEM
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
 from multiversx_sdk.core.interfaces import IAddress, ITransaction
 from multiversx_sdk.core.serializer import args_to_string
 from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_computer import TransactionComputer
 
 
 class IConfig(Protocol):
@@ -74,11 +76,11 @@ class RelayedTransactionsFactory:
 
     def create_relayed_v3_transaction(self,
                                       relayer_address: IAddress,
-                                      inner_transactions: Sequence[ITransaction]) -> Transaction:
+                                      inner_transactions: List[ITransaction]) -> Transaction:
         if len(inner_transactions) == 0:
             raise InvalidInnerTransactionError("The are no inner transactions")
 
-        inner_txs_gas_limit = 0
+        gas_limit = self._config.min_gas_limit * len(inner_transactions)
         for inner_transaction in inner_transactions:
             if not inner_transaction.signature:
                 raise InvalidInnerTransactionError("The inner transaction is not signed")
@@ -86,19 +88,19 @@ class RelayedTransactionsFactory:
             if inner_transaction.relayer != relayer_address.to_bech32():
                 raise InvalidInnerTransactionError("The inner transaction has an incorrect relayer address")
 
-            inner_txs_gas_limit += inner_transaction.gas_limit
-
-        move_balances_gas = self._config.min_gas_limit * len(inner_transactions)
-        gas_limit = move_balances_gas + inner_txs_gas_limit
+            gas_limit += inner_transaction.gas_limit
 
         return Transaction(
             sender=relayer_address.to_bech32(),
             receiver=relayer_address.to_bech32(),
             value=0,
             gas_limit=gas_limit,
+            gas_price=inner_transactions[0].gas_price,
             chain_id=self._config.chain_id,
+            version=inner_transactions[0].version,
             inner_transactions=inner_transactions,
-        )
+            )
+
 
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:
         sender = Address.new_from_bech32(inner_transaction.sender).to_hex()
