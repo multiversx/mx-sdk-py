@@ -3,6 +3,7 @@ from typing import Optional
 from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
+from multiversx_sdk.core.interfaces import ITransaction
 
 
 class Transaction:
@@ -21,7 +22,9 @@ class Transaction:
                  options: Optional[int] = None,
                  guardian: Optional[str] = None,
                  signature: Optional[bytes] = None,
-                 guardian_signature: Optional[bytes] = None) -> None:
+                 guardian_signature: Optional[bytes] = None,
+                 relayer: Optional[str] = None,
+                 inner_transactions: Optional[list[ITransaction]] = None) -> None:
         self.chain_id = chain_id
         self.sender = sender
         self.receiver = receiver
@@ -41,6 +44,8 @@ class Transaction:
 
         self.guardian = guardian or ""
         self.guardian_signature = guardian_signature or bytes()
+        self.relayer = relayer or ""
+        self.inner_transactions = inner_transactions or []
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Transaction):
