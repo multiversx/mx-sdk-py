@@ -11,7 +11,7 @@ class Serializer:
     https://docs.multiversx.com/developers/data/serialization-overview
     """
 
-    def __init__(self, parts_separator: str, pub_key_length: int):
+    def __init__(self, parts_separator: str):
         if not parts_separator:
             raise ValueError("cannot create serializer: parts separator must not be empty")
 
