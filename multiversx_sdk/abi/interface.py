@@ -1,7 +1,8 @@
 import io
-from typing import Protocol
+from typing import Any, Protocol, runtime_checkable
 
 
+@runtime_checkable
 class SingleValue(Protocol):
     def encode_nested(self, writer: io.BytesIO):
         ...
@@ -13,4 +14,12 @@ class SingleValue(Protocol):
         ...
 
     def decode_top_level(self, data: bytes):
+        ...
+
+
+class NativeObjectHolder(Protocol):
+    def set_native_object(self, value: Any):
+        ...
+
+    def get_native_object(self) -> Any:
         ...
