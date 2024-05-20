@@ -290,7 +290,7 @@ class TestRelayedTransactionsFactory:
             )
         assert str(err.value) == "The inner transaction has an incorrect relayer address"
 
-        inner_transaction_1.signature = ""
+        inner_transaction_1.signature = b""
         with pytest.raises(InvalidInnerTransactionError) as err:
             relayed_transaction = self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
