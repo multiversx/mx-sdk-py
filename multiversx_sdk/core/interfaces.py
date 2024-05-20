@@ -25,6 +25,8 @@ class ITransaction(Protocol):
     guardian: str
     signature: bytes
     guardian_signature: bytes
+    relayer: str
+    inner_transactions: List[Any]
 
 
 class IMessage(Protocol):
