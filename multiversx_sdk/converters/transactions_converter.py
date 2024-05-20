@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, Sequence
 
 from multiversx_sdk.converters.errors import MissingFieldError
 from multiversx_sdk.core.interfaces import ITransaction
@@ -142,7 +142,7 @@ class TransactionsConverter:
             return bytes.fromhex(value)
         return b""
 
-    def _transactions_to_string(self, value: list[ITransaction]) -> list[Dict[str, Any]]:
+    def _transactions_to_string(self, value: Sequence[ITransaction]) -> Sequence[Dict[str, Any]]:
         if len(value) == 0:
             return []
 
