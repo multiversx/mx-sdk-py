@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, Sequence
 
 from multiversx_sdk.converters.errors import MissingFieldError
 from multiversx_sdk.core.interfaces import ITransaction
