@@ -1,6 +1,6 @@
 import base64
 import json
-from typing import Any, Dict, Sequence, Protocol
+from typing import Any, Dict, List, Sequence, Protocol
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
