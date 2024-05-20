@@ -1,14 +1,12 @@
 import base64
 import json
-from typing import Any, Dict, List, Protocol
+from typing import Any, Dict, Sequence, Protocol
 
-from multiversx_sdk.wallet.user_pem import UserPEM
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
 from multiversx_sdk.core.interfaces import IAddress, ITransaction
 from multiversx_sdk.core.serializer import args_to_string
 from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transaction_computer import TransactionComputer
 
 
 class IConfig(Protocol):
@@ -76,7 +74,7 @@ class RelayedTransactionsFactory:
 
     def create_relayed_v3_transaction(self,
                                       relayer_address: IAddress,
-                                      inner_transactions: List[ITransaction]) -> Transaction:
+                                      inner_transactions: Sequence[ITransaction]) -> Transaction:
         if len(inner_transactions) == 0:
             raise InvalidInnerTransactionError("The are no inner transactions")
 
