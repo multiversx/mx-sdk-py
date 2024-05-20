@@ -1,4 +1,4 @@
-from typing import Optional, Protocol
+from typing import Optional, Protocol, List, Any
 
 
 class IAddress(Protocol):
@@ -25,8 +25,6 @@ class ITransaction(Protocol):
     guardian: str
     signature: bytes
     guardian_signature: bytes
-    relayer: str
-    inner_transactions: []
 
 
 class IMessage(Protocol):
