@@ -1,6 +1,6 @@
 import base64
 import json
-from typing import Any, Dict, List, Protocol
+from typing import Any, Dict, List, Protocol, Sequence
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
@@ -74,7 +74,7 @@ class RelayedTransactionsFactory:
 
     def create_relayed_v3_transaction(self,
                                       relayer_address: IAddress,
-                                      inner_transactions: List[ITransaction]) -> Transaction:
+                                      inner_transactions: Sequence[ITransaction]) -> Transaction:
         if len(inner_transactions) == 0:
             raise InvalidInnerTransactionError("The are no inner transactions")
 
