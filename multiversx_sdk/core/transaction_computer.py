@@ -92,6 +92,8 @@ class TransactionComputer:
                 raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
 
     def _to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
+        from multiversx_sdk.converters.transactions_converter import \
+            TransactionsConverter
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
@@ -121,6 +123,14 @@ class TransactionComputer:
 
         if transaction.guardian:
             dictionary["guardian"] = transaction.guardian
+
+        if transaction.relayer:
+            dictionary["relayer"] = transaction.relayer
+
+        if len(transaction.inner_transactions):
+            converter = TransactionsConverter()
+            dictionary["innerTransactions"] = [converter.transaction_to_dictionary(tx) for tx in transaction.inner_transactions]
+            # dictionary["innerTransactions"] = "lalalla"
 
         return dictionary
 

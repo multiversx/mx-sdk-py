@@ -33,7 +33,9 @@ class TransactionsConverter:
             "options": transaction.options,
             "guardian": transaction.guardian,
             "signature": self._value_to_hex_or_empty(transaction.signature),
-            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature)
+            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature),
+            "relayer": transaction.relayer,
+            "innerTransactions": [self.transaction_to_dictionary(inner_tx) for inner_tx in transaction.inner_transactions],
         }
 
     def dictionary_to_transaction(self, dictionary: Dict[str, Any]) -> Transaction:

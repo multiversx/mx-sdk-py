@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pytest
 
+from multiversx_sdk.converters.transactions_converter import \
+    TransactionsConverter
 from multiversx_sdk.core.constants import \
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
@@ -145,7 +147,6 @@ class TestTransaction:
         assert computed_gas == 6005000
 
     def test_compute_transaction_with_guardian_fields(self):
-
         sender_secret_key_hex = "3964a58b0debd802f67239c30aa2b3a75fff1842c203587cb590d03d20e32415"
         sender_secret_key = UserSecretKey(bytes.fromhex(sender_secret_key_hex))
 
@@ -345,3 +346,35 @@ class TestTransaction:
 
         assert is_signed_by_alice == True
         assert is_signed_by_bob == False
+
+    def test_inner_txs(self):
+        sender_secret_key_hex = "3964a58b0debd802f67239c30aa2b3a75fff1842c203587cb590d03d20e32415"
+        sender_secret_key = UserSecretKey(bytes.fromhex(sender_secret_key_hex))
+
+        transaction = Transaction(
+            sender="erd1fp4zaxvyc8jh99vauwns99kvs9tn0k6cwrr0zpyz2jvyurcepuhsfzvlar",
+            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            gas_limit=139000,
+            gas_price=1000000000,
+            chain_id="D",
+            nonce=2,
+            value=1000000000000000000,
+            data=b"this is a test transaction",
+            version=2,
+            options=2,
+            guardian="erd1nn8apn09vmf72l7kzr3nd90rr5r2q74he7hseghs3v68c5p7ud2qhhwf96",
+            guardian_signature=bytes.fromhex("487150c26d38a01fe19fbe26dac20ec2b42ec3abf5763a47a508e62bcd6ad3437c4d404684442e864a1dbad446dc0f852889a09f0650b5fdb55f4ee18147920d")
+        )
+        transaction.signature = sender_secret_key.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        relayed = Transaction(
+            sender="erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
+            receiver="erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8",
+            gas_limit=1000000,
+            chain_id="D",
+            nonce=11,
+            inner_transactions=[transaction]
+        )
+        relayed.signature = self.carol.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(relayed))
+        converter = TransactionsConverter()
+        print(converter.transaction_to_dictionary(relayed))
