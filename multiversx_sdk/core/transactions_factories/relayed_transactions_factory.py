@@ -78,7 +78,7 @@ class RelayedTransactionsFactory:
         if len(inner_transactions) == 0:
             raise InvalidInnerTransactionError("The are no inner transactions")
 
-        gas_limit = self._config.min_gas_limit * len(inner_transactions)
+        inner_txs_gas_limit = 0
         for inner_transaction in inner_transactions:
             if not inner_transaction.signature:
                 raise InvalidInnerTransactionError("The inner transaction is not signed")
@@ -86,18 +86,19 @@ class RelayedTransactionsFactory:
             if inner_transaction.relayer != relayer_address.to_bech32():
                 raise InvalidInnerTransactionError("The inner transaction has an incorrect relayer address")
 
-            gas_limit += inner_transaction.gas_limit
+            inner_txs_gas_limit += inner_transaction.gas_limit
+
+        move_balances_gas = self._config.min_gas_limit * len(inner_transactions)
+        gas_limit = self._config.min_gas_limit + move_balances_gas + inner_txs_gas_limit
 
         return Transaction(
             sender=relayer_address.to_bech32(),
             receiver=relayer_address.to_bech32(),
             value=0,
             gas_limit=gas_limit,
-            gas_price=inner_transactions[0].gas_price,
             chain_id=self._config.chain_id,
-            version=inner_transactions[0].version,
             inner_transactions=inner_transactions,
-            )
+        )
 
 
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:

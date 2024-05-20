@@ -130,3 +130,4 @@ class RelayedTransactionV1Builder:
             tx[f"rcvUserName"] = base64.b64encode(self.inner_transaction.receiver_username.encode()).decode()
 
         return json.dumps(tx, separators=(",", ":"))
+
