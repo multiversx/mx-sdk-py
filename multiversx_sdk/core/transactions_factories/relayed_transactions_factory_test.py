@@ -1,6 +1,6 @@
 import pytest
+from typing import List
 
-from multiversx_sdk import TransactionsConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
 from multiversx_sdk.core.transaction import Transaction
@@ -247,10 +247,9 @@ class TestRelayedTransactionsFactory:
             relayer="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         )
 
+        inner_transactions = [inner_transaction_1]
         serialized_inner_transaction_1 = self.transaction_computer.compute_bytes_for_signing(inner_transaction_1)
         inner_transaction_1.signature = bob.secret_key.sign(serialized_inner_transaction_1)
-
-        inner_transactions = [inner_transaction_1]
 
         relayed_transaction = self.factory.create_relayed_v3_transaction(
             relayer_address=Address.from_bech32(alice.label),

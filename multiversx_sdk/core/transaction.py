@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
@@ -24,7 +24,7 @@ class Transaction:
                  signature: Optional[bytes] = None,
                  guardian_signature: Optional[bytes] = None,
                  relayer: Optional[str] = None,
-                 inner_transactions: Optional[list[ITransaction]] = None) -> None:
+                 inner_transactions: Optional[Sequence[ITransaction]] = None) -> None:
         self.chain_id = chain_id
         self.sender = sender
         self.receiver = receiver
