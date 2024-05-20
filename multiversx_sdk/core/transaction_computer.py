@@ -34,10 +34,10 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: ITransaction) -> bytes:
+    def compute_bytes_for_signing(self, transaction: ITransaction, with_signature: bool = False) -> bytes:
         self._ensure_fields(transaction)
 
-        dictionary = self._to_dictionary(transaction)
+        dictionary = self._to_dictionary(transaction, with_signature)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
@@ -130,11 +130,7 @@ class TransactionComputer:
             dictionary["relayer"] = transaction.relayer
 
         if len(transaction.inner_transactions):
-            inner_transactions = []
-            for inner_transaction in transaction.inner_transactions:
-                inner_transactions.append(self._to_dictionary(inner_transaction))
-
-            dictionary["innerTransactions"] = [self._to_dictionary(transaction=tx, with_signature=True) for tx in transaction.inner_transactions]
+            dictionary["innerTransactions"] = [self._to_dictionary(transaction=tx, with_signature=with_signature) for tx in transaction.inner_transactions]
 
         return dictionary
 

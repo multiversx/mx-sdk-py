@@ -29,7 +29,7 @@ class ITransaction(Protocol):
     signature: bytes
     guardian_signature: bytes
     relayer: str
-    inner_transactions: Sequence
+    inner_transactions: Sequence["ITransaction"]
 
 
 class TransactionOnNetwork:
