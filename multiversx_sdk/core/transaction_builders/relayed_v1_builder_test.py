@@ -92,11 +92,8 @@ class TestRelayedV1Builder:
             version=2,
             options=2
         )
-
-        signature = self.bob.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
-        guardian_signature = self.grace.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
-        inner_tx.signature = signature
-        inner_tx.guardian_signature = guardian_signature
+        inner_tx.signature = self.bob.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
+        inner_tx.guardian_signature = self.grace.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
 
         relayed_builder = RelayedTransactionV1Builder()
         relayed_builder.set_inner_transaction(inner_tx)
@@ -125,11 +122,8 @@ class TestRelayedV1Builder:
             version=2,
             options=2
         )
-
-        signature = self.bob.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
-        guardian_signature = self.grace.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
-        inner_tx.signature = signature
-        inner_tx.guardian_signature = guardian_signature
+        inner_tx.signature = self.bob.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
+        inner_tx.guardian_signature = self.grace.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_tx))
 
         relayed_builder = RelayedTransactionV1Builder()
         relayed_builder.set_inner_transaction(inner_tx)
