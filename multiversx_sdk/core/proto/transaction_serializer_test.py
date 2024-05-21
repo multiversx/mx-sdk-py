@@ -86,3 +86,34 @@ class TestProtoSerializer:
 
         serialized_transaction = self.proto_serializer.serialize_transaction(transaction)
         assert serialized_transaction.hex() == "08cc011209000de0b6b3a76400001a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e12205616c6963652a20b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba32056361726f6c388094ebdc0340d086035201545802624051e6cd78fb3ab4b53ff7ad6864df27cb4a56d70603332869d47a5cf6ea977c30e696103e41e8dddf2582996ad335229fdf4acb726564dbc1a0bc9e705b511f06"
+
+    def test_serialized_tx_with_inner_txs(self):
+        inner_transaction = Transaction(
+            sender=self.carol.label,
+            receiver=self.alice.label,
+            gas_limit=50000,
+            chain_id="T",
+            nonce=204,
+            value=1000000000000000000,
+            sender_username="carol",
+            receiver_username="alice"
+        )
+        inner_transaction.signature = self.carol.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_transaction))
+
+        relayed_transaction= Transaction(
+            sender=self.carol.label,
+            receiver=self.alice.label,
+            gas_limit=50000,
+            chain_id="T",
+            nonce=204,
+            value=1000000000000000000,
+            sender_username="carol",
+            receiver_username="alice",
+            relayer=self.carol.label,
+            inner_transactions=[inner_transaction]
+        )
+
+        relayed_transaction.signature = self.carol.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(
+            relayed_transaction, with_signature=True))
+        serialized_transaction = self.proto_serializer.serialize_transaction(relayed_transaction)
+        assert serialized_transaction.hex() == "08cc011209000de0b6b3a76400001a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e12205616c6963652a20b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba32056361726f6c388094ebdc0340d0860352015458026240901a6a974d6ab36546e7881c6e0364ec4c61a891aa70e5eb60f818d6c92a39cfa0beac6fab73f503853cfe8fe6149b4be207ddb93788f8450d75a07fa8759d06820120b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba8a01b10108cc011209000de0b6b3a76400001a200139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e12205616c6963652a20b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba32056361726f6c388094ebdc0340d086035201545802624051e6cd78fb3ab4b53ff7ad6864df27cb4a56d70603332869d47a5cf6ea977c30e696103e41e8dddf2582996ad335229fdf4acb726564dbc1a0bc9e705b511f06"
