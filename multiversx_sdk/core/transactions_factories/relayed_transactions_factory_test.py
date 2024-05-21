@@ -237,7 +237,7 @@ class TestRelayedTransactionsFactory:
         alice = self.wallets["alice"]
         bob = self.wallets["bob"]
 
-        inner_transaction_1 = Transaction(
+        inner_transaction = Transaction(
             sender=bob.label,
             receiver=bob.label,
             gas_limit=50000,
@@ -247,9 +247,9 @@ class TestRelayedTransactionsFactory:
             relayer=alice.label
         )
 
-        inner_transactions = [inner_transaction_1]
-        serialized_inner_transaction_1 = self.transaction_computer.compute_bytes_for_signing(inner_transaction_1)
-        inner_transaction_1.signature = bob.secret_key.sign(serialized_inner_transaction_1)
+        inner_transactions = [inner_transaction]
+        serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
+        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction)
 
         relayed_transaction = self.factory.create_relayed_v3_transaction(
             relayer_address=Address.from_bech32(alice.label),
@@ -274,8 +274,8 @@ class TestRelayedTransactionsFactory:
             relayer="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         )
 
-        serialized_inner_transaction_1 = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
-        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction_1)
+        serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
+        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction)
 
         inner_transactions = [inner_transaction]
 
