@@ -1,28 +1,29 @@
 from typing import Protocol, Sequence
 
 import multiversx_sdk.core.proto.transaction_pb2 as ProtoTransaction
+from multiversx_sdk.core.transaction import ITransaction
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.codec import encode_unsigned_number
 
 
-class ITransaction(Protocol):
-    sender: str
-    receiver: str
-    gas_limit: int
-    chain_id: str
-    gas_price: int
-    sender_username: str
-    receiver_username: str
-    nonce: int
-    value: int
-    data: bytes
-    version: int
-    signature: bytes
-    options: int
-    guardian: str
-    guardian_signature: bytes
-    relayer: str
-    inner_transactions: Sequence["ITransaction"]
+# class ITransaction(Protocol):
+#     sender: str
+#     receiver: str
+#     gas_limit: int
+#     chain_id: str
+#     gas_price: int
+#     sender_username: str
+#     receiver_username: str
+#     nonce: int
+#     value: int
+#     data: bytes
+#     version: int
+#     signature: bytes
+#     options: int
+#     guardian: str
+#     guardian_signature: bytes
+#     relayer: str
+#     inner_transactions: Sequence["ITransaction"]
 
 
 class ProtoSerializer:
