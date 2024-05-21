@@ -1,6 +1,7 @@
 from typing import Protocol, Sequence
 
 import multiversx_sdk.core.proto.transaction_pb2 as ProtoTransaction
+import google.protobuf.message as Message
 from multiversx_sdk.core.transaction import ITransaction
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.codec import encode_unsigned_number
@@ -45,7 +46,7 @@ class ProtoSerializer:
 
         return buffer
 
-    def convert_to_proto_message(self, transaction: ITransaction) -> ProtoTransaction:
+    def convert_to_proto_message(self, transaction: ITransaction) -> Message:
         receiver_pubkey = Address.new_from_bech32(transaction.receiver).get_public_key()
         sender_pubkey = Address.new_from_bech32(transaction.sender).get_public_key()
 
