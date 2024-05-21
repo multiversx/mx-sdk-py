@@ -45,7 +45,7 @@ class ProtoSerializer:
 
         return buffer
 
-    def convert_to_proto_message(self, transaction: ITransaction) -> ProtoTransaction.Transaction():
+    def convert_to_proto_message(self, transaction: ITransaction):
         receiver_pubkey = Address.new_from_bech32(transaction.receiver).get_public_key()
         sender_pubkey = Address.new_from_bech32(transaction.sender).get_public_key()
 
