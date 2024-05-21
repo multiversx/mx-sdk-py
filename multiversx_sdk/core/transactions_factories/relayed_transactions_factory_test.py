@@ -255,7 +255,7 @@ class TestRelayedTransactionsFactory:
             relayer_address=Address.from_bech32(alice.label),
             inner_transactions=inner_transactions
         )
-        serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction, with_signature=True)
+        serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction)
         relayed_transaction.signature = alice.secret_key.sign(serialized_relayed_transaction)
         assert relayed_transaction.signature.hex() == "6bd446e1f531db190de97adeab7bae3ed332a83d93e47dc29299a0a6868b966b002d0f4395eee450fc89c7677516d7448c6d01245a3fc5c6c65e0bf8dca9540e"
         assert relayed_transaction.gas_limit == 150000
