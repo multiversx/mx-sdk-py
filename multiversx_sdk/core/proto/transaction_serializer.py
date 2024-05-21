@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Protocol, Sequence
 
 import multiversx_sdk.core.proto.transaction_pb2 as ProtoTransaction
 from multiversx_sdk.core.address import Address
@@ -21,6 +21,8 @@ class ITransaction(Protocol):
     options: int
     guardian: str
     guardian_signature: bytes
+    relayer: str
+    inner_transactions: Sequence["ITransaction"]
 
 
 class ProtoSerializer:
@@ -28,6 +30,21 @@ class ProtoSerializer:
         pass
 
     def serialize_transaction(self, transaction: ITransaction) -> bytes:
+        proto_transaction = self.convert_to_proto_message(transaction)
+
+        encoded_tx: bytes = proto_transaction.SerializeToString()
+        return encoded_tx
+
+    def serialize_transaction_value(self, tx_value: int):
+        if tx_value == 0:
+            return bytes([0, 0])
+
+        buffer = encode_unsigned_number(tx_value)
+        buffer = bytes([0x00]) + buffer
+
+        return buffer
+
+    def convert_to_proto_message(self, transaction: ITransaction) -> ProtoTransaction.Transaction():
         receiver_pubkey = Address.new_from_bech32(transaction.receiver).get_public_key()
         sender_pubkey = Address.new_from_bech32(transaction.sender).get_public_key()
 
@@ -51,15 +68,11 @@ class ProtoSerializer:
             proto_transaction.GuardAddr = Address.new_from_bech32(guardian_address).get_public_key()
             proto_transaction.GuardSignature = transaction.guardian_signature
 
-        encoded_tx: bytes = proto_transaction.SerializeToString()
+        if transaction.relayer != "":
+            proto_transaction.Relayer = Address.new_from_bech32(transaction.relayer).get_public_key()
 
-        return encoded_tx
+        proto_transaction.InnerTransactions.extend(
+            [self.convert_to_proto_message(inner_tx) for inner_tx in transaction.inner_transactions])
 
-    def serialize_transaction_value(self, tx_value: int):
-        if tx_value == 0:
-            return bytes([0, 0])
+        return proto_transaction
 
-        buffer = encode_unsigned_number(tx_value)
-        buffer = bytes([0x00]) + buffer
-
-        return buffer
