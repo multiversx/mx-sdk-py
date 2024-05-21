@@ -34,10 +34,10 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: ITransaction, with_signature: bool = False) -> bytes:
+    def compute_bytes_for_signing(self, transaction: ITransaction) -> bytes:
         self._ensure_fields(transaction)
 
-        dictionary = self._to_dictionary(transaction, with_signature)
+        dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
