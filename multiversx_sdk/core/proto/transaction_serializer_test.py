@@ -100,7 +100,7 @@ class TestProtoSerializer:
         )
         inner_transaction.signature = self.carol.secret_key.sign(self.transaction_computer.compute_bytes_for_signing(inner_transaction))
 
-        relayed_transaction= Transaction(
+        relayed_transaction = Transaction(
             sender=self.carol.label,
             receiver=self.alice.label,
             gas_limit=50000,
