@@ -91,7 +91,7 @@ class TransactionComputer:
             if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(transaction):
                 raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
 
-    def _to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
+    def _to_dictionary(self, transaction: ITransaction, with_signature: bool = False) -> Dict[str, Any]:
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
@@ -111,6 +111,10 @@ class TransactionComputer:
         if transaction.data:
             dictionary["data"] = b64encode(transaction.data).decode()
 
+        if with_signature:
+            if transaction.signature:
+                dictionary["signature"] = transaction.signature.hex()
+
         dictionary["chainID"] = transaction.chain_id
 
         if transaction.version:
@@ -121,6 +125,13 @@ class TransactionComputer:
 
         if transaction.guardian:
             dictionary["guardian"] = transaction.guardian
+
+        if transaction.relayer:
+            dictionary["relayer"] = transaction.relayer
+
+        if len(transaction.inner_transactions):
+            dictionary["innerTransactions"] = \
+                [self._to_dictionary(transaction=tx, with_signature=True) for tx in transaction.inner_transactions]
 
         return dictionary
 

@@ -21,4 +21,6 @@ message Transaction {
   uint32   Options        = 13;
   bytes    GuardAddr      = 14;
   bytes    GuardSignature = 15;
+  bytes    Relayer        = 16;
+  repeated Transaction InnerTransactions = 17;
 }
