@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.transaction_builders.esdt_builders &mdash; multiversx-sdk 0.9.0b0 documentation</title>
+  <title>multiversx_sdk.core.transaction_builders.esdt_builders &mdash; multiversx-sdk 0.9.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=c6d8f059"></script>
+        <script src="../../../../_static/documentation_options.js?v=39bb1c6d"></script>
         <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -71,13 +71,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.transaction_builders.esdt_builders</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="p">(</span><span class="n">IAddress</span><span class="p">,</span> <span class="n">IGasLimit</span><span class="p">,</span> <span class="n">IGasPrice</span><span class="p">,</span>
                                             <span class="n">INonce</span><span class="p">,</span> <span class="n">ITransactionValue</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.serializer</span> <span class="kn">import</span> <span class="n">arg_to_string</span><span class="p">,</span> <span class="n">args_to_strings</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction_builders.transaction_builder</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ITransactionBuilderConfiguration</span><span class="p">,</span> <span class="n">TransactionBuilder</span><span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ESDTIssueBuilder&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="IESDTIssueConfiguration">
@@ -113,6 +116,7 @@
                  <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasPrice</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">nonce</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;The &#39;ESDTIssueBuilder&#39; is deprecated and will soon be removed. Please use &#39;TokenManagementTransactionsFactory&#39; instead.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_issue</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">gas_limit_esdt_issue</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">issuer</span>
