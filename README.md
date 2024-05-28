@@ -5,7 +5,7 @@ The Python SDK for interacting with MultiversX. It's an all in one sdk that can 
 ## Documentation
 
 - [Cookbook](./examples/Cookbook.ipynb)
-- [Auto-generated documentation](https://multiversx.github.io/mx-sdk-py-incubator/)
+- [Auto-generated documentation](https://multiversx.github.io/mx-sdk-py/)
 
 ## Development setup
 

@@ -1,4 +1,4 @@
-
+import logging
 from typing import Protocol
 
 from multiversx_sdk.core import Address
@@ -11,6 +11,8 @@ from multiversx_sdk.core.transaction_parsers.token_operations_outcome_parser_typ
 from multiversx_sdk.core.transaction_parsers.transaction_on_network_wrapper import (
     ITransactionEvent, ITransactionOnNetwork, TransactionOnNetworkWrapper)
 
+logger = logging.getLogger("TokenOperationsOutcomeParser")
+
 
 class IConfig(Protocol):
     address_hrp: str
@@ -18,6 +20,7 @@ class IConfig(Protocol):
 
 class TokenOperationsOutcomeParser:
     def __init__(self, config: IConfig) -> None:
+        logger.warning("The 'TokenOperationsOutcomeParser' is deprecated and will soon be removed. Please use 'TokenManagementTransactionsOutcomeParser' instead.")
         self._config = config
 
     def parse_issue_fungible(self, transaction: ITransactionOnNetwork) -> ESDTIssueOutcome:
