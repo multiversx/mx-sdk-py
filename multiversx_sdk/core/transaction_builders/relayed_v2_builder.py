@@ -1,3 +1,4 @@
+import logging
 from typing import Any, List, Optional
 
 from multiversx_sdk.core.address import Address
@@ -9,6 +10,8 @@ from multiversx_sdk.core.serializer import args_to_string
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_payload import TransactionPayload
 
+logger = logging.getLogger("RelayedTransactionV2Builder")
+
 
 class RelayedTransactionV2Builder:
     def __init__(
@@ -17,6 +20,7 @@ class RelayedTransactionV2Builder:
             relayer_address: Optional[IAddress] = None,
             relayer_nonce: Optional[INonce] = None,
             network_config: Optional[INetworkConfig] = None) -> None:
+        logger.warning("'RelayedTransactionV2Builder' is deprecated and will soon be removed. Please use 'RelayedTransactionsFactory' instead.")
         self.inner_transaction = inner_transaction
         self.inner_transaction_gas_limit = inner_transaction_gas_limit
         self.relayer_address = relayer_address
