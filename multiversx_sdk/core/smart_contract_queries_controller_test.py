@@ -1,7 +1,10 @@
 import base64
+from pathlib import Path
 
 import pytest
 
+from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
@@ -100,3 +103,26 @@ class TestSmartContractQueriesController:
         assert query_response.return_code == "ok"
         assert query_response.return_message == ""
         assert query_response.return_data_parts == [b'\x05']
+
+
+if __name__ == "__main__":
+    testdata = Path(__file__).parent.parent / "testutils" / "testdata"
+    abi_path = testdata / "multisig-full.abi.json"
+    abi_definition = AbiDefinition.load(abi_path)
+    abi = Abi(abi_definition)
+
+    provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
+    query_runner = QueryRunnerAdapter(network_provider=provider)
+    controller = SmartContractQueriesController(query_runner=query_runner, abi=abi)
+
+    contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+    function = "getSum"
+
+    query = controller.create_query(
+        contract=contract,
+        function=function,
+        arguments=[]
+    )
+
+    print(query.arguments)
+    print("Done")

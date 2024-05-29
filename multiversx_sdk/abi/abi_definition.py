@@ -11,9 +11,12 @@ class ParameterDefinition:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ParameterDefinition':
         return cls(
-            name=data["name"],
-            type=data["type"]
+            name=data.get("name", ""),
+            type=data.get("type", ""),
         )
+
+    def __str__(self):
+        return f"ParameterDefinition(name={self.name}, type={self.type})"
 
 
 class FieldDefinition:
@@ -28,9 +31,9 @@ class FieldDefinition:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'FieldDefinition':
         return cls(
-            name=data["name"],
-            description=data["description"],
-            type=data["type"]
+            name=data.get("name", ""),
+            description=data.get("description", ""),
+            type=data.get("type", "")
         )
 
 
@@ -45,11 +48,11 @@ class EnumVariantDefinition:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'EnumVariantDefinition':
-        fields = [FieldDefinition.from_dict(item) for item in data["fields"]]
+        fields = [FieldDefinition.from_dict(item) for item in data.get("fields", [])]
 
         return cls(
-            name=data["name"],
-            discriminant=data["discriminant"],
+            name=data.get("name", ""),
+            discriminant=data.get("discriminant", 0),
             fields=fields
         )
 
@@ -144,13 +147,16 @@ class EndpointDefinition:
         outputs = [ParameterDefinition.from_dict(item) for item in data["outputs"]]
 
         return cls(
-            name=data["name"],
-            mutability=data["mutability"],
+            name=data.get("name", ""),
+            mutability=data.get("mutability", ""),
             inputs=inputs,
             outputs=outputs,
             payable_in_tokens=data.get("payableInTokens", []),
             only_owner=data.get("onlyOwner", False)
         )
+
+    def __str__(self):
+        return f"EndpointDefinition(name={self.name})"
 
 
 class AbiDefinition:
@@ -167,9 +173,13 @@ class AbiDefinition:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'AbiDefinition':
         constructor = EndpointDefinition.from_dict(data["constructor"])
+        # TODO upgrade constructor
         endpoints = [EndpointDefinition.from_dict(item) for item in data["endpoints"]] if "endpoints" in data else []
 
-        types = data.get("types", [])
+        types = data.get("types", {})
+
+        # TODO fix - types is a mapping.
+
         types_enum = [item for item in types if item["type"] == "enum"]
         types_struct = [item for item in types if item["type"] == "struct"]
 

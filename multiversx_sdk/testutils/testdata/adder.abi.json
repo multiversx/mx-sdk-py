@@ -1,0 +1,51 @@
+{
+  "name": "Adder",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "initial_value",
+        "type": "BigUint"
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "name": "getSum",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "BigUint"
+        }
+      ]
+    },
+    {
+      "name": "upgrade",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "new_value",
+          "type": "BigUint"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "docs": ["Add desired amount to the storage variable."],
+      "name": "add",
+      "mutability": "mutable",
+      "payableInTokens": ["*"],
+      "inputs": [
+        {
+          "name": "value",
+          "type": "BigUint"
+        }
+      ],
+      "outputs": []
+    }
+  ],
+  "esdtAttributes": [],
+  "hasCallback": false,
+  "types": {}
+}

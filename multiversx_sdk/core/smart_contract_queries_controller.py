@@ -14,10 +14,10 @@ class IQueryRunner(Protocol):
 
 
 class IAbi(Protocol):
-    def encode_values(self, function_name: str, values: List[Any]) -> List[bytes]:
+    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
         ...
 
-    def decode_values(self, function_name: str, encoded_values: List[bytes]) -> List[Any]:
+    def decode_endpoint_output_parameters(self, function_name: str, encoded_values: List[bytes]) -> List[Any]:
         ...
 
 
@@ -47,7 +47,7 @@ class SmartContractQueriesController:
 
     def _encode_arguments(self, function_name: str, args: List[Any]) -> List[bytes]:
         if self.abi:
-            return self.abi.encode_values(function_name, args)
+            return self.abi.encode_endpoint_input_parameters(function_name, args)
 
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
@@ -65,6 +65,6 @@ class SmartContractQueriesController:
         encoded_values = response.return_data_parts
 
         if self.abi:
-            return self.abi.decode_values(response.function, encoded_values)
+            return self.abi.decode_endpoint_output_parameters(response.function, encoded_values)
 
         return encoded_values

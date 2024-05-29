@@ -3,6 +3,8 @@ from typing import Any, List
 
 from multiversx_sdk.abi.type_formula import TypeFormula
 
+# TODO: apply simplifications from JS
+
 
 class TypeFormulaParser:
     BEGIN_TYPE_PARAMETERS = "<"

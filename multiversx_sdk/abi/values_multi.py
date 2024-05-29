@@ -8,6 +8,14 @@ class MultiValue:
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, MultiValue) and self.items == other.items
 
+    # def set_native_object(self, value: Any):
+    #     if isinstance(value, List):
+    #         if len(value) != len(self.items):
+    #             raise ValueError("invalid value length")
+
+    # def get_native_object(self) -> Any:
+    #     return [item.get_native_object() for item in self.items]
+
 
 class VariadicValues:
     def __init__(self,
