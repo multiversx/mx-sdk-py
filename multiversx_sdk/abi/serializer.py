@@ -39,31 +39,18 @@ class Serializer:
                     # Thus, here, we disallow them.
                     raise ValueError("an optional value must be last among input values")
 
-                self._serialize_optional_value(parts_holder, value)
+                if value.value is not None:
+                    self._do_serialize(parts_holder, [value.value])
             elif isinstance(value, MultiValue):
-                self._serialize_multi_value(parts_holder, value)
+                self._do_serialize(parts_holder, value.items)
             elif isinstance(value, VariadicValues):
                 if i != len(input_values) - 1:
                     raise ValueError("variadic values must be last among input values")
 
-                self._serialize_variadic_values(parts_holder, value)
+                self._do_serialize(parts_holder, value.items)
             else:
                 parts_holder.append_empty_part()
                 self._serialize_single_value(parts_holder, value)
-
-    def _serialize_optional_value(self, parts_holder: PartsHolder, value: OptionalValue):
-        if value.value is None:
-            return
-
-        self._do_serialize(parts_holder, [value.value])
-
-    def _serialize_multi_value(self, parts_holder: PartsHolder, value: MultiValue):
-        for item in value.items:
-            self._do_serialize(parts_holder, [item])
-
-    def _serialize_variadic_values(self, parts_holder: PartsHolder, value: VariadicValues):
-        for item in value.items:
-            self._do_serialize(parts_holder, [item])
 
     def _serialize_single_value(self, parts_holder: PartsHolder, value: Any):
         data = self.codec.encode_top_level(value)
@@ -89,9 +76,12 @@ class Serializer:
                     # Thus, here, we disallow them.
                     raise ValueError("an optional value must be last among output values")
 
-                self._deserialize_optional_value(parts_holder, value)
+                if parts_holder.is_focused_beyond_last_part():
+                    value.value = None
+                else:
+                    self._do_deserialize(parts_holder, [value.value])
             elif isinstance(value, MultiValue):
-                self._deserialize_multi_value(parts_holder, value)
+                self._do_deserialize(parts_holder, value.items)
             elif isinstance(value, VariadicValues):
                 if i != len(output_values) - 1:
                     raise ValueError("variadic values must be last among output values")
@@ -99,17 +89,6 @@ class Serializer:
                 self._deserialize_variadic_values(parts_holder, value)
             else:
                 self._deserialize_single_value(parts_holder, value)
-
-    def _deserialize_optional_value(self, parts_holder: PartsHolder, value: OptionalValue):
-        if parts_holder.is_focused_beyond_last_part():
-            value.value = None
-            return
-
-        self._do_deserialize(parts_holder, [value.value])
-
-    def _deserialize_multi_value(self, parts_holder: PartsHolder, value: MultiValue):
-        for item in value.items:
-            self._do_deserialize(parts_holder, [item])
 
     def _deserialize_variadic_values(self, parts_holder: PartsHolder, value: VariadicValues):
         if value.item_creator is None:
