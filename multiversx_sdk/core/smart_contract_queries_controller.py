@@ -46,7 +46,6 @@ class SmartContractQueriesController:
             arguments: List[bytes],
             caller: Optional[str] = None,
             value: Optional[int] = None,
-            block_nonce: Optional[int] = None
     ) -> SmartContractQuery:
         return SmartContractQuery(
             contract=contract,
@@ -54,7 +53,6 @@ class SmartContractQueriesController:
             arguments=arguments,
             caller=caller,
             value=value,
-            block_nonce=block_nonce
         )
 
     def run_query(self, query: SmartContractQuery) -> SmartContractQueryResponse:
