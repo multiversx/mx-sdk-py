@@ -65,11 +65,11 @@ class EnumDefinition:
         self.variants = variants
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'EnumDefinition':
+    def from_dict(cls, name: str, data: Dict[str, Any]) -> 'EnumDefinition':
         variants = [EnumVariantDefinition.from_dict(item) for item in data["variants"]]
 
         return cls(
-            name=data["name"],
+            name=name,
             variants=variants
         )
 
@@ -82,11 +82,11 @@ class StructDefinition:
         self.fields = fields
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'StructDefinition':
+    def from_dict(cls, name: str, data: Dict[str, Any]) -> 'StructDefinition':
         fields = [FieldDefinition.from_dict(item) for item in data["fields"]]
 
         return cls(
-            name=data["name"],
+            name=name,
             fields=fields
         )
 
@@ -159,38 +159,54 @@ class EndpointDefinition:
         return f"EndpointDefinition(name={self.name})"
 
 
-class AbiDefinition:
+class TypesDefinitions:
     def __init__(self,
-                 constructor: EndpointDefinition,
-                 endpoints: List[EndpointDefinition],
                  enums: List[EnumDefinition],
                  structs: List[StructDefinition]) -> None:
-        self.constructor = constructor
-        self.endpoints = endpoints
         self.enums = enums
         self.structs = structs
 
     @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'TypesDefinitions':
+        enums: List[EnumDefinition] = []
+        structs: List[StructDefinition] = []
+
+        for name, definition in data.items():
+            kind = definition["type"]
+
+            if kind == "enum":
+                enums.append(EnumDefinition.from_dict(name, definition))
+            elif kind == "struct":
+                structs.append(StructDefinition.from_dict(name, definition))
+            else:
+                raise ValueError(f"Unsupported kind of custom type: {kind}")
+
+        return cls(
+            enums=enums,
+            structs=structs
+        )
+
+
+class AbiDefinition:
+    def __init__(self,
+                 constructor: EndpointDefinition,
+                 endpoints: List[EndpointDefinition],
+                 types: TypesDefinitions) -> None:
+        self.constructor = constructor
+        self.endpoints = endpoints
+        self.types = types
+
+    @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'AbiDefinition':
         constructor = EndpointDefinition.from_dict(data["constructor"])
-        # TODO upgrade constructor
+        # TODO upgrade_constructor = EndpointDefinition.from_dict(data["upgradeConstructor"]) if "upgradeConstructor" in data else None
         endpoints = [EndpointDefinition.from_dict(item) for item in data["endpoints"]] if "endpoints" in data else []
-
-        types = data.get("types", {})
-
-        # TODO fix - types is a mapping.
-
-        types_enum = [item for item in types if item["type"] == "enum"]
-        types_struct = [item for item in types if item["type"] == "struct"]
-
-        enums = [EnumDefinition.from_dict(item) for item in types_enum]
-        structs = [StructDefinition.from_dict(item) for item in types_struct]
+        types = TypesDefinitions.from_dict(data.get("types", {}))
 
         return cls(
             constructor=constructor,
             endpoints=endpoints,
-            enums=enums,
-            structs=structs
+            types=types
         )
 
     @classmethod
