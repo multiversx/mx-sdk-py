@@ -18,6 +18,7 @@ from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import *
 from multiversx_sdk.abi.struct_value import StructValue
+from multiversx_sdk.abi.token_identifier_value import TokenIdentifierValue
 from multiversx_sdk.abi.tuple_value import TupleValue
 from multiversx_sdk.abi.type_formula import TypeFormula
 from multiversx_sdk.abi.type_formula_parser import TypeFormulaParser
@@ -33,8 +34,8 @@ class Abi:
         self.custom_types_prototypes_by_name: Dict[str, Any] = {}
         self.endpoints_prototypes_by_name: Dict[str, EndpointPrototype] = {}
 
-        # for name in definition.types.enums:
-        #     self.custom_types_prototypes_by_name[name] = self._create_custom_type_prototype(name)
+        for name in definition.types.enums:
+            self.custom_types_prototypes_by_name[name] = self._create_custom_type_prototype(name)
 
         for struct_type in definition.types.structs:
             self.custom_types_prototypes_by_name[struct_type] = self._create_custom_type_prototype(struct_type)
@@ -62,15 +63,32 @@ class Abi:
         raise ValueError(f"cannot create prototype for custom type {name} not found")
 
     def _create_enum_prototype(self, enum_definition: EnumDefinition) -> Any:
-        # TODO create fields provider.
-        return EnumValue()
+        return EnumValue(fields_provider=lambda discriminant: self._provide_fields_for_enum_prototype(discriminant, enum_definition))
+
+    def _provide_fields_for_enum_prototype(self, discriminant: int, enum_definition: EnumDefinition) -> List[Field]:
+        for variant in enum_definition.variants:
+            if variant.discriminant != discriminant:
+                continue
+
+            fields_prototypes: List[Field] = []
+
+            for field_definition in variant.fields:
+                type_formula = self.type_formula_parser.parse_expression(field_definition.type)
+                field_value_prototype = self._create_prototype(type_formula)
+                field_prototype = Field(name=field_definition.name, value=field_value_prototype)
+                fields_prototypes.append(field_prototype)
+
+            return fields_prototypes
+
+        raise ValueError(f"cannot provide fields from enum {enum_definition.name}: variant with discriminant {discriminant} not found")
 
     def _create_struct_prototype(self, struct_definition: StructDefinition) -> Any:
         fields_prototypes: List[Field] = []
 
         for field_definition in struct_definition.fields:
             type_formula = self.type_formula_parser.parse_expression(field_definition.type)
-            field_prototype = self._create_prototype(type_formula)
+            field_value_prototype = self._create_prototype(type_formula)
+            field_prototype = Field(name=field_definition.name, value=field_value_prototype)
             fields_prototypes.append(field_prototype)
 
         return StructValue(fields_prototypes)
@@ -146,6 +164,8 @@ class Abi:
             return BytesValue()
         if name == "Address":
             return AddressValue()
+        if name == "TokenIdentifier":
+            return TokenIdentifierValue()
         if name == "CodeMetadata":
             return BytesValue()
         if name == "tuple":

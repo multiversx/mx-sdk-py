@@ -54,6 +54,28 @@ class EnumValue:
         reader = io.BytesIO(data)
         self.decode_nested(reader)
 
+    def set_native_object(self, value: Any):
+        if not self.fields_provider:
+            raise ValueError("populating an enum from a native object requires the fields provider to be set")
+
+        try:
+            native_dict = dict(value)
+        except Exception:
+            raise ValueError("cannot convert native value to dict")
+
+        if "__discriminant__" not in native_dict:
+            raise ValueError("for enums, the native object must contain the special field '__discriminant__'")
+
+        self.discriminant = native_dict["__discriminant__"]
+        self.fields = self.fields_provider(self.discriminant)
+
+        for field in self.fields:
+            if field.name not in native_dict:
+                raise ValueError(f"the native object is missing the field '{field.name}'")
+
+            native_field_value = native_dict[field.name]
+            field.set_native_object(native_field_value)
+
     def __eq__(self, other: Any) -> bool:
         return (
             isinstance(other, EnumValue)

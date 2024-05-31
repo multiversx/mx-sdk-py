@@ -40,7 +40,7 @@ class FieldDefinition:
 class EnumVariantDefinition:
     def __init__(self,
                  name: str,
-                 discriminant: str,
+                 discriminant: int,
                  fields: List[FieldDefinition]) -> None:
         self.name = name
         self.discriminant = discriminant

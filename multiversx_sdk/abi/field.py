@@ -8,5 +8,8 @@ class Field:
         self.name = name
         self.value = value
 
+    def set_native_object(self, value: Any):
+        self.value.set_native_object(value)
+
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Field) and self.name == other.name and self.value == other.value

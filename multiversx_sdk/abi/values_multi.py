@@ -24,6 +24,22 @@ class VariadicValues:
         self.items = items or []
         self.item_creator = item_creator
 
+    def set_native_object(self, value: Any):
+        if not self.item_creator:
+            raise ValueError("populating variadic values from a native object requires the item creator to be set")
+
+        try:
+            native_items = list(value)
+        except Exception:
+            raise ValueError("cannot convert native value to list")
+
+        self.items.clear()
+
+        for native_item in native_items:
+            item = self.item_creator()
+            item.set_native_object(native_item)
+            self.items.append(item)
+
     def __eq__(self, other: Any) -> bool:
         return (
             isinstance(other, VariadicValues)
