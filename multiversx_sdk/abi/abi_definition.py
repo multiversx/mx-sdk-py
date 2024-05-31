@@ -163,8 +163,8 @@ class TypesDefinitions:
     def __init__(self,
                  enums: List[EnumDefinition],
                  structs: List[StructDefinition]) -> None:
-        self.enums = enums
-        self.structs = structs
+        self.enums: Dict[str, EnumDefinition] = {enum.name: enum for enum in enums}
+        self.structs: Dict[str, StructDefinition] = {struct.name: struct for struct in structs}
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TypesDefinitions':
