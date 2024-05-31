@@ -4,10 +4,19 @@ from typing import Any, List, cast
 from multiversx_sdk.abi.abi_definition import (AbiDefinition,
                                                EndpointDefinition,
                                                ParameterDefinition)
+from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.bool_value import BoolValue
+from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.interface import NativeObjectHolder
+from multiversx_sdk.abi.list_value import ListValue
+from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.small_int_values import *
+from multiversx_sdk.abi.tuple_value import TupleValue
+from multiversx_sdk.abi.type_formula import TypeFormula
 from multiversx_sdk.abi.type_formula_parser import TypeFormulaParser
+from multiversx_sdk.abi.values_multi import OptionalValue, VariadicValues
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
 
 
@@ -55,12 +64,7 @@ class Abi:
 
     def _create_parameter_prototype(self, parameter: ParameterDefinition) -> Any:
         type_formula = self.type_formula_parser.parse_expression(parameter.type)
-
-        if type_formula.name == "BigUint":
-            return BigUIntValue()
-        # TODO
-
-        raise Exception(f"unsupported type formula: {type_formula}")
+        return create_prototype(type_formula)
 
     def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
         endpoint_prototype = self._get_endpoint_prototype(endpoint_name)
@@ -102,3 +106,39 @@ class EndpointPrototype:
         self.name = name
         self.input_parameters = input_parameters
         self.output_parameters = output_parameters
+
+
+def create_prototype(type_formula: TypeFormula) -> Any:
+    name = type_formula.name
+
+    if name == "bool":
+        return BoolValue()
+    if name == "u32":
+        return U32Value()
+    if name == "u64":
+        return U64Value()
+    if name == "BigUint":
+        return BigUIntValue()
+    if name == "bytes":
+        return BytesValue()
+    if name == "Address":
+        return AddressValue()
+    if name == "CodeMetadata":
+        return BytesValue()
+    if name == "tuple":
+        return TupleValue([create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
+    if name == "Option":
+        type_parameter = type_formula.type_parameters[0]
+        return OptionValue(create_prototype(type_parameter))
+    if name == "List":
+        type_parameter = type_formula.type_parameters[0]
+        return ListValue([], item_creator=lambda: create_prototype(type_parameter))
+    if name == "optional":
+        # The prototype of an optional is provided a value.
+        type_parameter = type_formula.type_parameters[0]
+        return OptionalValue(create_prototype(type_parameter))
+    if name == "variadic":
+        type_parameter = type_formula.type_parameters[0]
+        return VariadicValues([], item_creator=lambda: create_prototype(type_parameter))
+
+    raise Exception(f"unsupported type formula: {type_formula}")
