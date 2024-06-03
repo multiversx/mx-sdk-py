@@ -1,14 +1,11 @@
 import base64
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
-from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
-from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
