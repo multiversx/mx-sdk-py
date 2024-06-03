@@ -1,5 +1,7 @@
 from typing import Any, Callable, List, Optional
 
+from multiversx_sdk.abi.shared import convert_native_value_to_list
+
 
 class MultiValue:
     def __init__(self, items: List[Any]):
@@ -8,13 +10,17 @@ class MultiValue:
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, MultiValue) and self.items == other.items
 
-    # def set_native_object(self, value: Any):
-    #     if isinstance(value, List):
-    #         if len(value) != len(self.items):
-    #             raise ValueError("invalid value length")
+    def set_native_object(self, value: Any):
+        native_items, _ = convert_native_value_to_list(value)
 
-    # def get_native_object(self) -> Any:
-    #     return [item.get_native_object() for item in self.items]
+        if len(value) != len(self.items):
+            raise ValueError(f"for multi-value, expected {len(self.items)} items, got {len(value)}")
+
+        for item, native_item in zip(self.items, native_items):
+            item.set_native_object(native_item)
+
+    def get_native_object(self) -> Any:
+        return [item.get_native_object() for item in self.items]
 
 
 class VariadicValues:
@@ -37,6 +43,9 @@ class VariadicValues:
             item.set_native_object(native_item)
             self.items.append(item)
 
+    def get_native_object(self) -> Any:
+        return [item.get_native_object() for item in self.items]
+
     def __eq__(self, other: Any) -> bool:
         return (
             isinstance(other, VariadicValues)
@@ -48,6 +57,22 @@ class VariadicValues:
 class OptionalValue:
     def __init__(self, value: Any = None):
         self.value = value
+
+    def set_native_object(self, value: Any):
+        if value is None:
+            self.value = None
+            return
+
+        if self.value is None:
+            raise ValueError("placeholder value of optional should be set before calling set_native_object")
+
+        self.value.set_native_object(value)
+
+    def get_native_object(self) -> Any:
+        if self.value is None:
+            return None
+
+        return self.value.get_native_object()
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, OptionalValue) and self.value == other.value

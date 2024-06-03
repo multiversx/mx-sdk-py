@@ -50,7 +50,7 @@ def set_fields_from_native_dictionary(fields: List[Field], native_dictionary: Di
 
 def set_fields_from_native_list(fields: List[Field], native_list: List[Any]):
     if len(fields) != len(native_list):
-        raise ValueError(f"the number of fields ({len(fields)}) does not match the number of native values ({len(native_list)})")
+        raise ValueError(f"the number of fields ({len(fields)}) does not match the number of provided native values ({len(native_list)})")
 
     for index, field in enumerate(fields):
         native_field_value = native_list[index]
