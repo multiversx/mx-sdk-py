@@ -141,6 +141,14 @@ class Abi:
         output_native_values = [value.get_native_object() for value in output_values_as_native_object_holders]
         return output_native_values
 
+    def _get_custom_type_prototype(self, type_name: str) -> Any:
+        type_prototype = self.custom_types_prototypes_by_name.get(type_name)
+
+        if not type_prototype:
+            raise ValueError(f"custom type {type_name} not found")
+
+        return type_prototype
+
     def _get_endpoint_prototype(self, endpoint_name: str) -> 'EndpointPrototype':
         endpoint_prototype = self.endpoints_prototypes_by_name.get(endpoint_name)
 
@@ -185,14 +193,12 @@ class Abi:
             return VariadicValues([], item_creator=lambda: self._create_prototype(type_parameter))
 
         # Handle custom types
-        if name in self.custom_types_prototypes_by_name:
-            return deepcopy(self.custom_types_prototypes_by_name[name])
-
-        raise ValueError(f"cannot create prototype for type: {name}")
+        type_prototype = self._get_custom_type_prototype(name)
+        return deepcopy(type_prototype)
 
 
 class EndpointPrototype:
     def __init__(self, name: str, input_parameters: List[Any], output_parameters: List[Any]) -> None:
-        self.name = name
+        # self.name = name
         self.input_parameters = input_parameters
         self.output_parameters = output_parameters
