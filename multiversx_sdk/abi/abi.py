@@ -1,4 +1,5 @@
 from copy import deepcopy
+from pathlib import Path
 from typing import Any, Dict, List, cast
 
 from multiversx_sdk.abi.abi_definition import (AbiDefinition,
@@ -146,6 +147,8 @@ class Abi:
         # Populate the input values with the provided arguments
         for i, arg in enumerate(values):
             if is_typed_value(arg):
+                # Since the argument is already a typed value, we can directly use it.
+                input_values[i] = arg
                 continue
 
             input_values_as_native_object_holders[i].set_native_object(arg)
@@ -216,6 +219,11 @@ class Abi:
         # Handle custom types
         type_prototype = self._get_custom_type_prototype(name)
         return deepcopy(type_prototype)
+
+    @classmethod
+    def load(cls, path: Path) -> 'Abi':
+        definition = AbiDefinition.load(path)
+        return cls(definition)
 
 
 class EndpointPrototype:

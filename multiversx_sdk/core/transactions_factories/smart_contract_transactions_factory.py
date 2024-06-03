@@ -28,7 +28,7 @@ class IConfig(Protocol):
 
 
 class IAbi(Protocol):
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
+    def encode_endpoint_input_parameters(self, endpoint: str, values: List[Any]) -> List[bytes]:
         ...
 
     def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:

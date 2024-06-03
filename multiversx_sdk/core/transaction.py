@@ -41,3 +41,9 @@ class Transaction:
 
         self.guardian = guardian or ""
         self.guardian_signature = guardian_signature or bytes()
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Transaction):
+            return False
+
+        return self.__dict__ == other.__dict__
