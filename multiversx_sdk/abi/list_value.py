@@ -12,13 +12,6 @@ class ListValue:
         self.items = items or []
         self.item_creator = item_creator
 
-    def __eq__(self, other: Any) -> bool:
-        return (
-            isinstance(other, ListValue)
-            and self.items == other.items
-            and self.item_creator == other.item_creator
-        )
-
     def encode_nested(self, writer: io.BytesIO):
         encode_length(writer, len(self.items))
         self._encode_list_items(writer)
@@ -51,3 +44,29 @@ class ListValue:
         new_item = self.item_creator()
         new_item.decode_nested(reader)
         self.items.append(new_item)
+
+    def set_native_object(self, value: Any):
+        if not self.item_creator:
+            raise ValueError("populating a list from a native object requires the item creator to be set")
+
+        try:
+            native_items = list(value)
+        except Exception:
+            raise ValueError("cannot convert native value to list")
+
+        self.items.clear()
+
+        for native_item in native_items:
+            item = self.item_creator()
+            item.set_native_object(native_item)
+            self.items.append(item)
+
+    def get_native_object(self) -> Any:
+        return [item.get_native_object() for item in self.items]
+
+    def __eq__(self, other: Any) -> bool:
+        return (
+            isinstance(other, ListValue)
+            and self.items == other.items
+            and self.item_creator == other.item_creator
+        )

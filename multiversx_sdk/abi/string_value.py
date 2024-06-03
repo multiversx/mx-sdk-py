@@ -26,5 +26,14 @@ class StringValue:
     def decode_top_level(self, data: bytes):
         self.value = data.decode("utf-8")
 
+    def set_native_object(self, value: Any):
+        if isinstance(value, bytes):
+            self.value = value.decode("utf-8")
+        else:
+            self.value = str(value)
+
+    def get_native_object(self) -> Any:
+        return self.value
+
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, StringValue) and self.value == other.value

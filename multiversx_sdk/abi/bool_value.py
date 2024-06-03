@@ -46,5 +46,11 @@ class BoolValue:
 
         raise ValueError(f"unexpected boolean value: {data}")
 
+    def set_native_object(self, value: Any):
+        self.value = bool(value)
+
+    def get_native_object(self) -> Any:
+        return self.value
+
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, BoolValue) and self.value == other.value
