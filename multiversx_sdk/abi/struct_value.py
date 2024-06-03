@@ -40,7 +40,11 @@ class StructValue:
                 raise ValueError(f"the native object is missing the field '{field.name}'")
 
             native_field_value = native_dict[field.name]
-            field.set_native_object(native_field_value)
+
+            try:
+                field.set_native_object(native_field_value)
+            except Exception as e:
+                raise ValueError(f"cannot set native object for field '{field.name}' of struct, because of: {e}")
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, StructValue) and self.fields == other.fields

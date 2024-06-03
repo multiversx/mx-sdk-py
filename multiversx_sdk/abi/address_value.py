@@ -43,5 +43,11 @@ class AddressValue:
         if len(pubkey) != PUBKEY_LENGTH:
             raise ValueError(f"public key (address) has invalid length: {len(pubkey)}")
 
+    def set_native_object(self, value: Any):
+        self.value = bytes(value)
+
+    def get_native_object(self) -> Any:
+        return self.value
+
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, AddressValue) and self.value == other.value

@@ -11,5 +11,8 @@ class Field:
     def set_native_object(self, value: Any):
         self.value.set_native_object(value)
 
+    def get_native_object(self) -> Any:
+        return self.value.get_native_object()
+
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Field) and self.name == other.name and self.value == other.value

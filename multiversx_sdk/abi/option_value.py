@@ -60,5 +60,21 @@ class OptionValue:
         reader = io.BytesIO(data_after_first_byte)
         self.value.decode_nested(reader)
 
+    def set_native_object(self, value: Any):
+        if self.value is None:
+            raise ValueError("placeholder value of option should be set before calling set_native_object")
+
+        if value is None:
+            self.value = None
+            return
+
+        self.value.set_native_object(value)
+
+    def get_native_object(self) -> Any:
+        if self.value is None:
+            return None
+
+        return self.value.get_native_object()
+
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, OptionValue) and self.value == other.value
