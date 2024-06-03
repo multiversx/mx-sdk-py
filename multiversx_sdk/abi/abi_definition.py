@@ -15,8 +15,15 @@ class ParameterDefinition:
             type=data.get("type", ""),
         )
 
-    def __str__(self):
+    def __repr__(self):
         return f"ParameterDefinition(name={self.name}, type={self.type})"
+
+    def __eq__(self, value: object) -> bool:
+        return (
+            isinstance(value, ParameterDefinition)
+            and self.name == value.name
+            and self.type == value.type
+        )
 
 
 class FieldDefinition:
@@ -35,6 +42,9 @@ class FieldDefinition:
             description=data.get("description", ""),
             type=data.get("type", "")
         )
+
+    def __repr__(self):
+        return f"FieldDefinition(name={self.name}, type={self.type})"
 
 
 class EnumVariantDefinition:
@@ -56,6 +66,9 @@ class EnumVariantDefinition:
             fields=fields
         )
 
+    def __repr__(self):
+        return f"EnumVariantDefinition(name={self.name}, discriminant={self.discriminant})"
+
 
 class EnumDefinition:
     def __init__(self,
@@ -73,6 +86,9 @@ class EnumDefinition:
             variants=variants
         )
 
+    def __repr__(self):
+        return f"EnumDefinition(name={self.name})"
+
 
 class StructDefinition:
     def __init__(self,
@@ -89,6 +105,9 @@ class StructDefinition:
             name=name,
             fields=fields
         )
+
+    def __repr__(self):
+        return f"StructDefinition(name={self.name})"
 
 
 class EventTopicDefinition:
@@ -108,6 +127,9 @@ class EventTopicDefinition:
             indexed=data["indexed"]
         )
 
+    def __repr__(self):
+        return f"EventTopicDefinition(name={self.name})"
+
 
 class EventDefinition:
     def __init__(self,
@@ -124,6 +146,9 @@ class EventDefinition:
             identifier=data["identifier"],
             inputs=inputs
         )
+
+    def __repr__(self):
+        return f"EventDefinition(identifier={self.identifier})"
 
 
 class EndpointDefinition:
@@ -155,7 +180,7 @@ class EndpointDefinition:
             only_owner=data.get("onlyOwner", False)
         )
 
-    def __str__(self):
+    def __repr__(self):
         return f"EndpointDefinition(name={self.name})"
 
 
@@ -201,7 +226,11 @@ class AbiDefinition:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'AbiDefinition':
         constructor = EndpointDefinition.from_dict(data["constructor"])
+        constructor.name = "constructor"
+
         upgrade_constructor = cls._get_endpoint_for_upgrade(data)
+        upgrade_constructor.name = "upgrade_constructor"
+
         endpoints = [EndpointDefinition.from_dict(item) for item in data["endpoints"]] if "endpoints" in data else []
         types = TypesDefinitions.from_dict(data.get("types", {}))
 

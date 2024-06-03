@@ -1,12 +1,9 @@
-from copy import deepcopy
 from pathlib import Path
-from typing import List
 
 from multiversx_sdk.abi.abi import Abi
-from multiversx_sdk.abi.abi_definition import AbiDefinition
-from multiversx_sdk.abi.enum_value import EnumValue
-from multiversx_sdk.abi.field import Field
-from multiversx_sdk.abi.small_int_values import U8Value
+from multiversx_sdk.abi.abi_definition import (AbiDefinition,
+                                               ParameterDefinition)
+from multiversx_sdk.abi.biguint_value import BigUIntValue
 
 testdata = Path(__file__).parent.parent / "testutils" / "testdata"
 
@@ -16,22 +13,32 @@ def test_abi():
     abi_definition = AbiDefinition.load(abi_path)
     abi = Abi(abi_definition)
 
+    assert abi.definition.constructor.name == "constructor"
+    assert abi.definition.constructor.inputs == [ParameterDefinition("initial_value", "BigUint")]
+    assert abi.definition.constructor.outputs == []
 
-if __name__ == "__main__":
-    test_abi()
+    assert abi.definition.upgrade_constructor.name == "upgrade_constructor"
+    assert abi.definition.upgrade_constructor.inputs == [ParameterDefinition("initial_value", "BigUint")]
+    assert abi.definition.upgrade_constructor.outputs == []
 
-    def action_fields_provider(discriminant: int) -> List[Field]:
-        if discriminant == 5:
-            return [
-                Field("foo", U8Value()),
-            ]
+    assert abi.definition.endpoints[0].name == "getSum"
+    assert abi.definition.endpoints[0].inputs == []
+    assert abi.definition.endpoints[0].outputs == [ParameterDefinition("", "BigUint")]
 
-        return []
+    assert abi.definition.endpoints[1].name == "add"
+    assert abi.definition.endpoints[1].inputs == [ParameterDefinition("value", "BigUint")]
+    assert abi.definition.endpoints[1].outputs == []
 
-    action = EnumValue(
-        discriminant=7,
-        fields_provider=action_fields_provider,
-        fields=[
-            Field("bar", U8Value()),
-        ]
-    )
+    assert abi.definition.types.enums == {}
+    assert abi.definition.types.structs == {}
+    assert abi.custom_types_prototypes_by_name == {}
+
+    assert abi.constructor_prototype.input_parameters == [BigUIntValue()]
+    assert abi.constructor_prototype.output_parameters == []
+    assert abi.upgrade_constructor_prototype.input_parameters == [BigUIntValue()]
+    assert abi.upgrade_constructor_prototype.output_parameters == []
+
+    assert abi.endpoints_prototypes_by_name["getSum"].input_parameters == []
+    assert abi.endpoints_prototypes_by_name["getSum"].output_parameters == [BigUIntValue()]
+    assert abi.endpoints_prototypes_by_name["add"].input_parameters == [BigUIntValue()]
+    assert abi.endpoints_prototypes_by_name["add"].output_parameters == []

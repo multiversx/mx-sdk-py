@@ -29,9 +29,10 @@ from multiversx_sdk.core.constants import ARGS_SEPARATOR
 
 class Abi:
     def __init__(self, definition: AbiDefinition) -> None:
+        self._type_formula_parser = TypeFormulaParser()
+        self._serializer = Serializer(parts_separator=ARGS_SEPARATOR)
+
         self.definition = definition
-        self.type_formula_parser = TypeFormulaParser()
-        self.serializer = Serializer(parts_separator=ARGS_SEPARATOR)
         self.custom_types_prototypes_by_name: Dict[str, Any] = {}
         self.endpoints_prototypes_by_name: Dict[str, EndpointPrototype] = {}
 
@@ -83,7 +84,7 @@ class Abi:
             fields_prototypes: List[Field] = []
 
             for field_definition in variant.fields:
-                type_formula = self.type_formula_parser.parse_expression(field_definition.type)
+                type_formula = self._type_formula_parser.parse_expression(field_definition.type)
                 field_value_prototype = self._create_prototype(type_formula)
                 field_prototype = Field(name=field_definition.name, value=field_value_prototype)
                 fields_prototypes.append(field_prototype)
@@ -96,7 +97,7 @@ class Abi:
         fields_prototypes: List[Field] = []
 
         for field_definition in struct_definition.fields:
-            type_formula = self.type_formula_parser.parse_expression(field_definition.type)
+            type_formula = self._type_formula_parser.parse_expression(field_definition.type)
             field_value_prototype = self._create_prototype(type_formula)
             field_prototype = Field(name=field_definition.name, value=field_value_prototype)
             fields_prototypes.append(field_prototype)
@@ -122,7 +123,7 @@ class Abi:
         return prototypes
 
     def _create_parameter_prototype(self, parameter: ParameterDefinition) -> Any:
-        type_formula = self.type_formula_parser.parse_expression(parameter.type)
+        type_formula = self._type_formula_parser.parse_expression(parameter.type)
         return self._create_prototype(type_formula)
 
     def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
@@ -149,13 +150,13 @@ class Abi:
 
             input_values_as_native_object_holders[i].set_native_object(arg)
 
-        input_values_encoded = self.serializer.serialize_to_parts(input_values)
+        input_values_encoded = self._serializer.serialize_to_parts(input_values)
         return input_values_encoded
 
     def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: List[bytes]) -> List[Any]:
         endpoint_prototype = self._get_endpoint_prototype(endpoint_name)
         output_values = deepcopy(endpoint_prototype.output_parameters)
-        self.serializer.deserialize_parts(encoded_values, output_values)
+        self._serializer.deserialize_parts(encoded_values, output_values)
 
         output_values_as_native_object_holders = cast(List[NativeObjectHolder], output_values)
         output_native_values = [value.get_native_object() for value in output_values_as_native_object_holders]
