@@ -125,11 +125,19 @@ class Abi:
         type_formula = self.type_formula_parser.parse_expression(parameter.type)
         return self._create_prototype(type_formula)
 
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
-        endpoint_prototype = self._get_endpoint_prototype(endpoint_name)
+    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        return self._do_encode_endpoint_input_parameters("constructor", self.constructor_prototype, values)
 
+    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        return self._do_encode_endpoint_input_parameters("upgrade", self.upgrade_constructor_prototype, values)
+
+    def encode_endpoint_input_parameters(self, endpoint: str, values: List[Any]) -> List[bytes]:
+        endpoint_prototype = self._get_endpoint_prototype(endpoint)
+        return self._do_encode_endpoint_input_parameters(endpoint, endpoint_prototype, values)
+
+    def _do_encode_endpoint_input_parameters(self, endpoint_name: str, endpoint_prototype: 'EndpointPrototype', values: List[Any]):
         if len(values) != len(endpoint_prototype.input_parameters):
-            raise ValueError(f"invalid value length: expected {len(endpoint_prototype.input_parameters)}, got {len(values)}")
+            raise ValueError(f"for {endpoint_name}, invalid value length: expected {len(endpoint_prototype.input_parameters)}, got {len(values)}")
 
         input_values = deepcopy(endpoint_prototype.input_parameters)
         input_values_as_native_object_holders = cast(List[NativeObjectHolder], input_values)
