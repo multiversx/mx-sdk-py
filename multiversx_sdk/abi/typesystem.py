@@ -18,7 +18,11 @@ def is_list_of_typed_values(values: Sequence[Any]) -> bool:
 
 
 def is_typed_value(value: Any) -> bool:
-    return isinstance(value, MultiValue) or isinstance(value, SingleValue)
+    return is_multi_value(value) or is_single_value(value)
+
+
+def is_single_value(value: Any) -> bool:
+    return isinstance(value, SingleValue)
 
 
 def is_multi_value(value: Any) -> bool:
