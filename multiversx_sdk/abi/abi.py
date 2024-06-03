@@ -11,7 +11,7 @@ from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.enum_value import EnumValue
-from multiversx_sdk.abi.field import Field
+from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.interface import NativeObjectHolder
 from multiversx_sdk.abi.list_value import ListValue
 from multiversx_sdk.abi.option_value import OptionValue

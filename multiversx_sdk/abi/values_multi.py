@@ -28,10 +28,7 @@ class VariadicValues:
         if not self.item_creator:
             raise ValueError("populating variadic values from a native object requires the item creator to be set")
 
-        try:
-            native_items = list(value)
-        except Exception:
-            raise ValueError("cannot convert native value to list")
+        native_items, _ = convert_native_value_to_list(value)
 
         self.items.clear()
 

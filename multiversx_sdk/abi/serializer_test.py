@@ -6,7 +6,7 @@ from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.enum_value import EnumValue
-from multiversx_sdk.abi.field import *
+from multiversx_sdk.abi.fields import *
 from multiversx_sdk.abi.list_value import ListValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.serializer import Serializer

@@ -2,7 +2,6 @@
 import io
 from typing import Any
 
-from multiversx_sdk.abi.field import *
 from multiversx_sdk.abi.interface import SingleValue
 
 

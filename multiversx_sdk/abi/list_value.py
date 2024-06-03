@@ -2,7 +2,8 @@ import io
 from typing import Any, Callable, List, Optional
 
 from multiversx_sdk.abi.interface import SingleValue
-from multiversx_sdk.abi.shared import decode_length, encode_length
+from multiversx_sdk.abi.shared import (convert_native_value_to_list,
+                                       decode_length, encode_length)
 
 
 class ListValue:
@@ -49,10 +50,7 @@ class ListValue:
         if not self.item_creator:
             raise ValueError("populating a list from a native object requires the item creator to be set")
 
-        try:
-            native_items = list(value)
-        except Exception:
-            raise ValueError("cannot convert native value to list")
+        native_items, _ = convert_native_value_to_list(value)
 
         self.items.clear()
 
