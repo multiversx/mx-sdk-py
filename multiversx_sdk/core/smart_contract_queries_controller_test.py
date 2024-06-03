@@ -1,11 +1,14 @@
 import base64
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
@@ -18,19 +21,20 @@ from multiversx_sdk.testutils.mock_network_provider import MockNetworkProvider
 
 
 class TestSmartContractQueriesController:
-    provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-    query_runner = QueryRunnerAdapter(network_provider=provider)
-    controller = SmartContractQueriesController(query_runner=query_runner)
+    testdata = Path(__file__).parent.parent / "testutils" / "testdata"
 
     def test_create_query_without_arguments(self):
+        query_runner = QueryRunnerAdapter(MockNetworkProvider())
+        controller = SmartContractQueriesController(query_runner)
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
 
-        query = self.controller.create_query(
+        query = controller.create_query(
             contract=contract,
             function=function,
             arguments=[]
         )
+
         assert query.contract == contract
         assert query.function == function
         assert query.arguments == []
@@ -38,23 +42,53 @@ class TestSmartContractQueriesController:
         assert query.value is None
 
     def test_create_query_with_arguments(self):
+        query_runner = QueryRunnerAdapter(MockNetworkProvider())
+        controller = SmartContractQueriesController(query_runner)
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
 
-        query = self.controller.create_query(
+        query = controller.create_query(
             contract=contract,
             function=function,
             arguments=[int.to_bytes(7, length=4, byteorder="big"), "abba".encode()]
         )
+
         assert query.contract == contract
         assert query.function == function
         assert query.arguments == [int.to_bytes(7, length=4, byteorder="big"), "abba".encode()]
         assert query.caller is None
         assert query.value is None
 
+    def test_create_query_with_arguments_with_abi(self):
+        query_runner = QueryRunnerAdapter(MockNetworkProvider())
+        abi = Abi.load(self.testdata / "lottery-esdt.abi.json")
+        controller = SmartContractQueriesController(query_runner, abi)
+        contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+        function = "getLotteryInfo"
+
+        query = controller.create_query(
+            contract=contract,
+            function=function,
+            arguments=["myLottery"]
+        )
+
+        query_with_typed = controller.create_query(
+            contract=contract,
+            function=function,
+            arguments=[StringValue("myLottery")]
+        )
+
+        assert query.contract == contract
+        assert query.function == function
+        assert query.arguments == [b"myLottery"]
+        assert query.caller is None
+        assert query.value is None
+
+        assert query_with_typed == query
+
     def test_run_query_with_mock_provider(self):
         network_provider = MockNetworkProvider()
-        query_runner = QueryRunnerAdapter(network_provider=network_provider)
+        query_runner = QueryRunnerAdapter(network_provider)
         controller = SmartContractQueriesController(query_runner)
 
         contract_query_response = ContractQueryResponse()
@@ -74,8 +108,7 @@ class TestSmartContractQueriesController:
         assert response.return_data_parts == ["abba".encode()]
 
     def test_parse_query_response(self):
-        network_provider = MockNetworkProvider()
-        query_runner = QueryRunnerAdapter(network_provider=network_provider)
+        query_runner = QueryRunnerAdapter(MockNetworkProvider())
         controller = SmartContractQueriesController(query_runner)
 
         response = SmartContractQueryResponse(
@@ -88,41 +121,42 @@ class TestSmartContractQueriesController:
         parsed = controller.parse_query_response(response)
         assert parsed == ["abba".encode()]
 
+    def test_parse_query_response_with_abi(self):
+        query_runner = QueryRunnerAdapter(MockNetworkProvider())
+        abi = Abi.load(self.testdata / "lottery-esdt.abi.json")
+        controller = SmartContractQueriesController(query_runner, abi)
+
+        response = SmartContractQueryResponse(
+            function="getLotteryInfo",
+            return_code="ok",
+            return_message="ok",
+            return_data_parts=[bytes.fromhex("0000000b6c75636b792d746f6b656e000000010100000000000000005fc2b9dbffffffff00000001640000000a140ec80fa7ee88000000")]
+        )
+
+        [lottery_info] = controller.parse_query_response(response)
+        assert lottery_info.token_identifier == "lucky-token"
+        assert lottery_info.ticket_price == 1
+        assert lottery_info.tickets_left == 0
+        assert lottery_info.deadline == 0x000000005fc2b9db
+        assert lottery_info.max_entries_per_user == 0xffffffff
+        assert lottery_info.prize_distribution == bytes([0x64])
+        assert lottery_info.prize_pool == 94720000000000000000000
+
     @pytest.mark.networkInteraction
     def test_run_query_on_network(self):
+        provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
+        query_runner = QueryRunnerAdapter(provider)
+        controller = SmartContractQueriesController(query_runner)
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
 
-        query = self.controller.create_query(
+        query = controller.create_query(
             contract=contract,
             function=function,
             arguments=[]
         )
 
-        query_response = self.controller.run_query(query)
+        query_response = controller.run_query(query)
         assert query_response.return_code == "ok"
         assert query_response.return_message == ""
         assert query_response.return_data_parts == [b'\x05']
-
-
-if __name__ == "__main__":
-    testdata = Path(__file__).parent.parent / "testutils" / "testdata"
-    abi_path = testdata / "multisig-full.abi.json"
-    abi_definition = AbiDefinition.load(abi_path)
-    abi = Abi(abi_definition)
-
-    provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-    query_runner = QueryRunnerAdapter(network_provider=provider)
-    controller = SmartContractQueriesController(query_runner=query_runner, abi=abi)
-
-    contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
-    function = "getSum"
-
-    query = controller.create_query(
-        contract=contract,
-        function=function,
-        arguments=[]
-    )
-
-    print(query.arguments)
-    print("Done")

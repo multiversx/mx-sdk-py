@@ -17,7 +17,7 @@ class IAbi(Protocol):
     def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
         ...
 
-    def decode_endpoint_output_parameters(self, function_name: str, encoded_values: List[bytes]) -> List[Any]:
+    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: List[bytes]) -> List[Any]:
         ...
 
 

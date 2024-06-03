@@ -133,9 +133,9 @@ class Abi:
     def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
         return self._do_encode_endpoint_input_parameters("upgrade", self.upgrade_constructor_prototype, values)
 
-    def encode_endpoint_input_parameters(self, endpoint: str, values: List[Any]) -> List[bytes]:
-        endpoint_prototype = self._get_endpoint_prototype(endpoint)
-        return self._do_encode_endpoint_input_parameters(endpoint, endpoint_prototype, values)
+    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
+        endpoint_prototype = self._get_endpoint_prototype(endpoint_name)
+        return self._do_encode_endpoint_input_parameters(endpoint_name, endpoint_prototype, values)
 
     def _do_encode_endpoint_input_parameters(self, endpoint_name: str, endpoint_prototype: 'EndpointPrototype', values: List[Any]):
         if len(values) != len(endpoint_prototype.input_parameters):
@@ -169,7 +169,7 @@ class Abi:
         type_prototype = self.custom_types_prototypes_by_name.get(type_name)
 
         if not type_prototype:
-            raise ValueError(f"custom type {type_name} not found")
+            raise ValueError(f"custom type '{type_name}' not found")
 
         return type_prototype
 
@@ -177,7 +177,7 @@ class Abi:
         endpoint_prototype = self.endpoints_prototypes_by_name.get(endpoint_name)
 
         if not endpoint_prototype:
-            raise ValueError(f"endpoint {endpoint_name} not found")
+            raise ValueError(f"endpoint '{endpoint_name}' not found")
 
         return endpoint_prototype
 
