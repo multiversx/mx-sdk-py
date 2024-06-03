@@ -190,24 +190,39 @@ class TypesDefinitions:
 class AbiDefinition:
     def __init__(self,
                  constructor: EndpointDefinition,
+                 upgrade_constructor: EndpointDefinition,
                  endpoints: List[EndpointDefinition],
                  types: TypesDefinitions) -> None:
         self.constructor = constructor
+        self.upgrade_constructor = upgrade_constructor
         self.endpoints = endpoints
         self.types = types
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'AbiDefinition':
         constructor = EndpointDefinition.from_dict(data["constructor"])
-        # TODO upgrade_constructor = EndpointDefinition.from_dict(data["upgradeConstructor"]) if "upgradeConstructor" in data else None
+        upgrade_constructor = cls._get_endpoint_for_upgrade(data)
         endpoints = [EndpointDefinition.from_dict(item) for item in data["endpoints"]] if "endpoints" in data else []
         types = TypesDefinitions.from_dict(data.get("types", {}))
 
         return cls(
             constructor=constructor,
+            upgrade_constructor=upgrade_constructor,
             endpoints=endpoints,
             types=types
         )
+
+    @classmethod
+    def _get_endpoint_for_upgrade(cls, data: Dict[str, Any]) -> EndpointDefinition:
+        if "upgradeConstructor" in data:
+            return EndpointDefinition.from_dict(data["upgradeConstructor"])
+
+        # Fallback for contracts written using a not-old, but not-new Rust framework:
+        if "upgrade" in data["endpoints"]:
+            return EndpointDefinition.from_dict(data["endpoints"]["upgrade"])
+
+        # Fallback for contracts written using an old Rust framework:
+        return EndpointDefinition.from_dict(data["constructor"])
 
     @classmethod
     def load(cls, path: Path) -> 'AbiDefinition':

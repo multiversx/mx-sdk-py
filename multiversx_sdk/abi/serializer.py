@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Sequence
 
 from multiversx_sdk.abi.codec import Codec
 from multiversx_sdk.abi.parts import PartsHolder
@@ -18,16 +18,16 @@ class Serializer:
         self.parts_separator = parts_separator
         self.codec = Codec()
 
-    def serialize(self, input_values: List[Any]) -> str:
+    def serialize(self, input_values: Sequence[Any]) -> str:
         parts = self.serialize_to_parts(input_values)
         return self._encode_parts(parts)
 
-    def serialize_to_parts(self, input_values: List[Any]) -> List[bytes]:
+    def serialize_to_parts(self, input_values: Sequence[Any]) -> List[bytes]:
         parts_holder = PartsHolder([])
         self._do_serialize(parts_holder, input_values)
         return parts_holder.get_parts()
 
-    def _do_serialize(self, parts_holder: PartsHolder, input_values: List[Any]):
+    def _do_serialize(self, parts_holder: PartsHolder, input_values: Sequence[Any]):
         for i, value in enumerate(input_values):
             if value is None:
                 raise ValueError("cannot serialize nil value")
@@ -56,15 +56,15 @@ class Serializer:
         data = self.codec.encode_top_level(value)
         parts_holder.append_to_last_part(data)
 
-    def deserialize(self, data: str, output_values: List[Any]):
+    def deserialize(self, data: str, output_values: Sequence[Any]):
         parts = self._decode_into_parts(data)
         self.deserialize_parts(parts, output_values)
 
-    def deserialize_parts(self, parts: List[bytes], output_values: List[Any]):
+    def deserialize_parts(self, parts: Sequence[bytes], output_values: Sequence[Any]):
         parts_holder = PartsHolder(parts)
         self._do_deserialize(parts_holder, output_values)
 
-    def _do_deserialize(self, parts_holder: PartsHolder, output_values: List[Any]):
+    def _do_deserialize(self, parts_holder: PartsHolder, output_values: Sequence[Any]):
         for i, value in enumerate(output_values):
             if value is None:
                 raise ValueError("cannot deserialize into nil value")

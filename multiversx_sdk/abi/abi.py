@@ -40,12 +40,21 @@ class Abi:
         for struct_type in definition.types.structs:
             self.custom_types_prototypes_by_name[struct_type] = self._create_custom_type_prototype(struct_type)
 
+        self.constructor_prototype = EndpointPrototype(
+            input_parameters=self._create_endpoint_input_prototypes(definition.constructor),
+            output_parameters=self._create_endpoint_output_prototypes(definition.constructor)
+        )
+
+        self.upgrade_constructor_prototype = EndpointPrototype(
+            input_parameters=self._create_endpoint_input_prototypes(definition.upgrade_constructor),
+            output_parameters=self._create_endpoint_output_prototypes(definition.upgrade_constructor)
+        )
+
         for endpoint in definition.endpoints:
             input_prototype = self._create_endpoint_input_prototypes(endpoint)
             output_prototype = self._create_endpoint_output_prototypes(endpoint)
 
             endpoint_prototype = EndpointPrototype(
-                name=endpoint.name,
                 input_parameters=input_prototype,
                 output_parameters=output_prototype
             )
@@ -198,7 +207,6 @@ class Abi:
 
 
 class EndpointPrototype:
-    def __init__(self, name: str, input_parameters: List[Any], output_parameters: List[Any]) -> None:
-        # self.name = name
+    def __init__(self, input_parameters: List[Any], output_parameters: List[Any]) -> None:
         self.input_parameters = input_parameters
         self.output_parameters = output_parameters

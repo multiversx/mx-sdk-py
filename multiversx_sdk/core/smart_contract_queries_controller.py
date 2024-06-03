@@ -35,12 +35,12 @@ class SmartContractQueriesController:
             caller: Optional[str] = None,
             value: Optional[int] = None
     ) -> SmartContractQuery:
-        parepared_arguments = self._encode_arguments(function, arguments)
+        prepared_arguments = self._encode_arguments(function, arguments)
 
         return SmartContractQuery(
             contract=contract,
             function=function,
-            arguments=parepared_arguments,
+            arguments=prepared_arguments,
             caller=caller,
             value=value
         )
