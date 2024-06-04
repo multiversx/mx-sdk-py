@@ -2,8 +2,16 @@ import io
 from typing import Any, Protocol, runtime_checkable
 
 
+class NativeObjectHolder(Protocol):
+    def set_payload(self, value: Any):
+        ...
+
+    def get_payload(self) -> Any:
+        ...
+
+
 @runtime_checkable
-class SingleValue(Protocol):
+class SingleValue(NativeObjectHolder, Protocol):
     def encode_nested(self, writer: io.BytesIO):
         ...
 
@@ -14,12 +22,4 @@ class SingleValue(Protocol):
         ...
 
     def decode_top_level(self, data: bytes):
-        ...
-
-
-class NativeObjectHolder(Protocol):
-    def set_native_object(self, value: Any):
-        ...
-
-    def get_native_object(self) -> Any:
         ...

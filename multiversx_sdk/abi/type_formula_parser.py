@@ -12,80 +12,95 @@ class TypeFormulaParser:
 
     def parse_expression(self, expression: str) -> TypeFormula:
         expression = expression.strip()
-
-        tokens = self._tokenize_expression(expression)
-        tokens = [token for token in tokens if token != TypeFormulaParser.COMMA]
-
+        tokens = [token for token in self.tokenize_expression(expression) if token != self.COMMA]
         stack: List[Any] = []
 
         for token in tokens:
-            if token in TypeFormulaParser.PUNCTUATION:
-                if token == TypeFormulaParser.END_TYPE_PARAMETERS:
-                    type_parameters: List[TypeFormula] = []
-
-                    while True:
-                        if not stack:
-                            raise Exception("Badly specified type parameters.")
-
-                        if stack[-1] == TypeFormulaParser.BEGIN_TYPE_PARAMETERS:
-                            break
-
-                        item = stack.pop()
-                        if isinstance(item, TypeFormula):
-                            type_formula = item
-                        else:
-                            type_formula = TypeFormula(item, [])
-
-                        type_parameters.append(type_formula)
-
-                    stack.pop()  # pop "<" symbol
-                    type_name = stack.pop()
-                    type_formula = TypeFormula(type_name, list(reversed(type_parameters)))
+            if self.is_punctuation(token):
+                if self.is_end_of_type_parameters(token):
+                    type_formula = self.acquire_type_with_parameters(stack)
                     stack.append(type_formula)
-                elif token == TypeFormulaParser.BEGIN_TYPE_PARAMETERS:
-                    # The symbol is pushed as a simple string,
-                    # as it will never be interpreted, anyway.
+                elif self.is_beginning_of_type_parameters(token):
+                    # This symbol is pushed as a simple string.
                     stack.append(token)
-                elif token == TypeFormulaParser.COMMA:
-                    # We simply ignore commas
-                    pass
                 else:
-                    raise Exception(f"Unexpected token (punctuation): {token}.")
+                    raise ValueError(f"unexpected token (punctuation): {token}")
             else:
                 # It's a type name. We push it as a simple string.
                 stack.append(token)
 
         if len(stack) != 1:
-            raise Exception(f"Unexpected stack length at end of parsing: {len(stack)}.")
-        if stack[0] in TypeFormulaParser.PUNCTUATION:
-            raise Exception(f"Unexpected root element.")
+            raise ValueError(f"unexpected stack length at end of parsing: {len(stack)}")
+        if stack[0] in self.PUNCTUATION:
+            raise ValueError("unexpected root element")
 
-        if isinstance(stack[0], str):
-            # Expression contained a simple, non-generic type
-            return TypeFormula(stack[0], [])
-        elif isinstance(stack[0], TypeFormula):
-            return stack[0]
+        item = stack[0]
+
+        if isinstance(item, TypeFormula):
+            return item
+        elif isinstance(item, str):
+            # Expression contained a simple, non-generic type.
+            return TypeFormula(item, [])
         else:
-            raise Exception(f"Unexpected item on stack: {stack[0]}")
+            raise ValueError(f"Unexpected item on stack: {item}")
 
-    def _tokenize_expression(self, expression: str) -> List[str]:
+    def tokenize_expression(self, expression: str) -> List[str]:
         tokens: List[str] = []
         current_token = ""
 
-        for i in range(len(expression)):
-            character = expression[i]
-
-            if character not in TypeFormulaParser.PUNCTUATION:
-                # Non-punctuation character
-                current_token += character
-            else:
+        for character in expression:
+            if self.is_punctuation(character):
                 if current_token:
+                    # Retain current token
                     tokens.append(current_token.strip())
+                    # Reset current token
                     current_token = ""
                 # Punctuation character
                 tokens.append(character)
+            else:
+                current_token += character
 
         if current_token:
+            # Retain the last token (if any).
             tokens.append(current_token.strip())
 
         return tokens
+
+    def acquire_type_with_parameters(self, stack: List[Any]) -> TypeFormula:
+        type_parameters = self.acquire_type_parameters(stack)
+        type_name = stack.pop()
+        type_formula = TypeFormula(type_name, type_parameters[::-1])
+        return type_formula
+
+    def acquire_type_parameters(self, stack: List[Any]) -> List[TypeFormula]:
+        type_parameters: List[TypeFormula] = []
+
+        while True:
+            item = stack.pop()
+
+            if item is None:
+                raise ValueError("badly specified type parameters")
+
+            if self.is_beginning_of_type_parameters(item):
+                # We've acquired all type parameters.
+                break
+
+            if isinstance(item, TypeFormula):
+                # Type parameter is a previously-acquired type.
+                type_parameters.append(item)
+            elif isinstance(item, str):
+                # Type parameter is a simple, non-generic type.
+                type_parameters.append(TypeFormula(item, []))
+            else:
+                raise ValueError(f"unexpected type parameter object in stack: {item}")
+
+        return type_parameters
+
+    def is_punctuation(self, token: str) -> bool:
+        return token in self.PUNCTUATION
+
+    def is_end_of_type_parameters(self, token: str) -> bool:
+        return token == self.END_TYPE_PARAMETERS
+
+    def is_beginning_of_type_parameters(self, token: str) -> bool:
+        return token == self.BEGIN_TYPE_PARAMETERS

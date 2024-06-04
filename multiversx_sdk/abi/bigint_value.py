@@ -40,5 +40,14 @@ class BigIntValue:
     def _signed_from_bytes(self, data: bytes) -> int:
         return int.from_bytes(data, byteorder="big", signed=True)
 
+    def set_payload(self, value: Any):
+        self.value = int(value)
+
+    def get_payload(self) -> Any:
+        return self.value
+
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, BigIntValue) and self.value == other.value
+
+    def __int__(self):
+        return self.value

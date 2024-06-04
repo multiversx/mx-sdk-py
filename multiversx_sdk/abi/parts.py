@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Sequence
 
 
 class PartsHolder:
@@ -9,13 +9,13 @@ class PartsHolder:
     Both functionalities (building and reading) are kept within this single abstraction, for convenience.
     """
 
-    def __init__(self, parts: List[bytes]):
+    def __init__(self, parts: Sequence[bytes]):
         """
         Creates a new PartsHolder, which has the given parts.
         Focus is on the first part, if any, or "beyond the last part" otherwise.
         """
 
-        self.parts = parts
+        self.parts = list(parts)
         self.focused_part_index = 0
 
     def get_parts(self) -> List[bytes]:
