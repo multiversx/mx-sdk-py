@@ -68,3 +68,6 @@ class ListValue:
             and self.items == other.items
             and self.item_creator == other.item_creator
         )
+
+    def __iter__(self) -> Any:
+        return iter(self.items)

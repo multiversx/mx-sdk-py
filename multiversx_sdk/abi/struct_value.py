@@ -50,3 +50,7 @@ class StructValue:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, StructValue) and self.fields == other.fields
+
+    def __iter__(self):
+        for field in self.fields:
+            yield (field.name, field.value)

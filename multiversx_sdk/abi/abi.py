@@ -23,7 +23,6 @@ from multiversx_sdk.abi.token_identifier_value import TokenIdentifierValue
 from multiversx_sdk.abi.tuple_value import TupleValue
 from multiversx_sdk.abi.type_formula import TypeFormula
 from multiversx_sdk.abi.type_formula_parser import TypeFormulaParser
-from multiversx_sdk.abi.typesystem import is_typed_value
 from multiversx_sdk.abi.values_multi import OptionalValue, VariadicValues
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
 
@@ -146,11 +145,6 @@ class Abi:
 
         # Populate the input values with the provided arguments
         for i, arg in enumerate(values):
-            if is_typed_value(arg):
-                # Since the argument is already a typed value, we can directly use it.
-                input_values[i] = arg
-                continue
-
             input_values_as_native_object_holders[i].set_native_object(arg)
 
         input_values_encoded = self._serializer.serialize_to_parts(input_values)

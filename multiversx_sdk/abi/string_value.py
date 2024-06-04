@@ -37,3 +37,9 @@ class StringValue:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, StringValue) and self.value == other.value
+
+    def __str__(self) -> str:
+        return self.value
+
+    def __bytes__(self) -> bytes:
+        return self.value.encode("utf-8")

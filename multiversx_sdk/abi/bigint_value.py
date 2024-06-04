@@ -48,3 +48,6 @@ class BigIntValue:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, BigIntValue) and self.value == other.value
+
+    def __int__(self):
+        return self.value

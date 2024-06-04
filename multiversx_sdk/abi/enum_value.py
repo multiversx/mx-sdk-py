@@ -94,3 +94,9 @@ class EnumValue:
             and self.discriminant == other.discriminant
             and self.fields == other.fields
         )
+
+    def __iter__(self):
+        yield ("__discriminant__", self.discriminant)
+
+        for field in self.fields:
+            yield (field.name, field.value)

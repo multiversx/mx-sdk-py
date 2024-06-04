@@ -68,6 +68,10 @@ class OptionValue:
             self.value = None
             return
 
+        if isinstance(value, OptionValue):
+            self.value = value.value
+            return
+
         self.value.set_native_object(value)
 
     def get_native_object(self) -> Any:

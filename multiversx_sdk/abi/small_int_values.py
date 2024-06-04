@@ -45,6 +45,9 @@ class SmallUIntValue:
     def get_native_object(self) -> Any:
         return self.value
 
+    def __int__(self):
+        return self.value
+
 
 class SmallIntValue:
     def __init__(self, num_bytes: int, value: int = 0) -> None:
@@ -82,6 +85,9 @@ class SmallIntValue:
         self.value = int(value)
 
     def get_native_object(self) -> Any:
+        return self.value
+
+    def __int__(self):
         return self.value
 
 

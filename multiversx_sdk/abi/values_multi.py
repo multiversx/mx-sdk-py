@@ -7,9 +7,6 @@ class MultiValue:
     def __init__(self, items: List[Any]):
         self.items = items
 
-    def __eq__(self, other: Any) -> bool:
-        return isinstance(other, MultiValue) and self.items == other.items
-
     def set_native_object(self, value: Any):
         native_items, _ = convert_native_value_to_list(value)
 
@@ -21,6 +18,12 @@ class MultiValue:
 
     def get_native_object(self) -> Any:
         return [item.get_native_object() for item in self.items]
+
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, MultiValue) and self.items == other.items
+
+    def __iter__(self) -> Any:
+        return iter(self.items)
 
 
 class VariadicValues:
@@ -52,6 +55,9 @@ class VariadicValues:
             and self.items == other.items
             and self.item_creator == other.item_creator
         )
+
+    def __iter__(self) -> Any:
+        return iter(self.items)
 
 
 class OptionalValue:

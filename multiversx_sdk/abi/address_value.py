@@ -51,3 +51,6 @@ class AddressValue:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, AddressValue) and self.value == other.value
+
+    def __bytes__(self) -> bytes:
+        return self.value

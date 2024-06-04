@@ -54,3 +54,6 @@ class BoolValue:
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, BoolValue) and self.value == other.value
+
+    def __bool__(self) -> bool:
+        return self.value
