@@ -20,14 +20,14 @@ class SmartContractQueriesController:
         function: str,
         arguments: List[bytes],
         caller: Optional[str] = None,
-        value: Optional[int] = None,
+        value: Optional[int] = None
     ):
         query = self.create_query(
             contract=contract,
             function=function,
             arguments=arguments,
             caller=caller,
-            value=value,
+            value=value
         )
 
         query_response = self.run_query(query)
