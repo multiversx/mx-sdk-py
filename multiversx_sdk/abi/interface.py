@@ -3,10 +3,10 @@ from typing import Any, Protocol, runtime_checkable
 
 
 class NativeObjectHolder(Protocol):
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         ...
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         ...
 
 

@@ -46,7 +46,7 @@ class ListValue:
         new_item.decode_nested(reader)
         self.items.append(new_item)
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         if not self.item_creator:
             raise ValueError("populating a list from a native object requires the item creator to be set")
 
@@ -56,11 +56,11 @@ class ListValue:
 
         for native_item in native_items:
             item = self.item_creator()
-            item.set_native_object(native_item)
+            item.set_payload(native_item)
             self.items.append(item)
 
-    def get_native_object(self) -> Any:
-        return [item.get_native_object() for item in self.items]
+    def get_payload(self) -> Any:
+        return [item.get_payload() for item in self.items]
 
     def __eq__(self, other: Any) -> bool:
         return (

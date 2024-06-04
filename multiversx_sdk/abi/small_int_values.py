@@ -39,10 +39,10 @@ class SmallUIntValue:
         except OverflowError:
             raise ValueError(f"decoded value is too large or invalid (does not fit into {self._num_bytes} byte(s)): {self.value}")
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         self.value = int(value)
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         return self.value
 
     def __int__(self):
@@ -81,10 +81,10 @@ class SmallIntValue:
         except OverflowError:
             raise ValueError(f"decoded value is too large or invalid (does not fit into {self._num_bytes} byte(s)): {self.value}")
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         self.value = int(value)
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         return self.value
 
     def __int__(self):

@@ -40,10 +40,10 @@ class BigIntValue:
     def _signed_from_bytes(self, data: bytes) -> int:
         return int.from_bytes(data, byteorder="big", signed=True)
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         self.value = int(value)
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         return self.value
 
     def __eq__(self, other: Any) -> bool:

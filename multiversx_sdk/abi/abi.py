@@ -145,7 +145,7 @@ class Abi:
 
         # Populate the input values with the provided arguments
         for i, arg in enumerate(values):
-            input_values_as_native_object_holders[i].set_native_object(arg)
+            input_values_as_native_object_holders[i].set_payload(arg)
 
         input_values_encoded = self._serializer.serialize_to_parts(input_values)
         return input_values_encoded
@@ -156,7 +156,7 @@ class Abi:
         self._serializer.deserialize_parts(encoded_values, output_values)
 
         output_values_as_native_object_holders = cast(List[NativeObjectHolder], output_values)
-        output_native_values = [value.get_native_object() for value in output_values_as_native_object_holders]
+        output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
         return output_native_values
 
     def _get_custom_type_prototype(self, type_name: str) -> Any:

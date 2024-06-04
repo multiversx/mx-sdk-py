@@ -52,7 +52,7 @@ class EnumValue:
         reader = io.BytesIO(data)
         self.decode_nested(reader)
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         if not self.fields_provider:
             raise ValueError("populating an enum from a native object requires the fields provider to be set")
 
@@ -78,11 +78,11 @@ class EnumValue:
 
         raise ValueError("cannot set native object for enum (should be either a dictionary or a list)")
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         obj = SimpleNamespace()
 
         for field in self.fields:
-            setattr(obj, field.name, field.get_native_object())
+            setattr(obj, field.name, field.get_payload())
 
         setattr(obj, "__discriminant__", self.discriminant)
 

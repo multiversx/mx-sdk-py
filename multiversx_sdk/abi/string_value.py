@@ -26,13 +26,13 @@ class StringValue:
     def decode_top_level(self, data: bytes):
         self.value = data.decode("utf-8")
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         if isinstance(value, bytes):
             self.value = value.decode("utf-8")
         else:
             self.value = str(value)
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         return self.value
 
     def __eq__(self, other: Any) -> bool:

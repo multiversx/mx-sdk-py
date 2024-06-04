@@ -27,7 +27,7 @@ class StructValue:
         reader = io.BytesIO(data)
         self.decode_nested(reader)
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         native_dictionary, ok = convert_native_value_to_dictionary(value, raise_on_failure=False)
         if ok:
             set_fields_from_native_dictionary(self.fields, native_dictionary)
@@ -40,11 +40,11 @@ class StructValue:
 
         raise ValueError("cannot set native object for struct (should be either a dictionary or a list)")
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         obj = SimpleNamespace()
 
         for field in self.fields:
-            setattr(obj, field.name, field.get_native_object())
+            setattr(obj, field.name, field.get_payload())
 
         return obj
 

@@ -9,11 +9,11 @@ class Field:
         self.name = name
         self.value = value
 
-    def set_native_object(self, value: Any):
-        self.value.set_native_object(value)
+    def set_payload(self, value: Any):
+        self.value.set_payload(value)
 
-    def get_native_object(self) -> Any:
-        return self.value.get_native_object()
+    def get_payload(self) -> Any:
+        return self.value.get_payload()
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Field) and self.name == other.name and self.value == other.value
@@ -43,7 +43,7 @@ def set_fields_from_native_dictionary(fields: List[Field], native_dictionary: Di
         native_field_value = native_dictionary[field.name]
 
         try:
-            field.set_native_object(native_field_value)
+            field.set_payload(native_field_value)
         except Exception as error:
             raise ValueError(f"cannot set native object for field '{field.name}', because of: {error}")
 
@@ -56,6 +56,6 @@ def set_fields_from_native_list(fields: List[Field], native_list: List[Any]):
         native_field_value = native_list[index]
 
         try:
-            field.set_native_object(native_field_value)
+            field.set_payload(native_field_value)
         except Exception as error:
             raise ValueError(f"cannot set native object for field '{field.name}', because of: {error}")

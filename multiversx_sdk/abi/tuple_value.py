@@ -30,21 +30,21 @@ class TupleValue:
         reader = io.BytesIO(data)
         self.decode_nested(reader)
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
         if ok:
             if len(self.fields) != len(native_list):
                 raise ValueError(f"the number of fields ({len(self.fields)}) does not match the number of provided native values ({len(native_list)})")
 
             for i, field in enumerate(self.fields):
-                field.set_native_object(native_list[i])
+                field.set_payload(native_list[i])
 
             return
 
         raise ValueError("cannot set native object for tuple (should be either a tuple or a list)")
 
-    def get_native_object(self) -> Any:
-        native_values = [field.get_native_object() for field in self.fields]
+    def get_payload(self) -> Any:
+        native_values = [field.get_payload() for field in self.fields]
         return tuple(native_values)
 
     def __eq__(self, other: Any) -> bool:

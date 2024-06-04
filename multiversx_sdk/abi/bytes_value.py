@@ -26,13 +26,13 @@ class BytesValue:
     def decode_top_level(self, data: bytes):
         self.value = data
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         if isinstance(value, str):
             self.value = bytes(value, "utf-8")
         else:
             self.value = bytes(value)
 
-    def get_native_object(self) -> Any:
+    def get_payload(self) -> Any:
         return self.value
 
     def __eq__(self, other: Any) -> bool:

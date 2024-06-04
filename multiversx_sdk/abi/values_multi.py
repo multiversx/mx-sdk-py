@@ -7,17 +7,17 @@ class MultiValue:
     def __init__(self, items: List[Any]):
         self.items = items
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         native_items, _ = convert_native_value_to_list(value)
 
         if len(value) != len(self.items):
             raise ValueError(f"for multi-value, expected {len(self.items)} items, got {len(value)}")
 
         for item, native_item in zip(self.items, native_items):
-            item.set_native_object(native_item)
+            item.set_payload(native_item)
 
-    def get_native_object(self) -> Any:
-        return [item.get_native_object() for item in self.items]
+    def get_payload(self) -> Any:
+        return [item.get_payload() for item in self.items]
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, MultiValue) and self.items == other.items
@@ -33,7 +33,7 @@ class VariadicValues:
         self.items = items or []
         self.item_creator = item_creator
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         if not self.item_creator:
             raise ValueError("populating variadic values from a native object requires the item creator to be set")
 
@@ -43,11 +43,11 @@ class VariadicValues:
 
         for native_item in native_items:
             item = self.item_creator()
-            item.set_native_object(native_item)
+            item.set_payload(native_item)
             self.items.append(item)
 
-    def get_native_object(self) -> Any:
-        return [item.get_native_object() for item in self.items]
+    def get_payload(self) -> Any:
+        return [item.get_payload() for item in self.items]
 
     def __eq__(self, other: Any) -> bool:
         return (
@@ -64,21 +64,25 @@ class OptionalValue:
     def __init__(self, value: Any = None):
         self.value = value
 
-    def set_native_object(self, value: Any):
+    def set_payload(self, value: Any):
         if value is None:
             self.value = None
             return
 
         if self.value is None:
-            raise ValueError("placeholder value of optional should be set before calling set_native_object")
+            raise ValueError("placeholder value of optional should be set before calling set_payload")
 
-        self.value.set_native_object(value)
+        if isinstance(value, OptionalValue):
+            self.value = value.value
+            return
 
-    def get_native_object(self) -> Any:
+        self.value.set_payload(value)
+
+    def get_payload(self) -> Any:
         if self.value is None:
             return None
 
-        return self.value.get_native_object()
+        return self.value.get_payload()
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, OptionalValue) and self.value == other.value
