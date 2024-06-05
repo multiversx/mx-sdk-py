@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, Optional, Protocol
+from typing import Any, Dict, Optional, Protocol, Sequence
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.network_providers.contract_results import ContractResults
@@ -28,6 +28,11 @@ class ITransaction(Protocol):
     guardian: str
     signature: bytes
     guardian_signature: bytes
+    relayer: str
+
+    @property
+    def inner_transactions(self) -> Sequence["ITransaction"]:
+        ...
 
 
 class TransactionOnNetwork:

@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, Sequence
 
 from multiversx_sdk.converters.errors import MissingFieldError
 from multiversx_sdk.core.interfaces import ITransaction
@@ -33,7 +33,9 @@ class TransactionsConverter:
             "options": transaction.options,
             "guardian": transaction.guardian,
             "signature": self._value_to_hex_or_empty(transaction.signature),
-            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature)
+            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature),
+            "relayer": transaction.relayer,
+            "innerTransactions": [self.transaction_to_dictionary(inner_tx) for inner_tx in transaction.inner_transactions]
         }
 
     def dictionary_to_transaction(self, dictionary: Dict[str, Any]) -> Transaction:
@@ -54,7 +56,9 @@ class TransactionsConverter:
             version=dictionary.get("version", None),
             options=dictionary.get("options", None),
             signature=self._bytes_from_hex(dictionary.get("signature", "")),
-            guardian_signature=self._bytes_from_hex(dictionary.get("guardianSignature", ""))
+            guardian_signature=self._bytes_from_hex(dictionary.get("guardianSignature", "")),
+            relayer=dictionary.get("relayer", None),
+            inner_transactions=dictionary.get("innerTransactions", None),
         )
 
     def transaction_on_network_to_outcome(self, transaction_on_network: TransactionOnNetwork) -> TransactionOutcome:
