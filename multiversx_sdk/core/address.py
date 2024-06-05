@@ -101,8 +101,6 @@ class Address:
     # this will be removed in v1.0.0; it's here for compatibility reasons with the deprecated transaction builders
     # the transaction builders will also be removed in v1.0.0
     def serialize(self) -> bytes:
-        """This method is deprecated and will soon be removed. Also displays a deprecation warning when used."""
-        logger.warning("The `serialize()` method is deprecated and will soon be removed")
         return self.get_public_key()
 
     def __bytes__(self) -> bytes:

@@ -6,6 +6,7 @@ import pytest
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
+from multiversx_sdk.core.codec import encode_unsigned_number
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
@@ -47,12 +48,12 @@ class TestSmartContractQueriesController:
         query = controller.create_query(
             contract=contract,
             function=function,
-            arguments=[int.to_bytes(7, length=4, byteorder="big"), "abba".encode()]
+            arguments=[encode_unsigned_number(7), "abba".encode()]
         )
 
         assert query.contract == contract
         assert query.function == function
-        assert query.arguments == [int.to_bytes(7, length=4, byteorder="big"), "abba".encode()]
+        assert query.arguments == [encode_unsigned_number(7), "abba".encode()]
         assert query.caller is None
         assert query.value is None
 
@@ -157,3 +158,19 @@ class TestSmartContractQueriesController:
         assert query_response.return_code == "ok"
         assert query_response.return_message == ""
         assert query_response.return_data_parts == [b'\x05']
+
+    @pytest.mark.networkInteraction
+    def test_query_on_network(self):
+        provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
+        query_runner = QueryRunnerAdapter(provider)
+        controller = SmartContractQueriesController(query_runner)
+        contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+        function = "getSum"
+
+        return_data_parts = controller.query(
+            contract=contract,
+            function=function,
+            arguments=[]
+        )
+
+        assert return_data_parts == [b'\x05']

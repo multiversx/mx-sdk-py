@@ -4,6 +4,7 @@ from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.typesystem import (is_list_of_bytes,
                                            is_list_of_typed_values)
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
+from multiversx_sdk.core.errors import SmartContractQueryError
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 
@@ -26,6 +27,31 @@ class SmartContractQueriesController:
         self.query_runner = query_runner
         self.abi = abi
         self.serializer = Serializer(parts_separator=ARGS_SEPARATOR)
+
+    def query(
+        self,
+        contract: str,
+        function: str,
+        arguments: List[bytes],
+        caller: Optional[str] = None,
+        value: Optional[int] = None
+    ):
+        query = self.create_query(
+            contract=contract,
+            function=function,
+            arguments=arguments,
+            caller=caller,
+            value=value
+        )
+
+        query_response = self.run_query(query)
+        self._raise_for_status(query_response)
+        return self.parse_query_response(query_response)
+
+    def _raise_for_status(self, query_response: SmartContractQueryResponse):
+        is_ok = query_response.return_code == "ok"
+        if not is_ok:
+            raise SmartContractQueryError(query_response.return_code, query_response.return_message)
 
     def create_query(
             self,
