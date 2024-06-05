@@ -39,7 +39,6 @@ class MainFacade:
         self.provider = network_provider
         self.chain_id = self.provider.get_network_config().chain_id
         self.factories_config = TransactionsFactoryConfig(self.chain_id)
-        self.signer: Union[UserSigner, None] = None
 
     def load_signer(self, wallet: Path, password: Optional[str] = None, index: Optional[int] = None) -> UserSigner:
         if wallet.suffix == ".pem":
@@ -132,6 +131,17 @@ class MainFacade:
         tx_parser = SmartContractTransactionsOutcomeParser()
         return tx_parser.parse_deploy(transaction_outcome)
 
+    def create_transaction_for_contract_call(self,
+                                             sender: Address,
+                                             contract: Address,
+                                             function: str,
+                                             arguments: List[Any],
+                                             gas_limit: int,
+                                             native_transfer_amount: Optional[int] = 0,
+                                             token_transfers: Optional[List[TokenTransfer]] = None
+                                             ) -> Transaction:
+        pass
+
     def query_contract(self,
                        contract: Address,
                        function: str,
@@ -139,10 +149,16 @@ class MainFacade:
                        abi: Optional[Any] = None,
                        caller: Optional[Address] = None,
                        value: Optional[int] = None,
-                       block_nonce: Optional[int] = None
                        ) -> List[Any]:
         query_runner = QueryRunnerAdapter(self.provider)
-        query = SmartContractQueriesController(query_runner)
+        controller = SmartContractQueriesController(query_runner)
+        return controller.query(
+            contract=contract.to_bech32(),
+            function=function,
+            arguments=arguments,
+            caller=caller.to_bech32() if caller else None,
+            value=value
+        )
 
 
 class ProviderWrapper:
