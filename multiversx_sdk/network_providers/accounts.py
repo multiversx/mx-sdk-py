@@ -1,4 +1,3 @@
-import base64
 from typing import Any, Dict
 
 from multiversx_sdk.core.address import Address
@@ -34,8 +33,8 @@ class AccountOnNetwork:
 
         result.code = bytes.fromhex(payload.get("code", ""))
         result.username = payload.get("username", "")
-        result.code_hash = base64.b64decode(payload.get("codeHash", "") or "").hex()
-        result.root_hash = base64.b64decode(payload.get("rootHash", "") or "").hex()
+        result.code_hash = payload.get("codeHash", "")
+        result.root_hash = payload.get("rootHash", "")
 
         return result
 
