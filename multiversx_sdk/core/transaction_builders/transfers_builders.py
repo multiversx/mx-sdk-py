@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional, Protocol, Sequence
 
 from multiversx_sdk.core.interfaces import (IAddress, IGasLimit, IGasPrice,
@@ -31,6 +32,9 @@ class EGLDTransferBuilder(TransactionBuilder):
                  ) -> None:
         assert payment.is_egld()
         super().__init__(config, nonce, payment.amount_as_integer, gas_limit, gas_price)
+        logger = logging.getLogger("EGLDTransferBuilder")
+        logger.warning("'EGLDTransferBuilder' is deprecated and will soon be removed. Please use 'TransferTransactionsFactory' instead.")
+
         self.sender = sender
         self.receiver = receiver
         self.data = data
@@ -54,6 +58,9 @@ class ESDTTransferBuilder(TransactionBuilder):
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:
         super().__init__(config, nonce, value, gas_limit, gas_price)
+        logger = logging.getLogger("ESDTTransferBuilder")
+        logger.warning("'ESDTTransferBuilder' is deprecated and will soon be removed. Please use 'TransferTransactionsFactory' instead.")
+
         self.gas_limit_esdt_transfer = config.gas_limit_esdt_transfer
         self.additional_gas_for_esdt_transfer = config.additional_gas_for_esdt_transfer
 
@@ -84,6 +91,9 @@ class ESDTNFTTransferBuilder(TransactionBuilder):
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:
         super().__init__(config, nonce, value, gas_limit, gas_price)
+        logger = logging.getLogger("ESDTNFTTransferBuilder")
+        logger.warning("'ESDTNFTTransferBuilder' is deprecated and will soon be removed. Please use 'TransferTransactionsFactory' instead.")
+
         self.gas_limit_esdt_nft_transfer = config.gas_limit_esdt_nft_transfer
         self.additional_gas_for_esdt_nft_transfer = config.additional_gas_for_esdt_nft_transfer
 
@@ -117,6 +127,9 @@ class MultiESDTNFTTransferBuilder(TransactionBuilder):
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:
         super().__init__(config, nonce, value, gas_limit, gas_price)
+        logger = logging.getLogger("MultiESDTNFTTransferBuilder")
+        logger.warning("'MultiESDTNFTTransferBuilder' is deprecated and will soon be removed. Please use 'TransferTransactionsFactory' instead.")
+
         self.gas_limit_esdt_nft_transfer = config.gas_limit_esdt_nft_transfer
         self.additional_gas_for_esdt_nft_transfer = config.additional_gas_for_esdt_nft_transfer
 

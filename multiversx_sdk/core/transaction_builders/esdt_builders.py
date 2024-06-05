@@ -1,3 +1,4 @@
+import logging
 from typing import List, Optional, Protocol
 
 from multiversx_sdk.core.interfaces import (IAddress, IGasLimit, IGasPrice,
@@ -5,6 +6,8 @@ from multiversx_sdk.core.interfaces import (IAddress, IGasLimit, IGasPrice,
 from multiversx_sdk.core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk.core.transaction_builders.transaction_builder import (
     ITransactionBuilderConfiguration, TransactionBuilder)
+
+logger = logging.getLogger("ESDTIssueBuilder")
 
 
 class IESDTIssueConfiguration(ITransactionBuilderConfiguration, Protocol):
@@ -35,6 +38,7 @@ class ESDTIssueBuilder(TransactionBuilder):
                  gas_price: Optional[IGasPrice] = None
                  ) -> None:
         super().__init__(config, nonce, value, gas_limit, gas_price)
+        logger.warning("The 'ESDTIssueBuilder' is deprecated and will soon be removed. Please use 'TokenManagementTransactionsFactory' instead.")
         self.gas_limit_esdt_issue = config.gas_limit_esdt_issue
 
         self.sender = issuer

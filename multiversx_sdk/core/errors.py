@@ -59,3 +59,9 @@ class InvalidInnerTransactionError(Exception):
 class ParseTransactionOutcomeError(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
+
+
+class SmartContractQueryError(Exception):
+    def __init__(self, return_code: str, message: str) -> None:
+        super().__init__(message)
+        self.return_code = return_code
