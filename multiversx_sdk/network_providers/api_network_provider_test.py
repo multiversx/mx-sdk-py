@@ -58,6 +58,8 @@ class TestApi:
 
         assert result.address.to_bech32() == 'erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl'
         assert result.username == ''
+        assert len(result.code_hash) == 0
+        assert len(result.root_hash) == 64
 
     def test_get_generic_with_bad_address(self):
         with pytest.raises(GenericError, match='a bech32 address is expected'):

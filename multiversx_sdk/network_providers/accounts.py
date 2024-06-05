@@ -1,3 +1,4 @@
+import base64
 from typing import Any, Dict
 
 from multiversx_sdk.core.address import Address
@@ -8,35 +9,47 @@ from multiversx_sdk.network_providers.resources import EmptyAddress
 class AccountOnNetwork:
     def __init__(self):
         self.address: IAddress = EmptyAddress()
+        self.owner_address = EmptyAddress()
         self.nonce: int = 0
         self.balance: int = 0
-        self.code: bytes = b''
-        self.username: str = ''
-        self.code_hash: str = ''
+        self.developer_reward = 0
+        self.code: bytes = b""
+        self.username: str = ""
+        self.code_hash: str = ""
+        self.root_hash: str = ""
 
     @staticmethod
-    def from_http_response(payload: Dict[str, Any]) -> 'AccountOnNetwork':
+    def from_http_response(payload: Dict[str, Any]) -> "AccountOnNetwork":
         result = AccountOnNetwork()
 
-        address = payload.get('address', '')
-        result.address = Address.new_from_bech32(address) if address else EmptyAddress()
+        address = payload.get("address", "")
+        owner_address = payload.get("ownerAddress", "")
 
-        result.nonce = payload.get('nonce', 0)
-        result.balance = int(payload.get('balance', 0))
-        result.code = bytes.fromhex(payload.get('code', ''))
-        result.username = payload.get('username', '')
-        result.code_hash = payload.get('codeHash', '')
+        result.address = Address.new_from_bech32(address) if address else EmptyAddress()
+        result.owner_address = Address.new_from_bech32(owner_address) if owner_address else EmptyAddress()
+
+        result.nonce = payload.get("nonce", 0)
+        result.balance = int(payload.get("balance", 0))
+        result.developer_reward = int(payload.get("developerReward", 0))
+
+        result.code = bytes.fromhex(payload.get("code", ""))
+        result.username = payload.get("username", "")
+        result.code_hash = base64.b64decode(payload.get("codeHash", "") or "").hex()
+        result.root_hash = base64.b64decode(payload.get("rootHash", "") or "").hex()
 
         return result
 
     def to_dictionary(self) -> Dict[str, Any]:
         return {
             "address": self.address.to_bech32(),
+            "ownerAddress": self.owner_address.to_bech32(),
             "nonce": self.nonce,
             "balance": self.balance,
+            "developerReward": self.developer_reward,
             "code": self.code.hex(),
             "username": self.username,
-            "codeHash": self.code_hash
+            "codeHash": self.code_hash,
+            "rootHash": self.root_hash
         }
 
 
@@ -47,10 +60,10 @@ class GuardianData:
         self.pending_guardian: Guardian = Guardian()
 
     @staticmethod
-    def from_http_response(response: Dict[str, Any]) -> 'GuardianData':
+    def from_http_response(response: Dict[str, Any]) -> "GuardianData":
         result = GuardianData()
 
-        result.guarded = response.get('guarded', False)
+        result.guarded = response.get("guarded", False)
 
         if response.get("activeGuardian", None):
             result.active_guardian = Guardian.from_http_response(response["activeGuardian"])
@@ -73,11 +86,11 @@ class Guardian:
         self.service_uid: str = ""
 
     @staticmethod
-    def from_http_response(response: Dict[str, Any]) -> 'Guardian':
+    def from_http_response(response: Dict[str, Any]) -> "Guardian":
         result = Guardian()
 
-        result.activation_epoch = int(response.get('activationEpoch', 0))
-        result.address = Address.new_from_bech32(response.get('address', ''))
-        result.service_uid = response.get('serviceUID', '')
+        result.activation_epoch = int(response.get("activationEpoch", 0))
+        result.address = Address.new_from_bech32(response.get("address", ""))
+        result.service_uid = response.get("serviceUID", "")
 
         return result
