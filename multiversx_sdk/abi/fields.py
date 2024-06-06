@@ -8,6 +8,8 @@ class Field:
     def __init__(self, name: str, value: SingleValue) -> None:
         self.name = name
         self.value = value
+
+
 def encode_fields_nested(fields: List[Field], writer: io.BytesIO):
     for field in fields:
         try:
