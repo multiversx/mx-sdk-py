@@ -1,6 +1,5 @@
 
 import io
-from typing import Any
 
 from multiversx_sdk.abi.interface import SingleValue
 
@@ -14,12 +13,12 @@ class Codec:
         value.encode_nested(buffer)
         return buffer.getvalue()
 
-    def encode_top_level(self, value: Any) -> bytes:
+    def encode_top_level(self, value: SingleValue) -> bytes:
         buffer = io.BytesIO()
         value.encode_top_level(buffer)
         return buffer.getvalue()
 
-    def decode_nested(self, data: bytes, value: Any) -> None:
+    def decode_nested(self, data: bytes, value: SingleValue) -> None:
         reader = io.BytesIO(data)
 
         try:
@@ -27,7 +26,7 @@ class Codec:
         except ValueError as e:
             raise ValueError(f"cannot decode (nested) {type(value)}, because of: {e}")
 
-    def decode_top_level(self, data: bytes, value: Any) -> None:
+    def decode_top_level(self, data: bytes, value: SingleValue) -> None:
         try:
             value.decode_top_level(data)
         except ValueError as e:
