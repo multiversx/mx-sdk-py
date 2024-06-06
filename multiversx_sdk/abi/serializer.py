@@ -2,8 +2,8 @@ from typing import Any, List, Sequence
 
 from multiversx_sdk.abi.codec import Codec
 from multiversx_sdk.abi.interface import SingleValue
+from multiversx_sdk.abi.multi_values import *
 from multiversx_sdk.abi.parts import PartsHolder
-from multiversx_sdk.abi.values_multi import *
 
 
 class Serializer:
