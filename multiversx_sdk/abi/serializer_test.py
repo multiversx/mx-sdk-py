@@ -146,7 +146,7 @@ def test_deserialize():
     serializer = Serializer(parts_separator="@")
 
     # nil destination
-    with pytest.raises(ValueError, match="^cannot deserialize into nil value$"):
+    with pytest.raises(ValueError, match="^cannot deserialize into null value$"):
         serializer.deserialize("", [None])
 
     # u8

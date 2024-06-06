@@ -1,6 +1,7 @@
 from typing import Any, List, Sequence
 
 from multiversx_sdk.abi.codec import Codec
+from multiversx_sdk.abi.interface import SingleValue
 from multiversx_sdk.abi.parts import PartsHolder
 from multiversx_sdk.abi.values_multi import *
 
@@ -30,7 +31,7 @@ class Serializer:
     def _do_serialize(self, parts_holder: PartsHolder, input_values: Sequence[Any]):
         for i, value in enumerate(input_values):
             if value is None:
-                raise ValueError("cannot serialize nil value")
+                raise ValueError("cannot serialize null value")
 
             if isinstance(value, OptionalValue):
                 if i != len(input_values) - 1:
@@ -48,11 +49,13 @@ class Serializer:
                     raise ValueError("variadic values must be last among input values")
 
                 self._do_serialize(parts_holder, value.items)
-            else:
+            elif isinstance(value, SingleValue):
                 parts_holder.append_empty_part()
                 self._serialize_single_value(parts_holder, value)
+            else:
+                raise ValueError(f"cannot serialize value of type: {type(value).__name__}")
 
-    def _serialize_single_value(self, parts_holder: PartsHolder, value: Any):
+    def _serialize_single_value(self, parts_holder: PartsHolder, value: SingleValue):
         data = self.codec.encode_top_level(value)
         parts_holder.append_to_last_part(data)
 
@@ -67,7 +70,7 @@ class Serializer:
     def _do_deserialize(self, parts_holder: PartsHolder, output_values: Sequence[Any]):
         for i, value in enumerate(output_values):
             if value is None:
-                raise ValueError("cannot deserialize into nil value")
+                raise ValueError("cannot deserialize into null value")
 
             if isinstance(value, OptionalValue):
                 if i != len(output_values) - 1:
@@ -87,8 +90,10 @@ class Serializer:
                     raise ValueError("variadic values must be last among output values")
 
                 self._deserialize_variadic_values(parts_holder, value)
-            else:
+            elif isinstance(value, SingleValue):
                 self._deserialize_single_value(parts_holder, value)
+            else:
+                raise ValueError(f"cannot deserialize value of type: {type(value).__name__}")
 
     def _deserialize_variadic_values(self, parts_holder: PartsHolder, value: VariadicValues):
         if value.item_creator is None:
@@ -101,7 +106,7 @@ class Serializer:
 
             value.items.append(new_item)
 
-    def _deserialize_single_value(self, parts_holder: PartsHolder, value: Any):
+    def _deserialize_single_value(self, parts_holder: PartsHolder, value: SingleValue):
         part = parts_holder.read_whole_focused_part()
         self.codec.decode_top_level(part, value)
         parts_holder.focus_on_next_part()

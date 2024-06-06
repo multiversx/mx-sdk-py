@@ -1,5 +1,3 @@
-
-
 from typing import Any
 
 from multiversx_sdk.abi.string_value import StringValue
