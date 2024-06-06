@@ -66,7 +66,7 @@
 | multiversx\_sdk/core/transactions\_outcome\_parsers/token\_management\_transactions\_outcome\_parser\_types.py |       79 |        0 |    100% |           |
 | multiversx\_sdk/core/typecheck.py                                                                              |        5 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/\_\_init\_\_.py                                                             |        7 |        0 |    100% |           |
-| multiversx\_sdk/network\_providers/accounts.py                                                                 |       55 |       22 |     60% |33, 45-47, 51-61, 64-66, 71-73, 77-83 |
+| multiversx\_sdk/network\_providers/accounts.py                                                                 |       62 |       22 |     65% |42, 57-59, 63-73, 76-78, 83-85, 89-95 |
 | multiversx\_sdk/network\_providers/api\_network\_provider.py                                                   |      179 |       30 |     83% |50, 57, 60, 78-81, 84-87, 157-158, 173-174, 203-206, 214-220, 228-229, 236-237 |
 | multiversx\_sdk/network\_providers/config.py                                                                   |        9 |        2 |     78% |    10, 13 |
 | multiversx\_sdk/network\_providers/constants.py                                                                |        5 |        0 |    100% |           |
@@ -118,7 +118,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **4698** |  **501** | **89%** |           |
+|                                                                                                      **TOTAL** | **4705** |  **501** | **89%** |           |
 
 
 ## Setup coverage badge
