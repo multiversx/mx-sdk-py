@@ -54,12 +54,14 @@ class AbiDefinition:
 class EndpointDefinition:
     def __init__(self,
                  name: str,
+                 docs: str,
                  mutability: str,
                  inputs: List["ParameterDefinition"],
                  outputs: List["ParameterDefinition"],
                  payable_in_tokens: List[str],
                  only_owner: bool) -> None:
         self.name = name
+        self.docs = docs
         self.mutability = mutability
         self.inputs = inputs
         self.outputs = outputs
@@ -73,6 +75,7 @@ class EndpointDefinition:
 
         return cls(
             name=data.get("name", ""),
+            docs=data.get("docs", ""),
             mutability=data.get("mutability", ""),
             inputs=inputs,
             outputs=outputs,
