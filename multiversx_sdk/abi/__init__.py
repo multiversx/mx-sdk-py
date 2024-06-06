@@ -1,5 +1,7 @@
 from multiversx_sdk.abi.address_value import AddressValue
+from multiversx_sdk.abi.bigint_value import BigIntValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.fields import Field
@@ -18,7 +20,9 @@ from multiversx_sdk.abi.tuple_value import TupleValue
 
 __all__ = [
     "AddressValue",
+    "BigIntValue",
     "BigUIntValue",
+    "BoolValue",
     "BytesValue",
     "EnumValue",
     "Field",
