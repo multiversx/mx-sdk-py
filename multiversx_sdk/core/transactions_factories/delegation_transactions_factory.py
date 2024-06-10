@@ -166,7 +166,8 @@ class DelegationTransactionsFactory:
     def create_transaction_for_unjailing_nodes(self,
                                                sender: IAddress,
                                                delegation_contract: IAddress,
-                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                               public_keys: Sequence[IValidatorPublicKey],
+                                               amount: int) -> Transaction:
         num_nodes = len(public_keys)
 
         parts = ["unJailNodes"]
@@ -179,7 +180,8 @@ class DelegationTransactionsFactory:
             receiver=delegation_contract,
             data_parts=parts,
             gas_limit=self._compute_execution_gas_limit_for_nodes_management(num_nodes),
-            add_data_movement_gas=True
+            add_data_movement_gas=True,
+            amount=amount
         ).build()
 
         return transaction
