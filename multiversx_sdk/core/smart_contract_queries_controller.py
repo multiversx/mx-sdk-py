@@ -5,6 +5,7 @@ from multiversx_sdk.abi.typesystem import (is_list_of_bytes,
                                            is_list_of_typed_values)
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.errors import SmartContractQueryError
+from multiversx_sdk.core.serializer import args_to_buffers
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 
@@ -81,7 +82,7 @@ class SmartContractQueriesController:
         if is_list_of_bytes(args):
             return args
 
-        raise ValueError("cannot encode arguments: when ABI is not available, they must be either typed values or buffers")
+        return args_to_buffers(args)
 
     def run_query(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         query_response = self.query_runner.run_query(query)
