@@ -113,7 +113,7 @@ class SmartContractTransactionsFactory:
         prepared_arguments = self._encode_execute_arguments(function, list(arguments))
 
         data_parts.append(function) if not data_parts else data_parts.append(arg_to_string(function))
-        data_parts.extend([arg.hex() for arg in prepared_arguments])
+        data_parts += [arg.hex() for arg in prepared_arguments]
 
         return TransactionBuilder(
             config=self.config,
