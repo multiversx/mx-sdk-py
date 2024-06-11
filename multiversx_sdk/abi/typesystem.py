@@ -1,6 +1,6 @@
 from typing import Any, Sequence
 
-from multiversx_sdk.abi.interface import SingleValue
+from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.multi_values import (MultiValue, OptionalValue,
                                              VariadicValues)
 
@@ -22,7 +22,7 @@ def is_typed_value(value: Any) -> bool:
 
 
 def is_single_value(value: Any) -> bool:
-    return isinstance(value, SingleValue)
+    return isinstance(value, ISingleValue)
 
 
 def is_multi_value(value: Any) -> bool:

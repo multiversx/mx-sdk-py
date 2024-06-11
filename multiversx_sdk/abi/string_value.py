@@ -24,3 +24,22 @@ class StringValue:
     def decode_top_level(self, data: bytes):
         self.value = data.decode("utf-8")
 
+    def set_payload(self, value: Any):
+        if isinstance(value, bytes):
+            self.value = value.decode("utf-8")
+        elif isinstance(value, str):
+            self.value = value
+        else:
+            raise ValueError(f"cannot set payload for string (should be either a string or bytes, but got: {type(value)})")
+
+    def get_payload(self) -> Any:
+        return self.value
+
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, StringValue) and self.value == other.value
+
+    def __str__(self) -> str:
+        return self.value
+
+    def __bytes__(self) -> bytes:
+        return self.value.encode("utf-8")

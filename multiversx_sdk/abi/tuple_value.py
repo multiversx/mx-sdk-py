@@ -1,12 +1,12 @@
 import io
 from typing import Any, List
 
-from multiversx_sdk.abi.interface import SingleValue
+from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class TupleValue:
-    def __init__(self, fields: List[SingleValue]) -> None:
+    def __init__(self, fields: List[ISingleValue]) -> None:
         self.fields = fields
 
     def encode_nested(self, writer: io.BytesIO):

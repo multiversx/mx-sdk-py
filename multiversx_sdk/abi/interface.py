@@ -1,6 +1,17 @@
+import io
+from typing import Any, Protocol, runtime_checkable
+
+
+class IPayloadHolder(Protocol):
+    def set_payload(self, value: Any):
+        ...
+
+    def get_payload(self) -> Any:
+        ...
+
 
 @runtime_checkable
-class SingleValue(NativeObjectHolder, Protocol):
+class ISingleValue(IPayloadHolder, Protocol):
     def encode_nested(self, writer: io.BytesIO):
         ...
 

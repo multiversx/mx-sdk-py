@@ -1,7 +1,7 @@
 from typing import Any, List, Sequence
 
 from multiversx_sdk.abi.codec import Codec
-from multiversx_sdk.abi.interface import SingleValue
+from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.multi_values import *
 from multiversx_sdk.abi.parts import PartsHolder
 
@@ -49,13 +49,13 @@ class Serializer:
                     raise ValueError("variadic values must be last among input values")
 
                 self._do_serialize(parts_holder, value.items)
-            elif isinstance(value, SingleValue):
+            elif isinstance(value, ISingleValue):
                 parts_holder.append_empty_part()
                 self._serialize_single_value(parts_holder, value)
             else:
                 raise ValueError(f"cannot serialize value of type: {type(value).__name__}")
 
-    def _serialize_single_value(self, parts_holder: PartsHolder, value: SingleValue):
+    def _serialize_single_value(self, parts_holder: PartsHolder, value: ISingleValue):
         data = self.codec.encode_top_level(value)
         parts_holder.append_to_last_part(data)
 
@@ -90,7 +90,7 @@ class Serializer:
                     raise ValueError("variadic values must be last among output values")
 
                 self._deserialize_variadic_values(parts_holder, value)
-            elif isinstance(value, SingleValue):
+            elif isinstance(value, ISingleValue):
                 self._deserialize_single_value(parts_holder, value)
             else:
                 raise ValueError(f"cannot deserialize value of type: {type(value).__name__}")
@@ -106,7 +106,7 @@ class Serializer:
 
             value.items.append(new_item)
 
-    def _deserialize_single_value(self, parts_holder: PartsHolder, value: SingleValue):
+    def _deserialize_single_value(self, parts_holder: PartsHolder, value: ISingleValue):
         part = parts_holder.read_whole_focused_part()
         self.codec.decode_top_level(part, value)
         parts_holder.focus_on_next_part()
