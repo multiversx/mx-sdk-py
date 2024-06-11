@@ -1,11 +1,11 @@
 import io
 from typing import Any, Dict, List
 
-from multiversx_sdk.abi.interface import SingleValue
+from multiversx_sdk.abi.interface import ISingleValue
 
 
 class Field:
-    def __init__(self, name: str, value: SingleValue) -> None:
+    def __init__(self, name: str, value: ISingleValue) -> None:
         self.name = name
         self.value = value
 

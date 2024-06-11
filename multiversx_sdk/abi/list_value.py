@@ -1,15 +1,15 @@
 import io
 from typing import Any, Callable, List, Optional
 
-from multiversx_sdk.abi.interface import SingleValue
+from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.shared import (convert_native_value_to_list,
                                        decode_length, encode_length)
 
 
 class ListValue:
     def __init__(self,
-                 items: Optional[List[SingleValue]] = None,
-                 item_creator: Optional[Callable[[], SingleValue]] = None) -> None:
+                 items: Optional[List[ISingleValue]] = None,
+                 item_creator: Optional[Callable[[], ISingleValue]] = None) -> None:
         self.items = items or []
         self.item_creator = item_creator
 
@@ -45,3 +45,29 @@ class ListValue:
         new_item = self.item_creator()
         new_item.decode_nested(reader)
         self.items.append(new_item)
+
+    def set_payload(self, value: Any):
+        if not self.item_creator:
+            raise ValueError("populating a list from a native object requires the item creator to be set")
+
+        native_items, _ = convert_native_value_to_list(value)
+
+        self.items.clear()
+
+        for native_item in native_items:
+            item = self.item_creator()
+            item.set_payload(native_item)
+            self.items.append(item)
+
+    def get_payload(self) -> Any:
+        return [item.get_payload() for item in self.items]
+
+    def __eq__(self, other: Any) -> bool:
+        return (
+            isinstance(other, ListValue)
+            and self.items == other.items
+            and self.item_creator == other.item_creator
+        )
+
+    def __iter__(self) -> Any:
+        return iter(self.items)
