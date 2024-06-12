@@ -26,3 +26,31 @@ class StructValue:
     def decode_top_level(self, data: bytes):
         reader = io.BytesIO(data)
         self.decode_nested(reader)
+
+    def set_payload(self, value: Any):
+        native_dictionary, ok = convert_native_value_to_dictionary(value, raise_on_failure=False)
+        if ok:
+            set_fields_from_dictionary(self.fields, native_dictionary)
+            return
+
+        native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
+        if ok:
+            set_fields_from_list(self.fields, native_list[1:])
+            return
+
+        raise ValueError("cannot set payload for struct (should be either a dictionary or a list)")
+
+    def get_payload(self) -> Any:
+        obj = SimpleNamespace()
+
+        for field in self.fields:
+            setattr(obj, field.name, field.get_payload())
+
+        return obj
+
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, StructValue) and self.fields == other.fields
+
+    def __iter__(self):
+        for field in self.fields:
+            yield (field.name, field.value)
