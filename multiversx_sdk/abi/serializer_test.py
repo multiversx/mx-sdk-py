@@ -8,12 +8,14 @@ from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.fields import *
 from multiversx_sdk.abi.list_value import ListValue
-from multiversx_sdk.abi.multi_values import *
+from multiversx_sdk.abi.multi_value import *
 from multiversx_sdk.abi.option_value import OptionValue
+from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import *
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
+from multiversx_sdk.abi.variadic_values import VariadicValues
 
 alice_pub_key = bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
 bob_pub_key = bytes.fromhex("8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8")

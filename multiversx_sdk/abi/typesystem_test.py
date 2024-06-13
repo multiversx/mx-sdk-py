@@ -1,11 +1,12 @@
 from multiversx_sdk.abi.list_value import ListValue
-from multiversx_sdk.abi.multi_values import (MultiValue, OptionalValue,
-                                             VariadicValues)
+from multiversx_sdk.abi.multi_value import MultiValue
+from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.typesystem import (is_bytes, is_list_of_bytes,
                                            is_list_of_typed_values,
                                            is_multi_value, is_single_value,
                                            is_typed_value)
+from multiversx_sdk.abi.variadic_values import VariadicValues
 
 
 def test_is_list_of_bytes():
