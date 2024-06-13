@@ -1,11 +1,11 @@
-from typing import Any, List
+from typing import Any, List, Union
 
-from multiversx_sdk.abi.interface import IPayloadHolder
+from multiversx_sdk.abi.interface import IPayloadHolder, ISingleValue
 from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class MultiValue(IPayloadHolder):
-    def __init__(self, items: List[Any]):
+    def __init__(self, items: List[Union[ISingleValue, "MultiValue"]]):
         self.items = items
 
     def set_payload(self, value: Any):

@@ -1,13 +1,14 @@
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, List, Optional, Union
 
-from multiversx_sdk.abi.interface import IPayloadHolder
+from multiversx_sdk.abi.interface import IPayloadHolder, ISingleValue
+from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class VariadicValues(IPayloadHolder):
     def __init__(self,
-                 items: Optional[List[Any]] = None,
-                 item_creator: Optional[Callable[[], Any]] = None) -> None:
+                 items: Optional[List[Union[ISingleValue, MultiValue]]] = None,
+                 item_creator: Optional[Callable[[], Union[ISingleValue, MultiValue]]] = None) -> None:
         self.items = items or []
         self.item_creator = item_creator
 

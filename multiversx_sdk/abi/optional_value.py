@@ -1,10 +1,11 @@
-from typing import Any
+from typing import Any, Optional, Union
 
-from multiversx_sdk.abi.interface import IPayloadHolder
+from multiversx_sdk.abi.interface import IPayloadHolder, ISingleValue
+from multiversx_sdk.abi.multi_value import MultiValue
 
 
 class OptionalValue(IPayloadHolder):
-    def __init__(self, value: Any = None):
+    def __init__(self, value: Optional[Union[ISingleValue, MultiValue]] = None):
         self.value = value
 
     def set_payload(self, value: Any):
