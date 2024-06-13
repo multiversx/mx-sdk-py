@@ -13,6 +13,7 @@ def test_set_payload_and_get_payload():
     ])
 
     value.set_payload([1, "hello"])
+
     assert value.items == [U32Value(1), StringValue("hello")]
     assert value.get_payload() == [1, "hello"]
 
