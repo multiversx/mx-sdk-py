@@ -1,8 +1,9 @@
 from typing import Any, Sequence
 
 from multiversx_sdk.abi.interface import ISingleValue
-from multiversx_sdk.abi.multi_values import (MultiValue, OptionalValue,
-                                             VariadicValues)
+from multiversx_sdk.abi.multi_value import MultiValue
+from multiversx_sdk.abi.optional_value import OptionalValue
+from multiversx_sdk.abi.variadic_values import VariadicValues
 
 
 def is_list_of_bytes(values: Sequence[Any]) -> bool:
