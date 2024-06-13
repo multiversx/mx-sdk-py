@@ -54,6 +54,35 @@ def test_abi():
     assert abi.endpoints_prototypes_by_name["add"].output_parameters == []
 
 
+def test_encode_endpoint_input_parameters_artificial_contract():
+    abi = Abi.load(testdata / "artificial.abi.json")
+
+    encoded_values = abi.encode_endpoint_input_parameters(
+        endpoint_name="yellow",
+        values=[[42, "hello", True]]
+    )
+
+    assert len(encoded_values) == 3
+    assert encoded_values[0].hex() == "2a"
+    assert encoded_values[1].hex() == "hello".encode().hex()
+    assert encoded_values[2].hex() == "01"
+
+
+def test_decode_endpoint_output_parameters_artificial_contract():
+    abi = Abi.load(testdata / "artificial.abi.json")
+
+    decoded_values = abi.decode_endpoint_output_parameters(
+        endpoint_name="blue",
+        encoded_values=[
+            "UTK-2f80e9".encode(),
+            bytes([0x00]),
+            bytes.fromhex("0de0b6b3a7640000")
+        ]
+    )
+
+    assert decoded_values == [["UTK-2f80e9", 0, 1000000000000000000]]
+
+
 def test_encode_endpoint_input_parameters_real_world_multisig_propose_batch():
     abi = Abi.load(testdata / "multisig-full.abi.json")
 

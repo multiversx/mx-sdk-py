@@ -15,10 +15,12 @@ from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.interface import IPayloadHolder
 from multiversx_sdk.abi.list_value import ListValue
+from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import *
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.token_identifier_value import TokenIdentifierValue
 from multiversx_sdk.abi.tuple_value import TupleValue
@@ -181,14 +183,28 @@ class Abi:
 
         if name == "bool":
             return BoolValue()
+        if name == "u8":
+            return U8Value()
+        if name == "u16":
+            return U16Value()
         if name == "u32":
             return U32Value()
         if name == "u64":
             return U64Value()
+        if name == "i8":
+            return I8Value()
+        if name == "i16":
+            return I16Value()
+        if name == "i32":
+            return I32Value()
         if name == "BigUint":
+            return BigUIntValue()
+        if name == "BigInt":
             return BigUIntValue()
         if name == "bytes":
             return BytesValue()
+        if name == "utf-8 string":
+            return StringValue()
         if name == "Address":
             return AddressValue()
         if name == "TokenIdentifier":
@@ -204,12 +220,14 @@ class Abi:
             type_parameter = type_formula.type_parameters[0]
             return ListValue([], item_creator=lambda: self._create_prototype(type_parameter))
         if name == "optional":
-            # The prototype of an optional is provided a value.
+            # The prototype of an optional is provided a value (the placeholder).
             type_parameter = type_formula.type_parameters[0]
             return OptionalValue(self._create_prototype(type_parameter))
         if name == "variadic":
             type_parameter = type_formula.type_parameters[0]
             return VariadicValues([], item_creator=lambda: self._create_prototype(type_parameter))
+        if name == "multi":
+            return MultiValue([self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
 
         # Handle custom types
         type_prototype = self._get_custom_type_prototype(name)
