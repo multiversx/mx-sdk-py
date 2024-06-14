@@ -83,7 +83,7 @@ def test_decode_endpoint_output_parameters_artificial_contract():
     assert decoded_values == [["UTK-2f80e9", 0, 1000000000000000000]]
 
 
-def test_encode_endpoint_input_parameters_real_world_multisig_propose_batch():
+def test_encode_endpoint_input_parameters_multisig_propose_batch():
     abi = Abi.load(testdata / "multisig-full.abi.json")
 
     alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -222,7 +222,7 @@ def test_encode_endpoint_input_parameters_real_world_multisig_propose_batch():
     assert encoded_values == expected_encoded_values
 
 
-def test_decode_endpoint_output_parameters_real_world_multisig_get_pending_action_full_info():
+def test_decode_endpoint_output_parameters_multisig_get_pending_action_full_info():
     abi = Abi.load(testdata / "multisig-full.abi.json")
 
     data_hex = "".join([
