@@ -1,3 +1,5 @@
+from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.bigint_value import BigIntValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
@@ -20,6 +22,9 @@ from multiversx_sdk.abi.tuple_value import TupleValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
 
 __all__ = [
+    "Abi",
+    "AbiDefinition",
+
     "AddressValue",
     "BigIntValue",
     "BigUIntValue",
@@ -42,6 +47,7 @@ __all__ = [
     "StructValue",
     "TokenIdentifierValue",
     "TupleValue",
+
     "MultiValue",
     "OptionalValue",
     "VariadicValues",
