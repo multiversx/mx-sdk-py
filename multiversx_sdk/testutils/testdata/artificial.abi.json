@@ -1,0 +1,45 @@
+{
+  "name": "Artificial",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "a",
+        "type": "utf-8 string"
+      }
+    ],
+    "outputs": []
+  },
+  "upgradeConstructor": {
+    "inputs": [
+      {
+        "name": "a",
+        "type": "u8"
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "name": "blue",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "optional<multi<TokenIdentifier,u64,BigUint>>"
+        }
+      ]
+    },
+    {
+      "name": "yellow",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "multi<u32, bytes, bool>"
+        }
+      ],
+      "outputs": []
+    }
+  ],
+  "types": {}
+}

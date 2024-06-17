@@ -103,6 +103,9 @@ class Address:
     def serialize(self) -> bytes:
         return self.get_public_key()
 
+    def __bytes__(self) -> bytes:
+        return self.get_public_key()
+
 
 class AddressFactory:
     """A factory used to create address objects."""

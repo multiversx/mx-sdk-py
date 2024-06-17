@@ -16,6 +16,12 @@ class SmartContractQuery:
         self.caller = caller
         self.value = value
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SmartContractQuery):
+            return False
+
+        return self.__dict__ == other.__dict__
+
 
 class SmartContractQueryResponse:
     def __init__(
@@ -29,3 +35,9 @@ class SmartContractQueryResponse:
         self.return_code = return_code
         self.return_message = return_message
         self.return_data_parts = return_data_parts
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SmartContractQueryResponse):
+            return False
+
+        return self.__dict__ == other.__dict__
