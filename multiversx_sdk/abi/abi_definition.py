@@ -16,10 +16,10 @@ class AbiDefinition:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "AbiDefinition":
-        constructor = EndpointDefinition.from_dict(data["constructor"])
+        constructor = cls._get_definition_for_constructor(data)
         constructor.name = "constructor"
 
-        upgrade_constructor = cls._get_endpoint_for_upgrade(data)
+        upgrade_constructor = cls._get_definition_for_upgrade(data)
         upgrade_constructor.name = "upgrade_constructor"
 
         endpoints = [EndpointDefinition.from_dict(item) for item in data["endpoints"]] if "endpoints" in data else []
@@ -33,7 +33,14 @@ class AbiDefinition:
         )
 
     @classmethod
-    def _get_endpoint_for_upgrade(cls, data: Dict[str, Any]) -> "EndpointDefinition":
+    def _get_definition_for_constructor(cls, data: Dict[str, Any]):
+        if "constructor" in data:
+            return EndpointDefinition.from_dict(data["constructor"])
+
+        return NullEndpointDefinition()
+
+    @classmethod
+    def _get_definition_for_upgrade(cls, data: Dict[str, Any]) -> "EndpointDefinition":
         if "upgradeConstructor" in data:
             return EndpointDefinition.from_dict(data["upgradeConstructor"])
 
@@ -42,7 +49,10 @@ class AbiDefinition:
             return EndpointDefinition.from_dict(data["endpoints"]["upgrade"])
 
         # Fallback for contracts written using an old Rust framework:
-        return EndpointDefinition.from_dict(data["constructor"])
+        if "constructor" in data:
+            EndpointDefinition.from_dict(data["constructor"])
+
+        return NullEndpointDefinition()
 
     @classmethod
     def load(cls, path: Path) -> "AbiDefinition":
@@ -85,6 +95,22 @@ class EndpointDefinition:
 
     def __repr__(self):
         return f"EndpointDefinition(name={self.name})"
+
+
+class NullEndpointDefinition(EndpointDefinition):
+    def __init__(self) -> None:
+        super().__init__(
+            name="",
+            docs="",
+            mutability="",
+            inputs=[],
+            outputs=[],
+            payable_in_tokens=[],
+            only_owner=False
+        )
+
+    def __repr__(self):
+        return "NullEndpointDefinition()"
 
 
 class ParameterDefinition:
