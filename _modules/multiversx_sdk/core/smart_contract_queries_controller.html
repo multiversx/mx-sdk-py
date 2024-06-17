@@ -73,7 +73,12 @@
   <h1>Source code for multiversx_sdk.core.smart_contract_queries_controller</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
 
+<span class="kn">from</span> <span class="nn">multiversx_sdk.abi</span> <span class="kn">import</span> <span class="n">Serializer</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.typesystem</span> <span class="kn">import</span> <span class="p">(</span><span class="n">is_list_of_bytes</span><span class="p">,</span>
+                                           <span class="n">is_list_of_typed_values</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">ARGS_SEPARATOR</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">SmartContractQueryError</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.serializer</span> <span class="kn">import</span> <span class="n">args_to_buffers</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.smart_contract_query</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">SmartContractQuery</span><span class="p">,</span> <span class="n">SmartContractQueryResponse</span><span class="p">)</span>
 
@@ -89,11 +94,30 @@
 
 
 
+<div class="viewcode-block" id="IAbi">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.IAbi">[docs]</a>
+<span class="k">class</span> <span class="nc">IAbi</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="IAbi.encode_endpoint_input_parameters">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.IAbi.encode_endpoint_input_parameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">encode_endpoint_input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="IAbi.decode_endpoint_output_parameters">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.IAbi.decode_endpoint_output_parameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">decode_endpoint_output_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">encoded_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="o">...</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="SmartContractQueriesController">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartContractQueriesController</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_runner</span><span class="p">:</span> <span class="n">IQueryRunner</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_runner</span><span class="p">:</span> <span class="n">IQueryRunner</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IAbi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query_runner</span> <span class="o">=</span> <span class="n">query_runner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="n">abi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">(</span><span class="n">parts_separator</span><span class="o">=</span><span class="n">ARGS_SEPARATOR</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SmartContractQueriesController.query">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController.query">[docs]</a>
@@ -129,18 +153,32 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">contract</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">arguments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
+            <span class="n">arguments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
             <span class="n">caller</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQuery</span><span class="p">:</span>
+        <span class="n">prepared_arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encode_arguments</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">SmartContractQuery</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
             <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
-            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">prepared_arguments</span><span class="p">,</span>
             <span class="n">caller</span><span class="o">=</span><span class="n">caller</span><span class="p">,</span>
             <span class="n">value</span><span class="o">=</span><span class="n">value</span>
         <span class="p">)</span></div>
 
+
+    <span class="k">def</span> <span class="nf">_encode_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="o">.</span><span class="n">encode_endpoint_input_parameters</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_list_of_typed_values</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_list_of_bytes</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">args</span>
+
+        <span class="k">return</span> <span class="n">args_to_buffers</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SmartContractQueriesController.run_query">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController.run_query">[docs]</a>
@@ -152,7 +190,12 @@
 <div class="viewcode-block" id="SmartContractQueriesController.parse_query_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.SmartContractQueriesController.parse_query_response">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_query_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">SmartContractQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">return_data_parts</span></div>
+        <span class="n">encoded_values</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">return_data_parts</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="o">.</span><span class="n">decode_endpoint_output_parameters</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">function</span><span class="p">,</span> <span class="n">encoded_values</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">encoded_values</span></div>
 </div>
 
 </pre></div>

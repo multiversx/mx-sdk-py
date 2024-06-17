@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="multiversx_sdk.adapters package" href="multiversx_sdk.adapters.html" />
+    <link rel="next" title="multiversx_sdk.abi package" href="multiversx_sdk.abi.html" />
     <link rel="prev" title="multiversx_sdk" href="modules.html" /> 
 </head>
 
@@ -49,6 +49,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">multiversx_sdk</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">multiversx_sdk package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html">multiversx_sdk.abi package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.adapters.html">multiversx_sdk.adapters package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.converters.html">multiversx_sdk.converters package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a></li>
@@ -153,6 +154,513 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="multiversx_sdk.abi.html">multiversx_sdk.abi package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.abi">multiversx_sdk.abi.abi module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi"><code class="docutils literal notranslate"><span class="pre">Abi</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.decode_endpoint_output_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.decode_endpoint_output_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_constructor_input_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_endpoint_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_endpoint_input_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_upgrade_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_upgrade_constructor_input_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.load"><code class="docutils literal notranslate"><span class="pre">Abi.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.EndpointPrototype"><code class="docutils literal notranslate"><span class="pre">EndpointPrototype</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.abi_definition">multiversx_sdk.abi.abi_definition module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition"><code class="docutils literal notranslate"><span class="pre">AbiDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.load"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EndpointDefinition"><code class="docutils literal notranslate"><span class="pre">EndpointDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EndpointDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">EndpointDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EnumDefinition"><code class="docutils literal notranslate"><span class="pre">EnumDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EnumDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">EnumDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EnumVariantDefinition"><code class="docutils literal notranslate"><span class="pre">EnumVariantDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EnumVariantDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">EnumVariantDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EventDefinition"><code class="docutils literal notranslate"><span class="pre">EventDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EventDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">EventDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EventTopicDefinition"><code class="docutils literal notranslate"><span class="pre">EventTopicDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EventTopicDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">EventTopicDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.FieldDefinition"><code class="docutils literal notranslate"><span class="pre">FieldDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.FieldDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">FieldDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.NullEndpointDefinition"><code class="docutils literal notranslate"><span class="pre">NullEndpointDefinition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ParameterDefinition"><code class="docutils literal notranslate"><span class="pre">ParameterDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ParameterDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">ParameterDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.StructDefinition"><code class="docutils literal notranslate"><span class="pre">StructDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.StructDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">StructDefinition.from_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.TypesDefinitions"><code class="docutils literal notranslate"><span class="pre">TypesDefinitions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.TypesDefinitions.from_dict"><code class="docutils literal notranslate"><span class="pre">TypesDefinitions.from_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.address_value">multiversx_sdk.abi.address_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue"><code class="docutils literal notranslate"><span class="pre">AddressValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">AddressValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">AddressValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">AddressValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">AddressValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.from_address"><code class="docutils literal notranslate"><span class="pre">AddressValue.from_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.get_payload"><code class="docutils literal notranslate"><span class="pre">AddressValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.set_payload"><code class="docutils literal notranslate"><span class="pre">AddressValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.IAddress"><code class="docutils literal notranslate"><span class="pre">IAddress</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.IAddress.get_public_key"><code class="docutils literal notranslate"><span class="pre">IAddress.get_public_key()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.bigint_value">multiversx_sdk.abi.bigint_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bigint_value.BigIntValue"><code class="docutils literal notranslate"><span class="pre">BigIntValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bigint_value.BigIntValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BigIntValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bigint_value.BigIntValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BigIntValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bigint_value.BigIntValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BigIntValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bigint_value.BigIntValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BigIntValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bigint_value.BigIntValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BigIntValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bigint_value.BigIntValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BigIntValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.biguint_value">multiversx_sdk.abi.biguint_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.biguint_value.BigUIntValue"><code class="docutils literal notranslate"><span class="pre">BigUIntValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.biguint_value.BigUIntValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.biguint_value.BigUIntValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.biguint_value.BigUIntValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.biguint_value.BigUIntValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.biguint_value.BigUIntValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.biguint_value.BigUIntValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.bool_value">multiversx_sdk.abi.bool_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue"><code class="docutils literal notranslate"><span class="pre">BoolValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BoolValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BoolValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BoolValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BoolValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BoolValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BoolValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.bytes_value">multiversx_sdk.abi.bytes_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bytes_value.BytesValue"><code class="docutils literal notranslate"><span class="pre">BytesValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bytes_value.BytesValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BytesValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bytes_value.BytesValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BytesValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bytes_value.BytesValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BytesValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bytes_value.BytesValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BytesValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bytes_value.BytesValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BytesValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.bytes_value.BytesValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BytesValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.codec">multiversx_sdk.abi.codec module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec"><code class="docutils literal notranslate"><span class="pre">Codec</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.decode_nested"><code class="docutils literal notranslate"><span class="pre">Codec.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.decode_top_level"><code class="docutils literal notranslate"><span class="pre">Codec.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.encode_nested"><code class="docutils literal notranslate"><span class="pre">Codec.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.encode_top_level"><code class="docutils literal notranslate"><span class="pre">Codec.encode_top_level()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.enum_value">multiversx_sdk.abi.enum_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue"><code class="docutils literal notranslate"><span class="pre">EnumValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">EnumValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">EnumValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">EnumValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">EnumValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue.get_payload"><code class="docutils literal notranslate"><span class="pre">EnumValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue.set_payload"><code class="docutils literal notranslate"><span class="pre">EnumValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.fields">multiversx_sdk.abi.fields module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.Field.get_payload"><code class="docutils literal notranslate"><span class="pre">Field.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.Field.set_payload"><code class="docutils literal notranslate"><span class="pre">Field.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.decode_fields_nested"><code class="docutils literal notranslate"><span class="pre">decode_fields_nested()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.encode_fields_nested"><code class="docutils literal notranslate"><span class="pre">encode_fields_nested()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.set_fields_from_dictionary"><code class="docutils literal notranslate"><span class="pre">set_fields_from_dictionary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.set_fields_from_list"><code class="docutils literal notranslate"><span class="pre">set_fields_from_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.interface">multiversx_sdk.abi.interface module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.IPayloadHolder"><code class="docutils literal notranslate"><span class="pre">IPayloadHolder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.IPayloadHolder.get_payload"><code class="docutils literal notranslate"><span class="pre">IPayloadHolder.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.IPayloadHolder.set_payload"><code class="docutils literal notranslate"><span class="pre">IPayloadHolder.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.ISingleValue"><code class="docutils literal notranslate"><span class="pre">ISingleValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.ISingleValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">ISingleValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.ISingleValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">ISingleValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.ISingleValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">ISingleValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.interface.ISingleValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">ISingleValue.encode_top_level()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.list_value">multiversx_sdk.abi.list_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.list_value.ListValue"><code class="docutils literal notranslate"><span class="pre">ListValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.list_value.ListValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">ListValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.list_value.ListValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">ListValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.list_value.ListValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">ListValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.list_value.ListValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">ListValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.list_value.ListValue.get_payload"><code class="docutils literal notranslate"><span class="pre">ListValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.list_value.ListValue.set_payload"><code class="docutils literal notranslate"><span class="pre">ListValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.multi_value">multiversx_sdk.abi.multi_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.multi_value.MultiValue"><code class="docutils literal notranslate"><span class="pre">MultiValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.multi_value.MultiValue.get_payload"><code class="docutils literal notranslate"><span class="pre">MultiValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.multi_value.MultiValue.set_payload"><code class="docutils literal notranslate"><span class="pre">MultiValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.option_value">multiversx_sdk.abi.option_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue"><code class="docutils literal notranslate"><span class="pre">OptionValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">OptionValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">OptionValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">OptionValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">OptionValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.get_payload"><code class="docutils literal notranslate"><span class="pre">OptionValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.set_payload"><code class="docutils literal notranslate"><span class="pre">OptionValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.optional_value">multiversx_sdk.abi.optional_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.optional_value.OptionalValue"><code class="docutils literal notranslate"><span class="pre">OptionalValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.optional_value.OptionalValue.get_payload"><code class="docutils literal notranslate"><span class="pre">OptionalValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.optional_value.OptionalValue.set_payload"><code class="docutils literal notranslate"><span class="pre">OptionalValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.parts">multiversx_sdk.abi.parts module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder"><code class="docutils literal notranslate"><span class="pre">PartsHolder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.append_empty_part"><code class="docutils literal notranslate"><span class="pre">PartsHolder.append_empty_part()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.append_to_last_part"><code class="docutils literal notranslate"><span class="pre">PartsHolder.append_to_last_part()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.focus_on_next_part"><code class="docutils literal notranslate"><span class="pre">PartsHolder.focus_on_next_part()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.get_num_parts"><code class="docutils literal notranslate"><span class="pre">PartsHolder.get_num_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.get_part"><code class="docutils literal notranslate"><span class="pre">PartsHolder.get_part()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.get_parts"><code class="docutils literal notranslate"><span class="pre">PartsHolder.get_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.has_any_part"><code class="docutils literal notranslate"><span class="pre">PartsHolder.has_any_part()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.is_focused_beyond_last_part"><code class="docutils literal notranslate"><span class="pre">PartsHolder.is_focused_beyond_last_part()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.parts.PartsHolder.read_whole_focused_part"><code class="docutils literal notranslate"><span class="pre">PartsHolder.read_whole_focused_part()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.serializer">multiversx_sdk.abi.serializer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.serializer.Serializer"><code class="docutils literal notranslate"><span class="pre">Serializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.serializer.Serializer.deserialize"><code class="docutils literal notranslate"><span class="pre">Serializer.deserialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.serializer.Serializer.deserialize_parts"><code class="docutils literal notranslate"><span class="pre">Serializer.deserialize_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.serializer.Serializer.serialize"><code class="docutils literal notranslate"><span class="pre">Serializer.serialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.serializer.Serializer.serialize_to_parts"><code class="docutils literal notranslate"><span class="pre">Serializer.serialize_to_parts()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.shared">multiversx_sdk.abi.shared module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.shared.convert_native_value_to_dictionary"><code class="docutils literal notranslate"><span class="pre">convert_native_value_to_dictionary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.shared.convert_native_value_to_list"><code class="docutils literal notranslate"><span class="pre">convert_native_value_to_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.shared.decode_length"><code class="docutils literal notranslate"><span class="pre">decode_length()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.shared.encode_length"><code class="docutils literal notranslate"><span class="pre">encode_length()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.shared.read_bytes_exactly"><code class="docutils literal notranslate"><span class="pre">read_bytes_exactly()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.small_int_values">multiversx_sdk.abi.small_int_values module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.I16Value"><code class="docutils literal notranslate"><span class="pre">I16Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.I32Value"><code class="docutils literal notranslate"><span class="pre">I32Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.I64Value"><code class="docutils literal notranslate"><span class="pre">I64Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.I8Value"><code class="docutils literal notranslate"><span class="pre">I8Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue"><code class="docutils literal notranslate"><span class="pre">SmallIntValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">SmallIntValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">SmallIntValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">SmallIntValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">SmallIntValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue.get_payload"><code class="docutils literal notranslate"><span class="pre">SmallIntValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue.set_payload"><code class="docutils literal notranslate"><span class="pre">SmallIntValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue"><code class="docutils literal notranslate"><span class="pre">SmallUIntValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">SmallUIntValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">SmallUIntValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">SmallUIntValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">SmallUIntValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue.get_payload"><code class="docutils literal notranslate"><span class="pre">SmallUIntValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue.set_payload"><code class="docutils literal notranslate"><span class="pre">SmallUIntValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.U16Value"><code class="docutils literal notranslate"><span class="pre">U16Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.U32Value"><code class="docutils literal notranslate"><span class="pre">U32Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.U64Value"><code class="docutils literal notranslate"><span class="pre">U64Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.U8Value"><code class="docutils literal notranslate"><span class="pre">U8Value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.string_value">multiversx_sdk.abi.string_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.string_value.StringValue"><code class="docutils literal notranslate"><span class="pre">StringValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.string_value.StringValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">StringValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.string_value.StringValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">StringValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.string_value.StringValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">StringValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.string_value.StringValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">StringValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.string_value.StringValue.get_payload"><code class="docutils literal notranslate"><span class="pre">StringValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.string_value.StringValue.set_payload"><code class="docutils literal notranslate"><span class="pre">StringValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.struct_value">multiversx_sdk.abi.struct_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.struct_value.StructValue"><code class="docutils literal notranslate"><span class="pre">StructValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.struct_value.StructValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">StructValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.struct_value.StructValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">StructValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.struct_value.StructValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">StructValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.struct_value.StructValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">StructValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.struct_value.StructValue.get_payload"><code class="docutils literal notranslate"><span class="pre">StructValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.struct_value.StructValue.set_payload"><code class="docutils literal notranslate"><span class="pre">StructValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.token_identifier_value">multiversx_sdk.abi.token_identifier_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.token_identifier_value.TokenIdentifierValue"><code class="docutils literal notranslate"><span class="pre">TokenIdentifierValue</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.tuple_value">multiversx_sdk.abi.tuple_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.tuple_value.TupleValue"><code class="docutils literal notranslate"><span class="pre">TupleValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.tuple_value.TupleValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">TupleValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.tuple_value.TupleValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">TupleValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.tuple_value.TupleValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">TupleValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.tuple_value.TupleValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">TupleValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.tuple_value.TupleValue.get_payload"><code class="docutils literal notranslate"><span class="pre">TupleValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.tuple_value.TupleValue.set_payload"><code class="docutils literal notranslate"><span class="pre">TupleValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.type_formula">multiversx_sdk.abi.type_formula module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula.TypeFormula"><code class="docutils literal notranslate"><span class="pre">TypeFormula</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.type_formula_parser">multiversx_sdk.abi.type_formula_parser module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.BEGIN_TYPE_PARAMETERS"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.BEGIN_TYPE_PARAMETERS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.COMMA"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.COMMA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.END_TYPE_PARAMETERS"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.END_TYPE_PARAMETERS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.PUNCTUATION"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.PUNCTUATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.acquire_type_parameters"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.acquire_type_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.acquire_type_with_parameters"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.acquire_type_with_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.is_beginning_of_type_parameters"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.is_beginning_of_type_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.is_end_of_type_parameters"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.is_end_of_type_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.is_punctuation"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.is_punctuation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.parse_expression"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.parse_expression()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.tokenize_expression"><code class="docutils literal notranslate"><span class="pre">TypeFormulaParser.tokenize_expression()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.typesystem">multiversx_sdk.abi.typesystem module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.typesystem.is_bytes"><code class="docutils literal notranslate"><span class="pre">is_bytes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.typesystem.is_list_of_bytes"><code class="docutils literal notranslate"><span class="pre">is_list_of_bytes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.typesystem.is_list_of_typed_values"><code class="docutils literal notranslate"><span class="pre">is_list_of_typed_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.typesystem.is_multi_value"><code class="docutils literal notranslate"><span class="pre">is_multi_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.typesystem.is_single_value"><code class="docutils literal notranslate"><span class="pre">is_single_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.typesystem.is_typed_value"><code class="docutils literal notranslate"><span class="pre">is_typed_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.variadic_values">multiversx_sdk.abi.variadic_values module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.variadic_values.VariadicValues"><code class="docutils literal notranslate"><span class="pre">VariadicValues</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.variadic_values.VariadicValues.get_payload"><code class="docutils literal notranslate"><span class="pre">VariadicValues.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.variadic_values.VariadicValues.set_payload"><code class="docutils literal notranslate"><span class="pre">VariadicValues.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi"><code class="docutils literal notranslate"><span class="pre">Abi</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.decode_endpoint_output_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.decode_endpoint_output_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.encode_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_constructor_input_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.encode_endpoint_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_endpoint_input_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.encode_upgrade_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_upgrade_constructor_input_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.load"><code class="docutils literal notranslate"><span class="pre">Abi.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AbiDefinition"><code class="docutils literal notranslate"><span class="pre">AbiDefinition</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AbiDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AbiDefinition.load"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue"><code class="docutils literal notranslate"><span class="pre">AddressValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">AddressValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">AddressValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">AddressValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">AddressValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue.from_address"><code class="docutils literal notranslate"><span class="pre">AddressValue.from_address()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue.get_payload"><code class="docutils literal notranslate"><span class="pre">AddressValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AddressValue.set_payload"><code class="docutils literal notranslate"><span class="pre">AddressValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigIntValue"><code class="docutils literal notranslate"><span class="pre">BigIntValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigIntValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BigIntValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigIntValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BigIntValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigIntValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BigIntValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigIntValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BigIntValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigIntValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BigIntValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigIntValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BigIntValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigUIntValue"><code class="docutils literal notranslate"><span class="pre">BigUIntValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigUIntValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigUIntValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigUIntValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigUIntValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigUIntValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BigUIntValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BigUIntValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BoolValue"><code class="docutils literal notranslate"><span class="pre">BoolValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BoolValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BoolValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BoolValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BoolValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BoolValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BoolValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BoolValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BoolValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BoolValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BoolValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BoolValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BoolValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue"><code class="docutils literal notranslate"><span class="pre">BytesValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">BytesValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">BytesValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">BytesValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">BytesValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue.get_payload"><code class="docutils literal notranslate"><span class="pre">BytesValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BytesValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue"><code class="docutils literal notranslate"><span class="pre">EnumValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">EnumValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">EnumValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">EnumValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">EnumValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.get_payload"><code class="docutils literal notranslate"><span class="pre">EnumValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.set_payload"><code class="docutils literal notranslate"><span class="pre">EnumValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Field.get_payload"><code class="docutils literal notranslate"><span class="pre">Field.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Field.set_payload"><code class="docutils literal notranslate"><span class="pre">Field.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.I16Value"><code class="docutils literal notranslate"><span class="pre">I16Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.I32Value"><code class="docutils literal notranslate"><span class="pre">I32Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.I64Value"><code class="docutils literal notranslate"><span class="pre">I64Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.I8Value"><code class="docutils literal notranslate"><span class="pre">I8Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.ListValue"><code class="docutils literal notranslate"><span class="pre">ListValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.ListValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">ListValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.ListValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">ListValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.ListValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">ListValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.ListValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">ListValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.ListValue.get_payload"><code class="docutils literal notranslate"><span class="pre">ListValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.ListValue.set_payload"><code class="docutils literal notranslate"><span class="pre">ListValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.MultiValue"><code class="docutils literal notranslate"><span class="pre">MultiValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.MultiValue.get_payload"><code class="docutils literal notranslate"><span class="pre">MultiValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.MultiValue.set_payload"><code class="docutils literal notranslate"><span class="pre">MultiValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionValue"><code class="docutils literal notranslate"><span class="pre">OptionValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">OptionValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">OptionValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">OptionValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">OptionValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionValue.get_payload"><code class="docutils literal notranslate"><span class="pre">OptionValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionValue.set_payload"><code class="docutils literal notranslate"><span class="pre">OptionValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionalValue"><code class="docutils literal notranslate"><span class="pre">OptionalValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionalValue.get_payload"><code class="docutils literal notranslate"><span class="pre">OptionalValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.OptionalValue.set_payload"><code class="docutils literal notranslate"><span class="pre">OptionalValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Serializer"><code class="docutils literal notranslate"><span class="pre">Serializer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Serializer.deserialize"><code class="docutils literal notranslate"><span class="pre">Serializer.deserialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Serializer.deserialize_parts"><code class="docutils literal notranslate"><span class="pre">Serializer.deserialize_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Serializer.serialize"><code class="docutils literal notranslate"><span class="pre">Serializer.serialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Serializer.serialize_to_parts"><code class="docutils literal notranslate"><span class="pre">Serializer.serialize_to_parts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StringValue"><code class="docutils literal notranslate"><span class="pre">StringValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StringValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">StringValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StringValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">StringValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StringValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">StringValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StringValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">StringValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StringValue.get_payload"><code class="docutils literal notranslate"><span class="pre">StringValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StringValue.set_payload"><code class="docutils literal notranslate"><span class="pre">StringValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StructValue"><code class="docutils literal notranslate"><span class="pre">StructValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StructValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">StructValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StructValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">StructValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StructValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">StructValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StructValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">StructValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StructValue.get_payload"><code class="docutils literal notranslate"><span class="pre">StructValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.StructValue.set_payload"><code class="docutils literal notranslate"><span class="pre">StructValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TokenIdentifierValue"><code class="docutils literal notranslate"><span class="pre">TokenIdentifierValue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TupleValue"><code class="docutils literal notranslate"><span class="pre">TupleValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TupleValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">TupleValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TupleValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">TupleValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TupleValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">TupleValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TupleValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">TupleValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TupleValue.get_payload"><code class="docutils literal notranslate"><span class="pre">TupleValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.TupleValue.set_payload"><code class="docutils literal notranslate"><span class="pre">TupleValue.set_payload()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.U16Value"><code class="docutils literal notranslate"><span class="pre">U16Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.U32Value"><code class="docutils literal notranslate"><span class="pre">U32Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.U64Value"><code class="docutils literal notranslate"><span class="pre">U64Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.U8Value"><code class="docutils literal notranslate"><span class="pre">U8Value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.VariadicValues"><code class="docutils literal notranslate"><span class="pre">VariadicValues</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.VariadicValues.get_payload"><code class="docutils literal notranslate"><span class="pre">VariadicValues.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.VariadicValues.set_payload"><code class="docutils literal notranslate"><span class="pre">VariadicValues.set_payload()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="multiversx_sdk.adapters.html">multiversx_sdk.adapters package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.adapters.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.adapters.html#module-multiversx_sdk.adapters.query_runner_adapter">multiversx_sdk.adapters.query_runner_adapter module</a><ul>
@@ -497,6 +1005,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.smart_contract_queries_controller">multiversx_sdk.core.smart_contract_queries_controller module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IAbi"><code class="docutils literal notranslate"><span class="pre">IAbi</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IAbi.decode_endpoint_output_parameters"><code class="docutils literal notranslate"><span class="pre">IAbi.decode_endpoint_output_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IAbi.encode_endpoint_input_parameters"><code class="docutils literal notranslate"><span class="pre">IAbi.encode_endpoint_input_parameters()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner"><code class="docutils literal notranslate"><span class="pre">IQueryRunner</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner.run_query"><code class="docutils literal notranslate"><span class="pre">IQueryRunner.run_query()</span></code></a></li>
 </ul>
@@ -2344,11 +2857,11 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.SmartContractQueriesController">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">SmartContractQueriesController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_runner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner" title="multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner"><span class="pre">IQueryRunner</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/smart_contract_queries_controller.html#SmartContractQueriesController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractQueriesController" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">SmartContractQueriesController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_runner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner" title="multiversx_sdk.core.smart_contract_queries_controller.IQueryRunner"><span class="pre">IQueryRunner</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">abi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_queries_controller.IAbi" title="multiversx_sdk.core.smart_contract_queries_controller.IAbi"><span class="pre">IAbi</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/smart_contract_queries_controller.html#SmartContractQueriesController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractQueriesController" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.SmartContractQueriesController.create_query">
-<span class="sig-name descname"><span class="pre">create_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_query.SmartContractQuery" title="multiversx_sdk.core.smart_contract_query.SmartContractQuery"><span class="pre">SmartContractQuery</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/smart_contract_queries_controller.html#SmartContractQueriesController.create_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractQueriesController.create_query" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.smart_contract_query.SmartContractQuery" title="multiversx_sdk.core.smart_contract_query.SmartContractQuery"><span class="pre">SmartContractQuery</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/smart_contract_queries_controller.html#SmartContractQueriesController.create_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractQueriesController.create_query" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2388,7 +2901,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.SmartContractTransactionsFactory">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">SmartContractTransactionsFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory.IConfig" title="multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory.IConfig"><span class="pre">IConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_factories/smart_contract_transactions_factory.html#SmartContractTransactionsFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractTransactionsFactory" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">SmartContractTransactionsFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory.IConfig" title="multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory.IConfig"><span class="pre">IConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">abi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.transactions_factories.html#multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory.IAbi" title="multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory.IAbi"><span class="pre">IAbi</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_factories/smart_contract_transactions_factory.html#SmartContractTransactionsFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractTransactionsFactory" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_changing_owner_address">
@@ -3352,7 +3865,7 @@ patience_time_in_milliseconds (Optional[int]): The patience, an extra time (in m
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="modules.html" class="btn btn-neutral float-left" title="multiversx_sdk" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="multiversx_sdk.adapters.html" class="btn btn-neutral float-right" title="multiversx_sdk.adapters package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="multiversx_sdk.abi.html" class="btn btn-neutral float-right" title="multiversx_sdk.abi package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
