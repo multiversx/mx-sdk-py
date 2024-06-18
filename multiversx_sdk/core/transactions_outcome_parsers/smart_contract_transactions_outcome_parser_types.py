@@ -8,6 +8,9 @@ class DeployedSmartContract:
     owner_address: str
     code_hash: bytes
 
+    def __repr__(self) -> str:
+        return f"DeployedSmartContract(address={self.address}, owner_address={self.owner_address}, code_hash={self.code_hash.hex()})"
+
 
 @dataclass
 class SmartContractDeployOutcome:
