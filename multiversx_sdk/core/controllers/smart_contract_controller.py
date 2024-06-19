@@ -72,7 +72,17 @@ class IAccount(Protocol):
 
 
 class IAbi(Protocol):
-    pass
+    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
+        ...
+
+    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        ...
+
+    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        ...
+
+    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: List[bytes]) -> List[Any]:
+        ...
 
 
 class SmartContractController:
@@ -82,7 +92,10 @@ class SmartContractController:
         self.abi = abi
         self.factory: Union[SmartContractTransactionsFactory, None] = None
         self.parser = SmartContractTransactionsOutcomeParser()
-        self.query_controller = SmartContractQueriesController(QueryRunnerAdapter(self.provider))
+        self.query_controller = SmartContractQueriesController(
+            query_runner=QueryRunnerAdapter(self.provider),
+            abi=self.abi
+        )
         self.tx_computer = TransactionComputer()
 
     def create_transaction_for_deploy(self,
@@ -210,4 +223,4 @@ class SmartContractController:
         if self.factory is None:
             self.chain_id = self.provider.get_network_config().chain_id
             config = TransactionsFactoryConfig(self.chain_id)
-            self.factory = SmartContractTransactionsFactory(config)
+            self.factory = SmartContractTransactionsFactory(config, self.abi)
