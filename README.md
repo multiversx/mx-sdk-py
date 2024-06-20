@@ -5,15 +5,16 @@
 | Name                                                                                                           |    Stmts |     Miss |   Cover |   Missing |
 |--------------------------------------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
 | multiversx\_sdk/\_\_init\_\_.py                                                                                |       43 |        0 |    100% |           |
-| multiversx\_sdk/abi/\_\_init\_\_.py                                                                            |       21 |        0 |    100% |           |
-| multiversx\_sdk/abi/abi.py                                                                                     |      179 |       10 |     94% |77, 97, 144, 169, 177, 189, 195, 197, 199, 203 |
+| multiversx\_sdk/abi/\_\_init\_\_.py                                                                            |       22 |        0 |    100% |           |
+| multiversx\_sdk/abi/abi.py                                                                                     |      184 |       13 |     93% |78, 98, 145, 170, 178, 190, 196, 198, 200, 204, 224-226 |
 | multiversx\_sdk/abi/abi\_definition.py                                                                         |      146 |       20 |     86% |40, 49, 97, 113, 129, 159, 184, 207, 227, 248, 255-256, 260-262, 268, 276-278, 282, 289 |
 | multiversx\_sdk/abi/address\_value.py                                                                          |       37 |        5 |     86% |14, 30, 37-38, 53 |
+| multiversx\_sdk/abi/array\_value.py                                                                            |       52 |        3 |     94% |45, 73, 81 |
 | multiversx\_sdk/abi/bigint\_value.py                                                                           |       36 |       21 |     42% |11, 14-16, 19-20, 23-25, 28, 31-38, 41, 44, 47, 50, 53 |
 | multiversx\_sdk/abi/biguint\_value.py                                                                          |       37 |        1 |     97% |        35 |
 | multiversx\_sdk/abi/bool\_value.py                                                                             |       40 |       21 |     48% |13-17, 26-27, 30-38, 41-47, 53, 56, 59 |
 | multiversx\_sdk/abi/bytes\_value.py                                                                            |       27 |        2 |     93% |    27, 39 |
-| multiversx\_sdk/abi/codec.py                                                                                   |       24 |        8 |     67% |12-14, 22-27 |
+| multiversx\_sdk/abi/codec.py                                                                                   |       24 |        2 |     92% |     26-27 |
 | multiversx\_sdk/abi/constants.py                                                                               |        8 |        0 |    100% |           |
 | multiversx\_sdk/abi/enum\_value.py                                                                             |       71 |       11 |     85% |33, 39, 49-54, 62, 80, 87, 100 |
 | multiversx\_sdk/abi/fields.py                                                                                  |       43 |        4 |     91% |26-27, 34-35 |
@@ -147,7 +148,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6094** |  **728** | **88%** |           |
+|                                                                                                      **TOTAL** | **6152** |  **728** | **88%** |           |
 
 
 ## Setup coverage badge
