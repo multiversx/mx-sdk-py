@@ -92,17 +92,17 @@ def test_decode_top_level():
     codec = Codec()
     data = bytes.fromhex("000100020003")
 
-    destinattion = ArrayValue(length=3, item_creator=lambda: U16Value())
-    codec.decode_top_level(data, destinattion)
+    destination = ArrayValue(length=3, item_creator=lambda: U16Value())
+    codec.decode_top_level(data, destination)
 
-    assert destinattion.items == [U16Value(1), U16Value(2), U16Value(3)]
+    assert destination.items == [U16Value(1), U16Value(2), U16Value(3)]
 
 
 def test_decode_nested():
     codec = Codec()
     data = bytes.fromhex("000100020003")
 
-    destinattion = ArrayValue(length=3, item_creator=lambda: U16Value())
-    codec.decode_nested(data, destinattion)
+    destination = ArrayValue(length=3, item_creator=lambda: U16Value())
+    codec.decode_nested(data, destination)
 
-    assert destinattion.items == [U16Value(1), U16Value(2), U16Value(3)]
+    assert destination.items == [U16Value(1), U16Value(2), U16Value(3)]
