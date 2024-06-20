@@ -4,8 +4,9 @@ import pytest
 
 from multiversx_sdk.abi.array_value import ArrayValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.codec import Codec
 from multiversx_sdk.abi.fields import Field
-from multiversx_sdk.abi.small_int_values import U32Value
+from multiversx_sdk.abi.small_int_values import U16Value, U32Value
 from multiversx_sdk.abi.struct_value import StructValue
 
 
@@ -69,3 +70,39 @@ def test_set_payload_and_get_payload():
     with pytest.raises(ValueError, match="cannot convert native value to list, because of: 'int' object is not iterable"):
         value = ArrayValue(length=1, item_creator=lambda: U32Value())
         value.set_payload(42)
+
+
+def test_encode_top_level():
+    codec = Codec()
+    array_value = ArrayValue(length=3, items=[U16Value(1), U16Value(2), U16Value(3)])
+
+    encoded = codec.encode_top_level(array_value)
+    assert encoded.hex() == "000100020003"
+
+
+def test_encode_nested():
+    codec = Codec()
+    array_value = ArrayValue(length=3, items=[U16Value(1), U16Value(2), U16Value(3)])
+
+    encoded = codec.encode_nested(array_value)
+    assert encoded.hex() == "000100020003"
+
+
+def test_decode_top_level():
+    codec = Codec()
+    data = bytes.fromhex("000100020003")
+
+    destinattion = ArrayValue(length=3, item_creator=lambda: U16Value())
+    codec.decode_top_level(data, destinattion)
+
+    assert destinattion.items == [U16Value(1), U16Value(2), U16Value(3)]
+
+
+def test_decode_nested():
+    codec = Codec()
+    data = bytes.fromhex("000100020003")
+
+    destinattion = ArrayValue(length=3, item_creator=lambda: U16Value())
+    codec.decode_nested(data, destinattion)
+
+    assert destinattion.items == [U16Value(1), U16Value(2), U16Value(3)]

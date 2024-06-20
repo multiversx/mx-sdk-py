@@ -2,8 +2,7 @@ import io
 from typing import Any, Callable, List, Optional
 
 from multiversx_sdk.abi.interface import ISingleValue
-from multiversx_sdk.abi.shared import (convert_native_value_to_list,
-                                       decode_length, encode_length)
+from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class ArrayValue:
@@ -20,17 +19,14 @@ class ArrayValue:
         self.item_creator = item_creator
 
     def encode_nested(self, writer: io.BytesIO):
-        encode_length(writer, len(self.items))
         self._encode_list_items(writer)
 
     def encode_top_level(self, writer: io.BytesIO):
         self._encode_list_items(writer)
 
     def decode_nested(self, reader: io.BytesIO):
-        length = decode_length(reader)
-
         self.items = []
-        for _ in range(length):
+        for _ in range(self.length):
             self._decode_list_item(reader)
 
     def decode_top_level(self, data: bytes):
