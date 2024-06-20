@@ -8,11 +8,13 @@ class AbiDefinition:
                  constructor: "EndpointDefinition",
                  upgrade_constructor: "EndpointDefinition",
                  endpoints: List["EndpointDefinition"],
-                 types: "TypesDefinitions") -> None:
+                 types: "TypesDefinitions",
+                 events: List["EventDefinition"]) -> None:
         self.constructor = constructor
         self.upgrade_constructor = upgrade_constructor
         self.endpoints = endpoints
         self.types = types
+        self.events = events
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "AbiDefinition":
@@ -25,11 +27,14 @@ class AbiDefinition:
         endpoints = [EndpointDefinition.from_dict(item) for item in data["endpoints"]] if "endpoints" in data else []
         types = TypesDefinitions.from_dict(data.get("types", {}))
 
+        events = [EventDefinition.from_dict(item) for item in data["events"]] if "events" in data else []
+
         return cls(
             constructor=constructor,
             upgrade_constructor=upgrade_constructor,
             endpoints=endpoints,
-            types=types
+            types=types,
+            events=events
         )
 
     @classmethod
@@ -282,7 +287,7 @@ class EventTopicDefinition:
         return cls(
             name=data["name"],
             type=data["type"],
-            indexed=data["indexed"]
+            indexed=data.get("indexed", False)
         )
 
     def __repr__(self):

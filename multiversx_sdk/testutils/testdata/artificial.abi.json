@@ -41,5 +41,17 @@
       "outputs": []
     }
   ],
-  "types": {}
+  "types": {},
+  "events": [
+    {
+      "identifier": "firstEvent",
+      "inputs": [
+          {
+              "name": "result",
+              "type": "BigUint",
+              "indexed": true
+          }
+      ]
+  }
+  ]
 }

@@ -4,7 +4,8 @@ from typing import Any, Dict, List, cast
 
 from multiversx_sdk.abi.abi_definition import (AbiDefinition,
                                                EndpointDefinition,
-                                               EnumDefinition,
+                                               EnumDefinition, EventDefinition,
+                                               EventTopicDefinition,
                                                ParameterDefinition,
                                                StructDefinition)
 from multiversx_sdk.abi.address_value import AddressValue
@@ -38,6 +39,7 @@ class Abi:
         self.definition = definition
         self.custom_types_prototypes_by_name: Dict[str, Any] = {}
         self.endpoints_prototypes_by_name: Dict[str, EndpointPrototype] = {}
+        self.events_prototypes_by_name: Dict[str, EndpointPrototype] = {}
 
         for name in definition.types.enums:
             self.custom_types_prototypes_by_name[name] = self._create_custom_type_prototype(name)
@@ -65,6 +67,17 @@ class Abi:
             )
 
             self.endpoints_prototypes_by_name[endpoint.name] = endpoint_prototype
+
+        for event in definition.events:
+            input_prototype = self._create_event_input_prototypes(event)
+
+            # events do not have 'outputs'
+            event_prototype = EndpointPrototype(
+                input_parameters=input_prototype,
+                output_parameters=[]
+            )
+
+            self.events_prototypes_by_name[event.identifier] = event_prototype
 
     def _create_custom_type_prototype(self, name: str) -> Any:
         if name in self.definition.types.enums:
@@ -125,7 +138,20 @@ class Abi:
 
         return prototypes
 
+    def _create_event_input_prototypes(self, event: EventDefinition) -> List[Any]:
+        prototypes: List[Any] = []
+
+        for topic in event.inputs:
+            parameter_prototype = self._create_topic_prototype(topic)
+            prototypes.append(parameter_prototype)
+
+        return prototypes
+
     def _create_parameter_prototype(self, parameter: ParameterDefinition) -> Any:
+        type_formula = self._type_formula_parser.parse_expression(parameter.type)
+        return self._create_prototype(type_formula)
+
+    def _create_topic_prototype(self, parameter: EventTopicDefinition) -> Any:
         type_formula = self._type_formula_parser.parse_expression(parameter.type)
         return self._create_prototype(type_formula)
 
@@ -162,6 +188,26 @@ class Abi:
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
         return output_native_values
 
+    def decode_event(self, event_name: str, encoded_values: List[bytes]) -> List[Any]:
+        event_prototype = self._get_event_prototype(event_name)
+        output_values = deepcopy(event_prototype.input_parameters)
+        self._serializer.deserialize_parts(encoded_values, output_values)
+
+        output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
+        output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
+        return output_native_values
+
+    def get_event(self, name: str) -> EventDefinition:
+        event = [event for event in self.definition.events if event.identifier == name]
+
+        if not len(event):
+            raise Exception(f"event [{name}] not found")
+
+        if len(event) > 1:
+            raise Exception(f"more than one event found: [{event}]")
+
+        return event[0]
+
     def _get_custom_type_prototype(self, type_name: str) -> Any:
         type_prototype = self.custom_types_prototypes_by_name.get(type_name)
 
@@ -177,6 +223,14 @@ class Abi:
             raise ValueError(f"endpoint '{endpoint_name}' not found")
 
         return endpoint_prototype
+
+    def _get_event_prototype(self, event_name: str) -> 'EndpointPrototype':
+        event_prototype = self.endpoints_prototypes_by_name.get(event_name)
+
+        if not event_prototype:
+            raise ValueError(f"endpoint '{event_name}' not found")
+
+        return event_prototype
 
     def _create_prototype(self, type_formula: TypeFormula) -> Any:
         name = type_formula.name

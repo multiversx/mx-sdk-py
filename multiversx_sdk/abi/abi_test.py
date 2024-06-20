@@ -31,6 +31,8 @@ def test_abi():
     assert abi.definition.upgrade_constructor.inputs == [ParameterDefinition("initial_value", "BigUint")]
     assert abi.definition.upgrade_constructor.outputs == []
 
+    assert abi.definition.events == []
+
     assert abi.definition.endpoints[0].name == "getSum"
     assert abi.definition.endpoints[0].inputs == []
     assert abi.definition.endpoints[0].outputs == [ParameterDefinition("", "BigUint")]
@@ -52,6 +54,14 @@ def test_abi():
     assert abi.endpoints_prototypes_by_name["getSum"].output_parameters == [BigUIntValue()]
     assert abi.endpoints_prototypes_by_name["add"].input_parameters == [BigUIntValue()]
     assert abi.endpoints_prototypes_by_name["add"].output_parameters == []
+
+
+def test_abi_events():
+    abi = Abi.load(testdata / "artificial.abi.json")
+
+    assert len(abi.definition.events) == 1
+    assert abi.events_prototypes_by_name["firstEvent"].input_parameters == [BigUIntValue()]
+    assert abi.events_prototypes_by_name["firstEvent"].output_parameters == []
 
 
 def test_encode_endpoint_input_parameters_artificial_contract():
