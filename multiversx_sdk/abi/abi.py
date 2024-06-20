@@ -9,6 +9,7 @@ from multiversx_sdk.abi.abi_definition import (AbiDefinition,
                                                ParameterDefinition,
                                                StructDefinition)
 from multiversx_sdk.abi.address_value import AddressValue
+from multiversx_sdk.abi.array_value import ArrayValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
@@ -212,7 +213,7 @@ class Abi:
         type_prototype = self.custom_types_prototypes_by_name.get(type_name)
 
         if not type_prototype:
-            raise ValueError(f"custom type '{type_name}' not found")
+            return self._create_custom_type_prototype(type_name)
 
         return type_prototype
 
@@ -273,6 +274,10 @@ class Abi:
         if name == "List":
             type_parameter = type_formula.type_parameters[0]
             return ListValue([], item_creator=lambda: self._create_prototype(type_parameter))
+        if name.startswith("array"):
+            type_parameter = type_formula.type_parameters[0]
+            length = int(name[5:])
+            return ArrayValue(length=length, item_creator=lambda: self._create_prototype(type_parameter))
         if name == "optional":
             # The prototype of an optional is provided a value (the placeholder).
             type_parameter = type_formula.type_parameters[0]
