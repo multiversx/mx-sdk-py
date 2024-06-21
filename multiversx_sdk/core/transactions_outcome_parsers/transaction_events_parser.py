@@ -9,7 +9,7 @@ class IAbi(Protocol):
     def get_event(self, name: str) -> EventDefinition:
         ...
 
-    def decode_event(self, event_name: str, encoded_values: List[bytes]) -> List[Any]:
+    def decode_event(self, event_definition: EventDefinition, topics: List[bytes], data_items: List[bytes]) -> List[Any]:
         ...
 
 
@@ -34,15 +34,8 @@ class TransactionEventsParser:
             event.topics = event.topics[1:]
 
         event_definition = self.abi.get_event(abi_identifier)
-        return self.do_parse_event(
+        return self.abi.decode_event(
+            event_definition=event_definition,
             topics=event.topics,
             data_items=event.data_items,
-            event_definition=event_definition
         )
-
-    def do_parse_event(self, topics: List[bytes], data_items: List[bytes], event_definition: EventDefinition) -> Any:
-        result: Any = {}
-
-        # "Indexed" ABI "event.inputs" correspond to "event.topics[1:]":
-        indexed_inputs = [input for input in event_definition.inputs if input.indexed]
-        decoded_topics = []

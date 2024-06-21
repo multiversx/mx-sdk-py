@@ -40,7 +40,7 @@ class Abi:
         self.definition = definition
         self.custom_types_prototypes_by_name: Dict[str, Any] = {}
         self.endpoints_prototypes_by_name: Dict[str, EndpointPrototype] = {}
-        self.events_prototypes_by_name: Dict[str, EndpointPrototype] = {}
+        self.events_prototypes_by_name: Dict[str, EventPrototype] = {}
 
         for name in definition.types.enums:
             self.custom_types_prototypes_by_name[name] = self._create_custom_type_prototype(name)
@@ -72,10 +72,8 @@ class Abi:
         for event in definition.events:
             input_prototype = self._create_event_input_prototypes(event)
 
-            # events do not have 'outputs'
-            event_prototype = EndpointPrototype(
-                input_parameters=input_prototype,
-                output_parameters=[]
+            event_prototype = EventPrototype(
+                input_parameters=input_prototype
             )
 
             self.events_prototypes_by_name[event.identifier] = event_prototype
@@ -143,7 +141,7 @@ class Abi:
         prototypes: List[Any] = []
 
         for topic in event.inputs:
-            parameter_prototype = self._create_topic_prototype(topic)
+            parameter_prototype = EventField(name=topic.name, value=self._create_topic_prototype(topic))
             prototypes.append(parameter_prototype)
 
         return prototypes
@@ -189,14 +187,37 @@ class Abi:
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
         return output_native_values
 
-    def decode_event(self, event_name: str, encoded_values: List[bytes]) -> List[Any]:
-        event_prototype = self._get_event_prototype(event_name)
-        output_values = deepcopy(event_prototype.input_parameters)
-        self._serializer.deserialize_parts(encoded_values, output_values)
+    def decode_event(self, event_definition: EventDefinition, topics: List[bytes], data_items: List[bytes]) -> List[Any]:
+        result: Any = {}
+        event_prototype = self._get_event_prototype(event_definition.identifier)
+
+        indexed_inputs = [input for input in event_definition.inputs if input.indexed]
+        indexed_inputs_names = [item.name for item in indexed_inputs]
+
+        parameters = deepcopy(event_prototype.input_parameters)
+
+        output_values = [param.value for param in parameters if param.name in indexed_inputs_names]
+        self._serializer.deserialize_parts(topics, output_values)
 
         output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
-        return output_native_values
+
+        for i in range(len(indexed_inputs)):
+            result[indexed_inputs[i].name] = output_native_values[i]
+
+        non_indexed_inputs = [input for input in event_definition.inputs if not input.indexed]
+        non_indexed_inputs_names = [item.name for item in non_indexed_inputs]
+
+        output_values = [param.value for param in parameters if param.name in non_indexed_inputs_names]
+        self._serializer.deserialize_parts(data_items, output_values)
+
+        output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
+        output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
+
+        for i in range(len(non_indexed_inputs)):
+            result[non_indexed_inputs[i].name] = output_native_values[i]
+
+        return result
 
     def get_event(self, name: str) -> EventDefinition:
         event = [event for event in self.definition.events if event.identifier == name]
@@ -225,11 +246,12 @@ class Abi:
 
         return endpoint_prototype
 
-    def _get_event_prototype(self, event_name: str) -> 'EndpointPrototype':
-        event_prototype = self.endpoints_prototypes_by_name.get(event_name)
+    def _get_event_prototype(self, event_name: str) -> 'EventPrototype':
+        event_prototype = self.events_prototypes_by_name.get(event_name)
 
         if not event_prototype:
-            raise ValueError(f"endpoint '{event_name}' not found")
+            raise ValueError(f"event '{event_name}' not found")
+            # return self._create_event_input_prototypes()
 
         return event_prototype
 
@@ -302,3 +324,14 @@ class EndpointPrototype:
     def __init__(self, input_parameters: List[Any], output_parameters: List[Any]) -> None:
         self.input_parameters = input_parameters
         self.output_parameters = output_parameters
+
+
+class EventField:
+    def __init__(self, name: str, value: Any) -> None:
+        self.name = name
+        self.value = value
+
+
+class EventPrototype:
+    def __init__(self, input_parameters: List[EventField]) -> None:
+        self.input_parameters = input_parameters

@@ -61,7 +61,6 @@ def test_abi_events():
 
     assert len(abi.definition.events) == 1
     assert abi.events_prototypes_by_name["firstEvent"].input_parameters == [BigUIntValue()]
-    assert abi.events_prototypes_by_name["firstEvent"].output_parameters == []
 
 
 def test_encode_endpoint_input_parameters_artificial_contract():

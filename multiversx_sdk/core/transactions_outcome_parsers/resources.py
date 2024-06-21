@@ -59,6 +59,10 @@ def find_events_by_identifier(transaction_outcome: TransactionOutcome, identifie
     return find_events_by_predicate(transaction_outcome, lambda event: event.identifier == identifier)
 
 
+def find_events_by_first_topic(transaction_outcome: TransactionOutcome, topic: str) -> List[TransactionEvent]:
+    return find_events_by_predicate(transaction_outcome, lambda event: event.topics[0].decode() == topic if len(event.topics) else False)
+
+
 def find_events_by_predicate(
     transaction_outcome: TransactionOutcome,
     predicate: Callable[[TransactionEvent], bool]
