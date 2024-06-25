@@ -27,7 +27,10 @@ def test_parse_events_minimalistic():
     )
 
     assert len(values) == 1
-    assert values[0] == SimpleNamespace(**{"batch_id": 42, "tx_id": 43})
+    assert values[0] == SimpleNamespace(
+        batch_id=42,
+        tx_id=43
+    )
 
 
 def test_parse_esdt_safe_deposit_event():
@@ -58,20 +61,20 @@ def test_parse_esdt_safe_deposit_event():
     parsed = parser.parse_events(events)
 
     assert len(parsed) == 1
-    assert parsed[0] == SimpleNamespace(**{
-        "dest_address": Address.new_from_bech32("erd1wfkv9495dhtt6a9yepxsyu2mlpw2ua333j4cr0qfulpxr4q5nfnshgyqun").get_public_key(),
-        "tokens": [SimpleNamespace(
+    assert parsed[0] == SimpleNamespace(
+        dest_address=Address.new_from_bech32("erd1wfkv9495dhtt6a9yepxsyu2mlpw2ua333j4cr0qfulpxr4q5nfnshgyqun").get_public_key(),
+        tokens=[SimpleNamespace(
             token_identifier="WEGLD-01e49d",
             token_nonce=0,
             amount=100
         )],
-        "event_data": SimpleNamespace(
+        event_data=SimpleNamespace(
             tx_nonce=987,
             opt_function=None,
             opt_arguments=None,
             opt_gas_limit=None,
         )
-    })
+    )
 
 
 def test_parse_multisig_start_perform_action():
@@ -159,8 +162,8 @@ def test_parse_event_with_multi_values():
         )
     )
 
-    assert parsed == SimpleNamespace(**{
-        "a": [42, "test", 43, "test"],
-        "b": ["test", 44],
-        "c": 42
-    })
+    assert parsed == SimpleNamespace(
+        a=[42, "test", 43, "test"],
+        b=["test", 44],
+        c=42
+    )

@@ -1,4 +1,3 @@
-from copy import deepcopy
 from types import SimpleNamespace
 from typing import List, Protocol
 
@@ -28,7 +27,7 @@ class TransactionEventsParser:
         first_topic = event.topics[0].decode() if len(event.topics) else ""
         abi_identifier = first_topic if self.first_topic_as_identifier else event.identifier
 
-        topics = deepcopy(event.topics)
+        topics = event.topics
 
         if self.first_topic_as_identifier:
             topics = topics[1:]
