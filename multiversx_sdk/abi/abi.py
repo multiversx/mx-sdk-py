@@ -251,7 +251,6 @@ class Abi:
 
         if not event_prototype:
             raise ValueError(f"event '{event_name}' not found")
-            # return self._create_event_input_prototypes()
 
         return event_prototype
 
