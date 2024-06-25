@@ -66,6 +66,17 @@ class AbiDefinition:
         data = json.loads(content)
         return cls.from_dict(data)
 
+    def get_event_definition(self, name: str) -> "EventDefinition":
+        event = [event for event in self.events if event.identifier == name]
+
+        if not len(event):
+            raise Exception(f"event [{name}] not found")
+
+        if len(event) > 1:
+            raise Exception(f"more than one event found: [{event}]")
+
+        return event[0]
+
 
 class EndpointDefinition:
     def __init__(self,
