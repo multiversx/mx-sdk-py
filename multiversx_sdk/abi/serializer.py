@@ -1,10 +1,12 @@
 from typing import Any, List, Sequence
 
 from multiversx_sdk.abi.codec import Codec
+from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.multi_value import *
 from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.parts import PartsHolder
+from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.abi.variadic_values import VariadicValues
 
 
@@ -51,6 +53,10 @@ class Serializer:
                     raise ValueError("variadic values must be last among input values")
 
                 self._do_serialize(parts_holder, value.items)
+            elif isinstance(value, CountedVariadicValues):
+                length = U32Value(value.length)
+                self._do_serialize(parts_holder, [length])
+                self._do_serialize(parts_holder, value.items)
             elif isinstance(value, ISingleValue):
                 parts_holder.append_empty_part()
                 self._serialize_single_value(parts_holder, value)
@@ -92,6 +98,8 @@ class Serializer:
                     raise ValueError("variadic values must be last among output values")
 
                 self._deserialize_variadic_values(parts_holder, value)
+            elif isinstance(value, CountedVariadicValues):
+                self._deserialize_counted_variadic_values(parts_holder, value)
             elif isinstance(value, ISingleValue):
                 self._deserialize_single_value(parts_holder, value)
             else:
@@ -107,6 +115,20 @@ class Serializer:
             self._do_deserialize(parts_holder, [new_item])
 
             value.items.append(new_item)
+
+    def _deserialize_counted_variadic_values(self, parts_holder: PartsHolder, value: CountedVariadicValues):
+        if value.item_creator is None:
+            raise Exception("cannot decode list: item creator is None")
+
+        self._deserialize_single_value(parts_holder, U32Value())
+
+        while not parts_holder.is_focused_beyond_last_part():
+            new_item = value.item_creator()
+
+            self._do_deserialize(parts_holder, [new_item])
+
+            value.items.append(new_item)
+            value.length += 1
 
     def _deserialize_single_value(self, parts_holder: PartsHolder, value: ISingleValue):
         part = parts_holder.read_whole_focused_part()

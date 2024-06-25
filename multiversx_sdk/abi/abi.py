@@ -12,6 +12,7 @@ from multiversx_sdk.abi.array_value import ArrayValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.interface import IPayloadHolder
@@ -231,6 +232,9 @@ class Abi:
         if name == "variadic":
             type_parameter = type_formula.type_parameters[0]
             return VariadicValues([], item_creator=lambda: self._create_prototype(type_parameter))
+        if name == "counted-variadic":
+            type_parameter = type_formula.type_parameters[0]
+            return CountedVariadicValues([], item_creator=lambda: self._create_prototype(type_parameter))
         if name == "multi":
             return MultiValue([self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
 

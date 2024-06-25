@@ -7,11 +7,12 @@ from multiversx_sdk.abi.abi_definition import ParameterDefinition
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.list_value import ListValue
 from multiversx_sdk.abi.option_value import OptionValue
-from multiversx_sdk.abi.small_int_values import U64Value
+from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
@@ -52,6 +53,22 @@ def test_abi():
     assert abi.endpoints_prototypes_by_name["getSum"].output_parameters == [BigUIntValue()]
     assert abi.endpoints_prototypes_by_name["add"].input_parameters == [BigUIntValue()]
     assert abi.endpoints_prototypes_by_name["add"].output_parameters == []
+
+
+def test_load_abi_with_counted_variadic():
+    abi = Abi.load(testdata / "counted-variadic.abi.json")
+
+    bar_prototype = abi.endpoints_prototypes_by_name["bar"]
+
+    assert isinstance(bar_prototype.input_parameters[0], CountedVariadicValues)
+    assert bar_prototype.input_parameters[0].items == []
+    assert bar_prototype.input_parameters[0].item_creator
+    assert bar_prototype.input_parameters[0].item_creator() == U32Value()
+
+    assert isinstance(bar_prototype.input_parameters[1], CountedVariadicValues)
+    assert bar_prototype.input_parameters[1].items == []
+    assert bar_prototype.input_parameters[1].item_creator
+    assert bar_prototype.input_parameters[1].item_creator() == BytesValue()
 
 
 def test_encode_endpoint_input_parameters_artificial_contract():
