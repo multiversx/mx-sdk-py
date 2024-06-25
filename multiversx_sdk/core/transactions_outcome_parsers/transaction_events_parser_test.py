@@ -2,6 +2,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractCallOutcome, SmartContractResult, TransactionEvent,
@@ -111,4 +112,55 @@ def test_parse_multisig_start_perform_action():
 
 
 def test_parse_event_with_multi_values():
-    pass
+    abi_definition = AbiDefinition.from_dict(
+        {
+            "events": [
+                {
+                    "identifier": "doFoobar",
+                    "inputs": [
+                        {
+                            "name": "a",
+                            "type": "multi<u8, utf-8 string, u8, utf-8 string>",
+                            "indexed": True,
+                        },
+                        {
+                            "name": "b",
+                            "type": "multi<utf-8 string, u8>",
+                            "indexed": True,
+                        },
+                        {
+                            "name": "c",
+                            "type": "u8",
+                            "indexed": False,
+                        },
+                    ],
+                },
+            ]
+        }
+    )
+
+    abi = Abi(abi_definition)
+    parser = TransactionEventsParser(abi=abi)
+    value = 42
+
+    parsed = parser.parse_event(
+        TransactionEvent(
+            identifier="foobar",
+            topics=[
+                "doFoobar".encode(),
+                value.to_bytes(),
+                "test".encode(),
+                (value + 1).to_bytes(),
+                "test".encode(),
+                "test".encode(),
+                (value + 2).to_bytes()
+            ],
+            data_items=[value.to_bytes()]
+        )
+    )
+
+    assert parsed == {
+        "a": [42, "test", 43, "test"],
+        "b": ["test", 44],
+        "c": 42
+    }

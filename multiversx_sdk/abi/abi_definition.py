@@ -50,7 +50,8 @@ class AbiDefinition:
             return EndpointDefinition.from_dict(data["upgradeConstructor"])
 
         # Fallback for contracts written using a not-old, but not-new Rust framework:
-        if "upgrade" in data["endpoints"]:
+        endpoints = data.get("endpoints", [])
+        if "upgrade" in endpoints:
             return EndpointDefinition.from_dict(data["endpoints"]["upgrade"])
 
         # Fallback for contracts written using an old Rust framework:
