@@ -123,16 +123,13 @@ class Serializer:
         length = U32Value()
         self._deserialize_single_value(parts_holder, length)
 
-        while not parts_holder.is_focused_beyond_last_part():
+        for _ in range(int(length)):
             new_item = value.item_creator()
 
             self._do_deserialize(parts_holder, [new_item])
 
             value.items.append(new_item)
             value.length += 1
-
-        if int(length) != value.length:
-            raise Exception(f"wrong number of elements for counted-variadic, expected: [{int(length)}], actual: [{value.length}]")
 
     def _deserialize_single_value(self, parts_holder: PartsHolder, value: ISingleValue):
         part = parts_holder.read_whole_focused_part()
