@@ -120,7 +120,8 @@ class Serializer:
         if value.item_creator is None:
             raise Exception("cannot decode list: item creator is None")
 
-        self._deserialize_single_value(parts_holder, U32Value())
+        length = U32Value()
+        self._deserialize_single_value(parts_holder, length)
 
         while not parts_holder.is_focused_beyond_last_part():
             new_item = value.item_creator()
@@ -129,6 +130,9 @@ class Serializer:
 
             value.items.append(new_item)
             value.length += 1
+
+        if int(length) != value.length:
+            raise Exception(f"wrong number of elements for counted-variadic, expected: [{int(length)}], actual: [{value.length}]")
 
     def _deserialize_single_value(self, parts_holder: PartsHolder, value: ISingleValue):
         part = parts_holder.read_whole_focused_part()

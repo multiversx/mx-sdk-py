@@ -1,3 +1,4 @@
+import re
 from typing import cast
 
 import pytest
@@ -338,6 +339,14 @@ def test_deserialize():
         )
 
         serializer.deserialize("0100", [destination])
+
+    # counted-variadic<u8>, should fail
+    destination = CountedVariadicValues(
+        item_creator=lambda: U8Value()
+    )
+
+    with pytest.raises(Exception, match=re.escape("wrong number of elements for counted-variadic, expected: [2], actual: [3]")):
+        serializer.deserialize("02@2A@2B@2C", [destination])
 
     # counted-variadic<u8>
     destination = CountedVariadicValues(
