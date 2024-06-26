@@ -1,6 +1,8 @@
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.core.address import Address
@@ -166,4 +168,36 @@ def test_parse_event_with_multi_values():
         a=[42, "test", 43, "test"],
         b=["test", 44],
         c=42
+    )
+
+
+@pytest.mark.networkInteraction
+def test_multisig_start_perform_action():
+    from multiversx_sdk import (ApiNetworkProvider, TransactionEventsParser,
+                                TransactionsConverter,
+                                find_events_by_first_topic)
+    from multiversx_sdk.abi import Abi
+
+    api = ApiNetworkProvider("https://testnet-api.multiversx.com")
+    converter = TransactionsConverter()
+
+    transaction_on_network = api.get_transaction("6f006c99e45525c94629db2442d9ca27ff088ad113a09f0a3a3e24bcc164945a")
+    transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
+
+    abi = Abi.load(Path(testdata / "multisig-full.abi.json"))
+    events_parser = TransactionEventsParser(abi)
+
+    events = find_events_by_first_topic(transaction_outcome, "startPerformAction")
+    parsed_event = events_parser.parse_event(events[0])
+
+    assert parsed_event.data == SimpleNamespace(
+        action_id=1,
+        group_id=0,
+        action_data=SimpleNamespace(
+            **{
+                "0": Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
+                '__discriminant__': 1
+            },
+        ),
+        signers=[Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2").get_public_key()]
     )
