@@ -25,7 +25,7 @@ class TransactionEventsParser:
 
     def parse_event(self, event: TransactionEvent) -> SimpleNamespace:
         first_topic = event.topics[0].decode() if len(event.topics) else ""
-        abi_identifier = first_topic if self.first_topic_as_identifier else event.identifier
+        abi_identifier = first_topic if first_topic and self.first_topic_as_identifier else event.identifier
 
         topics = event.topics
 
