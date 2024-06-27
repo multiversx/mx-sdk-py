@@ -1,8 +1,11 @@
+from copy import deepcopy
 from typing import List, Optional, Protocol, Sequence
 
+from multiversx_sdk.core.constants import \
+    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER
 from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
-from multiversx_sdk.core.tokens import TokenComputer
+from multiversx_sdk.core.tokens import Token, TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
@@ -76,3 +79,48 @@ class TransferTransactionsFactory:
             gas_limit=extra_gas_for_transfer,
             add_data_movement_gas=True
         ).build()
+
+    def create_transaction_for_token_transfer(self,
+                                              sender: IAddress,
+                                              receiver: IAddress,
+                                              native_amount: Optional[int] = None,
+                                              token_transfers: Optional[Sequence[ITokenTransfer]] = None,
+                                              data: Optional[bytes] = None) -> Transaction:
+        if not native_amount and not token_transfers:
+            raise BadUsageError("No native token amount or token transfers provided")
+
+        if token_transfers and data:
+            raise BadUsageError("Can't set data field when sending esdt tokens")
+
+        if native_amount and not token_transfers:
+            return self.create_transaction_for_native_token_transfer(
+                sender=sender,
+                receiver=receiver,
+                native_amount=native_amount,
+                data=data.decode() if data else None
+            )
+
+        if token_transfers and not native_amount:
+            return self.create_transaction_for_esdt_token_transfer(
+                sender=sender,
+                receiver=receiver,
+                token_transfers=token_transfers
+            )
+
+        # if the method does not return until here it means both native_amount and token_transfers have been provided
+        # the bellow two line are only to get rid of pylance warning
+        native_amount = native_amount if native_amount else 0
+        token_transfers = token_transfers if token_transfers else []
+
+        transfers = deepcopy(token_transfers)
+        transfers = list(transfers)
+
+        native_token = Token(EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER)
+        native_tranfer = TokenTransfer(native_token, native_amount)
+        transfers.append(native_tranfer)
+
+        return self.create_transaction_for_esdt_token_transfer(
+            sender=sender,
+            receiver=receiver,
+            token_transfers=transfers
+        )
