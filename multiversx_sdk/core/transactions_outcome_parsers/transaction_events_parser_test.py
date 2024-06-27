@@ -8,7 +8,8 @@ from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractCallOutcome, SmartContractResult, TransactionEvent,
-    TransactionLogs, TransactionOutcome, find_events_by_first_topic)
+    TransactionLogs, TransactionOutcome, find_events_by_first_topic,
+    find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
     TransactionEventsParser
 
@@ -168,6 +169,51 @@ def test_parse_event_with_multi_values():
         a=[42, "test", 43, "test"],
         b=["test", 44],
         c=42
+    )
+
+
+def test_parse_esdt_safe_deposit_event_without_first_topic():
+    abi = Abi.load(testdata / "esdt-safe.abi.json")
+    parser = TransactionEventsParser(abi=abi)
+
+    transaction_outcome = TransactionOutcome()
+
+    logs = TransactionLogs(
+        events=[
+            TransactionEvent(
+                identifier="deposit",
+                topics=[
+                    bytes.fromhex(""),
+                    bytes.fromhex("726cc2d4b46dd6bd74a4c84d02715bf85cae76318cab81bc09e7c261d4149a67"),
+                    bytes.fromhex("0000000c5745474c442d30316534396400000000000000000000000164")
+                ],
+                data_items=[bytes.fromhex("00000000000003db000000")]
+            )
+        ]
+    )
+
+    transaction_outcome.direct_smart_contract_call = SmartContractCallOutcome(return_code="ok", return_message="ok")
+    transaction_outcome.transaction_results = [
+        SmartContractResult(data=bytes.fromhex("4036663662"), logs=logs)
+    ]
+
+    events = find_events_by_identifier(transaction_outcome, "deposit")
+    parsed = parser.parse_events(events)
+
+    assert len(parsed) == 1
+    assert parsed[0] == SimpleNamespace(
+        dest_address=Address.new_from_bech32("erd1wfkv9495dhtt6a9yepxsyu2mlpw2ua333j4cr0qfulpxr4q5nfnshgyqun").get_public_key(),
+        tokens=[SimpleNamespace(
+            token_identifier="WEGLD-01e49d",
+            token_nonce=0,
+            amount=100
+        )],
+        event_data=SimpleNamespace(
+            tx_nonce=987,
+            opt_function=None,
+            opt_arguments=None,
+            opt_gas_limit=None,
+        )
     )
 
 
