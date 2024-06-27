@@ -5,6 +5,7 @@ import pytest
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.fields import *
 from multiversx_sdk.abi.list_value import ListValue
@@ -142,6 +143,27 @@ def test_serialize():
     ])
 
     assert data == "41@42@43"
+
+    # counted-variadic, of different types
+    data = serializer.serialize([
+        CountedVariadicValues(
+            items=[
+                U8Value(0x42),
+                U16Value(0x4243),
+            ]),
+    ])
+    assert data == "02@42@4243"
+
+    # variadic<u8>
+    data = serializer.serialize([
+        CountedVariadicValues(
+            items=[
+                U8Value(0x42),
+                U8Value(0x43),
+            ]),
+        U8Value(0x44),
+    ])
+    assert data == "02@42@43@44"
 
 
 def test_deserialize():
@@ -316,6 +338,67 @@ def test_deserialize():
         )
 
         serializer.deserialize("0100", [destination])
+
+    # # counted-variadic<u32>, variadic<u32>
+    destination = [CountedVariadicValues(item_creator=lambda: U32Value()), VariadicValues(item_creator=lambda: U32Value())]
+
+    serializer.deserialize("03@41@42@43@44@45", destination)
+    assert len(destination) == 2
+
+    assert isinstance(destination[0], CountedVariadicValues)
+    assert destination[0].length == 3
+    assert destination[0].items == [
+        U32Value(0x41),
+        U32Value(0x42),
+        U32Value(0x43),
+    ]
+
+    assert isinstance(destination[1], VariadicValues)
+    assert destination[1].items == [
+        U32Value(0x44),
+        U32Value(0x45)
+    ]
+
+    # counted-variadic<u8>
+    destination = CountedVariadicValues(
+        item_creator=lambda: U8Value()
+    )
+
+    serializer.deserialize("03@2A@2B@2C", [destination])
+    assert destination.length == 3
+    assert destination.items == [
+        U8Value(0x2A),
+        U8Value(0x2B),
+        U8Value(0x2C),
+    ]
+
+    # counted-variadic<u8>, with empty items
+    destination = CountedVariadicValues(
+        item_creator=lambda: U8Value()
+    )
+
+    serializer.deserialize("04@@01@00@", [destination])
+
+    assert destination.length == 4
+    assert destination.items == [
+        U8Value(0x00),
+        U8Value(0x01),
+        U8Value(0x00),
+        U8Value(0x00),
+    ]
+
+    # variadic<u32>
+    destination = CountedVariadicValues(
+        item_creator=lambda: U32Value()
+    )
+
+    serializer.deserialize("02@AABBCCDD@DDCCBBAA", [destination])
+
+    assert destination.length == 2
+    assert destination.items == [
+        U32Value(0xAABBCCDD),
+        U32Value(0xDDCCBBAA),
+    ]
 
 
 def test_real_world_multisig_propose_batch():
