@@ -96,6 +96,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionComputer"><code class="docutils literal notranslate"><span class="pre">TransactionComputer</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionDecoder"><code class="docutils literal notranslate"><span class="pre">TransactionDecoder</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionEvent"><code class="docutils literal notranslate"><span class="pre">TransactionEvent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionEventsParser"><code class="docutils literal notranslate"><span class="pre">TransactionEventsParser</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionLogs"><code class="docutils literal notranslate"><span class="pre">TransactionLogs</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionMetadata"><code class="docutils literal notranslate"><span class="pre">TransactionMetadata</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransactionOutcome"><code class="docutils literal notranslate"><span class="pre">TransactionOutcome</span></code></a></li>
@@ -114,6 +115,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ValidatorSecretKey"><code class="docutils literal notranslate"><span class="pre">ValidatorSecretKey</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ValidatorSigner"><code class="docutils literal notranslate"><span class="pre">ValidatorSigner</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ValidatorVerifier"><code class="docutils literal notranslate"><span class="pre">ValidatorVerifier</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.find_events_by_first_topic"><code class="docutils literal notranslate"><span class="pre">find_events_by_first_topic()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.find_events_by_identifier"><code class="docutils literal notranslate"><span class="pre">find_events_by_identifier()</span></code></a></li>
 </ul>
 </li>
@@ -1322,6 +1324,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionEvent"><code class="docutils literal notranslate"><span class="pre">TransactionEvent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionEventsParser"><code class="docutils literal notranslate"><span class="pre">TransactionEventsParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionEventsParser.parse_event"><code class="docutils literal notranslate"><span class="pre">TransactionEventsParser.parse_event()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionEventsParser.parse_events"><code class="docutils literal notranslate"><span class="pre">TransactionEventsParser.parse_events()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionLogs"><code class="docutils literal notranslate"><span class="pre">TransactionLogs</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionOutcome"><code class="docutils literal notranslate"><span class="pre">TransactionOutcome</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionPayload"><code class="docutils literal notranslate"><span class="pre">TransactionPayload</span></code></a><ul>
@@ -1339,6 +1346,7 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.TransferTransactionsFactory.create_transaction_for_native_token_transfer"><code class="docutils literal notranslate"><span class="pre">TransferTransactionsFactory.create_transaction_for_native_token_transfer()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.find_events_by_first_topic"><code class="docutils literal notranslate"><span class="pre">find_events_by_first_topic()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.find_events_by_identifier"><code class="docutils literal notranslate"><span class="pre">find_events_by_identifier()</span></code></a></li>
 </ul>
 </li>
@@ -3451,6 +3459,22 @@ patience_time_in_milliseconds (Optional[int]): The patience, an extra time (in m
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionEventsParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">TransactionEventsParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IAbi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_topic_as_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/transaction_events_parser.html#TransactionEventsParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.TransactionEventsParser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionEventsParser.parse_event">
+<span class="sig-name descname"><span class="pre">parse_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent"><span class="pre">TransactionEvent</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SimpleNamespace</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/transaction_events_parser.html#TransactionEventsParser.parse_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.TransactionEventsParser.parse_event" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.TransactionEventsParser.parse_events">
+<span class="sig-name descname"><span class="pre">parse_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent"><span class="pre">TransactionEvent</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SimpleNamespace</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/transaction_events_parser.html#TransactionEventsParser.parse_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.TransactionEventsParser.parse_events" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.TransactionLogs">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">TransactionLogs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent"><span class="pre">TransactionEvent</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/resources.html#TransactionLogs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.TransactionLogs" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -3867,6 +3891,11 @@ patience_time_in_milliseconds (Optional[int]): The patience, an extra time (in m
 <dd></dd></dl>
 
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="multiversx_sdk.find_events_by_first_topic">
+<span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">find_events_by_first_topic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_outcome</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionOutcome" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionOutcome"><span class="pre">TransactionOutcome</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent" title="multiversx_sdk.core.transactions_outcome_parsers.resources.TransactionEvent"><span class="pre">TransactionEvent</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/transactions_outcome_parsers/resources.html#find_events_by_first_topic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.find_events_by_first_topic" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="multiversx_sdk.find_events_by_identifier">
