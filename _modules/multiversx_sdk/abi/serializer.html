@@ -74,10 +74,12 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.codec</span> <span class="kn">import</span> <span class="n">Codec</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.counted_variadic_values</span> <span class="kn">import</span> <span class="n">CountedVariadicValues</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.interface</span> <span class="kn">import</span> <span class="n">ISingleValue</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.multi_value</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.optional_value</span> <span class="kn">import</span> <span class="n">OptionalValue</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.parts</span> <span class="kn">import</span> <span class="n">PartsHolder</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.small_int_values</span> <span class="kn">import</span> <span class="n">U32Value</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.variadic_values</span> <span class="kn">import</span> <span class="n">VariadicValues</span>
 
 
@@ -132,6 +134,10 @@
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;variadic values must be last among input values&quot;</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_do_serialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">CountedVariadicValues</span><span class="p">):</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="n">U32Value</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_do_serialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="p">[</span><span class="n">length</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_do_serialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ISingleValue</span><span class="p">):</span>
                 <span class="n">parts_holder</span><span class="o">.</span><span class="n">append_empty_part</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_serialize_single_value</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -179,6 +185,8 @@
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;variadic values must be last among output values&quot;</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize_variadic_values</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">CountedVariadicValues</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize_counted_variadic_values</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ISingleValue</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize_single_value</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -194,6 +202,21 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_do_deserialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="p">[</span><span class="n">new_item</span><span class="p">])</span>
 
             <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_deserialize_counted_variadic_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts_holder</span><span class="p">:</span> <span class="n">PartsHolder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">CountedVariadicValues</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">item_creator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;cannot decode list: item creator is None&quot;</span><span class="p">)</span>
+
+        <span class="n">length</span> <span class="o">=</span> <span class="n">U32Value</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deserialize_single_value</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">)):</span>
+            <span class="n">new_item</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">item_creator</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do_deserialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="p">[</span><span class="n">new_item</span><span class="p">])</span>
+
+            <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_item</span><span class="p">)</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">length</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">_deserialize_single_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts_holder</span><span class="p">:</span> <span class="n">PartsHolder</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">):</span>
         <span class="n">part</span> <span class="o">=</span> <span class="n">parts_holder</span><span class="o">.</span><span class="n">read_whole_focused_part</span><span class="p">()</span>
