@@ -66,10 +66,8 @@ def find_events_by_first_topic(transaction_outcome: TransactionOutcome, topic: s
 
         try:
             decoded_topic = event.topics[0].decode()
-            if decoded_topic == topic:
-                return True
-            return False
-        except:
+            return decoded_topic == topic
+        except UnicodeDecodeError:
             return False
 
     return find_events_by_predicate(transaction_outcome, is_topic_matching)

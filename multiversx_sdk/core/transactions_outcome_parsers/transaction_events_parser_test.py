@@ -5,6 +5,7 @@ import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition
+from multiversx_sdk.converters import TransactionsConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractCallOutcome, SmartContractResult, TransactionEvent,
@@ -12,6 +13,7 @@ from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
     TransactionEventsParser
+from multiversx_sdk.network_providers import ApiNetworkProvider
 
 testdata = Path(__file__).parent.parent.parent / "testutils" / "testdata"
 
@@ -219,18 +221,13 @@ def test_parse_esdt_safe_deposit_event_without_first_topic():
 
 @pytest.mark.networkInteraction
 def test_multisig_start_perform_action():
-    from multiversx_sdk import (ApiNetworkProvider, TransactionEventsParser,
-                                TransactionsConverter,
-                                find_events_by_first_topic)
-    from multiversx_sdk.abi import Abi
-
     api = ApiNetworkProvider("https://testnet-api.multiversx.com")
     converter = TransactionsConverter()
 
     transaction_on_network = api.get_transaction("6f006c99e45525c94629db2442d9ca27ff088ad113a09f0a3a3e24bcc164945a")
     transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
 
-    abi = Abi.load(Path(testdata / "multisig-full.abi.json"))
+    abi = Abi.load(testdata / "multisig-full.abi.json")
     events_parser = TransactionEventsParser(abi)
 
     events = find_events_by_first_topic(transaction_outcome, "startPerformAction")
