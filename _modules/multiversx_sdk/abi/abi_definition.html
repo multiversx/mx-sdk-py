@@ -83,11 +83,13 @@
                  <span class="n">constructor</span><span class="p">:</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">,</span>
                  <span class="n">upgrade_constructor</span><span class="p">:</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">,</span>
                  <span class="n">endpoints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">],</span>
-                 <span class="n">types</span><span class="p">:</span> <span class="s2">&quot;TypesDefinitions&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">types</span><span class="p">:</span> <span class="s2">&quot;TypesDefinitions&quot;</span><span class="p">,</span>
+                 <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EventDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constructor</span> <span class="o">=</span> <span class="n">constructor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upgrade_constructor</span> <span class="o">=</span> <span class="n">upgrade_constructor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span> <span class="o">=</span> <span class="n">endpoints</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">events</span>
 
 <div class="viewcode-block" id="AbiDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.from_dict">[docs]</a>
@@ -102,11 +104,14 @@
         <span class="n">endpoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">EndpointDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;endpoints&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;endpoints&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="p">[]</span>
         <span class="n">types</span> <span class="o">=</span> <span class="n">TypesDefinitions</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;types&quot;</span><span class="p">,</span> <span class="p">{}))</span>
 
+        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">EventDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;events&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;events&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="p">[]</span>
+
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">constructor</span><span class="o">=</span><span class="n">constructor</span><span class="p">,</span>
             <span class="n">upgrade_constructor</span><span class="o">=</span><span class="n">upgrade_constructor</span><span class="p">,</span>
             <span class="n">endpoints</span><span class="o">=</span><span class="n">endpoints</span><span class="p">,</span>
-            <span class="n">types</span><span class="o">=</span><span class="n">types</span>
+            <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
+            <span class="n">events</span><span class="o">=</span><span class="n">events</span>
         <span class="p">)</span></div>
 
 
@@ -123,7 +128,8 @@
             <span class="k">return</span> <span class="n">EndpointDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;upgradeConstructor&quot;</span><span class="p">])</span>
 
         <span class="c1"># Fallback for contracts written using a not-old, but not-new Rust framework:</span>
-        <span class="k">if</span> <span class="s2">&quot;upgrade&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;endpoints&quot;</span><span class="p">]:</span>
+        <span class="n">endpoints</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;endpoints&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="s2">&quot;upgrade&quot;</span> <span class="ow">in</span> <span class="n">endpoints</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">EndpointDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;endpoints&quot;</span><span class="p">][</span><span class="s2">&quot;upgrade&quot;</span><span class="p">])</span>
 
         <span class="c1"># Fallback for contracts written using an old Rust framework:</span>
@@ -139,6 +145,20 @@
         <span class="n">content</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AbiDefinition.get_event_definition">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.get_event_definition">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_event_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EventDefinition&quot;</span><span class="p">:</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="p">[</span><span class="n">event</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">identifier</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;event [</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">] not found&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;more than one event found: [</span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 </div>
 
 
@@ -419,7 +439,7 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>
-            <span class="n">indexed</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;indexed&quot;</span><span class="p">]</span>
+            <span class="n">indexed</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;indexed&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="p">)</span></div>
 
 

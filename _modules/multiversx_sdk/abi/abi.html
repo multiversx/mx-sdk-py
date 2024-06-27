@@ -73,11 +73,13 @@
   <h1>Source code for multiversx_sdk.abi.abi</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.abi_definition</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AbiDefinition</span><span class="p">,</span>
                                                <span class="n">EndpointDefinition</span><span class="p">,</span>
-                                               <span class="n">EnumDefinition</span><span class="p">,</span>
+                                               <span class="n">EnumDefinition</span><span class="p">,</span> <span class="n">EventDefinition</span><span class="p">,</span>
+                                               <span class="n">EventTopicDefinition</span><span class="p">,</span>
                                                <span class="n">ParameterDefinition</span><span class="p">,</span>
                                                <span class="n">StructDefinition</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.address_value</span> <span class="kn">import</span> <span class="n">AddressValue</span>
@@ -114,6 +116,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">custom_types_prototypes_by_name</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endpoints_prototypes_by_name</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">EndpointPrototype</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events_prototypes_by_name</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">EventPrototype</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">definition</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">enums</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">custom_types_prototypes_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_custom_type_prototype</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -141,6 +144,15 @@
             <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">endpoints_prototypes_by_name</span><span class="p">[</span><span class="n">endpoint</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">endpoint_prototype</span>
+
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">definition</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+            <span class="n">prototype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_event_input_prototypes</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+            <span class="n">event_prototype</span> <span class="o">=</span> <span class="n">EventPrototype</span><span class="p">(</span>
+                <span class="n">fields</span><span class="o">=</span><span class="n">prototype</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">events_prototypes_by_name</span><span class="p">[</span><span class="n">event</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_prototype</span>
 
     <span class="k">def</span> <span class="nf">_create_custom_type_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">enums</span><span class="p">:</span>
@@ -201,7 +213,20 @@
 
         <span class="k">return</span> <span class="n">prototypes</span>
 
+    <span class="k">def</span> <span class="nf">_create_event_input_prototypes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">EventDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="n">prototypes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+            <span class="n">event_field_prototype</span> <span class="o">=</span> <span class="n">EventField</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">topic</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_event_field_prototype</span><span class="p">(</span><span class="n">topic</span><span class="p">))</span>
+            <span class="n">prototypes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event_field_prototype</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prototypes</span>
+
     <span class="k">def</span> <span class="nf">_create_parameter_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">:</span> <span class="n">ParameterDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="n">type_formula</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_formula_parser</span><span class="o">.</span><span class="n">parse_expression</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_formula</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_event_field_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">:</span> <span class="n">EventTopicDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">type_formula</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_formula_parser</span><span class="o">.</span><span class="n">parse_expression</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_formula</span><span class="p">)</span>
 
@@ -250,6 +275,42 @@
         <span class="k">return</span> <span class="n">output_native_values</span></div>
 
 
+<div class="viewcode-block" id="Abi.decode_event">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.decode_event">[docs]</a>
+    <span class="k">def</span> <span class="nf">decode_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">topics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">data_items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SimpleNamespace</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">()</span>
+        <span class="n">event_definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">get_event_definition</span><span class="p">(</span><span class="n">event_name</span><span class="p">)</span>
+        <span class="n">event_prototype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_event_prototype</span><span class="p">(</span><span class="n">event_name</span><span class="p">)</span>
+
+        <span class="n">indexed_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">input</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">event_definition</span><span class="o">.</span><span class="n">inputs</span> <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">indexed</span><span class="p">]</span>
+        <span class="n">indexed_inputs_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">indexed_inputs</span><span class="p">]</span>
+
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">event_prototype</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
+
+        <span class="n">output_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">indexed_inputs_names</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_serializer</span><span class="o">.</span><span class="n">deserialize_parts</span><span class="p">(</span><span class="n">topics</span><span class="p">,</span> <span class="n">output_values</span><span class="p">)</span>
+
+        <span class="n">output_values_as_native_object_holders</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">List</span><span class="p">[</span><span class="n">IPayloadHolder</span><span class="p">],</span> <span class="n">output_values</span><span class="p">)</span>
+        <span class="n">output_native_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">get_payload</span><span class="p">()</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">output_values_as_native_object_holders</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indexed_inputs</span><span class="p">)):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">indexed_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">output_native_values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="n">non_indexed_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">input</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">event_definition</span><span class="o">.</span><span class="n">inputs</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">input</span><span class="o">.</span><span class="n">indexed</span><span class="p">]</span>
+        <span class="n">non_indexed_inputs_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">non_indexed_inputs</span><span class="p">]</span>
+
+        <span class="n">output_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">non_indexed_inputs_names</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_serializer</span><span class="o">.</span><span class="n">deserialize_parts</span><span class="p">(</span><span class="n">data_items</span><span class="p">,</span> <span class="n">output_values</span><span class="p">)</span>
+
+        <span class="n">output_values_as_native_object_holders</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">List</span><span class="p">[</span><span class="n">IPayloadHolder</span><span class="p">],</span> <span class="n">output_values</span><span class="p">)</span>
+        <span class="n">output_native_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">get_payload</span><span class="p">()</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">output_values_as_native_object_holders</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">non_indexed_inputs</span><span class="p">)):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">non_indexed_inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">output_native_values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
     <span class="k">def</span> <span class="nf">_get_custom_type_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">type_prototype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_types_prototypes_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
 
@@ -265,6 +326,14 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;endpoint &#39;</span><span class="si">{</span><span class="n">endpoint_name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">endpoint_prototype</span>
+
+    <span class="k">def</span> <span class="nf">_get_event_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;EventPrototype&#39;</span><span class="p">:</span>
+        <span class="n">event_prototype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events_prototypes_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">event_prototype</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;event &#39;</span><span class="si">{</span><span class="n">event_name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">event_prototype</span>
 
     <span class="k">def</span> <span class="nf">_create_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_formula</span><span class="p">:</span> <span class="n">TypeFormula</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">name</span>
@@ -341,6 +410,23 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">output_parameters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_parameters</span> <span class="o">=</span> <span class="n">output_parameters</span></div>
+
+
+
+<div class="viewcode-block" id="EventField">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi.EventField">[docs]</a>
+<span class="k">class</span> <span class="nc">EventField</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="EventPrototype">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi.EventPrototype">[docs]</a>
+<span class="k">class</span> <span class="nc">EventPrototype</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EventField</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span></div>
 
 </pre></div>
 

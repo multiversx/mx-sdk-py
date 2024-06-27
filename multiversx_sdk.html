@@ -159,6 +159,7 @@
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.abi">multiversx_sdk.abi.abi module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi"><code class="docutils literal notranslate"><span class="pre">Abi</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.decode_endpoint_output_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.decode_endpoint_output_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.decode_event"><code class="docutils literal notranslate"><span class="pre">Abi.decode_event()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_constructor_input_parameters()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_endpoint_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_endpoint_input_parameters()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_upgrade_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_upgrade_constructor_input_parameters()</span></code></a></li>
@@ -166,11 +167,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.EndpointPrototype"><code class="docutils literal notranslate"><span class="pre">EndpointPrototype</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.EventField"><code class="docutils literal notranslate"><span class="pre">EventField</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.EventPrototype"><code class="docutils literal notranslate"><span class="pre">EventPrototype</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi.abi_definition">multiversx_sdk.abi.abi_definition module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition"><code class="docutils literal notranslate"><span class="pre">AbiDefinition</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.get_event_definition"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.get_event_definition()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.load"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.load()</span></code></a></li>
 </ul>
 </li>
@@ -510,6 +514,7 @@
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.abi.html#module-multiversx_sdk.abi">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi"><code class="docutils literal notranslate"><span class="pre">Abi</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.decode_endpoint_output_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.decode_endpoint_output_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.decode_event"><code class="docutils literal notranslate"><span class="pre">Abi.decode_event()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.encode_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_constructor_input_parameters()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.encode_endpoint_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_endpoint_input_parameters()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.Abi.encode_upgrade_constructor_input_parameters"><code class="docutils literal notranslate"><span class="pre">Abi.encode_upgrade_constructor_input_parameters()</span></code></a></li>
@@ -518,6 +523,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AbiDefinition"><code class="docutils literal notranslate"><span class="pre">AbiDefinition</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AbiDefinition.from_dict"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AbiDefinition.get_event_definition"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.get_event_definition()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.AbiDefinition.load"><code class="docutils literal notranslate"><span class="pre">AbiDefinition.load()</span></code></a></li>
 </ul>
 </li>

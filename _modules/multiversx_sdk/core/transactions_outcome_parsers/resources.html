@@ -150,6 +150,13 @@
 
 
 
+<div class="viewcode-block" id="find_events_by_first_topic">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.find_events_by_first_topic">[docs]</a>
+<span class="k">def</span> <span class="nf">find_events_by_first_topic</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">:</span> <span class="n">TransactionOutcome</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TransactionEvent</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">find_events_by_predicate</span><span class="p">(</span><span class="n">transaction_outcome</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">event</span><span class="p">:</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="n">topic</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="find_events_by_predicate">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_outcome_parsers.html#multiversx_sdk.find_events_by_predicate">[docs]</a>
 <span class="k">def</span> <span class="nf">find_events_by_predicate</span><span class="p">(</span>
