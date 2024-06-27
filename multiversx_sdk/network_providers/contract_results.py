@@ -55,6 +55,7 @@ class ContractResultItem:
             "callType": self.call_type,
             "returnMessage": self.return_message,
             "isRefund": self.is_refund,
+            "logs": self.logs.to_dictionary()
         }
 
     @staticmethod

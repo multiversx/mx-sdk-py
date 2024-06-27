@@ -1,0 +1,48 @@
+{
+  "name": "Adder",
+  "constructor": {
+    "inputs": [
+      {
+        "name": "initial_value",
+        "type": "BigUint"
+      }
+    ],
+    "outputs": []
+  },
+  "upgradeConstructor": {
+    "inputs": [
+      {
+        "name": "initial_value",
+        "type": "BigUint"
+      }
+    ],
+    "outputs": []
+  },
+  "endpoints": [
+    {
+      "name": "getSum",
+      "mutability": "readonly",
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "BigUint"
+        }
+      ]
+    },
+    {
+      "docs": ["Add desired amount to the storage variable."],
+      "name": "add",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "BigUint"
+        }
+      ],
+      "outputs": []
+    }
+  ],
+  "esdtAttributes": [],
+  "hasCallback": false,
+  "types": {}
+}

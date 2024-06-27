@@ -1,9 +1,9 @@
 from typing import Optional, Sequence
-from multiversx_sdk.core.interfaces import ITransaction
 
 from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
+from multiversx_sdk.core.interfaces import ITransaction
 
 
 class Transaction:
@@ -46,3 +46,9 @@ class Transaction:
         self.guardian_signature = guardian_signature or bytes()
         self.relayer = relayer or ""
         self.inner_transactions = inner_transactions or []
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Transaction):
+            return False
+
+        return self.__dict__ == other.__dict__
