@@ -159,7 +159,10 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.serializer.Serializer.deserialize_parts">[docs]</a>
     <span class="k">def</span> <span class="nf">deserialize_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">output_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
         <span class="n">parts_holder</span> <span class="o">=</span> <span class="n">PartsHolder</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_do_deserialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">output_values</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_deserialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">output_values</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">parts_holder</span><span class="o">.</span><span class="n">is_focused_beyond_last_part</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;not all parts have been deserialized&quot;</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="nf">_do_deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts_holder</span><span class="p">:</span> <span class="n">PartsHolder</span><span class="p">,</span> <span class="n">output_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]):</span>
