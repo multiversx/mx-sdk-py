@@ -1,13 +1,16 @@
 from pathlib import Path
-from typing import Any, List, Protocol, Sequence, Union
+from typing import Any, List, Optional, Protocol, Sequence, Union
 
+from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.typesystem import is_list_of_typed_values
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
-from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
+from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
+                                           CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
 from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
-from multiversx_sdk.core.serializer import arg_to_string, args_to_strings
+from multiversx_sdk.core.serializer import arg_to_string, args_to_buffers
 from multiversx_sdk.core.tokens import TokenComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
@@ -24,9 +27,22 @@ class IConfig(Protocol):
     gas_limit_change_owner_address: int
 
 
+class IAbi(Protocol):
+    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
+        ...
+
+    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        ...
+
+    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        ...
+
+
 class SmartContractTransactionsFactory:
-    def __init__(self, config: IConfig) -> None:
+    def __init__(self, config: IConfig, abi: Optional[IAbi] = None) -> None:
         self.config = config
+        self.abi = abi
+        self.serializer = Serializer(parts_separator=ARGS_SEPARATOR)
         self.token_computer = TokenComputer()
         self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
 
@@ -51,7 +67,8 @@ class SmartContractTransactionsFactory:
             str(metadata)
         ]
 
-        parts += args_to_strings(arguments)
+        prepared_arguments = self._encode_deploy_arguments(list(arguments))
+        parts += [arg.hex() for arg in prepared_arguments]
 
         return TransactionBuilder(
             config=self.config,
@@ -93,8 +110,10 @@ class SmartContractTransactionsFactory:
                 receiver=receiver, transfers=token_transfers)
             receiver = sender
 
+        prepared_arguments = self._encode_execute_arguments(function, list(arguments))
+
         data_parts.append(function) if not data_parts else data_parts.append(arg_to_string(function))
-        data_parts.extend(args_to_strings(arguments))
+        data_parts += [arg.hex() for arg in prepared_arguments]
 
         return TransactionBuilder(
             config=self.config,
@@ -128,7 +147,8 @@ class SmartContractTransactionsFactory:
             str(metadata)
         ]
 
-        parts += args_to_strings(arguments)
+        prepared_arguments = self._encode_upgrade_arguments(list(arguments))
+        parts += [arg.hex() for arg in prepared_arguments]
 
         return TransactionBuilder(
             config=self.config,
@@ -168,3 +188,30 @@ class SmartContractTransactionsFactory:
             gas_limit=self.config.gas_limit_change_owner_address,
             add_data_movement_gas=False,
         ).build()
+
+    def _encode_deploy_arguments(self, args: List[Any]) -> List[bytes]:
+        if self.abi:
+            return self.abi.encode_constructor_input_parameters(args)
+
+        if is_list_of_typed_values(args):
+            return self.serializer.serialize_to_parts(args)
+
+        return args_to_buffers(args)
+
+    def _encode_execute_arguments(self, function_name: str, args: List[Any]) -> List[bytes]:
+        if self.abi:
+            return self.abi.encode_endpoint_input_parameters(function_name, args)
+
+        if is_list_of_typed_values(args):
+            return self.serializer.serialize_to_parts(args)
+
+        return args_to_buffers(args)
+
+    def _encode_upgrade_arguments(self, args: List[Any]) -> List[bytes]:
+        if self.abi:
+            return self.abi.encode_upgrade_constructor_input_parameters(args)
+
+        if is_list_of_typed_values(args):
+            return self.serializer.serialize_to_parts(args)
+
+        return args_to_buffers(args)
