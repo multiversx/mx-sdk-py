@@ -208,6 +208,15 @@ def test_deserialize():
         U16Value(0x4243),
     ]
 
+    # u8, u16
+    output_values = [
+        U8Value(),
+        U16Value(),
+    ]
+
+    with pytest.raises(Exception, match="not all parts have been deserialized"):
+        serializer.deserialize("42@4243@44", output_values)
+
     # optional (missing)
     output_values = [
         U8Value(),
