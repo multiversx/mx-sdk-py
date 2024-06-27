@@ -8,11 +8,13 @@ class AbiDefinition:
                  constructor: "EndpointDefinition",
                  upgrade_constructor: "EndpointDefinition",
                  endpoints: List["EndpointDefinition"],
-                 types: "TypesDefinitions") -> None:
+                 types: "TypesDefinitions",
+                 events: List["EventDefinition"]) -> None:
         self.constructor = constructor
         self.upgrade_constructor = upgrade_constructor
         self.endpoints = endpoints
         self.types = types
+        self.events = events
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "AbiDefinition":
@@ -25,11 +27,14 @@ class AbiDefinition:
         endpoints = [EndpointDefinition.from_dict(item) for item in data["endpoints"]] if "endpoints" in data else []
         types = TypesDefinitions.from_dict(data.get("types", {}))
 
+        events = [EventDefinition.from_dict(item) for item in data["events"]] if "events" in data else []
+
         return cls(
             constructor=constructor,
             upgrade_constructor=upgrade_constructor,
             endpoints=endpoints,
-            types=types
+            types=types,
+            events=events
         )
 
     @classmethod
@@ -45,7 +50,8 @@ class AbiDefinition:
             return EndpointDefinition.from_dict(data["upgradeConstructor"])
 
         # Fallback for contracts written using a not-old, but not-new Rust framework:
-        if "upgrade" in data["endpoints"]:
+        endpoints = data.get("endpoints", [])
+        if "upgrade" in endpoints:
             return EndpointDefinition.from_dict(data["endpoints"]["upgrade"])
 
         # Fallback for contracts written using an old Rust framework:
@@ -59,6 +65,17 @@ class AbiDefinition:
         content = Path(path).read_text()
         data = json.loads(content)
         return cls.from_dict(data)
+
+    def get_event_definition(self, name: str) -> "EventDefinition":
+        event = [event for event in self.events if event.identifier == name]
+
+        if not len(event):
+            raise Exception(f"event [{name}] not found")
+
+        if len(event) > 1:
+            raise Exception(f"more than one event found: [{event}]")
+
+        return event[0]
 
 
 class EndpointDefinition:
@@ -282,7 +299,7 @@ class EventTopicDefinition:
         return cls(
             name=data["name"],
             type=data["type"],
-            indexed=data["indexed"]
+            indexed=data.get("indexed", False)
         )
 
     def __repr__(self):
