@@ -1,10 +1,12 @@
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, List, cast
 
 from multiversx_sdk.abi.abi_definition import (AbiDefinition,
                                                EndpointDefinition,
-                                               EnumDefinition,
+                                               EnumDefinition, EventDefinition,
+                                               EventTopicDefinition,
                                                ParameterDefinition,
                                                StructDefinition)
 from multiversx_sdk.abi.address_value import AddressValue
@@ -39,6 +41,7 @@ class Abi:
         self.definition = definition
         self.custom_types_prototypes_by_name: Dict[str, Any] = {}
         self.endpoints_prototypes_by_name: Dict[str, EndpointPrototype] = {}
+        self.events_prototypes_by_name: Dict[str, EventPrototype] = {}
 
         for name in definition.types.enums:
             self.custom_types_prototypes_by_name[name] = self._create_custom_type_prototype(name)
@@ -66,6 +69,15 @@ class Abi:
             )
 
             self.endpoints_prototypes_by_name[endpoint.name] = endpoint_prototype
+
+        for event in definition.events:
+            prototype = self._create_event_input_prototypes(event)
+
+            event_prototype = EventPrototype(
+                fields=prototype
+            )
+
+            self.events_prototypes_by_name[event.identifier] = event_prototype
 
     def _create_custom_type_prototype(self, name: str) -> Any:
         if name in self.definition.types.enums:
@@ -126,7 +138,20 @@ class Abi:
 
         return prototypes
 
+    def _create_event_input_prototypes(self, event: EventDefinition) -> List[Any]:
+        prototypes: List[Any] = []
+
+        for topic in event.inputs:
+            event_field_prototype = EventField(name=topic.name, value=self._create_event_field_prototype(topic))
+            prototypes.append(event_field_prototype)
+
+        return prototypes
+
     def _create_parameter_prototype(self, parameter: ParameterDefinition) -> Any:
+        type_formula = self._type_formula_parser.parse_expression(parameter.type)
+        return self._create_prototype(type_formula)
+
+    def _create_event_field_prototype(self, parameter: EventTopicDefinition) -> Any:
         type_formula = self._type_formula_parser.parse_expression(parameter.type)
         return self._create_prototype(type_formula)
 
@@ -163,6 +188,39 @@ class Abi:
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
         return output_native_values
 
+    def decode_event(self, event_name: str, topics: List[bytes], data_items: List[bytes]) -> SimpleNamespace:
+        result = SimpleNamespace()
+        event_definition = self.definition.get_event_definition(event_name)
+        event_prototype = self._get_event_prototype(event_name)
+
+        indexed_inputs = [input for input in event_definition.inputs if input.indexed]
+        indexed_inputs_names = [item.name for item in indexed_inputs]
+
+        fields = deepcopy(event_prototype.fields)
+
+        output_values = [field.value for field in fields if field.name in indexed_inputs_names]
+        self._serializer.deserialize_parts(topics, output_values)
+
+        output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
+        output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
+
+        for i in range(len(indexed_inputs)):
+            setattr(result, indexed_inputs[i].name, output_native_values[i])
+
+        non_indexed_inputs = [input for input in event_definition.inputs if not input.indexed]
+        non_indexed_inputs_names = [item.name for item in non_indexed_inputs]
+
+        output_values = [field.value for field in fields if field.name in non_indexed_inputs_names]
+        self._serializer.deserialize_parts(data_items, output_values)
+
+        output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
+        output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
+
+        for i in range(len(non_indexed_inputs)):
+            setattr(result, non_indexed_inputs[i].name, output_native_values[i])
+
+        return result
+
     def _get_custom_type_prototype(self, type_name: str) -> Any:
         type_prototype = self.custom_types_prototypes_by_name.get(type_name)
 
@@ -178,6 +236,14 @@ class Abi:
             raise ValueError(f"endpoint '{endpoint_name}' not found")
 
         return endpoint_prototype
+
+    def _get_event_prototype(self, event_name: str) -> 'EventPrototype':
+        event_prototype = self.events_prototypes_by_name.get(event_name)
+
+        if not event_prototype:
+            raise ValueError(f"event '{event_name}' not found")
+
+        return event_prototype
 
     def _create_prototype(self, type_formula: TypeFormula) -> Any:
         name = type_formula.name
@@ -248,3 +314,14 @@ class EndpointPrototype:
     def __init__(self, input_parameters: List[Any], output_parameters: List[Any]) -> None:
         self.input_parameters = input_parameters
         self.output_parameters = output_parameters
+
+
+class EventField:
+    def __init__(self, name: str, value: Any) -> None:
+        self.name = name
+        self.value = value
+
+
+class EventPrototype:
+    def __init__(self, fields: List[EventField]) -> None:
+        self.fields = fields
