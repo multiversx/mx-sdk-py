@@ -69,6 +69,9 @@ class Serializer:
         parts_holder = PartsHolder(parts)
         self._do_deserialize(parts_holder, output_values)
 
+        if not parts_holder.is_focused_beyond_last_part():
+            raise Exception("not all parts have been deserialized")
+
     def _do_deserialize(self, parts_holder: PartsHolder, output_values: Sequence[Any]):
         for i, value in enumerate(output_values):
             if value is None:
