@@ -108,7 +108,7 @@ class TransferTransactionsFactory:
             )
 
         # if the method does not return until here it means both native_amount and token_transfers have been provided
-        # the bellow two line are only to get rid of pylance warning
+        # the two lines bellow are only to get rid of pylance warning
         native_amount = native_amount if native_amount else 0
         token_transfers = token_transfers if token_transfers else []
 
