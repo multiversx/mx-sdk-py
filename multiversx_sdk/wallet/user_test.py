@@ -43,6 +43,15 @@ def test_user_signer_from_pem_file():
     assert Address(pubkey.buffer, "erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
 
 
+def test_load_signers_from_pem():
+    signers = UserSigner.from_pem_file_all(testwallets / "multipleUserKeys.pem")
+
+    assert len(signers) == 3
+    assert Address(signers[0].get_pubkey().buffer, "erd").to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    assert Address(signers[1].get_pubkey().buffer, "erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    assert Address(signers[2].get_pubkey().buffer, "erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+
+
 def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_randomness():
     alice_secret_key = UserSecretKey.from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9")
     alice_wallet = UserWallet.from_secret_key(alice_secret_key, "password", Randomness(
