@@ -245,7 +245,7 @@ class TestSmartContractTransactionsFactory:
         assert transaction.data.decode() == "MultiESDTNFTTransfer@00000000000000000500b9353fe8407f87310c87e12fa1ac807f0485da39d152@02@4e46542d313233343536@01@01@4e46542d313233343536@2a@01@64756d6d79@07"
         assert transaction.value == 0
 
-    def test_create_transaction_for_execute_and_native_and_nfts(self):
+    def test_create_transaction_for_execute_and_send_native_and_nfts(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
