@@ -1,4 +1,3 @@
-from copy import deepcopy
 from pathlib import Path
 from typing import Any, List, Optional, Protocol, Sequence, Union
 
@@ -88,8 +87,7 @@ class SmartContractTransactionsFactory:
                                        arguments: Sequence[Any] = [],
                                        native_transfer_amount: int = 0,
                                        token_transfers: Sequence[ITokenTransfer] = []) -> Transaction:
-        transfers = deepcopy(token_transfers)
-        transfers = list(transfers)
+        transfers = list(token_transfers)
         number_of_tokens = len(transfers)
         receiver = contract
 

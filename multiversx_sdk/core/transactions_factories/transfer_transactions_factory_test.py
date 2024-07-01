@@ -99,7 +99,7 @@ class TestTransferTransactionsFactory:
 
     def test_create_transaction_for_token_transfer_with_errors(self):
         with pytest.raises(BadUsageError, match="No native token amount or token transfers provided"):
-            self.transfer_factory.create_transaction_for_token_transfer(
+            self.transfer_factory.create_transaction_for_transfer(
                 sender=self.alice,
                 receiver=self.bob
             )
@@ -108,7 +108,7 @@ class TestTransferTransactionsFactory:
             nft = Token("NFT-123456", 10)
             transfer = TokenTransfer(nft, 1)
 
-            self.transfer_factory.create_transaction_for_token_transfer(
+            self.transfer_factory.create_transaction_for_transfer(
                 sender=self.alice,
                 receiver=self.bob,
                 token_transfers=[transfer],
@@ -122,7 +122,7 @@ class TestTransferTransactionsFactory:
         second_nft = Token("TEST-987654", 1)
         second_transfer = TokenTransfer(second_nft, 1)
 
-        transaction = self.transfer_factory.create_transaction_for_token_transfer(
+        transaction = self.transfer_factory.create_transaction_for_transfer(
             sender=self.alice,
             receiver=self.bob,
             native_amount=1000000000000000000,
