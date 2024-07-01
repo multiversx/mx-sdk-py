@@ -1,10 +1,8 @@
-from typing import List, Optional, Protocol, Sequence, Union
+from typing import List, Optional, Protocol, Sequence
 
-from multiversx_sdk.core.constants import \
-    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER
 from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
-from multiversx_sdk.core.tokens import Token, TokenComputer, TokenTransfer
+from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
@@ -101,7 +99,7 @@ class TransferTransactionsFactory:
 
         token_transfers = list(token_transfers) if token_transfers else []
 
-        native_transfer = self._create_native_transfer(native_amount)
+        native_transfer = TokenTransfer.new_from_native_amount(native_amount) if native_amount else None
         token_transfers.append(native_transfer) if native_transfer else None
 
         return self.create_transaction_for_esdt_token_transfer(
@@ -109,11 +107,3 @@ class TransferTransactionsFactory:
             receiver=receiver,
             token_transfers=token_transfers
         )
-
-    def _create_native_transfer(self,
-                                native_amount: Optional[int] = None) -> Union[TokenTransfer, None]:
-        if native_amount is None:
-            return None
-
-        native_token = Token(EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER)
-        return TokenTransfer(native_token, native_amount)

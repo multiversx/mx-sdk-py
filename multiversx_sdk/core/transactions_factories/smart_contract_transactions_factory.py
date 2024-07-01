@@ -5,12 +5,12 @@ from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.typesystem import is_list_of_typed_values
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
-from multiversx_sdk.core.constants import (
-    ARGS_SEPARATOR, CONTRACT_DEPLOY_ADDRESS,
-    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER, VM_TYPE_WASM_VM)
+from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
+                                           CONTRACT_DEPLOY_ADDRESS,
+                                           VM_TYPE_WASM_VM)
 from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
 from multiversx_sdk.core.serializer import arg_to_string, args_to_buffers
-from multiversx_sdk.core.tokens import Token, TokenComputer, TokenTransfer
+from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
@@ -92,8 +92,7 @@ class SmartContractTransactionsFactory:
         receiver = contract
 
         if native_transfer_amount and number_of_tokens:
-            native_token = Token(EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER)
-            native_tranfer = TokenTransfer(native_token, native_transfer_amount)
+            native_tranfer = TokenTransfer.new_from_native_amount(native_transfer_amount)
             transfers.append(native_tranfer)
 
             native_transfer_amount = 0
