@@ -35,7 +35,7 @@ class StructValue:
 
         native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
         if ok:
-            set_fields_from_list(self.fields, native_list[1:])
+            set_fields_from_list(self.fields, native_list)
             return
 
         raise ValueError("cannot set payload for struct (should be either a dictionary or a list)")
