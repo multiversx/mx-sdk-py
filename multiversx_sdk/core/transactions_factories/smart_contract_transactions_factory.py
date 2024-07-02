@@ -87,13 +87,12 @@ class SmartContractTransactionsFactory:
                                        arguments: Sequence[Any] = [],
                                        native_transfer_amount: int = 0,
                                        token_transfers: Sequence[ITokenTransfer] = []) -> Transaction:
-        transfers = list(token_transfers)
-        number_of_tokens = len(transfers)
+        number_of_tokens = len(token_transfers)
         receiver = contract
 
         if native_transfer_amount and number_of_tokens:
             native_tranfer = TokenTransfer.new_from_native_amount(native_transfer_amount)
-            transfers.append(native_tranfer)
+            token_transfers = list(token_transfers) + [native_tranfer]
 
             native_transfer_amount = 0
             number_of_tokens += 1
@@ -101,7 +100,7 @@ class SmartContractTransactionsFactory:
         data_parts: List[str] = []
 
         if number_of_tokens == 1:
-            transfer = transfers[0]
+            transfer = token_transfers[0]
 
             if self.token_computer.is_fungible(transfer.token):
                 data_parts = self._data_args_builder.build_args_for_esdt_transfer(transfer=transfer)
@@ -111,7 +110,7 @@ class SmartContractTransactionsFactory:
                 receiver = sender
         elif number_of_tokens > 1:
             data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(
-                receiver=receiver, transfers=transfers)
+                receiver=receiver, transfers=token_transfers)
             receiver = sender
 
         prepared_arguments = self._encode_execute_arguments(function, list(arguments))
