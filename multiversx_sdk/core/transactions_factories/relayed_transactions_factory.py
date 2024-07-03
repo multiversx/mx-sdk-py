@@ -100,7 +100,6 @@ class RelayedTransactionsFactory:
             inner_transactions=inner_transactions,
         )
 
-
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:
         sender = Address.new_from_bech32(inner_transaction.sender).to_hex()
         receiver = Address.new_from_bech32(inner_transaction.receiver).to_hex()
