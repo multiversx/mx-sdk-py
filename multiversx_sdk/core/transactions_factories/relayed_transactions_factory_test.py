@@ -1,5 +1,6 @@
-import pytest
 from typing import List
+
+import pytest
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
@@ -283,7 +284,7 @@ class TestRelayedTransactionsFactory:
         In the inner tx, the relayer address is acutally bob's. The creation should fail
         """
         with pytest.raises(InvalidInnerTransactionError) as err:
-            relayed_transaction = self.factory.create_relayed_v3_transaction(
+            self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
@@ -291,17 +292,16 @@ class TestRelayedTransactionsFactory:
 
         inner_transaction.signature = b""
         with pytest.raises(InvalidInnerTransactionError) as err:
-            relayed_transaction = self.factory.create_relayed_v3_transaction(
+            self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
         assert str(err.value) == "The inner transaction is not signed"
 
-        inner_transactions = []
+        inner_transactions: List[Transaction] = []
         with pytest.raises(InvalidInnerTransactionError) as err:
-            relayed_transaction = self.factory.create_relayed_v3_transaction(
+            self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
         assert str(err.value) == "The are no inner transactions"
-
