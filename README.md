@@ -47,7 +47,7 @@
 | multiversx\_sdk/core/bech32.py                                                                                 |       78 |       25 |     68% |67, 73, 77, 90, 100, 106-118, 123-129 |
 | multiversx\_sdk/core/code\_metadata.py                                                                         |       28 |        0 |    100% |           |
 | multiversx\_sdk/core/codec.py                                                                                  |       12 |        1 |     92% |        21 |
-| multiversx\_sdk/core/constants.py                                                                              |       21 |        0 |    100% |           |
+| multiversx\_sdk/core/constants.py                                                                              |       22 |        0 |    100% |           |
 | multiversx\_sdk/core/contract\_query.py                                                                        |       19 |        0 |    100% |           |
 | multiversx\_sdk/core/contract\_query\_builder.py                                                               |       14 |        0 |    100% |           |
 | multiversx\_sdk/core/errors.py                                                                                 |       41 |        5 |     88% |16, 36, 51, 66-67 |
@@ -60,7 +60,7 @@
 | multiversx\_sdk/core/smart\_contract\_queries\_controller.py                                                   |       48 |        5 |     90% |15, 20, 23, 55, 85 |
 | multiversx\_sdk/core/smart\_contract\_query.py                                                                 |       22 |        4 |     82% | 21, 40-43 |
 | multiversx\_sdk/core/token\_payment.py                                                                         |       67 |        2 |     97% |    51, 89 |
-| multiversx\_sdk/core/tokens.py                                                                                 |       79 |        5 |     94% |103, 110, 113, 116, 120 |
+| multiversx\_sdk/core/tokens.py                                                                                 |       83 |        5 |     94% |109, 116, 119, 122, 126 |
 | multiversx\_sdk/core/transaction.py                                                                            |       23 |        1 |     96% |        47 |
 | multiversx\_sdk/core/transaction\_builders/\_\_init\_\_.py                                                     |        8 |        0 |    100% |           |
 | multiversx\_sdk/core/transaction\_builders/contract\_builders.py                                               |       62 |        0 |    100% |           |
@@ -81,12 +81,12 @@
 | multiversx\_sdk/core/transactions\_factories/account\_transactions\_factory.py                                 |       44 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/delegation\_transactions\_factory.py                              |      111 |        1 |     99% |        59 |
 | multiversx\_sdk/core/transactions\_factories/relayed\_transactions\_factory.py                                 |       49 |        0 |    100% |           |
-| multiversx\_sdk/core/transactions\_factories/smart\_contract\_transactions\_factory.py                         |       93 |        5 |     95% |32, 35, 38, 60, 95 |
+| multiversx\_sdk/core/transactions\_factories/smart\_contract\_transactions\_factory.py                         |       95 |        4 |     96% |31, 34, 37, 59 |
 | multiversx\_sdk/core/transactions\_factories/token\_management\_transactions\_factory.py                       |      109 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/token\_transfers\_data\_builder.py                                |       26 |        1 |     96% |         9 |
 | multiversx\_sdk/core/transactions\_factories/transaction\_builder.py                                           |       31 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/transactions\_factory\_config.py                                  |       41 |        0 |    100% |           |
-| multiversx\_sdk/core/transactions\_factories/transfer\_transactions\_factory.py                                |       41 |        1 |     98% |        55 |
+| multiversx\_sdk/core/transactions\_factories/transfer\_transactions\_factory.py                                |       52 |        2 |     96% |    55, 93 |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/\_\_init\_\_.py                                            |        6 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/delegation\_transactions\_outcome\_parser.py               |       23 |        4 |     83% | 28-31, 35 |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/delegation\_transactions\_outcome\_parser\_types.py        |        4 |        0 |    100% |           |
@@ -150,7 +150,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6297** |  **711** | **89%** |           |
+|                                                                                                      **TOTAL** | **6315** |  **711** | **89%** |           |
 
 
 ## Setup coverage badge
