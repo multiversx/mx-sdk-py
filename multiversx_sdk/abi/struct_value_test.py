@@ -19,6 +19,11 @@ def test_set_payload_and_get_payload():
         Field("b", BigUIntValue())
     ])
 
+    # From list
+    value.set_payload([39, 40])
+    assert value.fields == [Field("a", U32Value(39)), Field("b", BigUIntValue(40))]
+    assert value.get_payload() == SimpleNamespace(a=39, b=40)
+
     # From SimpleNamespace
     value.set_payload(SimpleNamespace(a=41, b=42))
     assert value.fields == [Field("a", U32Value(41)), Field("b", BigUIntValue(42))]
