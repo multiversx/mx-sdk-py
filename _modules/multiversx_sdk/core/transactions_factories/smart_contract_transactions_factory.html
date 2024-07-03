@@ -81,10 +81,9 @@
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ARGS_SEPARATOR</span><span class="p">,</span>
                                            <span class="n">CONTRACT_DEPLOY_ADDRESS</span><span class="p">,</span>
                                            <span class="n">VM_TYPE_WASM_VM</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">BadUsageError</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">ITokenTransfer</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.serializer</span> <span class="kn">import</span> <span class="n">arg_to_string</span><span class="p">,</span> <span class="n">args_to_buffers</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.tokens</span> <span class="kn">import</span> <span class="n">TokenComputer</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.tokens</span> <span class="kn">import</span> <span class="n">TokenComputer</span><span class="p">,</span> <span class="n">TokenTransfer</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_factories.token_transfers_data_builder</span> <span class="kn">import</span> \
     <span class="n">TokenTransfersDataBuilder</span>
@@ -187,11 +186,15 @@
         <span class="n">receiver</span> <span class="o">=</span> <span class="n">contract</span>
 
         <span class="k">if</span> <span class="n">native_transfer_amount</span> <span class="ow">and</span> <span class="n">number_of_tokens</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t send both native token and custom tokens(ESDT/NFT)&quot;</span><span class="p">)</span>
+            <span class="n">native_tranfer</span> <span class="o">=</span> <span class="n">TokenTransfer</span><span class="o">.</span><span class="n">new_from_native_amount</span><span class="p">(</span><span class="n">native_transfer_amount</span><span class="p">)</span>
+            <span class="n">token_transfers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">token_transfers</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">native_tranfer</span><span class="p">]</span>
+
+            <span class="n">native_transfer_amount</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">number_of_tokens</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="n">data_parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_transfers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">number_of_tokens</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">transfer</span> <span class="o">=</span> <span class="n">token_transfers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_computer</span><span class="o">.</span><span class="n">is_fungible</span><span class="p">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">token</span><span class="p">):</span>
@@ -200,7 +203,7 @@
                 <span class="n">data_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_args_builder</span><span class="o">.</span><span class="n">build_args_for_single_esdt_nft_transfer</span><span class="p">(</span>
                     <span class="n">transfer</span><span class="o">=</span><span class="n">transfer</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">)</span>
                 <span class="n">receiver</span> <span class="o">=</span> <span class="n">sender</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_transfers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">number_of_tokens</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">data_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_args_builder</span><span class="o">.</span><span class="n">build_args_for_multi_esdt_nft_transfer</span><span class="p">(</span>
                 <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span> <span class="n">transfers</span><span class="o">=</span><span class="n">token_transfers</span><span class="p">)</span>
             <span class="n">receiver</span> <span class="o">=</span> <span class="n">sender</span>
