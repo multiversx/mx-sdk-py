@@ -1,6 +1,7 @@
+from typing import List
+
 import pytest
 
-from multiversx_sdk import TransactionsConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
 from multiversx_sdk.core.transaction import Transaction
@@ -237,7 +238,7 @@ class TestRelayedTransactionsFactory:
         alice = self.wallets["alice"]
         bob = self.wallets["bob"]
 
-        inner_transaction_1 = Transaction(
+        inner_transaction = Transaction(
             sender=bob.label,
             receiver=bob.label,
             gas_limit=50000,
@@ -247,16 +248,15 @@ class TestRelayedTransactionsFactory:
             relayer=alice.label
         )
 
-        serialized_inner_transaction_1 = self.transaction_computer.compute_bytes_for_signing(inner_transaction_1)
-        inner_transaction_1.signature = bob.secret_key.sign(serialized_inner_transaction_1)
-
-        inner_transactions = [inner_transaction_1]
+        inner_transactions = [inner_transaction]
+        serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
+        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction)
 
         relayed_transaction = self.factory.create_relayed_v3_transaction(
             relayer_address=Address.from_bech32(alice.label),
             inner_transactions=inner_transactions
         )
-        serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction, with_signature=True)
+        serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction)
         relayed_transaction.signature = alice.secret_key.sign(serialized_relayed_transaction)
         assert relayed_transaction.signature.hex() == "6bd446e1f531db190de97adeab7bae3ed332a83d93e47dc29299a0a6868b966b002d0f4395eee450fc89c7677516d7448c6d01245a3fc5c6c65e0bf8dca9540e"
         assert relayed_transaction.gas_limit == 150000
@@ -275,8 +275,8 @@ class TestRelayedTransactionsFactory:
             relayer="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
         )
 
-        serialized_inner_transaction_1 = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
-        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction_1)
+        serialized_inner_transaction = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
+        inner_transaction.signature = bob.secret_key.sign(serialized_inner_transaction)
 
         inner_transactions = [inner_transaction]
 
@@ -284,7 +284,7 @@ class TestRelayedTransactionsFactory:
         In the inner tx, the relayer address is acutally bob's. The creation should fail
         """
         with pytest.raises(InvalidInnerTransactionError) as err:
-            relayed_transaction = self.factory.create_relayed_v3_transaction(
+            self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
@@ -292,17 +292,16 @@ class TestRelayedTransactionsFactory:
 
         inner_transaction.signature = b""
         with pytest.raises(InvalidInnerTransactionError) as err:
-            relayed_transaction = self.factory.create_relayed_v3_transaction(
+            self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
         assert str(err.value) == "The inner transaction is not signed"
 
-        inner_transactions = []
+        inner_transactions: List[Transaction] = []
         with pytest.raises(InvalidInnerTransactionError) as err:
-            relayed_transaction = self.factory.create_relayed_v3_transaction(
+            self.factory.create_relayed_v3_transaction(
                 relayer_address=Address.from_bech32(alice.label),
                 inner_transactions=inner_transactions
             )
         assert str(err.value) == "The are no inner transactions"
-
