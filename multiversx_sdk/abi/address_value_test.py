@@ -47,3 +47,7 @@ def test_set_payload_and_get_payload():
     # With errors
     with pytest.raises(TypeError, match="cannot convert 'types.SimpleNamespace' object to bytes"):
         AddressValue().set_payload(SimpleNamespace(a=1, b=2, c=3))
+
+    # With errors
+    with pytest.raises(ValueError, match="cannot extract pubkey from dictionary"):
+        AddressValue().set_payload({})
