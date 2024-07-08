@@ -1,7 +1,5 @@
-
-
 import io
-from typing import Any
+from typing import Any, Dict, cast
 
 from multiversx_sdk.abi.shared import (decode_length, encode_length,
                                        read_bytes_exactly)
@@ -29,8 +27,19 @@ class BytesValue:
     def set_payload(self, value: Any):
         if isinstance(value, str):
             self.value = bytes(value, "utf-8")
+        elif isinstance(value, dict):
+            value = cast(Dict[str, str], value)
+            self.value = self._extract_value_from_dict(value)
         else:
             self.value = bytes(value)
+
+    def _extract_value_from_dict(self, value: Dict[str, str]) -> bytes:
+        hex_value = value.get("hex", None)
+
+        if not hex_value:
+            raise ValueError("cannot get value from dictionary")
+
+        return bytes.fromhex(hex_value)
 
     def get_payload(self) -> Any:
         return self.value
