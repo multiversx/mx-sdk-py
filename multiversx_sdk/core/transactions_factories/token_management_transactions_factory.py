@@ -793,7 +793,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         return TransactionBuilder(
             config=self._config,
             sender=sender,
-            receiver=sender,
+            receiver=self._config.esdt_contract_address,
             amount=None,
             gas_limit=self._config.gas_limit_nft_change_to_dynamic,
             add_data_movement_gas=True,
@@ -811,7 +811,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         return TransactionBuilder(
             config=self._config,
             sender=sender,
-            receiver=sender,
+            receiver=self._config.esdt_contract_address,
             amount=None,
             gas_limit=self._config.gas_limit_update_token_id,
             add_data_movement_gas=True,
@@ -824,6 +824,28 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                          token_ticker: str,
                                                          token_type: TokenTypes) -> Transaction:
         parts: List[str] = [
+            "registerDynamic",
+            arg_to_string(token_name),
+            arg_to_string(token_ticker),
+            arg_to_string(token_type.value)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_update_token_id,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_registering_dynamic_and_setting_roles(self,
+                                                                     sender: IAddress,
+                                                                     token_name: str,
+                                                                     token_ticker: str,
+                                                                     token_type: TokenTypes) -> Transaction:
+        parts: List[str] = [
             "registerAndSetAllRolesDynamic",
             arg_to_string(token_name),
             arg_to_string(token_ticker),
@@ -833,7 +855,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         return TransactionBuilder(
             config=self._config,
             sender=sender,
-            receiver=sender,
+            receiver=self._config.esdt_contract_address,
             amount=None,
             gas_limit=self._config.gas_limit_update_token_id,
             add_data_movement_gas=True,

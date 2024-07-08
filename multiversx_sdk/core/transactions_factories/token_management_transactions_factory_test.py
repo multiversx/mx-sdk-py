@@ -1,7 +1,8 @@
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
-    RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory)
+    RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory,
+    TokenTypes)
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 
@@ -359,3 +360,141 @@ def test_create_transaction_for_wiping():
     assert transaction.data.decode() == "wipe@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
     assert transaction.sender == frank.to_bech32()
     assert transaction.value == 0
+
+
+def test_create_transaction_for_modifying_royalties():
+    transaction = factory.create_transaction_for_modifying_royalties(
+        sender=alice,
+        token_identifier="TEST-123456",
+        token_nonce=1,
+        royalties=1234
+    )
+
+    assert transaction.data.decode() == "ESDTModifyRoyalties@544553542d313233343536@01@04d2"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == alice.to_bech32()
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_125_000
+
+
+def test_create_transaction_for_setting_new_uris():
+    transaction = factory.create_transaction_for_setting_new_uris(
+        sender=alice,
+        token_identifier="TEST-123456",
+        token_nonce=1,
+        uris=["firstURI", "secondURI"]
+    )
+
+    assert transaction.data.decode() == "ESDTModifyRoyalties@544553542d313233343536@01@6669727374555249@7365636f6e64555249"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == alice.to_bech32()
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_171_500
+
+
+def test_create_transaction_for_modifying_creator():
+    transaction = factory.create_transaction_for_modifying_creator(
+        sender=alice,
+        token_identifier="TEST-123456",
+        token_nonce=1,
+    )
+
+    assert transaction.data.decode() == "ESDTModifyCreator@544553542d313233343536@01"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == alice.to_bech32()
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_114_500
+
+
+def test_create_transaction_for_updating_metadata():
+    transaction = factory.create_transaction_for_updating_metadata(
+        sender=alice,
+        token_identifier="TEST-123456",
+        token_nonce=1,
+        token_name="Test",
+        royalties=1234,
+        hash="abba",
+        attributes=b"test",
+        uris=["firstURI", "secondURI"]
+    )
+
+    assert transaction.data.decode() == "ESDTMetaDataUpdate@544553542d313233343536@01@54657374@04d2@61626261@74657374@6669727374555249@7365636f6e64555249"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == alice.to_bech32()
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_218_000
+
+
+def test_create_transaction_for_recreating_metadata():
+    transaction = factory.create_transaction_for_nft_metadata_recreate(
+        sender=alice,
+        token_identifier="TEST-123456",
+        token_nonce=1,
+        token_name="Test",
+        royalties=1234,
+        hash="abba",
+        attributes=b"test",
+        uris=["firstURI", "secondURI"]
+    )
+
+    assert transaction.data.decode() == "ESDTMetaDataRecreate@544553542d313233343536@01@54657374@04d2@61626261@74657374@6669727374555249@7365636f6e64555249"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == alice.to_bech32()
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_221_000
+
+
+def test_create_transaction_for_changing_to_dynamic():
+    transaction = factory.create_transaction_for_making_token_dynamic(
+        sender=alice,
+        token_identifier="TEST-123456"
+    )
+
+    assert transaction.data.decode() == "changeToDynamic@544553542d313233343536"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_107_000
+
+
+def test_create_transaction_for_updating_token_id():
+    transaction = factory.create_transaction_for_updating_token_id(
+        sender=alice,
+        token_identifier="TEST-123456"
+    )
+
+    assert transaction.data.decode() == "updateTokenID@544553542d313233343536"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_104_000
+
+
+def test_create_transaction_for_registering_dynamic():
+    transaction = factory.create_transaction_for_registering_dynamic_token(
+        sender=alice,
+        token_name="Test",
+        token_ticker="TEST-123456",
+        token_type=TokenTypes.FNG
+    )
+
+    assert transaction.data.decode() == "registerDynamic@54657374@544553542d313233343536@464e47"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_131_000
+
+
+def test_create_transaction_for_registering_and_setting_all_roles():
+    transaction = factory.create_transaction_for_registering_dynamic_and_setting_roles(
+        sender=alice,
+        token_name="Test",
+        token_ticker="TEST-123456",
+        token_type=TokenTypes.FNG
+    )
+
+    assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d313233343536@464e47"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_152_000
