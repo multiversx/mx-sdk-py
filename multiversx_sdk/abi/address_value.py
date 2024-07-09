@@ -60,7 +60,7 @@ class AddressValue:
         if hex_address:
             return bytes.fromhex(hex_address)
 
-        raise ValueError("cannot extract pubkey from dictionary")
+        raise ValueError("cannot extract pubkey from dictionary: missing 'bech32' or 'hex' keys")
 
     def get_payload(self) -> Any:
         return self.value

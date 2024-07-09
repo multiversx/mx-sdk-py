@@ -49,5 +49,5 @@ def test_set_payload_and_get_payload():
         AddressValue().set_payload(SimpleNamespace(a=1, b=2, c=3))
 
     # With errors
-    with pytest.raises(ValueError, match="cannot extract pubkey from dictionary"):
+    with pytest.raises(ValueError, match="cannot extract pubkey from dictionary: missing 'bech32' or 'hex' keys"):
         AddressValue().set_payload({})

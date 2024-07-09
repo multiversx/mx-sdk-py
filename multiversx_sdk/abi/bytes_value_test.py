@@ -29,5 +29,5 @@ def test_set_payload_and_get_payload():
     with pytest.raises(TypeError, match="cannot convert 'types.SimpleNamespace' object to bytes"):
         BytesValue().set_payload(SimpleNamespace(a=1, b=2, c=3))
 
-    with pytest.raises(ValueError, match="cannot get value from dictionary"):
+    with pytest.raises(ValueError, match="cannot get value from dictionary: missing 'hex' key"):
         BytesValue().set_payload({})

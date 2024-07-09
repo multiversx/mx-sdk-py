@@ -37,7 +37,7 @@ class BytesValue:
         hex_value = value.get("hex", None)
 
         if not hex_value:
-            raise ValueError("cannot get value from dictionary")
+            raise ValueError("cannot get value from dictionary: missing 'hex' key")
 
         return bytes.fromhex(hex_value)
 
