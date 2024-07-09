@@ -42,6 +42,15 @@ def test_convert_native_value_to_list():
     assert not ok
 
     # With errors (raise on failure)
+    with pytest.raises(ValueError, match="cannot properly convert dictionary to list"):
+        items, ok = convert_native_value_to_list(
+            {
+                "a": 1,
+                "b": 2,
+                "c": 3
+            }
+        )
+
     with pytest.raises(ValueError, match="cannot convert native value to list"):
         items, ok = convert_native_value_to_list(42)
 
