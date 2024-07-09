@@ -8,12 +8,12 @@
 | multiversx\_sdk/abi/\_\_init\_\_.py                                                                            |       22 |        0 |    100% |           |
 | multiversx\_sdk/abi/abi.py                                                                                     |      237 |       10 |     96% |91, 111, 171, 237, 245, 257, 263, 265, 267, 271 |
 | multiversx\_sdk/abi/abi\_definition.py                                                                         |      156 |       13 |     92% |55, 73, 76, 114, 130, 146, 176, 201, 224, 244, 265, 285, 306 |
-| multiversx\_sdk/abi/address\_value.py                                                                          |       37 |        3 |     92% |14, 30, 53 |
+| multiversx\_sdk/abi/address\_value.py                                                                          |       48 |        3 |     94% |14, 30, 69 |
 | multiversx\_sdk/abi/array\_value.py                                                                            |       52 |        3 |     94% |45, 73, 81 |
 | multiversx\_sdk/abi/bigint\_value.py                                                                           |       36 |       21 |     42% |11, 14-16, 19-20, 23-25, 28, 31-38, 41, 44, 47, 50, 53 |
 | multiversx\_sdk/abi/biguint\_value.py                                                                          |       37 |        1 |     97% |        35 |
 | multiversx\_sdk/abi/bool\_value.py                                                                             |       40 |       21 |     48% |13-17, 26-27, 30-38, 41-47, 53, 56, 59 |
-| multiversx\_sdk/abi/bytes\_value.py                                                                            |       27 |        1 |     96% |        27 |
+| multiversx\_sdk/abi/bytes\_value.py                                                                            |       35 |        1 |     97% |        25 |
 | multiversx\_sdk/abi/codec.py                                                                                   |       24 |        2 |     92% |     26-27 |
 | multiversx\_sdk/abi/constants.py                                                                               |        8 |        0 |    100% |           |
 | multiversx\_sdk/abi/counted\_variadic\_values.py                                                               |       25 |        2 |     92% |    35, 42 |
@@ -26,7 +26,7 @@
 | multiversx\_sdk/abi/optional\_value.py                                                                         |       22 |        5 |     77% |13-14, 20-21, 27 |
 | multiversx\_sdk/abi/parts.py                                                                                   |       31 |        4 |     87% |29, 34, 49, 58 |
 | multiversx\_sdk/abi/serializer.py                                                                              |      105 |        7 |     93% |21, 38, 64, 101, 109, 113, 124 |
-| multiversx\_sdk/abi/shared.py                                                                                  |       37 |        1 |     97% |        25 |
+| multiversx\_sdk/abi/shared.py                                                                                  |       39 |        1 |     97% |        25 |
 | multiversx\_sdk/abi/small\_int\_values.py                                                                      |      102 |       30 |     71% |21, 52-53, 56-57, 60-67, 70-71, 74-80, 83, 86, 89, 121, 126, 129, 134, 137, 142, 145, 150, 153 |
 | multiversx\_sdk/abi/string\_value.py                                                                           |       31 |        2 |     94% |    17, 42 |
 | multiversx\_sdk/abi/struct\_value.py                                                                           |       37 |        1 |     97% |        21 |
@@ -150,7 +150,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6314** |  **710** | **89%** |           |
+|                                                                                                      **TOTAL** | **6335** |  **710** | **89%** |           |
 
 
 ## Setup coverage badge
