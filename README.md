@@ -86,7 +86,7 @@
 | multiversx\_sdk/core/transactions\_factories/token\_transfers\_data\_builder.py                                |       26 |        1 |     96% |         9 |
 | multiversx\_sdk/core/transactions\_factories/transaction\_builder.py                                           |       31 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/transactions\_factory\_config.py                                  |       41 |        0 |    100% |           |
-| multiversx\_sdk/core/transactions\_factories/transfer\_transactions\_factory.py                                |       52 |        2 |     96% |    55, 93 |
+| multiversx\_sdk/core/transactions\_factories/transfer\_transactions\_factory.py                                |       51 |        1 |     98% |        55 |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/\_\_init\_\_.py                                            |        6 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/delegation\_transactions\_outcome\_parser.py               |       23 |        4 |     83% | 28-31, 35 |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/delegation\_transactions\_outcome\_parser\_types.py        |        4 |        0 |    100% |           |
@@ -150,7 +150,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6315** |  **711** | **89%** |           |
+|                                                                                                      **TOTAL** | **6314** |  **710** | **89%** |           |
 
 
 ## Setup coverage badge
