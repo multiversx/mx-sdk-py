@@ -1,6 +1,6 @@
 import base64
 import json
-from typing import Any, Dict, List, Protocol
+from typing import Any, Dict, List, Protocol, Sequence
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
@@ -70,6 +70,34 @@ class RelayedTransactionsFactory:
             data=data.encode(),
             version=inner_transaction.version,
             options=inner_transaction.options
+        )
+
+    def create_relayed_v3_transaction(self,
+                                      relayer_address: IAddress,
+                                      inner_transactions: Sequence[ITransaction]) -> Transaction:
+        if len(inner_transactions) == 0:
+            raise InvalidInnerTransactionError("The are no inner transactions")
+
+        inner_txs_gas_limit = 0
+        for inner_transaction in inner_transactions:
+            if not inner_transaction.signature:
+                raise InvalidInnerTransactionError("The inner transaction is not signed")
+
+            if inner_transaction.relayer != relayer_address.to_bech32():
+                raise InvalidInnerTransactionError("The inner transaction has an incorrect relayer address")
+
+            inner_txs_gas_limit += inner_transaction.gas_limit
+
+        move_balances_gas = self._config.min_gas_limit * len(inner_transactions)
+        gas_limit = self._config.min_gas_limit + move_balances_gas + inner_txs_gas_limit
+
+        return Transaction(
+            sender=relayer_address.to_bech32(),
+            receiver=relayer_address.to_bech32(),
+            value=0,
+            gas_limit=gas_limit,
+            chain_id=self._config.chain_id,
+            inner_transactions=inner_transactions,
         )
 
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:
