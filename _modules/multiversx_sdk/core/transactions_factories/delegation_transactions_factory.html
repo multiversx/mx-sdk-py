@@ -264,7 +264,8 @@
     <span class="k">def</span> <span class="nf">create_transaction_for_unjailing_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
                                                <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
-                                               <span class="n">public_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">IValidatorPublicKey</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+                                               <span class="n">public_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">IValidatorPublicKey</span><span class="p">],</span>
+                                               <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">)</span>
 
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unJailNodes&quot;</span><span class="p">]</span>
@@ -277,7 +278,8 @@
             <span class="n">receiver</span><span class="o">=</span><span class="n">delegation_contract</span><span class="p">,</span>
             <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
             <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_execution_gas_limit_for_nodes_management</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span>
         <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>

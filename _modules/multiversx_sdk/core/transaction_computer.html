@@ -193,7 +193,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_options_set_for_guarded_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_options_set_for_hash_signing</span><span class="p">(</span><span class="n">transaction</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-empty transaction options requires transaction version &gt;= </span><span class="si">{</span><span class="n">MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">,</span> <span class="n">with_signature</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="n">dictionary</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;nonce&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span>
         <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
@@ -213,6 +213,10 @@
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
+        <span class="k">if</span> <span class="n">with_signature</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="p">:</span>
+                <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;signature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+
         <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;chainID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
@@ -223,6 +227,13 @@
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="p">:</span>
             <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;guardian&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span>
+
+        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="p">:</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;relayer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">inner_transactions</span><span class="p">):</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;innerTransactions&quot;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">tx</span><span class="p">,</span> <span class="n">with_signature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">tx</span> <span class="ow">in</span> <span class="n">transaction</span><span class="o">.</span><span class="n">inner_transactions</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">dictionary</span>
 
