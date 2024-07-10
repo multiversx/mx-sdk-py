@@ -83,13 +83,11 @@ class TransferTransactionsFactory:
                                         native_amount: Optional[int] = None,
                                         token_transfers: Optional[Sequence[ITokenTransfer]] = None,
                                         data: Optional[bytes] = None) -> Transaction:
-        if not native_amount and not token_transfers:
-            raise BadUsageError("No native token amount or token transfers provided")
-
         if token_transfers and data:
             raise BadUsageError("Can't set data field when sending esdt tokens")
 
-        if native_amount and not token_transfers:
+        if (native_amount and not token_transfers) or data:
+            native_amount = native_amount if native_amount else 0
             return self.create_transaction_for_native_token_transfer(
                 sender=sender,
                 receiver=receiver,

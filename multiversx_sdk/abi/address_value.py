@@ -1,8 +1,8 @@
 import io
-from typing import Any, Protocol
+from typing import Any, Dict, Protocol, cast
 
 from multiversx_sdk.abi.shared import read_bytes_exactly
-from multiversx_sdk.core.address import PUBKEY_LENGTH
+from multiversx_sdk.core.address import PUBKEY_LENGTH, Address
 
 
 class IAddress(Protocol):
@@ -42,9 +42,25 @@ class AddressValue:
             raise ValueError(f"public key (address) has invalid length: {len(pubkey)}")
 
     def set_payload(self, value: Any):
-        pubkey = bytes(value)
+        if isinstance(value, dict):
+            value = cast(Dict[str, str], value)
+            pubkey = self._extract_pubkey_from_dict(value)
+        else:
+            pubkey = bytes(value)
+
         self._check_pub_key_length(pubkey)
         self.value = pubkey
+
+    def _extract_pubkey_from_dict(self, value: Dict[str, str]) -> bytes:
+        bech32_address = value.get("bech32", None)
+        if bech32_address:
+            return Address.new_from_bech32(bech32_address).get_public_key()
+
+        hex_address = value.get("hex", None)
+        if hex_address:
+            return bytes.fromhex(hex_address)
+
+        raise ValueError("cannot extract pubkey from dictionary: missing 'bech32' or 'hex' keys")
 
     def get_payload(self) -> Any:
         return self.value
