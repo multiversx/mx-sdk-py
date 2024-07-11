@@ -60,6 +60,14 @@ multiversx\_sdk.core.transactions\_outcome\_parsers.token\_management\_transacti
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.core.transactions\_outcome\_parsers.transaction\_events\_parser module
+--------------------------------------------------------------------------------------
+
+.. automodule:: multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

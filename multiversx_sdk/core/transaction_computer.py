@@ -130,8 +130,9 @@ class TransactionComputer:
             dictionary["relayer"] = transaction.relayer
 
         if len(transaction.inner_transactions):
-            dictionary["innerTransactions"] = \
-                [self._to_dictionary(transaction=tx, with_signature=True) for tx in transaction.inner_transactions]
+            dictionary["innerTransactions"] = [
+                self._to_dictionary(transaction=tx, with_signature=True) for tx in transaction.inner_transactions
+            ]
 
         return dictionary
 
