@@ -680,7 +680,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             raise BadUsageError("No URIs provided")
 
         parts: List[str] = [
-            "ESDTModifyRoyalties",
+            "ESDTSetNewURIs",
             arg_to_string(token_identifier),
             arg_to_string(token_nonce),
             *map(arg_to_string, uris)

@@ -385,11 +385,11 @@ def test_create_transaction_for_setting_new_uris():
         uris=["firstURI", "secondURI"]
     )
 
-    assert transaction.data.decode() == "ESDTModifyRoyalties@544553542d313233343536@01@6669727374555249@7365636f6e64555249"
+    assert transaction.data.decode() == "ESDTSetNewURIs@544553542d313233343536@01@6669727374555249@7365636f6e64555249"
     assert transaction.sender == alice.to_bech32()
     assert transaction.receiver == alice.to_bech32()
     assert transaction.value == 0
-    assert transaction.gas_limit == 60_171_500
+    assert transaction.gas_limit == 60_164_000
 
 
 def test_create_transaction_for_modifying_creator():
