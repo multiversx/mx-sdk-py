@@ -36,6 +36,7 @@ class IConfig(Protocol):
     gas_limit_nft_metadata_recreate: int
     gas_limit_nft_change_to_dynamic: int
     gas_limit_update_token_id: int
+    gas_limit_register_dynamic: int
     issue_cost: int
     esdt_contract_address: IAddress
 
@@ -835,7 +836,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=sender,
             receiver=self._config.esdt_contract_address,
             amount=None,
-            gas_limit=self._config.gas_limit_update_token_id,
+            gas_limit=self._config.gas_limit_register_dynamic,
             add_data_movement_gas=True,
             data_parts=parts
         ).build()
@@ -857,7 +858,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             sender=sender,
             receiver=self._config.esdt_contract_address,
             amount=None,
-            gas_limit=self._config.gas_limit_update_token_id,
+            gas_limit=self._config.gas_limit_register_dynamic,
             add_data_movement_gas=True,
             data_parts=parts
         ).build()

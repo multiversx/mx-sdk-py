@@ -32,6 +32,7 @@ class TransactionsFactoryConfig:
         self.gas_limit_nft_metadata_recreate = 60_000_000
         self.gas_limit_nft_change_to_dynamic = 60_000_000
         self.gas_limit_update_token_id = 60_000_000
+        self.gas_limit_register_dynamic = 60_000_000
         self.issue_cost = 50_000_000_000_000_000
         self.esdt_contract_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
 
