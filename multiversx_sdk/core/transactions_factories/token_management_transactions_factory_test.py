@@ -1,8 +1,7 @@
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
-    RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory,
-    TokenTypes)
+    TokenManagementTransactionsFactory, TokenType)
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 
@@ -17,7 +16,7 @@ def test_create_transaction_for_registering_and_setting_roles():
         sender=frank,
         token_name="TEST",
         token_ticker="TEST",
-        token_type=RegisterAndSetAllRolesTokenType.FNG,
+        token_type=TokenType.FNG,
         num_decimals=2
     )
 
@@ -123,11 +122,13 @@ def test_create_transaction_for_setting_special_role_on_non_fungible_token():
         add_role_nft_burn=False,
         add_role_nft_update_attributes=True,
         add_role_nft_add_uri=True,
-        add_role_esdt_transfer_role=False
+        add_role_esdt_transfer_role=False,
+        add_role_esdt_modify_creator=True,
+        add_role_nft_recreate=True
     )
 
     assert transaction.data
-    assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e465455706461746541747472696275746573@45534454526f6c654e4654416464555249"
+    assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e465455706461746541747472696275746573@45534454526f6c654e4654416464555249@45534454526f6c654d6f6469667943726561746f72@45534454526f6c654e46545265637265617465"
     assert transaction.sender == frank.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 0
@@ -367,7 +368,7 @@ def test_create_transaction_for_modifying_royalties():
         sender=alice,
         token_identifier="TEST-123456",
         token_nonce=1,
-        royalties=1234
+        new_royalties=1234
     )
 
     assert transaction.data.decode() == "ESDTModifyRoyalties@544553542d313233343536@01@04d2"
@@ -382,7 +383,7 @@ def test_create_transaction_for_setting_new_uris():
         sender=alice,
         token_identifier="TEST-123456",
         token_nonce=1,
-        uris=["firstURI", "secondURI"]
+        new_uris=["firstURI", "secondURI"]
     )
 
     assert transaction.data.decode() == "ESDTSetNewURIs@544553542d313233343536@01@6669727374555249@7365636f6e64555249"
@@ -411,11 +412,11 @@ def test_create_transaction_for_updating_metadata():
         sender=alice,
         token_identifier="TEST-123456",
         token_nonce=1,
-        token_name="Test",
-        royalties=1234,
-        hash="abba",
-        attributes=b"test",
-        uris=["firstURI", "secondURI"]
+        new_token_name="Test",
+        new_royalties=1234,
+        new_hash="abba",
+        new_attributes=b"test",
+        new_uris=["firstURI", "secondURI"]
     )
 
     assert transaction.data.decode() == "ESDTMetaDataUpdate@544553542d313233343536@01@54657374@04d2@61626261@74657374@6669727374555249@7365636f6e64555249"
@@ -430,11 +431,11 @@ def test_create_transaction_for_recreating_metadata():
         sender=alice,
         token_identifier="TEST-123456",
         token_nonce=1,
-        token_name="Test",
-        royalties=1234,
-        hash="abba",
-        attributes=b"test",
-        uris=["firstURI", "secondURI"]
+        new_token_name="Test",
+        new_royalties=1234,
+        new_hash="abba",
+        new_attributes=b"test",
+        new_uris=["firstURI", "secondURI"]
     )
 
     assert transaction.data.decode() == "ESDTMetaDataRecreate@544553542d313233343536@01@54657374@04d2@61626261@74657374@6669727374555249@7365636f6e64555249"
@@ -445,7 +446,7 @@ def test_create_transaction_for_recreating_metadata():
 
 
 def test_create_transaction_for_changing_to_dynamic():
-    transaction = factory.create_transaction_for_making_token_dynamic(
+    transaction = factory.create_transaction_for_changing_token_to_dynamic(
         sender=alice,
         token_identifier="TEST-123456"
     )
@@ -475,7 +476,7 @@ def test_create_transaction_for_registering_dynamic():
         sender=alice,
         token_name="Test",
         token_ticker="TEST-123456",
-        token_type=TokenTypes.FNG
+        token_type=TokenType.FNG
     )
 
     assert transaction.data.decode() == "registerDynamic@54657374@544553542d313233343536@464e47"
@@ -490,7 +491,7 @@ def test_create_transaction_for_registering_and_setting_all_roles():
         sender=alice,
         token_name="Test",
         token_ticker="TEST-123456",
-        token_type=TokenTypes.FNG
+        token_type=TokenType.FNG
     )
 
     assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d313233343536@464e47"

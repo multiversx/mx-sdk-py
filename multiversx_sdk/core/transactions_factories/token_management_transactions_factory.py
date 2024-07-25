@@ -41,14 +41,7 @@ class IConfig(Protocol):
     esdt_contract_address: IAddress
 
 
-class TokenTypes(Enum):
-    NFT = "NFT"
-    SFT = "SFT"
-    META = "META"
-    FNG = "FNG"
-
-
-class RegisterAndSetAllRolesTokenType(Enum):
+class TokenType(Enum):
     NFT = "NFT"
     SFT = "SFT"
     META = "META"
@@ -230,7 +223,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: IAddress,
         token_name: str,
         token_ticker: str,
-        token_type: RegisterAndSetAllRolesTokenType,
+        token_type: TokenType,
         num_decimals: int
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
@@ -364,7 +357,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         add_role_nft_add_uri: bool,
         add_role_esdt_transfer_role: bool,
         add_role_esdt_modify_creator: bool = False,
-        add_role_nft_recreate: bool = False
+        add_role_nft_recreate: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_royalties: bool = False
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -376,7 +371,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleNFTAddURI")] if add_role_nft_add_uri else []),
             *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
             *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
-            *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else [])
+            *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else [])
         ]
 
         return TransactionBuilder(
@@ -654,12 +651,12 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                    sender: IAddress,
                                                    token_identifier: str,
                                                    token_nonce: int,
-                                                   royalties: int) -> Transaction:
+                                                   new_royalties: int) -> Transaction:
         parts: List[str] = [
             "ESDTModifyRoyalties",
             arg_to_string(token_identifier),
             arg_to_string(token_nonce),
-            arg_to_string(royalties)
+            arg_to_string(new_royalties)
         ]
 
         return TransactionBuilder(
@@ -676,15 +673,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                 sender: IAddress,
                                                 token_identifier: str,
                                                 token_nonce: int,
-                                                uris: List[str]) -> Transaction:
-        if not uris:
+                                                new_uris: List[str]) -> Transaction:
+        if not new_uris:
             raise BadUsageError("No URIs provided")
 
         parts: List[str] = [
             "ESDTSetNewURIs",
             arg_to_string(token_identifier),
             arg_to_string(token_nonce),
-            *map(arg_to_string, uris)
+            *map(arg_to_string, new_uris)
         ]
 
         return TransactionBuilder(
@@ -721,23 +718,20 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                  sender: IAddress,
                                                  token_identifier: str,
                                                  token_nonce: int,
-                                                 token_name: str,
-                                                 royalties: int,
-                                                 hash: str,
-                                                 attributes: bytes,
-                                                 uris: List[str]) -> Transaction:
-        if not uris:
-            raise BadUsageError("No URIs provided")
-
+                                                 new_token_name: str,
+                                                 new_royalties: int,
+                                                 new_hash: str,
+                                                 new_attributes: bytes,
+                                                 new_uris: List[str]) -> Transaction:
         parts: List[str] = [
             "ESDTMetaDataUpdate",
             arg_to_string(token_identifier),
             arg_to_string(token_nonce),
-            arg_to_string(token_name),
-            arg_to_string(royalties),
-            arg_to_string(hash),
-            arg_to_string(attributes),
-            *map(arg_to_string, uris)
+            arg_to_string(new_token_name),
+            arg_to_string(new_royalties),
+            arg_to_string(new_hash),
+            arg_to_string(new_attributes),
+            *map(arg_to_string, new_uris)
         ]
 
         return TransactionBuilder(
@@ -754,23 +748,20 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                      sender: IAddress,
                                                      token_identifier: str,
                                                      token_nonce: int,
-                                                     token_name: str,
-                                                     royalties: int,
-                                                     hash: str,
-                                                     attributes: bytes,
-                                                     uris: List[str]) -> Transaction:
-        if not uris:
-            raise BadUsageError("No URIs provided")
-
+                                                     new_token_name: str,
+                                                     new_royalties: int,
+                                                     new_hash: str,
+                                                     new_attributes: bytes,
+                                                     new_uris: List[str]) -> Transaction:
         parts: List[str] = [
             "ESDTMetaDataRecreate",
             arg_to_string(token_identifier),
             arg_to_string(token_nonce),
-            arg_to_string(token_name),
-            arg_to_string(royalties),
-            arg_to_string(hash),
-            arg_to_string(attributes),
-            *map(arg_to_string, uris)
+            arg_to_string(new_token_name),
+            arg_to_string(new_royalties),
+            arg_to_string(new_hash),
+            arg_to_string(new_attributes),
+            *map(arg_to_string, new_uris)
         ]
 
         return TransactionBuilder(
@@ -783,9 +774,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         ).build()
 
-    def create_transaction_for_making_token_dynamic(self,
-                                                    sender: IAddress,
-                                                    token_identifier: str) -> Transaction:
+    def create_transaction_for_changing_token_to_dynamic(self,
+                                                         sender: IAddress,
+                                                         token_identifier: str) -> Transaction:
         parts: List[str] = [
             "changeToDynamic",
             arg_to_string(token_identifier)
@@ -823,7 +814,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                          sender: IAddress,
                                                          token_name: str,
                                                          token_ticker: str,
-                                                         token_type: TokenTypes) -> Transaction:
+                                                         token_type: TokenType) -> Transaction:
         parts: List[str] = [
             "registerDynamic",
             arg_to_string(token_name),
@@ -845,7 +836,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                                      sender: IAddress,
                                                                      token_name: str,
                                                                      token_ticker: str,
-                                                                     token_type: TokenTypes) -> Transaction:
+                                                                     token_type: TokenType) -> Transaction:
         parts: List[str] = [
             "registerAndSetAllRolesDynamic",
             arg_to_string(token_name),

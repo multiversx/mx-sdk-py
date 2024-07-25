@@ -23,8 +23,8 @@ from multiversx_sdk.core.transactions_factories.relayed_transactions_factory imp
     RelayedTransactionsFactory
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
-from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
-    RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory)
+from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import \
+    TokenManagementTransactionsFactory
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
@@ -50,7 +50,7 @@ __all__ = [
     "TokenManagementTransactionsOutcomeParser", "SmartContractResult",
     "TransactionEvent", "TransactionLogs", "TransactionOutcome",
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
-    "RegisterAndSetAllRolesTokenType", "TransactionsFactoryConfig",
+    "TransactionsFactoryConfig",
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
     "RelayedTransactionsFactory", "AccountTransactionsFactory", "DelegationTransactionsOutcomeParser",
     "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser",
