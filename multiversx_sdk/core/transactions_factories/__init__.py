@@ -6,8 +6,8 @@ from multiversx_sdk.core.transactions_factories.relayed_transactions_factory imp
     RelayedTransactionsFactory
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
-from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import \
-    TokenManagementTransactionsFactory
+from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
+    TokenManagementTransactionsFactory, TokenType)
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
@@ -16,6 +16,7 @@ from multiversx_sdk.core.transactions_factories.transfer_transactions_factory im
 __all__ = [
     "DelegationTransactionsFactory",
     "TokenManagementTransactionsFactory",
+    "TokenType",
     "TransactionsFactoryConfig",
     "SmartContractTransactionsFactory",
     "TransferTransactionsFactory",
