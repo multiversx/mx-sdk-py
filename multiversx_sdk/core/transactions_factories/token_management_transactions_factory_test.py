@@ -134,6 +134,38 @@ def test_create_transaction_for_setting_special_role_on_non_fungible_token():
     assert transaction.value == 0
 
 
+def test_set_roles_on_nft():
+    transaction = factory.create_transaction_for_setting_special_role_on_non_fungible_token(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+        add_role_esdt_transfer_role=True
+    )
+
+    assert transaction.data
+    assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@455344545472616e73666572526f6c65"
+    assert transaction.sender == frank.to_bech32()
+    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+
+    transaction = factory.create_transaction_for_setting_special_role_on_non_fungible_token(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+        add_role_nft_create=True,
+        add_role_nft_burn=True,
+        add_role_nft_update_attributes=True,
+        add_role_nft_update=True,
+        add_role_esdt_modify_royalties=True,
+        add_role_esdt_set_new_uri=True,
+        add_role_esdt_modify_creator=True,
+        add_role_nft_recreate=True,
+        add_role_esdt_transfer_role=True,
+        add_role_nft_add_uri=True
+    )
+    assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e46544275726e@45534454526f6c654e465455706461746541747472696275746573@45534454526f6c654e4654416464555249@455344545472616e73666572526f6c65@45534454526f6c654e4654557064617465@45534454526f6c654d6f64696679526f79616c74696573@45534454526f6c655365744e6577555249@45534454526f6c654d6f6469667943726561746f72@45534454526f6c654e46545265637265617465"
+
+
 def test_create_transaction_for_creating_nft():
     transaction = factory.create_transaction_for_creating_nft(
         sender=grace,

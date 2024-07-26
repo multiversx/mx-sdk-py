@@ -319,11 +319,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: IAddress,
         user: IAddress,
         token_identifier: str,
-        add_role_nft_create: bool,
-        add_role_nft_burn: bool,
-        add_role_nft_add_quantity: bool,
-        add_role_esdt_transfer_role: bool,
-        add_role_esdt_modify_creator: bool = False
+        add_role_nft_create: bool = False,
+        add_role_nft_burn: bool = False,
+        add_role_nft_add_quantity: bool = False,
+        add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_creator: bool = False,
+        add_role_nft_recreate: bool = False,
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -333,7 +337,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
             *([arg_to_string("ESDTRoleNFTAddQuantity")] if add_role_nft_add_quantity else []),
             *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
-            *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else [])
+            *([arg_to_string("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
+            *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
         ]
 
         return TransactionBuilder(
@@ -351,15 +359,16 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: IAddress,
         user: IAddress,
         token_identifier: str,
-        add_role_nft_create: bool,
-        add_role_nft_burn: bool,
-        add_role_nft_update_attributes: bool,
-        add_role_nft_add_uri: bool,
-        add_role_esdt_transfer_role: bool,
+        add_role_nft_create: bool = False,
+        add_role_nft_burn: bool = False,
+        add_role_nft_update_attributes: bool = False,
+        add_role_nft_add_uri: bool = False,
+        add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
         add_role_esdt_modify_creator: bool = False,
         add_role_nft_recreate: bool = False,
-        add_role_esdt_set_new_uri: bool = False,
-        add_role_esdt_modify_royalties: bool = False
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -370,10 +379,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if add_role_nft_update_attributes else []),
             *([arg_to_string("ESDTRoleNFTAddURI")] if add_role_nft_add_uri else []),
             *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
+            *([arg_to_string("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
             *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
             *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
-            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
-            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else [])
         ]
 
         return TransactionBuilder(
