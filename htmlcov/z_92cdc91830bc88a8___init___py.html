@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_92cdc91830bc88a8_account_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.6.0">coverage.py v7.6.0</a>,
-            created at 2024-07-17 10:52 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.6.1">coverage.py v7.6.1</a>,
+            created at 2024-08-08 12:29 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -106,7 +106,7 @@
     <p class="run"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">transactions_factories</span><span class="op">.</span><span class="nam">smart_contract_transactions_factory</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">    <span class="nam">SmartContractTransactionsFactory</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">transactions_factories</span><span class="op">.</span><span class="nam">token_management_transactions_factory</span> <span class="key">import</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">    <span class="nam">RegisterAndSetAllRolesTokenType</span><span class="op">,</span> <span class="nam">TokenManagementTransactionsFactory</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">    <span class="nam">TokenManagementTransactionsFactory</span><span class="op">,</span> <span class="nam">TokenType</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">transactions_factories</span><span class="op">.</span><span class="nam">transactions_factory_config</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">    <span class="nam">TransactionsFactoryConfig</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">transactions_factories</span><span class="op">.</span><span class="nam">transfer_transactions_factory</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
@@ -132,7 +132,7 @@
     <p class="pln"><span class="n"><a id="t50" href="#t50">50</a></span><span class="t">    <span class="str">"TokenManagementTransactionsOutcomeParser"</span><span class="op">,</span> <span class="str">"SmartContractResult"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t51" href="#t51">51</a></span><span class="t">    <span class="str">"TransactionEvent"</span><span class="op">,</span> <span class="str">"TransactionLogs"</span><span class="op">,</span> <span class="str">"TransactionOutcome"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t">    <span class="str">"DelegationTransactionsFactory"</span><span class="op">,</span> <span class="str">"TokenManagementTransactionsFactory"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">    <span class="str">"RegisterAndSetAllRolesTokenType"</span><span class="op">,</span> <span class="str">"TransactionsFactoryConfig"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">    <span class="str">"TransactionsFactoryConfig"</span><span class="op">,</span> <span class="str">"TokenType"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t">    <span class="str">"SmartContractTransactionsFactory"</span><span class="op">,</span> <span class="str">"TransferTransactionsFactory"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t">    <span class="str">"RelayedTransactionsFactory"</span><span class="op">,</span> <span class="str">"AccountTransactionsFactory"</span><span class="op">,</span> <span class="str">"DelegationTransactionsOutcomeParser"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t">    <span class="str">"find_events_by_identifier"</span><span class="op">,</span> <span class="str">"find_events_by_first_topic"</span><span class="op">,</span> <span class="str">"SmartContractTransactionsOutcomeParser"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -146,8 +146,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_92cdc91830bc88a8_account_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.6.0">coverage.py v7.6.0</a>,
-            created at 2024-07-17 10:52 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.6.1">coverage.py v7.6.1</a>,
+            created at 2024-08-08 12:29 +0000
         </p>
     </div>
 </footer>

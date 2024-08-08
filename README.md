@@ -56,7 +56,7 @@
 | multiversx\_sdk/core/proto/\_\_init\_\_.py                                                                     |        0 |        0 |    100% |           |
 | multiversx\_sdk/core/proto/transaction\_pb2.py                                                                 |       12 |        3 |     75% |     21-23 |
 | multiversx\_sdk/core/proto/transaction\_serializer.py                                                          |       62 |        1 |     98% |        28 |
-| multiversx\_sdk/core/serializer.py                                                                             |       32 |        2 |     94% |    43, 46 |
+| multiversx\_sdk/core/serializer.py                                                                             |       33 |        3 |     91% |12, 44, 47 |
 | multiversx\_sdk/core/smart\_contract\_queries\_controller.py                                                   |       48 |        5 |     90% |15, 20, 23, 55, 85 |
 | multiversx\_sdk/core/smart\_contract\_query.py                                                                 |       22 |        4 |     82% | 21, 40-43 |
 | multiversx\_sdk/core/token\_payment.py                                                                         |       67 |        2 |     97% |    51, 89 |
@@ -82,10 +82,10 @@
 | multiversx\_sdk/core/transactions\_factories/delegation\_transactions\_factory.py                              |      111 |        1 |     99% |        59 |
 | multiversx\_sdk/core/transactions\_factories/relayed\_transactions\_factory.py                                 |       62 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/smart\_contract\_transactions\_factory.py                         |       95 |        4 |     96% |31, 34, 37, 59 |
-| multiversx\_sdk/core/transactions\_factories/token\_management\_transactions\_factory.py                       |      109 |        0 |    100% |           |
+| multiversx\_sdk/core/transactions\_factories/token\_management\_transactions\_factory.py                       |      149 |        2 |     99% |  411, 688 |
 | multiversx\_sdk/core/transactions\_factories/token\_transfers\_data\_builder.py                                |       26 |        1 |     96% |         9 |
 | multiversx\_sdk/core/transactions\_factories/transaction\_builder.py                                           |       31 |        0 |    100% |           |
-| multiversx\_sdk/core/transactions\_factories/transactions\_factory\_config.py                                  |       41 |        0 |    100% |           |
+| multiversx\_sdk/core/transactions\_factories/transactions\_factory\_config.py                                  |       49 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/transfer\_transactions\_factory.py                                |       51 |        1 |     98% |        55 |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/\_\_init\_\_.py                                            |        6 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/delegation\_transactions\_outcome\_parser.py               |       23 |        4 |     83% | 28-31, 35 |
@@ -150,7 +150,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6376** |  **715** | **89%** |           |
+|                                                                                                      **TOTAL** | **6425** |  **718** | **89%** |           |
 
 
 ## Setup coverage badge
