@@ -81,26 +81,34 @@
 <span class="k">class</span> <span class="nc">TransactionsFactoryConfig</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># General-purpose configuration</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">chain_id</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_HRP</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_gas_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_per_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_500</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span> <span class="o">=</span> <span class="n">chain_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span> <span class="o">=</span> <span class="n">DEFAULT_HRP</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_gas_limit</span> <span class="o">=</span> <span class="mi">50_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_per_byte</span> <span class="o">=</span> <span class="mi">1_500</span>
 
         <span class="c1"># Configuration for token operations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_local_mint</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_local_burn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_pausing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_freezing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_wiping</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_create</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_burn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_store_per_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10_000</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50_000_000_000_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_issue</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_local_mint</span> <span class="o">=</span> <span class="mi">300_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_local_burn</span> <span class="o">=</span> <span class="mi">300_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_pausing</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_freezing</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_wiping</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_create</span> <span class="o">=</span> <span class="mi">3_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_update_attributes</span> <span class="o">=</span> <span class="mi">1_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_quantity</span> <span class="o">=</span> <span class="mi">1_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_burn</span> <span class="o">=</span> <span class="mi">1_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_store_per_byte</span> <span class="o">=</span> <span class="mi">10_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_modify_royalties</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_set_new_uris</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_modify_creator</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_esdt_metadata_update</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_nft_metadata_recreate</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_nft_change_to_dynamic</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_update_token_id</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_register_dynamic</span> <span class="o">=</span> <span class="mi">60_000_000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">issue_cost</span> <span class="o">=</span> <span class="mi">50_000_000_000_000_000</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">:</span> <span class="n">IAddress</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="s2">&quot;erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u&quot;</span><span class="p">)</span>
 
         <span class="c1"># Configuration for delegation operations</span>
