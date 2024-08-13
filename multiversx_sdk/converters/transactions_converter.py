@@ -58,7 +58,7 @@ class TransactionsConverter:
             signature=self._bytes_from_hex(dictionary.get("signature", "")),
             guardian_signature=self._bytes_from_hex(dictionary.get("guardianSignature", "")),
             relayer=dictionary.get("relayer", None),
-            inner_transactions=dictionary.get("innerTransactions", None),
+            inner_transactions=[self.dictionary_to_transaction(inner_tx) for inner_tx in dictionary.get("innerTransactions", [])],
         )
 
     def transaction_on_network_to_outcome(self, transaction_on_network: TransactionOnNetwork) -> TransactionOutcome:

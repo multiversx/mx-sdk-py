@@ -27,7 +27,7 @@ from multiversx_sdk.core.transactions_factories.relayed_transactions_factory imp
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
-    RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory)
+    TokenManagementTransactionsFactory, TokenType)
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
@@ -36,11 +36,13 @@ from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_ou
     DelegationTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
-    find_events_by_identifier)
+    find_events_by_first_topic, find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
     SmartContractTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
+from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
+    TransactionEventsParser
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.errors import GenericError
@@ -72,14 +74,14 @@ __all__ = [
     "TokenManagementTransactionsOutcomeParser", "SmartContractResult",
     "TransactionEvent", "TransactionLogs", "TransactionOutcome",
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
-    "RegisterAndSetAllRolesTokenType", "TransactionsFactoryConfig",
+    "TransactionsFactoryConfig", "TokenType",
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
     "RelayedTransactionsFactory", "AccountTransactionsFactory",
     "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
     "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
     "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
-    "find_events_by_identifier", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
+    "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
     "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse",
-    "TransactionDecoder", "TransactionMetadata"
+    "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser"
 ]

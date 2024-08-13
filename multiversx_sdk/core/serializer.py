@@ -8,7 +8,8 @@ from multiversx_sdk.core.errors import ErrCannotSerializeArgument
 
 @runtime_checkable
 class IArgument(Protocol):
-    def serialize(self) -> bytes: ...
+    def serialize(self) -> bytes:
+        ...
 
 
 def args_to_string(args: Sequence[Any]) -> str:

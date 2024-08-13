@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 from typing import List, Protocol
 
+from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transaction import Transaction
@@ -28,11 +29,19 @@ class IConfig(Protocol):
     gas_limit_esdt_nft_add_quantity: int
     gas_limit_esdt_nft_burn: int
     gas_limit_store_per_byte: int
+    gas_limit_esdt_modify_royalties: int
+    gas_limit_esdt_modify_creator: int
+    gas_limit_esdt_metadata_update: int
+    gas_limit_set_new_uris: int
+    gas_limit_nft_metadata_recreate: int
+    gas_limit_nft_change_to_dynamic: int
+    gas_limit_update_token_id: int
+    gas_limit_register_dynamic: int
     issue_cost: int
     esdt_contract_address: IAddress
 
 
-class RegisterAndSetAllRolesTokenType(Enum):
+class TokenType(Enum):
     NFT = "NFT"
     SFT = "SFT"
     META = "META"
@@ -214,7 +223,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: IAddress,
         token_name: str,
         token_ticker: str,
-        token_type: RegisterAndSetAllRolesTokenType,
+        token_type: TokenType,
         num_decimals: int
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
@@ -310,10 +319,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: IAddress,
         user: IAddress,
         token_identifier: str,
-        add_role_nft_create: bool,
-        add_role_nft_burn: bool,
-        add_role_nft_add_quantity: bool,
-        add_role_esdt_transfer_role: bool
+        add_role_nft_create: bool = False,
+        add_role_nft_burn: bool = False,
+        add_role_nft_add_quantity: bool = False,
+        add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_creator: bool = False,
+        add_role_nft_recreate: bool = False,
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -322,7 +336,12 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleNFTCreate")] if add_role_nft_create else []),
             *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
             *([arg_to_string("ESDTRoleNFTAddQuantity")] if add_role_nft_add_quantity else []),
-            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
+            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
+            *([arg_to_string("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
+            *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
         ]
 
         return TransactionBuilder(
@@ -340,11 +359,16 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: IAddress,
         user: IAddress,
         token_identifier: str,
-        add_role_nft_create: bool,
-        add_role_nft_burn: bool,
-        add_role_nft_update_attributes: bool,
-        add_role_nft_add_uri: bool,
-        add_role_esdt_transfer_role: bool
+        add_role_nft_create: bool = False,
+        add_role_nft_burn: bool = False,
+        add_role_nft_update_attributes: bool = False,
+        add_role_nft_add_uri: bool = False,
+        add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_creator: bool = False,
+        add_role_nft_recreate: bool = False,
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -354,7 +378,12 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
             *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if add_role_nft_update_attributes else []),
             *([arg_to_string("ESDTRoleNFTAddURI")] if add_role_nft_add_uri else []),
-            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
+            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
+            *([arg_to_string("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
+            *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
         ]
 
         return TransactionBuilder(
@@ -378,6 +407,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         attributes: bytes,
         uris: List[str]
     ) -> Transaction:
+        if not uris:
+            raise BadUsageError("No URIs provided")
+
         parts: List[str] = [
             "ESDTNFTCreate",
             arg_to_string(token_identifier),
@@ -621,6 +653,213 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             receiver=sender,
             amount=None,
             gas_limit=self._config.gas_limit_esdt_nft_burn,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_modifying_royalties(self,
+                                                   sender: IAddress,
+                                                   token_identifier: str,
+                                                   token_nonce: int,
+                                                   new_royalties: int) -> Transaction:
+        parts: List[str] = [
+            "ESDTModifyRoyalties",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce),
+            arg_to_string(new_royalties)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=sender,
+            amount=None,
+            gas_limit=self._config.gas_limit_esdt_modify_royalties,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_setting_new_uris(self,
+                                                sender: IAddress,
+                                                token_identifier: str,
+                                                token_nonce: int,
+                                                new_uris: List[str]) -> Transaction:
+        if not new_uris:
+            raise BadUsageError("No URIs provided")
+
+        parts: List[str] = [
+            "ESDTSetNewURIs",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce),
+            *map(arg_to_string, new_uris)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=sender,
+            amount=None,
+            gas_limit=self._config.gas_limit_set_new_uris,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_modifying_creator(self,
+                                                 sender: IAddress,
+                                                 token_identifier: str,
+                                                 token_nonce: int) -> Transaction:
+        parts: List[str] = [
+            "ESDTModifyCreator",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=sender,
+            amount=None,
+            gas_limit=self._config.gas_limit_esdt_modify_creator,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_updating_metadata(self,
+                                                 sender: IAddress,
+                                                 token_identifier: str,
+                                                 token_nonce: int,
+                                                 new_token_name: str,
+                                                 new_royalties: int,
+                                                 new_hash: str,
+                                                 new_attributes: bytes,
+                                                 new_uris: List[str]) -> Transaction:
+        parts: List[str] = [
+            "ESDTMetaDataUpdate",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce),
+            arg_to_string(new_token_name),
+            arg_to_string(new_royalties),
+            arg_to_string(new_hash),
+            arg_to_string(new_attributes),
+            *map(arg_to_string, new_uris)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=sender,
+            amount=None,
+            gas_limit=self._config.gas_limit_esdt_metadata_update,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_nft_metadata_recreate(self,
+                                                     sender: IAddress,
+                                                     token_identifier: str,
+                                                     token_nonce: int,
+                                                     new_token_name: str,
+                                                     new_royalties: int,
+                                                     new_hash: str,
+                                                     new_attributes: bytes,
+                                                     new_uris: List[str]) -> Transaction:
+        parts: List[str] = [
+            "ESDTMetaDataRecreate",
+            arg_to_string(token_identifier),
+            arg_to_string(token_nonce),
+            arg_to_string(new_token_name),
+            arg_to_string(new_royalties),
+            arg_to_string(new_hash),
+            arg_to_string(new_attributes),
+            *map(arg_to_string, new_uris)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=sender,
+            amount=None,
+            gas_limit=self._config.gas_limit_nft_metadata_recreate,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_changing_token_to_dynamic(self,
+                                                         sender: IAddress,
+                                                         token_identifier: str) -> Transaction:
+        parts: List[str] = [
+            "changeToDynamic",
+            arg_to_string(token_identifier)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_nft_change_to_dynamic,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_updating_token_id(self,
+                                                 sender: IAddress,
+                                                 token_identifier: str) -> Transaction:
+        parts: List[str] = [
+            "updateTokenID",
+            arg_to_string(token_identifier)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_update_token_id,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_registering_dynamic_token(self,
+                                                         sender: IAddress,
+                                                         token_name: str,
+                                                         token_ticker: str,
+                                                         token_type: TokenType) -> Transaction:
+        parts: List[str] = [
+            "registerDynamic",
+            arg_to_string(token_name),
+            arg_to_string(token_ticker),
+            arg_to_string(token_type.value)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_register_dynamic,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_registering_dynamic_and_setting_roles(self,
+                                                                     sender: IAddress,
+                                                                     token_name: str,
+                                                                     token_ticker: str,
+                                                                     token_type: TokenType) -> Transaction:
+        parts: List[str] = [
+            "registerAndSetAllRolesDynamic",
+            arg_to_string(token_name),
+            arg_to_string(token_ticker),
+            arg_to_string(token_type.value)
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_register_dynamic,
             add_data_movement_gas=True,
             data_parts=parts
         ).build()

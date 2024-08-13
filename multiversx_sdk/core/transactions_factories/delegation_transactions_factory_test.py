@@ -133,14 +133,15 @@ class TestDelegationTransactionsFactory:
         transaction = self.factory.create_transaction_for_unjailing_nodes(
             sender=sender,
             delegation_contract=delegation_contract,
-            public_keys=public_keys
+            public_keys=public_keys,
+            amount=25000000000000000000  # 2.5 egld
         )
 
         assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unJailNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
-        assert transaction.value == 0
+        assert transaction.value == 25000000000000000000
 
     def test_create_transaction_for_changing_service_fee(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")

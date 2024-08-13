@@ -28,6 +28,14 @@ multiversx\_sdk.abi.address\_value module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.abi.array\_value module
+---------------------------------------
+
+.. automodule:: multiversx_sdk.abi.array_value
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.abi.bigint\_value module
 ----------------------------------------
 
@@ -64,6 +72,14 @@ multiversx\_sdk.abi.codec module
 --------------------------------
 
 .. automodule:: multiversx_sdk.abi.codec
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+multiversx\_sdk.abi.counted\_variadic\_values module
+----------------------------------------------------
+
+.. automodule:: multiversx_sdk.abi.counted_variadic_values
    :members:
    :undoc-members:
    :show-inheritance:

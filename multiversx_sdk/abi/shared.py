@@ -45,6 +45,9 @@ def convert_native_value_to_dictionary(obj: Any, raise_on_failure: bool = True) 
 
 
 def convert_native_value_to_list(obj: Any, raise_on_failure: bool = True) -> Tuple[List[Any], bool]:
+    if isinstance(obj, dict):
+        raise ValueError("cannot properly convert dictionary to list")
+
     try:
         return list(obj), True
     except Exception as error:

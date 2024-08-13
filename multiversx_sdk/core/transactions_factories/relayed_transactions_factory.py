@@ -89,7 +89,7 @@ class RelayedTransactionsFactory:
             inner_txs_gas_limit += inner_transaction.gas_limit
 
         move_balances_gas = self._config.min_gas_limit * len(inner_transactions)
-        gas_limit = self._config.min_gas_limit + move_balances_gas + inner_txs_gas_limit
+        gas_limit = move_balances_gas + inner_txs_gas_limit
 
         return Transaction(
             sender=relayer_address.to_bech32(),
@@ -99,7 +99,6 @@ class RelayedTransactionsFactory:
             chain_id=self._config.chain_id,
             inner_transactions=inner_transactions,
         )
-
 
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:
         sender = Address.new_from_bech32(inner_transaction.sender).to_hex()
