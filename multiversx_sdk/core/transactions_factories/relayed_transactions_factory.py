@@ -89,7 +89,7 @@ class RelayedTransactionsFactory:
             inner_txs_gas_limit += inner_transaction.gas_limit
 
         move_balances_gas = self._config.min_gas_limit * len(inner_transactions)
-        gas_limit = self._config.min_gas_limit + move_balances_gas + inner_txs_gas_limit
+        gas_limit = move_balances_gas + inner_txs_gas_limit
 
         return Transaction(
             sender=relayer_address.to_bech32(),

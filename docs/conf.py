@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath(".."))
 project = 'multiversx-sdk'
 copyright = '2024, MultiversX'
 author = 'MultiversX'
-release = '0.9.0'
+release = '0.11.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

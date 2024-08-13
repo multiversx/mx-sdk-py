@@ -6,26 +6,34 @@ from multiversx_sdk.core.interfaces import IAddress
 class TransactionsFactoryConfig:
     def __init__(self, chain_id: str) -> None:
         # General-purpose configuration
-        self.chain_id: str = chain_id
-        self.address_hrp: str = DEFAULT_HRP
-        self.min_gas_limit: int = 50_000
-        self.gas_limit_per_byte: int = 1_500
+        self.chain_id = chain_id
+        self.address_hrp = DEFAULT_HRP
+        self.min_gas_limit = 50_000
+        self.gas_limit_per_byte = 1_500
 
         # Configuration for token operations
-        self.gas_limit_issue: int = 60_000_000
-        self.gas_limit_toggle_burn_role_globally: int = 60_000_000
-        self.gas_limit_esdt_local_mint: int = 300_000
-        self.gas_limit_esdt_local_burn: int = 300_000
-        self.gas_limit_set_special_role: int = 60_000_000
-        self.gas_limit_pausing: int = 60_000_000
-        self.gas_limit_freezing: int = 60_000_000
-        self.gas_limit_wiping: int = 60_000_000
-        self.gas_limit_esdt_nft_create: int = 3_000_000
-        self.gas_limit_esdt_nft_update_attributes: int = 1_000_000
-        self.gas_limit_esdt_nft_add_quantity: int = 1_000_000
-        self.gas_limit_esdt_nft_burn: int = 1_000_000
-        self.gas_limit_store_per_byte: int = 10_000
-        self.issue_cost: int = 50_000_000_000_000_000
+        self.gas_limit_issue = 60_000_000
+        self.gas_limit_toggle_burn_role_globally = 60_000_000
+        self.gas_limit_esdt_local_mint = 300_000
+        self.gas_limit_esdt_local_burn = 300_000
+        self.gas_limit_set_special_role = 60_000_000
+        self.gas_limit_pausing = 60_000_000
+        self.gas_limit_freezing = 60_000_000
+        self.gas_limit_wiping = 60_000_000
+        self.gas_limit_esdt_nft_create = 3_000_000
+        self.gas_limit_esdt_nft_update_attributes = 1_000_000
+        self.gas_limit_esdt_nft_add_quantity = 1_000_000
+        self.gas_limit_esdt_nft_burn = 1_000_000
+        self.gas_limit_store_per_byte = 10_000
+        self.gas_limit_esdt_modify_royalties = 60_000_000
+        self.gas_limit_set_new_uris = 60_000_000
+        self.gas_limit_esdt_modify_creator = 60_000_000
+        self.gas_limit_esdt_metadata_update = 60_000_000
+        self.gas_limit_nft_metadata_recreate = 60_000_000
+        self.gas_limit_nft_change_to_dynamic = 60_000_000
+        self.gas_limit_update_token_id = 60_000_000
+        self.gas_limit_register_dynamic = 60_000_000
+        self.issue_cost = 50_000_000_000_000_000
         self.esdt_contract_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
 
         # Configuration for delegation operations
