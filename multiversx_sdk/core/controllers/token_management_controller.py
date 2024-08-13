@@ -8,7 +8,7 @@ from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
-    RegisterAndSetAllRolesTokenType, TokenManagementTransactionsFactory)
+    TokenManagementTransactionsFactory, TokenType)
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
@@ -220,7 +220,7 @@ class TokenManagementController:
                                                              nonce: int,
                                                              token_name: str,
                                                              token_ticker: str,
-                                                             token_type: RegisterAndSetAllRolesTokenType,
+                                                             token_type: TokenType,
                                                              num_decimals: int) -> Transaction:
         self._ensure_factory_is_initialized()
 

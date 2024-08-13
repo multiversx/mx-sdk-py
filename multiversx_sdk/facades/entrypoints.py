@@ -1,5 +1,5 @@
 
-from typing import Any, Optional, Union
+from typing import Any, Dict, Optional, Sequence, Tuple, Union
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.controllers.account_controller import \
@@ -79,6 +79,18 @@ class NetworkEntrypoint:
 
     def recall_account_nonce(self, address: Address) -> int:
         return self.provider.get_account(address).nonce
+
+    def send_transactions(self, transactions: Sequence[Transaction]) -> Tuple[int, Dict[str, str]]:
+        """
+        Sends multiple transactions.
+
+        Args:
+            transactions (Sequence[Transaction]): An iterable containing multiple transactions (e.g. a list of transactions).
+
+        Returns:
+            Tuple (int, Dict[str, str]): The integer indicates the total number of transactions sent, while the dictionary maps the transaction's index in the list to its corresponding hash.
+        """
+        return self.provider.send_transactions(transactions)
 
     def send_transaction(self, transaction: Transaction) -> str:
         return self.provider.send_transaction(transaction)

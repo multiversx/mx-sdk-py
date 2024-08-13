@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Tuple, Union, cast
+from typing import Any, Dict, List, Sequence, Tuple, Union, cast
 
 import requests
 from requests.auth import AuthBase
@@ -169,7 +169,7 @@ class ApiNetworkProvider:
         tx_hash: str = response.get('txHash', '')
         return tx_hash
 
-    def send_transactions(self, transactions: List[ITransaction]) -> Tuple[int, Dict[str, str]]:
+    def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
         response = self.backing_proxy.send_transactions(transactions)
         return response
 

@@ -173,13 +173,15 @@ class DelegationController:
                                                sender: IAccount,
                                                nonce: int,
                                                delegation_contract: IAddress,
-                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                               public_keys: Sequence[IValidatorPublicKey],
+                                               amount: int) -> Transaction:
         self._ensure_factory_is_initialized()
 
         transaction = self.factory.create_transaction_for_unjailing_nodes(  # type: ignore
             sender=sender.address,
             delegation_contract=delegation_contract,
-            public_keys=public_keys
+            public_keys=public_keys,
+            amount=amount
         )
 
         transaction.nonce = nonce
