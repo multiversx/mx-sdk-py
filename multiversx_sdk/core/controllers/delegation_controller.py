@@ -1,7 +1,8 @@
-from typing import List, Protocol, Sequence, Union
+from typing import Any, List, Sequence
 
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
+from multiversx_sdk.core.controllers.interfaces import IAccount
 from multiversx_sdk.core.controllers.network_provider_wrapper import \
     ProviderWrapper
 from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
@@ -20,28 +21,11 @@ from multiversx_sdk.network_providers.transaction_awaiter import \
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
-class INetworkConfig(Protocol):
-    chain_id: str
-
-
-class INetworkProvider(Protocol):
-    def get_network_config(self) -> INetworkConfig:
-        ...
-
-
-class IAccount(Protocol):
-    address: IAddress
-
-    def sign(self, data: bytes) -> bytes:
-        ...
-
-
 class DelegationController:
-    def __init__(self, network_provider: INetworkProvider) -> None:
-        self.chain_id: Union[str, None] = None
-        self.factory: Union[DelegationTransactionsFactory, None] = None
-        self.parser = DelegationTransactionsOutcomeParser()
+    def __init__(self, network_provider: Any, chain_id: str) -> None:
         self.provider = network_provider
+        self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id))
+        self.parser = DelegationTransactionsOutcomeParser()
         self.tx_computer = TransactionComputer()
 
     def create_transaction_for_new_delegation_contract(self,
@@ -50,9 +34,7 @@ class DelegationController:
                                                        total_delegation_cap: int,
                                                        service_fee: int,
                                                        amount: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_new_delegation_contract(  # type: ignore
+        transaction = self.factory.create_transaction_for_new_delegation_contract(
             sender=sender.address,
             total_delegation_cap=total_delegation_cap,
             service_fee=service_fee,
@@ -83,9 +65,7 @@ class DelegationController:
                                             delegation_contract: IAddress,
                                             public_keys: Sequence[IValidatorPublicKey],
                                             signed_messages: Sequence[bytes]) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_adding_nodes(  # type: ignore
+        transaction = self.factory.create_transaction_for_adding_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys,
@@ -102,9 +82,7 @@ class DelegationController:
                                               nonce: int,
                                               delegation_contract: IAddress,
                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_removing_nodes(  # type: ignore
+        transaction = self.factory.create_transaction_for_removing_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
@@ -120,9 +98,7 @@ class DelegationController:
                                              nonce: int,
                                              delegation_contract: IAddress,
                                              public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_staking_nodes(  # type: ignore
+        transaction = self.factory.create_transaction_for_staking_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
@@ -138,9 +114,7 @@ class DelegationController:
                                                nonce: int,
                                                delegation_contract: IAddress,
                                                public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unbonding_nodes(  # type: ignore
+        transaction = self.factory.create_transaction_for_unbonding_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
@@ -156,9 +130,7 @@ class DelegationController:
                                                nonce: int,
                                                delegation_contract: IAddress,
                                                public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unstaking_nodes(  # type: ignore
+        transaction = self.factory.create_transaction_for_unstaking_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
@@ -175,9 +147,7 @@ class DelegationController:
                                                delegation_contract: IAddress,
                                                public_keys: Sequence[IValidatorPublicKey],
                                                amount: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unjailing_nodes(  # type: ignore
+        transaction = self.factory.create_transaction_for_unjailing_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys,
@@ -194,9 +164,7 @@ class DelegationController:
                                                     nonce: int,
                                                     delegation_contract: IAddress,
                                                     service_fee: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_changing_service_fee(  # type: ignore
+        transaction = self.factory.create_transaction_for_changing_service_fee(
             sender=sender.address,
             delegation_contract=delegation_contract,
             service_fee=service_fee
@@ -212,9 +180,7 @@ class DelegationController:
                                                         nonce: int,
                                                         delegation_contract: IAddress,
                                                         delegation_cap: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_modifying_delegation_cap(  # type: ignore
+        transaction = self.factory.create_transaction_for_modifying_delegation_cap(
             sender=sender.address,
             delegation_contract=delegation_contract,
             delegation_cap=delegation_cap
@@ -229,9 +195,7 @@ class DelegationController:
                                                             sender: IAccount,
                                                             nonce: int,
                                                             delegation_contract: IAddress) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_setting_automatic_activation(  # type: ignore
+        transaction = self.factory.create_transaction_for_setting_automatic_activation(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
@@ -245,9 +209,7 @@ class DelegationController:
                                                               sender: IAccount,
                                                               nonce: int,
                                                               delegation_contract: IAddress) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unsetting_automatic_activation(  # type: ignore
+        transaction = self.factory.create_transaction_for_unsetting_automatic_activation(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
@@ -261,9 +223,7 @@ class DelegationController:
                                                                        sender: IAccount,
                                                                        nonce: int,
                                                                        delegation_contract: IAddress) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_setting_cap_check_on_redelegate_rewards(  # type: ignore
+        transaction = self.factory.create_transaction_for_setting_cap_check_on_redelegate_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
@@ -277,9 +237,7 @@ class DelegationController:
                                                                          sender: IAccount,
                                                                          nonce: int,
                                                                          delegation_contract: IAddress) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards(  # type: ignore
+        transaction = self.factory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
@@ -296,9 +254,7 @@ class DelegationController:
                                                 name: str,
                                                 website: str,
                                                 identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_setting_metadata(  # type: ignore
+        transaction = self.factory.create_transaction_for_setting_metadata(
             sender=sender.address,
             delegation_contract=delegation_contract,
             name=name,
@@ -316,9 +272,7 @@ class DelegationController:
                                           nonce: int,
                                           delegation_contract: IAddress,
                                           amount: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_delegating(  # type: ignore
+        transaction = self.factory.create_transaction_for_delegating(
             sender=sender.address,
             delegation_contract=delegation_contract,
             amount=amount
@@ -333,9 +287,7 @@ class DelegationController:
                                                 sender: IAccount,
                                                 nonce: int,
                                                 delegation_contract: IAddress) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_claiming_rewards(  # type: ignore
+        transaction = self.factory.create_transaction_for_claiming_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
@@ -349,9 +301,7 @@ class DelegationController:
                                                     sender: IAccount,
                                                     nonce: int,
                                                     delegation_contract: IAddress) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_redelegating_rewards(  # type: ignore
+        transaction = self.factory.create_transaction_for_redelegating_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
@@ -366,9 +316,7 @@ class DelegationController:
                                             nonce: int,
                                             delegation_contract: IAddress,
                                             amount: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_undelegating(  # type: ignore
+        transaction = self.factory.create_transaction_for_undelegating(
             sender=sender.address,
             delegation_contract=delegation_contract,
             amount=amount
@@ -383,9 +331,7 @@ class DelegationController:
                                            sender: IAccount,
                                            nonce: int,
                                            delegation_contract: IAddress) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_withdrawing(  # type: ignore
+        transaction = self.factory.create_transaction_for_withdrawing(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
@@ -394,9 +340,3 @@ class DelegationController:
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
-
-    def _ensure_factory_is_initialized(self):
-        if self.factory is None:
-            self.chain_id = self.provider.get_network_config().chain_id
-            config = TransactionsFactoryConfig(self.chain_id)
-            self.factory = DelegationTransactionsFactory(config)

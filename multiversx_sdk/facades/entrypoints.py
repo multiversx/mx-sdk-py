@@ -17,10 +17,9 @@ from multiversx_sdk.core.controllers.transfers_controller import \
 from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.facades.config import (DevnetConfig, MainnetConfig,
-                                           TestnetConfig)
+from multiversx_sdk.facades.config import (DevnetEntrypointConfig,
+                                           MainnetEntrypointConfig,
+                                           TestnetEntrypointConfig)
 from multiversx_sdk.facades.errors import InvalidNetworkProviderKindError
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
@@ -35,20 +34,20 @@ from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 class NetworkEntrypoint:
     def __init__(self,
-                 url: str,
-                 kind: str,
+                 network_provider_url: str,
+                 network_provider_kind: str,
                  chain_id: str) -> None:
-        if kind == "proxy":
-            self.provider = ProxyNetworkProvider(url)
-        elif kind == "api":
-            self.provider = ApiNetworkProvider(url)
+        if network_provider_kind == "proxy":
+            self.network_provider = ProxyNetworkProvider(network_provider_url)
+        elif network_provider_kind == "api":
+            self.network_provider = ApiNetworkProvider(network_provider_url)
         else:
             raise InvalidNetworkProviderKindError()
 
         self.chain_id = chain_id
-        self.factories_config = TransactionsFactoryConfig(self.chain_id)
 
     def sign_transaction(self, transaction: Transaction, signer: UserSigner):
+        """Signs the transactions and applies the signature on the transaction."""
         tx_computer = TransactionComputer()
         transaction.signature = signer.sign(tx_computer.compute_bytes_for_signing(transaction))
 
@@ -62,6 +61,7 @@ class NetworkEntrypoint:
         )
 
     def sign_message(self, message: Message, signer: UserSigner):
+        """Signs the message and applies the signature on the message."""
         message_computer = MessageComputer()
         message.signature = signer.sign(message_computer.compute_bytes_for_signing(message))
 
@@ -78,7 +78,7 @@ class NetworkEntrypoint:
         )
 
     def recall_account_nonce(self, address: Address) -> int:
-        return self.provider.get_account(address).nonce
+        return self.network_provider.get_account(address).nonce
 
     def send_transactions(self, transactions: Sequence[Transaction]) -> Tuple[int, Dict[str, str]]:
         """
@@ -90,74 +90,76 @@ class NetworkEntrypoint:
         Returns:
             Tuple (int, Dict[str, str]): The integer indicates the total number of transactions sent, while the dictionary maps the transaction's index in the list to its corresponding hash.
         """
-        return self.provider.send_transactions(transactions)
+        return self.network_provider.send_transactions(transactions)
 
     def send_transaction(self, transaction: Transaction) -> str:
-        return self.provider.send_transaction(transaction)
+        return self.network_provider.send_transaction(transaction)
 
     def await_completed_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        provider = ProviderWrapper(self.provider)
+        provider = ProviderWrapper(self.network_provider)
         transaction_awaiter = TransactionAwaiter(provider)
         return transaction_awaiter.await_completed(tx_hash)
 
-    def get_network_provider(self) -> Union[ApiNetworkProvider, ProxyNetworkProvider]:
-        return self.provider
+    def create_network_provider(self) -> Union[ApiNetworkProvider, ProxyNetworkProvider]:
+        return self.network_provider
 
-    # access to individual controllers
-    def get_delegation_controller(self) -> DelegationController:
-        return DelegationController(self.provider)
+    def create_delegation_controller(self) -> DelegationController:
+        return DelegationController(self.network_provider, self.chain_id)
 
-    def get_account_controller(self) -> AccountController:
-        return AccountController(self.provider)
+    def create_account_controller(self) -> AccountController:
+        return AccountController(self.chain_id)
 
-    def get_relayed_controller(self) -> RelayedController:
-        return RelayedController(self.provider)
+    def create_relayed_controller(self) -> RelayedController:
+        return RelayedController(self.chain_id)
 
-    def get_smart_contract_controller(self, abi: Any) -> SmartContractController:
-        return SmartContractController(self.provider, abi)
+    def create_smart_contract_controller(self, abi: Any) -> SmartContractController:
+        return SmartContractController(self.network_provider, abi)
 
-    def get_token_management_controller(self) -> TokenManagementController:
-        return TokenManagementController(self.provider)
+    def create_token_management_controller(self) -> TokenManagementController:
+        return TokenManagementController(self.network_provider)
 
-    def get_transfers_controller(self) -> TransfersController:
-        return TransfersController(self.provider)
+    def create_transfers_controller(self) -> TransfersController:
+        return TransfersController(self.chain_id)
 
 
 class TestnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         if url is None:
-            url = TestnetConfig.api
+            url = TestnetEntrypointConfig.network_provider_url
 
         if kind is None:
-            kind = TestnetConfig.kind
-        super().__init__(url, kind, TestnetConfig.chain_id)
+            kind = TestnetEntrypointConfig.network_provider_kind
+
+        super().__init__(url, kind, TestnetEntrypointConfig.chain_id)
 
 
 class DevnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         if url is None:
-            url = DevnetConfig.api
+            url = DevnetEntrypointConfig.network_provider_url
 
         if kind is None:
-            kind = DevnetConfig.kind
-        super().__init__(url, kind, DevnetConfig.chain_id)
+            kind = DevnetEntrypointConfig.network_provider_kind
+
+        super().__init__(url, kind, DevnetEntrypointConfig.chain_id)
 
 
 class MainnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         if url is None:
-            url = MainnetConfig.api
+            url = MainnetEntrypointConfig.network_provider_url
 
         if kind is None:
-            kind = MainnetConfig.kind
-        super().__init__(url, kind, MainnetConfig.chain_id)
+            kind = MainnetEntrypointConfig.network_provider_kind
+
+        super().__init__(url, kind, MainnetEntrypointConfig.chain_id)
 
 
 class ProviderWrapper:
     def __init__(self, provider: Union[ApiNetworkProvider, ProxyNetworkProvider]) -> None:
-        self.provider = provider
+        self.network_provider = provider
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        if isinstance(self.provider, ProxyNetworkProvider):
-            return self.provider.get_transaction(tx_hash, True)
-        return self.provider.get_transaction(tx_hash)
+        if isinstance(self.network_provider, ProxyNetworkProvider):
+            return self.network_provider.get_transaction(tx_hash, True)
+        return self.network_provider.get_transaction(tx_hash)

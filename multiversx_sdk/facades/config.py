@@ -2,21 +2,21 @@ from dataclasses import dataclass
 
 
 @dataclass
-class TestnetConfig:
-    api = "https://testnet-api.multiversx.com"
-    kind = "api"
+class TestnetEntrypointConfig:
+    network_provider_url = "https://testnet-api.multiversx.com"
+    network_provider_kind = "api"
     chain_id = "T"
 
 
 @dataclass
-class DevnetConfig:
-    api = "https://devnet-api.multiversx.com"
-    kind = "api"
+class DevnetEntrypointConfig:
+    network_provider_url = "https://devnet-api.multiversx.com"
+    network_provider_kind = "api"
     chain_id = "D"
 
 
 @dataclass
-class MainnetConfig:
-    api = "https://api.multiversx.com"
-    kind = "api"
+class MainnetEntrypointConfig:
+    network_provider_url = "https://api.multiversx.com"
+    network_provider_kind = "api"
     chain_id = "1"

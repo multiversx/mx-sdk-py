@@ -1,5 +1,3 @@
-import re
-
 import pytest
 
 from multiversx_sdk.abi.multi_value import MultiValue

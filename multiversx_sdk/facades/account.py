@@ -1,10 +1,9 @@
 from pathlib import Path
 
+from multiversx_sdk.core.constants import DEFAULT_HRP
 from multiversx_sdk.wallet.mnemonic import Mnemonic
 from multiversx_sdk.wallet.user_signer import UserSigner
 from multiversx_sdk.wallet.user_wallet import UserWallet
-
-DEFAULT_HRP = "erd"
 
 
 class Account:
