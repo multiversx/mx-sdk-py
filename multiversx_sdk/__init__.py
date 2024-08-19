@@ -1,4 +1,13 @@
 from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
+from multiversx_sdk.controllers.account_controller import AccountController
+from multiversx_sdk.controllers.delegation_controller import \
+    DelegationController
+from multiversx_sdk.controllers.relayed_controller import RelayedController
+from multiversx_sdk.controllers.smart_contract_controller import \
+    SmartContractController
+from multiversx_sdk.controllers.token_management_controller import \
+    TokenManagementController
+from multiversx_sdk.controllers.transfers_controller import TransfersController
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.account import AccountNonceHolder
@@ -39,6 +48,11 @@ from multiversx_sdk.core.transactions_outcome_parsers.token_management_transacti
     TokenManagementTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
     TransactionEventsParser
+from multiversx_sdk.facades.account import Account
+from multiversx_sdk.facades.entrypoints import (DevnetEntrypoint,
+                                                MainnetEntrypoint,
+                                                NetworkEntrypoint,
+                                                TestnetEntrypoint)
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.errors import GenericError
@@ -78,5 +92,8 @@ __all__ = [
     "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
     "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
     "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse",
-    "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser"
+    "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser",
+    "Account", "DevnetEntrypoint", "MainnetEntrypoint", "NetworkEntrypoint", "TestnetEntrypoint",
+    "AccountController", "DelegationController", "RelayedController", "SmartContractController",
+    "TokenManagementController", "TransfersController"
 ]

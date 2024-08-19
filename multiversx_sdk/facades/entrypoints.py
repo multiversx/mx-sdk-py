@@ -1,19 +1,16 @@
 
 from typing import Any, Dict, Optional, Sequence, Tuple, Union
 
-from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.controllers.account_controller import \
-    AccountController
-from multiversx_sdk.core.controllers.delegation_controller import \
+from multiversx_sdk.controllers.account_controller import AccountController
+from multiversx_sdk.controllers.delegation_controller import \
     DelegationController
-from multiversx_sdk.core.controllers.relayed_controller import \
-    RelayedController
-from multiversx_sdk.core.controllers.smart_contract_controller import \
+from multiversx_sdk.controllers.relayed_controller import RelayedController
+from multiversx_sdk.controllers.smart_contract_controller import \
     SmartContractController
-from multiversx_sdk.core.controllers.token_management_controller import \
+from multiversx_sdk.controllers.token_management_controller import \
     TokenManagementController
-from multiversx_sdk.core.controllers.transfers_controller import \
-    TransfersController
+from multiversx_sdk.controllers.transfers_controller import TransfersController
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer

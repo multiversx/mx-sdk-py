@@ -1,6 +1,6 @@
 from typing import Dict
 
-from multiversx_sdk.core.controllers.interfaces import IAccount
+from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer

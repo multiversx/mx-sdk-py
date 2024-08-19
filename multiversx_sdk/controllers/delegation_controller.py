@@ -1,10 +1,9 @@
 from typing import Any, List, Sequence
 
+from multiversx_sdk.controllers.interfaces import IAccount
+from multiversx_sdk.controllers.network_provider_wrapper import ProviderWrapper
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
-from multiversx_sdk.core.controllers.interfaces import IAccount
-from multiversx_sdk.core.controllers.network_provider_wrapper import \
-    ProviderWrapper
 from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
