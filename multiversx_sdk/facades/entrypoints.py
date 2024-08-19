@@ -1,5 +1,4 @@
-
-from typing import Any, Dict, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Protocol, Sequence, Tuple, Union
 
 from multiversx_sdk.controllers.account_controller import AccountController
 from multiversx_sdk.controllers.delegation_controller import \
@@ -27,6 +26,20 @@ from multiversx_sdk.network_providers.transaction_awaiter import \
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.wallet.user_signer import UserSigner
 from multiversx_sdk.wallet.user_verifer import UserVerifier
+
+
+class IAbi(Protocol):
+    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
+        ...
+
+    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        ...
+
+    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+        ...
+
+    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: List[bytes]) -> List[Any]:
+        ...
 
 
 class NetworkEntrypoint:
@@ -109,7 +122,7 @@ class NetworkEntrypoint:
     def create_relayed_controller(self) -> RelayedController:
         return RelayedController(self.chain_id)
 
-    def create_smart_contract_controller(self, abi: Any) -> SmartContractController:
+    def create_smart_contract_controller(self, abi: Optional[IAbi] = None) -> SmartContractController:
         return SmartContractController(self.chain_id, self.network_provider, abi)
 
     def create_token_management_controller(self) -> TokenManagementController:

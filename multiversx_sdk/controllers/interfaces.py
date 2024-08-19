@@ -4,7 +4,9 @@ from multiversx_sdk.core.interfaces import IAddress
 
 
 class IAccount(Protocol):
-    address: IAddress
+    @property
+    def address(self) -> IAddress:
+        ...
 
     def sign(self, data: bytes) -> bytes:
         ...

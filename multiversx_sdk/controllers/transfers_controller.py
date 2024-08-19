@@ -1,6 +1,6 @@
 from typing import Optional, Sequence
 
-from multiversx_sdk.controllers.smart_contract_controller import IAccount
+from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction

@@ -1,5 +1,6 @@
 from typing import List, Protocol
 
+from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.controllers.network_provider_wrapper import ProviderWrapper
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
@@ -29,13 +30,6 @@ class INetworkConfig(Protocol):
 
 class INetworkProvider(Protocol):
     def get_network_config(self) -> INetworkConfig:
-        ...
-
-
-class IAccount(Protocol):
-    address: IAddress
-
-    def sign(self, data: bytes) -> bytes:
         ...
 
 
