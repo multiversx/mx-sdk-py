@@ -104,7 +104,7 @@ class NetworkEntrypoint:
         return self.network_provider
 
     def create_delegation_controller(self) -> DelegationController:
-        return DelegationController(self.network_provider, self.chain_id)
+        return DelegationController(self.chain_id, self.network_provider)
 
     def create_account_controller(self) -> AccountController:
         return AccountController(self.chain_id)
@@ -113,10 +113,10 @@ class NetworkEntrypoint:
         return RelayedController(self.chain_id)
 
     def create_smart_contract_controller(self, abi: Any) -> SmartContractController:
-        return SmartContractController(self.network_provider, abi)
+        return SmartContractController(self.chain_id, self.network_provider, abi)
 
     def create_token_management_controller(self) -> TokenManagementController:
-        return TokenManagementController(self.network_provider)
+        return TokenManagementController(self.chain_id, self.network_provider)
 
     def create_transfers_controller(self) -> TransfersController:
         return TransfersController(self.chain_id)
@@ -124,33 +124,27 @@ class NetworkEntrypoint:
 
 class TestnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
-        if url is None:
-            url = TestnetEntrypointConfig.network_provider_url
+        url = url or TestnetEntrypointConfig.network_provider_url
 
-        if kind is None:
-            kind = TestnetEntrypointConfig.network_provider_kind
+        kind = kind or TestnetEntrypointConfig.network_provider_kind
 
         super().__init__(url, kind, TestnetEntrypointConfig.chain_id)
 
 
 class DevnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
-        if url is None:
-            url = DevnetEntrypointConfig.network_provider_url
+        url = url or DevnetEntrypointConfig.network_provider_url
 
-        if kind is None:
-            kind = DevnetEntrypointConfig.network_provider_kind
+        kind = kind or DevnetEntrypointConfig.network_provider_kind
 
         super().__init__(url, kind, DevnetEntrypointConfig.chain_id)
 
 
 class MainnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
-        if url is None:
-            url = MainnetEntrypointConfig.network_provider_url
+        url = url or MainnetEntrypointConfig.network_provider_url
 
-        if kind is None:
-            kind = MainnetEntrypointConfig.network_provider_kind
+        kind = kind or MainnetEntrypointConfig.network_provider_kind
 
         super().__init__(url, kind, MainnetEntrypointConfig.chain_id)
 

@@ -22,7 +22,7 @@ from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
 class DelegationController:
-    def __init__(self, network_provider: Any, chain_id: str) -> None:
+    def __init__(self, chain_id: str, network_provider: Any) -> None:
         self.provider = network_provider
         self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.parser = DelegationTransactionsOutcomeParser()

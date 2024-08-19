@@ -78,7 +78,7 @@ class IAbi(Protocol):
 
 
 class SmartContractController:
-    def __init__(self, network_provider: INetworkProvider, chain_id: str, abi: Optional[IAbi] = None) -> None:
+    def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Optional[IAbi] = None) -> None:
         self.provider = network_provider
         self.abi = abi
         self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id))
@@ -184,14 +184,10 @@ class SmartContractController:
         return transaction
 
     def parse_execute(self, transaction_on_network: TransactionOnNetwork, function: Optional[str] = None) -> List[Any]:
+        raise NotImplementedError("This method is not yet implemented")
+
+    def await_completed_execute(self, tx_hash: str) -> List[Any]:
         raise NotImplementedError("This feature is not yet implemented")
-
-    def await_completed_execute(self, tx_hash: str):
-        provider = ProviderWrapper(self.provider)
-        transaction_awaiter = TransactionAwaiter(provider)
-        transaction = transaction_awaiter.await_completed(tx_hash)
-
-        self.parse_execute(transaction)
 
     def query_contract(self,
                        contract: IAddress,

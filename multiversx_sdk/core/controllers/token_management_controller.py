@@ -1,4 +1,4 @@
-from typing import List, Protocol, Union
+from typing import List, Protocol
 
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
@@ -41,9 +41,8 @@ class IAccount(Protocol):
 
 
 class TokenManagementController:
-    def __init__(self, network_provider: INetworkProvider) -> None:
-        self.chain_id: Union[str, None] = None
-        self.factory: Union[TokenManagementTransactionsFactory, None] = None
+    def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
+        self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.provider = network_provider
         self.provider_wrapper = ProviderWrapper(self.provider)
         self.transaction_awaiter = TransactionAwaiter(self.provider_wrapper)
@@ -64,9 +63,7 @@ class TokenManagementController:
                                                 can_change_owner: bool,
                                                 can_upgrade: bool,
                                                 can_add_special_roles: bool) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_issuing_fungible(  # type: ignore
+        transaction = self.factory.create_transaction_for_issuing_fungible(
             sender=sender.address,
             token_name=token_name,
             token_ticker=token_ticker,
@@ -105,9 +102,7 @@ class TokenManagementController:
                                                      can_change_owner: bool,
                                                      can_upgrade: bool,
                                                      can_add_special_roles: bool) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_issuing_semi_fungible(  # type: ignore
+        transaction = self.factory.create_transaction_for_issuing_semi_fungible(
             sender=sender.address,
             token_name=token_name,
             token_ticker=token_ticker,
@@ -145,9 +140,7 @@ class TokenManagementController:
                                                     can_change_owner: bool,
                                                     can_upgrade: bool,
                                                     can_add_special_roles: bool) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_issuing_non_fungible(  # type: ignore
+        transaction = self.factory.create_transaction_for_issuing_non_fungible(
             sender=sender.address,
             token_name=token_name,
             token_ticker=token_ticker,
@@ -186,9 +179,7 @@ class TokenManagementController:
                                                      can_change_owner: bool,
                                                      can_upgrade: bool,
                                                      can_add_special_roles: bool) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_registering_meta_esdt(  # type: ignore
+        transaction = self.factory.create_transaction_for_registering_meta_esdt(
             sender=sender.address,
             token_name=token_name,
             token_ticker=token_ticker,
@@ -222,9 +213,7 @@ class TokenManagementController:
                                                              token_ticker: str,
                                                              token_type: TokenType,
                                                              num_decimals: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_registering_and_setting_roles(  # type: ignore
+        transaction = self.factory.create_transaction_for_registering_and_setting_roles(
             sender=sender.address,
             token_name=token_name,
             token_ticker=token_ticker,
@@ -249,9 +238,7 @@ class TokenManagementController:
                                                           sender: IAccount,
                                                           nonce: int,
                                                           token_identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_setting_burn_role_globally(  # type: ignore
+        transaction = self.factory.create_transaction_for_setting_burn_role_globally(
             sender=sender.address,
             token_identifier=token_identifier
         )
@@ -273,9 +260,7 @@ class TokenManagementController:
                                                             sender: IAccount,
                                                             nonce: int,
                                                             token_identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unsetting_burn_role_globally(  # type: ignore
+        transaction = self.factory.create_transaction_for_unsetting_burn_role_globally(
             sender=sender.address,
             token_identifier=token_identifier
         )
@@ -301,9 +286,7 @@ class TokenManagementController:
                                                                       add_role_local_mint: bool,
                                                                       add_role_local_burn: bool,
                                                                       add_role_esdt_transfer_role: bool) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_setting_special_role_on_fungible_token(  # type: ignore
+        transaction = self.factory.create_transaction_for_setting_special_role_on_fungible_token(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier,
@@ -334,9 +317,7 @@ class TokenManagementController:
                                                                            add_role_nft_burn: bool,
                                                                            add_role_nft_add_quantity: bool,
                                                                            add_role_esdt_transfer_role: bool) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_setting_special_role_on_semi_fungible_token(  # type: ignore
+        transaction = self.factory.create_transaction_for_setting_special_role_on_semi_fungible_token(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier,
@@ -369,9 +350,7 @@ class TokenManagementController:
                                                                           add_role_nft_update_attributes: bool,
                                                                           add_role_nft_add_uri: bool,
                                                                           add_role_esdt_transfer_role: bool) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_setting_special_role_on_non_fungible_token(  # type: ignore
+        transaction = self.factory.create_transaction_for_setting_special_role_on_non_fungible_token(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier,
@@ -405,9 +384,7 @@ class TokenManagementController:
                                             hash: str,
                                             attributes: bytes,
                                             uris: List[str]) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_creating_nft(  # type: ignore
+        transaction = self.factory.create_transaction_for_creating_nft(
             sender=sender.address,
             token_identifier=token_identifier,
             initial_quantity=initial_quantity,
@@ -435,9 +412,7 @@ class TokenManagementController:
                                        sender: IAccount,
                                        nonce: int,
                                        token_identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_pausing(  # type: ignore
+        transaction = self.factory.create_transaction_for_pausing(
             sender=sender.address,
             token_identifier=token_identifier
         )
@@ -459,9 +434,7 @@ class TokenManagementController:
                                          sender: IAccount,
                                          nonce: int,
                                          token_identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unpausing(  # type: ignore
+        transaction = self.factory.create_transaction_for_unpausing(
             sender=sender.address,
             token_identifier=token_identifier
         )
@@ -484,9 +457,7 @@ class TokenManagementController:
                                         nonce: int,
                                         user: IAddress,
                                         token_identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_freezing(  # type: ignore
+        transaction = self.factory.create_transaction_for_freezing(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier
@@ -510,9 +481,7 @@ class TokenManagementController:
                                           nonce: int,
                                           user: IAddress,
                                           token_identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_unfreezing(  # type: ignore
+        transaction = self.factory.create_transaction_for_unfreezing(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier
@@ -536,9 +505,7 @@ class TokenManagementController:
                                       nonce: int,
                                       user: IAddress,
                                       token_identifier: str) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_wiping(  # type: ignore
+        transaction = self.factory.create_transaction_for_wiping(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier
@@ -562,9 +529,7 @@ class TokenManagementController:
                                              nonce: int,
                                              token_identifier: str,
                                              supply_to_mint: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_local_minting(  # type: ignore
+        transaction = self.factory.create_transaction_for_local_minting(
             sender=sender.address,
             token_identifier=token_identifier,
             supply_to_mint=supply_to_mint
@@ -588,9 +553,7 @@ class TokenManagementController:
                                              nonce: int,
                                              token_identifier: str,
                                              supply_to_burn: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_local_burning(  # type: ignore
+        transaction = self.factory.create_transaction_for_local_burning(
             sender=sender.address,
             token_identifier=token_identifier,
             supply_to_burn=supply_to_burn
@@ -615,9 +578,7 @@ class TokenManagementController:
                                                    token_identifier: str,
                                                    token_nonce: int,
                                                    attributes: bytes) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_updating_attributes(  # type: ignore
+        transaction = self.factory.create_transaction_for_updating_attributes(
             sender=sender.address,
             token_identifier=token_identifier,
             token_nonce=token_nonce,
@@ -643,9 +604,7 @@ class TokenManagementController:
                                                token_identifier: str,
                                                token_nonce: int,
                                                quantity_to_add: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_adding_quantity(  # type: ignore
+        transaction = self.factory.create_transaction_for_adding_quantity(
             sender=sender.address,
             token_identifier=token_identifier,
             token_nonce=token_nonce,
@@ -671,9 +630,7 @@ class TokenManagementController:
                                                 token_identifier: str,
                                                 token_nonce: int,
                                                 quantity_to_burn: int) -> Transaction:
-        self._ensure_factory_is_initialized()
-
-        transaction = self.factory.create_transaction_for_burning_quantity(  # type: ignore
+        transaction = self.factory.create_transaction_for_burning_quantity(
             sender=sender.address,
             token_identifier=token_identifier,
             token_nonce=token_nonce,
@@ -692,9 +649,3 @@ class TokenManagementController:
     def await_completed_burn_quantity(self, tx_hash: str) -> List[BurnQuantityOutcome]:
         transaction = self.transaction_awaiter.await_completed(tx_hash)
         return self.parse_burn_quantity(transaction)
-
-    def _ensure_factory_is_initialized(self):
-        if self.factory is None:
-            self.chain_id = self.provider.get_network_config().chain_id
-            config = TransactionsFactoryConfig(self.chain_id)
-            self.factory = TokenManagementTransactionsFactory(config)
