@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
 | multiversx\_sdk/\_\_init\_\_.py                                                                                |       44 |        0 |    100% |           |
 | multiversx\_sdk/abi/\_\_init\_\_.py                                                                            |       22 |        0 |    100% |           |
-| multiversx\_sdk/abi/abi.py                                                                                     |      237 |       10 |     96% |91, 111, 171, 237, 245, 257, 263, 265, 267, 271 |
+| multiversx\_sdk/abi/abi.py                                                                                     |      239 |       10 |     96% |91, 111, 171, 237, 245, 257, 263, 265, 267, 271 |
 | multiversx\_sdk/abi/abi\_definition.py                                                                         |      156 |       13 |     92% |55, 73, 76, 114, 130, 146, 176, 201, 224, 244, 265, 285, 306 |
 | multiversx\_sdk/abi/address\_value.py                                                                          |       48 |        3 |     94% |14, 30, 69 |
 | multiversx\_sdk/abi/array\_value.py                                                                            |       52 |        3 |     94% |45, 73, 81 |
@@ -150,7 +150,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6425** |  **718** | **89%** |           |
+|                                                                                                      **TOTAL** | **6427** |  **718** | **89%** |           |
 
 
 ## Setup coverage badge
