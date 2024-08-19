@@ -163,7 +163,7 @@
             <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">structs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_struct_prototype</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot create prototype for custom type </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot create prototype for custom type </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: definition not found&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_enum_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_definition</span><span class="p">:</span> <span class="n">EnumDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">EnumValue</span><span class="p">(</span><span class="n">fields_provider</span><span class="o">=</span><span class="k">lambda</span> <span class="n">discriminant</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_provide_fields_for_enum_prototype</span><span class="p">(</span><span class="n">discriminant</span><span class="p">,</span> <span class="n">enum_definition</span><span class="p">))</span>
@@ -366,6 +366,8 @@
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">AddressValue</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TokenIdentifier&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TokenIdentifierValue</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;EgldOrEsdtTokenIdentifier&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TokenIdentifierValue</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;CodeMetadata&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">BytesValue</span><span class="p">()</span>
