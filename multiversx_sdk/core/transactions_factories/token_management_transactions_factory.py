@@ -314,6 +314,34 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         ).build()
 
+    def create_transaction_for_unsetting_special_role_on_fungible_token(
+        self,
+        sender: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        remove_role_local_mint: bool,
+        remove_role_local_burn: bool,
+        remove_role_esdt_transfer_role: bool
+    ) -> Transaction:
+        parts: List[str] = [
+            "unSetSpecialRole",
+            arg_to_string(token_identifier),
+            user.to_hex(),
+            *([arg_to_string("ESDTRoleLocalMint")] if remove_role_local_mint else []),
+            *([arg_to_string("ESDTRoleLocalBurn")] if remove_role_local_burn else []),
+            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else [])
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_set_special_role,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
     def create_transaction_for_setting_special_role_on_semi_fungible_token(
         self,
         sender: IAddress,
@@ -342,6 +370,46 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
             *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
             *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_set_special_role,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+    
+    def create_transaction_for_unsetting_special_role_on_semi_fungible_token(
+        self,
+        sender: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        remove_role_nft_create: bool = False,
+        remove_role_nft_burn: bool = False,
+        remove_role_nft_remove_quantity: bool = False,
+        remove_role_esdt_transfer_role: bool = False,
+        remove_role_nft_update: bool = False,
+        remove_role_esdt_modify_royalties: bool = False,
+        remove_role_esdt_set_new_uri: bool = False,
+        remove_role_esdt_modify_creator: bool = False,
+        remove_role_nft_recreate: bool = False,
+    ) -> Transaction:
+        parts: List[str] = [
+            "unSetSpecialRole",
+            arg_to_string(token_identifier),
+            user.to_hex(),
+            *([arg_to_string("ESDTRoleNFTCreate")] if remove_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTremoveQuantity")] if remove_role_nft_remove_quantity else []),
+            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
+            *([arg_to_string("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
+            *([arg_to_string("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else []),
         ]
 
         return TransactionBuilder(
@@ -384,6 +452,48 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
             *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
             *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_set_special_role,
+            add_data_movement_gas=True,
+            data_parts=parts,
+        ).build()
+    
+    def create_transaction_for_unsetting_special_role_on_non_fungible_token(
+        self,
+        sender: IAddress,
+        user: IAddress,
+        token_identifier: str,
+        remove_role_nft_create: bool = False,
+        remove_role_nft_burn: bool = False,
+        remove_role_nft_update_attributes: bool = False,
+        remove_role_nft_remove_uri: bool = False,
+        remove_role_esdt_transfer_role: bool = False,
+        remove_role_nft_update: bool = False,
+        remove_role_esdt_modify_royalties: bool = False,
+        remove_role_esdt_set_new_uri: bool = False,
+        remove_role_esdt_modify_creator: bool = False,
+        remove_role_nft_recreate: bool = False,
+    ) -> Transaction:
+        parts: List[str] = [
+            "unSetSpecialRole",
+            arg_to_string(token_identifier),
+            user.to_hex(),
+            *([arg_to_string("ESDTRoleNFTCreate")] if remove_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if remove_role_nft_update_attributes else []),
+            *([arg_to_string("ESDTRoleNFTremoveURI")] if remove_role_nft_remove_uri else []),
+            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
+            *([arg_to_string("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
+            *([arg_to_string("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else []),
         ]
 
         return TransactionBuilder(
