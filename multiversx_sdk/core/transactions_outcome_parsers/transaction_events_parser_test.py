@@ -7,7 +7,6 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.converters import TransactionsConverter
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.codec import encode_unsigned_number
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractCallOutcome, SmartContractResult, TransactionEvent,
     TransactionLogs, TransactionOutcome, find_events_by_first_topic,
@@ -157,14 +156,14 @@ def test_parse_event_with_multi_values():
             identifier="foobar",
             topics=[
                 "doFoobar".encode(),
-                encode_unsigned_number(value),
+                value.to_bytes(),
                 "test".encode(),
-                encode_unsigned_number(value + 1),
+                (value + 1).to_bytes(),
                 "test".encode(),
                 "test".encode(),
-                encode_unsigned_number(value + 2),
+                (value + 2).to_bytes()
             ],
-            data_items=[encode_unsigned_number(value)]
+            data_items=[value.to_bytes()]
         )
     )
 
