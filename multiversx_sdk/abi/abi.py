@@ -88,7 +88,7 @@ class Abi:
             definition = self.definition.types.structs[name]
             return self._create_struct_prototype(definition)
 
-        raise ValueError(f"cannot create prototype for custom type {name}: definition not found")
+        raise ValueError(f"cannot create prototype for custom type {name} not found")
 
     def _create_enum_prototype(self, enum_definition: EnumDefinition) -> Any:
         return EnumValue(fields_provider=lambda discriminant: self._provide_fields_for_enum_prototype(discriminant, enum_definition))
@@ -276,8 +276,6 @@ class Abi:
         if name == "Address":
             return AddressValue()
         if name == "TokenIdentifier":
-            return TokenIdentifierValue()
-        if name == "EgldOrEsdtTokenIdentifier":
             return TokenIdentifierValue()
         if name == "CodeMetadata":
             return BytesValue()

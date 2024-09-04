@@ -277,7 +277,6 @@ def test_create_transaction_for_setting_special_role_on_semi_fungible_token():
     assert transaction.sender == frank.to_bech32()
     assert transaction.value == 0
 
-
 def test_create_transaction_for_unsetting_special_role_on_semi_fungible_token():
     transaction = factory.create_transaction_for_unsetting_special_role_on_semi_fungible_token(
             sender=frank,

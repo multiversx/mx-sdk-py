@@ -8,6 +8,8 @@ bob_pem = Path(__file__).parent / "testwallets" / "bob.pem"
 frank_pem = Path(__file__).parent / "testwallets" / "frank.pem"
 grace_pem = Path(__file__).parent / "testwallets" / "grace.pem"
 carol_pem = Path(__file__).parent / "testwallets" / "carol.pem"
+sender_pem = Path(__file__).parent / "testwallets" / "sender.pem"
+relayer_pem = Path(__file__).parent / "testwallets" / "relayer.pem"
 
 
 def load_wallets() -> Dict[str, UserPEM]:
@@ -27,5 +29,11 @@ def load_wallets() -> Dict[str, UserPEM]:
 
     grace = UserPEM.from_file(Path(grace_pem))
     wallets["grace"] = grace
+
+    sender = UserPEM.from_file(Path(sender_pem))
+    wallets["sender"] = sender
+
+    relayer = UserPEM.from_file(Path(relayer_pem))
+    wallets["relayer"] = relayer
 
     return wallets
