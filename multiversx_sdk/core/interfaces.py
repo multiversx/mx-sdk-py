@@ -26,10 +26,7 @@ class ITransaction(Protocol):
     signature: bytes
     guardian_signature: bytes
     relayer: str
-
-    @property
-    def inner_transactions(self) -> Sequence["ITransaction"]:
-        ...
+    inner_transactions: Sequence["ITransaction"]
 
 
 class IMessage(Protocol):

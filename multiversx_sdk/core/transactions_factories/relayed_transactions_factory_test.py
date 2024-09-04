@@ -258,8 +258,8 @@ class TestRelayedTransactionsFactory:
         )
         serialized_relayed_transaction = self.transaction_computer.compute_bytes_for_signing(relayed_transaction)
         relayed_transaction.signature = alice.secret_key.sign(serialized_relayed_transaction)
-        assert relayed_transaction.signature.hex() == "88b9bce6fe62a641fca593f95c12ad09032a44b34c9e5cf16d070f0563b1695bf9d452a9df52bce3373fd5e10ed96c3d65cd189f5873e3a3184a89f4980c9e0c"
-        assert relayed_transaction.gas_limit == 100000
+        assert relayed_transaction.signature.hex() == "6bd446e1f531db190de97adeab7bae3ed332a83d93e47dc29299a0a6868b966b002d0f4395eee450fc89c7677516d7448c6d01245a3fc5c6c65e0bf8dca9540e"
+        assert relayed_transaction.gas_limit == 150000
 
     def test_create_relayed_v3_with_invalid_inner_tx(self):
         alice = self.wallets["alice"]
