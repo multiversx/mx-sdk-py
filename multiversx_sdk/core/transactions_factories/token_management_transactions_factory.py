@@ -55,18 +55,18 @@ class TokenManagementTransactionsFactory:
         self._false_as_hex = arg_to_string("false")
 
     def create_transaction_for_issuing_fungible(
-        self,
-        sender: IAddress,
-        token_name: str,
-        token_ticker: str,
-        initial_supply: int,
-        num_decimals: int,
-        can_freeze: bool,
-        can_wipe: bool,
-        can_pause: bool,
-        can_change_owner: bool,
-        can_upgrade: bool,
-        can_add_special_roles: bool
+            self,
+            sender: IAddress,
+            token_name: str,
+            token_ticker: str,
+            initial_supply: int,
+            num_decimals: int,
+            can_freeze: bool,
+            can_wipe: bool,
+            can_pause: bool,
+            can_change_owner: bool,
+            can_upgrade: bool,
+            can_add_special_roles: bool
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
@@ -103,17 +103,17 @@ You are about to issue (register) a new token. This will set the role "ESDTRoleB
 Once the token is registered, you can unset this role by calling "unsetBurnRoleGlobally" (in a separate transaction).""")
 
     def create_transaction_for_issuing_semi_fungible(
-        self,
-        sender: IAddress,
-        token_name: str,
-        token_ticker: str,
-        can_freeze: bool,
-        can_wipe: bool,
-        can_pause: bool,
-        can_transfer_nft_create_role: bool,
-        can_change_owner: bool,
-        can_upgrade: bool,
-        can_add_special_roles: bool
+            self,
+            sender: IAddress,
+            token_name: str,
+            token_ticker: str,
+            can_freeze: bool,
+            can_wipe: bool,
+            can_pause: bool,
+            can_transfer_nft_create_role: bool,
+            can_change_owner: bool,
+            can_upgrade: bool,
+            can_add_special_roles: bool
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
@@ -124,7 +124,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canFreeze"), self._true_as_hex if can_freeze else self._false_as_hex]),
             *([arg_to_string("canWipe"), self._true_as_hex if can_wipe else self._false_as_hex]),
             *([arg_to_string("canPause"), self._true_as_hex if can_pause else self._false_as_hex]),
-            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
+            *([arg_to_string("canTransferNFTCreateRole"),
+               self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
             *([arg_to_string("canChangeOwner"), self._true_as_hex if can_change_owner else self._false_as_hex]),
             *([arg_to_string("canUpgrade"), self._true_as_hex if can_upgrade else self._false_as_hex]),
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex if can_add_special_roles else self._false_as_hex])
@@ -141,17 +142,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_issuing_non_fungible(
-        self,
-        sender: IAddress,
-        token_name: str,
-        token_ticker: str,
-        can_freeze: bool,
-        can_wipe: bool,
-        can_pause: bool,
-        can_transfer_nft_create_role: bool,
-        can_change_owner: bool,
-        can_upgrade: bool,
-        can_add_special_roles: bool
+            self,
+            sender: IAddress,
+            token_name: str,
+            token_ticker: str,
+            can_freeze: bool,
+            can_wipe: bool,
+            can_pause: bool,
+            can_transfer_nft_create_role: bool,
+            can_change_owner: bool,
+            can_upgrade: bool,
+            can_add_special_roles: bool
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
@@ -162,7 +163,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canFreeze"), self._true_as_hex if can_freeze else self._false_as_hex]),
             *([arg_to_string("canWipe"), self._true_as_hex if can_wipe else self._false_as_hex]),
             *([arg_to_string("canPause"), self._true_as_hex if can_pause else self._false_as_hex]),
-            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
+            *([arg_to_string("canTransferNFTCreateRole"),
+               self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
             *([arg_to_string("canChangeOwner"), self._true_as_hex if can_change_owner else self._false_as_hex]),
             *([arg_to_string("canUpgrade"), self._true_as_hex if can_upgrade else self._false_as_hex]),
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex if can_add_special_roles else self._false_as_hex])
@@ -179,18 +181,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_registering_meta_esdt(
-        self,
-        sender: IAddress,
-        token_name: str,
-        token_ticker: str,
-        num_decimals: int,
-        can_freeze: bool,
-        can_wipe: bool,
-        can_pause: bool,
-        can_transfer_nft_create_role: bool,
-        can_change_owner: bool,
-        can_upgrade: bool,
-        can_add_special_roles: bool
+            self,
+            sender: IAddress,
+            token_name: str,
+            token_ticker: str,
+            num_decimals: int,
+            can_freeze: bool,
+            can_wipe: bool,
+            can_pause: bool,
+            can_transfer_nft_create_role: bool,
+            can_change_owner: bool,
+            can_upgrade: bool,
+            can_add_special_roles: bool
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
@@ -202,7 +204,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             *([arg_to_string("canFreeze"), self._true_as_hex if can_freeze else self._false_as_hex]),
             *([arg_to_string("canWipe"), self._true_as_hex if can_wipe else self._false_as_hex]),
             *([arg_to_string("canPause"), self._true_as_hex if can_pause else self._false_as_hex]),
-            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
+            *([arg_to_string("canTransferNFTCreateRole"),
+               self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
             *([arg_to_string("canChangeOwner"), self._true_as_hex if can_change_owner else self._false_as_hex]),
             *([arg_to_string("canUpgrade"), self._true_as_hex if can_upgrade else self._false_as_hex]),
             *([arg_to_string("canAddSpecialRoles"), self._true_as_hex if can_add_special_roles else self._false_as_hex])
@@ -219,12 +222,12 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_registering_and_setting_roles(
-        self,
-        sender: IAddress,
-        token_name: str,
-        token_ticker: str,
-        token_type: TokenType,
-        num_decimals: int
+            self,
+            sender: IAddress,
+            token_name: str,
+            token_ticker: str,
+            token_type: TokenType,
+            num_decimals: int
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
@@ -247,9 +250,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_setting_burn_role_globally(
-        self,
-        sender: IAddress,
-        token_identifier: str
+            self,
+            sender: IAddress,
+            token_identifier: str
     ) -> Transaction:
         parts: List[str] = [
             "setBurnRoleGlobally",
@@ -267,9 +270,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_unsetting_burn_role_globally(
-        self,
-        sender: IAddress,
-        token_identifier: str
+            self,
+            sender: IAddress,
+            token_identifier: str
     ) -> Transaction:
         parts: List[str] = [
             "unsetBurnRoleGlobally",
@@ -287,13 +290,13 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_setting_special_role_on_fungible_token(
-        self,
-        sender: IAddress,
-        user: IAddress,
-        token_identifier: str,
-        add_role_local_mint: bool,
-        add_role_local_burn: bool,
-        add_role_esdt_transfer_role: bool
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str,
+            add_role_local_mint: bool,
+            add_role_local_burn: bool,
+            add_role_esdt_transfer_role: bool
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -314,20 +317,48 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         ).build()
 
+    def create_transaction_for_unsetting_special_role_on_fungible_token(
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str,
+            remove_role_local_mint: bool,
+            remove_role_local_burn: bool,
+            remove_role_esdt_transfer_role: bool
+    ) -> Transaction:
+        parts: List[str] = [
+            "unSetSpecialRole",
+            arg_to_string(token_identifier),
+            user.to_hex(),
+            *([arg_to_string("ESDTRoleLocalMint")] if remove_role_local_mint else []),
+            *([arg_to_string("ESDTRoleLocalBurn")] if remove_role_local_burn else []),
+            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else [])
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_set_special_role,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
     def create_transaction_for_setting_special_role_on_semi_fungible_token(
-        self,
-        sender: IAddress,
-        user: IAddress,
-        token_identifier: str,
-        add_role_nft_create: bool = False,
-        add_role_nft_burn: bool = False,
-        add_role_nft_add_quantity: bool = False,
-        add_role_esdt_transfer_role: bool = False,
-        add_role_nft_update: bool = False,
-        add_role_esdt_modify_royalties: bool = False,
-        add_role_esdt_set_new_uri: bool = False,
-        add_role_esdt_modify_creator: bool = False,
-        add_role_nft_recreate: bool = False,
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str,
+            add_role_nft_create: bool = False,
+            add_role_nft_burn: bool = False,
+            add_role_nft_add_quantity: bool = False,
+            add_role_esdt_transfer_role: bool = False,
+            add_role_nft_update: bool = False,
+            add_role_esdt_modify_royalties: bool = False,
+            add_role_esdt_set_new_uri: bool = False,
+            add_role_esdt_modify_creator: bool = False,
+            add_role_nft_recreate: bool = False,
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -354,21 +385,61 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts
         ).build()
 
+    def create_transaction_for_unsetting_special_role_on_semi_fungible_token(
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str,
+            remove_role_nft_create: bool = False,
+            remove_role_nft_burn: bool = False,
+            remove_role_nft_add_quantity: bool = False,
+            remove_role_esdt_transfer_role: bool = False,
+            remove_role_nft_update: bool = False,
+            remove_role_esdt_modify_royalties: bool = False,
+            remove_role_esdt_set_new_uri: bool = False,
+            remove_role_esdt_modify_creator: bool = False,
+            remove_role_nft_recreate: bool = False,
+    ) -> Transaction:
+        parts: List[str] = [
+            "unSetSpecialRole",
+            arg_to_string(token_identifier),
+            user.to_hex(),
+            *([arg_to_string("ESDTRoleNFTCreate")] if remove_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTAddQuantity")] if remove_role_nft_add_quantity else []),
+            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
+            *([arg_to_string("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
+            *([arg_to_string("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else []),
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_set_special_role,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
     def create_transaction_for_setting_special_role_on_non_fungible_token(
-        self,
-        sender: IAddress,
-        user: IAddress,
-        token_identifier: str,
-        add_role_nft_create: bool = False,
-        add_role_nft_burn: bool = False,
-        add_role_nft_update_attributes: bool = False,
-        add_role_nft_add_uri: bool = False,
-        add_role_esdt_transfer_role: bool = False,
-        add_role_nft_update: bool = False,
-        add_role_esdt_modify_royalties: bool = False,
-        add_role_esdt_set_new_uri: bool = False,
-        add_role_esdt_modify_creator: bool = False,
-        add_role_nft_recreate: bool = False,
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str,
+            add_role_nft_create: bool = False,
+            add_role_nft_burn: bool = False,
+            add_role_nft_update_attributes: bool = False,
+            add_role_nft_add_uri: bool = False,
+            add_role_esdt_transfer_role: bool = False,
+            add_role_nft_update: bool = False,
+            add_role_esdt_modify_royalties: bool = False,
+            add_role_esdt_set_new_uri: bool = False,
+            add_role_esdt_modify_creator: bool = False,
+            add_role_nft_recreate: bool = False,
     ) -> Transaction:
         parts: List[str] = [
             "setSpecialRole",
@@ -396,16 +467,58 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             data_parts=parts,
         ).build()
 
+    def create_transaction_for_unsetting_special_role_on_non_fungible_token(
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str,
+            remove_role_nft_create: bool = False,
+            remove_role_nft_burn: bool = False,
+            remove_role_nft_update_attributes: bool = False,
+            remove_role_nft_remove_uri: bool = False,
+            remove_role_esdt_transfer_role: bool = False,
+            remove_role_nft_update: bool = False,
+            remove_role_esdt_modify_royalties: bool = False,
+            remove_role_esdt_set_new_uri: bool = False,
+            remove_role_esdt_modify_creator: bool = False,
+            remove_role_nft_recreate: bool = False,
+    ) -> Transaction:
+        parts: List[str] = [
+            "unSetSpecialRole",
+            arg_to_string(token_identifier),
+            user.to_hex(),
+            *([arg_to_string("ESDTRoleNFTCreate")] if remove_role_nft_create else []),
+            *([arg_to_string("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
+            *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if remove_role_nft_update_attributes else []),
+            *([arg_to_string("ESDTRoleNFTAddURI")] if remove_role_nft_remove_uri else []),
+            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
+            *([arg_to_string("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
+            *([arg_to_string("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
+            *([arg_to_string("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
+            *([arg_to_string("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
+            *([arg_to_string("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else []),
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=None,
+            gas_limit=self._config.gas_limit_set_special_role,
+            add_data_movement_gas=True,
+            data_parts=parts,
+        ).build()
+
     def create_transaction_for_creating_nft(
-        self,
-        sender: IAddress,
-        token_identifier: str,
-        initial_quantity: int,
-        name: str,
-        royalties: int,
-        hash: str,
-        attributes: bytes,
-        uris: List[str]
+            self,
+            sender: IAddress,
+            token_identifier: str,
+            initial_quantity: int,
+            name: str,
+            royalties: int,
+            hash: str,
+            attributes: bytes,
+            uris: List[str]
     ) -> Transaction:
         if not uris:
             raise BadUsageError("No URIs provided")
@@ -436,9 +549,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_pausing(
-        self,
-        sender: IAddress,
-        token_identifier: str
+            self,
+            sender: IAddress,
+            token_identifier: str
     ) -> Transaction:
         parts: List[str] = [
             "pause",
@@ -456,9 +569,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_unpausing(
-        self,
-        sender: IAddress,
-        token_identifier: str
+            self,
+            sender: IAddress,
+            token_identifier: str
     ) -> Transaction:
         parts: List[str] = [
             "unPause",
@@ -476,10 +589,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_freezing(
-        self,
-        sender: IAddress,
-        user: IAddress,
-        token_identifier: str
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str
     ) -> Transaction:
         parts: List[str] = [
             "freeze",
@@ -498,10 +611,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_unfreezing(
-        self,
-        sender: IAddress,
-        user: IAddress,
-        token_identifier: str
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str
     ) -> Transaction:
         parts: List[str] = [
             "unFreeze",
@@ -520,10 +633,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_wiping(
-        self,
-        sender: IAddress,
-        user: IAddress,
-        token_identifier: str
+            self,
+            sender: IAddress,
+            user: IAddress,
+            token_identifier: str
     ) -> Transaction:
         parts: List[str] = [
             "wipe",
@@ -542,10 +655,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_local_minting(
-        self,
-        sender: IAddress,
-        token_identifier: str,
-        supply_to_mint: int
+            self,
+            sender: IAddress,
+            token_identifier: str,
+            supply_to_mint: int
     ) -> Transaction:
         parts: List[str] = [
             "ESDTLocalMint",
@@ -564,10 +677,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_local_burning(
-        self,
-        sender: IAddress,
-        token_identifier: str,
-        supply_to_burn: int
+            self,
+            sender: IAddress,
+            token_identifier: str,
+            supply_to_burn: int
     ) -> Transaction:
         parts: List[str] = [
             "ESDTLocalBurn",
@@ -586,11 +699,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_updating_attributes(
-        self,
-        sender: IAddress,
-        token_identifier: str,
-        token_nonce: int,
-        attributes: bytes
+            self,
+            sender: IAddress,
+            token_identifier: str,
+            token_nonce: int,
+            attributes: bytes
     ) -> Transaction:
         parts: List[str] = [
             "ESDTNFTUpdateAttributes",
@@ -610,11 +723,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_adding_quantity(
-        self,
-        sender: IAddress,
-        token_identifier: str,
-        token_nonce: int,
-        quantity_to_add: int
+            self,
+            sender: IAddress,
+            token_identifier: str,
+            token_nonce: int,
+            quantity_to_add: int
     ) -> Transaction:
         parts: List[str] = [
             "ESDTNFTAddQuantity",
@@ -634,11 +747,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_burning_quantity(
-        self,
-        sender: IAddress,
-        token_identifier: str,
-        token_nonce: int,
-        quantity_to_burn: int
+            self,
+            sender: IAddress,
+            token_identifier: str,
+            token_nonce: int,
+            quantity_to_burn: int
     ) -> Transaction:
         parts: List[str] = [
             "ESDTNFTBurn",
