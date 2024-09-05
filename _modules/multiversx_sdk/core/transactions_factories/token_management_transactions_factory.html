@@ -419,6 +419,37 @@
         <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_special_role_on_fungible_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">remove_role_local_mint</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">remove_role_local_burn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;unSetSpecialRole&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleLocalMint&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_local_mint</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleLocalBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_local_burn</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_setting_special_role_on_semi_fungible_token</span><span class="p">(</span>
@@ -449,6 +480,47 @@
             <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleSetNewURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_set_new_uri</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyCreator&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_modify_creator</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTRecreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_recreate</span> <span class="k">else</span> <span class="p">[]),</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_semi_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_semi_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_special_role_on_semi_fungible_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">remove_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_add_quantity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_modify_royalties</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_set_new_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;unSetSpecialRole&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_burn</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTAddQuantity&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_add_quantity</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTUpdate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_update</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyRoyalties&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_modify_royalties</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleSetNewURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_set_new_uri</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyCreator&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_modify_creator</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTRecreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_recreate</span> <span class="k">else</span> <span class="p">[]),</span>
         <span class="p">]</span>
 
         <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
@@ -494,6 +566,49 @@
             <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleSetNewURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_set_new_uri</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyCreator&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_modify_creator</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTRecreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_recreate</span> <span class="k">else</span> <span class="p">[]),</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_non_fungible_token">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_non_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_special_role_on_non_fungible_token</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">remove_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_update_attributes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_remove_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_modify_royalties</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_set_new_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;unSetSpecialRole&quot;</span><span class="p">,</span>
+            <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_burn</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTUpdateAttributes&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_update_attributes</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTAddURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_remove_uri</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTUpdate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_update</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyRoyalties&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_modify_royalties</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleSetNewURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_set_new_uri</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyCreator&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_modify_creator</span> <span class="k">else</span> <span class="p">[]),</span>
+            <span class="o">*</span><span class="p">([</span><span class="n">arg_to_string</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTRecreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_recreate</span> <span class="k">else</span> <span class="p">[]),</span>
         <span class="p">]</span>
 
         <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
