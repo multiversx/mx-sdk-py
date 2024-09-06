@@ -39,6 +39,17 @@
         }
       ],
       "outputs": []
+    },
+    {
+      "name": "orange",
+      "mutability": "mutable",
+      "inputs": [
+        {
+          "name": "value",
+          "type": "EgldOrEsdtTokenIdentifier"
+        }
+      ],
+      "outputs": []
     }
   ],
   "types": {},

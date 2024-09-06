@@ -7,6 +7,7 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.converters import TransactionsConverter
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.codec import encode_unsigned_number
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractCallOutcome, SmartContractResult, TransactionEvent,
     TransactionLogs, TransactionOutcome, find_events_by_first_topic,
@@ -156,14 +157,14 @@ def test_parse_event_with_multi_values():
             identifier="foobar",
             topics=[
                 "doFoobar".encode(),
-                value.to_bytes(),
+                encode_unsigned_number(value),
                 "test".encode(),
-                (value + 1).to_bytes(),
+                encode_unsigned_number(value + 1),
                 "test".encode(),
                 "test".encode(),
-                (value + 2).to_bytes()
+                encode_unsigned_number(value + 2),
             ],
-            data_items=[value.to_bytes()]
+            data_items=[encode_unsigned_number(value)]
         )
     )
 
@@ -224,7 +225,7 @@ def test_multisig_start_perform_action():
     api = ApiNetworkProvider("https://testnet-api.multiversx.com")
     converter = TransactionsConverter()
 
-    transaction_on_network = api.get_transaction("6f006c99e45525c94629db2442d9ca27ff088ad113a09f0a3a3e24bcc164945a")
+    transaction_on_network = api.get_transaction("69f63a246a65abad952fa052e105e2487fda98e765c318ed3a2af801efeb9818")
     transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
 
     abi = Abi.load(testdata / "multisig-full.abi.json")
@@ -238,9 +239,18 @@ def test_multisig_start_perform_action():
         group_id=0,
         action_data=SimpleNamespace(
             **{
-                "0": Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
-                '__discriminant__': 1
+                "0": SimpleNamespace(
+                    **{
+                        'to': Address.new_from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede").get_public_key(),
+                        'egld_amount': 1000000000000000000,
+                        'opt_gas_limit': None,
+                        'endpoint_name': b'',
+                        'arguments': []
+                    }
+                ),
+                '__discriminant__': 5
             },
         ),
-        signers=[Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2").get_public_key()]
+        signers=[Address.new_from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv").get_public_key(),
+                 Address.new_from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede").get_public_key()]
     )
