@@ -4,10 +4,8 @@ from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.account_transactions_factory import \
-    AccountTransactionsFactory
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
+from multiversx_sdk.core.transactions_factories import (
+    AccountTransactionsFactory, TransactionsFactoryConfig)
 
 
 class AccountController:

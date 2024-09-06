@@ -39,13 +39,23 @@ from multiversx_sdk.core.transactions_factories.transfer_transactions_factory im
     TransferTransactionsFactory
 from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import \
     DelegationTransactionsOutcomeParser
+from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types import \
+    CreateNewDelegationContractOutcome
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
     find_events_by_first_topic, find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
     SmartContractTransactionsOutcomeParser
+from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import (
+    DeployedSmartContract, SmartContractDeployOutcome)
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
+from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_types import (
+    AddQuantityOutcome, BurnOutcome, BurnQuantityOutcome, FreezeOutcome,
+    IssueFungibleOutcome, IssueNonFungibleOutcome, IssueSemiFungibleOutcome,
+    MintOutcome, NFTCreateOutcome, PauseOutcome, RegisterAndSetAllRolesOutcome,
+    RegisterMetaEsdtOutcome, SetSpecialRoleOutcome, UnFreezeOutcome,
+    UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
 from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
     TransactionEventsParser
 from multiversx_sdk.facades.account import Account
@@ -95,5 +105,10 @@ __all__ = [
     "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser",
     "Account", "DevnetEntrypoint", "MainnetEntrypoint", "NetworkEntrypoint", "TestnetEntrypoint",
     "AccountController", "DelegationController", "RelayedController", "SmartContractController",
-    "TokenManagementController", "TransfersController"
+    "TokenManagementController", "TransfersController",
+    "CreateNewDelegationContractOutcome", "SmartContractDeployOutcome", "DeployedSmartContract",
+    "IssueFungibleOutcome", "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome",
+    "RegisterAndSetAllRolesOutcome", "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome",
+    "PauseOutcome", "UnPauseOutcome", "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome",
+    "AddQuantityOutcome", "BurnQuantityOutcome"
 ]

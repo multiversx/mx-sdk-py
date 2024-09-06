@@ -2,8 +2,8 @@ from pathlib import Path
 from typing import Any, List, Optional, Protocol, Sequence, Union
 
 from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
+from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.controllers.network_provider_wrapper import ProviderWrapper
-from multiversx_sdk.controllers.token_management_controller import IAccount
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.interfaces import IAddress
@@ -12,14 +12,10 @@ from multiversx_sdk.core.smart_contract_queries_controller import \
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
-    SmartContractTransactionsFactory
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
-    SmartContractTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import \
-    SmartContractDeployOutcome
+from multiversx_sdk.core.transactions_factories import (
+    SmartContractTransactionsFactory, TransactionsFactoryConfig)
+from multiversx_sdk.core.transactions_outcome_parsers import (
+    SmartContractDeployOutcome, SmartContractTransactionsOutcomeParser)
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
@@ -50,10 +46,6 @@ class IQueryResponse(Protocol):
 
     def get_return_data_parts(self) -> List[bytes]:
         ...
-
-
-class INetworkConfig(Protocol):
-    chain_id: str
 
 
 class INetworkProvider(Protocol):

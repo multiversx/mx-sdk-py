@@ -11,31 +11,23 @@ from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.account_transactions_factory import \
-    AccountTransactionsFactory
-from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
-    DelegationTransactionsFactory
-from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
-    RelayedTransactionsFactory
-from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
-    SmartContractTransactionsFactory
-from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
-    TokenManagementTransactionsFactory, TokenType)
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
-    TransferTransactionsFactory
-from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import \
-    DelegationTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
+from multiversx_sdk.core.transactions_factories import (
+    AccountTransactionsFactory, DelegationTransactionsFactory,
+    RelayedTransactionsFactory, SmartContractTransactionsFactory,
+    TokenManagementTransactionsFactory, TokenType, TransactionsFactoryConfig,
+    TransferTransactionsFactory)
+from multiversx_sdk.core.transactions_outcome_parsers import (
+    AddQuantityOutcome, BurnOutcome, BurnQuantityOutcome,
+    CreateNewDelegationContractOutcome, DelegationTransactionsOutcomeParser,
+    DeployedSmartContract, FreezeOutcome, IssueFungibleOutcome,
+    IssueNonFungibleOutcome, IssueSemiFungibleOutcome, MintOutcome,
+    NFTCreateOutcome, PauseOutcome, RegisterAndSetAllRolesOutcome,
+    RegisterMetaEsdtOutcome, SetSpecialRoleOutcome, SmartContractDeployOutcome,
+    SmartContractResult, SmartContractTransactionsOutcomeParser,
+    TokenManagementTransactionsOutcomeParser, TransactionEvent,
+    TransactionEventsParser, TransactionLogs, TransactionOutcome,
+    UnFreezeOutcome, UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome,
     find_events_by_first_topic, find_events_by_identifier)
-from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
-    SmartContractTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
-    TokenManagementTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
-    TransactionEventsParser
 
 __all__ = [
     "AccountNonceHolder", "Address", "AddressFactory", "AddressComputer",
@@ -49,5 +41,10 @@ __all__ = [
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
     "RelayedTransactionsFactory", "AccountTransactionsFactory", "DelegationTransactionsOutcomeParser",
     "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser",
-    "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse", "TransactionEventsParser"
+    "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse", "TransactionEventsParser",
+    "CreateNewDelegationContractOutcome", "SmartContractDeployOutcome", "DeployedSmartContract",
+    "IssueFungibleOutcome", "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome",
+    "RegisterAndSetAllRolesOutcome", "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome",
+    "PauseOutcome", "UnPauseOutcome", "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome",
+    "AddQuantityOutcome", "BurnQuantityOutcome"
 ]

@@ -7,14 +7,10 @@ from multiversx_sdk.converters.transactions_converter import \
 from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
-    DelegationTransactionsFactory
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import \
-    DelegationTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types import \
-    CreateNewDelegationContractOutcome
+from multiversx_sdk.core.transactions_factories import (
+    DelegationTransactionsFactory, TransactionsFactoryConfig)
+from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import (
+    CreateNewDelegationContractOutcome, DelegationTransactionsOutcomeParser)
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork

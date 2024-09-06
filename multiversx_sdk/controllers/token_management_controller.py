@@ -7,37 +7,28 @@ from multiversx_sdk.converters.transactions_converter import \
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
-    TokenManagementTransactionsFactory, TokenType)
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
-    TokenManagementTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_types import (
+from multiversx_sdk.core.transactions_factories import (
+    TokenManagementTransactionsFactory, TokenType, TransactionsFactoryConfig)
+from multiversx_sdk.core.transactions_outcome_parsers import (
     AddQuantityOutcome, BurnOutcome, BurnQuantityOutcome, FreezeOutcome,
     IssueFungibleOutcome, IssueNonFungibleOutcome, IssueSemiFungibleOutcome,
     MintOutcome, NFTCreateOutcome, PauseOutcome, RegisterAndSetAllRolesOutcome,
-    RegisterMetaEsdtOutcome, SetSpecialRoleOutcome, UnFreezeOutcome,
-    UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
+    RegisterMetaEsdtOutcome, SetSpecialRoleOutcome,
+    TokenManagementTransactionsOutcomeParser, UnFreezeOutcome, UnPauseOutcome,
+    UpdateAttributesOutcome, WipeOutcome)
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
-class INetworkConfig(Protocol):
-    chain_id: str
-
-
 class INetworkProvider(Protocol):
-    def get_network_config(self) -> INetworkConfig:
-        ...
+    ...
 
 
 class TokenManagementController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
         self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id))
-        self.provider = network_provider
-        self.provider_wrapper = ProviderWrapper(self.provider)
+        self.provider_wrapper = ProviderWrapper(network_provider)
         self.transaction_awaiter = TransactionAwaiter(self.provider_wrapper)
         self.tx_computer = TransactionComputer()
         self.tx_converter = TransactionsConverter()

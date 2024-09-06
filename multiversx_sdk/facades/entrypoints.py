@@ -56,10 +56,10 @@ class NetworkEntrypoint:
 
         self.chain_id = chain_id
 
-    def sign_transaction(self, transaction: Transaction, signer: UserSigner):
+    def sign_transaction(self, transaction: Transaction, account: UserSigner):
         """Signs the transactions and applies the signature on the transaction."""
         tx_computer = TransactionComputer()
-        transaction.signature = signer.sign(tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = account.sign(tx_computer.compute_bytes_for_signing(transaction))
 
     def verify_transaction_signature(self, transaction: Transaction) -> bool:
         verifier = UserVerifier.from_address(Address.new_from_bech32(transaction.sender))
@@ -70,10 +70,10 @@ class NetworkEntrypoint:
             signature=transaction.signature
         )
 
-    def sign_message(self, message: Message, signer: UserSigner):
+    def sign_message(self, message: Message, account: UserSigner):
         """Signs the message and applies the signature on the message."""
         message_computer = MessageComputer()
-        message.signature = signer.sign(message_computer.compute_bytes_for_signing(message))
+        message.signature = account.sign(message_computer.compute_bytes_for_signing(message))
 
     def verify_message_signature(self, message: Message) -> bool:
         if message.address is None:

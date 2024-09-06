@@ -5,10 +5,8 @@ from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
-    TransferTransactionsFactory
+from multiversx_sdk.core.transactions_factories import (
+    TransactionsFactoryConfig, TransferTransactionsFactory)
 
 
 class TransfersController:

@@ -4,10 +4,8 @@ from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.interfaces import ITransaction
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
-    RelayedTransactionsFactory
-from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
-    TransactionsFactoryConfig
+from multiversx_sdk.core.transactions_factories import (
+    RelayedTransactionsFactory, TransactionsFactoryConfig)
 
 
 class RelayedController:
