@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from multiversx_sdk.network_providers.interface import IPagination
 
 
@@ -11,3 +13,9 @@ class DefaultPagination(IPagination):
 
     def get_size(self) -> int:
         return self.size
+
+
+@dataclass
+class DefaultRequestsConfig:
+    # by default, timeout requests after 5 seconds
+    timeout: int = 5

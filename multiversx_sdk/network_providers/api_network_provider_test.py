@@ -1,15 +1,19 @@
 import base64
+import time
 
 import pytest
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.interface import IPagination
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ContractQuery
+from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
+from multiversx_sdk.testutils.wallets import load_wallets
 
 
 class Pagination(IPagination):
@@ -209,3 +213,47 @@ class TestApi:
         )
 
         assert self.api.send_transaction(transaction) == expected_hash
+
+    def test_send_and_await_for_completed_transaction(self):
+        alice = load_wallets()["alice"]
+        tx_computer = TransactionComputer()
+
+        transaction = Transaction(
+            sender=alice.label,
+            receiver=alice.label,
+            gas_limit=50000,
+            chain_id="D",
+        )
+
+        nonce = self.api.get_account(Address.new_from_bech32(alice.label)).nonce
+
+        transaction.nonce = nonce
+        transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        hash = self.api.send_transaction(transaction)
+        time.sleep(1)
+
+        tx_on_network = self.api.await_transaction_completed(hash)
+        assert tx_on_network.status.is_executed()
+
+        transaction = Transaction(
+            sender=alice.label,
+            receiver="erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094",
+            gas_limit=5000000,
+            chain_id="D",
+            data="dummy@05".encode()
+        )
+        transaction.nonce = nonce + 1
+        transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        def condition(tx: TransactionOnNetwork) -> bool:
+            return tx.status.is_failed()
+
+        hash = self.api.send_transaction(transaction)
+        time.sleep(1)
+
+        tx_on_network = self.api.await_transaction_on_condition(
+            tx_hash=hash,
+            condition=condition
+        )
+        assert tx_on_network.status.is_failed()

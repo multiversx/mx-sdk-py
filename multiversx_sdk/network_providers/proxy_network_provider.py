@@ -1,5 +1,6 @@
-from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from dataclasses import asdict
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 from requests.auth import AuthBase
@@ -8,6 +9,7 @@ from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
+from multiversx_sdk.network_providers.config import DefaultRequestsConfig
 from multiversx_sdk.network_providers.constants import (DEFAULT_ADDRESS_HRP,
                                                         ESDT_CONTRACT_ADDRESS,
                                                         METACHAIN_ID)
@@ -19,12 +21,15 @@ from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.interface import IAddress, IContractQuery
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_status import NetworkStatus
-from multiversx_sdk.network_providers.resources import (GenericResponse,
+from multiversx_sdk.network_providers.resources import (AwaitingOptions,
+                                                        GenericResponse,
                                                         SimulateResponse)
 from multiversx_sdk.network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from multiversx_sdk.network_providers.tokens import (
     FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
+from multiversx_sdk.network_providers.transaction_awaiter import \
+    TransactionAwaiter
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
@@ -36,11 +41,13 @@ class ProxyNetworkProvider:
             self,
             url: str,
             auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP
+            address_hrp: str = DEFAULT_ADDRESS_HRP,
+            requests_config: DefaultRequestsConfig = DefaultRequestsConfig()
     ) -> None:
         self.url = url
         self.auth = auth
         self.address_hrp = address_hrp
+        self.requests_config = requests_config
 
     def get_network_config(self) -> NetworkConfig:
         response = self.do_get_generic('network/config')
@@ -92,7 +99,7 @@ class ProxyNetworkProvider:
         token = NonFungibleTokenOfAccountOnNetwork.from_proxy_http_response_by_nonce(response.get('tokenData', ''))
         return token
 
-    def get_transaction(self, tx_hash: str, with_process_status: Optional[bool] = False) -> TransactionOnNetwork:
+    def get_transaction(self, tx_hash: str, with_process_status: Optional[bool] = True) -> TransactionOnNetwork:
         def get_process_status() -> TransactionStatus:
             return self.get_transaction_status(tx_hash)
 
@@ -102,16 +109,20 @@ class ProxyNetworkProvider:
 
         status_task = None
         with ThreadPoolExecutor(max_workers=2) as executor:
-            if with_process_status:
-                status_task = executor.submit(get_process_status)
+            try:
+                if with_process_status:
+                    status_task = executor.submit(get_process_status)
 
-            tx_task = executor.submit(get_tx)
+                tx_task = executor.submit(get_tx)
 
-        process_status = status_task.result() if status_task else None
-        tx = tx_task.result()
-        transaction = TransactionOnNetwork.from_proxy_http_response(tx_hash, tx, process_status)
+                process_status = status_task.result(timeout=5) if status_task else None
+                tx = tx_task.result(timeout=5)
+            except TimeoutError:
+                raise TimeoutError("Fetching transaction or process status timed out")
+            except Exception as e:
+                raise Exception(f"An error occured: {str(e)}")
 
-        return transaction
+        return TransactionOnNetwork.from_proxy_http_response(tx_hash, tx, process_status)
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
@@ -131,6 +142,41 @@ class ProxyNetworkProvider:
         num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
         hashes = response.get("txsHashes")
         return num_sent, hashes
+
+    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        if isinstance(tx_hash, bytes):
+            tx_hash = tx_hash.hex()
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_completed(tx_hash)
+
+    def await_transaction_on_condition(self,
+                                       tx_hash: Union[str, bytes],
+                                       condition: Callable[[TransactionOnNetwork], bool],
+                                       options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        if isinstance(tx_hash, bytes):
+            tx_hash = tx_hash.hex()
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_on_condition(tx_hash, condition)
 
     def query_contract(self, query: IContractQuery) -> ContractQueryResponse:
         request = ContractQueryRequest(query).to_http_request()
@@ -181,7 +227,7 @@ class ProxyNetworkProvider:
 
     def do_get(self, url: str) -> GenericResponse:
         try:
-            response = requests.get(url, auth=self.auth)
+            response = requests.get(url, auth=self.auth, **asdict(self.requests_config))
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)
@@ -195,7 +241,7 @@ class ProxyNetworkProvider:
 
     def do_post(self, url: str, payload: Any) -> GenericResponse:
         try:
-            response = requests.post(url, json=payload, auth=self.auth)
+            response = requests.post(url, json=payload, auth=self.auth, **asdict(self.requests_config))
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)
