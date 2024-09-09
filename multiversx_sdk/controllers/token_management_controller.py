@@ -28,8 +28,7 @@ class INetworkProvider(Protocol):
 class TokenManagementController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
         self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id))
-        self.provider_wrapper = ProviderWrapper(network_provider)
-        self.transaction_awaiter = TransactionAwaiter(self.provider_wrapper)
+        self.transaction_awaiter = TransactionAwaiter(ProviderWrapper(network_provider))
         self.tx_computer = TransactionComputer()
         self.tx_converter = TransactionsConverter()
         self.parser = TokenManagementTransactionsOutcomeParser()

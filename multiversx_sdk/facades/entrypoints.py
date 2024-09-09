@@ -13,6 +13,7 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.facades.account import Account
 from multiversx_sdk.facades.config import (DevnetEntrypointConfig,
                                            MainnetEntrypointConfig,
                                            TestnetEntrypointConfig)
@@ -24,7 +25,6 @@ from multiversx_sdk.network_providers.proxy_network_provider import \
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
-from multiversx_sdk.wallet.user_signer import UserSigner
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
@@ -56,7 +56,7 @@ class NetworkEntrypoint:
 
         self.chain_id = chain_id
 
-    def sign_transaction(self, transaction: Transaction, account: UserSigner):
+    def sign_transaction(self, transaction: Transaction, account: Account):
         """Signs the transactions and applies the signature on the transaction."""
         tx_computer = TransactionComputer()
         transaction.signature = account.sign(tx_computer.compute_bytes_for_signing(transaction))
@@ -70,7 +70,7 @@ class NetworkEntrypoint:
             signature=transaction.signature
         )
 
-    def sign_message(self, message: Message, account: UserSigner):
+    def sign_message(self, message: Message, account: Account):
         """Signs the message and applies the signature on the message."""
         message_computer = MessageComputer()
         message.signature = account.sign(message_computer.compute_bytes_for_signing(message))

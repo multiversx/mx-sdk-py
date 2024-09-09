@@ -63,15 +63,8 @@ class TestEntrypoint:
         )
 
         tx_hash = self.entrypoint.send_transaction(transaction)
-
-        retries = 10
-        while retries:
-            time.sleep(0.5)
-            try:
-                self.entrypoint.await_completed_transaction(tx_hash)
-                break
-            except:
-                retries -= 1
+        time.sleep(1)
+        self.entrypoint.await_completed_transaction(tx_hash)
 
         query_result = controller.query_contract(
             contract=contract_address,

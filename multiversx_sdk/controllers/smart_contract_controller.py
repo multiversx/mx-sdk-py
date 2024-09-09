@@ -69,14 +69,14 @@ class IAbi(Protocol):
 
 class SmartContractController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Optional[IAbi] = None) -> None:
-        self.provider = network_provider
         self.abi = abi
         self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.parser = SmartContractTransactionsOutcomeParser()
         self.query_controller = SmartContractQueriesController(
-            query_runner=QueryRunnerAdapter(self.provider),
+            query_runner=QueryRunnerAdapter(network_provider),
             abi=self.abi
         )
+        self.transaction_awaiter = TransactionAwaiter(ProviderWrapper(network_provider))
         self.tx_computer = TransactionComputer()
 
     def create_transaction_for_deploy(self,
@@ -114,9 +114,7 @@ class SmartContractController:
         return self.parser.parse_deploy(tx_outcome)
 
     def await_completed_deploy(self, tx_hash: str) -> SmartContractDeployOutcome:
-        provider = ProviderWrapper(self.provider)
-        transaction_awaiter = TransactionAwaiter(provider)
-        transaction = transaction_awaiter.await_completed(tx_hash)
+        transaction = self.transaction_awaiter.await_completed(tx_hash)
         return self.parse_deploy(transaction)
 
     def create_transaction_for_upgrade(self,

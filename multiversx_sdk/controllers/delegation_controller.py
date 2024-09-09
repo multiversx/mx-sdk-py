@@ -1,4 +1,4 @@
-from typing import Any, List, Sequence
+from typing import List, Protocol, Sequence
 
 from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.controllers.network_provider_wrapper import ProviderWrapper
@@ -16,9 +16,13 @@ from multiversx_sdk.network_providers.transaction_awaiter import \
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
+class INetworkProvider(Protocol):
+    ...
+
+
 class DelegationController:
-    def __init__(self, chain_id: str, network_provider: Any) -> None:
-        self.provider = network_provider
+    def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
+        self.transaction_awaiter = TransactionAwaiter(ProviderWrapper(network_provider))
         self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.parser = DelegationTransactionsOutcomeParser()
         self.tx_computer = TransactionComputer()
@@ -49,9 +53,7 @@ class DelegationController:
         return self.parser.parse_create_new_delegation_contract(tx_outcome)
 
     def await_completed_create_new_delegation_contract(self, tx_hash: str) -> List[CreateNewDelegationContractOutcome]:
-        provider = ProviderWrapper(self.provider)
-        transaction_awaiter = TransactionAwaiter(provider)
-        transaction = transaction_awaiter.await_completed(tx_hash)
+        transaction = self.transaction_awaiter.await_completed(tx_hash)
         return self.parse_create_new_delegation_contract(transaction)
 
     def create_transaction_for_adding_nodes(self,
