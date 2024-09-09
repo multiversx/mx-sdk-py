@@ -47,6 +47,7 @@ class TestEntrypoint:
         )
 
         tx_hash = self.entrypoint.send_transaction(transaction)
+        time.sleep(1)
         outcome = controller.await_completed_deploy(tx_hash)
 
         assert len(outcome.contracts) == 1
