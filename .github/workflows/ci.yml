@@ -1,9 +1,10 @@
 name: CI
 
 on:
-  pull_request:
-  push:
-    branches: [main, feat/*]
+  workflow_run:
+    workflows: ["Run tests"] # Waits until the tests worflow is completed, then this workflow starts running
+    types:
+      - completed
 
 jobs:
   coverage:
