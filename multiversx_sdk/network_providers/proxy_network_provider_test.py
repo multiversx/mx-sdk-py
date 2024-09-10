@@ -237,19 +237,19 @@ class TestProxy:
         assert hashes == {"0": f"{expected_hashes[0]}", "1": f"{expected_hashes[1]}"}
 
     def test_send_and_await_for_completed_transaction(self):
-        alice = load_wallets()["alice"]
+        bob = load_wallets()["bob"]
         tx_computer = TransactionComputer()
 
         transaction = Transaction(
-            sender=alice.label,
-            receiver=alice.label,
+            sender=bob.label,
+            receiver=bob.label,
             gas_limit=50000,
             chain_id="D",
         )
-        nonce = self.proxy.get_account(Address.new_from_bech32(alice.label)).nonce
+        nonce = self.proxy.get_account(Address.new_from_bech32(bob.label)).nonce
 
         transaction.nonce = nonce
-        transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         hash = self.proxy.send_transaction(transaction)
 
@@ -257,14 +257,14 @@ class TestProxy:
         assert tx_on_network.status.is_executed()
 
         transaction = Transaction(
-            sender=alice.label,
+            sender=bob.label,
             receiver="erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094",
             gas_limit=5000000,
             chain_id="D",
             data="dummy@05".encode()
         )
         transaction.nonce = nonce + 1
-        transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         def condition(tx: TransactionOnNetwork) -> bool:
             return tx.status.is_failed()
