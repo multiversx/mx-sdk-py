@@ -17,7 +17,8 @@ from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
 from multiversx_sdk.network_providers.contract_query_response import \
     ContractQueryResponse
-from multiversx_sdk.network_providers.errors import GenericError
+from multiversx_sdk.network_providers.errors import (GenericError,
+                                                     TransactionFetchingError)
 from multiversx_sdk.network_providers.interface import IAddress, IContractQuery
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_status import NetworkStatus
@@ -117,10 +118,11 @@ class ProxyNetworkProvider:
 
                 process_status = status_task.result(timeout=5) if status_task else None
                 tx = tx_task.result(timeout=5)
+
             except TimeoutError:
                 raise TimeoutError("Fetching transaction or process status timed out")
-            except Exception as e:
-                raise Exception(f"An error occured: {str(e)}")
+            except GenericError as ge:
+                raise TransactionFetchingError(ge.url, ge.data)
 
         return TransactionOnNetwork.from_proxy_http_response(tx_hash, tx, process_status)
 

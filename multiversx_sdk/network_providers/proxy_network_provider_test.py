@@ -1,5 +1,3 @@
-import time
-
 import pytest
 
 from multiversx_sdk.core.address import Address
@@ -254,7 +252,6 @@ class TestProxy:
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         hash = self.proxy.send_transaction(transaction)
-        time.sleep(1)
 
         tx_on_network = self.proxy.await_transaction_completed(hash)
         assert tx_on_network.status.is_executed()
@@ -273,7 +270,6 @@ class TestProxy:
             return tx.status.is_failed()
 
         hash = self.proxy.send_transaction(transaction)
-        time.sleep(1)
 
         tx_on_network = self.proxy.await_transaction_on_condition(
             tx_hash=hash,

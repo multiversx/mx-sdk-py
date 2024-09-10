@@ -16,7 +16,8 @@ from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
 from multiversx_sdk.network_providers.contract_query_response import \
     ContractQueryResponse
-from multiversx_sdk.network_providers.errors import GenericError
+from multiversx_sdk.network_providers.errors import (GenericError,
+                                                     TransactionFetchingError)
 from multiversx_sdk.network_providers.interface import (IAddress,
                                                         IContractQuery,
                                                         IPagination)
@@ -129,7 +130,11 @@ class ApiNetworkProvider:
         return ContractQueryResponse.from_http_response(response)
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        response = self.do_get_generic(f'transactions/{tx_hash}')
+        try:
+            response = self.do_get_generic(f'transactions/{tx_hash}')
+        except GenericError as ge:
+            raise TransactionFetchingError(ge.url, ge.data)
+
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
         return transaction
 

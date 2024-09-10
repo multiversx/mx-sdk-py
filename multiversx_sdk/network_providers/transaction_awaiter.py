@@ -1,3 +1,4 @@
+import logging
 import time
 from typing import Callable, Optional, Protocol, Union
 
@@ -5,10 +6,13 @@ from multiversx_sdk.network_providers.constants import (
     DEFALT_PATIENCE_IN_MILLISECONDS, DEFAULT_POLLING_INTERVAL_IN_MILLISECONDS,
     DEFAULT_TIMEOUT_IN_MILLISECONDS)
 from multiversx_sdk.network_providers.errors import (
-    ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction)
+    ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction,
+    TransactionFetchingError)
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 ONE_SECOND_IN_MILLISECONDS = 1000
+
+logger = logging.getLogger("transaction_awaiter")
 
 
 class ITransactionFetcher(Protocol):
@@ -92,6 +96,8 @@ class TransactionAwaiter:
 
                 if is_condition_satisfied:
                     break
+            except TransactionFetchingError:
+                logger.warning("Couldn't fetch transaction. Retrying...")
             except Exception as ex:
                 raise ex
 

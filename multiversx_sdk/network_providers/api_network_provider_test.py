@@ -1,5 +1,4 @@
 import base64
-import time
 
 import pytest
 
@@ -231,7 +230,6 @@ class TestApi:
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         hash = self.api.send_transaction(transaction)
-        time.sleep(1)
 
         tx_on_network = self.api.await_transaction_completed(hash)
         assert tx_on_network.status.is_executed()
@@ -250,7 +248,6 @@ class TestApi:
             return tx.status.is_failed()
 
         hash = self.api.send_transaction(transaction)
-        time.sleep(1)
 
         tx_on_network = self.api.await_transaction_on_condition(
             tx_hash=hash,
