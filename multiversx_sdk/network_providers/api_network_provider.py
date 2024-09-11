@@ -9,7 +9,8 @@ from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import (DefaultPagination,
                                                      NetworkProviderConfig)
-from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
+from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
+                                                        DEFAULT_ADDRESS_HRP)
 from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
 from multiversx_sdk.network_providers.contract_query_response import \
@@ -38,6 +39,7 @@ from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionInMempool, TransactionOnNetwork)
+from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 
@@ -54,6 +56,9 @@ class ApiNetworkProvider:
         self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
 
         self.config = config if config is not None else NetworkProviderConfig()
+
+        self.user_agent_prefix = f"{BASE_USER_AGENT}/api"
+        extend_user_agent(self.user_agent_prefix, self.config)
 
     def get_network_config(self) -> NetworkConfig:
         return self.backing_proxy.get_network_config()
