@@ -3,8 +3,9 @@ import time
 from typing import Callable, Optional, Protocol, Union
 
 from multiversx_sdk.network_providers.constants import (
-    DEFALT_PATIENCE_IN_MILLISECONDS, DEFAULT_POLLING_INTERVAL_IN_MILLISECONDS,
-    DEFAULT_TIMEOUT_IN_MILLISECONDS)
+    DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
+    DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
+    DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS)
 from multiversx_sdk.network_providers.errors import (
     ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction,
     TransactionFetchingError)
@@ -38,17 +39,17 @@ class TransactionAwaiter:
         self.fetcher = fetcher
 
         if polling_interval_in_milliseconds is None:
-            self.polling_interval_in_milliseconds = DEFAULT_POLLING_INTERVAL_IN_MILLISECONDS
+            self.polling_interval_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
         else:
             self.polling_interval_in_milliseconds = polling_interval_in_milliseconds
 
         if timeout_interval_in_milliseconds is None:
-            self.timeout_interval_in_milliseconds = DEFAULT_TIMEOUT_IN_MILLISECONDS
+            self.timeout_interval_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
         else:
             self.timeout_interval_in_milliseconds = timeout_interval_in_milliseconds
 
         if patience_time_in_milliseconds is None:
-            self.patience_time_in_milliseconds = DEFALT_PATIENCE_IN_MILLISECONDS
+            self.patience_time_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
         else:
             self.patience_time_in_milliseconds = patience_time_in_milliseconds
 

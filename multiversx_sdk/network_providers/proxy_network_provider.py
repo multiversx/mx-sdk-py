@@ -1,15 +1,13 @@
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
-from dataclasses import asdict
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
-from requests.auth import AuthBase
 
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
-from multiversx_sdk.network_providers.config import DefaultRequestsConfig
+from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import (DEFAULT_ADDRESS_HRP,
                                                         ESDT_CONTRACT_ADDRESS,
                                                         METACHAIN_ID)
@@ -25,6 +23,7 @@ from multiversx_sdk.network_providers.network_status import NetworkStatus
 from multiversx_sdk.network_providers.resources import (AwaitingOptions,
                                                         GenericResponse,
                                                         SimulateResponse)
+from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from multiversx_sdk.network_providers.tokens import (
@@ -41,14 +40,14 @@ class ProxyNetworkProvider:
     def __init__(
             self,
             url: str,
-            auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP,
-            requests_config: DefaultRequestsConfig = DefaultRequestsConfig()
+            address_hrp: Optional[str] = None,
+            config: Optional[NetworkProviderConfig] = None
     ) -> None:
         self.url = url
-        self.auth = auth
-        self.address_hrp = address_hrp
-        self.requests_config = requests_config
+
+        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+
+        self.config = config if config is not None else NetworkProviderConfig()
 
     def get_network_config(self) -> NetworkConfig:
         response = self.do_get_generic('network/config')
@@ -116,8 +115,8 @@ class ProxyNetworkProvider:
 
                 tx_task = executor.submit(get_tx)
 
-                process_status = status_task.result(timeout=5) if status_task else None
-                tx = tx_task.result(timeout=5)
+                process_status = status_task.result() if status_task else None
+                tx = tx_task.result()
 
             except TimeoutError:
                 raise TimeoutError("Fetching transaction or process status timed out")
@@ -146,8 +145,7 @@ class ProxyNetworkProvider:
         return num_sent, hashes
 
     def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        if isinstance(tx_hash, bytes):
-            tx_hash = tx_hash.hex()
+        tx_hash = convert_tx_hash_to_string(tx_hash)
 
         if options is None:
             options = AwaitingOptions()
@@ -165,8 +163,7 @@ class ProxyNetworkProvider:
                                        tx_hash: Union[str, bytes],
                                        condition: Callable[[TransactionOnNetwork], bool],
                                        options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        if isinstance(tx_hash, bytes):
-            tx_hash = tx_hash.hex()
+        tx_hash = convert_tx_hash_to_string(tx_hash)
 
         if options is None:
             options = AwaitingOptions()
@@ -229,7 +226,7 @@ class ProxyNetworkProvider:
 
     def do_get(self, url: str) -> GenericResponse:
         try:
-            response = requests.get(url, auth=self.auth, **asdict(self.requests_config))
+            response = requests.get(url, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)
@@ -243,7 +240,7 @@ class ProxyNetworkProvider:
 
     def do_post(self, url: str, payload: Any) -> GenericResponse:
         try:
-            response = requests.post(url, json=payload, auth=self.auth, **asdict(self.requests_config))
+            response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)

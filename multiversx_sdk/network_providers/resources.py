@@ -1,8 +1,9 @@
 from typing import Any, Dict, List
 
 from multiversx_sdk.network_providers.constants import (
-    DEFALT_PATIENCE_IN_MILLISECONDS, DEFAULT_POLLING_INTERVAL_IN_MILLISECONDS,
-    DEFAULT_TIMEOUT_IN_MILLISECONDS)
+    DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
+    DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
+    DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS)
 
 
 class GenericResponse:
@@ -90,9 +91,9 @@ class SimulateResponse:
 
 class AwaitingOptions:
     def __init__(self,
-                 polling_interval_in_milliseconds: int = DEFAULT_POLLING_INTERVAL_IN_MILLISECONDS,
-                 timeout_in_milliseconds: int = DEFAULT_TIMEOUT_IN_MILLISECONDS,
-                 patience_in_milliseconds: int = DEFALT_PATIENCE_IN_MILLISECONDS) -> None:
+                 polling_interval_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
+                 timeout_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS,
+                 patience_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS) -> None:
         self.polling_interval_in_milliseconds = polling_interval_in_milliseconds
         self.timeout_in_milliseconds = timeout_in_milliseconds
         self.patience_in_milliseconds = patience_in_milliseconds

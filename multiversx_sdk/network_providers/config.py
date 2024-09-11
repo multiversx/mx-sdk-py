@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from typing import Any, Dict, Optional
 
 from multiversx_sdk.network_providers.interface import IPagination
 
@@ -15,7 +15,7 @@ class DefaultPagination(IPagination):
         return self.size
 
 
-@dataclass
-class DefaultRequestsConfig:
-    # by default, timeout requests after 5 seconds
-    timeout: int = 5
+class NetworkProviderConfig:
+    def __init__(self, requests_options: Optional[Dict[str, Any]] = None) -> None:
+        self.requests_options = requests_options or {}
+        self.requests_options.setdefault("timeout", 5)

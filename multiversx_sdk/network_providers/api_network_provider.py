@@ -1,16 +1,14 @@
-from dataclasses import asdict
 from typing import (Any, Callable, Dict, List, Optional, Sequence, Tuple,
                     Union, cast)
 
 import requests
-from requests.auth import AuthBase
 
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import (DefaultPagination,
-                                                     DefaultRequestsConfig)
+                                                     NetworkProviderConfig)
 from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
 from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
@@ -29,6 +27,7 @@ from multiversx_sdk.network_providers.network_status import NetworkStatus
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 from multiversx_sdk.network_providers.resources import AwaitingOptions
+from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from multiversx_sdk.network_providers.tokens import (
@@ -46,14 +45,15 @@ class ApiNetworkProvider:
     def __init__(
             self,
             url: str,
-            auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP,
-            requests_config: DefaultRequestsConfig = DefaultRequestsConfig()
+            address_hrp: Optional[str] = None,
+            config: Optional[NetworkProviderConfig] = None
     ) -> None:
         self.url = url
-        self.backing_proxy = ProxyNetworkProvider(url, auth, address_hrp)
-        self.auth = auth
-        self.requests_config = requests_config
+
+        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
+
+        self.config = config if config is not None else NetworkProviderConfig()
 
     def get_network_config(self) -> NetworkConfig:
         return self.backing_proxy.get_network_config()
@@ -187,8 +187,7 @@ class ApiNetworkProvider:
         return response
 
     def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        if isinstance(tx_hash, bytes):
-            tx_hash = tx_hash.hex()
+        tx_hash = convert_tx_hash_to_string(tx_hash)
 
         if options is None:
             options = AwaitingOptions()
@@ -206,8 +205,7 @@ class ApiNetworkProvider:
                                        tx_hash: Union[str, bytes],
                                        condition: Callable[[TransactionOnNetwork], bool],
                                        options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        if isinstance(tx_hash, bytes):
-            tx_hash = tx_hash.hex()
+        tx_hash = convert_tx_hash_to_string(tx_hash)
 
         if options is None:
             options = AwaitingOptions()
@@ -241,7 +239,7 @@ class ApiNetworkProvider:
 
     def __do_get(self, url: str) -> Any:
         try:
-            response = requests.get(url, auth=self.auth, **asdict(self.requests_config))
+            response = requests.get(url, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
@@ -255,7 +253,7 @@ class ApiNetworkProvider:
 
     def do_post(self, url: str, payload: Any) -> Dict[str, Any]:
         try:
-            response = requests.post(url, json=payload, auth=self.auth, **asdict(self.requests_config))
+            response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return cast(Dict[str, Any], self._get_data(parsed, url))
