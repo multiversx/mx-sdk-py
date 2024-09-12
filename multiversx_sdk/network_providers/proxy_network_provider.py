@@ -8,7 +8,8 @@ from multiversx_sdk.converters.transactions_converter import \
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.constants import (DEFAULT_ADDRESS_HRP,
+from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
+                                                        DEFAULT_ADDRESS_HRP,
                                                         ESDT_CONTRACT_ADDRESS,
                                                         METACHAIN_ID)
 from multiversx_sdk.network_providers.contract_query_requests import \
@@ -34,6 +35,7 @@ from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionOnNetwork)
+from multiversx_sdk.network_providers.user_agent import extend_user_agent
 
 
 class ProxyNetworkProvider:
@@ -44,6 +46,9 @@ class ProxyNetworkProvider:
         self.url = url
         self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
         self.config = config if config is not None else NetworkProviderConfig()
+
+        self.user_agent_prefix = f"{BASE_USER_AGENT}/proxy"
+        extend_user_agent(self.user_agent_prefix, self.config)
 
     def get_network_config(self) -> NetworkConfig:
         response = self.do_get_generic('network/config')

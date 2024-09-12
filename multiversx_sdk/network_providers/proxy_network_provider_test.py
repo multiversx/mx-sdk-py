@@ -1,8 +1,10 @@
 import pytest
+import requests
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.proxy_network_provider import (
     ContractQuery, ProxyNetworkProvider)
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
@@ -276,3 +278,17 @@ class TestProxy:
             condition=condition
         )
         assert tx_on_network.status.is_failed()
+
+    def test_user_agent(self):
+        # using the previoulsy instantiated provider without user agent
+        response = requests.get(self.proxy.url + "/network/config", **self.proxy.config.requests_options)
+        headers = response.request.headers
+        assert headers.get("User-Agent") == "multiversx-sdk/proxy/unknown"
+
+        # using the new instantiated provider with user agent
+        config = NetworkProviderConfig(client_name="test-client")
+        proxy = ProxyNetworkProvider(url='https://devnet-gateway.multiversx.com', config=config)
+
+        response = requests.get(proxy.url + "/network/config", **proxy.config.requests_options)
+        headers = response.request.headers
+        assert headers.get("User-Agent") == "multiversx-sdk/proxy/test-client"
