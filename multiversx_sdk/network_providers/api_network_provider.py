@@ -42,17 +42,13 @@ from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(
-            self,
-            url: str,
-            address_hrp: Optional[str] = None,
-            config: Optional[NetworkProviderConfig] = None
-    ) -> None:
+    def __init__(self,
+                 url: str,
+                 address_hrp: Optional[str] = None,
+                 config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-
         self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
         self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
-
         self.config = config if config is not None else NetworkProviderConfig()
 
     def get_network_config(self) -> NetworkConfig:

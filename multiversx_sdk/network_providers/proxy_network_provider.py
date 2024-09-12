@@ -37,16 +37,12 @@ from multiversx_sdk.network_providers.transactions import (
 
 
 class ProxyNetworkProvider:
-    def __init__(
-            self,
-            url: str,
-            address_hrp: Optional[str] = None,
-            config: Optional[NetworkProviderConfig] = None
-    ) -> None:
+    def __init__(self,
+                 url: str,
+                 address_hrp: Optional[str] = None,
+                 config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-
         self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
-
         self.config = config if config is not None else NetworkProviderConfig()
 
     def get_network_config(self) -> NetworkConfig:
