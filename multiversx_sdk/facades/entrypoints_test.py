@@ -1,4 +1,3 @@
-import time
 from pathlib import Path
 
 import pytest
@@ -47,7 +46,6 @@ class TestEntrypoint:
         )
 
         tx_hash = self.entrypoint.send_transaction(transaction)
-        time.sleep(1)
         outcome = controller.await_completed_deploy(tx_hash)
 
         assert len(outcome.contracts) == 1
@@ -64,7 +62,6 @@ class TestEntrypoint:
         )
 
         tx_hash = self.entrypoint.send_transaction(transaction)
-        time.sleep(1)
         self.entrypoint.await_completed_transaction(tx_hash)
 
         query_result = controller.query_contract(

@@ -1,19 +1,21 @@
-from typing import Any, Dict, List, Sequence, Tuple, Union, cast
+from typing import (Any, Callable, Dict, List, Optional, Sequence, Tuple,
+                    Union, cast)
 
 import requests
-from requests.auth import AuthBase
 
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
-from multiversx_sdk.network_providers.config import DefaultPagination
+from multiversx_sdk.network_providers.config import (DefaultPagination,
+                                                     NetworkProviderConfig)
 from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
 from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
 from multiversx_sdk.network_providers.contract_query_response import \
     ContractQueryResponse
-from multiversx_sdk.network_providers.errors import GenericError
+from multiversx_sdk.network_providers.errors import (GenericError,
+                                                     TransactionFetchingError)
 from multiversx_sdk.network_providers.interface import (IAddress,
                                                         IContractQuery,
                                                         IPagination)
@@ -24,10 +26,14 @@ from multiversx_sdk.network_providers.network_stake import NetworkStake
 from multiversx_sdk.network_providers.network_status import NetworkStatus
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
+from multiversx_sdk.network_providers.resources import AwaitingOptions
+from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
 from multiversx_sdk.network_providers.tokens import (
     FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
+from multiversx_sdk.network_providers.transaction_awaiter import \
+    TransactionAwaiter
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
@@ -36,15 +42,14 @@ from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 
 class ApiNetworkProvider:
-    def __init__(
-            self,
-            url: str,
-            auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP
-    ) -> None:
+    def __init__(self,
+                 url: str,
+                 address_hrp: Optional[str] = None,
+                 config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-        self.backing_proxy = ProxyNetworkProvider(url, auth, address_hrp)
-        self.auth = auth
+        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
+        self.config = config if config is not None else NetworkProviderConfig()
 
     def get_network_config(self) -> NetworkConfig:
         return self.backing_proxy.get_network_config()
@@ -121,7 +126,11 @@ class ApiNetworkProvider:
         return ContractQueryResponse.from_http_response(response)
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        response = self.do_get_generic(f'transactions/{tx_hash}')
+        try:
+            response = self.do_get_generic(f'transactions/{tx_hash}')
+        except GenericError as ge:
+            raise TransactionFetchingError(ge.url, ge.data)
+
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
         return transaction
 
@@ -173,6 +182,39 @@ class ApiNetworkProvider:
         response = self.backing_proxy.send_transactions(transactions)
         return response
 
+    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        tx_hash = convert_tx_hash_to_string(tx_hash)
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_completed(tx_hash)
+
+    def await_transaction_on_condition(self,
+                                       tx_hash: Union[str, bytes],
+                                       condition: Callable[[TransactionOnNetwork], bool],
+                                       options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        tx_hash = convert_tx_hash_to_string(tx_hash)
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_on_condition(tx_hash, condition)
+
     def _build_pagination_params(self, pagination: IPagination) -> str:
         return f'from={pagination.get_start()}&size={pagination.get_size()}'
 
@@ -193,7 +235,7 @@ class ApiNetworkProvider:
 
     def __do_get(self, url: str) -> Any:
         try:
-            response = requests.get(url, auth=self.auth)
+            response = requests.get(url, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
@@ -207,7 +249,7 @@ class ApiNetworkProvider:
 
     def do_post(self, url: str, payload: Any) -> Dict[str, Any]:
         try:
-            response = requests.post(url, json=payload, auth=self.auth)
+            response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return cast(Dict[str, Any], self._get_data(parsed, url))

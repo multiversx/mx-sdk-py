@@ -2,8 +2,11 @@ import pytest
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.proxy_network_provider import (
     ContractQuery, ProxyNetworkProvider)
+from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
+from multiversx_sdk.testutils.wallets import load_wallets
 
 
 @pytest.mark.networkInteraction
@@ -124,7 +127,7 @@ class TestProxy:
         assert result.block_nonce == 835600
         assert result.epoch == 348
         assert result.hash == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
-        assert result.is_completed is None
+        assert result.is_completed
         assert result.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert result.contract_results.items == []
 
@@ -232,3 +235,44 @@ class TestProxy:
         num_txs, hashes = self.proxy.send_transactions(transactions)
         assert num_txs == 2
         assert hashes == {"0": f"{expected_hashes[0]}", "1": f"{expected_hashes[1]}"}
+
+    def test_send_and_await_for_completed_transaction(self):
+        bob = load_wallets()["bob"]
+        tx_computer = TransactionComputer()
+
+        transaction = Transaction(
+            sender=bob.label,
+            receiver=bob.label,
+            gas_limit=50000,
+            chain_id="D",
+        )
+        nonce = self.proxy.get_account(Address.new_from_bech32(bob.label)).nonce
+
+        transaction.nonce = nonce
+        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        hash = self.proxy.send_transaction(transaction)
+
+        tx_on_network = self.proxy.await_transaction_completed(hash)
+        assert tx_on_network.status.is_executed()
+
+        transaction = Transaction(
+            sender=bob.label,
+            receiver="erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094",
+            gas_limit=5000000,
+            chain_id="D",
+            data="dummy@05".encode()
+        )
+        transaction.nonce = nonce + 1
+        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        def condition(tx: TransactionOnNetwork) -> bool:
+            return tx.status.is_failed()
+
+        hash = self.proxy.send_transaction(transaction)
+
+        tx_on_network = self.proxy.await_transaction_on_condition(
+            tx_hash=hash,
+            condition=condition
+        )
+        assert tx_on_network.status.is_failed()

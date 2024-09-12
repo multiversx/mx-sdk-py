@@ -1,11 +1,19 @@
+import logging
 import time
 from typing import Callable, Optional, Protocol, Union
 
+from multiversx_sdk.network_providers.constants import (
+    DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
+    DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
+    DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS)
 from multiversx_sdk.network_providers.errors import (
-    ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction)
+    ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction,
+    TransactionFetchingError)
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 ONE_SECOND_IN_MILLISECONDS = 1000
+
+logger = logging.getLogger("transaction_awaiter")
 
 
 class ITransactionFetcher(Protocol):
@@ -15,9 +23,6 @@ class ITransactionFetcher(Protocol):
 
 class TransactionAwaiter:
     """TransactionAwaiter allows one to await until a specific event (such as transaction completion) occurs on a given transaction."""
-    default_polling_interval = 6000
-    default_timeout = default_polling_interval * 15
-    default_patience = 0
 
     def __init__(self,
                  fetcher: ITransactionFetcher,
@@ -34,17 +39,17 @@ class TransactionAwaiter:
         self.fetcher = fetcher
 
         if polling_interval_in_milliseconds is None:
-            self.polling_interval_in_milliseconds = TransactionAwaiter.default_polling_interval
+            self.polling_interval_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
         else:
             self.polling_interval_in_milliseconds = polling_interval_in_milliseconds
 
         if timeout_interval_in_milliseconds is None:
-            self.timeout_interval_in_milliseconds = TransactionAwaiter.default_timeout
+            self.timeout_interval_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
         else:
             self.timeout_interval_in_milliseconds = timeout_interval_in_milliseconds
 
         if patience_time_in_milliseconds is None:
-            self.patience_time_in_milliseconds = TransactionAwaiter.default_patience
+            self.patience_time_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
         else:
             self.patience_time_in_milliseconds = patience_time_in_milliseconds
 
@@ -92,6 +97,8 @@ class TransactionAwaiter:
 
                 if is_condition_satisfied:
                     break
+            except TransactionFetchingError:
+                logger.warning("Couldn't fetch transaction. Retrying...")
             except Exception as ex:
                 raise ex
 
