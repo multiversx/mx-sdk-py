@@ -1,11 +1,8 @@
-import base64
 from typing import (Any, Callable, Dict, List, Optional, Sequence, Tuple,
                     Union, cast)
 
 import requests
 
-from multiversx_sdk.converters.smart_contract_query_converter import \
-    SmartContractQueryConverter
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.smart_contract_query import (
@@ -18,6 +15,9 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
                                                         DEFAULT_ADDRESS_HRP)
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
+from multiversx_sdk.network_providers.http_resources import (
+    raw_query_response_to_smart_contract_query_response,
+    smart_contract_query_to_dictionary)
 from multiversx_sdk.network_providers.interface import IAddress, IPagination
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_general_statistics import \
@@ -125,20 +125,9 @@ class ApiNetworkProvider:
         return result
 
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
-        query_converter = SmartContractQueryConverter()
-        request = query_converter.smart_contract_query_to_dictionary(query)
+        request = smart_contract_query_to_dictionary(query)
         response = self.do_post_generic('query', request)
-
-        return_data = response.get('returnData', []) or response.get('ReturnData', [])
-        return_code = response.get('returnCode', '') or response.get('ReturnCode', '')
-        return_message = response.get('returnMessage', '') or response.get('ReturnMessage', '')
-
-        return SmartContractQueryResponse(
-            function=query.function,
-            return_code=return_code,
-            return_message=return_message,
-            return_data_parts=[base64.b64decode(item) for item in return_data]
-        )
+        return raw_query_response_to_smart_contract_query_response(response, query.function)
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
         try:
