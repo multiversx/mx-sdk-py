@@ -4,6 +4,7 @@ import pytest
 import requests
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.smart_contract_query import SmartContractQuery
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.api_network_provider import \
@@ -11,8 +12,6 @@ from multiversx_sdk.network_providers.api_network_provider import \
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.interface import IPagination
-from multiversx_sdk.network_providers.proxy_network_provider import \
-    ContractQuery
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.testutils.wallets import load_wallets
 
@@ -160,10 +159,13 @@ class TestApi:
         assert result.status == 'success'
 
     def test_query_contract(self):
-        query = ContractQuery(Address.new_from_bech32('erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4'),
-                              'getSum', 0, [])
+        query = SmartContractQuery(
+            contract="erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4",
+            function="getSum",
+            arguments=[],
+        )
         result = self.api.query_contract(query)
-        assert len(result.return_data) == 1
+        assert len(result.return_data_parts) == 1
 
     def test_get_definition_of_fungible_token(self):
         result = self.api.get_definition_of_fungible_token('TEST-ff155e')

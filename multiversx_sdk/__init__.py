@@ -1,4 +1,3 @@
-from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
 from multiversx_sdk.controllers.account_controller import AccountController
 from multiversx_sdk.controllers.delegation_controller import \
     DelegationController
@@ -99,7 +98,7 @@ __all__ = [
     "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
     "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
-    "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
+    "UserWallet", "UserPEM", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
     "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
     "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse",
     "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser",

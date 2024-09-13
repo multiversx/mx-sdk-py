@@ -4,14 +4,13 @@ from typing import Any, Callable, Dict, List
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.core.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.accounts import AccountOnNetwork
-from multiversx_sdk.network_providers.contract_query_response import \
-    ContractQueryResponse
 from multiversx_sdk.network_providers.contract_results import (
     ContractResultItem, ContractResults)
-from multiversx_sdk.network_providers.interface import IContractQuery
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
@@ -65,9 +64,9 @@ class MockNetworkProvider:
         transaction.is_completed = False
         self.transactions[hash] = transaction
 
-    def mock_query_contract_on_function(self, function: str, response: ContractQueryResponse) -> None:
-        def predicate(query: IContractQuery) -> bool:
-            return query.get_function() == function
+    def mock_query_contract_on_function(self, function: str, response: SmartContractQueryResponse) -> None:
+        def predicate(query: SmartContractQuery) -> bool:
+            return query.function == function
 
         self.query_contract_responders.append(QueryContractResponder(predicate, response))
 
@@ -135,7 +134,7 @@ class MockNetworkProvider:
         transaction = self.get_transaction(tx_hash)
         return transaction.status
 
-    def query_contract(self, query: IContractQuery) -> ContractQueryResponse:
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         for responder in self.query_contract_responders:
             if responder.matches(query):
                 return responder.response
@@ -144,7 +143,7 @@ class MockNetworkProvider:
 
 
 class QueryContractResponder:
-    def __init__(self, matches: Callable[[IContractQuery], bool], response: ContractQueryResponse) -> None:
+    def __init__(self, matches: Callable[[SmartContractQuery], bool], response: SmartContractQueryResponse) -> None:
         self.matches = matches
         self.response = response
 
