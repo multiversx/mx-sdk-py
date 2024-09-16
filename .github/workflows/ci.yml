@@ -13,6 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
         python-version: [3.11]
+      max-parallel: 1  # This ensures jobs run sequentially, not concurrently
 
     name: Check coverage
     permissions:
