@@ -128,34 +128,6 @@
 
 
 
-<div class="viewcode-block" id="IToken">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IToken">[docs]</a>
-<span class="k">class</span> <span class="nc">IToken</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span></div>
-
-
-
-<div class="viewcode-block" id="ITokenTransfer">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITokenTransfer">[docs]</a>
-<span class="k">class</span> <span class="nc">ITokenTransfer</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">token</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IToken</span><span class="p">:</span>
-        <span class="o">...</span>
-
-    <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span></div>
-
-
-
-<div class="viewcode-block" id="ITokenIdentifierParts">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITokenIdentifierParts">[docs]</a>
-<span class="k">class</span> <span class="nc">ITokenIdentifierParts</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">random_sequence</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span></div>
-
-
-
 <span class="n">INonce</span> <span class="o">=</span> <span class="nb">int</span>
 <span class="n">IGasPrice</span> <span class="o">=</span> <span class="nb">int</span>
 <span class="n">IGasLimit</span> <span class="o">=</span> <span class="nb">int</span>

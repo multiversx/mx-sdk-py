@@ -79,7 +79,6 @@
     <span class="n">EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER</span><span class="p">,</span> <span class="n">TOKEN_RANDOM_SEQUENCE_LENGTH</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BadUsageError</span><span class="p">,</span>
                                         <span class="n">InvalidTokenIdentifierError</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IToken</span><span class="p">,</span> <span class="n">ITokenIdentifierParts</span>
 
 
 <div class="viewcode-block" id="Token">
@@ -94,7 +93,7 @@
 <div class="viewcode-block" id="TokenTransfer">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TokenTransfer">[docs]</a>
 <span class="k">class</span> <span class="nc">TokenTransfer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">IToken</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">Token</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;`amount` should always be in atomic units: 1.000000 &quot;USDC-c76f1f&quot; = &quot;1000000&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
@@ -127,7 +126,7 @@
 
 <div class="viewcode-block" id="TokenComputer.is_fungible">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TokenComputer.is_fungible">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">IToken</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">Token</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">token</span><span class="o">.</span><span class="n">nonce</span> <span class="o">==</span> <span class="mi">0</span></div>
 
 
@@ -202,7 +201,7 @@
 
 <div class="viewcode-block" id="TokenComputer.compute_extended_identifier_from_parts">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TokenComputer.compute_extended_identifier_from_parts">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_extended_identifier_from_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="n">ITokenIdentifierParts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compute_extended_identifier_from_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="n">TokenIdentifierParts</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">identifier</span> <span class="o">=</span> <span class="n">parts</span><span class="o">.</span><span class="n">ticker</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">parts</span><span class="o">.</span><span class="n">random_sequence</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_extended_identifier_from_identifier_and_nonce</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">parts</span><span class="o">.</span><span class="n">nonce</span><span class="p">)</span></div>
 
