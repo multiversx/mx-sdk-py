@@ -1,7 +1,7 @@
 from typing import List, Optional, Protocol, Sequence
 
 from multiversx_sdk.core.errors import BadUsageError
-from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
+from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
@@ -47,7 +47,7 @@ class TransferTransactionsFactory:
     def create_transaction_for_esdt_token_transfer(self,
                                                    sender: IAddress,
                                                    receiver: IAddress,
-                                                   token_transfers: Sequence[ITokenTransfer]) -> Transaction:
+                                                   token_transfers: List[TokenTransfer]) -> Transaction:
         data_parts: List[str] = []
         extra_gas_for_transfer = 0
 
@@ -81,7 +81,7 @@ class TransferTransactionsFactory:
                                         sender: IAddress,
                                         receiver: IAddress,
                                         native_amount: Optional[int] = None,
-                                        token_transfers: Optional[Sequence[ITokenTransfer]] = None,
+                                        token_transfers: Optional[List[TokenTransfer]] = None,
                                         data: Optional[bytes] = None) -> Transaction:
         if token_transfers and data:
             raise BadUsageError("Can't set data field when sending esdt tokens")

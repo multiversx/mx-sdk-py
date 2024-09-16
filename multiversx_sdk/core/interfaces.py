@@ -40,25 +40,6 @@ class IMessage(Protocol):
     signer: str
 
 
-class IToken(Protocol):
-    identifier: str
-    nonce: int
-
-
-class ITokenTransfer(Protocol):
-    @property
-    def token(self) -> IToken:
-        ...
-
-    amount: int
-
-
-class ITokenIdentifierParts(Protocol):
-    ticker: str
-    random_sequence: str
-    nonce: int
-
-
 INonce = int
 IGasPrice = int
 IGasLimit = int
