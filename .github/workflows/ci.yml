@@ -44,13 +44,14 @@ jobs:
 
       - name: Coverage comment
         id: coverage_comment
+        if: matrix.os == 'ubuntu-latest'  # Run only on Ubuntu
         uses: py-cov-action/python-coverage-comment-action@v3
         with:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Store Pull Request comment to be posted
+        if: matrix.os == 'ubuntu-latest' && steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'  # Run only on Ubuntu
         uses: actions/upload-artifact@v3
-        if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
         with:
           name: python-coverage-comment-action
           path: python-coverage-comment-action.txt
