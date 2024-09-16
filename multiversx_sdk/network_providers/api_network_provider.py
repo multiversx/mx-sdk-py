@@ -16,8 +16,8 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
-    raw_query_response_to_smart_contract_query_response,
-    smart_contract_query_to_dictionary)
+    smart_contract_query_to_vm_query_request,
+    vm_query_response_to_smart_contract_query_response)
 from multiversx_sdk.network_providers.interface import IAddress, IPagination
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_general_statistics import \
@@ -125,9 +125,9 @@ class ApiNetworkProvider:
         return result
 
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
-        request = smart_contract_query_to_dictionary(query)
+        request = smart_contract_query_to_vm_query_request(query)
         response = self.do_post_generic('query', request)
-        return raw_query_response_to_smart_contract_query_response(response, query.function)
+        return vm_query_response_to_smart_contract_query_response(response, query.function)
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
         try:
