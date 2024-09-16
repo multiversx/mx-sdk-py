@@ -1,10 +1,15 @@
+import base64
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 
+from multiversx_sdk.converters.smart_contract_query_converter import \
+    SmartContractQueryConverter
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
+from multiversx_sdk.core.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
@@ -12,13 +17,9 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
                                                         DEFAULT_ADDRESS_HRP,
                                                         ESDT_CONTRACT_ADDRESS,
                                                         METACHAIN_ID)
-from multiversx_sdk.network_providers.contract_query_requests import \
-    ContractQueryRequest
-from multiversx_sdk.network_providers.contract_query_response import \
-    ContractQueryResponse
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
-from multiversx_sdk.network_providers.interface import IAddress, IContractQuery
+from multiversx_sdk.network_providers.interface import IAddress
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_status import NetworkStatus
 from multiversx_sdk.network_providers.resources import (AwaitingOptions,
@@ -178,10 +179,22 @@ class ProxyNetworkProvider:
 
         return awaiter.await_on_condition(tx_hash, condition)
 
-    def query_contract(self, query: IContractQuery) -> ContractQueryResponse:
-        request = ContractQueryRequest(query).to_http_request()
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
+        query_converter = SmartContractQueryConverter()
+        request = query_converter.smart_contract_query_to_dictionary(query)
         response = self.do_post_generic('vm-values/query', request)
-        return ContractQueryResponse.from_http_response(response.get('data', ''))
+        response = response.get('data', '')
+
+        return_data = response.get('returnData', []) or response.get('ReturnData', [])
+        return_code = response.get('returnCode', '') or response.get('ReturnCode', '')
+        return_message = response.get('returnMessage', '') or response.get('ReturnMessage', '')
+
+        return SmartContractQueryResponse(
+            function=query.function,
+            return_code=return_code,
+            return_message=return_message,
+            return_data_parts=[base64.b64decode(item) for item in return_data]
+        )
 
     def get_definition_of_fungible_token(self, token_identifier: str) -> DefinitionOfFungibleTokenOnNetwork:
         response = self.__get_token_properties(token_identifier)
@@ -190,10 +203,14 @@ class ProxyNetworkProvider:
 
     def __get_token_properties(self, identifier: str) -> List[bytes]:
         encoded_identifier = identifier.encode()
-        query = ContractQuery(ESDT_CONTRACT_ADDRESS, 'getTokenProperties', 0, [encoded_identifier])
+        query = SmartContractQuery(
+            contract=ESDT_CONTRACT_ADDRESS.to_bech32(),
+            function="getTokenProperties",
+            arguments=[encoded_identifier],
+        )
         query_response = self.query_contract(query)
-        properties = query_response.get_return_data_parts()
-        return properties
+
+        return query_response.return_data_parts
 
     def get_definition_of_token_collection(self, collection: str) -> DefinitionOfTokenCollectionOnNetwork:
         properties = self.__get_token_properties(collection)
@@ -268,27 +285,3 @@ class ProxyNetworkProvider:
             return response.json()
         except Exception:
             return response.text
-
-
-class ContractQuery(IContractQuery):
-    def __init__(self, address: IAddress, function: str, value: int, arguments: List[bytes], caller: Optional[IAddress] = None):
-        self.contract = address
-        self.function = function
-        self.caller = caller
-        self.value = value
-        self.encoded_arguments = [item.hex() for item in arguments]
-
-    def get_contract(self) -> IAddress:
-        return self.contract
-
-    def get_function(self) -> str:
-        return self.function
-
-    def get_encoded_arguments(self) -> Sequence[str]:
-        return self.encoded_arguments
-
-    def get_caller(self) -> Optional[IAddress]:
-        return self.caller
-
-    def get_value(self) -> int:
-        return self.value

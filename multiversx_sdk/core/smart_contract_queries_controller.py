@@ -10,8 +10,8 @@ from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 
 
-class IQueryRunner(Protocol):
-    def run_query(self, query: SmartContractQuery) -> SmartContractQueryResponse:
+class INetworkProvider(Protocol):
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         ...
 
 
@@ -24,8 +24,8 @@ class IAbi(Protocol):
 
 
 class SmartContractQueriesController:
-    def __init__(self, query_runner: IQueryRunner, abi: Optional[IAbi] = None) -> None:
-        self.query_runner = query_runner
+    def __init__(self, network_provider: INetworkProvider, abi: Optional[IAbi] = None) -> None:
+        self.network_provider = network_provider
         self.abi = abi
         self.serializer = Serializer(parts_separator=ARGS_SEPARATOR)
 
@@ -85,8 +85,7 @@ class SmartContractQueriesController:
         return args_to_buffers(args)
 
     def run_query(self, query: SmartContractQuery) -> SmartContractQueryResponse:
-        query_response = self.query_runner.run_query(query)
-        return query_response
+        return self.network_provider.query_contract(query)
 
     def parse_query_response(self, response: SmartContractQueryResponse) -> List[Any]:
         encoded_values = response.return_data_parts

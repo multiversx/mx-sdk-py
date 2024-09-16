@@ -1,20 +1,16 @@
-import base64
 from pathlib import Path
 
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.string_value import StringValue
-from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
 from multiversx_sdk.core.codec import encode_unsigned_number
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
-from multiversx_sdk.network_providers.contract_query_response import \
-    ContractQueryResponse
-from multiversx_sdk.network_providers.proxy_network_provider import \
-    ProxyNetworkProvider
+from multiversx_sdk.network_providers.api_network_provider import \
+    ApiNetworkProvider
 from multiversx_sdk.testutils.mock_network_provider import MockNetworkProvider
 
 
@@ -22,8 +18,7 @@ class TestSmartContractQueriesController:
     testdata = Path(__file__).parent.parent / "testutils" / "testdata"
 
     def test_create_query_without_arguments(self):
-        query_runner = QueryRunnerAdapter(MockNetworkProvider())
-        controller = SmartContractQueriesController(query_runner)
+        controller = SmartContractQueriesController(MockNetworkProvider())
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
 
@@ -40,8 +35,7 @@ class TestSmartContractQueriesController:
         assert query.value is None
 
     def test_create_query_with_arguments(self):
-        query_runner = QueryRunnerAdapter(MockNetworkProvider())
-        controller = SmartContractQueriesController(query_runner)
+        controller = SmartContractQueriesController(MockNetworkProvider())
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
 
@@ -58,9 +52,8 @@ class TestSmartContractQueriesController:
         assert query.value is None
 
     def test_create_query_with_arguments_with_abi(self):
-        query_runner = QueryRunnerAdapter(MockNetworkProvider())
         abi = Abi.load(self.testdata / "lottery-esdt.abi.json")
-        controller = SmartContractQueriesController(query_runner, abi)
+        controller = SmartContractQueriesController(MockNetworkProvider(), abi)
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getLotteryInfo"
 
@@ -86,12 +79,14 @@ class TestSmartContractQueriesController:
 
     def test_run_query_with_mock_provider(self):
         network_provider = MockNetworkProvider()
-        query_runner = QueryRunnerAdapter(network_provider)
-        controller = SmartContractQueriesController(query_runner)
+        controller = SmartContractQueriesController(network_provider)
 
-        contract_query_response = ContractQueryResponse()
-        contract_query_response.return_code = "ok"
-        contract_query_response.return_data = [base64.b64encode("abba".encode()).decode()]
+        contract_query_response = SmartContractQueryResponse(
+            function="bar",
+            return_code="ok",
+            return_message="",
+            return_data_parts=["abba".encode()]
+        )
 
         network_provider.mock_query_contract_on_function("bar", contract_query_response)
 
@@ -106,8 +101,7 @@ class TestSmartContractQueriesController:
         assert response.return_data_parts == ["abba".encode()]
 
     def test_parse_query_response(self):
-        query_runner = QueryRunnerAdapter(MockNetworkProvider())
-        controller = SmartContractQueriesController(query_runner)
+        controller = SmartContractQueriesController(MockNetworkProvider())
 
         response = SmartContractQueryResponse(
             function="bar",
@@ -120,9 +114,8 @@ class TestSmartContractQueriesController:
         assert parsed == ["abba".encode()]
 
     def test_parse_query_response_with_abi(self):
-        query_runner = QueryRunnerAdapter(MockNetworkProvider())
         abi = Abi.load(self.testdata / "lottery-esdt.abi.json")
-        controller = SmartContractQueriesController(query_runner, abi)
+        controller = SmartContractQueriesController(MockNetworkProvider(), abi)
 
         response = SmartContractQueryResponse(
             function="getLotteryInfo",
@@ -142,9 +135,8 @@ class TestSmartContractQueriesController:
 
     @pytest.mark.networkInteraction
     def test_run_query_on_network(self):
-        provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-        query_runner = QueryRunnerAdapter(provider)
-        controller = SmartContractQueriesController(query_runner)
+        provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        controller = SmartContractQueriesController(provider)
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
 
@@ -161,9 +153,8 @@ class TestSmartContractQueriesController:
 
     @pytest.mark.networkInteraction
     def test_query_on_network(self):
-        provider = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-        query_runner = QueryRunnerAdapter(provider)
-        controller = SmartContractQueriesController(query_runner)
+        provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        controller = SmartContractQueriesController(provider)
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
 

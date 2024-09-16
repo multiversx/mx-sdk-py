@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any, List, Optional, Protocol, Sequence, Union
 
-from multiversx_sdk.adapters.query_runner_adapter import QueryRunnerAdapter
 from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.controllers.network_provider_wrapper import ProviderWrapper
 from multiversx_sdk.converters.transactions_converter import \
@@ -9,6 +8,8 @@ from multiversx_sdk.converters.transactions_converter import \
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
+from multiversx_sdk.core.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
@@ -21,35 +22,8 @@ from multiversx_sdk.network_providers.transaction_awaiter import \
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
-class IQuery(Protocol):
-    def get_contract(self) -> IAddress:
-        ...
-
-    def get_function(self) -> str:
-        ...
-
-    def get_encoded_arguments(self) -> Sequence[str]:
-        ...
-
-    def get_caller(self) -> Optional[IAddress]:
-        ...
-
-    def get_value(self) -> int:
-        ...
-
-
-class IQueryResponse(Protocol):
-    return_data: List[str]
-    return_code: str
-    return_message: str
-    gas_used: int
-
-    def get_return_data_parts(self) -> List[bytes]:
-        ...
-
-
 class INetworkProvider(Protocol):
-    def query_contract(self, query: IQuery) -> IQueryResponse:
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         ...
 
 
@@ -73,7 +47,7 @@ class SmartContractController:
         self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.parser = SmartContractTransactionsOutcomeParser()
         self.query_controller = SmartContractQueriesController(
-            query_runner=QueryRunnerAdapter(network_provider),
+            network_provider=network_provider,
             abi=self.abi
         )
         self.transaction_awaiter = TransactionAwaiter(ProviderWrapper(network_provider))

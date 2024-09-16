@@ -9,7 +9,7 @@ logger = logging.getLogger("user_agent")
 
 def extend_user_agent(user_agent_prefix: str, config: NetworkProviderConfig):
     if config.client_name is None:
-        logger.warning("Please provide the client name of the application that uses the SDK. It will be used for metrics.")
+        logger.debug("Please provide the client name of the application that uses the SDK. It will be used for metrics.")
 
     headers: Dict[str, Any] = config.requests_options.setdefault("headers", {})
     resolved_client_name = config.client_name or UNKNOWN_CLIENT_NAME

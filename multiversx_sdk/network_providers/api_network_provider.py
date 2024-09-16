@@ -1,25 +1,24 @@
+import base64
 from typing import (Any, Callable, Dict, List, Optional, Sequence, Tuple,
                     Union, cast)
 
 import requests
 
+from multiversx_sdk.converters.smart_contract_query_converter import \
+    SmartContractQueryConverter
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
+from multiversx_sdk.core.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import (DefaultPagination,
                                                      NetworkProviderConfig)
 from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
                                                         DEFAULT_ADDRESS_HRP)
-from multiversx_sdk.network_providers.contract_query_requests import \
-    ContractQueryRequest
-from multiversx_sdk.network_providers.contract_query_response import \
-    ContractQueryResponse
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
-from multiversx_sdk.network_providers.interface import (IAddress,
-                                                        IContractQuery,
-                                                        IPagination)
+from multiversx_sdk.network_providers.interface import IAddress, IPagination
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_general_statistics import \
     NetworkGeneralStatistics
@@ -125,10 +124,21 @@ class ApiNetworkProvider:
         result = NonFungibleTokenOfAccountOnNetwork.from_api_http_response(response)
         return result
 
-    def query_contract(self, query: IContractQuery) -> ContractQueryResponse:
-        request = ContractQueryRequest(query).to_http_request()
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
+        query_converter = SmartContractQueryConverter()
+        request = query_converter.smart_contract_query_to_dictionary(query)
         response = self.do_post_generic('query', request)
-        return ContractQueryResponse.from_http_response(response)
+
+        return_data = response.get('returnData', []) or response.get('ReturnData', [])
+        return_code = response.get('returnCode', '') or response.get('ReturnCode', '')
+        return_message = response.get('returnMessage', '') or response.get('ReturnMessage', '')
+
+        return SmartContractQueryResponse(
+            function=query.function,
+            return_code=return_code,
+            return_message=return_message,
+            return_data_parts=[base64.b64decode(item) for item in return_data]
+        )
 
     def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
         try:
@@ -139,7 +149,9 @@ class ApiNetworkProvider:
         transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
         return transaction
 
-    def get_account_transactions(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[TransactionOnNetwork]:
+    def get_account_transactions(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[TransactionOnNetwork]:
+        pagination = pagination if pagination is not None else DefaultPagination()
+
         url = f"accounts/{address.to_bech32()}/transactions?{self._build_pagination_params(pagination)}"
         response = self.do_get_generic_collection(url)
         transactions = [TransactionOnNetwork.from_api_http_response(tx.get("txHash", ""), tx) for tx in response]
