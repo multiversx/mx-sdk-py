@@ -22,8 +22,6 @@ from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
-from multiversx_sdk.network_providers.transaction_awaiter import \
-    TransactionAwaiter
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
@@ -106,9 +104,7 @@ class NetworkEntrypoint:
         return self.network_provider.send_transaction(transaction)
 
     def await_completed_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        provider = ProviderWrapper(self.network_provider)
-        transaction_awaiter = TransactionAwaiter(provider)
-        return transaction_awaiter.await_completed(tx_hash)
+        return self.network_provider.await_transaction_completed(tx_hash)
 
     def create_network_provider(self) -> Union[ApiNetworkProvider, ProxyNetworkProvider]:
         return self.network_provider
@@ -157,13 +153,3 @@ class MainnetEntrypoint(NetworkEntrypoint):
         kind = kind or MainnetEntrypointConfig.network_provider_kind
 
         super().__init__(url, kind, MainnetEntrypointConfig.chain_id)
-
-
-class ProviderWrapper:
-    def __init__(self, provider: Union[ApiNetworkProvider, ProxyNetworkProvider]) -> None:
-        self.network_provider = provider
-
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        if isinstance(self.network_provider, ProxyNetworkProvider):
-            return self.network_provider.get_transaction(tx_hash, True)
-        return self.network_provider.get_transaction(tx_hash)

@@ -1,7 +1,6 @@
-from typing import List, Protocol, Sequence
+from typing import List, Optional, Protocol, Sequence, Union
 
 from multiversx_sdk.controllers.interfaces import IAccount
-from multiversx_sdk.controllers.network_provider_wrapper import ProviderWrapper
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
@@ -11,18 +10,18 @@ from multiversx_sdk.core.transactions_factories import (
     DelegationTransactionsFactory, TransactionsFactoryConfig)
 from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import (
     CreateNewDelegationContractOutcome, DelegationTransactionsOutcomeParser)
-from multiversx_sdk.network_providers.transaction_awaiter import \
-    TransactionAwaiter
+from multiversx_sdk.network_providers.resources import AwaitingOptions
 from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
 class INetworkProvider(Protocol):
-    ...
+    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        ...
 
 
 class DelegationController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
-        self.transaction_awaiter = TransactionAwaiter(ProviderWrapper(network_provider))
+        self.network_provider = network_provider
         self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.parser = DelegationTransactionsOutcomeParser()
         self.tx_computer = TransactionComputer()
@@ -53,7 +52,7 @@ class DelegationController:
         return self.parser.parse_create_new_delegation_contract(tx_outcome)
 
     def await_completed_create_new_delegation_contract(self, tx_hash: str) -> List[CreateNewDelegationContractOutcome]:
-        transaction = self.transaction_awaiter.await_completed(tx_hash)
+        transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_create_new_delegation_contract(transaction)
 
     def create_transaction_for_adding_nodes(self,

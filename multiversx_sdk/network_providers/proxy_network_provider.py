@@ -1,11 +1,8 @@
-import base64
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
 import requests
 
-from multiversx_sdk.converters.smart_contract_query_converter import \
-    SmartContractQueryConverter
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.smart_contract_query import (
@@ -19,6 +16,9 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
                                                         METACHAIN_ID)
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
+from multiversx_sdk.network_providers.http_resources import (
+    smart_contract_query_to_vm_query_request,
+    vm_query_response_to_smart_contract_query_response)
 from multiversx_sdk.network_providers.interface import IAddress
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_status import NetworkStatus
@@ -180,21 +180,10 @@ class ProxyNetworkProvider:
         return awaiter.await_on_condition(tx_hash, condition)
 
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
-        query_converter = SmartContractQueryConverter()
-        request = query_converter.smart_contract_query_to_dictionary(query)
+        request = smart_contract_query_to_vm_query_request(query)
         response = self.do_post_generic('vm-values/query', request)
         response = response.get('data', '')
-
-        return_data = response.get('returnData', []) or response.get('ReturnData', [])
-        return_code = response.get('returnCode', '') or response.get('ReturnCode', '')
-        return_message = response.get('returnMessage', '') or response.get('ReturnMessage', '')
-
-        return SmartContractQueryResponse(
-            function=query.function,
-            return_code=return_code,
-            return_message=return_message,
-            return_data_parts=[base64.b64decode(item) for item in return_data]
-        )
+        return vm_query_response_to_smart_contract_query_response(response, query.function)
 
     def get_definition_of_fungible_token(self, token_identifier: str) -> DefinitionOfFungibleTokenOnNetwork:
         response = self.__get_token_properties(token_identifier)
