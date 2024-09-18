@@ -86,6 +86,10 @@ class TransactionDecoder:
                 metadata.function_name = data_components[0]
                 metadata.function_args = args
 
+            if len(args) == 0 and not self._is_smart_contract_address(transaction.receiver):
+                metadata.function_name = 'transfer'
+                metadata.function_args = []
+
         return metadata
 
     def get_esdt_transaction_metadata(self, metadata: TransactionMetadata) -> Optional[TransactionMetadata]:
@@ -234,3 +238,6 @@ class TransactionDecoder:
 
     def hex_to_number(self, hex: str) -> int:
         return int(hex or "00", 16)
+
+    def _is_smart_contract_address(self, address: IAddress) -> bool:
+        return Address.new_from_bech32(address.to_bech32()).is_smart_contract()

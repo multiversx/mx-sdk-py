@@ -134,3 +134,19 @@ class TestTransactionDecoder:
 
             assert metadata.transfers[1].amount == 1389278024872597502641297
             assert metadata.transfers[1].token.identifier == "USDC-350c4e"
+
+    def test_smart_contract_call_without_args(self):
+        tx_to_decode = TransactionOnNetwork()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd18w6yj09l9jwlpj5cjqq9eccfgulkympv7d4rj6vq4u49j8fpwzwsvx7e85")
+        tx_to_decode.receiver = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqmua7hcd05yxypyj7sv7pffrquy9gf86s535qxct34s")
+        tx_to_decode.value = 0
+        tx_to_decode.data = base64.b64decode("bXlFbmRwb2ludA==").decode()
+
+        metadata = self.transaction_decoder.get_transaction_metadata(tx_to_decode)
+
+        assert metadata.sender == "erd18w6yj09l9jwlpj5cjqq9eccfgulkympv7d4rj6vq4u49j8fpwzwsvx7e85"
+        assert metadata.receiver == "erd1qqqqqqqqqqqqqpgqmua7hcd05yxypyj7sv7pffrquy9gf86s535qxct34s"
+        assert metadata.value == 0
+        assert metadata.function_name == "myEndpoint"
+        assert metadata.function_args == []
