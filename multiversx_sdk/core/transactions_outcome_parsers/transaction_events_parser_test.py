@@ -225,7 +225,7 @@ def test_multisig_start_perform_action():
     api = ApiNetworkProvider("https://testnet-api.multiversx.com")
     converter = TransactionsConverter()
 
-    transaction_on_network = api.get_transaction("69f63a246a65abad952fa052e105e2487fda98e765c318ed3a2af801efeb9818")
+    transaction_on_network = api.get_transaction("6e893154a3100a3a1ca3cf7ab52a66bb7dab81d2f288943e27cac71a5c437b19")
     transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
 
     abi = Abi.load(testdata / "multisig-full.abi.json")
@@ -251,6 +251,6 @@ def test_multisig_start_perform_action():
                 '__discriminant__': 5
             },
         ),
-        signers=[Address.new_from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv").get_public_key(),
-                 Address.new_from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede").get_public_key()]
+        signers=[Address.new_from_bech32("erd1uwef0vsxup3p84fmg3szjs0ae3d9qx0sn5eqe5ayerlgk34cczpsqm2nrl").get_public_key(),
+                 Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key()]
     )
