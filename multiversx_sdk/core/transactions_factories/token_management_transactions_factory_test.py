@@ -568,7 +568,7 @@ def test_create_transaction_for_registering_dynamic():
     assert transaction.data.decode() == "registerDynamic@54657374@544553542d313233343536@464e47"
     assert transaction.sender == alice.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.value == 0
+    assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_131_000
 
 
@@ -583,5 +583,5 @@ def test_create_transaction_for_registering_and_setting_all_roles():
     assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d313233343536@464e47"
     assert transaction.sender == alice.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-    assert transaction.value == 0
+    assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_152_000
