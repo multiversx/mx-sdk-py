@@ -222,10 +222,10 @@ def test_parse_esdt_safe_deposit_event_without_first_topic():
 
 @pytest.mark.networkInteraction
 def test_multisig_start_perform_action():
-    api = ApiNetworkProvider("https://testnet-api.multiversx.com")
+    api = ApiNetworkProvider("https://devnet-api.multiversx.com")
     converter = TransactionsConverter()
 
-    transaction_on_network = api.get_transaction("6e893154a3100a3a1ca3cf7ab52a66bb7dab81d2f288943e27cac71a5c437b19")
+    transaction_on_network = api.get_transaction("d17f6c129cefa8320365f25d7ab051121b985ad6ff73f20d0005286856b1ac36")
     transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
 
     abi = Abi.load(testdata / "multisig-full.abi.json")
@@ -251,6 +251,8 @@ def test_multisig_start_perform_action():
                 '__discriminant__': 5
             },
         ),
-        signers=[Address.new_from_bech32("erd1uwef0vsxup3p84fmg3szjs0ae3d9qx0sn5eqe5ayerlgk34cczpsqm2nrl").get_public_key(),
-                 Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key()]
+        signers=[
+            Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
+            Address.new_from_bech32("erd1uwef0vsxup3p84fmg3szjs0ae3d9qx0sn5eqe5ayerlgk34cczpsqm2nrl").get_public_key(),
+        ]
     )
