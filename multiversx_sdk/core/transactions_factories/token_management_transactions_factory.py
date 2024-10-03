@@ -942,7 +942,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
+            amount=self._config.issue_cost,
             gas_limit=self._config.gas_limit_register_dynamic,
             add_data_movement_gas=True,
             data_parts=parts
@@ -964,7 +964,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             config=self._config,
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
+            amount=self._config.issue_cost,
             gas_limit=self._config.gas_limit_register_dynamic,
             add_data_movement_gas=True,
             data_parts=parts

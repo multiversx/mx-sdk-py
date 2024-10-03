@@ -130,7 +130,7 @@ class SmartContractController:
                                        function: str,
                                        arguments: Sequence[Any] = [],
                                        native_transfer_amount: int = 0,
-                                       token_transfers: Sequence[TokenTransfer] = []) -> Transaction:
+                                       token_transfers: List[TokenTransfer] = []) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,

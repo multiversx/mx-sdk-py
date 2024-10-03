@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import List, Optional
 
 from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.interfaces import IAddress
@@ -36,7 +36,7 @@ class TransfersController:
                                                    sender: IAccount,
                                                    nonce: int,
                                                    receiver: IAddress,
-                                                   token_transfers: Sequence[TokenTransfer]) -> Transaction:
+                                                   token_transfers: List[TokenTransfer]) -> Transaction:
         transaction = self.factory.create_transaction_for_esdt_token_transfer(
             sender=sender.address,
             receiver=receiver,
@@ -53,7 +53,7 @@ class TransfersController:
                                         nonce: int,
                                         receiver: IAddress,
                                         native_transfer_amount: Optional[int] = None,
-                                        token_transfers: Optional[Sequence[TokenTransfer]] = None,
+                                        token_transfers: Optional[List[TokenTransfer]] = None,
                                         data: Optional[bytes] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_transfer(
             sender=sender.address,

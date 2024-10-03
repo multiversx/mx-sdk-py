@@ -8,7 +8,7 @@ from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
                                            CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
-from multiversx_sdk.core.interfaces import IAddress, ITokenTransfer
+from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.serializer import arg_to_string, args_to_buffers
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
@@ -86,7 +86,7 @@ class SmartContractTransactionsFactory:
                                        gas_limit: int,
                                        arguments: Sequence[Any] = [],
                                        native_transfer_amount: int = 0,
-                                       token_transfers: Sequence[ITokenTransfer] = []) -> Transaction:
+                                       token_transfers: List[TokenTransfer] = []) -> Transaction:
         number_of_tokens = len(token_transfers)
         receiver = contract
 
