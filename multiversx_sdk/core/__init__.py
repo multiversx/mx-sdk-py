@@ -11,6 +11,9 @@ from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.core.transaction_outcome import (
+    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
+    find_events_by_first_topic, find_events_by_identifier)
 from multiversx_sdk.core.transactions_factories import (
     AccountTransactionsFactory, DelegationTransactionsFactory,
     RelayedTransactionsFactory, SmartContractTransactionsFactory,
@@ -23,11 +26,9 @@ from multiversx_sdk.core.transactions_outcome_parsers import (
     IssueNonFungibleOutcome, IssueSemiFungibleOutcome, MintOutcome,
     NFTCreateOutcome, PauseOutcome, RegisterAndSetAllRolesOutcome,
     RegisterMetaEsdtOutcome, SetSpecialRoleOutcome, SmartContractDeployOutcome,
-    SmartContractResult, SmartContractTransactionsOutcomeParser,
-    TokenManagementTransactionsOutcomeParser, TransactionEvent,
-    TransactionEventsParser, TransactionLogs, TransactionOutcome,
-    UnFreezeOutcome, UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome,
-    find_events_by_first_topic, find_events_by_identifier)
+    SmartContractTransactionsOutcomeParser,
+    TokenManagementTransactionsOutcomeParser, TransactionEventsParser,
+    UnFreezeOutcome, UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
 
 __all__ = [
     "AccountNonceHolder", "Address", "AddressFactory", "AddressComputer",

@@ -9,7 +9,8 @@ from multiversx_sdk.network_providers.constants import (
 from multiversx_sdk.network_providers.errors import (
     ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction,
     TransactionFetchingError)
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
+from multiversx_sdk.network_providers.transaction_on_network import \
+    TransactionOnNetwork
 
 ONE_SECOND_IN_MILLISECONDS = 1000
 

@@ -4,13 +4,6 @@ from typing import Any, Dict, Union
 from multiversx_sdk.converters.errors import MissingFieldError
 from multiversx_sdk.core.interfaces import ITransaction
 from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
-from multiversx_sdk.network_providers.contract_results import \
-    ContractResultItem as SCResultItemOnNetwork
-from multiversx_sdk.network_providers.transaction_events import \
-    TransactionEvent as TransactionEventOnNetwork
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
 class TransactionsConverter:
@@ -59,48 +52,6 @@ class TransactionsConverter:
             guardian_signature=self._bytes_from_hex(dictionary.get("guardianSignature", "")),
             relayer=dictionary.get("relayer", None),
             inner_transactions=[self.dictionary_to_transaction(inner_tx) for inner_tx in dictionary.get("innerTransactions", [])],
-        )
-
-    def transaction_on_network_to_outcome(self, transaction_on_network: TransactionOnNetwork) -> TransactionOutcome:
-        results = [self._sc_result_item_on_network_to_sc_result(item) for item in transaction_on_network.contract_results.items]
-        logs = TransactionLogs(
-            address=transaction_on_network.logs.address.to_bech32(),
-            events=[self._event_on_network_to_event(event) for event in transaction_on_network.logs.events]
-        )
-
-        return TransactionOutcome(
-            transaction_results=results,
-            transaction_logs=logs
-        )
-
-    def _event_on_network_to_event(self, event: TransactionEventOnNetwork) -> TransactionEvent:
-        address = event.address.to_bech32()
-        identifier = event.identifier
-        topics = [topic.raw for topic in event.topics]
-
-        legacy_data = event.data_payload.raw if event.data_payload else b'' or event.data.encode()
-        data_items = [data.raw for data in event.additional_data] if event.additional_data else []
-
-        if len(data_items) == 0:
-            if len(legacy_data):
-                data_items.append(legacy_data)
-
-        return TransactionEvent(address, identifier, topics, data_items)
-
-    def _sc_result_item_on_network_to_sc_result(self, sc_result_item: SCResultItemOnNetwork) -> SmartContractResult:
-        sender = sc_result_item.sender.to_bech32()
-        receiver = sc_result_item.receiver.to_bech32()
-        data = sc_result_item.data.encode()
-        logs = TransactionLogs(
-            address=sc_result_item.logs.address.to_bech32(),
-            events=[self._event_on_network_to_event(event) for event in sc_result_item.logs.events]
-        )
-
-        return SmartContractResult(
-            sender=sender,
-            receiver=receiver,
-            data=data,
-            logs=logs
         )
 
     def _ensure_mandatory_fields_for_transaction(self, dictionary: Dict[str, Any]) -> None:

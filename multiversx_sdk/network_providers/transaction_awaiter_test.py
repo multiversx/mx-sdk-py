@@ -7,9 +7,10 @@ from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
+from multiversx_sdk.network_providers.transaction_on_network import \
+    TransactionOnNetwork
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.testutils.mock_network_provider import (
     MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
 from multiversx_sdk.testutils.wallets import load_wallets

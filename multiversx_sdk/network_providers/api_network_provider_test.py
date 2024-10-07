@@ -12,7 +12,8 @@ from multiversx_sdk.network_providers.api_network_provider import \
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.interface import IPagination
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
+from multiversx_sdk.network_providers.transaction_on_network import \
+    TransactionOnNetwork
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
@@ -151,7 +152,7 @@ class TestApi:
         result = self.api.get_transaction('6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb')
 
         assert result.is_completed is True
-        assert len(result.contract_results.items) > 0
+        assert len(result.contract_results) > 0
         assert result.data == 'issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565'
 
     def test_get_transaction_status(self):
