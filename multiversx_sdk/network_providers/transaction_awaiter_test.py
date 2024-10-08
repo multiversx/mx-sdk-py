@@ -3,12 +3,11 @@ import pytest
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
-from multiversx_sdk.network_providers.transaction_on_network import \
-    TransactionOnNetwork
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.testutils.mock_network_provider import (

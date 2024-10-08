@@ -8,12 +8,11 @@ from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
+from multiversx_sdk.core.transaction_outcome import SmartContractResult
 from multiversx_sdk.network_providers.accounts import AccountOnNetwork
-from multiversx_sdk.network_providers.contract_results import (
-    ContractResultItem, ContractResults)
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 
 
@@ -71,16 +70,12 @@ class MockNetworkProvider:
         self.query_contract_responders.append(QueryContractResponder(predicate, response))
 
     def mock_get_transaction_with_any_hash_as_completed_with_one_result(self, return_code_and_data: str) -> None:
-        contract_result_item = ContractResultItem()
-        contract_result_item.nonce = 1
-        contract_result_item.data = return_code_and_data
-
         def predicate(hash: str) -> bool:
             return True
 
         response = TransactionOnNetwork()
         response.status = TransactionStatus("executed")
-        response.contract_results = ContractResults([contract_result_item])
+        response.contract_results = [SmartContractResult(data=return_code_and_data.encode())]
         response.is_completed = True
 
         self.get_transaction_responders.insert(0, GetTransactionResponder(predicate, response))

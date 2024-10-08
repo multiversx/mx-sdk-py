@@ -1,10 +1,9 @@
 import base64
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.transaction_decoder import \
     TransactionDecoder
-from multiversx_sdk.network_providers.transaction_on_network import \
-    TransactionOnNetwork
 
 
 class TestTransactionDecoder:
