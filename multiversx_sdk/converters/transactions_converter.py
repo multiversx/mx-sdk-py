@@ -4,13 +4,13 @@ from typing import Any, Dict, Union
 from multiversx_sdk.converters.errors import MissingFieldError
 from multiversx_sdk.core.interfaces import ITransaction
 from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_on_network import \
+    ContractResultItem as SCResultItemOnNetwork
+from multiversx_sdk.core.transaction_on_network import \
+    TransactionEvent as TransactionEventOnNetwork
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
-from multiversx_sdk.network_providers.contract_results import \
-    ContractResultItem as SCResultItemOnNetwork
-from multiversx_sdk.network_providers.transaction_events import \
-    TransactionEvent as TransactionEventOnNetwork
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 
 class TransactionsConverter:

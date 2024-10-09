@@ -7,12 +7,12 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_query import SmartContractQuery
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.interface import IPagination
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.testutils.wallets import load_wallets
 
 

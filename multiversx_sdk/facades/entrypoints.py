@@ -13,6 +13,7 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.facades.account import Account
 from multiversx_sdk.facades.config import (DevnetEntrypointConfig,
                                            MainnetEntrypointConfig,
@@ -22,7 +23,6 @@ from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
