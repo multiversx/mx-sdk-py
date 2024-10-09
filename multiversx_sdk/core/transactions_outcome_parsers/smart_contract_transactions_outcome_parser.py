@@ -1,6 +1,7 @@
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    TransactionEvent, TransactionOutcome, find_events_by_identifier)
+from multiversx_sdk.core.transaction_on_network import (
+    SmartContractCallOutcome, TransactionEvent, TransactionOnNetwork,
+    find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import (
     DeployedSmartContract, SmartContractDeployOutcome)
 from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
@@ -10,9 +11,13 @@ class SmartContractTransactionsOutcomeParser:
     def __init__(self) -> None:
         pass
 
-    def parse_deploy(self, transaction_outcome: TransactionOutcome) -> SmartContractDeployOutcome:
-        direct_call_outcome = transaction_outcome.direct_smart_contract_call
-        events = find_events_by_identifier(transaction_outcome, "SCDeploy")
+    def get_direct_sc_call(self, transaction: TransactionOnNetwork) -> SmartContractCallOutcome:
+        # will copy the logic from js, the "neural" network, to convert to a sc call outcome
+        ...
+
+    def parse_deploy(self, transaction: TransactionOnNetwork) -> SmartContractDeployOutcome:
+        direct_call_outcome = self.get_direct_sc_call(transaction)
+        events = find_events_by_identifier(transaction, "SCDeploy")
         contracts = [self._parse_sc_deploy_event(event) for event in events]
 
         return SmartContractDeployOutcome(direct_call_outcome.return_code, direct_call_outcome.return_message, contracts)

@@ -1,6 +1,12 @@
 from typing import Protocol
 
-from multiversx_sdk.core.interfaces import IAddress
+
+class IAddress(Protocol):
+    def to_bech32(self) -> str:
+        ...
+
+    def to_hex(self) -> str:
+        ...
 
 
 class IAccount(Protocol):

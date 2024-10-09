@@ -10,9 +10,8 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_outcome import SmartContractResult
+from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.accounts import AccountOnNetwork
-from multiversx_sdk.network_providers.transaction_status import \
-    TransactionStatus
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 
 

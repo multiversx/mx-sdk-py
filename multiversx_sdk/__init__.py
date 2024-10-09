@@ -9,6 +9,10 @@ from multiversx_sdk.controllers.token_management_controller import \
 from multiversx_sdk.controllers.transfers_controller import TransfersController
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
+from multiversx_sdk.core import (SmartContractResult, TransactionEvent,
+                                 TransactionLogs, TransactionOnNetwork,
+                                 find_events_by_first_topic,
+                                 find_events_by_identifier)
 from multiversx_sdk.core.account import AccountNonceHolder
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
@@ -22,9 +26,6 @@ from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transaction_outcome import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
-    find_events_by_first_topic, find_events_by_identifier)
 from multiversx_sdk.core.transactions_factories.account_transactions_factory import \
     AccountTransactionsFactory
 from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
@@ -90,7 +91,7 @@ __all__ = [
     "Message", "MessageComputer", "CodeMetadata",
     "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",
     "TokenManagementTransactionsOutcomeParser", "SmartContractResult",
-    "TransactionEvent", "TransactionLogs", "TransactionOutcome",
+    "TransactionEvent", "TransactionLogs",
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
     "TransactionsFactoryConfig", "TokenType",
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
@@ -109,5 +110,5 @@ __all__ = [
     "IssueFungibleOutcome", "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome",
     "RegisterAndSetAllRolesOutcome", "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome",
     "PauseOutcome", "UnPauseOutcome", "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome",
-    "AddQuantityOutcome", "BurnQuantityOutcome"
+    "AddQuantityOutcome", "BurnQuantityOutcome", "TransactionOnNetwork"
 ]

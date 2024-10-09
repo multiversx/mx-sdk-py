@@ -1,8 +1,7 @@
 from types import SimpleNamespace
 from typing import List, Protocol
 
-from multiversx_sdk.core.transactions_outcome_parsers.resources import \
-    TransactionEvent
+from multiversx_sdk.core.transaction_on_network import TransactionEvent
 
 
 class IAbi(Protocol):
@@ -35,5 +34,5 @@ class TransactionEventsParser:
         return self.abi.decode_event(
             event_name=abi_identifier,
             topics=topics,
-            data_items=event.data_items,
+            data_items=event.additional_data,
         )

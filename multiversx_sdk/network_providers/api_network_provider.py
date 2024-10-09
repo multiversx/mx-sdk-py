@@ -8,6 +8,7 @@ from multiversx_sdk.converters.transactions_converter import \
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
+from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import (DefaultPagination,
@@ -35,8 +36,6 @@ from multiversx_sdk.network_providers.tokens import (
     FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
-from multiversx_sdk.network_providers.transaction_status import \
-    TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionInMempool)
 from multiversx_sdk.network_providers.user_agent import extend_user_agent

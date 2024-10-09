@@ -3,9 +3,11 @@ import re
 
 import pytest
 
-from multiversx_sdk.core.errors import ParseTransactionOutcomeError
-from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
+from multiversx_sdk.core.errors import ParseTransactionOnNetworkError
+from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
+                                                        TransactionEvent,
+                                                        TransactionLogs,
+                                                        TransactionOnNetwork)
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
 from multiversx_sdk.testutils.utils import base64_topics_to_bytes
@@ -20,16 +22,14 @@ class TestTokenManagementTransactionsOutcomeParser:
             address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             identifier="signalError",
             topics=base64_topics_to_bytes(encoded_topics),
-            data_items=[base64.b64decode("QDc1NzM2NTcyMjA2NTcyNzI2Zjcy")]
+            additional_data=[base64.b64decode("QDc1NzM2NTcyMjA2NTcyNzI2Zjcy")]
         )
 
-        sc_result = SmartContractResult()
-        logs = TransactionLogs("", [event])
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("", [event])
 
-        tx_outcome = TransactionOutcome(transaction_results=[sc_result], transaction_logs=logs)
-
-        with pytest.raises(ParseTransactionOutcomeError, match=re.escape("encountered signalError: ticker name is not valid (user error)")):
-            self.parser.parse_issue_fungible(tx_outcome)
+        with pytest.raises(ParseTransactionOnNetworkError, match=re.escape("encountered signalError: ticker name is not valid (user error)")):
+            self.parser.parse_issue_fungible(tx)
 
     def test_parse_issue_fungible(self):
         identifier = "ZZZ-9ee87d"
@@ -47,11 +47,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="issue",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_issue_fungible(tx_results_and_logs)
+        outcome = self.parser.parse_issue_fungible(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
 
@@ -96,11 +95,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="issueNonFungible",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [first_event, second_event, third_event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [first_event, second_event, third_event])
 
-        outcome = self.parser.parse_issue_non_fungible(tx_results_and_logs)
+        outcome = self.parser.parse_issue_non_fungible(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
 
@@ -119,11 +117,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="issueSemiFungible",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_issue_semi_fungible(tx_results_and_logs)
+        outcome = self.parser.parse_issue_semi_fungible(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
 
@@ -142,11 +139,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="registerMetaESDT",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_register_meta_esdt(tx_results_and_logs)
+        outcome = self.parser.parse_register_meta_esdt(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
 
@@ -214,8 +210,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             logs=result_logs
         )
 
-        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result], transaction_logs=tx_log)
-        outcome = self.parser.parse_register_and_set_all_roles(tx_results_and_logs)
+        tx = TransactionOnNetwork()
+        tx.contract_results = [sc_result]
+        tx.logs = tx_log
+        outcome = self.parser.parse_register_and_set_all_roles(tx)
 
         assert len(outcome) == 2
         assert outcome[0].token_identifier == first_identifier
@@ -241,11 +239,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTSetRole",
             topics=base64_topics_to_bytes(encoded_roles)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_set_special_role(tx_results_and_logs)
+        outcome = self.parser.parse_set_special_role(tx)
         assert len(outcome) == 1
         assert outcome[0].user_address == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert outcome[0].token_identifier == identifier
@@ -268,11 +265,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTNFTCreate",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_nft_create(tx_results_and_logs)
+        outcome = self.parser.parse_nft_create(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
         assert outcome[0].nonce == nonce
@@ -294,11 +290,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTLocalMint",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_local_mint(tx_results_and_logs)
+        outcome = self.parser.parse_local_mint(tx)
         assert len(outcome) == 1
         assert outcome[0].user_address == event.address
         assert outcome[0].token_identifier == identifier
@@ -321,11 +316,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTLocalBurn",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_local_burn(tx_results_and_logs)
+        outcome = self.parser.parse_local_burn(tx)
         assert len(outcome) == 1
         assert outcome[0].user_address == event.address
         assert outcome[0].token_identifier == identifier
@@ -341,11 +335,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTPause",
             topics=base64_topics_to_bytes([identifier_base64])
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_pause(tx_results_and_logs)
+        outcome = self.parser.parse_pause(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
 
@@ -358,11 +351,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTUnPause",
             topics=base64_topics_to_bytes([identifier_base64])
         )
-        empty_result = SmartContractResult()
-        tx_log = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
-        tx_results_and_logs = TransactionOutcome(transaction_results=[empty_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2", [event])
 
-        outcome = self.parser.parse_unpause(tx_results_and_logs)
+        outcome = self.parser.parse_unpause(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
 
@@ -391,9 +383,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
-        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result])
+        tx = TransactionOnNetwork()
+        tx.contract_results = [sc_result]
 
-        outcome = self.parser.parse_freeze(tx_results_and_logs)
+        outcome = self.parser.parse_freeze(tx)
         assert len(outcome) == 1
         assert outcome[0].user_address == address
         assert outcome[0].token_identifier == identifier
@@ -425,9 +418,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
-        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result])
+        tx = TransactionOnNetwork()
+        tx.contract_results = [sc_result]
 
-        outcome = self.parser.parse_unfreeze(tx_results_and_logs)
+        outcome = self.parser.parse_unfreeze(tx)
         assert len(outcome) == 1
         assert outcome[0].user_address == address
         assert outcome[0].token_identifier == identifier
@@ -459,9 +453,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             data="RVNEVEZyZWV6ZUA0MTQxNDEyZDMyMzk2MzM0NjMzOQ==".encode(),
             logs=tx_log
         )
-        tx_results_and_logs = TransactionOutcome(transaction_results=[sc_result])
+        tx = TransactionOnNetwork()
+        tx.contract_results = [sc_result]
 
-        outcome = self.parser.parse_wipe(tx_results_and_logs)
+        outcome = self.parser.parse_wipe(tx)
         assert len(outcome) == 1
         assert outcome[0].user_address == address
         assert outcome[0].token_identifier == identifier
@@ -486,11 +481,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTNFTUpdateAttributes",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
-        tx_result = SmartContractResult()
-        tx_results_and_logs = TransactionOutcome(transaction_results=[tx_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
 
-        outcome = self.parser.parse_update_attributes(tx_results_and_logs)
+        outcome = self.parser.parse_update_attributes(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
         assert outcome[0].nonce == nonce
@@ -512,11 +506,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTNFTAddQuantity",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
-        tx_result = SmartContractResult()
-        tx_results_and_logs = TransactionOutcome(transaction_results=[tx_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
 
-        outcome = self.parser.parse_add_quantity(tx_results_and_logs)
+        outcome = self.parser.parse_add_quantity(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
         assert outcome[0].nonce == nonce
@@ -538,11 +531,10 @@ class TestTokenManagementTransactionsOutcomeParser:
             identifier="ESDTNFTBurn",
             topics=base64_topics_to_bytes(encoded_topics)
         )
-        tx_log = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
-        tx_result = SmartContractResult()
-        tx_results_and_logs = TransactionOutcome(transaction_results=[tx_result], transaction_logs=tx_log)
+        tx = TransactionOnNetwork()
+        tx.logs = TransactionLogs("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", [event])
 
-        outcome = self.parser.parse_burn_quantity(tx_results_and_logs)
+        outcome = self.parser.parse_burn_quantity(tx)
         assert len(outcome) == 1
         assert outcome[0].token_identifier == identifier
         assert outcome[0].nonce == nonce

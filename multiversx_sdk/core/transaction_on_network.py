@@ -1,9 +1,8 @@
 import base64
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.transaction_outcome import (SmartContractResult,
-                                                     TransactionLogs)
+from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.http_resources import (
     smart_contract_result_from_api_request,
     smart_contract_result_from_proxy_request, transaction_logs_from_request)
@@ -11,8 +10,6 @@ from multiversx_sdk.network_providers.interface import IAddress
 from multiversx_sdk.network_providers.resources import EmptyAddress
 from multiversx_sdk.network_providers.transaction_receipt import \
     TransactionReceipt
-from multiversx_sdk.network_providers.transaction_status import \
-    TransactionStatus
 
 
 class TransactionOnNetwork:
@@ -137,3 +134,88 @@ class TransactionOnNetwork:
             "smartContractResults": [item.__dict__ for item in self.contract_results],
             "logs": self.logs.__dict__,
         }
+
+
+class TransactionEvent:
+    def __init__(self,
+                 raw: dict[str, Any] = {},
+                 address: str = "",
+                 identifier: str = "",
+                 topics: list[bytes] = [],
+                 data: bytes = b"",
+                 additional_data: list[bytes] = []) -> None:
+        self.raw = raw
+        self.address = address
+        self.identifier = identifier
+        self.topics = topics
+        self.data = data
+        self.additional_data = additional_data
+
+
+class TransactionLogs:
+    def __init__(self,
+                 address: str = "",
+                 events: list[TransactionEvent] = []) -> None:
+        self.address = address
+        self.events = events
+
+
+class SmartContractResult:
+    def __init__(self,
+                 raw: dict[str, Any] = {},
+                 sender: str = "",
+                 receiver: str = "",
+                 data: bytes = b"",
+                 logs: TransactionLogs = TransactionLogs()) -> None:
+        self.raw = raw
+        self.sender = sender
+        self.receiver = receiver
+        self.data = data
+        self.logs = logs
+
+
+class SmartContractCallOutcome:
+    def __init__(self,
+                 function: str = "",
+                 return_data_parts: list[bytes] = [],
+                 return_message: str = "",
+                 return_code: str = "") -> None:
+        self.function = function
+        self.return_data_parts = return_data_parts
+        self.return_message = return_message
+        self.return_code = return_code
+
+
+def find_events_by_identifier(transaction: TransactionOnNetwork, identifier: str) -> list[TransactionEvent]:
+    return _find_events_by_predicate(transaction, lambda event: event.identifier == identifier)
+
+
+def find_events_by_first_topic(transaction: TransactionOnNetwork, topic: str) -> list[TransactionEvent]:
+    def is_topic_matching(event: TransactionEvent):
+        if not len(event.topics):
+            return False
+
+        try:
+            decoded_topic = event.topics[0].decode()
+            return decoded_topic == topic
+        except UnicodeDecodeError:
+            return False
+
+    return _find_events_by_predicate(transaction, is_topic_matching)
+
+
+def _find_events_by_predicate(
+    transaction: TransactionOnNetwork,
+    predicate: Callable[[TransactionEvent], bool]
+) -> list[TransactionEvent]:
+    events = _gather_all_events(transaction)
+    return list(filter(predicate, events))
+
+
+def _gather_all_events(transaction: TransactionOnNetwork) -> list[TransactionEvent]:
+    all_events = [*transaction.logs.events]
+
+    for result in transaction.contract_results:
+        all_events.extend(result.logs.events)
+
+    return all_events
