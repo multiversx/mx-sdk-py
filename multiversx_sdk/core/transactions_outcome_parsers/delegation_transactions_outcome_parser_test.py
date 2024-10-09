@@ -1,10 +1,12 @@
 import base64
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
+                                                        TransactionEvent,
+                                                        TransactionLogs,
+                                                        TransactionOnNetwork)
 from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import \
     DelegationTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome)
 from multiversx_sdk.testutils.utils import base64_topics_to_bytes
 
 
@@ -60,9 +62,11 @@ class TestDelegationTransactionsOutcomeParser:
             logs=sc_result_log
         )
 
-        tx_outcome = TransactionOutcome(transaction_results=[sc_result], transaction_logs=logs)
+        tx = TransactionOnNetwork()
+        tx.contract_results = [sc_result]
+        tx.logs = logs
 
-        outcome = self.parser.parse_create_new_delegation_contract(tx_outcome)
+        outcome = self.parser.parse_create_new_delegation_contract(tx)
 
         assert len(outcome) == 1
         assert outcome[0].contract_address == contract_address.to_bech32()

@@ -2,8 +2,6 @@ from pathlib import Path
 from typing import Any, List, Optional, Protocol, Sequence, Union
 
 from multiversx_sdk.controllers.interfaces import IAccount
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionsConverter
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
@@ -83,10 +81,7 @@ class SmartContractController:
         return transaction
 
     def parse_deploy(self, transaction_on_network: TransactionOnNetwork) -> SmartContractDeployOutcome:
-        tx_converter = TransactionsConverter()
-        tx_outcome = tx_converter.transaction_on_network_to_outcome(transaction_on_network)
-
-        return self.parser.parse_deploy(tx_outcome)
+        return self.parser.parse_deploy(transaction_on_network)
 
     def await_completed_deploy(self, tx_hash: str) -> SmartContractDeployOutcome:
         transaction = self.network_provider.await_transaction_completed(tx_hash)

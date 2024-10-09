@@ -22,6 +22,10 @@ from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.core.transaction_on_network import (
+    SmartContractResult, TransactionEvent, TransactionLogs,
+    TransactionOnNetwork, TransactionStatus, find_events_by_first_topic,
+    find_events_by_identifier)
 from multiversx_sdk.core.transactions_factories.account_transactions_factory import \
     AccountTransactionsFactory
 from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
@@ -40,9 +44,6 @@ from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_ou
     DelegationTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types import \
     CreateNewDelegationContractOutcome
-from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractResult, TransactionEvent, TransactionLogs, TransactionOutcome,
-    find_events_by_first_topic, find_events_by_identifier)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
     SmartContractTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import (
@@ -90,7 +91,7 @@ __all__ = [
     "Message", "MessageComputer", "CodeMetadata",
     "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",
     "TokenManagementTransactionsOutcomeParser", "SmartContractResult",
-    "TransactionEvent", "TransactionLogs", "TransactionOutcome",
+    "TransactionEvent", "TransactionLogs",
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
     "TransactionsFactoryConfig", "TokenType",
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
@@ -109,5 +110,5 @@ __all__ = [
     "IssueFungibleOutcome", "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome",
     "RegisterAndSetAllRolesOutcome", "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome",
     "PauseOutcome", "UnPauseOutcome", "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome",
-    "AddQuantityOutcome", "BurnQuantityOutcome"
+    "AddQuantityOutcome", "BurnQuantityOutcome", "TransactionOnNetwork", "TransactionStatus"
 ]

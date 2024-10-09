@@ -1,8 +1,7 @@
 from types import SimpleNamespace
 from typing import List, Protocol
 
-from multiversx_sdk.core.transactions_outcome_parsers.resources import \
-    TransactionEvent
+from multiversx_sdk.core.transaction_on_network import TransactionEvent
 
 
 class IAbi(Protocol):
@@ -13,7 +12,6 @@ class IAbi(Protocol):
 class TransactionEventsParser:
     def __init__(self, abi: IAbi, first_topic_as_identifier: bool = True) -> None:
         self.abi = abi
-
         # By default, we consider that the first topic is the event identifier.
         # This is true for log entries emitted by smart contracts:
         # https://github.com/multiversx/mx-chain-vm-go/blob/v1.5.27/vmhost/contexts/output.go#L270
@@ -26,14 +24,11 @@ class TransactionEventsParser:
     def parse_event(self, event: TransactionEvent) -> SimpleNamespace:
         first_topic = event.topics[0].decode() if len(event.topics) else ""
         abi_identifier = first_topic if first_topic and self.first_topic_as_identifier else event.identifier
-
         topics = event.topics
-
         if self.first_topic_as_identifier:
             topics = topics[1:]
-
         return self.abi.decode_event(
             event_name=abi_identifier,
             topics=topics,
-            data_items=event.data_items,
+            data_items=event.additional_data,
         )

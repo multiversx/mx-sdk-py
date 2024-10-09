@@ -1,7 +1,5 @@
-import base64
-from typing import Any, Callable, Optional, Protocol, Union
+from typing import Any, Callable, Optional, Protocol
 
-from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.resources import EmptyAddress
 
@@ -37,76 +35,12 @@ class TransactionOnNetwork:
         self.hyperblock_nonce: int = 0
         self.hyperblock_hash: str = ""
 
-        self.contract_results: ContractResults = ContractResults([])
+        self.contract_results: list[SmartContractResult] = []
         self.logs: TransactionLogs = TransactionLogs()
         self.raw_response: dict[str, Any] = {}
 
     def get_status(self) -> TransactionStatus:
         return self.status
-
-    @staticmethod
-    def from_api_http_response(
-        tx_hash: str, response: dict[str, Any]
-    ) -> "TransactionOnNetwork":
-        result = TransactionOnNetwork.from_http_response(tx_hash, response)
-
-        result.contract_results = ContractResults.from_api_http_response(
-            response.get("results", [])
-        )
-        result.is_completed = not result.get_status().is_pending()
-
-        return result
-
-    @staticmethod
-    def from_proxy_http_response(
-        tx_hash: str, response: dict[str, Any], process_status: Optional[TransactionStatus] = None
-    ) -> "TransactionOnNetwork":
-        result = TransactionOnNetwork.from_http_response(tx_hash, response)
-        result.contract_results = ContractResults.from_proxy_http_response(
-            response.get("smartContractResults", [])
-        )
-
-        if process_status:
-            result.status = process_status
-            result.is_completed = True if result.status.is_successful() or result.status.is_failed() else False
-
-        return result
-
-    @staticmethod
-    def from_http_response(tx_hash: str, response: dict[str, Any]) -> "TransactionOnNetwork":
-        result = TransactionOnNetwork()
-
-        result.hash = tx_hash
-        result.type = response.get("type", "")
-        result.nonce = response.get("nonce", 0)
-        result.round = response.get("round", 0)
-        result.epoch = response.get("epoch", 0)
-        result.value = response.get("value", 0)
-
-        sender = response.get("sender", "")
-        result.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
-
-        receiver = response.get("receiver", "")
-        result.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
-
-        result.gas_price = response.get("gasPrice", 0)
-        result.gas_limit = response.get("gasLimit", 0)
-
-        data = response.get("data", "") or ""
-        result.function = response.get("function", "")
-
-        result.data = base64.b64decode(data).decode()
-        result.status = TransactionStatus(response.get("status"))
-        result.timestamp = response.get("timestamp", 0)
-
-        result.block_nonce = response.get("blockNonce", 0)
-        result.hyperblock_nonce = response.get("hyperblockNonce", 0)
-        result.hyperblock_hash = response.get("hyperblockHash", "")
-
-        result.logs = TransactionLogs.from_http_response(response.get("logs", {}))
-        result.raw_response = response
-
-        return result
 
     def to_dictionary(self) -> dict[str, Any]:
         return {
@@ -128,202 +62,91 @@ class TransactionOnNetwork:
             "blockNonce": self.block_nonce,
             "hyperblockNonce": self.hyperblock_nonce,
             "hyperblockHash": self.hyperblock_hash,
-            "smartContractResults": [item.to_dictionary() for item in self.contract_results.items],
-            "logs": self.logs.to_dictionary(),
+            "smartContractResults": [item.__dict__ for item in self.contract_results],
+            "logs": self.logs.__dict__,
         }
 
 
 class TransactionEvent:
-    def __init__(self) -> None:
-        self.address: IAddress = EmptyAddress()
-        self.identifier: str = ''
-        self.topics: list[TransactionEventTopic] = []
-        self.data_payload: Optional[TransactionEventData] = None
-        self.data: str = ''
-        self.additional_data: list[TransactionEventData] = []
-
-    @staticmethod
-    def from_http_response(response: dict[str, Any]) -> 'TransactionEvent':
-        result = TransactionEvent()
-
-        address = response.get('address', '')
-        result.address = Address.new_from_bech32(address) if address else EmptyAddress()
-
-        result.identifier = response.get('identifier', '')
-        topics = response.get('topics', [])
-        result.topics = [TransactionEventTopic(item) for item in topics]
-
-        raw_data = base64.b64decode(response.get('responseData', b''))
-        result.data_payload = TransactionEventData(raw_data)
-        result.data = raw_data.decode()
-
-        additional_data: Any = response.get("additionalData", [])
-        if additional_data is None:
-            additional_data = []
-        result.additional_data = [TransactionEventData(base64.b64decode(data)) for data in additional_data]
-
-        return result
-
-    def to_dictionary(self) -> dict[str, Any]:
-        return {
-            "address": self.address.to_bech32(),
-            "identifier": self.identifier,
-            "topics": [item.hex() for item in self.topics],
-            "data_payload": self.data_payload.hex() if self.data_payload else "",
-            "data": self.data,
-            "additional_data": [data.hex() for data in self.additional_data]
-        }
-
-
-class TransactionEventData:
-    def __init__(self, raw: bytes) -> None:
+    def __init__(self,
+                 raw: dict[str, Any] = {},
+                 address: str = "",
+                 identifier: str = "",
+                 topics: list[bytes] = [],
+                 data: bytes = b"",
+                 additional_data: list[bytes] = []) -> None:
         self.raw = raw
-
-    def __str__(self) -> str:
-        return self.raw.decode()
-
-    def hex(self) -> str:
-        return self.raw.hex()
-
-
-class TransactionEventTopic:
-    def __init__(self, topic: str) -> None:
-        self.raw = base64.b64decode(topic.encode())
-
-    def __str__(self) -> str:
-        return self.raw.decode()
-
-    def hex(self) -> str:
-        return self.raw.hex()
+        self.address = address
+        self.identifier = identifier
+        self.topics = topics
+        self.data = data
+        self.additional_data = additional_data
 
 
 class TransactionLogs:
-    def __init__(self):
-        self.address: IAddress = EmptyAddress()
-        self.events: list[TransactionEvent] = []
+    def __init__(self,
+                 address: str = "",
+                 events: list[TransactionEvent] = []) -> None:
+        self.address = address
+        self.events = events
 
-    @staticmethod
-    def from_http_response(logs: dict[str, Any]) -> 'TransactionLogs':
-        result = TransactionLogs()
 
-        address = logs.get('address', '')
-        result.address = Address.new_from_bech32(address) if address else EmptyAddress()
+class SmartContractResult:
+    def __init__(self,
+                 raw: dict[str, Any] = {},
+                 sender: str = "",
+                 receiver: str = "",
+                 data: bytes = b"",
+                 logs: TransactionLogs = TransactionLogs()) -> None:
+        self.raw = raw
+        self.sender = sender
+        self.receiver = receiver
+        self.data = data
+        self.logs = logs
 
-        events = logs.get('events', [])
-        result.events = [TransactionEvent.from_http_response(item) for item in events]
 
-        return result
+class SmartContractCallOutcome:
+    def __init__(self,
+                 function: str = "",
+                 return_data_parts: list[bytes] = [],
+                 return_message: str = "",
+                 return_code: str = "") -> None:
+        self.function = function
+        self.return_data_parts = return_data_parts
+        self.return_message = return_message
+        self.return_code = return_code
 
-    def find_first_or_none_event(self, identifier: str, predicate: Optional[Callable[[TransactionEvent], bool]] = None) -> Union[TransactionEvent, None]:
+
+def find_events_by_identifier(transaction: TransactionOnNetwork, identifier: str) -> list[TransactionEvent]:
+    return find_events_by_predicate(transaction, lambda event: event.identifier == identifier)
+
+
+def find_events_by_first_topic(transaction: TransactionOnNetwork, topic: str) -> list[TransactionEvent]:
+    def is_topic_matching(event: TransactionEvent):
+        if not len(event.topics):
+            return False
+
         try:
-            return self.find_events(identifier, predicate)[0]
-        except:
-            return None
+            decoded_topic = event.topics[0].decode()
+            return decoded_topic == topic
+        except UnicodeDecodeError:
+            return False
 
-    def find_events(self, identifier: str, predicate: Optional[Callable[[TransactionEvent], bool]] = None) -> list[TransactionEvent]:
-        events = [item for item in self.events if item.identifier == identifier]
-
-        if predicate is not None:
-            events = list(filter(predicate, events))
-
-        return events
-
-    def to_dictionary(self) -> dict[str, Any]:
-        return {
-            "address": self.address.to_bech32(),
-            "events": [item.to_dictionary() for item in self.events]
-        }
+    return find_events_by_predicate(transaction, is_topic_matching)
 
 
-class ContractResults:
-    def __init__(self, items: list["ContractResultItem"]):
-        self.items = items
-        self.items.sort(key=lambda x: x.nonce, reverse=False)
-
-    @staticmethod
-    def from_api_http_response(results: list[Any]) -> "ContractResults":
-        items = [ContractResultItem.from_api_http_response(item) for item in results]
-        return ContractResults(items)
-
-    @staticmethod
-    def from_proxy_http_response(results: list[Any]) -> "ContractResults":
-        items = list(map(ContractResultItem.from_proxy_http_response, results))
-        return ContractResults(items)
+def find_events_by_predicate(
+        transaction: TransactionOnNetwork,
+        predicate: Callable[[TransactionEvent], bool]
+) -> list[TransactionEvent]:
+    events = gather_all_events(transaction)
+    return list(filter(predicate, events))
 
 
-class ContractResultItem:
-    def __init__(self):
-        self.hash: str = ""
-        self.nonce: int = 0
-        self.value: int = 0
-        self.receiver: IAddress = EmptyAddress()
-        self.sender: IAddress = EmptyAddress()
-        self.data: str = ""
-        self.previous_hash: str = ""
-        self.original_hash: str = ""
-        self.gas_limit: int = 0
-        self.gas_price: int = 0
-        self.call_type: int = 0
-        self.return_message: str = ""
-        self.is_refund = False
-        self.logs: TransactionLogs = TransactionLogs()
+def gather_all_events(transaction: TransactionOnNetwork) -> list[TransactionEvent]:
+    all_events = [*transaction.logs.events]
 
-    def to_dictionary(self) -> dict[str, Any]:
-        return {
-            "hash": self.hash,
-            "nonce": self.nonce,
-            "value": self.value,
-            "receiver": self.receiver.to_bech32(),
-            "sender": self.sender.to_bech32(),
-            "data": self.data,
-            "previousHash": self.previous_hash,
-            "originalHash": self.original_hash,
-            "gasLimit": self.gas_limit,
-            "gasPrice": self.gas_price,
-            "callType": self.call_type,
-            "returnMessage": self.return_message,
-            "isRefund": self.is_refund,
-            "logs": self.logs.to_dictionary()
-        }
+    for result in transaction.contract_results:
+        all_events.extend(result.logs.events)
 
-    @staticmethod
-    def from_api_http_response(response: Any) -> "ContractResultItem":
-        item = ContractResultItem._from_http_response(response)
-
-        item.data = base64.b64decode(item.data.encode()).decode()
-        item.call_type = int(item.call_type)
-
-        return item
-
-    @staticmethod
-    def from_proxy_http_response(response: Any) -> "ContractResultItem":
-        item = ContractResultItem._from_http_response(response)
-
-        return item
-
-    @staticmethod
-    def _from_http_response(response: dict[str, Any]) -> "ContractResultItem":
-        item = ContractResultItem()
-
-        item.hash = response.get("hash", "")
-        item.nonce = response.get("nonce", 0)
-        item.value = int(response.get("value", 0))
-
-        sender = response.get("sender", "")
-        item.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
-
-        receiver = response.get("receiver", "")
-        item.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
-
-        item.previous_hash = response.get("prevTxHash", "")
-        item.original_hash = response.get("originalTxHash", "")
-        item.gas_limit = response.get("gasLimit", 0)
-        item.gas_price = response.get("gasPrice", 0)
-        item.data = response.get("data", "")
-        item.call_type = response.get("callType", 0)
-        item.return_message = response.get("returnMessage", "")
-        item.is_refund = response.get("isRefund", False)
-
-        item.logs = TransactionLogs.from_http_response(response.get("logs", {}))
-
-        return item
+    return all_events

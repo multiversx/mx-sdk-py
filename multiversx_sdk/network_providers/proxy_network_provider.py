@@ -19,7 +19,7 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
-    smart_contract_query_to_vm_query_request,
+    smart_contract_query_to_vm_query_request, transaction_from_proxy_response,
     vm_query_response_to_smart_contract_query_response)
 from multiversx_sdk.network_providers.interface import IAddress
 from multiversx_sdk.network_providers.network_config import NetworkConfig
@@ -124,7 +124,7 @@ class ProxyNetworkProvider:
             except GenericError as ge:
                 raise TransactionFetchingError(ge.url, ge.data)
 
-        return TransactionOnNetwork.from_proxy_http_response(tx_hash, tx, process_status)
+        return transaction_from_proxy_response(tx_hash, tx, process_status)
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
