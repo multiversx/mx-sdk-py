@@ -2,6 +2,7 @@ import logging
 import time
 from typing import Callable, Optional, Protocol, Union
 
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.constants import (
     DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
@@ -9,7 +10,6 @@ from multiversx_sdk.network_providers.constants import (
 from multiversx_sdk.network_providers.errors import (
     ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction,
     TransactionFetchingError)
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 
 ONE_SECOND_IN_MILLISECONDS = 1000
 

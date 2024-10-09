@@ -8,12 +8,11 @@ from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
+from multiversx_sdk.core.transaction_on_network import (ContractResultItem,
+                                                        ContractResults,
+                                                        TransactionOnNetwork)
+from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.accounts import AccountOnNetwork
-from multiversx_sdk.network_providers.contract_results import (
-    ContractResultItem, ContractResults)
-from multiversx_sdk.network_providers.transaction_status import \
-    TransactionStatus
-from multiversx_sdk.network_providers.transactions import TransactionOnNetwork
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 
 
