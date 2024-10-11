@@ -23,14 +23,14 @@ class TransactionEvent:
         result.address = Address.new_from_bech32(address) if address else EmptyAddress()
 
         result.identifier = response.get('identifier', '')
-        topics = response.get('topics', [])
+        topics = response.get('topics') or []
         result.topics = [TransactionEventTopic(item) for item in topics]
 
         raw_data = base64.b64decode(response.get('responseData', b''))
         result.data_payload = TransactionEventData(raw_data)
         result.data = raw_data.decode()
 
-        additional_data: Any = response.get("additionalData", [])
+        additional_data: Any = response.get("additionalData") or []
         if additional_data is None:
             additional_data = []
         result.additional_data = [TransactionEventData(base64.b64decode(data)) for data in additional_data]

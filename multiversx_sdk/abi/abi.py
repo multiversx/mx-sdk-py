@@ -265,6 +265,8 @@ class Abi:
             return I16Value()
         if name == "i32":
             return I32Value()
+        if name == "i64":
+            return I64Value()
         if name == "BigUint":
             return BigUIntValue()
         if name == "BigInt":
