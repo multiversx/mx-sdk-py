@@ -222,10 +222,21 @@ def test_parse_esdt_safe_deposit_event_without_first_topic():
 
 @pytest.mark.networkInteraction
 def test_multisig_start_perform_action():
-    api = ApiNetworkProvider("https://testnet-api.multiversx.com")
+    api = ApiNetworkProvider("https://devnet-api.multiversx.com")
     converter = TransactionsConverter()
 
-    transaction_on_network = api.get_transaction("6e893154a3100a3a1ca3cf7ab52a66bb7dab81d2f288943e27cac71a5c437b19")
+    # Test was set up as follows:
+    # Deploy multisig
+    # mxpy contract deploy --bytecode=./multisig-full.wasm --gas-limit=100000000 --recall-nonce --arguments 2 erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx --proxy=https://devnet-gateway.multiversx.com --pem=erd1test.pem --send
+    # Call "proposeTransferExecute"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function proposeTransferExecute --gas-limit=20000000 --recall-nonce --arguments erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede 1000000000000000000 0x00 --proxy=https://devnet-gateway.multiversx.com --pem=alice.pem --send
+    # Call "sign"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function sign --gas-limit=20000000 --recall-nonce --arguments 1 --proxy=https://devnet-gateway.multiversx.com --pem=bob.pem --send
+    # Call "deposit"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function deposit --gas-limit=20000000 --recall-nonce --value 1000000000000000000 --proxy=https://devnet-gateway.multiversx.com --pem=alice.pem --send
+    # Call "performAction"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function performAction --gas-limit=20000000 --recall-nonce --arguments 1 --proxy=https://devnet-gateway.multiversx.com --pem=alice.pem --send
+    transaction_on_network = api.get_transaction("6651b983d494d69d94ce3efb3ae1604480af7c17780ab58daa09a9e5cc1d86c8")
     transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
 
     abi = Abi.load(testdata / "multisig-full.abi.json")
@@ -251,6 +262,6 @@ def test_multisig_start_perform_action():
                 '__discriminant__': 5
             },
         ),
-        signers=[Address.new_from_bech32("erd1uwef0vsxup3p84fmg3szjs0ae3d9qx0sn5eqe5ayerlgk34cczpsqm2nrl").get_public_key(),
-                 Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key()]
+        signers=[Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
+                 Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx").get_public_key()]
     )
