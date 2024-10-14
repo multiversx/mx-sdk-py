@@ -54,7 +54,7 @@ def transaction_from_proxy_response(
 ) -> "TransactionOnNetwork":
     result = _transaction_from_network_response(tx_hash, response)
 
-    sc_results = response.get("results", [])
+    sc_results = response.get("smartContractResults", [])
     result.contract_results = [smart_contract_result_from_proxy_request(result) for result in sc_results]
 
     if process_status:
@@ -118,10 +118,15 @@ def transaction_events_from_request(raw_response: dict[str, Any]) -> Transaction
     topics = [base64.b64decode(topic.encode()) for topic in raw_response.get('topics', [])]
 
     raw_data = base64.b64decode(raw_response.get('responseData', "").encode())
-    data = base64.b64decode(raw_response.get("data", "").encode())
 
-    additional_data = raw_response.get("additionalData", [])
-    additional_data = [base64.b64decode(data.encode()) for data in additional_data]
+    data = raw_response.get("data", None)
+    if data is not None:
+        data = base64.b64decode(data.encode())
+    else:
+        data = b""
+
+    additional_data = raw_response.get("additionalData", None)
+    additional_data = [base64.b64decode(data.encode()) for data in additional_data] if additional_data is not None else []
 
     if len(additional_data) == 0:
         if raw_data:

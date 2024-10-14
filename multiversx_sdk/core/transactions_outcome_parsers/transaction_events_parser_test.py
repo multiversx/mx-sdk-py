@@ -213,39 +213,37 @@ def test_parse_esdt_safe_deposit_event_without_first_topic():
     )
 
 
-# @pytest.mark.networkInteraction
-# def test_multisig_start_perform_action():
-#     api = ApiNetworkProvider("https://devnet-api.multiversx.com")
-#     converter = TransactionsConverter()
+@pytest.mark.networkInteraction
+def test_multisig_start_perform_action():
+    api = ApiNetworkProvider("https://devnet-api.multiversx.com")
 
-#     transaction_on_network = api.get_transaction("d17f6c129cefa8320365f25d7ab051121b985ad6ff73f20d0005286856b1ac36")
-#     transaction_outcome = converter.transaction_on_network_to_outcome(transaction_on_network)
+    transaction_on_network = api.get_transaction("d17f6c129cefa8320365f25d7ab051121b985ad6ff73f20d0005286856b1ac36")
 
-#     abi = Abi.load(testdata / "multisig-full.abi.json")
-#     events_parser = TransactionEventsParser(abi)
+    abi = Abi.load(testdata / "multisig-full.abi.json")
+    events_parser = TransactionEventsParser(abi)
 
-#     events = find_events_by_first_topic(transaction_outcome, "startPerformAction")
-#     parsed_event = events_parser.parse_event(events[0])
+    events = find_events_by_first_topic(transaction_on_network, "startPerformAction")
+    parsed_event = events_parser.parse_event(events[0])
 
-#     assert parsed_event.data == SimpleNamespace(
-#         action_id=1,
-#         group_id=0,
-#         action_data=SimpleNamespace(
-#             **{
-#                 "0": SimpleNamespace(
-#                     **{
-#                         'to': Address.new_from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede").get_public_key(),
-#                         'egld_amount': 1000000000000000000,
-#                         'opt_gas_limit': None,
-#                         'endpoint_name': b'',
-#                         'arguments': []
-#                     }
-#                 ),
-#                 '__discriminant__': 5
-#             },
-#         ),
-#         signers=[
-#             Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
-#             Address.new_from_bech32("erd1uwef0vsxup3p84fmg3szjs0ae3d9qx0sn5eqe5ayerlgk34cczpsqm2nrl").get_public_key(),
-#         ]
-#     )
+    assert parsed_event.data == SimpleNamespace(
+        action_id=1,
+        group_id=0,
+        action_data=SimpleNamespace(
+            **{
+                "0": SimpleNamespace(
+                    **{
+                        'to': Address.new_from_bech32("erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede").get_public_key(),
+                        'egld_amount': 1000000000000000000,
+                        'opt_gas_limit': None,
+                        'endpoint_name': b'',
+                        'arguments': []
+                    }
+                ),
+                '__discriminant__': 5
+            },
+        ),
+        signers=[
+            Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
+            Address.new_from_bech32("erd1uwef0vsxup3p84fmg3szjs0ae3d9qx0sn5eqe5ayerlgk34cczpsqm2nrl").get_public_key(),
+        ]
+    )

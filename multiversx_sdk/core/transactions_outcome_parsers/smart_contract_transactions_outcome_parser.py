@@ -12,7 +12,7 @@ class SmartContractTransactionsOutcomeParser:
         pass
 
     def get_direct_sc_call(self, transaction: TransactionOnNetwork) -> SmartContractCallOutcome:
-        # will copy the logic from js, the "neural" network, to convert to a sc call outcome
+        # will copy the logic from js, to convert to a sc call outcome
         ...
 
     def parse_deploy(self, transaction: TransactionOnNetwork) -> SmartContractDeployOutcome:

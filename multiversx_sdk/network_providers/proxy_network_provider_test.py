@@ -149,7 +149,7 @@ class TestProxy:
         assert result.is_completed is True
         assert len(result.contract_results) > 0
         assert result.data == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
-        assert sum([r.raw.get("", False) for r in result.contract_results]) == 1
+        assert sum([r.raw.get("isRefund", False) for r in result.contract_results]) == 1
 
     def test_get_hyperblock(self):
         result_by_nonce = self.proxy.get_hyperblock(835683)
