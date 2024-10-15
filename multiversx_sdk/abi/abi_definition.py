@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 
 class AbiDefinition:
@@ -87,7 +87,7 @@ class EndpointDefinition:
                  outputs: List["ParameterDefinition"],
                  payable_in_tokens: List[str],
                  only_owner: bool,
-                 title: Optional[str]) -> None:
+                 title: str = "") -> None:
         self.name = name
         self.docs = docs
         self.mutability = mutability
