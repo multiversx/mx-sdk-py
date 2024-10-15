@@ -21,6 +21,7 @@
   "endpoints": [
     {
       "name": "getSum",
+      "title": "Get Sum",
       "mutability": "readonly",
       "inputs": [],
       "outputs": [
