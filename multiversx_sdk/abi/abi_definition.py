@@ -86,7 +86,8 @@ class EndpointDefinition:
                  inputs: List["ParameterDefinition"],
                  outputs: List["ParameterDefinition"],
                  payable_in_tokens: List[str],
-                 only_owner: bool) -> None:
+                 only_owner: bool,
+                 title: str) -> None:
         self.name = name
         self.docs = docs
         self.mutability = mutability
@@ -94,6 +95,7 @@ class EndpointDefinition:
         self.outputs = outputs
         self.payable_in_tokens = payable_in_tokens
         self.only_owner = only_owner
+        self.title = title
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "EndpointDefinition":
@@ -107,7 +109,8 @@ class EndpointDefinition:
             inputs=inputs,
             outputs=outputs,
             payable_in_tokens=data.get("payableInTokens", []),
-            only_owner=data.get("onlyOwner", False)
+            only_owner=data.get("onlyOwner", False),
+            title=data.get("title", "")
         )
 
     def __repr__(self):
@@ -123,7 +126,8 @@ class NullEndpointDefinition(EndpointDefinition):
             inputs=[],
             outputs=[],
             payable_in_tokens=[],
-            only_owner=False
+            only_owner=False,
+            title=""
         )
 
     def __repr__(self):
