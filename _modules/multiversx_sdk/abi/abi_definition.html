@@ -171,7 +171,8 @@
                  <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">],</span>
                  <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">],</span>
                  <span class="n">payable_in_tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                 <span class="n">only_owner</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">only_owner</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                 <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">docs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mutability</span> <span class="o">=</span> <span class="n">mutability</span>
@@ -179,6 +180,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="n">outputs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">payable_in_tokens</span> <span class="o">=</span> <span class="n">payable_in_tokens</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">only_owner</span> <span class="o">=</span> <span class="n">only_owner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
 
 <div class="viewcode-block" id="EndpointDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EndpointDefinition.from_dict">[docs]</a>
@@ -194,7 +196,8 @@
             <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
             <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
             <span class="n">payable_in_tokens</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;payableInTokens&quot;</span><span class="p">,</span> <span class="p">[]),</span>
-            <span class="n">only_owner</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;onlyOwner&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">only_owner</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;onlyOwner&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="p">)</span></div>
 
 
@@ -214,7 +217,8 @@
             <span class="n">inputs</span><span class="o">=</span><span class="p">[],</span>
             <span class="n">outputs</span><span class="o">=</span><span class="p">[],</span>
             <span class="n">payable_in_tokens</span><span class="o">=</span><span class="p">[],</span>
-            <span class="n">only_owner</span><span class="o">=</span><span class="kc">False</span>
+            <span class="n">only_owner</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
