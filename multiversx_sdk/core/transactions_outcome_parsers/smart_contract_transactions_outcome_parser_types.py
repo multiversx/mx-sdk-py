@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import Any
 
 
 @dataclass
@@ -16,4 +16,11 @@ class DeployedSmartContract:
 class SmartContractDeployOutcome:
     return_code: str
     return_message: str
-    contracts: List[DeployedSmartContract]
+    contracts: list[DeployedSmartContract]
+
+
+@dataclass
+class ParsedSmartContractCallOutcome:
+    values: list[Any]
+    return_code: str
+    return_message: str

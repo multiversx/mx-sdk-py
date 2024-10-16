@@ -115,7 +115,12 @@ def transaction_logs_from_request(raw_response: dict[str, Any]) -> TransactionLo
 def transaction_events_from_request(raw_response: dict[str, Any]) -> TransactionEvent:
     address = raw_response.get('address', '')
     identifier = raw_response.get('identifier', '')
-    topics = [base64.b64decode(topic.encode()) for topic in raw_response.get('topics', [])]
+    topics = raw_response.get('topics', None)
+
+    if topics is not None:
+        topics = [base64.b64decode(topic) for topic in topics]
+    else:
+        topics = [b""]
 
     raw_data = base64.b64decode(raw_response.get('responseData', "").encode())
 

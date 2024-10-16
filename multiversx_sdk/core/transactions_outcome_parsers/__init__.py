@@ -5,7 +5,8 @@ from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_ou
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
     SmartContractTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import (
-    DeployedSmartContract, SmartContractDeployOutcome)
+    DeployedSmartContract, ParsedSmartContractCallOutcome,
+    SmartContractDeployOutcome)
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser import \
     TokenManagementTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.token_management_transactions_outcome_parser_types import (
@@ -24,5 +25,5 @@ __all__ = [
     "IssueFungibleOutcome", "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome",
     "RegisterAndSetAllRolesOutcome", "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome",
     "PauseOutcome", "UnPauseOutcome", "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome",
-    "AddQuantityOutcome", "BurnQuantityOutcome"
+    "AddQuantityOutcome", "BurnQuantityOutcome", "ParsedSmartContractCallOutcome"
 ]
