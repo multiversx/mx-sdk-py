@@ -1,8 +1,7 @@
 from typing import Any, Dict
 
-from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.address import Address, EmptyAddress
 from multiversx_sdk.network_providers.interface import IAddress
-from multiversx_sdk.network_providers.resources import EmptyAddress
 
 
 class AccountOnNetwork:

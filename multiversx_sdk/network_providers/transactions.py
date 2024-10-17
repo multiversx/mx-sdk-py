@@ -1,9 +1,8 @@
 import base64
 from typing import Any, Dict, Protocol, Sequence
 
-from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.address import Address, EmptyAddress
 from multiversx_sdk.network_providers.interface import IAddress
-from multiversx_sdk.network_providers.resources import EmptyAddress
 
 
 class ITransaction(Protocol):

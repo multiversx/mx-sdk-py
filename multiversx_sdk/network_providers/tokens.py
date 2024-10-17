@@ -1,8 +1,7 @@
 from typing import Any, Dict, List
 
-from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.address import Address, EmptyAddress
 from multiversx_sdk.network_providers.interface import IAddress
-from multiversx_sdk.network_providers.resources import EmptyAddress
 from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 

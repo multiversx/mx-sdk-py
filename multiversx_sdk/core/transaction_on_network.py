@@ -1,5 +1,6 @@
 from typing import Any, Callable, Optional, Protocol
 
+from multiversx_sdk.core.address import EmptyAddress
 from multiversx_sdk.core.transaction_status import TransactionStatus
 
 
@@ -9,15 +10,6 @@ class IAddress(Protocol):
 
     def to_hex(self) -> str:
         ...
-
-
-# This class is duplicated to get rid of the circular dependency; will be removed very soon as it will not be needed anymore
-class EmptyAddress:
-    def to_bech32(self) -> str:
-        return ""
-
-    def to_hex(self) -> str:
-        return ""
 
 
 class TransactionOnNetwork:

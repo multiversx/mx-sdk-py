@@ -17,14 +17,6 @@ class GenericResponse:
         return self.__dict__
 
 
-class EmptyAddress:
-    def to_bech32(self) -> str:
-        return ""
-
-    def to_hex(self) -> str:
-        return ""
-
-
 class SmartContractResult:
     def __init__(self, raw: Dict[str, Any]) -> None:
         self.raw = raw
