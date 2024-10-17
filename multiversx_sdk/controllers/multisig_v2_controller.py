@@ -179,12 +179,12 @@ class MultisigV2Controller:
 
         return value
 
-    def add_board_member(self,
-                         sender: IAccount,
-                         nonce: int,
-                         contract: IAddress,
-                         gas_limit: int,
-                         board_member: IAddress,) -> Transaction:
+    def create_transaction_for_propose_add_board_member(self,
+                                                        sender: IAccount,
+                                                        nonce: int,
+                                                        contract: IAddress,
+                                                        gas_limit: int,
+                                                        board_member: IAddress,) -> Transaction:
         transaction = self.factory.create_transaction_for_propose_add_board_member(
             sender=sender.address,
             contract=contract,
@@ -197,17 +197,53 @@ class MultisigV2Controller:
 
         return transaction
 
-    def add_proposer(self,
-                     sender: IAccount,
-                     nonce: int,
-                     contract: IAddress,
-                     gas_limit: int,
-                     proposer: IAddress) -> Transaction:
+    def create_transaction_for_propose_add_proposer(self,
+                                                    sender: IAccount,
+                                                    nonce: int,
+                                                    contract: IAddress,
+                                                    gas_limit: int,
+                                                    proposer: IAddress) -> Transaction:
         transaction = self.factory.create_transaction_for_propose_add_proposer(
             sender=sender.address,
             contract=contract,
             gas_limit=gas_limit,
             proposer=proposer,
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_propose_remove_user(self,
+                                                   sender: IAccount,
+                                                   nonce: int,
+                                                   contract: IAddress,
+                                                   gas_limit: int,
+                                                   user: IAddress) -> Transaction:
+        transaction = self.factory.create_transaction_for_propose_remove_user(
+            sender=sender.address,
+            contract=contract,
+            gas_limit=gas_limit,
+            user=user,
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_propose_change_quorum(self,
+                                                     sender: IAccount,
+                                                     nonce: int,
+                                                     contract: IAddress,
+                                                     gas_limit: int,
+                                                     new_quorum: int) -> Transaction:
+        transaction = self.factory.create_transaction_for_propose_change_quorum(
+            sender=sender.address,
+            contract=contract,
+            gas_limit=gas_limit,
+            new_quorum=new_quorum,
         )
 
         transaction.nonce = nonce
