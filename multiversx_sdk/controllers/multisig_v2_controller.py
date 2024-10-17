@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Tuple, Union
 
 from multiversx_sdk.controllers.interfaces import IAbi, IAccount
 from multiversx_sdk.controllers.multisig_v2_resources import (
@@ -362,14 +362,122 @@ class MultisigV2Controller:
 
         return transaction
 
-    def parse_execute_propose_action(self, transaction_on_network: TransactionOnNetwork) -> int:
+    def create_transaction_for_propose_batch(self,
+                                             sender: IAccount,
+                                             nonce: int,
+                                             contract: IAddress,
+                                             gas_limit: int,
+                                             actions: list[Any]) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def create_transaction_for_sign(self,
+                                    sender: IAccount,
+                                    nonce: int,
+                                    contract: IAddress,
+                                    gas_limit: int,
+                                    action_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def create_transaction_for_sign_batch(self,
+                                          sender: IAccount,
+                                          nonce: int,
+                                          contract: IAddress,
+                                          gas_limit: int,
+                                          group_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def create_transaction_for_sign_and_perform(self,
+                                                sender: IAccount,
+                                                nonce: int,
+                                                contract: IAddress,
+                                                gas_limit: int,
+                                                action_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def create_transaction_for_sign_batch_and_perform(self,
+                                                      sender: IAccount,
+                                                      nonce: int,
+                                                      contract: IAddress,
+                                                      gas_limit: int,
+                                                      group_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def create_transaction_for_unsign(self,
+                                      sender: IAccount,
+                                      nonce: int,
+                                      contract: IAddress,
+                                      gas_limit: int,
+                                      action_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def create_transaction_for_unsign_batch(self,
+                                            sender: IAccount,
+                                            nonce: int,
+                                            contract: IAddress,
+                                            gas_limit: int,
+                                            group_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def is_signed_by(self, contract: IAddress, user: IAddress, action_id: int) -> bool:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="signed",
+            arguments=[user, action_id],
+        )
+
+        return value
+
+    def create_transaction_for_unsign_for_outdated_board_members(self,
+                                                                 sender: IAccount,
+                                                                 nonce: int,
+                                                                 contract: IAddress,
+                                                                 gas_limit: int,
+                                                                 action_id: int,
+                                                                 outdated_board_members: list[int]) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def is_quorum_reached(self, contract: IAddress, action_id: int) -> bool:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="quorumReached",
+            arguments=[action_id],
+        )
+
+        return value
+
+    def create_transaction_for_perform_action(self,
+                                              sender: IAccount,
+                                              nonce: int,
+                                              contract: IAddress,
+                                              gas_limit: int,
+                                              action_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def create_transaction_for_perform_batch(self,
+                                             sender: IAccount,
+                                             nonce: int,
+                                             contract: IAddress,
+                                             gas_limit: int,
+                                             group_id: int) -> Transaction:
+        raise NotImplementedError("Not implemented yet")
+
+    def get_pending_action_full_info(self, contract: IAddress, range: Optional[Tuple[int, int]] = None) -> list[Any]:
+        values = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getPendingActionFullInfo",
+            arguments=[range],
+        )
+
+        return values
+
+    def parse_execute_propose_any(self, transaction_on_network: TransactionOnNetwork) -> int:
         outcome = self.parser.parse_execute(transaction_on_network)
         self._raise_for_return_code_in_outcome(outcome)
         return outcome.values[0]
 
-    def await_completed_execute_propose_action(self, tx_hash: str) -> int:
+    def await_completed_execute_propose_any(self, tx_hash: str) -> int:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_action(transaction)
+        return self.parse_execute_propose_any(transaction)
 
     # TODO: maybe move to the generic outcome parser, just like we did in the query controller?
     def _raise_for_return_code_in_outcome(self, outcome: ParsedSmartContractCallOutcome):
