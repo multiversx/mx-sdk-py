@@ -5,7 +5,7 @@ from multiversx_sdk.core.transaction_on_network import TransactionEvent
 
 
 class IAbi(Protocol):
-    def decode_event(self, event_name: str, topics: List[bytes], data_items: List[bytes]) -> SimpleNamespace:
+    def decode_event(self, event_name: str, topics: List[bytes], additional_data: List[bytes]) -> SimpleNamespace:
         ...
 
 
@@ -30,5 +30,5 @@ class TransactionEventsParser:
         return self.abi.decode_event(
             event_name=abi_identifier,
             topics=topics,
-            data_items=event.additional_data,
+            additional_data=event.additional_data,
         )

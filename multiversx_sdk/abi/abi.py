@@ -23,7 +23,9 @@ from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.serializer import Serializer
-from multiversx_sdk.abi.small_int_values import *
+from multiversx_sdk.abi.small_int_values import (I8Value, I16Value, I32Value,
+                                                 I64Value, U8Value, U16Value,
+                                                 U32Value, U64Value)
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.token_identifier_value import TokenIdentifierValue
@@ -189,7 +191,7 @@ class Abi:
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
         return output_native_values
 
-    def decode_event(self, event_name: str, topics: List[bytes], data_items: List[bytes]) -> SimpleNamespace:
+    def decode_event(self, event_name: str, topics: List[bytes], additional_data: List[bytes]) -> SimpleNamespace:
         result = SimpleNamespace()
         event_definition = self.definition.get_event_definition(event_name)
         event_prototype = self._get_event_prototype(event_name)
@@ -212,7 +214,7 @@ class Abi:
         non_indexed_inputs_names = [item.name for item in non_indexed_inputs]
 
         output_values = [field.value for field in fields if field.name in non_indexed_inputs_names]
-        self._serializer.deserialize_parts(data_items, output_values)
+        self._serializer.deserialize_parts(additional_data, output_values)
 
         output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
@@ -265,6 +267,8 @@ class Abi:
             return I16Value()
         if name == "i32":
             return I32Value()
+        if name == "i64":
+            return I64Value()
         if name == "BigUint":
             return BigUIntValue()
         if name == "BigInt":
