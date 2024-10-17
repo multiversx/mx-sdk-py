@@ -106,6 +106,9 @@ class Address:
     def __bytes__(self) -> bytes:
         return self.get_public_key()
 
+    def __str__(self) -> str:
+        return self.to_bech32()
+
 
 class EmptyAddress:
     def to_bech32(self) -> str:

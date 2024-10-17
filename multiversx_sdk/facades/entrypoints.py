@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Optional, Protocol, Sequence, Tuple, Union
 from multiversx_sdk.controllers.account_controller import AccountController
 from multiversx_sdk.controllers.delegation_controller import \
     DelegationController
+from multiversx_sdk.controllers.multisig_v2_controller import \
+    MultisigV2Controller
 from multiversx_sdk.controllers.relayed_controller import RelayedController
 from multiversx_sdk.controllers.smart_contract_controller import \
     SmartContractController
@@ -126,6 +128,9 @@ class NetworkEntrypoint:
 
     def create_transfers_controller(self) -> TransfersController:
         return TransfersController(self.chain_id)
+
+    def create_multisig_v2_controller(self, abi: IAbi) -> MultisigV2Controller:
+        return MultisigV2Controller(self.chain_id, self.network_provider, abi)
 
 
 class TestnetEntrypoint(NetworkEntrypoint):

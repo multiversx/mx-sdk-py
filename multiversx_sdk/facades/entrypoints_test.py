@@ -13,6 +13,7 @@ testutils = Path(__file__).parent.parent / "testutils"
 class TestEntrypoint:
     entrypoint = DevnetEntrypoint()
     alice_pem = testutils / "testwallets" / "alice.pem"
+    bob_pem = testutils / "testwallets" / "bob.pem"
 
     def test_native_transfer(self):
         controller = self.entrypoint.create_transfers_controller()
@@ -101,3 +102,28 @@ class TestEntrypoint:
         assert len(relayed_transaction.inner_transactions) == 1
         assert relayed_transaction.sender == relayed_transaction.inner_transactions[0].relayer
         assert relayed_transaction.chain_id == "D"
+
+    @pytest.mark.networkInteraction
+    def test_multisig_flow(self):
+        abi = Abi.load(testutils / "testdata" / "multisig-full.abi.json")
+        bytecode_path = testutils / "testdata" / "multisig-full.wasm"
+        controller = self.entrypoint.create_multisig_v2_controller(abi)
+
+        alice = Account.new_from_pem(self.alice_pem)
+        bob = Account.new_from_pem(self.bob_pem)
+        alice.nonce = self.entrypoint.recall_account_nonce(alice.address)
+        bob.nonce = self.entrypoint.recall_account_nonce(bob.address)
+
+        transaction = controller.create_transaction_for_deploy(
+            sender=alice,
+            nonce=alice.nonce,
+            bytecode=bytecode_path,
+            gas_limit=100_000_000,
+            quorum=2,
+            board=[alice.address, bob.address]
+        )
+
+        transaction_hash = self.entrypoint.send_transaction(transaction)
+        outcome = controller.await_completed_deploy(transaction_hash)
+        multisig_address = Address.new_from_bech32(outcome.contracts[0].address)
+
