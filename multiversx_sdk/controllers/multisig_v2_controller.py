@@ -1,11 +1,13 @@
 from pathlib import Path
-from typing import Any, List, Optional, Protocol, Sequence, Union
+from typing import List, Optional, Union
 
 from multiversx_sdk.controllers.interfaces import IAbi, IAccount
+from multiversx_sdk.controllers.multisig_v2_resources import (
+    ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
+    ProposeSCUpgradeFromSourceInput, ProposeTransferExecuteEsdtInput,
+    ProposeTransferExecuteInput)
 from multiversx_sdk.controllers.smart_contract_controller import \
     INetworkProvider
-from multiversx_sdk.core.address import EmptyAddress
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
@@ -15,109 +17,10 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transactions_factories import (
     SmartContractTransactionsFactory, TransactionsFactoryConfig)
-from multiversx_sdk.core.transactions_factories.transfer_transactions_factory import \
-    TransferTransactionsFactory
 from multiversx_sdk.core.transactions_outcome_parsers import (
     SmartContractDeployOutcome, SmartContractTransactionsOutcomeParser)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import \
     ParsedSmartContractCallOutcome
-
-
-class ProposeTransferExecuteInput:
-    def __init__(self,
-                 to: IAddress,
-                 native_transfer_amount: int,
-                 gas_limit: Optional[int] = None,
-                 function: Optional[str] = None,
-                 arguments: Optional[list[Any]] = None,
-                 abi: Optional[IAbi] = None) -> None:
-        arguments = arguments or []
-
-        self.to = to
-        self.egld_amount = native_transfer_amount
-        self.opt_gas_limit = gas_limit
-
-        if function:
-            if abi:
-                self.function_call = abi.encode_endpoint_input_parameters(function, arguments)
-            else:
-                self.function_call = [function, *arguments]
-        else:
-            self.function_call = []
-
-
-class ProposeTransferExecuteEsdtInput:
-    def __init__(self,
-                 to: IAddress,
-                 token_transfers: list[TokenTransfer],
-                 gas_limit: Optional[int] = None,
-                 function: Optional[str] = None,
-                 arguments: Optional[list[Any]] = None,
-                 abi: Optional[IAbi] = None) -> None:
-        arguments = arguments or []
-
-        self.to = to
-        self.tokens = [EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers]
-        self.opt_gas_limit = gas_limit
-
-        if function:
-            if abi:
-                self.function_call = abi.encode_endpoint_input_parameters(function, arguments)
-            else:
-                self.function_call = [function, *arguments]
-        else:
-            self.function_call = []
-
-
-class ProposeAsyncCallInput:
-    def __init__(self,
-                 to: IAddress,
-                 native_transfer_amount: int,
-                 token_transfers: list[TokenTransfer],
-                 gas_limit: Optional[int] = None,
-                 function: Optional[str] = None,
-                 arguments: Optional[list[Any]] = None,
-                 abi: Optional[IAbi] = None) -> None:
-        arguments = arguments or []
-
-        self.to = to
-        self.egld_amount = native_transfer_amount
-        self.opt_gas_limit = gas_limit
-
-        if function:
-            # Since multisig requires the transfer & execute to be encoded as variadic<bytes> in "function_call",
-            # we leverage the transactions factory to achieve this (followed by splitting the data).
-            transactions_factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(""), abi=abi)
-            transaction = transactions_factory.create_transaction_for_execute(
-                sender=EmptyAddress(),
-                contract=EmptyAddress(),
-                function=function,
-                gas_limit=0,
-                arguments=arguments,
-                # Multisig wasn't designed to work with EGLD within MultiESDTNFT.
-                native_transfer_amount=0,
-                token_transfers=token_transfers)
-
-            self.function_call = transaction.data.split(ARGS_SEPARATOR.encode())
-        else:
-            # Since multisig requires the transfer to be encoded as variadic<bytes> in "function_call",
-            # we leverage the transactions factory to achieve this (followed by splitting the data).
-            transactions_factory = TransferTransactionsFactory(TransactionsFactoryConfig(""))
-            transaction = transactions_factory.create_transaction_for_transfer(
-                sender=EmptyAddress(),
-                receiver=EmptyAddress(),
-                # Multisig wasn't designed to work with EGLD within MultiESDTNFT.
-                native_amount=0,
-                token_transfers=token_transfers)
-
-            self.function_call = transaction.data.split(ARGS_SEPARATOR.encode())
-
-
-class EsdtTokenPayment:
-    def __init__(self, token_identifier: str, token_nonce: int, amount: int) -> None:
-        self.token_identifier = token_identifier
-        self.token_nonce = token_nonce
-        self.amount = amount
 
 
 class MultisigV2Controller:
@@ -483,6 +386,62 @@ class MultisigV2Controller:
     def await_completed_execute_propose_async_call(self, tx_hash: str) -> int:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_execute_propose_async_call(transaction)
+
+    def create_transaction_for_propose_deploy_contract_from_source(self,
+                                                                   sender: IAccount,
+                                                                   nonce: int,
+                                                                   contract: IAddress,
+                                                                   gas_limit: int,
+                                                                   input: ProposeSCDeployFromSourceInput) -> Transaction:
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="SCDeployFromSource",
+            gas_limit=gas_limit,
+            arguments=[input.amount, input.source, input.code_metadata, input.arguments],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def parse_execute_propose_deploy_contract_from_source(self, transaction_on_network: TransactionOnNetwork) -> int:
+        outcome = self.parser.parse_execute(transaction_on_network)
+        self._raise_for_return_code_in_outcome(outcome)
+        return outcome.values[0]
+
+    def await_completed_execute_propose_deploy_contract_from_source(self, tx_hash: str) -> int:
+        transaction = self.network_provider.await_transaction_completed(tx_hash)
+        return self.parse_execute_propose_deploy_contract_from_source(transaction)
+
+    def create_transaction_for_propose_upgrade_contract_from_source(self,
+                                                                    sender: IAccount,
+                                                                    nonce: int,
+                                                                    contract: IAddress,
+                                                                    gas_limit: int,
+                                                                    input: ProposeSCUpgradeFromSourceInput) -> Transaction:
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="SCUpgradeFromSource",
+            gas_limit=gas_limit,
+            arguments=[input.sc_address, input.amount, input.source, input.code_metadata, input.arguments],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def parse_execute_propose_upgrade_contract_from_source(self, transaction_on_network: TransactionOnNetwork) -> int:
+        outcome = self.parser.parse_execute(transaction_on_network)
+        self._raise_for_return_code_in_outcome(outcome)
+        return outcome.values[0]
+
+    def await_completed_execute_propose_upgrade_contract_from_source(self, tx_hash: str) -> int:
+        transaction = self.network_provider.await_transaction_completed(tx_hash)
+        return self.parse_execute_propose_upgrade_contract_from_source(transaction)
 
     # TODO: maybe move to the generic outcome parser, just like we did in the query controller?
     def _raise_for_return_code_in_outcome(self, outcome: ParsedSmartContractCallOutcome):
