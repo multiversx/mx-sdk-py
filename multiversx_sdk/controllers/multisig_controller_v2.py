@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any, List, Optional, Protocol, Sequence, Union
 
-from multiversx_sdk.controllers.interfaces import IAccount
+from multiversx_sdk.controllers.interfaces import IAbi, IAccount
 from multiversx_sdk.controllers.smart_contract_controller import \
     INetworkProvider
 from multiversx_sdk.core.interfaces import IAddress
@@ -17,8 +17,6 @@ from multiversx_sdk.core.transactions_factories import (
     SmartContractTransactionsFactory, TransactionsFactoryConfig)
 from multiversx_sdk.core.transactions_factories.multisig_v2_transactions_factory import \
     MultisigV2TransactionsFactory
-from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
-    IAbi
 from multiversx_sdk.core.transactions_outcome_parsers import (
     SmartContractDeployOutcome, SmartContractTransactionsOutcomeParser)
 from multiversx_sdk.network_providers.resources import AwaitingOptions
@@ -29,6 +27,10 @@ class MultisigV2Controller:
         self.network_provider = network_provider
         self.factory = MultisigV2TransactionsFactory(TransactionsFactoryConfig(chain_id), multisig_abi=multisig_abi)
         self.transaction_computer = TransactionComputer()
+        self.query_controller = SmartContractQueriesController(
+            network_provider=network_provider,
+            abi=multisig_abi
+        )
 
     def create_transaction_for_deploy(self,
                                       sender: IAccount,
@@ -113,3 +115,21 @@ class MultisigV2Controller:
         transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
+
+    def get_quorum(self, contract: IAddress) -> int:
+        [quorum] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getQuorum",
+            arguments=[],
+        )
+
+        return quorum
+
+    def get_num_board_members(self, contract: IAddress) -> int:
+        [quorum] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getNumBoardMembers",
+            arguments=[],
+        )
+
+        return quorum
