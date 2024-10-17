@@ -117,46 +117,100 @@ class MultisigV2Controller:
         return transaction
 
     def get_quorum(self, contract: IAddress) -> int:
-        [quorum] = self.query_controller.query(
+        [value] = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getQuorum",
             arguments=[],
         )
 
-        return quorum
+        return value
 
     def get_num_board_members(self, contract: IAddress) -> int:
-        [num] = self.query_controller.query(
+        [value] = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getNumBoardMembers",
             arguments=[],
         )
 
-        return num
+        return value
 
     def get_num_groups(self, contract: IAddress) -> int:
-        [num] = self.query_controller.query(
+        [value] = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getNumGroups",
             arguments=[],
         )
 
-        return num
+        return value
 
     def get_num_proposers(self, contract: IAddress) -> int:
-        [num] = self.query_controller.query(
+        [value] = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getNumProposers",
             arguments=[],
         )
 
-        return num
+        return value
 
     def get_action_group(self, contract: IAddress, group_id: int) -> list[int]:
-        ids = self.query_controller.query(
+        values = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getActionGroup",
             arguments=[group_id],
         )
 
-        return ids
+        return values
+
+    def get_last_group_action_id(self, contract: IAddress) -> int:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getLastGroupActionId",
+            arguments=[],
+        )
+
+        return value
+
+    def get_action_last_index(self, contract: IAddress) -> int:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getActionLastIndex",
+            arguments=[],
+        )
+
+        return value
+
+    def add_board_member(self,
+                         sender: IAccount,
+                         nonce: int,
+                         contract: IAddress,
+                         gas_limit: int,
+                         board_member: IAddress,) -> Transaction:
+        transaction = self.factory.create_transaction_for_propose_add_board_member(
+            sender=sender.address,
+            contract=contract,
+            gas_limit=gas_limit,
+            board_member=board_member,
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def add_proposer(self,
+                     sender: IAccount,
+                     nonce: int,
+                     contract: IAddress,
+                     gas_limit: int,
+                     proposer: IAddress) -> Transaction:
+        transaction = self.factory.create_transaction_for_propose_add_proposer(
+            sender=sender.address,
+            contract=contract,
+            gas_limit=gas_limit,
+            proposer=proposer,
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
