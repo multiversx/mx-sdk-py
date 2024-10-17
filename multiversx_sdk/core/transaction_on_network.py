@@ -113,18 +113,6 @@ class SmartContractResult:
         self.logs = logs
 
 
-class SmartContractCallOutcome:
-    def __init__(self,
-                 function: str = "",
-                 return_data_parts: list[bytes] = [],
-                 return_message: str = "",
-                 return_code: str = "") -> None:
-        self.function = function
-        self.return_data_parts = return_data_parts
-        self.return_message = return_message
-        self.return_code = return_code
-
-
 def find_events_by_identifier(transaction: TransactionOnNetwork, identifier: str) -> list[TransactionEvent]:
     return find_events_by_predicate(transaction, lambda event: event.identifier == identifier)
 

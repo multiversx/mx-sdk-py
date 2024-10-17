@@ -40,7 +40,7 @@ jobs:
             pip install -r requirements-dev.txt
 
       - name: Launch tests & generate report
-        run: coverage run -m pytest .
+        run: coverage run -m pytest -m "not mainnet"
 
       - name: Coverage comment
         id: coverage_comment

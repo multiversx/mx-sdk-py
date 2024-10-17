@@ -25,8 +25,9 @@ from multiversx_sdk.core.transactions_outcome_parsers import (
     CreateNewDelegationContractOutcome, DelegationTransactionsOutcomeParser,
     DeployedSmartContract, FreezeOutcome, IssueFungibleOutcome,
     IssueNonFungibleOutcome, IssueSemiFungibleOutcome, MintOutcome,
-    NFTCreateOutcome, PauseOutcome, RegisterAndSetAllRolesOutcome,
-    RegisterMetaEsdtOutcome, SetSpecialRoleOutcome, SmartContractDeployOutcome,
+    NFTCreateOutcome, ParsedSmartContractCallOutcome, PauseOutcome,
+    RegisterAndSetAllRolesOutcome, RegisterMetaEsdtOutcome,
+    SetSpecialRoleOutcome, SmartContractDeployOutcome,
     SmartContractTransactionsOutcomeParser,
     TokenManagementTransactionsOutcomeParser, TransactionEventsParser,
     UnFreezeOutcome, UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
@@ -48,5 +49,5 @@ __all__ = [
     "IssueFungibleOutcome", "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome",
     "RegisterAndSetAllRolesOutcome", "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome",
     "PauseOutcome", "UnPauseOutcome", "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome",
-    "AddQuantityOutcome", "BurnQuantityOutcome"
+    "AddQuantityOutcome", "BurnQuantityOutcome", "ParsedSmartContractCallOutcome"
 ]

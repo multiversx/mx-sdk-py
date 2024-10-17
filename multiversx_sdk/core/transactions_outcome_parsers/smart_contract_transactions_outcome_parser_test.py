@@ -1,22 +1,20 @@
-import base64
+import re
+from pathlib import Path
 
 import pytest
 
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionsConverter
+from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.transaction_on_network import \
-    TransactionEvent as TxEventOnNetwork
-from multiversx_sdk.core.transaction_on_network import \
-    TransactionLogs as TxLogsOnNetwork
-from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
+from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
+                                                        TransactionEvent,
+                                                        TransactionLogs,
+                                                        TransactionOnNetwork)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
     SmartContractTransactionsOutcomeParser
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 
 
-@pytest.mark.skip
 class TestSmartContractTransactionsOutcomeParser:
     parser = SmartContractTransactionsOutcomeParser()
 
@@ -30,17 +28,10 @@ class TestSmartContractTransactionsOutcomeParser:
             topics=[contract.get_public_key(), deployer.get_public_key(), code_hash]
         )
 
-        logs = TransactionLogs(events=[event])
-        direct_sc_call_outcome = SmartContractCallOutcome(return_code="ok", return_message="ok")
+        transaction = TransactionOnNetwork()
+        transaction.logs = TransactionLogs(events=[event])
 
-        transaction_outcome = TransactionOutcome(
-            direct_smart_contract_call_outcome=direct_sc_call_outcome,
-            transaction_logs=logs
-        )
-
-        parsed = self.parser.parse_deploy(transaction_outcome)
-        assert parsed.return_code == "ok"
-        assert parsed.return_message == "ok"
+        parsed = self.parser.parse_deploy(transaction)
         assert len(parsed.contracts) == 1
         assert parsed.contracts[0].address == contract.to_bech32()
         assert parsed.contracts[0].owner_address == deployer.to_bech32()
@@ -51,35 +42,26 @@ class TestSmartContractTransactionsOutcomeParser:
         deployer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         code_hash = bytes.fromhex("abba")
 
-        transaction_converter = TransactionsConverter()
-
-        event = TxEventOnNetwork()
+        event = TransactionEvent()
         event.identifier = "SCDeploy"
         event.topics = [
-            TxEventTopicOnNetwork(base64.b64encode(contract.get_public_key()).decode()),
-            TxEventTopicOnNetwork(base64.b64encode(deployer.get_public_key()).decode()),
-            TxEventTopicOnNetwork(base64.b64encode(code_hash).decode())
+            contract.get_public_key(),
+            deployer.get_public_key(),
+            code_hash
         ]
 
-        logs = TxLogsOnNetwork()
-        logs.events = [event]
-
-        item = ContractResultItemOnNetwork()
-        item.nonce = 8
-        item.data = "@6f6b"
-        contract_result = ContractResultOnNetwork([item])
+        logs = TransactionLogs(events=[event])
+        contract_result = SmartContractResult(data="@6f6b".encode())
 
         tx_on_network = TransactionOnNetwork()
         tx_on_network.nonce = 7
         tx_on_network.logs = logs
-        tx_on_network.contract_results = contract_result
+        tx_on_network.contract_results = [contract_result]
 
-        tx_outcome = transaction_converter.transaction_on_network_to_outcome(tx_on_network)
+        parsed = self.parser.parse_deploy(tx_on_network)
 
-        parsed = self.parser.parse_deploy(tx_outcome)
-
-        assert parsed.return_code == ""
-        assert parsed.return_message == ""
+        assert parsed.return_code == "ok"
+        assert parsed.return_message == "ok"
         assert len(parsed.contracts) == 1
         assert parsed.contracts[0].address == contract.to_bech32()
         assert parsed.contracts[0].owner_address == deployer.to_bech32()
@@ -87,42 +69,65 @@ class TestSmartContractTransactionsOutcomeParser:
 
     def test_parse_deploy_outcome_with_error(self):
         deployer = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        transaction_converter = TransactionsConverter()
 
-        event = TxEventOnNetwork()
+        event = TransactionEvent()
         event.identifier = "signalError"
         event.topics = [
-            TxEventTopicOnNetwork(base64.b64encode(deployer.get_public_key()).decode()),
-            TxEventTopicOnNetwork(base64.b64encode(b"wrong number of arguments").decode()),
+            deployer.get_public_key(),
+            b"wrong number of arguments",
         ]
-        event.data = "@75736572206572726f72"
+        event.data = "@75736572206572726f72".encode()
 
-        logs = TxLogsOnNetwork()
-        logs.events = [event]
+        logs = TransactionLogs(events=[event])
 
         tx_on_network = TransactionOnNetwork()
         tx_on_network.nonce = 7
         tx_on_network.logs = logs
 
-        tx_outcome = transaction_converter.transaction_on_network_to_outcome(tx_on_network)
+        parsed = self.parser.parse_deploy(tx_on_network)
 
-        parsed = self.parser.parse_deploy(tx_outcome)
-
-        assert parsed.return_code == ""
-        assert parsed.return_message == ""
+        assert parsed.return_code == "user error"
+        assert parsed.return_message == "wrong number of arguments"
         assert len(parsed.contracts) == 0
         assert parsed.contracts == []
+
+    def test_parse_execute_outcome_with_abi(self):
+        abi_path = Path(__file__).parent.parent.parent / "testutils" / "testdata" / "answer.abi.json"
+        abi = Abi.load(abi_path)
+        parser = SmartContractTransactionsOutcomeParser(abi)
+
+        transaction = TransactionOnNetwork()
+        transaction.function = "getUltimateAnswer"
+        transaction.contract_results = [
+            SmartContractResult(data="@6f6b@2a".encode())
+        ]
+
+        parsed_tx = parser.parse_execute(transaction)
+        assert parsed_tx.return_code == "ok"
+        assert parsed_tx.return_message == "ok"
+        assert parsed_tx.values == [42]
+
+    def test_parse_execute_without_function_name(self):
+        abi_path = Path(__file__).parent.parent.parent / "testutils" / "testdata" / "answer.abi.json"
+        abi = Abi.load(abi_path)
+        parser = SmartContractTransactionsOutcomeParser(abi)
+
+        transaction = TransactionOnNetwork()
+        transaction.contract_results = [
+            SmartContractResult(data="@6f6b@2a".encode())
+        ]
+
+        with pytest.raises(Exception, match=re.escape('Function name is not available in the transaction, thus endpoint definition (ABI) cannot be picked (for parsing). Please provide the "function" parameter explicitly.')):
+            parser.parse_execute(transaction)
 
     @pytest.mark.networkInteraction
     def test_parse_successful_deploy(self):
         successful_tx_hash = "30bc4f262543e235b73ae6db7bcbf3a54513fe3c1ed7a86af688a8f0e7fe8655"
         proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
-        tx_converter = TransactionsConverter()
 
         tx_on_network = proxy.get_transaction(successful_tx_hash)
-        tx_outcome = tx_converter.transaction_on_network_to_outcome(tx_on_network)
 
-        parsed = self.parser.parse_deploy(tx_outcome)
+        parsed = self.parser.parse_deploy(tx_on_network)
         assert parsed.contracts[0].address == "erd1qqqqqqqqqqqqqpgq29deu3uhcvuk7jhxd5cxrvh23xulkcewd8ssyf38ec"
         assert parsed.contracts[0].owner_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
@@ -130,11 +135,24 @@ class TestSmartContractTransactionsOutcomeParser:
     def test_parse_failed_deploy(self):
         faied_tx_hash = "832780459c6c9589035dbbe5b8d1d86ca9674f4aab8379cbca9a94978e604ffd"
         proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
-        tx_converter = TransactionsConverter()
 
         tx_on_network = proxy.get_transaction(faied_tx_hash)
-        tx_outcome = tx_converter.transaction_on_network_to_outcome(tx_on_network)
 
-        parsed = self.parser.parse_deploy(tx_outcome)
+        parsed = self.parser.parse_deploy(tx_on_network)
         assert len(parsed.contracts) == 0
         assert parsed.contracts == []
+
+    @pytest.mark.networkInteraction
+    def test_parse_sc_call(self):
+        tx_hash = "8b599aa57d456aab573fcc1d5f409d4d00b897edbe1b7522a00604c0d64ea6cd"
+        proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+
+        tx_on_network = proxy.get_transaction(tx_hash)
+
+        parsed = self.parser.parse_execute(tx_on_network, "getActionSigners")
+        assert parsed.return_code == "ok"
+        assert parsed.return_message == "ok"
+        assert len(parsed.values) == 1
+
+        expected_value = 2
+        assert parsed.values == [expected_value.to_bytes()]
