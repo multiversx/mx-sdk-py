@@ -6,6 +6,7 @@ from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.errors import ErrCannotSerializeArgument
 
 
+# TODO: drop this.
 @runtime_checkable
 class IArgument(Protocol):
     def serialize(self) -> bytes:

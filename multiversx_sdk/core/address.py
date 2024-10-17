@@ -107,6 +107,14 @@ class Address:
         return self.get_public_key()
 
 
+class EmptyAddress:
+    def to_bech32(self) -> str:
+        return ""
+
+    def to_hex(self) -> str:
+        return ""
+
+
 class AddressFactory:
     """A factory used to create address objects."""
 
