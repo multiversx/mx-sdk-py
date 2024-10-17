@@ -10,8 +10,14 @@ DEFAULT_HRP = "erd"
 
 
 class ITransactionToDecode(Protocol):
-    sender: IAddress
-    receiver: IAddress
+    @property
+    def sender(self) -> IAddress:
+        ...
+
+    @property
+    def receiver(self) -> IAddress:
+        ...
+
     data: str
     value: int
 

@@ -317,8 +317,8 @@ class TestTransaction:
             signature=tx.signature
         )
 
-        assert is_signed_by_alice == True
-        assert is_signed_by_bob == False
+        assert is_signed_by_alice
+        assert is_signed_by_bob is False
 
     def test_compute_bytes_for_verifying_transaction_signed_by_hash(self):
         tx = Transaction(
@@ -343,5 +343,5 @@ class TestTransaction:
             signature=tx.signature
         )
 
-        assert is_signed_by_alice == True
-        assert is_signed_by_bob == False
+        assert is_signed_by_alice
+        assert is_signed_by_bob is False

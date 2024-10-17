@@ -26,10 +26,10 @@ def test_verify_message():
     message = b"hello"
     signature = bytes.fromhex("84fd0a3a9d4f1ea2d4b40c6da67f9b786284a1c3895b7253fec7311597cda3f757862bb0690a92a13ce612c33889fd86")
 
-    assert verifier.verify(message, signature) == True
+    assert verifier.verify(message, signature)
 
     invalid_signature = bytes.fromhex("94fd0a3a9d4f1ea2d4b40c6da67f9b786284a1c3895b7253fec7311597cda3f757862bb0690a92a13ce612c33889fd86")
-    assert verifier.verify(message, invalid_signature) == False
+    assert verifier.verify(message, invalid_signature) is False
 
 
 def test_pem_save():

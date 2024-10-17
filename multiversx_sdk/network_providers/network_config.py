@@ -34,7 +34,7 @@ class NetworkConfig:
         network_config.num_shards_without_meta = int(payload.get('erd_num_shards_without_meta', 0))
 
         return network_config
-    
+
     def to_dictionary(self) -> Dict[str, Any]:
         return {
             "chainId": self.chain_id,

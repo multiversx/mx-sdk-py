@@ -1,4 +1,4 @@
-from typing import List, Optional, Protocol, Sequence
+from typing import List, Optional, Protocol
 
 from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.interfaces import IAddress

@@ -7,13 +7,14 @@ from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
-from multiversx_sdk.abi.fields import *
+from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.list_value import ListValue
-from multiversx_sdk.abi.multi_value import *
+from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.serializer import Serializer
-from multiversx_sdk.abi.small_int_values import *
+from multiversx_sdk.abi.small_int_values import (U8Value, U16Value, U32Value,
+                                                 U64Value)
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
@@ -501,7 +502,7 @@ def test_real_world_multisig_get_pending_action_full_info():
         item_creator=lambda: BytesValue()
     )
 
-    def action_fields_provider(discriminant: int) -> List[Field]:
+    def action_fields_provider(discriminant: int) -> list[Field]:
         if discriminant == 5:
             return [
                 Field("to", action_to),
