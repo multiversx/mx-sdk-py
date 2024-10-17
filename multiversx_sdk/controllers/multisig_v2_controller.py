@@ -210,15 +210,6 @@ class MultisigV2Controller:
 
         return transaction
 
-    def parse_execute_propose_add_board_member(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_add_board_member(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_add_board_member(transaction)
-
     def create_transaction_for_propose_add_proposer(self,
                                                     sender: IAccount,
                                                     nonce: int,
@@ -237,15 +228,6 @@ class MultisigV2Controller:
         transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
-
-    def parse_execute_propose_add_proposer(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_add_proposer(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_add_proposer(transaction)
 
     def create_transaction_for_propose_remove_user(self,
                                                    sender: IAccount,
@@ -266,15 +248,6 @@ class MultisigV2Controller:
 
         return transaction
 
-    def parse_execute_propose_remove_user(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_propose_remove_user(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_remove_user(transaction)
-
     def create_transaction_for_propose_change_quorum(self,
                                                      sender: IAccount,
                                                      nonce: int,
@@ -293,15 +266,6 @@ class MultisigV2Controller:
         transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
-
-    def parse_execute_propose_change_quorum(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_propose_change_quorum(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_change_quorum(transaction)
 
     def create_transaction_for_propose_transfer_execute(self,
                                                         sender: IAccount,
@@ -322,15 +286,6 @@ class MultisigV2Controller:
 
         return transaction
 
-    def parse_execute_propose_transfer_execute(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_propose_transfer_execute(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_transfer_execute(transaction)
-
     def create_transaction_for_propose_transfer_execute_esdt(self,
                                                              sender: IAccount,
                                                              nonce: int,
@@ -349,15 +304,6 @@ class MultisigV2Controller:
         transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
-
-    def parse_execute_propose_transfer_execute_esdt(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_propose_transfer_execute_esdt(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_transfer_execute_esdt(transaction)
 
     def create_transaction_for_propose_async_call(self,
                                                   sender: IAccount,
@@ -378,15 +324,6 @@ class MultisigV2Controller:
 
         return transaction
 
-    def parse_execute_propose_async_call(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_propose_async_call(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_async_call(transaction)
-
     def create_transaction_for_propose_deploy_contract_from_source(self,
                                                                    sender: IAccount,
                                                                    nonce: int,
@@ -405,15 +342,6 @@ class MultisigV2Controller:
         transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
-
-    def parse_execute_propose_deploy_contract_from_source(self, transaction_on_network: TransactionOnNetwork) -> int:
-        outcome = self.parser.parse_execute(transaction_on_network)
-        self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
-
-    def await_completed_execute_propose_deploy_contract_from_source(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_deploy_contract_from_source(transaction)
 
     def create_transaction_for_propose_upgrade_contract_from_source(self,
                                                                     sender: IAccount,
@@ -434,14 +362,14 @@ class MultisigV2Controller:
 
         return transaction
 
-    def parse_execute_propose_upgrade_contract_from_source(self, transaction_on_network: TransactionOnNetwork) -> int:
+    def parse_execute_propose_action(self, transaction_on_network: TransactionOnNetwork) -> int:
         outcome = self.parser.parse_execute(transaction_on_network)
         self._raise_for_return_code_in_outcome(outcome)
         return outcome.values[0]
 
-    def await_completed_execute_propose_upgrade_contract_from_source(self, tx_hash: str) -> int:
+    def await_completed_execute_propose_action(self, tx_hash: str) -> int:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_upgrade_contract_from_source(transaction)
+        return self.parse_execute_propose_action(transaction)
 
     # TODO: maybe move to the generic outcome parser, just like we did in the query controller?
     def _raise_for_return_code_in_outcome(self, outcome: ParsedSmartContractCallOutcome):
