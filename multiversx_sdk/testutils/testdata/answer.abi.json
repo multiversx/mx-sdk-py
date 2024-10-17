@@ -1,0 +1,18 @@
+{
+    "name": "answer",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "getUltimateAnswer",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "i32"
+                }
+            ]
+        }
+    ]
+}
