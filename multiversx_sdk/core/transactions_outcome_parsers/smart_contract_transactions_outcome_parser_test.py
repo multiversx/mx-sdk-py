@@ -5,6 +5,7 @@ import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.codec import encode_unsigned_number
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionEvent,
                                                         TransactionLogs,
@@ -155,4 +156,4 @@ class TestSmartContractTransactionsOutcomeParser:
         assert len(parsed.values) == 1
 
         expected_value = 2
-        assert parsed.values == [expected_value.to_bytes()]
+        assert parsed.values == [encode_unsigned_number(expected_value)]
