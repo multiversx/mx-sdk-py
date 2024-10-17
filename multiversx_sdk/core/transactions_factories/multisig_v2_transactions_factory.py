@@ -9,7 +9,7 @@ from multiversx_sdk.core.transactions_factories.smart_contract_transactions_fact
     IAbi, IConfig, SmartContractTransactionsFactory)
 
 
-class MultisigTransactionsFactoryV2:
+class MultisigV2TransactionsFactory:
     def __init__(self, config: IConfig, multisig_abi: IAbi) -> None:
         self.factory_for_any = SmartContractTransactionsFactory(config)
         self.factory_for_multisig = SmartContractTransactionsFactory(config, abi=multisig_abi)
@@ -18,13 +18,13 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         bytecode: Union[Path, bytes],
+        gas_limit: int,
         quorum: int,
         board: list[IAddress],
         is_upgradeable=True,
         is_readable=True,
         is_payable=False,
         is_payable_by_contract=True,
-        gas_limit=0,
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_deploy(
             sender=sender,
@@ -41,9 +41,9 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         contract: IAddress,
-        native_transfer_amount=0,
+        gas_limit: int,
+        native_transfer_amount: int = 0,
         token_transfers: Optional[list[TokenTransfer]] = None,
-        gas_limit=0,
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_execute(
             sender=sender,
@@ -59,8 +59,8 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         contract: IAddress,
-        action_id: int,
-        gas_limit=0,
+        gas_limit: int,
+        action_id: int
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_execute(
             sender=sender,
@@ -74,8 +74,8 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         contract: IAddress,
+        gas_limit: int,
         actions_ids: list[int],
-        gas_limit=0,
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_execute(
             sender=sender,
@@ -89,8 +89,8 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         contract: IAddress,
+        gas_limit: int,
         board_member: IAddress,
-        gas_limit=0,
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_execute(
             sender=sender,
@@ -104,8 +104,8 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         contract: IAddress,
+        gas_limit: int,
         proposer: IAddress,
-        gas_limit=0,
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_execute(
             sender=sender,
@@ -119,8 +119,8 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         contract: IAddress,
+        gas_limit: int,
         user: IAddress,
-        gas_limit=0,
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_execute(
             sender=sender,
@@ -134,8 +134,8 @@ class MultisigTransactionsFactoryV2:
         self,
         sender: IAddress,
         contract: IAddress,
+        gas_limit: int,
         new_quorum: int,
-        gas_limit=0,
     ) -> Transaction:
         return self.factory_for_multisig.create_transaction_for_execute(
             sender=sender,
