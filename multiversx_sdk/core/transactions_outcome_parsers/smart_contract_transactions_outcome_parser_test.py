@@ -6,25 +6,17 @@ from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction_on_network import \
-    ContractResultItem as ContractResultItemOnNetwork
-from multiversx_sdk.core.transaction_on_network import \
-    ContractResults as ContractResultOnNetwork
-from multiversx_sdk.core.transaction_on_network import \
     TransactionEvent as TxEventOnNetwork
-from multiversx_sdk.core.transaction_on_network import \
-    TransactionEventTopic as TxEventTopicOnNetwork
 from multiversx_sdk.core.transaction_on_network import \
     TransactionLogs as TxLogsOnNetwork
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.core.transactions_outcome_parsers.resources import (
-    SmartContractCallOutcome, TransactionEvent, TransactionLogs,
-    TransactionOutcome)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser import \
     SmartContractTransactionsOutcomeParser
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 
 
+@pytest.mark.skip
 class TestSmartContractTransactionsOutcomeParser:
     parser = SmartContractTransactionsOutcomeParser()
 

@@ -18,7 +18,7 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
-    smart_contract_query_to_vm_query_request,
+    smart_contract_query_to_vm_query_request, transaction_from_api_response,
     vm_query_response_to_smart_contract_query_response)
 from multiversx_sdk.network_providers.interface import IAddress, IPagination
 from multiversx_sdk.network_providers.network_config import NetworkConfig
@@ -135,7 +135,7 @@ class ApiNetworkProvider:
         except GenericError as ge:
             raise TransactionFetchingError(ge.url, ge.data)
 
-        transaction = TransactionOnNetwork.from_api_http_response(tx_hash, response)
+        transaction = transaction_from_api_response(tx_hash, response)
         return transaction
 
     def get_account_transactions(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[TransactionOnNetwork]:
@@ -143,7 +143,7 @@ class ApiNetworkProvider:
 
         url = f"accounts/{address.to_bech32()}/transactions?{self._build_pagination_params(pagination)}"
         response = self.do_get_generic_collection(url)
-        transactions = [TransactionOnNetwork.from_api_http_response(tx.get("txHash", ""), tx) for tx in response]
+        transactions = [transaction_from_api_response(tx.get("txHash", ""), tx) for tx in response]
         return transactions
 
     def get_bunch_of_transactions(self, tx_hashes: List[str], with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
@@ -157,7 +157,7 @@ class ApiNetworkProvider:
             url += "&withResults=true"
 
         result = self.do_get_generic_collection(url)
-        transactions = [TransactionOnNetwork.from_api_http_response(transaction["txHash"], transaction) for transaction in result]
+        transactions = [transaction_from_api_response(transaction["txHash"], transaction) for transaction in result]
         return transactions
 
     def get_transactions_in_mempool_for_account(self, address: IAddress) -> List[TransactionInMempool]:

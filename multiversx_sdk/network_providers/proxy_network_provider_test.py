@@ -129,7 +129,7 @@ class TestProxy:
         assert result.hash == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
         assert result.is_completed
         assert result.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert result.contract_results.items == []
+        assert result.contract_results == []
 
     def test_get_transaction_with_events(self):
         transaction = self.proxy.get_transaction("6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb")
@@ -147,9 +147,9 @@ class TestProxy:
         )
 
         assert result.is_completed is True
-        assert len(result.contract_results.items) > 0
+        assert len(result.contract_results) > 0
         assert result.data == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
-        assert sum([r.is_refund for r in result.contract_results.items]) == 1
+        assert sum([r.raw.get("isRefund", False) for r in result.contract_results]) == 1
 
     def test_get_hyperblock(self):
         result_by_nonce = self.proxy.get_hyperblock(835683)
