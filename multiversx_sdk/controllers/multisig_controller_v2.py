@@ -126,10 +126,37 @@ class MultisigV2Controller:
         return quorum
 
     def get_num_board_members(self, contract: IAddress) -> int:
-        [quorum] = self.query_controller.query(
+        [num] = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getNumBoardMembers",
             arguments=[],
         )
 
-        return quorum
+        return num
+
+    def get_num_groups(self, contract: IAddress) -> int:
+        [num] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getNumGroups",
+            arguments=[],
+        )
+
+        return num
+
+    def get_num_proposers(self, contract: IAddress) -> int:
+        [num] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getNumProposers",
+            arguments=[],
+        )
+
+        return num
+
+    def get_action_group(self, contract: IAddress, group_id: int) -> list[int]:
+        ids = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getActionGroup",
+            arguments=[group_id],
+        )
+
+        return ids
