@@ -187,11 +187,7 @@ class ProposeSCDeployFromSourceInput:
         self.amount = native_transfer_amount
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
-
-        if abi:
-            self.arguments = abi.encode_constructor_input_parameters(arguments)
-        else:
-            self.arguments = arguments
+        self.arguments = abi.encode_constructor_input_parameters(arguments) if abi else arguments
 
 
 class ProposeSCUpgradeFromSourceInput:
@@ -206,8 +202,4 @@ class ProposeSCUpgradeFromSourceInput:
         self.amount = native_transfer_amount
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
-
-        if abi:
-            self.arguments = abi.encode_upgrade_constructor_input_parameters(arguments)
-        else:
-            self.arguments = arguments
+        self.arguments = abi.encode_constructor_input_parameters(arguments) if abi else arguments
