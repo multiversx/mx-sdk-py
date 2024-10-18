@@ -236,8 +236,3 @@ class TestEntrypoint:
         transaction_hash = self.entrypoint.send_transaction(transaction)
         addresses = controller.await_completed_execute_perform(transaction_hash)
         print("Output of perform:", addresses)
-
-
-if __name__ == "__main__":
-    t = TestEntrypoint()
-    t.test_multisig_flow()
