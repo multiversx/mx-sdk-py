@@ -114,7 +114,7 @@ class TestApi:
         assert result.sender.to_bech32() == 'erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2'
         assert result.receiver.to_bech32() == 'erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl'
         assert result.value == '5000000000000000000'
-        assert str(result.status) == "success"
+        assert result.status.status == "success"
 
     def test_get_account_transactions(self):
         address = Address.new_from_bech32('erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl')
@@ -125,12 +125,15 @@ class TestApi:
         assert len(result) == 2
 
     def test_get_trasactions(self):
-        hashes = ["9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c", "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb"]
+        hashes = [
+            "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c",
+            "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb"
+        ]
         result = self.api.get_bunch_of_transactions(hashes)
 
         assert len(result) == 2
-        assert result[0].status.is_successful()
-        assert result[1].status.is_successful()
+        assert result[0].status.is_successful
+        assert result[1].status.is_successful
 
     def test_get_transaction_with_events(self):
         transaction = self.api.get_transaction("6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb")
@@ -209,7 +212,9 @@ class TestApi:
             nonce=100,
             gas_price=1000000000,
             version=2,
-            signature=bytes.fromhex("faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05")
+            signature=bytes.fromhex(
+                "faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05"
+            )
         )
         expected_hash = (
             "fc914860c1d137ed8baa602e561381f97c7bad80d150c5bf90760d3cfd3a4cea"
@@ -236,7 +241,7 @@ class TestApi:
         hash = self.api.send_transaction(transaction)
 
         tx_on_network = self.api.await_transaction_completed(hash)
-        assert tx_on_network.status.is_executed()
+        assert tx_on_network.status.is_completed
 
         transaction = Transaction(
             sender=alice.label,
@@ -249,7 +254,7 @@ class TestApi:
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         def condition(tx: TransactionOnNetwork) -> bool:
-            return tx.status.is_failed()
+            return tx.status.status == "fail"
 
         hash = self.api.send_transaction(transaction)
 
@@ -257,7 +262,7 @@ class TestApi:
             tx_hash=hash,
             condition=condition
         )
-        assert tx_on_network.status.is_failed()
+        assert tx_on_network.status.status == "fail"
 
     def test_user_agent(self):
         # using the previoulsy instantiated provider without user agent

@@ -214,7 +214,8 @@ class TestSmartContractTransactionsFactory:
         assert transaction.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert transaction.gas_limit == gas_limit
         assert transaction.data
-        assert transaction.data.decode() == "ESDTNFTTransfer@4e46542d313233343536@01@01@00000000000000000500b9353fe8407f87310c87e12fa1ac807f0485da39d152@64756d6d79@07"
+        assert transaction.data.decode(
+        ) == "ESDTNFTTransfer@4e46542d313233343536@01@01@00000000000000000500b9353fe8407f87310c87e12fa1ac807f0485da39d152@64756d6d79@07"
         assert transaction.value == 0
 
     def test_create_transaction_for_execute_and_send_multiple_nfts(self):
