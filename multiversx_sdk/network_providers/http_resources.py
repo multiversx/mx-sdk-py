@@ -26,7 +26,9 @@ def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> Dict[
     return request
 
 
-def vm_query_response_to_smart_contract_query_response(raw_response: Dict[str, Any], function: str) -> SmartContractQueryResponse:
+def vm_query_response_to_smart_contract_query_response(
+        raw_response: Dict[str, Any],
+        function: str) -> SmartContractQueryResponse:
     return_data = raw_response.get('returnData', []) or raw_response.get('ReturnData', [])
     return_code = raw_response.get('returnCode', '') or raw_response.get('ReturnCode', '')
     return_message = raw_response.get('returnMessage', '') or raw_response.get('ReturnMessage', '')
@@ -44,7 +46,7 @@ def transaction_from_api_response(tx_hash: str, response: dict[str, Any]) -> Tra
 
     sc_results = response.get("results", [])
     result.contract_results = [smart_contract_result_from_api_request(result) for result in sc_results]
-    result.is_completed = not result.get_status().is_pending()
+    result.is_completed = result.status.is_completed
 
     return result
 
@@ -59,7 +61,7 @@ def transaction_from_proxy_response(
 
     if process_status:
         result.status = process_status
-        result.is_completed = True if result.status.is_successful() or result.status.is_failed() else False
+        result.is_completed = result.status.is_completed
 
     return result
 
@@ -87,9 +89,8 @@ def _transaction_from_network_response(tx_hash: str, response: dict[str, Any]) -
     result.function = response.get("function", "")
 
     result.data = base64.b64decode(data).decode()
-    result.status = TransactionStatus(response.get("status"))
+    result.status = TransactionStatus(response.get("status", ""))
     result.timestamp = response.get("timestamp", 0)
-
     result.block_nonce = response.get("blockNonce", 0)
     result.hyperblock_nonce = response.get("hyperblockNonce", 0)
     result.hyperblock_hash = response.get("hyperblockHash", "")
@@ -131,7 +132,8 @@ def transaction_events_from_request(raw_response: dict[str, Any]) -> Transaction
         data = b""
 
     additional_data = raw_response.get("additionalData", None)
-    additional_data = [base64.b64decode(data.encode()) for data in additional_data] if additional_data is not None else []
+    additional_data = [base64.b64decode(data.encode())
+                       for data in additional_data] if additional_data is not None else []
 
     if len(additional_data) == 0:
         if raw_data:

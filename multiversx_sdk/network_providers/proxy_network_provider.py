@@ -25,8 +25,7 @@ from multiversx_sdk.network_providers.interface import IAddress
 from multiversx_sdk.network_providers.network_config import NetworkConfig
 from multiversx_sdk.network_providers.network_status import NetworkStatus
 from multiversx_sdk.network_providers.resources import (AwaitingOptions,
-                                                        GenericResponse,
-                                                        SimulateResponse)
+                                                        GenericResponse)
 from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
@@ -204,12 +203,6 @@ class ProxyNetworkProvider:
         properties = self.__get_token_properties(collection)
         definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties, self.address_hrp)
         return definition
-
-    def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
-        url = "transaction/simulate"
-        transactions_converter = TransactionsConverter()
-        response = self.do_post_generic(url, transactions_converter.transaction_to_dictionary(transaction))
-        return SimulateResponse(response)
 
     def get_hyperblock(self, key: Union[int, str]) -> Dict[str, Any]:
         url = f"hyperblock/by-hash/{key}"
