@@ -73,8 +73,18 @@ class ProposeTransferExecuteEsdtInput:
                                  arguments: list[Any],
                                  gas_limit: Optional[int] = None,
                                  abi: Optional[IAbi] = None):
+        # Since multisig requires the transfer to be encoded as variadic<bytes> in "function_call",
+        # we leverage the transactions factory to achieve this (followed by splitting the data).
+        transactions_factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(""), abi=abi)
+        transaction = transactions_factory.create_transaction_for_execute(
+            sender=EmptyAddress(),
+            contract=EmptyAddress(),
+            function=function,
+            gas_limit=0,
+            arguments=arguments)
+
         tokens = [EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers]
-        function_call = abi.encode_endpoint_input_parameters(function, arguments) if abi else [function, *arguments]
+        function_call = transaction.data.split(ARGS_SEPARATOR.encode())
         return cls(to, tokens, function_call, gas_limit)
 
 
