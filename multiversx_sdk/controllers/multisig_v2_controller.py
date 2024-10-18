@@ -8,6 +8,7 @@ from multiversx_sdk.controllers.multisig_v2_resources import (
     ProposeTransferExecuteInput)
 from multiversx_sdk.controllers.smart_contract_controller import \
     INetworkProvider
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
@@ -21,6 +22,7 @@ from multiversx_sdk.core.transactions_outcome_parsers import (
     SmartContractDeployOutcome, SmartContractTransactionsOutcomeParser)
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import \
     ParsedSmartContractCallOutcome
+from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
 
 
 class MultisigV2Controller:
@@ -61,10 +63,11 @@ class MultisigV2Controller:
 
         return transaction
 
-    def parse_deploy(self, transaction_on_network: TransactionOnNetwork) -> SmartContractDeployOutcome:
-        return self.parser.parse_deploy(transaction_on_network)
+    def parse_deploy(self, transaction_on_network: TransactionOnNetwork) -> Address:
+        outcome = self.parser.parse_deploy(transaction_on_network)
+        return Address.new_from_bech32(outcome.contracts[0].address)
 
-    def await_completed_deploy(self, tx_hash: str) -> SmartContractDeployOutcome:
+    def await_completed_deploy(self, tx_hash: str) -> Address:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_deploy(transaction)
 
@@ -333,7 +336,7 @@ class MultisigV2Controller:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
-            function="SCDeployFromSource",
+            function="proposeSCDeployFromSource",
             gas_limit=gas_limit,
             arguments=[input.amount, input.source, input.code_metadata, input.arguments],
         )
@@ -352,7 +355,7 @@ class MultisigV2Controller:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
-            function="SCUpgradeFromSource",
+            function="proposeSCUpgradeFromSource",
             gas_limit=gas_limit,
             arguments=[input.sc_address, input.amount, input.source, input.code_metadata, input.arguments],
         )
@@ -376,7 +379,18 @@ class MultisigV2Controller:
                                     contract: IAddress,
                                     gas_limit: int,
                                     action_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="sign",
+            gas_limit=gas_limit,
+            arguments=[action_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def create_transaction_for_sign_batch(self,
                                           sender: IAccount,
@@ -392,7 +406,18 @@ class MultisigV2Controller:
                                                 contract: IAddress,
                                                 gas_limit: int,
                                                 action_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="signAndPerform",
+            gas_limit=gas_limit,
+            arguments=[action_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def create_transaction_for_sign_batch_and_perform(self,
                                                       sender: IAccount,
@@ -451,7 +476,18 @@ class MultisigV2Controller:
                                               contract: IAddress,
                                               gas_limit: int,
                                               action_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="performAction",
+            gas_limit=gas_limit,
+            arguments=[action_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def create_transaction_for_perform_batch(self,
                                              sender: IAccount,
@@ -478,6 +514,16 @@ class MultisigV2Controller:
     def await_completed_execute_propose_any(self, tx_hash: str) -> int:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_execute_propose_any(transaction)
+
+    def parse_execute_perform(self, transaction_on_network: TransactionOnNetwork) -> list[Address]:
+        outcome = self.parser.parse_execute(transaction_on_network)
+        self._raise_for_return_code_in_outcome(outcome)
+        addresses = [Address(value, DEFAULT_ADDRESS_HRP) for value in outcome.values]
+        return addresses
+
+    def await_completed_execute_perform(self, tx_hash: str) -> list[Address]:
+        transaction = self.network_provider.await_transaction_completed(tx_hash)
+        return self.parse_execute_perform(transaction)
 
     # TODO: maybe move to the generic outcome parser, just like we did in the query controller?
     def _raise_for_return_code_in_outcome(self, outcome: ParsedSmartContractCallOutcome):
