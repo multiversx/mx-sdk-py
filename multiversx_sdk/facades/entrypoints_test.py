@@ -3,9 +3,9 @@ from pathlib import Path
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
-from multiversx_sdk.controllers.multisig_v2_resources import \
-    ProposeSCDeployFromSourceInput
-from multiversx_sdk.core.address import Address
+from multiversx_sdk.controllers.multisig_v2_resources import (
+    ProposeAsyncCallInput, ProposeSCDeployFromSourceInput)
+from multiversx_sdk.core.address import Address, EmptyAddress
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.facades.account import Account
 from multiversx_sdk.facades.entrypoints import DevnetEntrypoint
@@ -111,6 +111,7 @@ class TestEntrypoint:
         abi = Abi.load(testutils / "testdata" / "multisig-full.abi.json")
         abi_adder = Abi.load(testutils / "testdata" / "adder.abi.json")
         bytecode_path = testutils / "testdata" / "multisig-full.wasm"
+        bytecode_path_adder = testutils / "testdata" / "adder.wasm"
         contract_to_copy_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
         controller = self.entrypoint.create_multisig_v2_controller(abi)
 
@@ -119,6 +120,7 @@ class TestEntrypoint:
         alice.nonce = self.entrypoint.recall_account_nonce(alice.address)
         bob.nonce = self.entrypoint.recall_account_nonce(bob.address)
 
+        # Deploy the multisig contract.
         transaction = controller.create_transaction_for_deploy(
             sender=alice,
             nonce=alice.nonce,
@@ -132,9 +134,9 @@ class TestEntrypoint:
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
         multisig_address = controller.await_completed_deploy(transaction_hash)
-
         print("Multisig address:", multisig_address)
 
+        # Propose a deploy of the adder contract.
         transaction = controller.create_transaction_for_propose_deploy_contract_from_source(
             sender=alice,
             nonce=alice.nonce,
@@ -155,6 +157,7 @@ class TestEntrypoint:
         action_id = controller.await_completed_execute_propose_any(transaction_hash)
         print("Action ID:", action_id)
 
+        # Bob signs the action.
         transaction = controller.create_transaction_for_sign(
             sender=bob,
             nonce=bob.nonce,
@@ -168,6 +171,7 @@ class TestEntrypoint:
         transaction_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(transaction_hash)
 
+        # Alice signs and performs the action.
         transaction = controller.create_transaction_for_perform_action(
             sender=alice,
             nonce=alice.nonce,
@@ -182,3 +186,58 @@ class TestEntrypoint:
         addresses = controller.await_completed_execute_perform(transaction_hash)
         print("Output of perform:", addresses)
 
+        # Now, let's propose an async call to deploy the adder contract (from bytecode).
+        transaction = controller.create_transaction_for_propose_async_call(
+            sender=alice,
+            nonce=alice.nonce,
+            contract=multisig_address,
+            gas_limit=30_000_000,
+            input=ProposeAsyncCallInput.new_for_deployment(
+                bytecode=bytecode_path_adder,
+                code_metadata=CodeMetadata(),
+                native_transfer_amount=0,
+                arguments=[7],
+                gas_limit=10_000_000,
+                abi=abi_adder
+            )
+        )
+
+        alice.nonce += 1
+
+        transaction_hash = self.entrypoint.send_transaction(transaction)
+        action_id = controller.await_completed_execute_propose_any(transaction_hash)
+        print("Action ID:", action_id)
+
+        # Bob signs the action.
+        transaction = controller.create_transaction_for_sign(
+            sender=bob,
+            nonce=bob.nonce,
+            contract=multisig_address,
+            gas_limit=30_000_000,
+            action_id=action_id
+        )
+
+        bob.nonce += 1
+
+        transaction_hash = self.entrypoint.send_transaction(transaction)
+        self.entrypoint.await_completed_transaction(transaction_hash)
+
+        # Alice signs and performs the action.
+        transaction = controller.create_transaction_for_perform_action(
+            sender=alice,
+            nonce=alice.nonce,
+            contract=multisig_address,
+            gas_limit=30_000_000,
+            action_id=action_id
+        )
+
+        alice.nonce += 1
+
+        transaction_hash = self.entrypoint.send_transaction(transaction)
+        addresses = controller.await_completed_execute_perform(transaction_hash)
+        print("Output of perform:", addresses)
+
+
+if __name__ == "__main__":
+    t = TestEntrypoint()
+    t.test_multisig_flow()
