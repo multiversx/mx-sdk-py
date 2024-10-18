@@ -222,7 +222,7 @@ class TestEntrypoint:
         transaction_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(transaction_hash)
 
-        # Alice signs and performs the action.
+        # Alice performs the action.
         transaction = controller.create_transaction_for_perform_action(
             sender=alice,
             nonce=alice.nonce,

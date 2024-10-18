@@ -18,46 +18,63 @@ class ProposeTransferExecuteInput:
     def __init__(self,
                  to: IAddress,
                  native_transfer_amount: int,
-                 gas_limit: Optional[int] = None,
-                 function: Optional[str] = None,
-                 arguments: Optional[list[Any]] = None,
-                 abi: Optional[IAbi] = None) -> None:
-        arguments = arguments or []
+                 function_call: list[bytes],
+                 opt_gas_limit: Optional[int] = None,) -> None:
 
         self.to = to
         self.egld_amount = native_transfer_amount
-        self.opt_gas_limit = gas_limit
+        self.function_call = function_call
+        self.opt_gas_limit = opt_gas_limit
 
-        if function:
-            if abi:
-                self.function_call = abi.encode_endpoint_input_parameters(function, arguments)
-            else:
-                self.function_call = [function, *arguments]
-        else:
-            self.function_call = []
+    @classmethod
+    def new_for_native_transfer(cls,
+                                to: IAddress,
+                                native_transfer_amount: int,
+                                gas_limit: Optional[int] = None):
+        return cls(to, native_transfer_amount, [], gas_limit)
+
+    @classmethod
+    def new_for_transfer_execute(cls,
+                                 to: IAddress,
+                                 native_transfer_amount: int,
+                                 function: str,
+                                 arguments: list[Any],
+                                 gas_limit: Optional[int] = None,
+                                 abi: Optional[IAbi] = None):
+        function_call = abi.encode_endpoint_input_parameters(function, arguments) if abi else [function, *arguments]
+        return cls(to, native_transfer_amount, function_call, gas_limit)
 
 
 class ProposeTransferExecuteEsdtInput:
     def __init__(self,
                  to: IAddress,
-                 token_transfers: list[TokenTransfer],
-                 gas_limit: Optional[int] = None,
-                 function: Optional[str] = None,
-                 arguments: Optional[list[Any]] = None,
-                 abi: Optional[IAbi] = None) -> None:
-        arguments = arguments or []
-
+                 tokens: list['EsdtTokenPayment'],
+                 function_call: list[bytes],
+                 opt_gas_limit: Optional[int] = None) -> None:
         self.to = to
-        self.tokens = [EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers]
-        self.opt_gas_limit = gas_limit
+        self.tokens = tokens
+        self.function_call = function_call
+        self.opt_gas_limit = opt_gas_limit
 
-        if function:
-            if abi:
-                self.function_call = abi.encode_endpoint_input_parameters(function, arguments)
-            else:
-                self.function_call = [function, *arguments]
-        else:
-            self.function_call = []
+    @classmethod
+    def new_for_transfer(cls,
+                         to: IAddress,
+                         token_transfers: list[TokenTransfer],
+                         gas_limit: Optional[int] = None):
+        tokens = [EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers]
+        return cls(to, tokens, [], gas_limit)
+
+    @classmethod
+    def new_for_transfer_execute(cls,
+                                 to: IAddress,
+                                 token_transfers: list[TokenTransfer],
+                                 function: str,
+                                 arguments: list[Any],
+                                 gas_limit: Optional[int] = None,
+                                 abi: Optional[IAbi] = None):
+        tokens = [EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers]
+        function_call = abi.encode_endpoint_input_parameters(function, arguments) if abi else [function, *arguments]
+        return cls(to, tokens, function_call, gas_limit)
 
 
 class ProposeAsyncCallInput:
@@ -72,10 +89,10 @@ class ProposeAsyncCallInput:
         self.opt_gas_limit = opt_gas_limit
 
     @classmethod
-    def new_for_transfers(cls,
-                          to: IAddress,
-                          token_transfers: list[TokenTransfer],
-                          gas_limit: Optional[int] = None):
+    def new_for_transfer(cls,
+                         to: IAddress,
+                         token_transfers: list[TokenTransfer],
+                         gas_limit: Optional[int] = None):
         # Since multisig requires the transfer to be encoded as variadic<bytes> in "function_call",
         # we leverage the transactions factory to achieve this (followed by splitting the data).
         transactions_factory = TransferTransactionsFactory(TransactionsFactoryConfig(""))
