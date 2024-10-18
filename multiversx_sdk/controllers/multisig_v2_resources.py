@@ -41,7 +41,8 @@ class ProposeTransferExecuteInput:
                                  arguments: list[Any],
                                  gas_limit: Optional[int] = None,
                                  abi: Optional[IAbi] = None):
-        function_call = abi.encode_endpoint_input_parameters(function, arguments) if abi else [function, *arguments]
+        arguments = abi.encode_endpoint_input_parameters(function, arguments) if abi else arguments
+        function_call = [function, *arguments]
         return cls(to, native_transfer_amount, function_call, gas_limit)
 
 

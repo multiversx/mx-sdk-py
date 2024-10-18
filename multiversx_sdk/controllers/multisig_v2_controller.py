@@ -509,19 +509,20 @@ class MultisigV2Controller:
     def parse_execute_propose_any(self, transaction_on_network: TransactionOnNetwork) -> int:
         outcome = self.parser.parse_execute(transaction_on_network)
         self._raise_for_return_code_in_outcome(outcome)
-        return outcome.values[0]
+        [value] = outcome.values
+        return value
 
     def await_completed_execute_propose_any(self, tx_hash: str) -> int:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_execute_propose_any(transaction)
 
-    def parse_execute_perform(self, transaction_on_network: TransactionOnNetwork) -> list[Address]:
+    def parse_execute_perform(self, transaction_on_network: TransactionOnNetwork) -> Optional[Address]:
         outcome = self.parser.parse_execute(transaction_on_network)
         self._raise_for_return_code_in_outcome(outcome)
-        addresses = [Address(value, DEFAULT_ADDRESS_HRP) for value in outcome.values]
-        return addresses
+        [value] = outcome.values
+        return Address(value, DEFAULT_ADDRESS_HRP) if value else None
 
-    def await_completed_execute_perform(self, tx_hash: str) -> list[Address]:
+    def await_completed_execute_perform(self, tx_hash: str) -> Optional[Address]:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_execute_perform(transaction)
 

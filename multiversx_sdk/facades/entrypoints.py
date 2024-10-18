@@ -18,6 +18,7 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.facades.account import Account
 from multiversx_sdk.facades.config import (DevnetEntrypointConfig,
+                                           LocalnetEntrypointConfig,
                                            MainnetEntrypointConfig,
                                            TestnetEntrypointConfig)
 from multiversx_sdk.facades.errors import InvalidNetworkProviderKindError
@@ -133,28 +134,29 @@ class NetworkEntrypoint:
         return MultisigV2Controller(self.chain_id, self.network_provider, abi)
 
 
+class LocalnetEntrypoint(NetworkEntrypoint):
+    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
+        url = url or LocalnetEntrypointConfig.network_provider_url
+        kind = kind or LocalnetEntrypointConfig.network_provider_kind
+        super().__init__(url, kind, LocalnetEntrypointConfig.chain_id)
+
+
 class TestnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         url = url or TestnetEntrypointConfig.network_provider_url
-
         kind = kind or TestnetEntrypointConfig.network_provider_kind
-
         super().__init__(url, kind, TestnetEntrypointConfig.chain_id)
 
 
 class DevnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         url = url or DevnetEntrypointConfig.network_provider_url
-
         kind = kind or DevnetEntrypointConfig.network_provider_kind
-
         super().__init__(url, kind, DevnetEntrypointConfig.chain_id)
 
 
 class MainnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         url = url or MainnetEntrypointConfig.network_provider_url
-
         kind = kind or MainnetEntrypointConfig.network_provider_kind
-
         super().__init__(url, kind, MainnetEntrypointConfig.chain_id)
