@@ -398,7 +398,18 @@ class MultisigV2Controller:
                                           contract: IAddress,
                                           gas_limit: int,
                                           group_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="signBatch",
+            gas_limit=gas_limit,
+            arguments=[group_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def create_transaction_for_sign_and_perform(self,
                                                 sender: IAccount,
@@ -425,7 +436,18 @@ class MultisigV2Controller:
                                                       contract: IAddress,
                                                       gas_limit: int,
                                                       group_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="signBatchAndPerform",
+            gas_limit=gas_limit,
+            arguments=[group_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def create_transaction_for_unsign(self,
                                       sender: IAccount,
@@ -433,7 +455,18 @@ class MultisigV2Controller:
                                       contract: IAddress,
                                       gas_limit: int,
                                       action_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="unsign",
+            gas_limit=gas_limit,
+            arguments=[action_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def create_transaction_for_unsign_batch(self,
                                             sender: IAccount,
@@ -441,7 +474,18 @@ class MultisigV2Controller:
                                             contract: IAddress,
                                             gas_limit: int,
                                             group_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="unsignBatch",
+            gas_limit=gas_limit,
+            arguments=[group_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def is_signed_by(self, contract: IAddress, user: IAddress, action_id: int) -> bool:
         [value] = self.query_controller.query(
@@ -459,7 +503,18 @@ class MultisigV2Controller:
                                                                  gas_limit: int,
                                                                  action_id: int,
                                                                  outdated_board_members: list[int]) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="unsignForOutdatedBoardMembers",
+            gas_limit=gas_limit,
+            arguments=[action_id, outdated_board_members],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def is_quorum_reached(self, contract: IAddress, action_id: int) -> bool:
         [value] = self.query_controller.query(
@@ -495,7 +550,18 @@ class MultisigV2Controller:
                                              contract: IAddress,
                                              gas_limit: int,
                                              group_id: int) -> Transaction:
-        raise NotImplementedError("Not implemented yet")
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="performBatch",
+            gas_limit=gas_limit,
+            arguments=[group_id],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
 
     def get_pending_action_full_info(self, contract: IAddress, range: Optional[Tuple[int, int]] = None) -> list[Any]:
         values = self.query_controller.query(
