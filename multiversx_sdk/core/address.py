@@ -109,6 +109,9 @@ class Address:
     def __str__(self) -> str:
         return self.to_bech32()
 
+    def __eq__(self, value: object) -> bool:
+        return isinstance(value, Address) and self.pubkey == value.pubkey and self.hrp == value.hrp
+
 
 class EmptyAddress:
     def to_bech32(self) -> str:

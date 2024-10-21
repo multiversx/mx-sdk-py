@@ -144,6 +144,9 @@ class TestEntrypoint:
         assert role_alice == UserRole.BOARD_MEMBER
         assert role_bob == UserRole.BOARD_MEMBER
 
+        board_members = controller_multisig.get_all_board_members(multisig_address)
+        assert board_members == [alice.address, bob.address]
+
         # Alice proposes a deploy of the adder contract.
         transaction = controller_multisig.create_transaction_for_propose_deploy_contract_from_source(
             sender=alice,

@@ -581,6 +581,15 @@ class MultisigV2Controller:
 
         return UserRole(int(value))
 
+    def get_all_board_members(self, contract: IAddress) -> list[Address]:
+        [public_keys] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getAllBoardMembers",
+            arguments=[],
+        )
+
+        return [Address(value, DEFAULT_ADDRESS_HRP) for value in public_keys]
+
     def parse_execute_propose_any(self, transaction_on_network: TransactionOnNetwork) -> int:
         outcome = self.parser.parse_execute(transaction_on_network)
         self._raise_for_return_code_in_outcome(outcome)
