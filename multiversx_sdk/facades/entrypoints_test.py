@@ -310,7 +310,12 @@ class TestEntrypoint:
         transaction_hash = self.entrypoint.send_transaction(transaction)
         _ = controller_multisig.await_completed_execute_perform(transaction_hash)
 
-        time.sleep(5)
+       # Query the adder contract.
+        [value] = controller_adder.query_contract(
+            contract=adder_address,
+            function="getSum",
+            arguments=[]
+        )
 
         print("Value of adder::getSum():", value)
         assert value == 21
