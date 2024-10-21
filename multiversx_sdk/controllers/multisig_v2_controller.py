@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Tuple, Union
 
 from multiversx_sdk.controllers.interfaces import IAbi, IAccount
 from multiversx_sdk.controllers.multisig_v2_resources import (
-    ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
+    ActionFullInfo, ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
     ProposeSCUpgradeFromSourceInput, ProposeTransferExecuteEsdtInput,
     ProposeTransferExecuteInput, UserRole)
 from multiversx_sdk.controllers.smart_contract_controller import \
@@ -563,14 +563,16 @@ class MultisigV2Controller:
 
         return transaction
 
-    def get_pending_action_full_info(self, contract: IAddress, range: Optional[Tuple[int, int]] = None) -> list[Any]:
+    def get_pending_actions_full_info(self, contract: IAddress) -> list[ActionFullInfo]:
         [values] = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getPendingActionFullInfo",
-            arguments=[range],
+            # For now, we don't support the `opt_range` argument.
+            arguments=[None],
         )
 
-        return values
+        actions = [ActionFullInfo.new_from_object(value) for value in values]
+        return actions
 
     def get_user_role(self, contract: IAddress, user: IAddress) -> UserRole:
         [value] = self.query_controller.query(

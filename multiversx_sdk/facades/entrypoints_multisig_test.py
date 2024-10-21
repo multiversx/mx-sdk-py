@@ -6,7 +6,7 @@ import pytest
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.controllers.multisig_v2_resources import (
     ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
-    ProposeTransferExecuteInput, UserRole)
+    ProposeTransferExecuteInput, SCDeployFromSource, SendAsyncCall, UserRole)
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.facades.account import Account
@@ -103,6 +103,18 @@ class TestEntrypoint:
         assert valid_signer_count == 2
         assert signers == [alice.address, grace.address]
 
+        [action_full_info] = controller_multisig.get_pending_actions_full_info(multisig_address)
+        print("Action full info:", action_full_info)
+        assert action_full_info.action_id == action_id
+        assert action_full_info.group_id == 0
+        assert action_full_info.signers == [alice.address, grace.address]
+        assert action_full_info.action_data.discriminant == 8
+        assert isinstance(action_full_info.action_data, SCDeployFromSource)
+        assert action_full_info.action_data.amount == 0
+        assert action_full_info.action_data.source == contract_to_copy_address
+        assert action_full_info.action_data.code_metadata == CodeMetadata().serialize()
+        assert action_full_info.action_data.arguments == [bytes([7])]
+
         # Alice performs the action.
         transaction = controller_multisig.create_transaction_for_perform_action(
             sender=alice,
@@ -164,6 +176,19 @@ class TestEntrypoint:
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(transaction_hash)
+
+        [action_full_info] = controller_multisig.get_pending_actions_full_info(multisig_address)
+        print("Action full info:", action_full_info)
+        assert action_full_info.action_id == action_id
+        assert action_full_info.group_id == 0
+        assert action_full_info.signers == [alice.address, grace.address]
+        assert action_full_info.action_data.discriminant == 7
+        assert isinstance(action_full_info.action_data, SendAsyncCall)
+        assert action_full_info.action_data.data.to == adder_address
+        assert action_full_info.action_data.data.egld_amount == 0
+        assert action_full_info.action_data.data.endpoint_name == b"add"
+        assert action_full_info.action_data.data.arguments == [bytes([7])]
+        assert action_full_info.action_data.data.opt_gas_limit is None
 
         # Alice performs the action.
         transaction = controller_multisig.create_transaction_for_perform_action(
