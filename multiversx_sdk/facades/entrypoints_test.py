@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 
 import pytest
@@ -201,14 +202,15 @@ class TestEntrypoint:
         assert value == 7
 
         # Alice proposes to add a value to the adder contract.
-        transaction = controller_multisig.create_transaction_for_propose_transfer_execute(
+        transaction = controller_multisig.create_transaction_for_propose_async_call(
             sender=alice,
             nonce=alice.nonce,
             contract=multisig_address,
             gas_limit=30_000_000,
-            input=ProposeTransferExecuteInput.new_for_transfer_execute(
+            input=ProposeAsyncCallInput.new_for_transfer_execute(
                 to=adder_address,
                 native_transfer_amount=0,
+                token_transfers=[],
                 function="add",
                 arguments=[7],
                 abi=abi_adder,
@@ -259,18 +261,18 @@ class TestEntrypoint:
         print("Value of adder::getSum():", value)
         assert value == 14
 
-        # Alice proposes an async call to deploy the adder contract (from bytecode).
-        transaction = controller_multisig.create_transaction_for_propose_async_call(
+        # Alice proposes to add a value to the adder contract (with transfer and execute).
+        transaction = controller_multisig.create_transaction_for_propose_transfer_execute(
             sender=alice,
             nonce=alice.nonce,
             contract=multisig_address,
             gas_limit=30_000_000,
-            input=ProposeAsyncCallInput.new_for_deployment(
-                bytecode=bytecode_path_adder,
-                code_metadata=CodeMetadata(),
+            input=ProposeTransferExecuteInput.new_for_transfer_execute(
+                to=adder_address,
                 native_transfer_amount=0,
+                function="add",
                 arguments=[7],
-                abi=abi_adder
+                abi=abi_adder,
             )
         )
 
@@ -278,7 +280,7 @@ class TestEntrypoint:
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
         action_id = controller_multisig.await_completed_execute_propose_any(transaction_hash)
-        print("Action ID:", action_id)
+        print("Action ID (call adder::add()):", action_id)
 
         # Bob signs the action.
         transaction = controller_multisig.create_transaction_for_sign(
@@ -299,20 +301,16 @@ class TestEntrypoint:
             sender=alice,
             nonce=alice.nonce,
             contract=multisig_address,
-            gas_limit=60_000_000,
+            gas_limit=30_000_000,
             action_id=action_id
         )
 
         alice.nonce += 1
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
-        address = controller_multisig.await_completed_execute_perform(transaction_hash)
-        print("Output of perform:", address)
+        _ = controller_multisig.await_completed_execute_perform(transaction_hash)
 
+        time.sleep(5)
 
-if __name__ == "__main__":
-    # c = AddressComputer()
-    # shard = c.compute_contract_address(Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqaexsgm8kragcv77p4vte4p6jygc3jma6d8ss8p8l4r"), 1)
-    # print(shard)
-    t = TestEntrypoint()
-    t.test_multisig_flow()
+        print("Value of adder::getSum():", value)
+        assert value == 21
