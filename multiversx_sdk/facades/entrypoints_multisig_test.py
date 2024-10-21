@@ -18,7 +18,7 @@ testutils = Path(__file__).parent.parent / "testutils"
 class TestEntrypoint:
     entrypoint = DevnetEntrypoint()
     alice_pem = testutils / "testwallets" / "alice.pem"
-    bob_pem = testutils / "testwallets" / "bob.pem"
+    grace_pem = testutils / "testwallets" / "grace.pem"
 
     @pytest.mark.networkInteraction
     def test_multisig_flow(self):
@@ -29,11 +29,11 @@ class TestEntrypoint:
         controller_multisig = self.entrypoint.create_multisig_v2_controller(abi_multisig)
         controller_adder = self.entrypoint.create_smart_contract_controller(abi_adder)
 
-        # Alice and Bob are the (initial) board members.
+        # Alice and Grace are the (initial) board members.
         alice = Account.new_from_pem(self.alice_pem)
-        bob = Account.new_from_pem(self.bob_pem)
+        grace = Account.new_from_pem(self.grace_pem)
         alice.nonce = self.entrypoint.recall_account_nonce(alice.address)
-        bob.nonce = self.entrypoint.recall_account_nonce(bob.address)
+        grace.nonce = self.entrypoint.recall_account_nonce(grace.address)
 
         # Deploy the multisig contract.
         transaction = controller_multisig.create_transaction_for_deploy(
@@ -42,7 +42,7 @@ class TestEntrypoint:
             bytecode=bytecode_path_multisig,
             gas_limit=100_000_000,
             quorum=2,
-            board=[alice.address, bob.address]
+            board=[alice.address, grace.address]
         )
 
         alice.nonce += 1
@@ -52,12 +52,12 @@ class TestEntrypoint:
         print("Multisig address:", multisig_address)
 
         role_alice = controller_multisig.get_user_role(multisig_address, alice.address)
-        role_bob = controller_multisig.get_user_role(multisig_address, bob.address)
+        role_grace = controller_multisig.get_user_role(multisig_address, grace.address)
         assert role_alice == UserRole.BOARD_MEMBER
-        assert role_bob == UserRole.BOARD_MEMBER
+        assert role_grace == UserRole.BOARD_MEMBER
 
         board_members = controller_multisig.get_all_board_members(multisig_address)
-        assert board_members == [alice.address, bob.address]
+        assert board_members == [alice.address, grace.address]
 
         # Alice proposes a deploy of the adder contract.
         transaction = controller_multisig.create_transaction_for_propose_deploy_contract_from_source(
@@ -80,16 +80,16 @@ class TestEntrypoint:
         action_id = controller_multisig.await_completed_execute_propose_any(transaction_hash)
         print("Action ID (deploy the adder contract):", action_id)
 
-        # Bob signs the action.
+        # Grace signs the action.
         transaction = controller_multisig.create_transaction_for_sign(
-            sender=bob,
-            nonce=bob.nonce,
+            sender=grace,
+            nonce=grace.nonce,
             contract=multisig_address,
             gas_limit=30_000_000,
             action_id=action_id
         )
 
-        bob.nonce += 1
+        grace.nonce += 1
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(transaction_hash)
@@ -101,7 +101,7 @@ class TestEntrypoint:
 
         assert signer_count == 2
         assert valid_signer_count == 2
-        assert signers == [alice.address, bob.address]
+        assert signers == [alice.address, grace.address]
 
         # Alice performs the action.
         transaction = controller_multisig.create_transaction_for_perform_action(
@@ -151,16 +151,16 @@ class TestEntrypoint:
         action_id = controller_multisig.await_completed_execute_propose_any(transaction_hash)
         print("Action ID (call adder::add()):", action_id)
 
-        # Bob signs the action.
+        # Grace signs the action.
         transaction = controller_multisig.create_transaction_for_sign(
-            sender=bob,
-            nonce=bob.nonce,
+            sender=grace,
+            nonce=grace.nonce,
             contract=multisig_address,
             gas_limit=30_000_000,
             action_id=action_id
         )
 
-        bob.nonce += 1
+        grace.nonce += 1
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(transaction_hash)
@@ -210,16 +210,16 @@ class TestEntrypoint:
         action_id = controller_multisig.await_completed_execute_propose_any(transaction_hash)
         print("Action ID (call adder::add()):", action_id)
 
-        # Bob signs the action.
+        # Grace signs the action.
         transaction = controller_multisig.create_transaction_for_sign(
-            sender=bob,
-            nonce=bob.nonce,
+            sender=grace,
+            nonce=grace.nonce,
             contract=multisig_address,
             gas_limit=30_000_000,
             action_id=action_id
         )
 
-        bob.nonce += 1
+        grace.nonce += 1
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(transaction_hash)
