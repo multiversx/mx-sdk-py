@@ -1,4 +1,5 @@
 
+from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Union
 
@@ -185,3 +186,9 @@ class ProposeSCUpgradeFromSourceInput:
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
         self.arguments = abi.encode_constructor_input_parameters(arguments) if abi else arguments
+
+
+class UserRole(Enum):
+    NONE = 0
+    PROPOSER = 1
+    BOARD_MEMBER = 2

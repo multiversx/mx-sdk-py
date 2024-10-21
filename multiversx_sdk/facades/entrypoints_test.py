@@ -6,7 +6,7 @@ import pytest
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.controllers.multisig_v2_resources import (
     ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
-    ProposeTransferExecuteInput)
+    ProposeTransferExecuteInput, UserRole)
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.facades.account import Account
@@ -113,7 +113,6 @@ class TestEntrypoint:
         abi_multisig = Abi.load(testutils / "testdata" / "multisig-full.abi.json")
         abi_adder = Abi.load(testutils / "testdata" / "adder.abi.json")
         bytecode_path_multisig = testutils / "testdata" / "multisig-full.wasm"
-        bytecode_path_adder = testutils / "testdata" / "adder.wasm"
         contract_to_copy_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
         controller_multisig = self.entrypoint.create_multisig_v2_controller(abi_multisig)
         controller_adder = self.entrypoint.create_smart_contract_controller(abi_adder)
@@ -139,6 +138,11 @@ class TestEntrypoint:
         transaction_hash = self.entrypoint.send_transaction(transaction)
         multisig_address = controller_multisig.await_completed_deploy(transaction_hash)
         print("Multisig address:", multisig_address)
+
+        role_alice = controller_multisig.get_user_role(multisig_address, alice.address)
+        role_bob = controller_multisig.get_user_role(multisig_address, bob.address)
+        assert role_alice == UserRole.BOARD_MEMBER
+        assert role_bob == UserRole.BOARD_MEMBER
 
         # Alice proposes a deploy of the adder contract.
         transaction = controller_multisig.create_transaction_for_propose_deploy_contract_from_source(

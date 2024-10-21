@@ -5,7 +5,7 @@ from multiversx_sdk.controllers.interfaces import IAbi, IAccount
 from multiversx_sdk.controllers.multisig_v2_resources import (
     ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
     ProposeSCUpgradeFromSourceInput, ProposeTransferExecuteEsdtInput,
-    ProposeTransferExecuteInput)
+    ProposeTransferExecuteInput, UserRole)
 from multiversx_sdk.controllers.smart_contract_controller import \
     INetworkProvider
 from multiversx_sdk.core.address import Address
@@ -18,8 +18,8 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transactions_factories import (
     SmartContractTransactionsFactory, TransactionsFactoryConfig)
-from multiversx_sdk.core.transactions_outcome_parsers import (
-    SmartContractDeployOutcome, SmartContractTransactionsOutcomeParser)
+from multiversx_sdk.core.transactions_outcome_parsers import \
+    SmartContractTransactionsOutcomeParser
 from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import \
     ParsedSmartContractCallOutcome
 from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
@@ -571,6 +571,15 @@ class MultisigV2Controller:
         )
 
         return values
+
+    def get_user_role(self, contract: IAddress, user: IAddress) -> UserRole:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="userRole",
+            arguments=[user],
+        )
+
+        return UserRole(int(value))
 
     def parse_execute_propose_any(self, transaction_on_network: TransactionOnNetwork) -> int:
         outcome = self.parser.parse_execute(transaction_on_network)
