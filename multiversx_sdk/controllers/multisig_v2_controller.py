@@ -564,7 +564,7 @@ class MultisigV2Controller:
         return transaction
 
     def get_pending_action_full_info(self, contract: IAddress, range: Optional[Tuple[int, int]] = None) -> list[Any]:
-        values = self.query_controller.query(
+        [values] = self.query_controller.query(
             contract=contract.to_bech32(),
             function="getPendingActionFullInfo",
             arguments=[range],
@@ -589,6 +589,51 @@ class MultisigV2Controller:
         )
 
         return [Address(value, DEFAULT_ADDRESS_HRP) for value in public_keys]
+
+    def get_all_proposers(self, contract: IAddress) -> list[Address]:
+        [public_keys] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getAllProposers",
+            arguments=[],
+        )
+
+        return [Address(value, DEFAULT_ADDRESS_HRP) for value in public_keys]
+
+    def get_action_data(self, contract: IAddress, action_id: int) -> list[Address]:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getActionData",
+            arguments=[action_id],
+        )
+
+        return value
+
+    def get_action_signers(self, contract: IAddress, action_id: int) -> list[Address]:
+        [public_keys] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getActionSigners",
+            arguments=[action_id],
+        )
+
+        return [Address(value, DEFAULT_ADDRESS_HRP) for value in public_keys]
+
+    def get_action_signer_count(self, contract: IAddress, action_id: int) -> int:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getActionValidSignerCount",
+            arguments=[action_id],
+        )
+
+        return value
+
+    def get_action_valid_signer_count(self, contract: IAddress, action_id: int) -> int:
+        [value] = self.query_controller.query(
+            contract=contract.to_bech32(),
+            function="getActionSignerCount",
+            arguments=[action_id],
+        )
+
+        return value
 
     def parse_execute_propose_any(self, transaction_on_network: TransactionOnNetwork) -> int:
         outcome = self.parser.parse_execute(transaction_on_network)

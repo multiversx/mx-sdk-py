@@ -182,6 +182,15 @@ class TestEntrypoint:
         transaction_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(transaction_hash)
 
+        # Query information about the action.
+        signer_count = controller_multisig.get_action_signer_count(multisig_address, action_id)
+        valid_signer_count = controller_multisig.get_action_valid_signer_count(multisig_address, action_id)
+        signers = controller_multisig.get_action_signers(multisig_address, action_id)
+
+        assert signer_count == 2
+        assert valid_signer_count == 2
+        assert signers == [alice.address, bob.address]
+
         # Alice performs the action.
         transaction = controller_multisig.create_transaction_for_perform_action(
             sender=alice,
