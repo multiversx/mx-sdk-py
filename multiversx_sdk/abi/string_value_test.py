@@ -7,14 +7,19 @@ from multiversx_sdk.abi.string_value import StringValue
 
 
 def test_set_payload_and_get_payload():
-    # Simple
+    # Simple (string)
     value = StringValue()
     value.set_payload("hello")
     assert value.get_payload() == "hello"
 
-    # Simple
+    # Simple (bytes)
     value = StringValue()
     value.set_payload(b"hello")
+    assert value.get_payload() == "hello"
+
+    # Simple (StringValue)
+    value = StringValue()
+    value.set_payload(StringValue("hello"))
     assert value.get_payload() == "hello"
 
     # With errors

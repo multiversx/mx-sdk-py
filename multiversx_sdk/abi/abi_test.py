@@ -89,6 +89,7 @@ def test_load_abi_with_counted_variadic():
 def test_encode_endpoint_input_parameters_artificial_contract():
     abi = Abi.load(testdata / "artificial.abi.json")
 
+    # All values untyped.
     encoded_values = abi.encode_endpoint_input_parameters(
         endpoint_name="yellow",
         values=[[42, "hello", True]]
@@ -98,6 +99,28 @@ def test_encode_endpoint_input_parameters_artificial_contract():
     assert encoded_values[0].hex() == "2a"
     assert encoded_values[1].hex() == "hello".encode().hex()
     assert encoded_values[2].hex() == "01"
+
+    # Some values typed.
+    encoded_values = abi.encode_endpoint_input_parameters(
+        endpoint_name="red",
+        values=[
+            "hello",
+            StringValue("world"),
+        ]
+    )
+
+    assert encoded_values == [b"hello", b"world"]
+
+    # All values typed.
+    encoded_values = abi.encode_endpoint_input_parameters(
+        endpoint_name="red",
+        values=[
+            StringValue("hello"),
+            StringValue("world"),
+        ]
+    )
+
+    assert encoded_values == [b"hello", b"world"]
 
 
 def test_decode_endpoint_output_parameters_artificial_contract():
@@ -233,6 +256,8 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
             ]
         ]
     )
+
+    assert encoded_values == expected_encoded_values
 
     # All values typed.
     encoded_values = abi.encode_endpoint_input_parameters(
