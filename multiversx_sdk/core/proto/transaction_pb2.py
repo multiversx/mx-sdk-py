@@ -20,6 +20,6 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'transaction_pb2', globals()
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _TRANSACTION._serialized_start=29
-  _TRANSACTION._serialized_end=311
+  _TRANSACTION._serialized_start=29  # pyright: ignore[reportUndefinedVariable]
+  _TRANSACTION._serialized_end=311  # pyright: ignore[reportUndefinedVariable]
 # @@protoc_insertion_point(module_scope)
