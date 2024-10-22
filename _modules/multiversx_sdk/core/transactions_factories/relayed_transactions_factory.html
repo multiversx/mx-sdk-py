@@ -71,7 +71,7 @@
   <h1>Source code for multiversx_sdk.core.transactions_factories.relayed_transactions_factory</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Protocol</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">InvalidInnerTransactionError</span>
@@ -151,37 +151,6 @@
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
             <span class="n">version</span><span class="o">=</span><span class="n">inner_transaction</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
             <span class="n">options</span><span class="o">=</span><span class="n">inner_transaction</span><span class="o">.</span><span class="n">options</span>
-        <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="RelayedTransactionsFactory.create_relayed_v3_transaction">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v3_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_relayed_v3_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                                      <span class="n">relayer_address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
-                                      <span class="n">inner_transactions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ITransaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inner_transactions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidInnerTransactionError</span><span class="p">(</span><span class="s2">&quot;The are no inner transactions&quot;</span><span class="p">)</span>
-
-        <span class="n">inner_txs_gas_limit</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">inner_transaction</span> <span class="ow">in</span> <span class="n">inner_transactions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">inner_transaction</span><span class="o">.</span><span class="n">signature</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidInnerTransactionError</span><span class="p">(</span><span class="s2">&quot;The inner transaction is not signed&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">inner_transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">!=</span> <span class="n">relayer_address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="n">InvalidInnerTransactionError</span><span class="p">(</span><span class="s2">&quot;The inner transaction has an incorrect relayer address&quot;</span><span class="p">)</span>
-
-            <span class="n">inner_txs_gas_limit</span> <span class="o">+=</span> <span class="n">inner_transaction</span><span class="o">.</span><span class="n">gas_limit</span>
-
-        <span class="n">move_balances_gas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">min_gas_limit</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">inner_transactions</span><span class="p">)</span>
-        <span class="n">gas_limit</span> <span class="o">=</span> <span class="n">move_balances_gas</span> <span class="o">+</span> <span class="n">inner_txs_gas_limit</span>
-
-        <span class="k">return</span> <span class="n">Transaction</span><span class="p">(</span>
-            <span class="n">sender</span><span class="o">=</span><span class="n">relayer_address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span>
-            <span class="n">receiver</span><span class="o">=</span><span class="n">relayer_address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span>
-            <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
-            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
-            <span class="n">inner_transactions</span><span class="o">=</span><span class="n">inner_transactions</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 

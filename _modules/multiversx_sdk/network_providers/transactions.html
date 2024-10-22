@@ -70,7 +70,7 @@
              
   <h1>Source code for multiversx_sdk.network_providers.transactions</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.contract_results</span> <span class="kn">import</span> <span class="n">ContractResults</span>
@@ -100,12 +100,7 @@
     <span class="n">options</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">guardian</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">guardian_signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">relayer</span><span class="p">:</span> <span class="nb">str</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">inner_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;ITransaction&quot;</span><span class="p">]:</span>
-        <span class="o">...</span></div>
+    <span class="n">guardian_signature</span><span class="p">:</span> <span class="nb">bytes</span></div>
 
 
 
