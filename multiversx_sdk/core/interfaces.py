@@ -1,4 +1,4 @@
-from typing import Optional, Protocol, Sequence
+from typing import Optional, Protocol
 
 
 class IAddress(Protocol):
@@ -25,11 +25,6 @@ class ITransaction(Protocol):
     guardian: str
     signature: bytes
     guardian_signature: bytes
-    relayer: str
-
-    @property
-    def inner_transactions(self) -> Sequence["ITransaction"]:
-        ...
 
 
 class IMessage(Protocol):
