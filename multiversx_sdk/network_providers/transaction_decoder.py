@@ -1,19 +1,13 @@
 import binascii
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Dict, List, Optional
 
 from multiversx_sdk.core import TokenTransfer
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.interface import IAddress
 
 DEFAULT_HRP = "erd"
-
-
-class ITransactionToDecode(Protocol):
-    sender: IAddress
-    receiver: IAddress
-    data: str
-    value: int
 
 
 class TransactionMetadata:
@@ -55,7 +49,7 @@ class TransactionMetadata:
 
 
 class TransactionDecoder:
-    def get_transaction_metadata(self, transaction: ITransactionToDecode) -> TransactionMetadata:
+    def get_transaction_metadata(self, transaction: TransactionOnNetwork) -> TransactionMetadata:
         metadata = self.get_normal_transaction_metadata(transaction)
 
         esdt_metadata = self.get_esdt_transaction_metadata(metadata)
@@ -72,7 +66,7 @@ class TransactionDecoder:
 
         return metadata
 
-    def get_normal_transaction_metadata(self, transaction: ITransactionToDecode) -> TransactionMetadata:
+    def get_normal_transaction_metadata(self, transaction: TransactionOnNetwork) -> TransactionMetadata:
         metadata = TransactionMetadata()
         metadata.sender = transaction.sender.to_bech32()
         metadata.receiver = transaction.receiver.to_bech32()
