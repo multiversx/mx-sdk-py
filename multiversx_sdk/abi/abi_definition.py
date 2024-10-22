@@ -156,13 +156,16 @@ class ParameterDefinition:
 class TypesDefinitions:
     def __init__(self,
                  enums: List["EnumDefinition"],
+                 explicit_enums: List["ExplicitEnumDefinition"],
                  structs: List["StructDefinition"]) -> None:
         self.enums: Dict[str, EnumDefinition] = {enum.name: enum for enum in enums}
+        self.explicit_enums: Dict[str, ExplicitEnumDefinition] = {enum.name: enum for enum in explicit_enums}
         self.structs: Dict[str, StructDefinition] = {struct.name: struct for struct in structs}
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "TypesDefinitions":
         enums: List[EnumDefinition] = []
+        explicit_enums: List[ExplicitEnumDefinition] = []
         structs: List[StructDefinition] = []
 
         for name, definition in data.items():
@@ -170,6 +173,8 @@ class TypesDefinitions:
 
             if kind == "enum":
                 enums.append(EnumDefinition.from_dict(name, definition))
+            elif kind == "explicit-enum":
+                explicit_enums.append(ExplicitEnumDefinition.from_dict(name, definition))
             elif kind == "struct":
                 structs.append(StructDefinition.from_dict(name, definition))
             else:
@@ -177,6 +182,7 @@ class TypesDefinitions:
 
         return cls(
             enums=enums,
+            explicit_enums=explicit_enums,
             structs=structs
         )
 
@@ -222,6 +228,42 @@ class EnumVariantDefinition:
 
     def __repr__(self):
         return f"EnumVariantDefinition(name={self.name}, discriminant={self.discriminant})"
+
+
+class ExplicitEnumDefinition:
+    def __init__(self,
+                 name: str,
+                 variants: List["ExplicitEnumVariantDefinition"]) -> None:
+        self.name = name
+        self.variants = variants
+
+    @classmethod
+    def from_dict(cls, name: str, data: Dict[str, Any]) -> "ExplicitEnumDefinition":
+        variants = [ExplicitEnumVariantDefinition.from_dict(item) for item in data["variants"]]
+
+        return cls(
+            name=name,
+            variants=variants
+        )
+
+    def __repr__(self):
+        return f"ExplicitEnumDefinition(name={self.name})"
+
+
+class ExplicitEnumVariantDefinition:
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "ExplicitEnumVariantDefinition":
+        fields = [FieldDefinition.from_dict(item) for item in data.get("fields", [])]
+
+        return cls(
+            name=data.get("name", "")
+        )
+
+    def __repr__(self):
+        return f"ExplicitEnumVariantDefinition(name={self.name})"
 
 
 class StructDefinition:

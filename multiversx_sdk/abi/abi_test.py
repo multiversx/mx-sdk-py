@@ -9,6 +9,7 @@ from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
+from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.list_value import ListValue
 from multiversx_sdk.abi.option_value import OptionValue
@@ -21,7 +22,7 @@ from multiversx_sdk.core.address import Address
 testdata = Path(__file__).parent.parent / "testutils" / "testdata"
 
 
-def test_abi():
+def test_abi_adder():
     abi = Abi.load(testdata / "adder.abi.json")
 
     assert abi.definition.constructor.name == "constructor"
@@ -57,8 +58,13 @@ def test_abi():
     assert abi.endpoints_prototypes_by_name["add"].output_parameters == []
 
 
-def test_abi_events():
+def test_abi_artificial():
     abi = Abi.load(testdata / "artificial.abi.json")
+
+    assert len(abi.definition.types.explicit_enums) == 1
+    assert "OperationCompletionStatus" in abi.definition.types.explicit_enums
+    assert abi.definition.endpoints[3].outputs[0].type == "OperationCompletionStatus"
+    assert abi.endpoints_prototypes_by_name["green"].output_parameters[0] == ExplicitEnumValue()
 
     assert len(abi.definition.events) == 1
     assert abi.events_prototypes_by_name["firstEvent"].fields[0].value == BigUIntValue()
@@ -107,6 +113,15 @@ def test_decode_endpoint_output_parameters_artificial_contract():
     )
 
     assert decoded_values == [["UTK-2f80e9", 0, 1000000000000000000]]
+
+    decoded_values = abi.decode_endpoint_output_parameters(
+        endpoint_name="green",
+        encoded_values=[
+            "completed".encode(),
+        ]
+    )
+
+    assert decoded_values == ["completed"]
 
 
 def test_encode_endpoint_input_parameters_multisig_propose_batch():
