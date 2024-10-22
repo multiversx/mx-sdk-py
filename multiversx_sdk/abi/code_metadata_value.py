@@ -2,7 +2,8 @@ import io
 from typing import Any
 
 from multiversx_sdk.abi.shared import read_bytes_exactly
-from multiversx_sdk.core.code_metadata import CodeMetadata
+from multiversx_sdk.core.code_metadata import (CODE_METADATA_LENGTH,
+                                               CodeMetadata)
 
 
 class CodeMetadataValue:
@@ -20,7 +21,7 @@ class CodeMetadataValue:
         writer.write(self.value)
 
     def decode_nested(self, reader: io.BytesIO):
-        length = 2
+        length = CODE_METADATA_LENGTH
         data = read_bytes_exactly(reader, length)
         self.value = data
 
@@ -29,7 +30,7 @@ class CodeMetadataValue:
 
     def set_payload(self, value: Any):
         if isinstance(value, bytes):
-            self.value = value
+            self.value = CodeMetadata.from_bytes(value).serialize()
         elif isinstance(value, CodeMetadata):
             self.value = value.serialize()
         else:
