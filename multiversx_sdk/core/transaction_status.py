@@ -1,30 +1,22 @@
-from typing import Union
+from dataclasses import dataclass
 
 
+@dataclass
 class TransactionStatus:
-    def __init__(self, status: Union[str, None] = None):
-        if not status:
-            self.status: str = 'unknown'
-        else:
-            self.status = status.lower()
+    status: str
+    is_completed: bool
+    is_successful: bool
 
-    def is_pending(self) -> bool:
-        return self.status == 'received' or self.status == 'pending'
+    def __init__(self, status: str):
+        self.status = status.lower()
+        self.is_completed = self.__is_status_completed()
+        self.is_successful = self.__is_status_successful()
 
-    def is_successful(self) -> bool:
+    def __is_status_completed(self) -> bool:
+        return self.__is_status_successful() or self.__is_failed()
+
+    def __is_status_successful(self) -> bool:
         return self.status == 'executed' or self.status == 'success' or self.status == 'successful'
 
-    def is_invalid(self) -> bool:
-        return self.status == 'invalid'
-
-    def is_failed(self) -> bool:
-        return self.status == 'fail' or self.status == 'failed' or self.status == 'unsuccessful' or self.is_invalid()
-
-    def is_executed(self) -> bool:
-        return self.is_successful() or self.is_failed() or self.is_invalid()
-
-    def equals(self, other: 'TransactionStatus') -> bool:
-        return self.status == other.status
-
-    def __str__(self) -> str:
-        return self.status
+    def __is_failed(self) -> bool:
+        return self.status == 'fail' or self.status == 'failed' or self.status == 'unsuccessful' or self.status == "invalid"
