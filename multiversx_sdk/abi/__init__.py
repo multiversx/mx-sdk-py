@@ -6,6 +6,7 @@ from multiversx_sdk.abi.bigint_value import BigIntValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
@@ -33,6 +34,7 @@ __all__ = [
     "BigUIntValue",
     "BoolValue",
     "BytesValue",
+    "CodeMetadataValue",
     "EnumValue",
     "ExplicitEnumValue",
     "Field",
