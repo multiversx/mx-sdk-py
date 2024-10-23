@@ -12,7 +12,7 @@ def test_set_payload_and_get_payload():
     value.set_payload(bytes([0x05, 0x00]))
     assert value.get_payload() == bytes([0x05, 0x00])
 
-    # From CodeMetadata
+    # With CodeMetadata
     value = CodeMetadataValue()
     value.set_payload(CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True))
     assert value.get_payload() == bytes([0x05, 0x06])
