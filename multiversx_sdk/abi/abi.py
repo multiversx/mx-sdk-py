@@ -14,6 +14,7 @@ from multiversx_sdk.abi.array_value import ArrayValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.fields import Field
@@ -284,7 +285,7 @@ class Abi:
         if name == "EgldOrEsdtTokenIdentifier":
             return TokenIdentifierValue()
         if name == "CodeMetadata":
-            return BytesValue()
+            return CodeMetadataValue()
         if name == "tuple":
             return TupleValue([self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
         if name == "Option":

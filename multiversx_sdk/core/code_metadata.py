@@ -1,5 +1,7 @@
 from enum import Enum
 
+CODE_METADATA_LENGTH = 2
+
 
 class ByteZero(Enum):
     Upgradeable = 1
@@ -19,6 +21,21 @@ class CodeMetadata:
         self.readable = readable
         self.payable = payable
         self.payable_by_contract = payable_by_contract
+
+    @classmethod
+    def new_from_bytes(cls, data: bytes) -> "CodeMetadata":
+        if len(data) != CODE_METADATA_LENGTH:
+            raise ValueError(f"code metadata buffer has length {len(data)}, expected {CODE_METADATA_LENGTH}")
+
+        byte_zero = data[0]
+        byte_one = data[1]
+
+        upgradeable = (byte_zero & ByteZero.Upgradeable.value) != 0
+        readable = (byte_zero & ByteZero.Readable.value) != 0
+        payable = (byte_one & ByteOne.Payable.value) != 0
+        payable_by_contract = (byte_one & ByteOne.PayableByContract.value) != 0
+
+        return cls(upgradeable, readable, payable, payable_by_contract)
 
     def serialize(self) -> bytes:
         data = bytearray([0, 0])

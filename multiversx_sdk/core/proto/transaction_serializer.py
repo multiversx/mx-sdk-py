@@ -1,4 +1,4 @@
-from typing import Protocol, Sequence
+from typing import Protocol
 
 import multiversx_sdk.core.proto.transaction_pb2 as ProtoTransaction
 from multiversx_sdk.core.address import Address
@@ -21,11 +21,6 @@ class ITransaction(Protocol):
     guardian: str
     signature: bytes
     guardian_signature: bytes
-    relayer: str
-
-    @property
-    def inner_transactions(self) -> Sequence["ITransaction"]:
-        ...
 
 
 class ProtoSerializer:
@@ -70,11 +65,5 @@ class ProtoSerializer:
             guardian_address = transaction.guardian
             proto_transaction.GuardAddr = Address.new_from_bech32(guardian_address).get_public_key()
             proto_transaction.GuardSignature = transaction.guardian_signature
-
-        if transaction.relayer != "":
-            proto_transaction.Relayer = Address.new_from_bech32(transaction.relayer).get_public_key()
-
-        proto_transaction.InnerTransactions.extend(
-            [self.convert_to_proto_message(inner_tx) for inner_tx in transaction.inner_transactions])
 
         return proto_transaction
