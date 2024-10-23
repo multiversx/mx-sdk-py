@@ -18,11 +18,11 @@ def test_code_metadata_new_from_bytes():
     assert metadata.payable == True
     assert metadata.payable_by_contract == True
 
-    metadata = CodeMetadata.new_from_bytes(bytes([0x05, 0x00]))
+    metadata = CodeMetadata.new_from_bytes(bytes([0x05, 0x04]))
     assert metadata.upgradeable == True
     assert metadata.readable == True
     assert metadata.payable == False
-    assert metadata.payable_by_contract == False
+    assert metadata.payable_by_contract == True
 
     metadata = CodeMetadata.new_from_bytes(bytes([0x00, 0x00]))
     assert metadata.upgradeable == False

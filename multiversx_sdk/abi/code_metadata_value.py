@@ -11,7 +11,7 @@ class CodeMetadataValue:
         self.value = value
 
     @classmethod
-    def from_code_metadata(cls, code_metadata: CodeMetadata) -> "CodeMetadataValue":
+    def new_from_code_metadata(cls, code_metadata: CodeMetadata) -> "CodeMetadataValue":
         return cls(code_metadata.serialize())
 
     def encode_nested(self, writer: io.BytesIO):
