@@ -17,7 +17,7 @@ logger = logging.getLogger("transaction_awaiter")
 
 
 class ITransactionFetcher(Protocol):
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
+    def get_transaction(self, transaction_hash: Union[bytes, str]) -> TransactionOnNetwork:
         ...
 
 
@@ -70,7 +70,9 @@ class TransactionAwaiter:
             error=ExpectedTransactionStatusNotReached()
         )
 
-    def await_on_condition(self, tx_hash: str, condition: Callable[[TransactionOnNetwork], bool]) -> TransactionOnNetwork:
+    def await_on_condition(
+            self, tx_hash: str, condition: Callable[[TransactionOnNetwork],
+                                                    bool]) -> TransactionOnNetwork:
         """Waits until the condition is satisfied."""
         def do_fetch():
             return self.fetcher.get_transaction(tx_hash)

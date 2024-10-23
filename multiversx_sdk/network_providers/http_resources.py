@@ -9,10 +9,10 @@ from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionLogs,
                                                         TransactionOnNetwork)
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.resources import (BlockOnNetwork,
-                                                        EmptyAddress,
-                                                        NetworkConfig,
-                                                        NetworkStatus)
+from multiversx_sdk.network_providers.resources import (
+    AccountOnNetwork, AccountStorage, AccountStorageEntry, BlockCoordinates,
+    BlockOnNetwork, EmptyAddress, NetworkConfig, NetworkStatus,
+    TransactionCostResponse)
 
 
 def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> Dict[str, Any]:
@@ -241,3 +241,116 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
         round=round,
         epoch=epoch
     )
+
+
+def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
+    account: dict[str, Any] = raw_response.get('account', {})
+    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+
+    address = account.get("address", "")
+    owner_address = account.get("ownerAddress", "")
+    nonce = account.get("nonce", 0)
+    balance = int(account.get("balance", 0))
+    developer_reward = int(account.get("developerReward", 0))
+    code = bytes.fromhex(account.get("code", ""))
+    username = account.get("username", "")
+
+    code_hash = account.get("codeHash", "")
+    code_hash = base64.b64decode(code_hash) if code_hash else b""
+
+    is_guarded = account.get("isGuarded", False)
+    is_upgradeable = account.get("isUpgradeable", False)
+    is_readable = account.get("isReadable", False)
+    is_payable = account.get("isPayable", False)
+    is_payable_by_sc = account.get("isPayableBySmartContract", False)
+
+    block_nonce = block_info.get("nonce", 0)
+    block_hash = block_info.get("hash", "")
+    block_root_hash = block_info.get("rootHash", "")
+    block_coordinates = BlockCoordinates(
+        nonce=block_nonce,
+        hash=bytes.fromhex(block_hash),
+        root_hash=bytes.fromhex(block_root_hash)
+    )
+
+    return AccountOnNetwork(
+        raw=raw_response,
+        address=address,
+        nonce=nonce,
+        balance=balance,
+        is_guarded=is_guarded,
+        username=username,
+        contract_code_hash=code_hash,
+        contract_code=code,
+        contract_developer_reward=developer_reward,
+        contract_owner_address=owner_address,
+        is_contract_upgradable=is_upgradeable,
+        is_contract_readable=is_readable,
+        is_contract_payable=is_payable,
+        is_contract_payable_by_contract=is_payable_by_sc,
+        block_coordinates=block_coordinates
+    )
+
+
+def account_storage_from_response(raw_response: dict[str, Any]) -> AccountStorage:
+    pairs: dict[str, Any] = raw_response.get('pairs', {})
+    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+
+    entries: list[AccountStorageEntry] = []
+    for key, value in pairs.items():
+        decoded_key = bytes.fromhex(str(key))
+        decoded_value = bytes.fromhex(str(value))
+
+        entries.append(
+            AccountStorageEntry(
+                raw={key: value},
+                key=decoded_key.decode(),
+                value=decoded_value
+            )
+        )
+
+    block_nonce = block_info.get("nonce", 0)
+    block_hash = block_info.get("hash", "")
+    block_root_hash = block_info.get("rootHash", "")
+    block_coordinates = BlockCoordinates(
+        nonce=block_nonce,
+        hash=bytes.fromhex(block_hash),
+        root_hash=bytes.fromhex(block_root_hash)
+    )
+
+    return AccountStorage(
+        raw=raw_response,
+        entries=entries,
+        block_coordinates=block_coordinates
+    )
+
+
+def account_storage_entry_from_response(raw_response: dict[str, Any], key: str) -> AccountStorageEntry:
+    value = raw_response.get("value", "")
+    return AccountStorageEntry(
+        raw=raw_response,
+        key=key,
+        value=bytes.fromhex(value)
+    )
+
+
+def transaction_cost_estimation_from_response(raw_response: dict[str, Any]) -> TransactionCostResponse:
+    cost = raw_response.get("txGasUnits", 0)
+    return TransactionCostResponse(
+        raw=raw_response,
+        gas_limit=cost,
+        status=TransactionStatus("")
+    )
+
+
+def transactions_from_send_multiple_response(raw_response: dict[str, Any],
+                                             initial_txs_sent: int) -> tuple[int, list[bytes]]:
+    num_sent = raw_response.get("numOfSentTxs", 0)
+    tx_hashes: dict[str, Any] = raw_response.get("txsHashes", {})
+
+    hashes: list[bytes] = []
+    for i in range(initial_txs_sent):
+        tx_hash = tx_hashes.get(str(i), "")
+        hashes.append(bytes.fromhex(tx_hash))
+
+    return (num_sent, hashes)
