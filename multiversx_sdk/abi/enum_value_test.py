@@ -60,6 +60,7 @@ def test_set_payload_and_get_payload():
     assert value.discriminant == 41
     assert value.fields == [Field("a", U32Value(1)), Field("b", BigUIntValue(2))]
     assert value.get_payload() == SimpleNamespace(__discriminant__=41, a=1, b=2)
+    assert int(value.get_payload()) == 41
 
     class Payload:
         def __init__(self, c: int, d: int):
@@ -72,15 +73,18 @@ def test_set_payload_and_get_payload():
     assert value.discriminant == 42
     assert value.fields == [Field("c", U32Value(3)), Field("d", BigUIntValue(4))]
     assert value.get_payload() == SimpleNamespace(__discriminant__=42, c=3, d=4)
+    assert int(value.get_payload()) == 42
 
     # Then, from dictionary
     value.set_payload({"__discriminant__": 43, "e": 5, "f": 6})
     assert value.discriminant == 43
     assert value.fields == [Field("e", U32Value(5)), Field("f", BigUIntValue(6))]
     assert value.get_payload() == SimpleNamespace(__discriminant__=43, e=5, f=6)
+    assert int(value.get_payload()) == 43
 
     # Finally, from list (first element is the discriminant)
     value.set_payload([44, 7, 8])
     assert value.discriminant == 44
     assert value.fields == [Field("g", U32Value(7)), Field("h", BigUIntValue(8))]
     assert value.get_payload() == SimpleNamespace(__discriminant__=44, g=7, h=8)
+    assert int(value.get_payload()) == 44
