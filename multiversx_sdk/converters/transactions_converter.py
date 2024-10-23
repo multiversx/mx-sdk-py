@@ -26,9 +26,7 @@ class TransactionsConverter:
             "options": transaction.options,
             "guardian": transaction.guardian,
             "signature": self._value_to_hex_or_empty(transaction.signature),
-            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature),
-            "relayer": transaction.relayer,
-            "innerTransactions": [self.transaction_to_dictionary(inner_tx) for inner_tx in transaction.inner_transactions]
+            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature)
         }
 
     def dictionary_to_transaction(self, dictionary: Dict[str, Any]) -> Transaction:
@@ -50,8 +48,6 @@ class TransactionsConverter:
             options=dictionary.get("options", None),
             signature=self._bytes_from_hex(dictionary.get("signature", "")),
             guardian_signature=self._bytes_from_hex(dictionary.get("guardianSignature", "")),
-            relayer=dictionary.get("relayer", None),
-            inner_transactions=[self.dictionary_to_transaction(inner_tx) for inner_tx in dictionary.get("innerTransactions", [])],
         )
 
     def _ensure_mandatory_fields_for_transaction(self, dictionary: Dict[str, Any]) -> None:
