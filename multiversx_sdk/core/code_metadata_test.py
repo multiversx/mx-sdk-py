@@ -5,33 +5,33 @@ import pytest
 from multiversx_sdk.core.code_metadata import CodeMetadata
 
 
-def test_code_metadata_from_bytes():
-    metadata = CodeMetadata.from_bytes(bytes([0x05, 0x00]))
+def test_code_metadata_new_from_bytes():
+    metadata = CodeMetadata.new_from_bytes(bytes([0x05, 0x00]))
     assert metadata.upgradeable == True
     assert metadata.readable == True
     assert metadata.payable == False
     assert metadata.payable_by_contract == False
 
-    metadata = CodeMetadata.from_bytes(bytes([0x05, 0x06]))
+    metadata = CodeMetadata.new_from_bytes(bytes([0x05, 0x06]))
     assert metadata.upgradeable == True
     assert metadata.readable == True
     assert metadata.payable == True
     assert metadata.payable_by_contract == True
 
-    metadata = CodeMetadata.from_bytes(bytes([0x05, 0x00]))
+    metadata = CodeMetadata.new_from_bytes(bytes([0x05, 0x00]))
     assert metadata.upgradeable == True
     assert metadata.readable == True
     assert metadata.payable == False
     assert metadata.payable_by_contract == False
 
-    metadata = CodeMetadata.from_bytes(bytes([0x00, 0x00]))
+    metadata = CodeMetadata.new_from_bytes(bytes([0x00, 0x00]))
     assert metadata.upgradeable == False
     assert metadata.readable == False
     assert metadata.payable == False
     assert metadata.payable_by_contract == False
 
     with pytest.raises(ValueError, match="code metadata buffer has length 4, expected 2"):
-        CodeMetadata.from_bytes(bytes([0x00, 0x01, 0x02, 0x03]))
+        CodeMetadata.new_from_bytes(bytes([0x00, 0x01, 0x02, 0x03]))
 
 
 def test_code_metadata_serialize():

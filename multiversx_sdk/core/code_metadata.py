@@ -23,7 +23,7 @@ class CodeMetadata:
         self.payable_by_contract = payable_by_contract
 
     @classmethod
-    def from_bytes(cls, data: bytes) -> "CodeMetadata":
+    def new_from_bytes(cls, data: bytes) -> "CodeMetadata":
         if len(data) != CODE_METADATA_LENGTH:
             raise ValueError(f"code metadata buffer has length {len(data)}, expected {CODE_METADATA_LENGTH}")
 
