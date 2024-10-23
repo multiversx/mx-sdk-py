@@ -604,6 +604,16 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.BytesValue.set_payload"><code class="docutils literal notranslate"><span class="pre">BytesValue.set_payload()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue.decode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue.decode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.encode_nested"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue.encode_nested()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.encode_top_level"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue.encode_top_level()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.get_payload"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue.get_payload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.new_from_code_metadata"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue.new_from_code_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.set_payload"><code class="docutils literal notranslate"><span class="pre">CodeMetadataValue.set_payload()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue"><code class="docutils literal notranslate"><span class="pre">EnumValue</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.decode_nested"><code class="docutils literal notranslate"><span class="pre">EnumValue.decode_nested()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.EnumValue.decode_top_level"><code class="docutils literal notranslate"><span class="pre">EnumValue.decode_top_level()</span></code></a></li>
@@ -893,6 +903,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.code_metadata.CodeMetadata"><code class="docutils literal notranslate"><span class="pre">CodeMetadata</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.code_metadata.CodeMetadata.new_from_bytes"><code class="docutils literal notranslate"><span class="pre">CodeMetadata.new_from_bytes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.code_metadata.CodeMetadata.serialize"><code class="docutils literal notranslate"><span class="pre">CodeMetadata.serialize()</span></code></a></li>
 </ul>
 </li>
@@ -1161,6 +1172,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.CodeMetadata"><code class="docutils literal notranslate"><span class="pre">CodeMetadata</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.CodeMetadata.new_from_bytes"><code class="docutils literal notranslate"><span class="pre">CodeMetadata.new_from_bytes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.CodeMetadata.serialize"><code class="docutils literal notranslate"><span class="pre">CodeMetadata.serialize()</span></code></a></li>
 </ul>
 </li>
@@ -2472,6 +2484,11 @@
 <dt class="sig sig-object py" id="multiversx_sdk.CodeMetadata">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">CodeMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upgradeable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">readable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payable_by_contract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/code_metadata.html#CodeMetadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.CodeMetadata" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.CodeMetadata.new_from_bytes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.code_metadata.CodeMetadata" title="multiversx_sdk.core.code_metadata.CodeMetadata"><span class="pre">CodeMetadata</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/code_metadata.html#CodeMetadata.new_from_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.CodeMetadata.new_from_bytes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.CodeMetadata.serialize">
 <span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/code_metadata.html#CodeMetadata.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.CodeMetadata.serialize" title="Link to this definition"></a></dt>

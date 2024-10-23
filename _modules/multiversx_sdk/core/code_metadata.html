@@ -71,6 +71,8 @@
   <h1>Source code for multiversx_sdk.core.code_metadata</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
+<span class="n">CODE_METADATA_LENGTH</span> <span class="o">=</span> <span class="mi">2</span>
+
 
 <div class="viewcode-block" id="ByteZero">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.ByteZero">[docs]</a>
@@ -98,6 +100,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">readable</span> <span class="o">=</span> <span class="n">readable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">payable</span> <span class="o">=</span> <span class="n">payable</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">payable_by_contract</span> <span class="o">=</span> <span class="n">payable_by_contract</span>
+
+<div class="viewcode-block" id="CodeMetadata.new_from_bytes">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.CodeMetadata.new_from_bytes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">new_from_bytes</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CodeMetadata&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="n">CODE_METADATA_LENGTH</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;code metadata buffer has length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">, expected </span><span class="si">{</span><span class="n">CODE_METADATA_LENGTH</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">byte_zero</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">byte_one</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">upgradeable</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte_zero</span> <span class="o">&amp;</span> <span class="n">ByteZero</span><span class="o">.</span><span class="n">Upgradeable</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">readable</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte_zero</span> <span class="o">&amp;</span> <span class="n">ByteZero</span><span class="o">.</span><span class="n">Readable</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">payable</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte_one</span> <span class="o">&amp;</span> <span class="n">ByteOne</span><span class="o">.</span><span class="n">Payable</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">payable_by_contract</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte_one</span> <span class="o">&amp;</span> <span class="n">ByteOne</span><span class="o">.</span><span class="n">PayableByContract</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">upgradeable</span><span class="p">,</span> <span class="n">readable</span><span class="p">,</span> <span class="n">payable</span><span class="p">,</span> <span class="n">payable_by_contract</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="CodeMetadata.serialize">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.CodeMetadata.serialize">[docs]</a>
