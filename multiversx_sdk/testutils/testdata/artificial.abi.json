@@ -59,21 +59,6 @@
                     "type": "OperationCompletionStatus"
                 }
             ]
-        },
-        {
-            "name": "red",
-            "mutability": "mutable",
-            "inputs": [
-                {
-                    "name": "a",
-                    "type": "utf-8 string"
-                },
-                {
-                    "name": "b",
-                    "type": "utf-8 string"
-                }
-            ],
-            "outputs": []
         }
     ],
     "types": {
