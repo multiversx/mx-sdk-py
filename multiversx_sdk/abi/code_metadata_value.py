@@ -11,7 +11,7 @@ class CodeMetadataValue:
         self.value = value
 
     @classmethod
-    def from_code_metadata(cls, code_metadata: CodeMetadata) -> "CodeMetadataValue":
+    def new_from_code_metadata(cls, code_metadata: CodeMetadata) -> "CodeMetadataValue":
         return cls(code_metadata.serialize())
 
     def encode_nested(self, writer: io.BytesIO):
@@ -30,7 +30,7 @@ class CodeMetadataValue:
 
     def set_payload(self, value: Any):
         if isinstance(value, bytes):
-            self.value = CodeMetadata.from_bytes(value).serialize()
+            self.value = CodeMetadata.new_from_bytes(value).serialize()
         elif isinstance(value, CodeMetadata):
             self.value = value.serialize()
         else:

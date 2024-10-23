@@ -37,9 +37,11 @@ def test_abi_adder():
 
     assert abi.definition.endpoints[0].name == "getSum"
     assert abi.definition.endpoints[0].inputs == []
+    assert abi.definition.endpoints[0].title == "Get Sum"
     assert abi.definition.endpoints[0].outputs == [ParameterDefinition("", "BigUint")]
 
     assert abi.definition.endpoints[1].name == "add"
+    assert abi.definition.endpoints[1].title == ""
     assert abi.definition.endpoints[1].inputs == [ParameterDefinition("value", "BigUint")]
     assert abi.definition.endpoints[1].outputs == []
 

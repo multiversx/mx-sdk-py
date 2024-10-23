@@ -43,7 +43,7 @@ def test_verify_message_signature():
         signature=bytes.fromhex("84fd0a3a9d4f1ea2d4b40c6da67f9b786284a1c3895b7253fec7311597cda3f757862bb0690a92a13ce612c33889fd86")
     )
 
-    assert ok == True
+    assert ok
 
     # With altered signature
     ok = facade.verify_message_signature(
@@ -59,7 +59,7 @@ def test_verify_message_signature():
         signature=bytes.fromhex("84fd0a3a9d4f1ea2d4b40c6da67f9b786284a1c3895b7253fec7311597cda3f757862bb0690a92a13ce612c33889fd86")
     )
 
-    assert ok == False
+    assert not ok
 
     # With bad public key
     ok = facade.verify_message_signature(
@@ -68,7 +68,7 @@ def test_verify_message_signature():
         signature=bytes.fromhex("84fd0a3a9d4f1ea2d4b40c6da67f9b786284a1c3895b7253fec7311597cda3f757862bb0690a92a13ce612c33889fd86")
     )
 
-    assert ok == False
+    assert not ok
 
 
 def test_generate_sign_and_verify():
@@ -80,4 +80,4 @@ def test_generate_sign_and_verify():
     signature = facade.compute_message_signature(message, private_key)
     ok = facade.verify_message_signature(public_key, message, signature)
 
-    assert ok == True
+    assert ok

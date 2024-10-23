@@ -215,7 +215,18 @@ def test_parse_esdt_safe_deposit_event_without_first_topic():
 def test_multisig_start_perform_action():
     api = ApiNetworkProvider("https://devnet-api.multiversx.com")
 
-    transaction_on_network = api.get_transaction("d17f6c129cefa8320365f25d7ab051121b985ad6ff73f20d0005286856b1ac36")
+    # Test was set up as follows:
+    # Deploy multisig
+    # mxpy contract deploy --bytecode=./multisig-full.wasm --gas-limit=100000000 --recall-nonce --arguments 2 erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx --proxy=https://devnet-gateway.multiversx.com --pem=erd1test.pem --send
+    # Call "proposeTransferExecute"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function proposeTransferExecute --gas-limit=20000000 --recall-nonce --arguments erd1r69gk66fmedhhcg24g2c5kn2f2a5k4kvpr6jfw67dn2lyydd8cfswy6ede 1000000000000000000 0x00 --proxy=https://devnet-gateway.multiversx.com --pem=alice.pem --send
+    # Call "sign"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function sign --gas-limit=20000000 --recall-nonce --arguments 1 --proxy=https://devnet-gateway.multiversx.com --pem=bob.pem --send
+    # Call "deposit"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function deposit --gas-limit=20000000 --recall-nonce --value 1000000000000000000 --proxy=https://devnet-gateway.multiversx.com --pem=alice.pem --send
+    # Call "performAction"
+    # mxpy contract call erd1qqqqqqqqqqqqqpgqnquyu4atwjz89p8vd8k0k7sz5qaeyfj2396qmek84v --function performAction --gas-limit=20000000 --recall-nonce --arguments 1 --proxy=https://devnet-gateway.multiversx.com --pem=alice.pem --send
+    transaction_on_network = api.get_transaction("6651b983d494d69d94ce3efb3ae1604480af7c17780ab58daa09a9e5cc1d86c8")
 
     abi = Abi.load(testdata / "multisig-full.abi.json")
     events_parser = TransactionEventsParser(abi)
@@ -242,6 +253,6 @@ def test_multisig_start_perform_action():
         ),
         signers=[
             Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
-            Address.new_from_bech32("erd1uwef0vsxup3p84fmg3szjs0ae3d9qx0sn5eqe5ayerlgk34cczpsqm2nrl").get_public_key(),
+            Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx").get_public_key()
         ]
     )

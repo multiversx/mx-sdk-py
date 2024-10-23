@@ -156,4 +156,4 @@ class TestSmartContractTransactionsOutcomeParser:
         assert len(parsed.values) == 1
 
         expected_value = 2
-        assert parsed.values == [encode_unsigned_number(expected_value)]
+        assert parsed.values == [expected_value.to_bytes(length=1, byteorder="big")]
