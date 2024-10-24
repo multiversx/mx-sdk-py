@@ -1,5 +1,7 @@
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
+from threading import Thread
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import requests
 
@@ -7,10 +9,10 @@ from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
+from multiversx_sdk.core.tokens import Token
+from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
-                                                       GuardianData)
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
                                                         DEFAULT_ADDRESS_HRP,
@@ -19,16 +21,19 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
-    block_from_response, network_config_from_response,
-    network_status_from_response, smart_contract_query_to_vm_query_request,
-    transaction_from_proxy_response,
+    account_from_response, account_storage_entry_from_response,
+    account_storage_from_response, block_from_response,
+    network_config_from_response, network_status_from_response,
+    smart_contract_query_to_vm_query_request,
+    transaction_cost_estimation_from_response, transaction_from_proxy_response,
+    transactions_from_send_multiple_response,
     vm_query_response_to_smart_contract_query_response)
-from multiversx_sdk.network_providers.interface import IAddress
-from multiversx_sdk.network_providers.resources import (AwaitingOptions,
-                                                        BlockOnNetwork,
-                                                        GenericResponse,
-                                                        NetworkConfig,
-                                                        NetworkStatus)
+from multiversx_sdk.network_providers.interface import (IAddress,
+                                                        IBasicNetworkProvider)
+from multiversx_sdk.network_providers.resources import (
+    AccountOnNetwork, AccountStorage, AccountStorageEntry, AwaitingOptions,
+    BlockOnNetwork, GenericResponse, GetBlockArguments, NetworkConfig,
+    NetworkStatus, TokenAmountOnNetwork, TransactionCostResponse)
 from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.token_definitions import (
     DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
@@ -36,11 +41,10 @@ from multiversx_sdk.network_providers.tokens import (
     FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
-from multiversx_sdk.network_providers.transactions import ITransaction
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 
 
-class ProxyNetworkProvider:
+class ProxyNetworkProvider(IBasicNetworkProvider):
     def __init__(self,
                  url: str,
                  address_hrp: Optional[str] = None,
@@ -62,10 +66,19 @@ class ProxyNetworkProvider:
         response = self.do_get_generic(f'network/status/{shard}')
         return network_status_from_response(response.get('status', ''))
 
-    # we'll see how we do this
-    def get_block(self) -> BlockOnNetwork:
+    def get_block(self, arguments: GetBlockArguments) -> BlockOnNetwork:
         """Fetches a block by nonce or by hash."""
-        ...
+        if not arguments.shard:
+            raise Exception("Shard not provided. Please set the shard in the arguments.")
+
+        if arguments.block_hash:
+            response = self.do_get_generic(f"block/{arguments.shard}/by-hash/{arguments.block_hash}")
+        elif arguments.block_nonce:
+            response = self.do_get_generic(f"block/{arguments.shard}/by-nonce/{arguments.block_nonce}")
+        else:
+            raise Exception("Block hash or block nonce not provided")
+
+        return block_from_response(response.get("block", {}))
 
     def get_latest_block(self, shard: int = METACHAIN_ID) -> BlockOnNetwork:
         """Fetches the latest block of a shard."""
@@ -74,14 +87,142 @@ class ProxyNetworkProvider:
         return block_from_response(response.get("block", {}))
 
     def get_account(self, address: IAddress) -> AccountOnNetwork:
+        """Fetches account information for a given address."""
+        data: dict[str, bool] = {}
+
+        def get_guardian_data():
+            guardian_data = self.do_get_generic(f"address/{address.to_bech32()}/guardian-data")
+            data["is_guarded"] = bool(guardian_data.get("guardianData", {}).get("guarded"))
+
+        get_guardian_data_thread = Thread(target=get_guardian_data,)
+
         response = self.do_get_generic(f'address/{address.to_bech32()}')
-        account = AccountOnNetwork.from_http_response(response.get('account', ''))
+        account = account_from_response(response.to_dictionary())
+
+        get_guardian_data_thread.join(timeout=2)
+        account.is_guarded = data.get("is_guarded", False)
+
         return account
 
-    def get_guardian_data(self, address: IAddress) -> GuardianData:
-        response = self.do_get_generic(f'address/{address.to_bech32()}/guardian-data')
-        account_guardian = GuardianData.from_http_response(response.get('guardianData', ''))
-        return account_guardian
+    def get_account_storage(self, address: IAddress) -> AccountStorage:
+        """Fetches the storage (key-value pairs) of an account."""
+        response = self.do_get_generic(f"address/{address.to_bech32()}/keys")
+        return account_storage_from_response(response.to_dictionary())
+
+    def get_account_storage_entry(self, address: IAddress, entry_key: str) -> AccountStorageEntry:
+        """Fetches a specific storage entry of an account."""
+        key_as_hex = entry_key.encode().hex()
+        response = self.do_get_generic(f"address/{address.to_bech32()}/key/{key_as_hex}")
+        return account_storage_entry_from_response(response.to_dictionary(), entry_key)
+
+    def await_account_on_condition(
+            self, address: IAddress, condition: Callable[[AccountOnNetwork],
+                                                         bool],
+            options: Optional[AwaitingOptions]) -> AccountOnNetwork:
+        """Waits until an account satisfies a given condition."""
+        # Account_awaiter needs to be implemented
+        ...
+
+    def send_transaction(self, transaction: Transaction) -> bytes:
+        """Broadcasts a transaction and returns its hash."""
+        transactions_converter = TransactionsConverter()
+        response = self.do_post_generic(
+            'transaction/send', transactions_converter.transaction_to_dictionary(transaction))
+        return bytes.fromhex(response.get('txHash', ''))
+
+    def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork:
+        """Simulates a transaction."""
+        transactions_converter = TransactionsConverter()
+        response = self.do_post_generic(
+            'transaction/simulate', transactions_converter.transaction_to_dictionary(transaction))
+        return transaction_from_proxy_response("", response.to_dictionary())
+
+    def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
+        """Estimates the cost of a transaction."""
+        transactions_converter = TransactionsConverter()
+        response = self.do_post_generic(
+            'transaction/cost', transactions_converter.transaction_to_dictionary(transaction))
+        return transaction_cost_estimation_from_response(response.to_dictionary())
+
+    def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
+        """
+        Broadcasts multiple transactions and returns a tuple of (number of accepted transactions, list of transaction hashes).
+        In the returned list, the order of transaction hashes corresponds to the order of transactions in the input list.
+        If a transaction is not accepted, its hash is empty in the returned list.
+        """
+        transactions_converter = TransactionsConverter()
+        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(
+            transaction) for transaction in transactions]
+        response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
+        return transactions_from_send_multiple_response(response.to_dictionary(), len(transactions))
+
+    def get_transaction(self, transaction_hash: Union[bytes, str]) -> TransactionOnNetwork:
+        """Fetches a transaction that was previously broadcasted (maybe already processed by the network)."""
+        transaction_hash = convert_tx_hash_to_string(transaction_hash)
+
+        def get_tx() -> Dict[str, Any]:
+            url = f"transaction/{transaction_hash}?withResults=true"
+            return self.do_get_generic(url).get('transaction', '')
+
+        status_task = None
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            try:
+                status_task = executor.submit(self.get_transaction_status, transaction_hash)
+                tx_task = executor.submit(get_tx)
+
+                process_status = status_task.result(timeout=5)
+                tx = tx_task.result(timeout=5)
+
+            except TimeoutError:
+                raise TimeoutError("Fetching transaction or process status timed out")
+            except GenericError as ge:
+                raise TransactionFetchingError(ge.url, ge.data)
+
+        return transaction_from_proxy_response(transaction_hash, tx, process_status)
+
+    def await_transaction_completed(
+            self, transaction_hash: Union[bytes, str],
+            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        """Waits until the transaction is completely processed."""
+        transaction_hash = convert_tx_hash_to_string(transaction_hash)
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_completed(transaction_hash)
+
+    def await_transaction_on_condition(self,
+                                       transaction_hash: Union[str, bytes],
+                                       condition: Callable[[TransactionOnNetwork], bool],
+                                       options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        transaction_hash = convert_tx_hash_to_string(transaction_hash)
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_on_condition(transaction_hash, condition)
+
+    # let's have token as str, it's easier
+    def get_token_of_account(self, address: IAddress, token: Token) -> TokenAmountOnNetwork:
+        """
+        Fetches the balance of an account, for a given token.
+        Able to handle both fungible and non-fungible tokens (NFTs, SFTs, MetaESDTs).
+        """
+        ...
 
     def get_fungible_tokens_of_account(self, address: IAddress) -> List[FungibleTokenOfAccountOnNetwork]:
         url = f'address/{address.to_bech32()}/esdt'
@@ -110,87 +251,81 @@ class ProxyNetworkProvider:
         token = NonFungibleTokenOfAccountOnNetwork.from_proxy_http_response_by_nonce(response.get('tokenData', ''))
         return token
 
-    def get_transaction(self, tx_hash: str, with_process_status: Optional[bool] = True) -> TransactionOnNetwork:
-        def get_process_status() -> TransactionStatus:
-            return self.get_transaction_status(tx_hash)
+    # def get_transaction(self, tx_hash: str, with_process_status: Optional[bool] = True) -> TransactionOnNetwork:
+    #     def get_process_status() -> TransactionStatus:
+    #         return self.get_transaction_status(tx_hash)
 
-        def get_tx() -> Dict[str, Any]:
-            url = f"transaction/{tx_hash}?withResults=true"
-            return self.do_get_generic(url).get('transaction', '')
+    #     def get_tx() -> Dict[str, Any]:
+    #         url = f"transaction/{tx_hash}?withResults=true"
+    #         return self.do_get_generic(url).get('transaction', '')
 
-        status_task = None
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            try:
-                if with_process_status:
-                    status_task = executor.submit(get_process_status)
+    #     status_task = None
+    #     with ThreadPoolExecutor(max_workers=2) as executor:
+    #         try:
+    #             if with_process_status:
+    #                 status_task = executor.submit(get_process_status)
 
-                tx_task = executor.submit(get_tx)
+    #             tx_task = executor.submit(get_tx)
 
-                process_status = status_task.result() if status_task else None
-                tx = tx_task.result()
+    #             process_status = status_task.result() if status_task else None
+    #             tx = tx_task.result()
 
-            except TimeoutError:
-                raise TimeoutError("Fetching transaction or process status timed out")
-            except GenericError as ge:
-                raise TransactionFetchingError(ge.url, ge.data)
+    #         except TimeoutError:
+    #             raise TimeoutError("Fetching transaction or process status timed out")
+    #         except GenericError as ge:
+    #             raise TransactionFetchingError(ge.url, ge.data)
 
-        return transaction_from_proxy_response(tx_hash, tx, process_status)
+    #     return transaction_from_proxy_response(tx_hash, tx, process_status)
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
         status = TransactionStatus(response.get('status', ''))
         return status
 
-    def send_transaction(self, transaction: ITransaction) -> str:
-        transactions_converter = TransactionsConverter()
-        response = self.do_post_generic(
-            'transaction/send', transactions_converter.transaction_to_dictionary(transaction))
-        return response.get('txHash', '')
+    # def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
+    #     transactions_converter = TransactionsConverter()
+    #     transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(
+    #         transaction) for transaction in transactions]
+    #     response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
+    #     # Proxy and Observers have different response format:
+    #     num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
+    #     hashes = response.get("txsHashes")
+    #     return num_sent, hashes
 
-    def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
-        transactions_converter = TransactionsConverter()
-        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(
-            transaction) for transaction in transactions]
-        response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
-        # Proxy and Observers have different response format:
-        num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
-        hashes = response.get("txsHashes")
-        return num_sent, hashes
+    # def await_transaction_completed(
+    #         self, tx_hash: Union[str, bytes],
+    #         options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+    #     tx_hash = convert_tx_hash_to_string(tx_hash)
 
-    def await_transaction_completed(
-            self, tx_hash: Union[str, bytes],
-            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        tx_hash = convert_tx_hash_to_string(tx_hash)
+    #     if options is None:
+    #         options = AwaitingOptions()
 
-        if options is None:
-            options = AwaitingOptions()
+    #     awaiter = TransactionAwaiter(
+    #         fetcher=self,
+    #         polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+    #         timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+    #         patience_time_in_milliseconds=options.patience_in_milliseconds
+    #     )
 
-        awaiter = TransactionAwaiter(
-            fetcher=self,
-            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
-            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
-            patience_time_in_milliseconds=options.patience_in_milliseconds
-        )
+    #     return awaiter.await_completed(tx_hash)
 
-        return awaiter.await_completed(tx_hash)
+    # def await_transaction_on_condition(self,
+    #                                    tx_hash: Union[str, bytes],
+    #                                    condition: Callable[[TransactionOnNetwork], bool],
+    #                                    options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+    #     tx_hash = convert_tx_hash_to_string(tx_hash)
 
-    def await_transaction_on_condition(self,
-                                       tx_hash: Union[str, bytes],
-                                       condition: Callable[[TransactionOnNetwork], bool],
-                                       options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        tx_hash = convert_tx_hash_to_string(tx_hash)
+    #     if options is None:
+    #         options = AwaitingOptions()
 
-        if options is None:
-            options = AwaitingOptions()
+    #     awaiter = TransactionAwaiter(
+    #         fetcher=self,
+    #         polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+    #         timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+    #         patience_time_in_milliseconds=options.patience_in_milliseconds
+    #     )
 
-        awaiter = TransactionAwaiter(
-            fetcher=self,
-            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
-            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
-            patience_time_in_milliseconds=options.patience_in_milliseconds
-        )
-
-        return awaiter.await_on_condition(tx_hash, condition)
+    #     return awaiter.await_on_condition(tx_hash, condition)
 
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         request = smart_contract_query_to_vm_query_request(query)
@@ -230,14 +365,25 @@ class ProxyNetworkProvider:
         response = response.get("hyperblock", {})
         return response
 
-    def do_get_generic(self, resource_url: str) -> GenericResponse:
-        url = f'{self.url}/{resource_url}'
+    def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]] = None) -> GenericResponse:
+        url = f'{self.url}/{url}'
+
+        if url_parameters is not None:
+            params = urllib.parse.urlencode(url_parameters)
+            url = f"{url}?{params}"
+
         response = self.do_get(url)
         return response
 
-    def do_post_generic(self, resource_url: str, payload: Any) -> GenericResponse:
-        url = f'{self.url}/{resource_url}'
-        response = self.do_post(url, payload)
+    def do_post_generic(
+            self, url: str, data: Any, url_parameters: Optional[dict[str, Any]] = None) -> GenericResponse:
+        url = f'{self.url}/{url}'
+
+        if url_parameters is not None:
+            params = urllib.parse.urlencode(url_parameters)
+            url = f"{url}?{params}"
+
+        response = self.do_post(url, data)
         return response
 
     def do_get(self, url: str) -> GenericResponse:
