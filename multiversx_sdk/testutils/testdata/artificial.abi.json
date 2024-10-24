@@ -1,68 +1,93 @@
 {
-  "name": "Artificial",
-  "constructor": {
-    "inputs": [
-      {
-        "name": "a",
-        "type": "utf-8 string"
-      }
-    ],
-    "outputs": []
-  },
-  "upgradeConstructor": {
-    "inputs": [
-      {
-        "name": "a",
-        "type": "u8"
-      }
-    ],
-    "outputs": []
-  },
-  "endpoints": [
-    {
-      "name": "blue",
-      "mutability": "readonly",
-      "inputs": [],
-      "outputs": [
-        {
-          "type": "optional<multi<TokenIdentifier,u64,BigUint>>"
-        }
-      ]
+    "name": "Artificial",
+    "constructor": {
+        "inputs": [
+            {
+                "name": "a",
+                "type": "utf-8 string"
+            }
+        ],
+        "outputs": []
     },
-    {
-      "name": "yellow",
-      "mutability": "mutable",
-      "inputs": [
-        {
-          "name": "value",
-          "type": "multi<u32, bytes, bool>"
-        }
-      ],
-      "outputs": []
+    "upgradeConstructor": {
+        "inputs": [
+            {
+                "name": "a",
+                "type": "u8"
+            }
+        ],
+        "outputs": []
     },
-    {
-      "name": "orange",
-      "mutability": "mutable",
-      "inputs": [
+    "endpoints": [
         {
-          "name": "value",
-          "type": "EgldOrEsdtTokenIdentifier"
+            "name": "blue",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "optional<multi<TokenIdentifier,u64,BigUint>>"
+                }
+            ]
+        },
+        {
+            "name": "yellow",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "multi<u32, bytes, bool>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "orange",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "value",
+                    "type": "EgldOrEsdtTokenIdentifier"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "green",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "OperationCompletionStatus"
+                }
+            ]
         }
-      ],
-      "outputs": []
-    }
-  ],
-  "types": {},
-  "events": [
-    {
-      "identifier": "firstEvent",
-      "inputs": [
-          {
-              "name": "result",
-              "type": "BigUint",
-              "indexed": true
-          }
-      ]
-  }
-  ]
+    ],
+    "types": {
+        "OperationCompletionStatus": {
+            "type": "explicit-enum",
+            "variants": [
+                {
+                    "docs": ["indicates that operation was completed"],
+                    "name": "completed"
+                },
+                {
+                    "docs": [
+                        "indicates that operation was interrupted prematurely, due to low gas"
+                    ],
+                    "name": "interrupted"
+                }
+            ]
+        }
+    },
+    "events": [
+        {
+            "identifier": "firstEvent",
+            "inputs": [
+                {
+                    "name": "result",
+                    "type": "BigUint",
+                    "indexed": true
+                }
+            ]
+        }
+    ]
 }
