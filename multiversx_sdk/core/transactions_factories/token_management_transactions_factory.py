@@ -930,13 +930,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                          sender: IAddress,
                                                          token_name: str,
                                                          token_ticker: str,
-                                                         token_type: TokenType) -> Transaction:
+                                                         token_type: TokenType,
+                                                         denominator: int = None) -> Transaction:
         parts: List[str] = [
             "registerDynamic",
             arg_to_string(token_name),
             arg_to_string(token_ticker),
             arg_to_string(token_type.value)
         ]
+
+        if token_type == TokenType.META and denominator is not None:
+            parts.append(arg_to_string(denominator))
 
         return TransactionBuilder(
             config=self._config,
@@ -952,13 +956,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                                      sender: IAddress,
                                                                      token_name: str,
                                                                      token_ticker: str,
-                                                                     token_type: TokenType) -> Transaction:
+                                                                     token_type: TokenType,
+                                                                     denominator: int = None) -> Transaction:
         parts: List[str] = [
             "registerAndSetAllRolesDynamic",
             arg_to_string(token_name),
             arg_to_string(token_ticker),
             arg_to_string(token_type.value)
         ]
+
+        if token_type == TokenType.META and denominator is not None:
+            parts.append(arg_to_string(denominator))
 
         return TransactionBuilder(
             config=self._config,
