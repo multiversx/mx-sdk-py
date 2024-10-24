@@ -87,7 +87,7 @@ class EnumValue:
         raise ValueError("cannot set payload for enum (should be either a dictionary or a list)")
 
     def get_payload(self) -> Any:
-        obj = SimpleNamespace()
+        obj = _EnumPayload()
 
         for field in self.fields:
             setattr(obj, field.name, field.get_payload())
@@ -108,3 +108,8 @@ class EnumValue:
 
         for field in self.fields:
             yield (field.name, field.value)
+
+
+class _EnumPayload(SimpleNamespace):
+    def __int__(self):
+        return getattr(self, ENUM_DISCRIMINANT_FIELD_NAME)
