@@ -33,7 +33,7 @@ class SmartContractQueriesController:
         self,
         contract: str,
         function: str,
-        arguments: List[bytes],
+        arguments: List[Any],
         caller: Optional[str] = None,
         value: Optional[int] = None
     ):
