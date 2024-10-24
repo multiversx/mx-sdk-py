@@ -260,8 +260,10 @@
 <span class="k">class</span> <span class="nc">TypesDefinitions</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EnumDefinition&quot;</span><span class="p">],</span>
+                 <span class="n">explicit_enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ExplicitEnumDefinition&quot;</span><span class="p">],</span>
                  <span class="n">structs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;StructDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enums</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">EnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">enum</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">enum</span> <span class="k">for</span> <span class="n">enum</span> <span class="ow">in</span> <span class="n">enums</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">explicit_enums</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ExplicitEnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">enum</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">enum</span> <span class="k">for</span> <span class="n">enum</span> <span class="ow">in</span> <span class="n">explicit_enums</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">structs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StructDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">struct</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">struct</span> <span class="k">for</span> <span class="n">struct</span> <span class="ow">in</span> <span class="n">structs</span><span class="p">}</span>
 
 <div class="viewcode-block" id="TypesDefinitions.from_dict">
@@ -269,6 +271,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;TypesDefinitions&quot;</span><span class="p">:</span>
         <span class="n">enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">explicit_enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ExplicitEnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">structs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">StructDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">definition</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -276,6 +279,8 @@
 
             <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;enum&quot;</span><span class="p">:</span>
                 <span class="n">enums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EnumDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">definition</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;explicit-enum&quot;</span><span class="p">:</span>
+                <span class="n">explicit_enums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ExplicitEnumDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">definition</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;struct&quot;</span><span class="p">:</span>
                 <span class="n">structs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StructDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">definition</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
@@ -283,6 +288,7 @@
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">enums</span><span class="o">=</span><span class="n">enums</span><span class="p">,</span>
+            <span class="n">explicit_enums</span><span class="o">=</span><span class="n">explicit_enums</span><span class="p">,</span>
             <span class="n">structs</span><span class="o">=</span><span class="n">structs</span>
         <span class="p">)</span></div>
 </div>
@@ -341,6 +347,54 @@
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;EnumVariantDefinition(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, discriminant=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ExplicitEnumDefinition">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ExplicitEnumDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">ExplicitEnumDefinition</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">variants</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ExplicitEnumVariantDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variants</span> <span class="o">=</span> <span class="n">variants</span>
+
+<div class="viewcode-block" id="ExplicitEnumDefinition.from_dict">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ExplicitEnumDefinition.from_dict">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExplicitEnumDefinition&quot;</span><span class="p">:</span>
+        <span class="n">variants</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExplicitEnumVariantDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;variants&quot;</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">variants</span><span class="o">=</span><span class="n">variants</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ExplicitEnumDefinition(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ExplicitEnumVariantDefinition">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ExplicitEnumVariantDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">ExplicitEnumVariantDefinition</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<div class="viewcode-block" id="ExplicitEnumVariantDefinition.from_dict">
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ExplicitEnumVariantDefinition.from_dict">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExplicitEnumVariantDefinition&quot;</span><span class="p">:</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">FieldDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fields&quot;</span><span class="p">,</span> <span class="p">[])]</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ExplicitEnumVariantDefinition(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
 
