@@ -1,5 +1,3 @@
-from typing import List
-
 from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.interfaces import ITransaction
 from multiversx_sdk.core.transaction import Transaction
@@ -44,4 +42,3 @@ class RelayedController:
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
-

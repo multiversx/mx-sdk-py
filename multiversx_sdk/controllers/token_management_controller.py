@@ -1,6 +1,6 @@
-from typing import List, Optional, Protocol, Union
+from typing import List
 
-from multiversx_sdk.controllers.interfaces import IAccount
+from multiversx_sdk.controllers.interfaces import IAccount, INetworkProvider
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.interfaces import IAddress
@@ -16,12 +16,6 @@ from multiversx_sdk.core.transactions_outcome_parsers import (
     RegisterMetaEsdtOutcome, SetSpecialRoleOutcome,
     TokenManagementTransactionsOutcomeParser, UnFreezeOutcome, UnPauseOutcome,
     UpdateAttributesOutcome, WipeOutcome)
-from multiversx_sdk.network_providers.resources import AwaitingOptions
-
-
-class INetworkProvider(Protocol):
-    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        ...
 
 
 class TokenManagementController:
