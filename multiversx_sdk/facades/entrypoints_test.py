@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ testutils = Path(__file__).parent.parent / "testutils"
 class TestEntrypoint:
     entrypoint = DevnetEntrypoint()
     alice_pem = testutils / "testwallets" / "alice.pem"
+    bob_pem = testutils / "testwallets" / "bob.pem"
 
     def test_native_transfer(self):
         controller = self.entrypoint.create_transfers_controller()

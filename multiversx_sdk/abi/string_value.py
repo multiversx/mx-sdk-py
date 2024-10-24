@@ -29,6 +29,8 @@ class StringValue:
             self.value = value.decode("utf-8")
         elif isinstance(value, str):
             self.value = value
+        elif isinstance(value, StringValue):
+            self.value = value.value
         else:
             raise ValueError(f"cannot set payload for string (should be either a string or bytes, but got: {type(value)})")
 
