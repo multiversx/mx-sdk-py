@@ -185,7 +185,7 @@ class ProposeSCUpgradeFromSourceInput:
         self.amount = native_transfer_amount
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
-        self.arguments = abi.encode_constructor_input_parameters(arguments) if abi else arguments
+        self.arguments = abi.encode_upgrade_constructor_input_parameters(arguments) if abi else arguments
 
 
 class UserRole(Enum):
