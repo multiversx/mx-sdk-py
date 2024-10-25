@@ -224,4 +224,4 @@ class TestApi:
 
         response = requests.get(api.url + "/network/config", **api.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/api/test-client"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"

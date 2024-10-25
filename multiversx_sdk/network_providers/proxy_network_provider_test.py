@@ -247,4 +247,4 @@ class TestProxy:
 
         response = requests.get(proxy.url + "/network/config", **proxy.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/proxy/test-client"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/test-client"
