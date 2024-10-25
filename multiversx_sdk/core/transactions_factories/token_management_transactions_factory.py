@@ -912,7 +912,6 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     def create_transaction_for_updating_token_id(self,
                                                  sender: IAddress,
                                                  token_identifier: str) -> Transaction:
-        """The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2"""
         parts: list[str] = [
             "updateTokenID",
             arg_to_string(token_identifier)
