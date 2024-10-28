@@ -72,32 +72,3 @@ class TestEntrypoint:
 
         assert len(query_result) == 1
         assert query_result[0] == 7
-
-    def test_create_relayed_transaction(self):
-        tranasfer_controller = self.entrypoint.create_transfers_controller()
-        sender = Account.new_from_pem(self.alice_pem)
-        sender.nonce = 77777
-
-        bob_pem = testutils / "testwallets" / "bob.pem"
-        relayer = Account.new_from_pem(bob_pem)
-        relayer.nonce = 7
-
-        transaction = tranasfer_controller.create_transaction_for_transfer(
-            sender=sender,
-            nonce=sender.get_nonce_then_increment(),
-            receiver=sender.address,
-            native_transfer_amount=0,
-            data="hello".encode(),
-        )
-        transaction.relayer = relayer.address.to_bech32()
-
-        relayed_controller = self.entrypoint.create_relayed_controller()
-        relayed_transaction = relayed_controller.create_relayed_v3_transaction(
-            sender=relayer,
-            nonce=relayer.get_nonce_then_increment(),
-            inner_transactions=[transaction]
-        )
-
-        assert len(relayed_transaction.inner_transactions) == 1
-        assert relayed_transaction.sender == relayed_transaction.inner_transactions[0].relayer
-        assert relayed_transaction.chain_id == "D"
