@@ -71,7 +71,7 @@
   <h1>Source code for multiversx_sdk.core.transactions_factories.token_management_transactions_factory</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">BadUsageError</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span>
@@ -151,7 +151,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
 
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;issue&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
@@ -201,7 +201,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
 
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;issueSemiFungible&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
@@ -242,7 +242,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
 
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;issueNonFungible&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
@@ -284,7 +284,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
 
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;registerMetaESDT&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
@@ -321,7 +321,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_notify_about_unsetting_burn_role_globally</span><span class="p">()</span>
 
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;registerAndSetAllRoles&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
@@ -347,7 +347,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;setBurnRoleGlobally&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
         <span class="p">]</span>
@@ -370,7 +370,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;unsetBurnRoleGlobally&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
         <span class="p">]</span>
@@ -397,7 +397,7 @@
         <span class="n">add_role_local_burn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
@@ -428,7 +428,7 @@
         <span class="n">remove_role_local_burn</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;unSetSpecialRole&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
@@ -465,7 +465,7 @@
         <span class="n">add_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
@@ -507,7 +507,7 @@
         <span class="n">remove_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">remove_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;unSetSpecialRole&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
@@ -550,7 +550,7 @@
         <span class="n">add_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
@@ -594,7 +594,7 @@
         <span class="n">remove_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">remove_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;unSetSpecialRole&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
@@ -631,12 +631,12 @@
         <span class="n">royalties</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="nb">hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">attributes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
-        <span class="n">uris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+        <span class="n">uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">uris</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;No URIs provided&quot;</span><span class="p">)</span>
 
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTNFTCreate&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">initial_quantity</span><span class="p">),</span>
@@ -669,7 +669,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;pause&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
         <span class="p">]</span>
@@ -692,7 +692,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;unPause&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
         <span class="p">]</span>
@@ -716,7 +716,7 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;freeze&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span>
@@ -741,7 +741,7 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;unFreeze&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span>
@@ -766,7 +766,7 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;wipe&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span>
@@ -791,7 +791,7 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">supply_to_mint</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTLocalMint&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">supply_to_mint</span><span class="p">)</span>
@@ -816,7 +816,7 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">supply_to_burn</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTLocalBurn&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">supply_to_burn</span><span class="p">)</span>
@@ -842,7 +842,7 @@
         <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">attributes</span><span class="p">:</span> <span class="nb">bytes</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTNFTUpdateAttributes&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
@@ -869,7 +869,7 @@
         <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">quantity_to_add</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTNFTAddQuantity&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
@@ -896,7 +896,7 @@
         <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">quantity_to_burn</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTNFTBurn&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
@@ -921,7 +921,7 @@
                                                    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                    <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                                    <span class="n">new_royalties</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTModifyRoyalties&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
@@ -945,11 +945,11 @@
                                                 <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
                                                 <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                 <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                                                <span class="n">new_uris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+                                                <span class="n">new_uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">new_uris</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;No URIs provided&quot;</span><span class="p">)</span>
 
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTSetNewURIs&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
@@ -973,7 +973,7 @@
                                                  <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
                                                  <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                  <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTModifyCreator&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">)</span>
@@ -1000,8 +1000,8 @@
                                                  <span class="n">new_royalties</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                                  <span class="n">new_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                  <span class="n">new_attributes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
-                                                 <span class="n">new_uris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                                                 <span class="n">new_uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTMetaDataUpdate&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
@@ -1033,8 +1033,8 @@
                                                      <span class="n">new_royalties</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                                      <span class="n">new_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                      <span class="n">new_attributes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
-                                                     <span class="n">new_uris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                                                     <span class="n">new_uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;ESDTMetaDataRecreate&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">),</span>
@@ -1061,7 +1061,8 @@
     <span class="k">def</span> <span class="nf">create_transaction_for_changing_token_to_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                          <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
                                                          <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2&quot;&quot;&quot;</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;changeToDynamic&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
         <span class="p">]</span>
@@ -1082,7 +1083,7 @@
     <span class="k">def</span> <span class="nf">create_transaction_for_updating_token_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                  <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
                                                  <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;updateTokenID&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
         <span class="p">]</span>
@@ -1104,13 +1105,20 @@
                                                          <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
                                                          <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                          <span class="n">token_ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                                                         <span class="n">token_type</span><span class="p">:</span> <span class="n">TokenType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                                                         <span class="n">token_type</span><span class="p">:</span> <span class="n">TokenType</span><span class="p">,</span>
+                                                         <span class="n">denominator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">token_type</span> <span class="o">==</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">FNG</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot register fungible token as dynamic&quot;</span><span class="p">)</span>
+
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;registerDynamic&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_type</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">token_type</span> <span class="o">==</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">META</span> <span class="ow">and</span> <span class="n">denominator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg_to_string</span><span class="p">(</span><span class="n">denominator</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
@@ -1129,13 +1137,20 @@
                                                                      <span class="n">sender</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span>
                                                                      <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                                                      <span class="n">token_ticker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                                                                     <span class="n">token_type</span><span class="p">:</span> <span class="n">TokenType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                                                                     <span class="n">token_type</span><span class="p">:</span> <span class="n">TokenType</span><span class="p">,</span>
+                                                                     <span class="n">denominator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">token_type</span> <span class="o">==</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">FNG</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot register fungible token as dynamic&quot;</span><span class="p">)</span>
+
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;registerAndSetAllRolesDynamic&quot;</span><span class="p">,</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_name</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_ticker</span><span class="p">),</span>
             <span class="n">arg_to_string</span><span class="p">(</span><span class="n">token_type</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">token_type</span> <span class="o">==</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">META</span> <span class="ow">and</span> <span class="n">denominator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg_to_string</span><span class="p">(</span><span class="n">denominator</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
