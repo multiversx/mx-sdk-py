@@ -1,12 +1,11 @@
 from pathlib import Path
-from typing import Any, List, Optional, Protocol, Sequence, Union
+from typing import Any, List, Optional, Sequence, Union
 
-from multiversx_sdk.controllers.interfaces import IAccount
+from multiversx_sdk.controllers.interfaces import (IAbi, IAccount,
+                                                   INetworkProvider)
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
-from multiversx_sdk.core.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
@@ -15,29 +14,6 @@ from multiversx_sdk.core.transactions_factories import (
     SmartContractTransactionsFactory, TransactionsFactoryConfig)
 from multiversx_sdk.core.transactions_outcome_parsers import (
     SmartContractDeployOutcome, SmartContractTransactionsOutcomeParser)
-from multiversx_sdk.network_providers.resources import AwaitingOptions
-
-
-class INetworkProvider(Protocol):
-    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
-        ...
-
-    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        ...
-
-
-class IAbi(Protocol):
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
-        ...
-
-    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
-        ...
-
-    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
-        ...
-
-    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: List[bytes]) -> List[Any]:
-        ...
 
 
 class SmartContractController:
