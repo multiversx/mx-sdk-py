@@ -9,6 +9,7 @@ from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
+from multiversx_sdk.network_providers.resources import GetBlockArguments
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
@@ -22,33 +23,44 @@ class TestProxy:
         assert result.chain_id == "D"
         assert result.gas_per_data_byte == 1500
         assert result.round_duration == 6000
-        assert result.rounds_per_epoch == 2400
         assert result.min_gas_limit == 50000
         assert result.min_gas_price == 1_000_000_000
-        assert result.min_transaction_version == 1
-        assert result.top_up_factor == 0.5
-        assert result.num_shards_without_meta == 3
+        assert result.raw
 
     def test_get_network_status(self):
         result = self.proxy.get_network_status()
 
-        assert result.nonce > 0
-        assert result.current_round > 0
-        assert result.epoch_number > 0
-        assert result.round_at_epoch_start > 0
-        assert result.rounds_passed_in_current_epcoch > 0
-        assert result.nonces_passed_in_current_epoch > 0
-        assert result.highest_final_nonce > 0
-        assert result.nonce_at_epoch_start > 0
-        assert result.rounds_per_epoch == 2400
+        assert result.block_nonce
+        assert result.current_round
+        assert result.block_timestamp
+        assert result.current_epoch
+        assert result.highest_final_block_nonce
+        assert result.raw
 
-    def test_get_network_gas_configs(self):
-        result = self.proxy.get_network_gas_configs()
-        built_in_cost = result["gasConfigs"]["builtInCost"]
-        meta_system_sc_cost = result["gasConfigs"]["metaSystemSCCost"]
+    def test_get_block(self):
+        args = GetBlockArguments(block_nonce=5949242)
 
-        assert built_in_cost["ESDTTransfer"] == 200000
-        assert meta_system_sc_cost["Stake"] == 5000000
+        with pytest.raises(Exception, match="Shard not provided. Please set the shard in the arguments."):
+            self.proxy.get_block(args)
+
+        args = GetBlockArguments(
+            shard=1, block_hash="ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f".encode()
+        )
+        result_by_hash = self.proxy.get_block(args)
+
+        args = GetBlockArguments(
+            shard=1, block_nonce=5949242)
+        result_by_nonce = self.proxy.get_block(args)
+
+        assert result_by_hash.hash == bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
+        assert result_by_hash.nonce == 5949242
+        assert result_by_hash.shard == 1
+        assert result_by_hash.timestamp == 1730112578
+        assert result_by_hash == result_by_nonce
+
+    def test_get_latest_block(self):
+        result = self.proxy.get_latest_block()
+        assert result
 
     def test_get_account(self):
         address = Address.new_from_bech32(
@@ -56,8 +68,20 @@ class TestProxy:
         )
         result = self.proxy.get_account(address)
 
-        assert result.address.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
+        assert result.address == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         assert result.username == ""
+        assert result.contract_owner_address == ""
+
+        address = Address.new_from_bech32(
+            "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        )
+        result = self.proxy.get_account(address)
+
+        assert result.address == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert result.username == ""
+        assert result.contract_owner_address == "erd1wzx0tak22f2me4g7wpxfae2w3htfue7khrg28fy6wu8x9hzq05vqm8qhnm"
+        assert result.is_contract_payable is False
+        assert result.is_contract_readable
 
     def test_get_fungible_token_of_account(self):
         address = Address.new_from_bech32(

@@ -1,9 +1,10 @@
 import base64
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
+from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionEvent,
                                                         TransactionLogs,
@@ -11,12 +12,13 @@ from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, BlockCoordinates,
-    BlockOnNetwork, EmptyAddress, NetworkConfig, NetworkStatus,
+    BlockOnNetwork, EmptyAddress, FungibleTokenMetadata, NetworkConfig,
+    NetworkStatus, TokenAmountOnNetwork, TokensCollectionMetadata,
     TransactionCostResponse)
 
 
-def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> Dict[str, Any]:
-    request: Dict[str, Any] = {
+def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[str, Any]:
+    request: dict[str, Any] = {
         'scAddress': query.contract,
         'funcName': query.function,
         'value': str(query.value if query.value else 0),
@@ -30,7 +32,7 @@ def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> Dict[
 
 
 def vm_query_response_to_smart_contract_query_response(
-        raw_response: Dict[str, Any],
+        raw_response: dict[str, Any],
         function: str) -> SmartContractQueryResponse:
     return_data = raw_response.get('returnData', []) or raw_response.get('ReturnData', [])
     return_code = raw_response.get('returnCode', '') or raw_response.get('ReturnCode', '')
@@ -354,3 +356,128 @@ def transactions_from_send_multiple_response(raw_response: dict[str, Any],
         hashes.append(bytes.fromhex(tx_hash))
 
     return (num_sent, hashes)
+
+
+def token_amount_on_network_from_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
+    token_data: dict[str, Any] = raw_response.get('tokenData', {})
+    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+
+    identifier = token_data.get("tokenIdentifier", "")
+    balance = int(token_data.get("balance", "0"))
+    nonce = token_data.get("nonce", 0)
+    token = Token(identifier, nonce)
+
+    block_nonce = block_info.get("nonce", 0)
+    block_hash = block_info.get("hash", "")
+    block_root_hash = block_info.get("rootHash", "")
+    block_coordinates = BlockCoordinates(
+        nonce=block_nonce,
+        hash=bytes.fromhex(block_hash),
+        root_hash=bytes.fromhex(block_root_hash)
+    )
+
+    return TokenAmountOnNetwork(
+        raw=raw_response,
+        token=token,
+        amount=balance,
+        block_coordinates=block_coordinates
+    )
+
+
+def token_amounts_from_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
+    tokens = raw_response.get("esdts", {})
+    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+
+    block_nonce = block_info.get("nonce", 0)
+    block_hash = block_info.get("hash", "")
+    block_root_hash = block_info.get("rootHash", "")
+    block_coordinates = BlockCoordinates(
+        nonce=block_nonce,
+        hash=bytes.fromhex(block_hash),
+        root_hash=bytes.fromhex(block_root_hash)
+    )
+
+    result: list[TokenAmountOnNetwork] = []
+    for item in tokens:
+        token_data: dict[str, Any] = tokens[item]
+        identifier = token_data.get("tokenIdentifier", "")
+        balance = int(token_data.get("balance", "0"))
+        nonce = token_data.get("nonce", 0)
+        token = Token(identifier, nonce)
+
+        result.append(
+            TokenAmountOnNetwork(
+                raw={item: token_data},
+                token=token,
+                amount=balance,
+                block_coordinates=block_coordinates
+            )
+        )
+
+    return result
+
+
+def definition_of_fungible_token_from_query_response(
+        raw_response: list[bytes],
+        identifier: str,
+        address_hrp: str) -> FungibleTokenMetadata:
+    token_name, _, owner, _, _, *properties_buffers = raw_response
+    properties = _parse_token_properties(properties_buffers)
+
+    name = token_name.decode()
+    ticker = identifier
+    owner = Address(owner, address_hrp)
+    decimals = properties.get('NumDecimals', 0)
+
+    return FungibleTokenMetadata(
+        raw={"returnDataParts": [item.hex() for item in raw_response]},
+        identifier=identifier,
+        name=name,
+        ticker=ticker,
+        owner=owner.to_bech32(),
+        decimals=decimals
+    )
+
+
+def definition_of_tokens_collection_from_query_response(
+        raw_response: list[bytes],
+        identifier: str,
+        address_hrp: str) -> TokensCollectionMetadata:
+    token_name, token_type, owner, _, _, *properties_buffers = raw_response
+    properties = _parse_token_properties(properties_buffers)
+
+    collection = identifier
+    type = token_type.decode()
+    name = token_name.decode()
+    ticker = collection
+    owner = Address(owner, address_hrp)
+    decimals = properties.get('NumDecimals', 0)
+
+    return TokensCollectionMetadata(
+        raw={"returnDataParts": [item.hex() for item in raw_response]},
+        collection=collection,
+        type=type,
+        name=name,
+        ticker=ticker,
+        owner=owner.to_bech32(),
+        decimals=decimals
+    )
+
+
+def _parse_token_properties(properties_buffer: list[bytes]) -> dict[str, Any]:
+    properties: dict[str, Any] = {}
+
+    for buffer in properties_buffer:
+        name, value = buffer.decode().split('-')
+        properties[name] = _parse_value_of_token_property(value)
+
+    return properties
+
+
+def _parse_value_of_token_property(value: str) -> Any:
+    if value == 'true':
+        return True
+    elif value == 'false':
+        return False
+    else:
+        return int(value)

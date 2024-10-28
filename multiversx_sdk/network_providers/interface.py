@@ -1,5 +1,6 @@
 from typing import Any, Callable, Optional, Protocol, Union
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import Token
@@ -33,18 +34,18 @@ class IBasicNetworkProvider(Protocol):
     def get_latest_block(self, shard: int) -> BlockOnNetwork:
         ...
 
-    def get_account(self, address: IAddress) -> AccountOnNetwork:
+    def get_account(self, address: Address) -> AccountOnNetwork:
         ...
 
-    def get_account_storage(self, address: IAddress) -> AccountStorage:
+    def get_account_storage(self, address: Address) -> AccountStorage:
         ...
 
-    def get_account_storage_entry(self, address: IAddress, entry_key: str) -> AccountStorageEntry:
+    def get_account_storage_entry(self, address: Address, entry_key: str) -> AccountStorageEntry:
         ...
 
     def await_account_on_condition(
-            self, address: IAddress, condition: Callable[[AccountOnNetwork],
-                                                         bool],
+            self, address: Address, condition: Callable[[AccountOnNetwork],
+                                                        bool],
             options: Optional[AwaitingOptions]) -> AccountOnNetwork:
         ...
 
@@ -75,13 +76,13 @@ class IBasicNetworkProvider(Protocol):
             options: Optional[AwaitingOptions]) -> TransactionOnNetwork:
         ...
 
-    def get_token_of_account(self, address: IAddress, token: Token) -> TokenAmountOnNetwork:
+    def get_token_of_account(self, address: Address, token: Token) -> TokenAmountOnNetwork:
         ...
 
-    def get_fungible_tokens_of_account(self, address: IAddress) -> list[TokenAmountOnNetwork]:
+    def get_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]:
         ...
 
-    def get_non_fungible_tokens_of_account(self, address: IAddress) -> list[TokenAmountOnNetwork]:
+    def get_non_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]:
         ...
 
     def get_definition_of_fungible_token(self, token_identifier: str) -> FungibleTokenMetadata:
