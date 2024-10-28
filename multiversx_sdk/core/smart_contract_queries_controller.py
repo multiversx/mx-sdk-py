@@ -46,10 +46,10 @@ class SmartContractQueriesController:
         )
 
         query_response = self.run_query(query)
-        self._raise_for_status(query_response)
+        self._raise_for_return_code(query_response)
         return self.parse_query_response(query_response)
 
-    def _raise_for_status(self, query_response: SmartContractQueryResponse):
+    def _raise_for_return_code(self, query_response: SmartContractQueryResponse):
         is_ok = query_response.return_code == "ok"
         if not is_ok:
             raise SmartContractQueryError(query_response.return_code, query_response.return_message)

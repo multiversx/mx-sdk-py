@@ -106,6 +106,23 @@ class Address:
     def __bytes__(self) -> bytes:
         return self.get_public_key()
 
+    def __str__(self) -> str:
+        return self.to_bech32()
+
+    def __repr__(self) -> str:
+        return f"Address({self.to_bech32()})"
+
+    def __eq__(self, value: object) -> bool:
+        return isinstance(value, Address) and self.pubkey == value.pubkey and self.hrp == value.hrp
+
+
+class EmptyAddress:
+    def to_bech32(self) -> str:
+        return ""
+
+    def to_hex(self) -> str:
+        return ""
+
 
 class AddressFactory:
     """A factory used to create address objects."""

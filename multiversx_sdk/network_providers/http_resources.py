@@ -1,7 +1,7 @@
 import base64
 from typing import Any, Dict, Optional
 
-from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.address import Address, EmptyAddress
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
@@ -9,7 +9,6 @@ from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionLogs,
                                                         TransactionOnNetwork)
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.resources import EmptyAddress
 
 
 def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> Dict[str, Any]:
