@@ -153,6 +153,10 @@ class ProposeAsyncCallInput:
         return cls(to, native_transfer_amount, function_call, gas_limit)
 
 
+class ProposeSyncCallInput(ProposeAsyncCallInput):
+    pass
+
+
 class EsdtTokenPayment:
     def __init__(self, token_identifier: str, token_nonce: int, amount: int) -> None:
         self.token_identifier = token_identifier

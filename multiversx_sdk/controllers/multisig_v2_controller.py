@@ -4,8 +4,8 @@ from typing import Any, List, Optional, Tuple, Union
 from multiversx_sdk.controllers.interfaces import IAbi, IAccount
 from multiversx_sdk.controllers.multisig_v2_resources import (
     ActionFullInfo, ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
-    ProposeSCUpgradeFromSourceInput, ProposeTransferExecuteEsdtInput,
-    ProposeTransferExecuteInput, UserRole)
+    ProposeSCUpgradeFromSourceInput, ProposeSyncCallInput,
+    ProposeTransferExecuteEsdtInput, ProposeTransferExecuteInput, UserRole)
 from multiversx_sdk.controllers.smart_contract_controller import \
     INetworkProvider
 from multiversx_sdk.core.address import Address
@@ -318,6 +318,25 @@ class MultisigV2Controller:
             sender=sender.address,
             contract=contract,
             function="proposeAsyncCall",
+            gas_limit=gas_limit,
+            arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_propose_sync_call(self,
+                                                  sender: IAccount,
+                                                  nonce: int,
+                                                  contract: IAddress,
+                                                  gas_limit: int,
+                                                  input: ProposeSyncCallInput) -> Transaction:
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function="proposeSyncCall",
             gas_limit=gas_limit,
             arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
         )
