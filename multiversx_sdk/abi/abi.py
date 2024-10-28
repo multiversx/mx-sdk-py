@@ -14,8 +14,10 @@ from multiversx_sdk.abi.array_value import ArrayValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
+from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.interface import IPayloadHolder
 from multiversx_sdk.abi.list_value import ListValue
@@ -86,6 +88,9 @@ class Abi:
         if name in self.definition.types.enums:
             definition = self.definition.types.enums[name]
             return self._create_enum_prototype(definition)
+        if name in self.definition.types.explicit_enums:
+            definition = self.definition.types.explicit_enums[name]
+            return self._create_explicit_enum_prototype()
         if name in self.definition.types.structs:
             definition = self.definition.types.structs[name]
             return self._create_struct_prototype(definition)
@@ -94,6 +99,9 @@ class Abi:
 
     def _create_enum_prototype(self, enum_definition: EnumDefinition) -> Any:
         return EnumValue(fields_provider=lambda discriminant: self._provide_fields_for_enum_prototype(discriminant, enum_definition))
+
+    def _create_explicit_enum_prototype(self) -> Any:
+        return ExplicitEnumValue()
 
     def _provide_fields_for_enum_prototype(self, discriminant: int, enum_definition: EnumDefinition) -> List[Field]:
         for variant in enum_definition.variants:
@@ -284,7 +292,7 @@ class Abi:
         if name == "EgldOrEsdtTokenIdentifier":
             return TokenIdentifierValue()
         if name == "CodeMetadata":
-            return BytesValue()
+            return CodeMetadataValue()
         if name == "tuple":
             return TupleValue([self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
         if name == "Option":
