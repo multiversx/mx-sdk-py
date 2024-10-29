@@ -9,7 +9,7 @@ logger = logging.getLogger("user_agent")
 
 def extend_user_agent(user_agent_prefix: str, config: NetworkProviderConfig):
     if config.client_name is None:
-        logger.warning("We recommend providing the `client_name` when instantiating a NetworkProvider (e.g. ProxyNetworkProvider, ApiNetworkProvider). This information will be used for metrics collection and improving our services.")
+        logger.info("We recommend providing the `client_name` when instantiating a NetworkProvider (e.g. ProxyNetworkProvider, ApiNetworkProvider). This information will be used for metrics collection and improving our services.")
 
     headers: Dict[str, Any] = config.requests_options.setdefault("headers", {})
     resolved_client_name = config.client_name or UNKNOWN_CLIENT_NAME
