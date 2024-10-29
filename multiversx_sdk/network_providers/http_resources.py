@@ -2,6 +2,7 @@ import base64
 from typing import Any, Optional
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import Token
@@ -154,6 +155,25 @@ def transaction_events_from_response(raw_response: dict[str, Any]) -> Transactio
     )
 
 
+def transaction_from_simulate_response(raw_response: dict[str, Any]) -> TransactionOnNetwork:
+    status = TransactionStatus(raw_response.get("status", ""))
+    tx_hash = raw_response.get("hash", "")
+
+    sc_results: list[SmartContractResult] = []
+    results = raw_response.get("scResults", {})
+    for hash in results:
+        sc_result = smart_contract_result_from_proxy_response(results[hash])
+        sc_results.append(sc_result)
+
+    tx = TransactionOnNetwork()
+
+    tx.status = status
+    tx.hash = tx_hash
+    tx.contract_results = sc_results
+
+    return tx
+
+
 def smart_contract_result_from_api_response(raw_response: dict[str, Any]) -> SmartContractResult:
     sc_result = _smart_contract_result_from_response(raw_response)
     data = raw_response.get("data", "")
@@ -259,12 +279,23 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
 
     code_hash = account.get("codeHash", "")
     code_hash = base64.b64decode(code_hash) if code_hash else b""
-
     is_guarded = account.get("isGuarded", False)
-    is_upgradeable = account.get("isUpgradeable", False)
-    is_readable = account.get("isReadable", False)
-    is_payable = account.get("isPayable", False)
-    is_payable_by_sc = account.get("isPayableBySmartContract", False)
+
+    code_metadata = account.get("codeMetadata", None)
+
+    if code_metadata is not None:
+        code_metadata = base64.b64decode(code_metadata)
+        metadata = CodeMetadata.new_from_bytes(code_metadata)
+
+        is_upgradeable = metadata.upgradeable
+        is_readable = metadata.readable
+        is_payable = metadata.payable
+        is_payable_by_sc = metadata.payable_by_contract
+    else:
+        is_upgradeable = account.get("isUpgradeable", False)
+        is_readable = account.get("isReadable", False)
+        is_payable = account.get("isPayable", False)
+        is_payable_by_sc = account.get("isPayableBySmartContract", False)
 
     block_nonce = block_info.get("nonce", 0)
     block_hash = block_info.get("hash", "")

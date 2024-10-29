@@ -30,6 +30,7 @@ from multiversx_sdk.network_providers.http_resources import (
     smart_contract_query_to_vm_query_request,
     token_amount_on_network_from_response, token_amounts_from_response,
     transaction_cost_estimation_from_response, transaction_from_proxy_response,
+    transaction_from_simulate_response,
     transactions_from_send_multiple_response,
     vm_query_response_to_smart_contract_query_response)
 from multiversx_sdk.network_providers.interface import IBasicNetworkProvider
@@ -135,7 +136,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         transactions_converter = TransactionsConverter()
         response = self.do_post_generic(
             'transaction/simulate', transactions_converter.transaction_to_dictionary(transaction))
-        return transaction_from_proxy_response("", response.to_dictionary())
+        return transaction_from_simulate_response(response.to_dictionary().get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""
@@ -202,6 +203,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
                                        transaction_hash: Union[str, bytes],
                                        condition: Callable[[TransactionOnNetwork], bool],
                                        options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        """Waits until a transaction satisfies a given condition."""
         transaction_hash = convert_tx_hash_to_string(transaction_hash)
 
         if options is None:
@@ -271,6 +273,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
             arguments=[encoded_identifier],
         )
         query_response = self.query_contract(query)
+
         return definition_of_tokens_collection_from_query_response(
             query_response.return_data_parts, collection_name, self.address_hrp
         )
@@ -280,22 +283,23 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         request = smart_contract_query_to_vm_query_request(query)
         response = self.do_post_generic('vm-values/query', request)
         response = response.get('data', '')
+
         return vm_query_response_to_smart_contract_query_response(response, query.function)
 
     def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
         """Fetches the status of a transaction."""
         response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
-        status = TransactionStatus(response.get('status', ''))
-        return status
+        return TransactionStatus(response.get('status', ''))
 
     def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]] = None) -> GenericResponse:
+        """Does a generic GET request against the network (handles API enveloping)."""
         url = f'{self.url}/{url}'
 
         if url_parameters is not None:
             params = urllib.parse.urlencode(url_parameters)
             url = f"{url}?{params}"
 
-        response = self.do_get(url)
+        response = self._do_get(url)
         return response
 
     def do_post_generic(
@@ -307,11 +311,10 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
             params = urllib.parse.urlencode(url_parameters)
             url = f"{url}?{params}"
 
-        response = self.do_post(url, data)
+        response = self._do_post(url, data)
         return response
 
-    def do_get(self, url: str) -> GenericResponse:
-        """Does a generic GET request against the network (handles API enveloping)."""
+    def _do_get(self, url: str) -> GenericResponse:
         try:
             response = requests.get(url, **self.config.requests_options)
             response.raise_for_status()
@@ -325,7 +328,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         except Exception as err:
             raise GenericError(url, err)
 
-    def do_post(self, url: str, payload: Any) -> GenericResponse:
+    def _do_post(self, url: str, payload: Any) -> GenericResponse:
         try:
             response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()
