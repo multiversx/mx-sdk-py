@@ -226,7 +226,7 @@ class TestProxy:
             )
         )
         expected_hash = ("fc914860c1d137ed8baa602e561381f97c7bad80d150c5bf90760d3cfd3a4cea")
-        assert self.proxy.send_transaction(transaction) == expected_hash.encode()
+        assert self.proxy.send_transaction(transaction) == bytes.fromhex(expected_hash)
 
     def test_send_transaction_with_data(self):
         transaction = Transaction(
@@ -243,7 +243,7 @@ class TestProxy:
             )
         )
         expected_hash = ("4dc7d4e18c0cf9ca7f17677ef0ac3d1363528e892996b518bee909bb17cf7929")
-        assert self.proxy.send_transaction(transaction) == expected_hash.encode()
+        assert self.proxy.send_transaction(transaction) == bytes.fromhex(expected_hash)
 
     def test_send_transactions(self):
         first_tx = Transaction(

@@ -226,7 +226,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         if token.nonce == 0:
             response = self.do_get_generic(f"address/{address.to_bech32()}/esdt/{token.identifier}")
         else:
-            response = self.do_get_generic(f"address/{address.to_bech32()}/nft/{token.identifier}/nft/{token.nonce}")
+            response = self.do_get_generic(f"address/{address.to_bech32()}/nft/{token.identifier}/nonce/{token.nonce}")
 
         return token_amount_on_network_from_response(response.to_dictionary())
 
