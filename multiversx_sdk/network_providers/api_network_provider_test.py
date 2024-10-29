@@ -1,11 +1,13 @@
 import base64
 
 import pytest
+import requests
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
+from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.interface import IPagination
 from multiversx_sdk.network_providers.proxy_network_provider import \
@@ -209,3 +211,17 @@ class TestApi:
         )
 
         assert self.api.send_transaction(transaction) == expected_hash
+
+    def test_user_agent(self):
+        # using the previoulsy instantiated provider without user agent
+        response = requests.get(self.api.url + "/network/config", **self.api.config.requests_options)
+        headers = response.request.headers
+        assert headers.get("User-Agent") == "multiversx-sdk-py/api/unknown"
+
+        # using the new instantiated provider with user agent
+        config = NetworkProviderConfig(client_name="test-client")
+        api = ApiNetworkProvider(url='https://devnet-api.multiversx.com', config=config)
+
+        response = requests.get(api.url + "/network/config", **api.config.requests_options)
+        headers = response.request.headers
+        assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Tuple, Union, cast
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
 from requests.auth import AuthBase
@@ -7,8 +7,10 @@ from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
-from multiversx_sdk.network_providers.config import DefaultPagination
-from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
+from multiversx_sdk.network_providers.config import (DefaultPagination,
+                                                     NetworkProviderConfig)
+from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
+                                                        DEFAULT_ADDRESS_HRP)
 from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
 from multiversx_sdk.network_providers.contract_query_response import \
@@ -32,6 +34,7 @@ from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionInMempool, TransactionOnNetwork)
+from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 
@@ -40,11 +43,17 @@ class ApiNetworkProvider:
             self,
             url: str,
             auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP
+            address_hrp: str = DEFAULT_ADDRESS_HRP,
+            config: Optional[NetworkProviderConfig] = None
     ) -> None:
         self.url = url
         self.backing_proxy = ProxyNetworkProvider(url, auth, address_hrp)
         self.auth = auth
+
+        self.config = config if config is not None else NetworkProviderConfig()
+
+        self.user_agent_prefix = f"{BASE_USER_AGENT}/api"
+        extend_user_agent(self.user_agent_prefix, self.config)
 
     def get_network_config(self) -> NetworkConfig:
         return self.backing_proxy.get_network_config()
@@ -193,7 +202,7 @@ class ApiNetworkProvider:
 
     def __do_get(self, url: str) -> Any:
         try:
-            response = requests.get(url, auth=self.auth)
+            response = requests.get(url, auth=self.auth, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
@@ -207,7 +216,7 @@ class ApiNetworkProvider:
 
     def do_post(self, url: str, payload: Any) -> Dict[str, Any]:
         try:
-            response = requests.post(url, json=payload, auth=self.auth)
+            response = requests.post(url, json=payload, auth=self.auth, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return cast(Dict[str, Any], self._get_data(parsed, url))

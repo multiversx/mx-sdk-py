@@ -8,7 +8,9 @@ from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
-from multiversx_sdk.network_providers.constants import (DEFAULT_ADDRESS_HRP,
+from multiversx_sdk.network_providers.config import NetworkProviderConfig
+from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
+                                                        DEFAULT_ADDRESS_HRP,
                                                         ESDT_CONTRACT_ADDRESS,
                                                         METACHAIN_ID)
 from multiversx_sdk.network_providers.contract_query_requests import \
@@ -29,6 +31,7 @@ from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
     ITransaction, TransactionOnNetwork)
+from multiversx_sdk.network_providers.user_agent import extend_user_agent
 
 
 class ProxyNetworkProvider:
@@ -36,11 +39,17 @@ class ProxyNetworkProvider:
             self,
             url: str,
             auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP
+            address_hrp: str = DEFAULT_ADDRESS_HRP,
+            config: Optional[NetworkProviderConfig] = None
     ) -> None:
         self.url = url
         self.auth = auth
         self.address_hrp = address_hrp
+        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.config = config if config is not None else NetworkProviderConfig()
+
+        self.user_agent_prefix = f"{BASE_USER_AGENT}/proxy"
+        extend_user_agent(self.user_agent_prefix, self.config)
 
     def get_network_config(self) -> NetworkConfig:
         response = self.do_get_generic('network/config')
@@ -181,7 +190,7 @@ class ProxyNetworkProvider:
 
     def do_get(self, url: str) -> GenericResponse:
         try:
-            response = requests.get(url, auth=self.auth)
+            response = requests.get(url, auth=self.auth, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)
@@ -195,7 +204,7 @@ class ProxyNetworkProvider:
 
     def do_post(self, url: str, payload: Any) -> GenericResponse:
         try:
-            response = requests.post(url, json=payload, auth=self.auth)
+            response = requests.post(url, json=payload, auth=self.auth, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return self.get_data(parsed, url)
