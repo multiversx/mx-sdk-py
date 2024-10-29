@@ -101,9 +101,9 @@
 | multiversx\_sdk/core/typecheck.py                                                                              |        5 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/\_\_init\_\_.py                                                             |        7 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/accounts.py                                                                 |       62 |       22 |     65% |42, 57-59, 63-73, 76-78, 83-85, 89-95 |
-| multiversx\_sdk/network\_providers/api\_network\_provider.py                                                   |      179 |       30 |     83% |50, 57, 60, 78-81, 84-87, 157-158, 173-174, 203-206, 214-220, 228-229, 236-237 |
-| multiversx\_sdk/network\_providers/config.py                                                                   |        9 |        2 |     78% |    10, 13 |
-| multiversx\_sdk/network\_providers/constants.py                                                                |        5 |        0 |    100% |           |
+| multiversx\_sdk/network\_providers/api\_network\_provider.py                                                   |      183 |       30 |     84% |59, 66, 69, 87-90, 93-96, 166-167, 182-183, 212-215, 223-229, 237-238, 245-246 |
+| multiversx\_sdk/network\_providers/config.py                                                                   |       15 |        2 |     87% |    12, 15 |
+| multiversx\_sdk/network\_providers/constants.py                                                                |       10 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/contract\_query\_requests.py                                                |       11 |        1 |     91% |        19 |
 | multiversx\_sdk/network\_providers/contract\_query\_response.py                                                |       26 |        1 |     96% |        34 |
 | multiversx\_sdk/network\_providers/contract\_results.py                                                        |       66 |        1 |     98% |        44 |
@@ -113,7 +113,7 @@
 | multiversx\_sdk/network\_providers/network\_general\_statistics.py                                             |       23 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/network\_stake.py                                                           |       15 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/network\_status.py                                                          |       25 |        0 |    100% |           |
-| multiversx\_sdk/network\_providers/proxy\_network\_provider.py                                                 |      187 |       38 |     80% |65-67, 70-75, 78-83, 158-161, 188-194, 202-208, 215, 221-224 |
+| multiversx\_sdk/network\_providers/proxy\_network\_provider.py                                                 |      193 |       38 |     80% |74-76, 79-84, 87-92, 167-170, 197-203, 211-217, 224, 230-233 |
 | multiversx\_sdk/network\_providers/resources.py                                                                |       58 |       35 |     40% |20, 25-28, 31-37, 40-45, 48-49, 52-60, 65, 70-74, 77-84 |
 | multiversx\_sdk/network\_providers/token\_definitions.py                                                       |      118 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/tokens.py                                                                   |       75 |        0 |    100% |           |
@@ -124,6 +124,7 @@
 | multiversx\_sdk/network\_providers/transaction\_receipt.py                                                     |       19 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/transaction\_status.py                                                      |       20 |        1 |     95% |        27 |
 | multiversx\_sdk/network\_providers/transactions.py                                                             |      123 |       24 |     80% |134, 160-167, 171-190, 193 |
+| multiversx\_sdk/network\_providers/user\_agent.py                                                              |       13 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/utils.py                                                                    |        8 |        4 |     50% |      7-10 |
 | multiversx\_sdk/testutils/mock\_network\_provider.py                                                           |      114 |       28 |     75% |53-56, 75-87, 90-92, 116-121, 125-126, 132, 135-136, 143, 154-155 |
 | multiversx\_sdk/testutils/utils.py                                                                             |        8 |        0 |    100% |           |
@@ -152,7 +153,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6488** |  **728** | **89%** |           |
+|                                                                                                      **TOTAL** | **6522** |  **728** | **89%** |           |
 
 
 ## Setup coverage badge
