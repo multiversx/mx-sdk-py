@@ -248,7 +248,7 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
     shard = raw_response.get("shard", 0)
     nonce = raw_response.get("nonce", 0)
     hash = raw_response.get("hash", "")
-    previous_hash = raw_response.get("prevBlockHash", "")
+    previous_hash = raw_response.get("prevBlockHash", "") or raw_response.get("prevHash", "")
     timestamp = raw_response.get("timestamp", 0)
     round = raw_response.get("round", 0)
     epoch = raw_response.get("epoch", 0)
@@ -265,7 +265,7 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
     )
 
 
-def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
+def account_from_proxy_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
     account: dict[str, Any] = raw_response.get('account', {})
     block_info: dict[str, Any] = raw_response.get("blockInfo", {})
 
@@ -283,6 +283,11 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
 
     code_metadata = account.get("codeMetadata", None)
 
+    is_upgradeable = False
+    is_readable = False
+    is_payable = False
+    is_payable_by_sc = False
+
     if code_metadata is not None:
         code_metadata = base64.b64decode(code_metadata)
         metadata = CodeMetadata.new_from_bytes(code_metadata)
@@ -291,11 +296,6 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
         is_readable = metadata.readable
         is_payable = metadata.payable
         is_payable_by_sc = metadata.payable_by_contract
-    else:
-        is_upgradeable = account.get("isUpgradeable", False)
-        is_readable = account.get("isReadable", False)
-        is_payable = account.get("isPayable", False)
-        is_payable_by_sc = account.get("isPayableBySmartContract", False)
 
     block_nonce = block_info.get("nonce", 0)
     block_hash = block_info.get("hash", "")
@@ -322,6 +322,42 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
         is_contract_payable=is_payable,
         is_contract_payable_by_contract=is_payable_by_sc,
         block_coordinates=block_coordinates
+    )
+
+
+def account_from_api_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
+    address = raw_response.get("address", "")
+    owner_address = raw_response.get("ownerAddress", "")
+    nonce = raw_response.get("nonce", 0)
+    balance = int(raw_response.get("balance", 0))
+    developer_reward = int(raw_response.get("developerReward", 0))
+    code = bytes.fromhex(raw_response.get("code", ""))
+    username = raw_response.get("username", "")
+
+    code_hash = raw_response.get("codeHash", "")
+    code_hash = base64.b64decode(code_hash) if code_hash else b""
+    is_guarded = raw_response.get("isGuarded", False)
+
+    is_upgradeable = bool(raw_response.get("isUpgradeable", False))
+    is_readable = bool(raw_response.get("isReadable", False))
+    is_payable = bool(raw_response.get("isPayable", False))
+    is_payable_by_sc = bool(raw_response.get("isPayableBySmartContract", False))
+
+    return AccountOnNetwork(
+        raw=raw_response,
+        address=address,
+        nonce=nonce,
+        balance=balance,
+        is_guarded=is_guarded,
+        username=username,
+        contract_code_hash=code_hash,
+        contract_code=code,
+        contract_developer_reward=developer_reward,
+        contract_owner_address=owner_address,
+        is_contract_upgradable=is_upgradeable,
+        is_contract_readable=is_readable,
+        is_contract_payable=is_payable,
+        is_contract_payable_by_contract=is_payable_by_sc,
     )
 
 

@@ -22,7 +22,7 @@ from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
-    account_from_response, account_storage_entry_from_response,
+    account_from_proxy_response, account_storage_entry_from_response,
     account_storage_from_response, block_from_response,
     definition_of_fungible_token_from_query_response,
     definition_of_tokens_collection_from_query_response,
@@ -99,7 +99,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         get_guardian_data_thread.start()
 
         response = self.do_get_generic(f'address/{address.to_bech32()}')
-        account = account_from_response(response.to_dictionary())
+        account = account_from_proxy_response(response.to_dictionary())
 
         get_guardian_data_thread.join(timeout=2)
         account.is_guarded = data.get("is_guarded", False)
@@ -120,7 +120,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
     def await_account_on_condition(
             self, address: Address, condition: Callable[[AccountOnNetwork],
                                                         bool],
-            options: Optional[AwaitingOptions]) -> AccountOnNetwork:
+            options: Optional[AwaitingOptions] = None) -> AccountOnNetwork:
         """Waits until an account satisfies a given condition."""
         raise NotImplementedError("Method not yet implemented")
 
