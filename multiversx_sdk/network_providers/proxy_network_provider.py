@@ -91,11 +91,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         """Fetches account information for a given address."""
         data: dict[str, bool] = {}
 
-        def get_guardian_data():
-            guardian_data = self.do_get_generic(f"address/{address.to_bech32()}/guardian-data")
-            data["is_guarded"] = bool(guardian_data.get("guardianData", {}).get("guarded"))
-
-        get_guardian_data_thread = Thread(target=get_guardian_data,)
+        get_guardian_data_thread = Thread(target=self._get_guardian_data, args=(address, data))
         get_guardian_data_thread.start()
 
         response = self.do_get_generic(f'address/{address.to_bech32()}')
@@ -105,6 +101,10 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         account.is_guarded = data.get("is_guarded", False)
 
         return account
+
+    def _get_guardian_data(self, address: Address, return_data: dict[str, bool]):
+        guardian_data = self.do_get_generic(f"address/{address.to_bech32()}/guardian-data")
+        return_data["is_guarded"] = bool(guardian_data.get("guardianData", {}).get("guarded"))
 
     def get_account_storage(self, address: Address) -> AccountStorage:
         """Fetches the storage (key-value pairs) of an account."""
