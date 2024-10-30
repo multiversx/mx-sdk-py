@@ -109,7 +109,6 @@ class AccountStorage:
 
 @dataclass
 class TransactionCostResponse:
-    # What is this used for?
     raw: dict[str, Any]
     gas_limit: int
     status: TransactionStatus
@@ -149,3 +148,10 @@ class AwaitingOptions:
     polling_interval_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
     timeout_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
     patience_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
+
+
+@dataclass
+class GetBlockArguments:
+    shard: Optional[int] = None
+    block_nonce: Optional[int] = None
+    block_hash: Optional[bytes] = None

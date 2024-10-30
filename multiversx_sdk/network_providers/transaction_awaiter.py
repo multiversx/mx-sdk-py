@@ -17,7 +17,7 @@ logger = logging.getLogger("transaction_awaiter")
 
 
 class ITransactionFetcher(Protocol):
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
+    def get_transaction(self, transaction_hash: Union[bytes, str]) -> TransactionOnNetwork:
         ...
 
 
@@ -53,7 +53,7 @@ class TransactionAwaiter:
         else:
             self.patience_time_in_milliseconds = patience_time_in_milliseconds
 
-    def await_completed(self, tx_hash: str) -> TransactionOnNetwork:
+    def await_completed(self, transaction_hash: str) -> TransactionOnNetwork:
         """Waits until the transaction is completely processed."""
         def is_completed(tx: TransactionOnNetwork):
             if tx.is_completed is None:
@@ -62,7 +62,7 @@ class TransactionAwaiter:
             return tx.is_completed
 
         def do_fetch():
-            return self.fetcher.get_transaction(tx_hash)
+            return self.fetcher.get_transaction(transaction_hash)
 
         return self._await_conditionally(
             is_satisfied=is_completed,
@@ -70,10 +70,12 @@ class TransactionAwaiter:
             error=ExpectedTransactionStatusNotReached()
         )
 
-    def await_on_condition(self, tx_hash: str, condition: Callable[[TransactionOnNetwork], bool]) -> TransactionOnNetwork:
+    def await_on_condition(
+            self, transaction_hash: str, condition: Callable[[TransactionOnNetwork],
+                                                             bool]) -> TransactionOnNetwork:
         """Waits until the condition is satisfied."""
         def do_fetch():
-            return self.fetcher.get_transaction(tx_hash)
+            return self.fetcher.get_transaction(transaction_hash)
 
         return self._await_conditionally(
             is_satisfied=condition,
