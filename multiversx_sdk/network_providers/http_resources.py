@@ -20,14 +20,14 @@ from multiversx_sdk.network_providers.resources import (
 
 def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[str, Any]:
     request: dict[str, Any] = {
-        'scAddress': query.contract,
-        'funcName': query.function,
-        'value': str(query.value if query.value else 0),
-        'args': [arg.hex() for arg in query.arguments]
+        "scAddress": query.contract,
+        "funcName": query.function,
+        "value": str(query.value if query.value else 0),
+        "args": [arg.hex() for arg in query.arguments]
     }
 
     if query.caller:
-        request['caller'] = query.caller
+        request["caller"] = query.caller
 
     return request
 
@@ -35,9 +35,9 @@ def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[
 def vm_query_response_to_smart_contract_query_response(
         raw_response: dict[str, Any],
         function: str) -> SmartContractQueryResponse:
-    return_data = raw_response.get('returnData', []) or raw_response.get('ReturnData', [])
-    return_code = raw_response.get('returnCode', '') or raw_response.get('ReturnCode', '')
-    return_message = raw_response.get('returnMessage', '') or raw_response.get('ReturnMessage', '')
+    return_data = raw_response.get("returnData", []) or raw_response.get("ReturnData", [])
+    return_code = raw_response.get("returnCode", "") or raw_response.get("ReturnCode", "")
+    return_message = raw_response.get("returnMessage", "") or raw_response.get("ReturnMessage", "")
 
     return SmartContractQueryResponse(
         function=function,
@@ -108,9 +108,9 @@ def _transaction_from_network_response(tx_hash: str, response: dict[str, Any]) -
 
 
 def transaction_logs_from_response(raw_response: dict[str, Any]) -> TransactionLogs:
-    address = raw_response.get('address', "")
+    address = raw_response.get("address", "")
 
-    events = raw_response.get('events', [])
+    events = raw_response.get("events", [])
     events = [transaction_events_from_response(event) for event in events]
 
     return TransactionLogs(
@@ -120,16 +120,16 @@ def transaction_logs_from_response(raw_response: dict[str, Any]) -> TransactionL
 
 
 def transaction_events_from_response(raw_response: dict[str, Any]) -> TransactionEvent:
-    address = raw_response.get('address', '')
-    identifier = raw_response.get('identifier', '')
-    topics = raw_response.get('topics', None)
+    address = raw_response.get("address", "")
+    identifier = raw_response.get("identifier", "")
+    topics = raw_response.get("topics", None)
 
     if topics is not None:
         topics = [base64.b64decode(topic) for topic in topics]
     else:
         topics = [b""]
 
-    raw_data = base64.b64decode(raw_response.get('responseData', "").encode())
+    raw_data = base64.b64decode(raw_response.get("responseData", "").encode())
 
     data = raw_response.get("data", None)
     if data is not None:
@@ -201,16 +201,16 @@ def _smart_contract_result_from_response(raw_response: dict[str, Any]) -> SmartC
 
 
 def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
-    chain_id = raw_response.get('erd_chain_id', '')
-    gas_per_data_byte = raw_response.get('erd_gas_per_data_byte', 0)
-    gas_price_modifier = float(raw_response.get('erd_gas_price_modifier', 0))
-    min_gas_limit = raw_response.get('erd_min_gas_limit', 0)
-    min_gas_price = raw_response.get('erd_min_gas_price', 0)
-    extra_gas_limit_guarded_tx = raw_response.get('erd_extra_gas_limit_guarded_tx', 0)
-    num_shards = raw_response.get('erd_num_shards_without_meta', 0)
-    round_duration = raw_response.get('erd_round_duration', 0)
-    rounds_per_epoch = raw_response.get('erd_rounds_per_epoch', 0)
-    genesis_timestamp = raw_response.get('erd_start_time', 0)
+    chain_id = raw_response.get("erd_chain_id", "")
+    gas_per_data_byte = raw_response.get("erd_gas_per_data_byte", 0)
+    gas_price_modifier = float(raw_response.get("erd_gas_price_modifier", 0.01))
+    min_gas_limit = raw_response.get("erd_min_gas_limit", 0)
+    min_gas_price = raw_response.get("erd_min_gas_price", 0)
+    extra_gas_limit_guarded_tx = raw_response.get("erd_extra_gas_limit_guarded_tx", 0)
+    num_shards = raw_response.get("erd_num_shards_without_meta", 0)
+    round_duration = raw_response.get("erd_round_duration", 0)
+    rounds_per_epoch = raw_response.get("erd_rounds_per_epoch", 0)
+    genesis_timestamp = raw_response.get("erd_start_time", 0)
 
     return NetworkConfig(
         raw=raw_response,
@@ -228,11 +228,11 @@ def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
 
 
 def network_status_from_response(raw_response: dict[str, Any]) -> NetworkStatus:
-    block_timestamp = raw_response.get('erd_block_timestamp', 0)
-    block_nonce = raw_response.get('erd_nonce', 0)
-    highest_final_nonce = raw_response.get('erd_highest_final_nonce', 0)
-    current_round = raw_response.get('erd_current_round', 0)
-    currernt_epoch = raw_response.get('erd_epoch_number', 0)
+    block_timestamp = raw_response.get("erd_block_timestamp", 0)
+    block_nonce = raw_response.get("erd_nonce", 0)
+    highest_final_nonce = raw_response.get("erd_highest_final_nonce", 0)
+    current_round = raw_response.get("erd_current_round", 0)
+    currernt_epoch = raw_response.get("erd_epoch_number", 0)
 
     return NetworkStatus(
         raw=raw_response,
@@ -266,8 +266,8 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
 
 
 def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
-    account: dict[str, Any] = raw_response.get('account', {})
-    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+    account: dict[str, Any] = raw_response.get("account", {})
+    block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
     address = account.get("address", "")
     owner_address = account.get("ownerAddress", "")
@@ -297,15 +297,6 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
         is_payable = account.get("isPayable", False)
         is_payable_by_sc = account.get("isPayableBySmartContract", False)
 
-    block_nonce = block_info.get("nonce", 0)
-    block_hash = block_info.get("hash", "")
-    block_root_hash = block_info.get("rootHash", "")
-    block_coordinates = BlockCoordinates(
-        nonce=block_nonce,
-        hash=bytes.fromhex(block_hash),
-        root_hash=bytes.fromhex(block_root_hash)
-    )
-
     return AccountOnNetwork(
         raw=raw_response,
         address=address,
@@ -326,8 +317,8 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
 
 
 def account_storage_from_response(raw_response: dict[str, Any]) -> AccountStorage:
-    pairs: dict[str, Any] = raw_response.get('pairs', {})
-    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+    pairs: dict[str, Any] = raw_response.get("pairs", {})
+    block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
     entries: list[AccountStorageEntry] = []
     for key, value in pairs.items():
@@ -341,15 +332,6 @@ def account_storage_from_response(raw_response: dict[str, Any]) -> AccountStorag
                 value=decoded_value
             )
         )
-
-    block_nonce = block_info.get("nonce", 0)
-    block_hash = block_info.get("hash", "")
-    block_root_hash = block_info.get("rootHash", "")
-    block_coordinates = BlockCoordinates(
-        nonce=block_nonce,
-        hash=bytes.fromhex(block_hash),
-        root_hash=bytes.fromhex(block_root_hash)
-    )
 
     return AccountStorage(
         raw=raw_response,
@@ -390,22 +372,13 @@ def transactions_from_send_multiple_response(raw_response: dict[str, Any],
 
 
 def token_amount_on_network_from_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
-    token_data: dict[str, Any] = raw_response.get('tokenData', {})
-    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+    token_data: dict[str, Any] = raw_response.get("tokenData", {})
+    block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
     identifier = token_data.get("tokenIdentifier", "")
     balance = int(token_data.get("balance", "0"))
     nonce = token_data.get("nonce", 0)
     token = Token(identifier, nonce)
-
-    block_nonce = block_info.get("nonce", 0)
-    block_hash = block_info.get("hash", "")
-    block_root_hash = block_info.get("rootHash", "")
-    block_coordinates = BlockCoordinates(
-        nonce=block_nonce,
-        hash=bytes.fromhex(block_hash),
-        root_hash=bytes.fromhex(block_root_hash)
-    )
 
     return TokenAmountOnNetwork(
         raw=raw_response,
@@ -417,16 +390,7 @@ def token_amount_on_network_from_response(raw_response: dict[str, Any]) -> Token
 
 def token_amounts_from_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
     tokens = raw_response.get("esdts", {})
-    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
-
-    block_nonce = block_info.get("nonce", 0)
-    block_hash = block_info.get("hash", "")
-    block_root_hash = block_info.get("rootHash", "")
-    block_coordinates = BlockCoordinates(
-        nonce=block_nonce,
-        hash=bytes.fromhex(block_hash),
-        root_hash=bytes.fromhex(block_root_hash)
-    )
+    block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
     result: list[TokenAmountOnNetwork] = []
     for item in tokens:
@@ -458,7 +422,7 @@ def definition_of_fungible_token_from_query_response(
     name = token_name.decode()
     ticker = identifier
     owner = Address(owner, address_hrp)
-    decimals = properties.get('NumDecimals', 0)
+    decimals = properties.get("NumDecimals", 0)
 
     return FungibleTokenMetadata(
         raw={"returnDataParts": [item.hex() for item in raw_response]},
@@ -482,7 +446,7 @@ def definition_of_tokens_collection_from_query_response(
     name = token_name.decode()
     ticker = collection
     owner = Address(owner, address_hrp)
-    decimals = properties.get('NumDecimals', 0)
+    decimals = properties.get("NumDecimals", 0)
 
     return TokensCollectionMetadata(
         raw={"returnDataParts": [item.hex() for item in raw_response]},
@@ -495,20 +459,37 @@ def definition_of_tokens_collection_from_query_response(
     )
 
 
+# the token properties have this format:
+# e.g.1. "4e756d446563696d616c732d36", which decodes to: "NumDecimals-6"
+# e.g.2. "49735061757365642d66616c7365", which decodes to: "IsPaused-false"
 def _parse_token_properties(properties_buffer: list[bytes]) -> dict[str, Any]:
     properties: dict[str, Any] = {}
 
     for buffer in properties_buffer:
-        name, value = buffer.decode().split('-')
+        name, value = buffer.decode().split("-")
         properties[name] = _parse_value_of_token_property(value)
 
     return properties
 
 
 def _parse_value_of_token_property(value: str) -> Any:
-    if value == 'true':
+    if value == "true":
         return True
-    elif value == 'false':
+    elif value == "false":
         return False
     else:
         return int(value)
+
+
+def _get_block_coordinates_from_raw_response(raw_response: dict[str, Any]) -> BlockCoordinates:
+    block_info: dict[str, Any] = raw_response.get("blockInfo", {})
+
+    block_nonce = block_info.get("nonce", 0)
+    block_hash = block_info.get("hash", "")
+    block_root_hash = block_info.get("rootHash", "")
+
+    return BlockCoordinates(
+        nonce=block_nonce,
+        hash=bytes.fromhex(block_hash),
+        root_hash=bytes.fromhex(block_root_hash)
+    )
