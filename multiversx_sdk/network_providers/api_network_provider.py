@@ -6,15 +6,14 @@ import requests
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import DEFAULT_HRP, METACHAIN_ID
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
-from multiversx_sdk.core.tokens import Token
+from multiversx_sdk.core.tokens import Token, TokenComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
-                                                        DEFAULT_ADDRESS_HRP,
-                                                        METACHAIN_ID)
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.http_resources import (
     account_from_api_response, account_storage_entry_from_response,
@@ -34,8 +33,7 @@ from multiversx_sdk.network_providers.resources import (
     BlockOnNetwork, FungibleTokenMetadata, GetBlockArguments, NetworkConfig,
     NetworkStatus, TokenAmountOnNetwork, TokensCollectionMetadata,
     TransactionCostResponse)
-from multiversx_sdk.network_providers.shared import (convert_tx_hash_to_string,
-                                                     decimal_to_padded_hex)
+from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
@@ -47,7 +45,7 @@ class ApiNetworkProvider(INetworkProvider):
                  address_hrp: Optional[str] = None,
                  config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.address_hrp = address_hrp or DEFAULT_HRP
         self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
         self.config = config if config is not None else NetworkProviderConfig()
 
@@ -181,7 +179,7 @@ class ApiNetworkProvider(INetworkProvider):
         Able to handle both fungible and non-fungible tokens (NFTs, SFTs, MetaESDTs).
         """
         if token.nonce:
-            nonce_as_hex = decimal_to_padded_hex(token.nonce)
+            nonce_as_hex = TokenComputer().convert_nonce_to_hex(token)
             identifier = f"{token.identifier}-{nonce_as_hex}"
             result = self.do_get_generic(f"accounts/{address.to_bech32()}/nfts/{identifier}")
         else:

@@ -8,6 +8,8 @@ import requests
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import (DEFAULT_HRP, ESDT_CONTRACT_ADDRESS,
+                                           METACHAIN_ID)
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import Token
@@ -15,10 +17,7 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
-                                                        DEFAULT_ADDRESS_HRP,
-                                                        ESDT_CONTRACT_ADDRESS,
-                                                        METACHAIN_ID)
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
@@ -52,7 +51,7 @@ class ProxyNetworkProvider(INetworkProvider):
                  address_hrp: Optional[str] = None,
                  config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.address_hrp = address_hrp or DEFAULT_HRP
         self.config = config if config is not None else NetworkProviderConfig()
 
         self.user_agent_prefix = f"{BASE_USER_AGENT}/proxy"
@@ -255,7 +254,7 @@ class ProxyNetworkProvider(INetworkProvider):
         """Fetches the definition of a fungible token."""
         encoded_identifier = token_identifier.encode()
         query = SmartContractQuery(
-            contract=ESDT_CONTRACT_ADDRESS.to_bech32(),
+            contract=ESDT_CONTRACT_ADDRESS,
             function="getTokenProperties",
             arguments=[encoded_identifier],
         )
@@ -269,7 +268,7 @@ class ProxyNetworkProvider(INetworkProvider):
         """Fetches the definition of a tokens collection."""
         encoded_identifier = collection_name.encode()
         query = SmartContractQuery(
-            contract=ESDT_CONTRACT_ADDRESS.to_bech32(),
+            contract=ESDT_CONTRACT_ADDRESS,
             function="getTokenProperties",
             arguments=[encoded_identifier],
         )

@@ -85,8 +85,8 @@ class SmartContractController:
     def parse_deploy(self, transaction_on_network: TransactionOnNetwork) -> SmartContractDeployOutcome:
         return self.parser.parse_deploy(transaction_on_network)
 
-    def await_completed_deploy(self, tx_hash: Union[str, bytes]) -> SmartContractDeployOutcome:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
+    def await_completed_deploy(self, transaction_hash: Union[str, bytes]) -> SmartContractDeployOutcome:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_deploy(transaction)
 
     def create_transaction_for_upgrade(self,
@@ -146,7 +146,7 @@ class SmartContractController:
     def parse_execute(self, transaction_on_network: TransactionOnNetwork, function: Optional[str] = None) -> List[Any]:
         raise NotImplementedError("This method is not yet implemented")
 
-    def await_completed_execute(self, tx_hash: Union[str, bytes]) -> List[Any]:
+    def await_completed_execute(self, transaction_hash: Union[str, bytes]) -> List[Any]:
         raise NotImplementedError("This feature is not yet implemented")
 
     def query_contract(self,
