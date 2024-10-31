@@ -13,7 +13,9 @@ from multiversx_sdk.network_providers.resources import AwaitingOptions
 
 
 class INetworkProvider(Protocol):
-    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+    def await_transaction_completed(
+            self, transaction_hash: Union[str, bytes],
+            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
         ...
 
 
@@ -42,8 +44,8 @@ class DelegationController:
 
         return transaction
 
-    def parse_create_new_delegation_contract(self,
-                                             transaction_on_network: TransactionOnNetwork) -> List[CreateNewDelegationContractOutcome]:
+    def parse_create_new_delegation_contract(
+            self, transaction_on_network: TransactionOnNetwork) -> List[CreateNewDelegationContractOutcome]:
         return self.parser.parse_create_new_delegation_contract(transaction_on_network)
 
     def await_completed_create_new_delegation_contract(self, tx_hash: str) -> List[CreateNewDelegationContractOutcome]:

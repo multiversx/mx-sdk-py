@@ -417,7 +417,7 @@ class TestApi:
         }
 
         result = self.api.do_get_generic(
-            f"accounts/{"erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"}", query_params
+            "accounts/erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl", query_params
         )
         account = account_from_api_response(result)
         guarded = bool(account.raw["isGuarded"])
