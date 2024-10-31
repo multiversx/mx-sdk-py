@@ -28,12 +28,13 @@ from multiversx_sdk.network_providers.http_resources import (
     definition_of_tokens_collection_from_query_response,
     network_config_from_response, network_status_from_response,
     smart_contract_query_to_vm_query_request,
-    token_amount_on_network_from_response, token_amounts_from_response,
+    token_amount_on_network_from_proxy_response,
+    token_amounts_from_proxy_response,
     transaction_cost_estimation_from_response, transaction_from_proxy_response,
     transaction_from_simulate_response,
     transactions_from_send_multiple_response,
     vm_query_response_to_smart_contract_query_response)
-from multiversx_sdk.network_providers.interface import IBasicNetworkProvider
+from multiversx_sdk.network_providers.interface import INetworkProvider
 from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, AwaitingOptions,
     BlockOnNetwork, FungibleTokenMetadata, GenericResponse, GetBlockArguments,
@@ -45,7 +46,7 @@ from multiversx_sdk.network_providers.transaction_awaiter import \
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 
 
-class ProxyNetworkProvider(IBasicNetworkProvider):
+class ProxyNetworkProvider(INetworkProvider):
     def __init__(self,
                  url: str,
                  address_hrp: Optional[str] = None,
@@ -228,7 +229,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         else:
             response = self.do_get_generic(f"address/{address.to_bech32()}/nft/{token.identifier}/nonce/{token.nonce}")
 
-        return token_amount_on_network_from_response(response.to_dictionary())
+        return token_amount_on_network_from_proxy_response(response.to_dictionary())
 
     def get_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]:
         """
@@ -236,7 +237,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         Pagination isn't explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.
         """
         response = self.do_get_generic(f"address/{address.to_bech32()}/esdt")
-        all_tokens = token_amounts_from_response(response.to_dictionary())
+        all_tokens = token_amounts_from_proxy_response(response.to_dictionary())
 
         return [token for token in all_tokens if token.token.nonce == 0]
 
@@ -246,7 +247,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         Pagination isn't explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.
         """
         response = self.do_get_generic(f"address/{address.to_bech32()}/esdt")
-        all_tokens = token_amounts_from_response(response.to_dictionary())
+        all_tokens = token_amounts_from_proxy_response(response.to_dictionary())
 
         return [token for token in all_tokens if token.token.nonce > 0]
 

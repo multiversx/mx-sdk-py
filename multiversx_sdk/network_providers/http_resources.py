@@ -203,7 +203,7 @@ def _smart_contract_result_from_response(raw_response: dict[str, Any]) -> SmartC
 def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
     chain_id = raw_response.get("erd_chain_id", "")
     gas_per_data_byte = raw_response.get("erd_gas_per_data_byte", 0)
-    gas_price_modifier = float(raw_response.get("erd_gas_price_modifier", 0.01))
+    gas_price_modifier = float(raw_response.get("erd_gas_price_modifier", 0))
     min_gas_limit = raw_response.get("erd_min_gas_limit", 0)
     min_gas_price = raw_response.get("erd_min_gas_price", 0)
     extra_gas_limit_guarded_tx = raw_response.get("erd_extra_gas_limit_guarded_tx", 0)
@@ -407,7 +407,7 @@ def transactions_from_send_multiple_response(raw_response: dict[str, Any],
     return (num_sent, hashes)
 
 
-def token_amount_on_network_from_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
+def token_amount_on_network_from_proxy_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
     token_data: dict[str, Any] = raw_response.get("tokenData", {})
     block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
@@ -424,7 +424,21 @@ def token_amount_on_network_from_response(raw_response: dict[str, Any]) -> Token
     )
 
 
-def token_amounts_from_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
+def token_amount_from_api_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
+    identifier = raw_response.get("identifier", "")
+    nonce = raw_response.get("nonce", 0)
+
+    # nfts don't have the balance field, thus in case it's nft we set the balance to 1
+    amount = int(raw_response.get("balance", 1))
+
+    return TokenAmountOnNetwork(
+        raw=raw_response,
+        token=Token(identifier, nonce),
+        amount=amount
+    )
+
+
+def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
     tokens = raw_response.get("esdts", {})
     block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
@@ -470,6 +484,23 @@ def definition_of_fungible_token_from_query_response(
     )
 
 
+def definition_of_fungible_token_from_api_response(raw_response: dict[str, Any]) -> FungibleTokenMetadata:
+    name = raw_response.get("name", "")
+    ticker = raw_response.get("ticker", "")
+    owner = raw_response.get("owner", "")
+    identifier = raw_response.get("identifier", "")
+    decimals = raw_response.get("decimals", 0)
+
+    return FungibleTokenMetadata(
+        raw=raw_response,
+        identifier=identifier,
+        name=name,
+        ticker=ticker,
+        owner=owner,
+        decimals=decimals
+    )
+
+
 def definition_of_tokens_collection_from_query_response(
         raw_response: list[bytes],
         identifier: str,
@@ -491,6 +522,25 @@ def definition_of_tokens_collection_from_query_response(
         name=name,
         ticker=ticker,
         owner=owner.to_bech32(),
+        decimals=decimals
+    )
+
+
+def definition_of_tokens_collection_from_api_response(raw_response: dict[str, Any]) -> TokensCollectionMetadata:
+    collection = raw_response.get("collection", "")
+    type = raw_response.get("type", "")
+    name = raw_response.get("name", "")
+    ticker = raw_response.get("ticker", "")
+    owner = raw_response.get("owner", "")
+    decimals = raw_response.get("decimals", 0)
+
+    return TokensCollectionMetadata(
+        collection=collection,
+        type=type,
+        raw=raw_response,
+        name=name,
+        ticker=ticker,
+        owner=owner,
         decimals=decimals
     )
 

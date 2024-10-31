@@ -21,7 +21,7 @@ class IAddress(Protocol):
         ...
 
 
-class IBasicNetworkProvider(Protocol):
+class INetworkProvider(Protocol):
     def get_network_config(self) -> NetworkConfig:
         ...
 

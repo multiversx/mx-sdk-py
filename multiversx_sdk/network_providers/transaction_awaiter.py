@@ -53,7 +53,7 @@ class TransactionAwaiter:
         else:
             self.patience_time_in_milliseconds = patience_time_in_milliseconds
 
-    def await_completed(self, transaction_hash: str) -> TransactionOnNetwork:
+    def await_completed(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
         """Waits until the transaction is completely processed."""
         def is_completed(tx: TransactionOnNetwork):
             if tx.is_completed is None:
@@ -71,8 +71,8 @@ class TransactionAwaiter:
         )
 
     def await_on_condition(
-            self, transaction_hash: str, condition: Callable[[TransactionOnNetwork],
-                                                             bool]) -> TransactionOnNetwork:
+            self, transaction_hash: Union[str, bytes], condition: Callable[[TransactionOnNetwork],
+                                                                           bool]) -> TransactionOnNetwork:
         """Waits until the condition is satisfied."""
         def do_fetch():
             return self.fetcher.get_transaction(transaction_hash)
