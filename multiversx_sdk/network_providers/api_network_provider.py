@@ -179,8 +179,7 @@ class ApiNetworkProvider(INetworkProvider):
         Able to handle both fungible and non-fungible tokens (NFTs, SFTs, MetaESDTs).
         """
         if token.nonce:
-            nonce_as_hex = TokenComputer().convert_nonce_to_hex(token)
-            identifier = f"{token.identifier}-{nonce_as_hex}"
+            identifier = TokenComputer().compute_extended_identifier(token)
             result = self.do_get_generic(f"accounts/{address.to_bech32()}/nfts/{identifier}")
         else:
             result = self.do_get_generic(f"accounts/{address.to_bech32()}/tokens/{token.identifier}")

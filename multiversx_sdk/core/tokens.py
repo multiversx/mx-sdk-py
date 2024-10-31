@@ -98,9 +98,16 @@ class TokenComputer:
         identifier = parts.ticker + "-" + parts.random_sequence
         return self.compute_extended_identifier_from_identifier_and_nonce(identifier, parts.nonce)
 
-    def convert_nonce_to_hex(self, token: Token) -> str:
+    def compute_extended_identifier(self, token: Token) -> str:
+        identifier_parts = token.identifier.split("-")
+
+        self._ensure_token_ticker_validity(identifier_parts[0])
+        self._check_length_of_random_sequence(identifier_parts[1])
+
         nonce_as_hex = f'{token.nonce:x}'
-        return "0" + nonce_as_hex if len(nonce_as_hex) % 2 else nonce_as_hex
+        padded_nonce = "0" + nonce_as_hex if len(nonce_as_hex) % 2 else nonce_as_hex
+
+        return f"{token.identifier}-{padded_nonce}"
 
     def _check_if_extended_identifier_was_provided(self, token_parts: List[str]) -> None:
         # this is for the identifiers of fungible tokens
