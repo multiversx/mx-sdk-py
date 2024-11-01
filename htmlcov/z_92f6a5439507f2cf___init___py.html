@@ -54,8 +54,8 @@
             </div>
         </aside>
         <h2>
-            <span class="text">7 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">7<span class="text"> run</span></button>
+            <span class="text">8 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">8<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">0<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_92f6a5439507f2cf_accounts_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-01 10:49 +0000
+            created at 2024-11-01 11:46 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -82,20 +82,21 @@
 <main id="source">
     <p class="run"><span class="n"><a id="t1" href="#t1">1</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">api_network_provider</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2" href="#t2">2</a></span><span class="t">    <span class="nam">ApiNetworkProvider</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">errors</span> <span class="key">import</span> <span class="nam">GenericError</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">proxy_network_provider</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t">    <span class="nam">ProxyNetworkProvider</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">resources</span> <span class="key">import</span> <span class="nam">GenericResponse</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">transaction_awaiter</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">    <span class="nam">TransactionAwaiter</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">transaction_decoder</span> <span class="key">import</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">    <span class="nam">TransactionDecoder</span><span class="op">,</span> <span class="nam">TransactionMetadata</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t"><span class="nam">__all__</span> <span class="op">=</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="str">"GenericError"</span><span class="op">,</span> <span class="str">"GenericResponse"</span><span class="op">,</span> <span class="str">"ApiNetworkProvider"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">    <span class="str">"ProxyNetworkProvider"</span><span class="op">,</span> <span class="str">"TransactionAwaiter"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">    <span class="str">"TransactionDecoder"</span><span class="op">,</span> <span class="str">"TransactionMetadata"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t"><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">config</span> <span class="key">import</span> <span class="nam">NetworkProviderConfig</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">errors</span> <span class="key">import</span> <span class="nam">GenericError</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">proxy_network_provider</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t">    <span class="nam">ProxyNetworkProvider</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">resources</span> <span class="key">import</span> <span class="nam">GenericResponse</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">transaction_awaiter</span> <span class="key">import</span> <span class="xx">\</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">    <span class="nam">TransactionAwaiter</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">network_providers</span><span class="op">.</span><span class="nam">transaction_decoder</span> <span class="key">import</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">    <span class="nam">TransactionDecoder</span><span class="op">,</span> <span class="nam">TransactionMetadata</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t"><span class="nam">__all__</span> <span class="op">=</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">    <span class="str">"GenericError"</span><span class="op">,</span> <span class="str">"GenericResponse"</span><span class="op">,</span> <span class="str">"ApiNetworkProvider"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">    <span class="str">"ProxyNetworkProvider"</span><span class="op">,</span> <span class="str">"TransactionAwaiter"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">    <span class="str">"TransactionDecoder"</span><span class="op">,</span> <span class="str">"TransactionMetadata"</span><span class="op">,</span> <span class="str">"NetworkProviderConfig"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -105,7 +106,7 @@
             <a class="nav" href="z_92f6a5439507f2cf_accounts_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-01 10:49 +0000
+            created at 2024-11-01 11:46 +0000
         </p>
     </div>
 </footer>

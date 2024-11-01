@@ -4,7 +4,7 @@
 
 | Name                                                                                                           |    Stmts |     Miss |   Cover |   Missing |
 |--------------------------------------------------------------------------------------------------------------- | -------: | -------: | ------: | --------: |
-| multiversx\_sdk/\_\_init\_\_.py                                                                                |       44 |        0 |    100% |           |
+| multiversx\_sdk/\_\_init\_\_.py                                                                                |       45 |        0 |    100% |           |
 | multiversx\_sdk/abi/\_\_init\_\_.py                                                                            |       24 |        0 |    100% |           |
 | multiversx\_sdk/abi/abi.py                                                                                     |      248 |       11 |     96% |96, 119, 179, 245, 253, 265, 271, 273, 275, 277, 281 |
 | multiversx\_sdk/abi/abi\_definition.py                                                                         |      180 |       15 |     92% |55, 73, 76, 117, 134, 150, 185, 211, 234, 254, 270, 290, 311, 331, 352 |
@@ -99,7 +99,7 @@
 | multiversx\_sdk/core/transactions\_outcome\_parsers/token\_management\_transactions\_outcome\_parser\_types.py |       79 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/transaction\_events\_parser.py                             |       19 |        1 |     95% |        10 |
 | multiversx\_sdk/core/typecheck.py                                                                              |        5 |        0 |    100% |           |
-| multiversx\_sdk/network\_providers/\_\_init\_\_.py                                                             |        7 |        0 |    100% |           |
+| multiversx\_sdk/network\_providers/\_\_init\_\_.py                                                             |        8 |        0 |    100% |           |
 | multiversx\_sdk/network\_providers/accounts.py                                                                 |       62 |       22 |     65% |42, 57-59, 63-73, 76-78, 83-85, 89-95 |
 | multiversx\_sdk/network\_providers/api\_network\_provider.py                                                   |      183 |       30 |     84% |59, 66, 69, 87-90, 93-96, 166-167, 182-183, 212-215, 223-229, 237-238, 245-246 |
 | multiversx\_sdk/network\_providers/config.py                                                                   |       15 |        2 |     87% |    12, 15 |
@@ -153,7 +153,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6529** |  **728** | **89%** |           |
+|                                                                                                      **TOTAL** | **6531** |  **728** | **89%** |           |
 
 
 ## Setup coverage badge
