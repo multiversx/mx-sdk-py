@@ -45,6 +45,7 @@ from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser 
     TransactionEventsParser
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
+from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
@@ -83,5 +84,5 @@ __all__ = [
     "UserWallet", "UserPEM", "QueryRunnerAdapter", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
     "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
     "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse",
-    "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser"
+    "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser", "NetworkProviderConfig"
 ]
