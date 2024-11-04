@@ -176,3 +176,20 @@ class TestTransferTransactionsFactory:
         assert transaction.chain_id == "D"
         assert transaction.data.decode() == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@03@4e46542d313233343536@0a@01@544553542d393837363534@01@01@45474c442d303030303030@@0de0b6b3a7640000"
         assert transaction.gas_limit == 1_727_500
+
+    def test_egld_as_single_token_transfer(self):
+        egld = Token("EGLD-000000")
+        transfer = TokenTransfer(egld, 1000000000000000000)
+
+        transaction = self.transfer_factory.create_transaction_for_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            token_transfers=[transfer]
+        )
+
+        assert transaction.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.value == 0
+        assert transaction.chain_id == "D"
+        assert transaction.data.decode() == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@01@45474c442d303030303030@@0de0b6b3a7640000"
+        assert transaction.gas_limit == 1_243_500

@@ -1,3 +1,5 @@
+import pytest
+
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
@@ -562,10 +564,10 @@ def test_create_transaction_for_registering_dynamic():
         sender=alice,
         token_name="Test",
         token_ticker="TEST-123456",
-        token_type=TokenType.FNG
+        token_type=TokenType.SFT
     )
 
-    assert transaction.data.decode() == "registerDynamic@54657374@544553542d313233343536@464e47"
+    assert transaction.data.decode() == "registerDynamic@54657374@544553542d313233343536@534654"
     assert transaction.sender == alice.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
@@ -577,11 +579,61 @@ def test_create_transaction_for_registering_and_setting_all_roles():
         sender=alice,
         token_name="Test",
         token_ticker="TEST-123456",
-        token_type=TokenType.FNG
+        token_type=TokenType.SFT
     )
 
-    assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d313233343536@464e47"
+    assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d313233343536@534654"
     assert transaction.sender == alice.to_bech32()
     assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_152_000
+
+
+def test_register_invalid_dynamic():
+    with pytest.raises(Exception, match="Cannot register fungible token as dynamic"):
+        factory.create_transaction_for_registering_dynamic_token(
+            sender=alice,
+            token_name="Test",
+            token_ticker="TEST-123456",
+            token_type=TokenType.FNG
+        )
+
+    with pytest.raises(Exception, match="Cannot register fungible token as dynamic"):
+        factory.create_transaction_for_registering_dynamic_and_setting_roles(
+            sender=alice,
+            token_name="Test",
+            token_ticker="TEST-123456",
+            token_type=TokenType.FNG
+        )
+
+
+def test_register_dynamic_meta():
+    transaction = factory.create_transaction_for_registering_dynamic_token(
+        sender=alice,
+        token_name="Test",
+        token_ticker="TEST-987654",
+        token_type=TokenType.META,
+        denominator=18
+    )
+
+    assert transaction.data.decode() == "registerDynamic@54657374@544553542d393837363534@4d455441@12"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 50000000000000000
+    assert transaction.gas_limit == 60_138_500
+
+
+def test_register_dynamic_and_set_all_roles_meta():
+    transaction = factory.create_transaction_for_registering_dynamic_and_setting_roles(
+        sender=alice,
+        token_name="Test",
+        token_ticker="TEST-987654",
+        token_type=TokenType.META,
+        denominator=18
+    )
+
+    assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d393837363534@4d455441@12"
+    assert transaction.sender == alice.to_bech32()
+    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 50000000000000000
+    assert transaction.gas_limit == 60_159_500

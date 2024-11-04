@@ -33,8 +33,18 @@ class CodeMetadataValue:
             self.value = CodeMetadata.new_from_bytes(value).serialize()
         elif isinstance(value, CodeMetadata):
             self.value = value.serialize()
+        elif isinstance(value, dict):
+            self.value = self._extract_value_from_dict(value)
         else:
-            raise ValueError(f"cannot set payload for code metadata (should be either a CodeMetadata or bytes, but got: {type(value)})")
+            raise ValueError(f"cannot set payload for code metadata (should be either a CodeMetadata, bytes or dict, but got: {type(value)})")
+
+    def _extract_value_from_dict(self, value: dict[str, str]) -> bytes:
+        hex_value = value.get("hex", None)
+
+        if not hex_value:
+            raise ValueError("cannot get value from dictionary: missing 'hex' key")
+
+        return bytes.fromhex(hex_value)
 
     def get_payload(self) -> Any:
         return self.value

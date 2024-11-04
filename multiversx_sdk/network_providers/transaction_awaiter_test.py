@@ -19,7 +19,8 @@ class TestTransactionAwaiter:
     watcher = TransactionAwaiter(
         fetcher=provider,
         polling_interval_in_milliseconds=42,
-        timeout_interval_in_milliseconds=42 * 42
+        timeout_interval_in_milliseconds=42 * 42,
+        patience_time_in_milliseconds=42
     )
 
     def test_await_status_executed(self):
