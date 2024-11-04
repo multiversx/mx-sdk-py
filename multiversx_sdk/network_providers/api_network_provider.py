@@ -83,25 +83,31 @@ class ApiNetworkProvider:
         account = AccountOnNetwork.from_http_response(response)
         return account
 
-    def get_fungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[FungibleTokenOfAccountOnNetwork]:
+    def get_fungible_tokens_of_account(
+            self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[
+            FungibleTokenOfAccountOnNetwork]:
         url = f'accounts/{address.to_bech32()}/tokens?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(FungibleTokenOfAccountOnNetwork.from_http_response, response)
         return list(result)
 
-    def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[NonFungibleTokenOfAccountOnNetwork]:
+    def get_nonfungible_tokens_of_account(
+            self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[
+            NonFungibleTokenOfAccountOnNetwork]:
         url = f'accounts/{address.to_bech32()}/nfts?{self._build_pagination_params(pagination)}'
         response = self.do_get_generic_collection(url)
         result = map(NonFungibleTokenOfAccountOnNetwork.from_api_http_response, response)
         return list(result)
 
-    def get_fungible_token_of_account(self, address: IAddress, token_identifier: str) -> FungibleTokenOfAccountOnNetwork:
+    def get_fungible_token_of_account(
+            self, address: IAddress, token_identifier: str) -> FungibleTokenOfAccountOnNetwork:
         url = f'accounts/{address.to_bech32()}/tokens/{token_identifier}'
         response = self.do_get_generic(url)
         result = FungibleTokenOfAccountOnNetwork.from_http_response(response)
         return result
 
-    def get_nonfungible_token_of_account(self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
+    def get_nonfungible_token_of_account(
+            self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
         nonce_as_hex = decimal_to_padded_hex(nonce)
         url = f'accounts/{address.to_bech32()}/nfts/{collection}-{nonce_as_hex}'
         response = self.do_get_generic(url)
@@ -138,7 +144,8 @@ class ApiNetworkProvider:
         transaction = transaction_from_api_response(tx_hash, response)
         return transaction
 
-    def get_account_transactions(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[TransactionOnNetwork]:
+    def get_account_transactions(
+            self, address: IAddress, pagination: Optional[IPagination] = None) -> List[TransactionOnNetwork]:
         pagination = pagination if pagination is not None else DefaultPagination()
 
         url = f"accounts/{address.to_bech32()}/transactions?{self._build_pagination_params(pagination)}"
@@ -146,7 +153,9 @@ class ApiNetworkProvider:
         transactions = [transaction_from_api_response(tx.get("txHash", ""), tx) for tx in response]
         return transactions
 
-    def get_bunch_of_transactions(self, tx_hashes: List[str], with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
+    def get_bunch_of_transactions(
+            self, tx_hashes: List[str],
+            with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
         hashes = ",".join(tx_hashes)
         url = f"transactions?hashes={hashes}"
 
@@ -161,7 +170,8 @@ class ApiNetworkProvider:
         return transactions
 
     def get_transactions_in_mempool_for_account(self, address: IAddress) -> List[TransactionInMempool]:
-        url = f"transaction/pool?by-sender={address.to_bech32()}&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
+        url = f"transaction/pool?by-sender={address.to_bech32()
+                                            }&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
         response = self.do_get_generic(url)
         tx_pool = response["data"]["txPool"]
         mempool_transactions = tx_pool.get("transactions", [])
@@ -188,7 +198,9 @@ class ApiNetworkProvider:
         response = self.backing_proxy.send_transactions(transactions)
         return response
 
-    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+    def await_transaction_completed(
+            self, tx_hash: Union[str, bytes],
+            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
         tx_hash = convert_tx_hash_to_string(tx_hash)
 
         if options is None:

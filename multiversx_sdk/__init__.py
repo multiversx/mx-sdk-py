@@ -66,6 +66,7 @@ from multiversx_sdk.facades.entrypoints import (DevnetEntrypoint,
                                                 TestnetEntrypoint)
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
+from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
@@ -87,29 +88,22 @@ from multiversx_sdk.wallet.validator_signer import ValidatorSigner
 from multiversx_sdk.wallet.validator_verifier import ValidatorVerifier
 
 __all__ = [
-    "AccountNonceHolder", "Address", "AddressFactory", "AddressComputer",
-    "Transaction", "TransactionComputer",
-    "Message", "MessageComputer", "CodeMetadata",
-    "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",
-    "TokenManagementTransactionsOutcomeParser", "SmartContractResult",
-    "TransactionEvent", "TransactionLogs",
-    "DelegationTransactionsFactory", "TokenManagementTransactionsFactory",
-    "TransactionsFactoryConfig", "TokenType",
-    "SmartContractTransactionsFactory", "TransferTransactionsFactory",
-    "RelayedTransactionsFactory", "AccountTransactionsFactory",
-    "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
-    "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey",
-    "ValidatorPublicKey", "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
-    "UserWallet", "UserPEM", "TransactionsConverter", "DelegationTransactionsOutcomeParser",
-    "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
-    "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse",
-    "TransactionDecoder", "TransactionMetadata", "TransactionEventsParser",
-    "Account", "DevnetEntrypoint", "MainnetEntrypoint", "NetworkEntrypoint", "TestnetEntrypoint",
-    "AccountController", "DelegationController", "RelayedController", "SmartContractController",
-    "TokenManagementController", "TransfersController",
-    "CreateNewDelegationContractOutcome", "SmartContractDeployOutcome", "DeployedSmartContract",
-    "IssueFungibleOutcome", "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome",
-    "RegisterAndSetAllRolesOutcome", "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome",
-    "PauseOutcome", "UnPauseOutcome", "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome",
-    "AddQuantityOutcome", "BurnQuantityOutcome", "TransactionOnNetwork", "TransactionStatus", "ParsedSmartContractCallOutcome"
-]
+    "AccountNonceHolder", "Address", "AddressFactory", "AddressComputer", "Transaction", "TransactionComputer",
+    "Message", "MessageComputer", "CodeMetadata", "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",
+    "TokenManagementTransactionsOutcomeParser", "SmartContractResult", "TransactionEvent", "TransactionLogs",
+    "DelegationTransactionsFactory", "TokenManagementTransactionsFactory", "TransactionsFactoryConfig", "TokenType",
+    "SmartContractTransactionsFactory", "TransferTransactionsFactory", "RelayedTransactionsFactory",
+    "AccountTransactionsFactory", "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
+    "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey", "ValidatorPublicKey",
+    "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM", "UserWallet", "UserPEM",
+    "TransactionsConverter", "DelegationTransactionsOutcomeParser", "find_events_by_identifier",
+    "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
+    "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse", "TransactionDecoder",
+    "TransactionMetadata", "TransactionEventsParser", "NetworkProviderConfig", "Account", "DevnetEntrypoint",
+    "MainnetEntrypoint", "NetworkEntrypoint", "TestnetEntrypoint", "AccountController", "DelegationController",
+    "RelayedController", "SmartContractController", "TokenManagementController", "TransfersController",
+    "CreateNewDelegationContractOutcome", "SmartContractDeployOutcome", "DeployedSmartContract", "IssueFungibleOutcome",
+    "IssueNonFungibleOutcome", "IssueSemiFungibleOutcome", "RegisterMetaEsdtOutcome", "RegisterAndSetAllRolesOutcome",
+    "SetSpecialRoleOutcome", "NFTCreateOutcome", "MintOutcome", "BurnOutcome", "PauseOutcome", "UnPauseOutcome",
+    "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome", "AddQuantityOutcome",
+    "BurnQuantityOutcome", "TransactionOnNetwork", "TransactionStatus", "ParsedSmartContractCallOutcome"]
