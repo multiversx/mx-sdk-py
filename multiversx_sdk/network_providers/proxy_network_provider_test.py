@@ -167,55 +167,33 @@ class TestProxy:
     def test_send_transaction(self):
         transaction = Transaction(
             sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            gas_limit=50000,
-            chain_id="D",
-            value=5000000000000000000,
-            nonce=100,
-            gas_price=1000000000,
-            version=2,
-            signature=bytes.fromhex("faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05")
-        )
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl", gas_limit=50000, chain_id="D",
+            value=5000000000000000000, nonce=100, gas_price=1000000000, version=2, signature=bytes.fromhex(
+                "faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05"))
         expected_hash = ("fc914860c1d137ed8baa602e561381f97c7bad80d150c5bf90760d3cfd3a4cea")
         assert self.proxy.send_transaction(transaction) == expected_hash
 
     def test_send_transaction_with_data(self):
         transaction = Transaction(
             sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            gas_limit=70000,
-            chain_id="D",
-            nonce=105,
-            gas_price=1000000000,
-            version=2,
-            data=b"foo",
-            signature=bytes.fromhex("7a8bd08351bac6b1113545f5a896cb0b63806abd93d639bc4d16bfbc82c7b514f68ed7b36c743f4c3d2d1e1d3cb356824041d51dfe587a149f6fc9ab0dd9c408")
-        )
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl", gas_limit=70000, chain_id="D",
+            nonce=105, gas_price=1000000000, version=2, data=b"foo", signature=bytes.fromhex(
+                "7a8bd08351bac6b1113545f5a896cb0b63806abd93d639bc4d16bfbc82c7b514f68ed7b36c743f4c3d2d1e1d3cb356824041d51dfe587a149f6fc9ab0dd9c408"))
         expected_hash = ("4dc7d4e18c0cf9ca7f17677ef0ac3d1363528e892996b518bee909bb17cf7929")
         assert self.proxy.send_transaction(transaction) == expected_hash
 
     def test_send_transactions(self):
         first_tx = Transaction(
             sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            gas_limit=50000,
-            chain_id="D",
-            nonce=103,
-            gas_price=1000000000,
-            version=2,
-            signature=bytes.fromhex("498d5abb9f8eb69cc75f24320e8929dadbfa855ffac220d5e92175a83be68e0437801af3a1411e3d839738230097a1c38da5c8c4df3f345defc5d40300675900")
-        )
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl", gas_limit=50000, chain_id="D",
+            nonce=103, gas_price=1000000000, version=2, signature=bytes.fromhex(
+                "498d5abb9f8eb69cc75f24320e8929dadbfa855ffac220d5e92175a83be68e0437801af3a1411e3d839738230097a1c38da5c8c4df3f345defc5d40300675900"))
 
         second_tx = Transaction(
             sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            gas_limit=50000,
-            chain_id="D",
-            nonce=104,
-            gas_price=1000000000,
-            version=2,
-            signature=bytes.fromhex("341a2f3b738fbd20692e3bbd1cb36cb5f4ce9c0a9acc0cf4322269c0fcf34fd6bb59cd94062a9a4730e47f41b1ef3e29b69c6ab2a2a4dca9c9a7724681bc1708")
-        )
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl", gas_limit=50000, chain_id="D",
+            nonce=104, gas_price=1000000000, version=2, signature=bytes.fromhex(
+                "341a2f3b738fbd20692e3bbd1cb36cb5f4ce9c0a9acc0cf4322269c0fcf34fd6bb59cd94062a9a4730e47f41b1ef3e29b69c6ab2a2a4dca9c9a7724681bc1708"))
 
         invalid_tx = Transaction(
             sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
@@ -281,7 +259,7 @@ class TestProxy:
         # using the previoulsy instantiated provider without user agent
         response = requests.get(self.proxy.url + "/network/config", **self.proxy.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/proxy/unknown"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/unknown"
 
         # using the new instantiated provider with user agent
         config = NetworkProviderConfig(client_name="test-client")
@@ -289,4 +267,4 @@ class TestProxy:
 
         response = requests.get(proxy.url + "/network/config", **proxy.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/proxy/test-client"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/test-client"

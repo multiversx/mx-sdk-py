@@ -95,7 +95,8 @@ class ProxyNetworkProvider:
         token = FungibleTokenOfAccountOnNetwork.from_http_response(response.get('tokenData'))
         return token
 
-    def get_nonfungible_token_of_account(self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
+    def get_nonfungible_token_of_account(
+            self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
         response = self.do_get_generic(f'address/{address.to_bech32()}/nft/{collection}/nonce/{nonce}')
         token = NonFungibleTokenOfAccountOnNetwork.from_proxy_http_response_by_nonce(response.get('tokenData', ''))
         return token
@@ -133,19 +134,23 @@ class ProxyNetworkProvider:
 
     def send_transaction(self, transaction: ITransaction) -> str:
         transactions_converter = TransactionsConverter()
-        response = self.do_post_generic('transaction/send', transactions_converter.transaction_to_dictionary(transaction))
+        response = self.do_post_generic(
+            'transaction/send', transactions_converter.transaction_to_dictionary(transaction))
         return response.get('txHash', '')
 
     def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
         transactions_converter = TransactionsConverter()
-        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(transaction) for transaction in transactions]
+        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(
+            transaction) for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         # Proxy and Observers have different response format:
         num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
         hashes = response.get("txsHashes")
         return num_sent, hashes
 
-    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+    def await_transaction_completed(
+            self, tx_hash: Union[str, bytes],
+            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
         tx_hash = convert_tx_hash_to_string(tx_hash)
 
         if options is None:
@@ -186,7 +191,8 @@ class ProxyNetworkProvider:
 
     def get_definition_of_fungible_token(self, token_identifier: str) -> DefinitionOfFungibleTokenOnNetwork:
         response = self.__get_token_properties(token_identifier)
-        definition = DefinitionOfFungibleTokenOnNetwork.from_response_of_get_token_properties(token_identifier, response, self.address_hrp)
+        definition = DefinitionOfFungibleTokenOnNetwork.from_response_of_get_token_properties(
+            token_identifier, response, self.address_hrp)
         return definition
 
     def __get_token_properties(self, identifier: str) -> List[bytes]:
@@ -202,7 +208,8 @@ class ProxyNetworkProvider:
 
     def get_definition_of_token_collection(self, collection: str) -> DefinitionOfTokenCollectionOnNetwork:
         properties = self.__get_token_properties(collection)
-        definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(collection, properties, self.address_hrp)
+        definition = DefinitionOfTokenCollectionOnNetwork.from_response_of_get_token_properties(
+            collection, properties, self.address_hrp)
         return definition
 
     def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:

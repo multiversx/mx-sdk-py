@@ -125,7 +125,8 @@ class TestApi:
         assert len(result) == 2
 
     def test_get_trasactions(self):
-        hashes = ["9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c", "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb"]
+        hashes = ["9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c",
+                  "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb"]
         result = self.api.get_bunch_of_transactions(hashes)
 
         assert len(result) == 2
@@ -202,15 +203,9 @@ class TestApi:
     def test_send_transaction(self):
         transaction = Transaction(
             sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            gas_limit=50000,
-            chain_id="D",
-            value=5000000000000000000,
-            nonce=100,
-            gas_price=1000000000,
-            version=2,
-            signature=bytes.fromhex("faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05")
-        )
+            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl", gas_limit=50000, chain_id="D",
+            value=5000000000000000000, nonce=100, gas_price=1000000000, version=2, signature=bytes.fromhex(
+                "faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05"))
         expected_hash = (
             "fc914860c1d137ed8baa602e561381f97c7bad80d150c5bf90760d3cfd3a4cea"
         )
@@ -263,7 +258,7 @@ class TestApi:
         # using the previoulsy instantiated provider without user agent
         response = requests.get(self.api.url + "/network/config", **self.api.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/api/unknown"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/api/unknown"
 
         # using the new instantiated provider with user agent
         config = NetworkProviderConfig(client_name="test-client")
@@ -271,4 +266,4 @@ class TestApi:
 
         response = requests.get(api.url + "/network/config", **api.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/api/test-client"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"
