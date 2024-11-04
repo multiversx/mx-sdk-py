@@ -96,7 +96,7 @@ class NetworkEntrypoint:
             transactions (list[Transaction]): An iterable containing multiple transactions (e.g. a list of transactions).
 
         Returns:
-            Tuple (int, Dict[str, str]): The integer indicates the total number of transactions sent, while the dictionary maps the transaction's index in the list to its corresponding hash.
+            Tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
         """
         return self.network_provider.send_transactions(transactions)
 
