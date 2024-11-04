@@ -1,5 +1,7 @@
-from typing import List, Optional, Protocol
+from typing import Optional, Protocol
 
+from multiversx_sdk.core.constants import \
+    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER
 from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
@@ -47,26 +49,14 @@ class TransferTransactionsFactory:
     def create_transaction_for_esdt_token_transfer(self,
                                                    sender: IAddress,
                                                    receiver: IAddress,
-                                                   token_transfers: List[TokenTransfer]) -> Transaction:
-        data_parts: List[str] = []
-        extra_gas_for_transfer = 0
-
-        if len(token_transfers) == 0:
+                                                   token_transfers: list[TokenTransfer]) -> Transaction:
+        if not token_transfers:
             raise BadUsageError("No token transfer has been provided")
-        elif len(token_transfers) == 1:
-            transfer = token_transfers[0]
 
-            if self.token_computer.is_fungible(transfer.token):
-                data_parts = self._data_args_builder.build_args_for_esdt_transfer(transfer)
-                extra_gas_for_transfer = self.config.gas_limit_esdt_transfer + ADDITIONAL_GAS_FOR_ESDT_TRANSFER
-            else:
-                data_parts = self._data_args_builder.build_args_for_single_esdt_nft_transfer(transfer, receiver)
-                extra_gas_for_transfer = self.config.gas_limit_esdt_nft_transfer + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
-                receiver = sender
+        if len(token_transfers) == 1:
+            data_parts, extra_gas_for_transfer, receiver = self._single_transfer(sender, receiver, token_transfers[0])
         else:
-            data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, token_transfers)
-            extra_gas_for_transfer = self.config.gas_limit_multi_esdt_nft_transfer * len(token_transfers) + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
-            receiver = sender
+            data_parts, extra_gas_for_transfer, receiver = self._multi_transfer(sender, receiver, token_transfers)
 
         return TransactionBuilder(
             config=self.config,
@@ -77,11 +67,38 @@ class TransferTransactionsFactory:
             add_data_movement_gas=True
         ).build()
 
+    def _single_transfer(self,
+                         sender: IAddress,
+                         receiver: IAddress,
+                         transfer: TokenTransfer) -> tuple[list[str], int, IAddress]:
+        if self.token_computer.is_fungible(transfer.token):
+            if transfer.token.identifier == EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER:
+                data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, [transfer])
+                gas = self.config.gas_limit_multi_esdt_nft_transfer + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
+                return data_parts, gas, sender
+            else:
+                data_parts = self._data_args_builder.build_args_for_esdt_transfer(transfer)
+                gas = self.config.gas_limit_esdt_transfer + ADDITIONAL_GAS_FOR_ESDT_TRANSFER
+                return data_parts, gas, receiver
+
+        data_parts = self._data_args_builder.build_args_for_single_esdt_nft_transfer(transfer, receiver)
+        gas = self.config.gas_limit_esdt_nft_transfer + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
+        return data_parts, gas, sender
+
+    def _multi_transfer(self,
+                        sender: IAddress,
+                        receiver: IAddress,
+                        token_transfers: list[TokenTransfer]) -> tuple[list[str], int, IAddress]:
+        data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, token_transfers)
+        gas = self.config.gas_limit_multi_esdt_nft_transfer * len(
+            token_transfers) + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
+        return data_parts, gas, sender
+
     def create_transaction_for_transfer(self,
                                         sender: IAddress,
                                         receiver: IAddress,
                                         native_amount: Optional[int] = None,
-                                        token_transfers: Optional[List[TokenTransfer]] = None,
+                                        token_transfers: Optional[list[TokenTransfer]] = None,
                                         data: Optional[bytes] = None) -> Transaction:
         if token_transfers and data:
             raise BadUsageError("Can't set data field when sending esdt tokens")

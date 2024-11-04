@@ -427,7 +427,7 @@ class TestApi:
         # using the previoulsy instantiated provider without user agent
         response = requests.get(self.api.url + "/network/config", **self.api.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/api/unknown"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/api/unknown"
 
         # using the new instantiated provider with user agent
         config = NetworkProviderConfig(client_name="test-client")
@@ -435,4 +435,4 @@ class TestApi:
 
         response = requests.get(api.url + "/network/config", **api.config.requests_options)
         headers = response.request.headers
-        assert headers.get("User-Agent") == "multiversx-sdk/api/test-client"
+        assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"

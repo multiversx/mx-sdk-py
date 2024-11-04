@@ -1,6 +1,6 @@
-from typing import List, Optional, Protocol, Sequence, Union
+from typing import List, Sequence
 
-from multiversx_sdk.controllers.interfaces import IAccount
+from multiversx_sdk.controllers.interfaces import IAccount, INetworkProvider
 from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
@@ -9,14 +9,6 @@ from multiversx_sdk.core.transactions_factories import (
     DelegationTransactionsFactory, TransactionsFactoryConfig)
 from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import (
     CreateNewDelegationContractOutcome, DelegationTransactionsOutcomeParser)
-from multiversx_sdk.network_providers.resources import AwaitingOptions
-
-
-class INetworkProvider(Protocol):
-    def await_transaction_completed(
-            self, transaction_hash: Union[str, bytes],
-            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        ...
 
 
 class DelegationController:
