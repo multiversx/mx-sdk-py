@@ -170,8 +170,7 @@ class ApiNetworkProvider:
         return transactions
 
     def get_transactions_in_mempool_for_account(self, address: IAddress) -> List[TransactionInMempool]:
-        url = f"transaction/pool?by-sender={address.to_bech32()
-                                            }&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
+        url = f"transaction/pool?by-sender={address.to_bech32()}&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
         response = self.do_get_generic(url)
         tx_pool = response["data"]["txPool"]
         mempool_transactions = tx_pool.get("transactions", [])
