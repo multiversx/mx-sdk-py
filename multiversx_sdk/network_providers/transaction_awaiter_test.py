@@ -14,14 +14,6 @@ from multiversx_sdk.testutils.mock_network_provider import (
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
-class ProxyWrapper:
-    def __init__(self, proxy: ProxyNetworkProvider) -> None:
-        self.proxy = proxy
-
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        return self.proxy.get_transaction(tx_hash, True)
-
-
 class TestTransactionAwaiter:
     provider = MockNetworkProvider()
     watcher = TransactionAwaiter(
@@ -49,8 +41,7 @@ class TestTransactionAwaiter:
     def test_on_network(self):
         alice = load_wallets()["alice"]
         proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-        proxy_wrapper = ProxyWrapper(proxy)
-        watcher = TransactionAwaiter(proxy_wrapper)
+        watcher = TransactionAwaiter(proxy)
         tx_computer = TransactionComputer()
 
         transaction = Transaction(

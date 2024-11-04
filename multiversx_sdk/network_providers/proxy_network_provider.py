@@ -8,6 +8,8 @@ import requests
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import (DEFAULT_HRP, ESDT_CONTRACT_ADDRESS,
+                                           METACHAIN_ID)
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import Token
@@ -15,25 +17,23 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
-                                                        DEFAULT_ADDRESS_HRP,
-                                                        ESDT_CONTRACT_ADDRESS,
-                                                        METACHAIN_ID)
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
-    account_from_response, account_storage_entry_from_response,
+    account_from_proxy_response, account_storage_entry_from_response,
     account_storage_from_response, block_from_response,
     definition_of_fungible_token_from_query_response,
     definition_of_tokens_collection_from_query_response,
     network_config_from_response, network_status_from_response,
     smart_contract_query_to_vm_query_request,
-    token_amount_on_network_from_response, token_amounts_from_response,
+    token_amount_on_network_from_proxy_response,
+    token_amounts_from_proxy_response,
     transaction_cost_estimation_from_response, transaction_from_proxy_response,
     transaction_from_simulate_response,
     transactions_from_send_multiple_response,
     vm_query_response_to_smart_contract_query_response)
-from multiversx_sdk.network_providers.interface import IBasicNetworkProvider
+from multiversx_sdk.network_providers.interface import INetworkProvider
 from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, AwaitingOptions,
     BlockOnNetwork, FungibleTokenMetadata, GenericResponse, GetBlockArguments,
@@ -45,13 +45,13 @@ from multiversx_sdk.network_providers.transaction_awaiter import \
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 
 
-class ProxyNetworkProvider(IBasicNetworkProvider):
+class ProxyNetworkProvider(INetworkProvider):
     def __init__(self,
                  url: str,
                  address_hrp: Optional[str] = None,
                  config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.address_hrp = address_hrp or DEFAULT_HRP
         self.config = config if config is not None else NetworkProviderConfig()
 
         self.user_agent_prefix = f"{BASE_USER_AGENT}/proxy"
@@ -95,7 +95,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         get_guardian_data_thread.start()
 
         response = self.do_get_generic(f'address/{address.to_bech32()}')
-        account = account_from_response(response.to_dictionary())
+        account = account_from_proxy_response(response.to_dictionary())
 
         get_guardian_data_thread.join(timeout=2)
         account.is_guarded = data.get("is_guarded", False)
@@ -120,7 +120,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
     def await_account_on_condition(
             self, address: Address, condition: Callable[[AccountOnNetwork],
                                                         bool],
-            options: Optional[AwaitingOptions]) -> AccountOnNetwork:
+            options: Optional[AwaitingOptions] = None) -> AccountOnNetwork:
         """Waits until an account satisfies a given condition."""
         raise NotImplementedError("Method not yet implemented")
 
@@ -228,7 +228,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         else:
             response = self.do_get_generic(f"address/{address.to_bech32()}/nft/{token.identifier}/nonce/{token.nonce}")
 
-        return token_amount_on_network_from_response(response.to_dictionary())
+        return token_amount_on_network_from_proxy_response(response.to_dictionary())
 
     def get_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]:
         """
@@ -236,7 +236,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         Pagination isn't explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.
         """
         response = self.do_get_generic(f"address/{address.to_bech32()}/esdt")
-        all_tokens = token_amounts_from_response(response.to_dictionary())
+        all_tokens = token_amounts_from_proxy_response(response.to_dictionary())
 
         return [token for token in all_tokens if token.token.nonce == 0]
 
@@ -246,7 +246,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         Pagination isn't explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.
         """
         response = self.do_get_generic(f"address/{address.to_bech32()}/esdt")
-        all_tokens = token_amounts_from_response(response.to_dictionary())
+        all_tokens = token_amounts_from_proxy_response(response.to_dictionary())
 
         return [token for token in all_tokens if token.token.nonce > 0]
 
@@ -254,7 +254,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         """Fetches the definition of a fungible token."""
         encoded_identifier = token_identifier.encode()
         query = SmartContractQuery(
-            contract=ESDT_CONTRACT_ADDRESS.to_bech32(),
+            contract=ESDT_CONTRACT_ADDRESS,
             function="getTokenProperties",
             arguments=[encoded_identifier],
         )
@@ -268,7 +268,7 @@ class ProxyNetworkProvider(IBasicNetworkProvider):
         """Fetches the definition of a tokens collection."""
         encoded_identifier = collection_name.encode()
         query = SmartContractQuery(
-            contract=ESDT_CONTRACT_ADDRESS.to_bech32(),
+            contract=ESDT_CONTRACT_ADDRESS,
             function="getTokenProperties",
             arguments=[encoded_identifier],
         )

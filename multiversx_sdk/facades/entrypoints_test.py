@@ -13,6 +13,7 @@ testutils = Path(__file__).parent.parent / "testutils"
 class TestEntrypoint:
     entrypoint = DevnetEntrypoint()
     alice_pem = testutils / "testwallets" / "alice.pem"
+    grace_pem = testutils / "testwallets" / "grace.pem"
 
     def test_native_transfer(self):
         controller = self.entrypoint.create_transfers_controller()
@@ -27,12 +28,13 @@ class TestEntrypoint:
             data="hello".encode()
         )
 
-        assert transaction.signature.hex() == "69bc7d1777edd0a901e6cf94830475716205c5efdf2fd44d4be31badead59fc8418b34f0aa3b2c80ba14aed5edd30031757d826af58a1abb690a0bee89ba9309"
+        assert transaction.signature.hex(
+        ) == "69bc7d1777edd0a901e6cf94830475716205c5efdf2fd44d4be31badead59fc8418b34f0aa3b2c80ba14aed5edd30031757d826af58a1abb690a0bee89ba9309"
 
     @pytest.mark.networkInteraction
     def test_contract_flow(self):
         abi = Abi.load(testutils / "testdata" / "adder.abi.json")
-        sender = Account.new_from_pem(self.alice_pem)
+        sender = Account.new_from_pem(self.grace_pem)
         sender.nonce = self.entrypoint.recall_account_nonce(sender.address)
 
         controller = self.entrypoint.create_smart_contract_controller(abi)

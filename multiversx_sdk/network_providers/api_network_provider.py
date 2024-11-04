@@ -1,54 +1,51 @@
-from typing import (Any, Callable, Dict, List, Optional, Sequence, Tuple,
-                    Union, cast)
+import urllib.parse
+from typing import Any, Callable, Dict, Optional, Union, cast
 
 import requests
 
 from multiversx_sdk.converters.transactions_converter import \
     TransactionsConverter
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import DEFAULT_HRP, METACHAIN_ID
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
+from multiversx_sdk.core.tokens import Token, TokenComputer
+from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
-                                                       GuardianData)
-from multiversx_sdk.network_providers.config import (DefaultPagination,
-                                                     NetworkProviderConfig)
-from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
-                                                        DEFAULT_ADDRESS_HRP)
-from multiversx_sdk.network_providers.errors import (GenericError,
-                                                     TransactionFetchingError)
+from multiversx_sdk.network_providers.config import NetworkProviderConfig
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
+from multiversx_sdk.network_providers.errors import GenericError
 from multiversx_sdk.network_providers.http_resources import (
-    smart_contract_query_to_vm_query_request, transaction_from_api_response,
+    account_from_api_response, account_storage_entry_from_response,
+    account_storage_from_response, block_from_response,
+    definition_of_fungible_token_from_api_response,
+    definition_of_tokens_collection_from_api_response,
+    smart_contract_query_to_vm_query_request, token_amount_from_api_response,
+    transaction_cost_estimation_from_response, transaction_from_api_response,
+    transaction_from_simulate_response,
+    transactions_from_send_multiple_response,
     vm_query_response_to_smart_contract_query_response)
-from multiversx_sdk.network_providers.interface import IAddress, IPagination
-from multiversx_sdk.network_providers.network_config import NetworkConfig
-from multiversx_sdk.network_providers.network_general_statistics import \
-    NetworkGeneralStatistics
-from multiversx_sdk.network_providers.network_stake import NetworkStake
-from multiversx_sdk.network_providers.network_status import NetworkStatus
+from multiversx_sdk.network_providers.interface import INetworkProvider
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
-from multiversx_sdk.network_providers.resources import AwaitingOptions
+from multiversx_sdk.network_providers.resources import (
+    AccountOnNetwork, AccountStorage, AccountStorageEntry, AwaitingOptions,
+    BlockOnNetwork, FungibleTokenMetadata, GetBlockArguments, NetworkConfig,
+    NetworkStatus, TokenAmountOnNetwork, TokensCollectionMetadata,
+    TransactionCostResponse)
 from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
-from multiversx_sdk.network_providers.token_definitions import (
-    DefinitionOfFungibleTokenOnNetwork, DefinitionOfTokenCollectionOnNetwork)
-from multiversx_sdk.network_providers.tokens import (
-    FungibleTokenOfAccountOnNetwork, NonFungibleTokenOfAccountOnNetwork)
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
-from multiversx_sdk.network_providers.transactions import (
-    ITransaction, TransactionInMempool)
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
-from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
 
-class ApiNetworkProvider:
+class ApiNetworkProvider(INetworkProvider):
     def __init__(self,
                  url: str,
                  address_hrp: Optional[str] = None,
                  config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.address_hrp = address_hrp or DEFAULT_HRP
         self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
         self.config = config if config is not None else NetworkProviderConfig()
 
@@ -56,190 +53,194 @@ class ApiNetworkProvider:
         extend_user_agent(self.user_agent_prefix, self.config)
 
     def get_network_config(self) -> NetworkConfig:
+        """Fetches the general configuration of the network."""
         return self.backing_proxy.get_network_config()
 
-    def get_network_gas_configs(self) -> Dict[str, Any]:
-        response = self.do_get_generic("network/gas-configs")
-        return response["data"]
+    def get_network_status(self, shard: int = METACHAIN_ID) -> NetworkStatus:
+        """Fetches the current status of the network."""
+        return self.backing_proxy.get_network_status(shard)
 
-    def get_network_status(self) -> NetworkStatus:
-        return self.backing_proxy.get_network_status()
+    def get_block(self, arguments: GetBlockArguments) -> BlockOnNetwork:
+        """Fetches a block by nonce or by hash."""
+        if not arguments.block_hash:
+            raise Exception("Block hash not provided. Please set the `block_hash` in the arguments.")
 
-    def get_guardian_data(self, address: IAddress) -> GuardianData:
-        return self.backing_proxy.get_guardian_data(address)
+        result = self.do_get_generic(f"blocks/{arguments.block_hash.decode()}")
+        return block_from_response(result)
 
-    def get_network_stake_statistics(self) -> NetworkStake:
-        response = self.do_get_generic('stake')
-        network_stake = NetworkStake.from_http_response(response)
-        return network_stake
+    def get_latest_block(self, shard: Optional[int] = None) -> BlockOnNetwork:
+        """Fetches the latest block of a shard."""
+        result = self.do_get_generic("/blocks/latest")
+        return block_from_response(result)
 
-    def get_network_general_statistics(self) -> NetworkGeneralStatistics:
-        response = self.do_get_generic('stats')
-        network_stats = NetworkGeneralStatistics.from_http_response(response)
-        return network_stats
-
-    def get_account(self, address: IAddress) -> AccountOnNetwork:
+    def get_account(self, address: Address) -> AccountOnNetwork:
+        """Fetches account information for a given address."""
         response = self.do_get_generic(f'accounts/{address.to_bech32()}')
-        account = AccountOnNetwork.from_http_response(response)
+        account = account_from_api_response(response)
         return account
 
-    def get_fungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[FungibleTokenOfAccountOnNetwork]:
-        url = f'accounts/{address.to_bech32()}/tokens?{self._build_pagination_params(pagination)}'
-        response = self.do_get_generic_collection(url)
-        result = map(FungibleTokenOfAccountOnNetwork.from_http_response, response)
-        return list(result)
+    def get_account_storage(self, address: Address) -> AccountStorage:
+        """Fetches the storage (key-value pairs) of an account."""
+        response: dict[str, Any] = self.do_get_generic(f"address/{address.to_bech32()}/keys")
+        return account_storage_from_response(response.get("data", {}))
 
-    def get_nonfungible_tokens_of_account(self, address: IAddress, pagination: IPagination = DefaultPagination()) -> List[NonFungibleTokenOfAccountOnNetwork]:
-        url = f'accounts/{address.to_bech32()}/nfts?{self._build_pagination_params(pagination)}'
-        response = self.do_get_generic_collection(url)
-        result = map(NonFungibleTokenOfAccountOnNetwork.from_api_http_response, response)
-        return list(result)
+    def get_account_storage_entry(self, address: Address, entry_key: str) -> AccountStorageEntry:
+        """Fetches a specific storage entry of an account."""
+        key_as_hex = entry_key.encode().hex()
+        response: dict[str, Any] = self.do_get_generic(f"address/{address.to_bech32()}/key/{key_as_hex}")
+        return account_storage_entry_from_response(response.get("data", {}), entry_key)
 
-    def get_fungible_token_of_account(self, address: IAddress, token_identifier: str) -> FungibleTokenOfAccountOnNetwork:
-        url = f'accounts/{address.to_bech32()}/tokens/{token_identifier}'
-        response = self.do_get_generic(url)
-        result = FungibleTokenOfAccountOnNetwork.from_http_response(response)
-        return result
+    def await_account_on_condition(
+            self, address: Address, condition: Callable[[AccountOnNetwork],
+                                                        bool],
+            options: Optional[AwaitingOptions] = None) -> AccountOnNetwork:
+        """Waits until an account satisfies a given condition."""
+        raise NotImplementedError("Method not yet implemented")
 
-    def get_nonfungible_token_of_account(self, address: IAddress, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
-        nonce_as_hex = decimal_to_padded_hex(nonce)
-        url = f'accounts/{address.to_bech32()}/nfts/{collection}-{nonce_as_hex}'
-        response = self.do_get_generic(url)
-        result = NonFungibleTokenOfAccountOnNetwork.from_api_http_response(response)
-        return result
+    def send_transaction(self, transaction: Transaction) -> bytes:
+        """Broadcasts a transaction and returns its hash."""
+        transactions_converter = TransactionsConverter()
+        response = self.do_post_generic("transactions", transactions_converter.transaction_to_dictionary(transaction))
+        return bytes.fromhex(response.get('txHash', ''))
 
-    def get_definition_of_fungible_token(self, token_identifier: str) -> DefinitionOfFungibleTokenOnNetwork:
-        response = self.do_get_generic(f'tokens/{token_identifier}')
-        result = DefinitionOfFungibleTokenOnNetwork.from_api_http_response(response)
-        return result
+    def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork:
+        """Simulates a transaction."""
+        transactions_converter = TransactionsConverter()
+        response: dict[str, Any] = self.do_post_generic(
+            'transaction/simulate', transactions_converter.transaction_to_dictionary(transaction))
+        return transaction_from_simulate_response(response.get("data", {}).get("result", {}))
 
-    def get_definition_of_token_collection(self, collection: str) -> DefinitionOfTokenCollectionOnNetwork:
-        response = self.do_get_generic(f'collections/{collection}')
-        result = DefinitionOfTokenCollectionOnNetwork.from_api_http_response(response)
-        return result
+    def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
+        """Estimates the cost of a transaction."""
+        transactions_converter = TransactionsConverter()
+        response: dict[str, Any] = self.do_post_generic(
+            'transaction/cost', transactions_converter.transaction_to_dictionary(transaction))
+        return transaction_cost_estimation_from_response(response.get("data", {}))
 
-    def get_non_fungible_token(self, collection: str, nonce: int) -> NonFungibleTokenOfAccountOnNetwork:
-        nonce_as_hex = decimal_to_padded_hex(nonce)
-        response = self.do_get_generic(f'nfts/{collection}-{nonce_as_hex}')
-        result = NonFungibleTokenOfAccountOnNetwork.from_api_http_response(response)
-        return result
+    def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
+        """
+        Broadcasts multiple transactions and returns a tuple of (number of accepted transactions, list of transaction hashes).
+        In the returned list, the order of transaction hashes corresponds to the order of transactions in the input list.
+        If a transaction is not accepted, its hash is empty in the returned list.
+        """
+        transactions_converter = TransactionsConverter()
+        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(
+            transaction) for transaction in transactions]
+        response: dict[str, Any] = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
+        return transactions_from_send_multiple_response(response.get("data", {}), len(transactions))
+
+    def get_transaction(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
+        """Fetches a transaction that was previously broadcasted (maybe already processed by the network)."""
+        transaction_hash = convert_tx_hash_to_string(transaction_hash)
+        response = self.do_get_generic(f'transactions/{transaction_hash}')
+        return transaction_from_api_response(transaction_hash, response)
+
+    def await_transaction_completed(
+            self, transaction_hash: Union[str, bytes],
+            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        """Waits until the transaction is completely processed."""
+        transaction_hash = convert_tx_hash_to_string(transaction_hash)
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_completed(transaction_hash)
+
+    def await_transaction_on_condition(
+            self, transaction_hash: Union[str, bytes],
+            condition: Callable[[TransactionOnNetwork],
+                                bool],
+            options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        """Waits until a transaction satisfies a given condition."""
+        transaction_hash = convert_tx_hash_to_string(transaction_hash)
+
+        if options is None:
+            options = AwaitingOptions()
+
+        awaiter = TransactionAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_on_condition(transaction_hash, condition)
+
+    def get_token_of_account(self, address: Address, token: Token) -> TokenAmountOnNetwork:
+        """
+        Fetches the balance of an account, for a given token.
+        Able to handle both fungible and non-fungible tokens (NFTs, SFTs, MetaESDTs).
+        """
+        if token.nonce:
+            identifier = TokenComputer().compute_extended_identifier(token)
+            result = self.do_get_generic(f"accounts/{address.to_bech32()}/nfts/{identifier}")
+        else:
+            result = self.do_get_generic(f"accounts/{address.to_bech32()}/tokens/{token.identifier}")
+
+        return token_amount_from_api_response(result)
+
+    def get_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]:
+        """
+        Fetches the balances of an account, for all fungible tokens held by the account.
+        Pagination isn't explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.
+        """
+        result: list[dict[str, Any]] = self.do_get_generic(f"accounts/{address.to_bech32()}/tokens")
+        return [token_amount_from_api_response(token) for token in result]
+
+    def get_non_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]:
+        """
+        Fetches the balances of an account, for all non-fungible tokens held by the account.
+        Pagination isn't explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.
+        """
+        result: list[dict[str, Any]] = self.do_get_generic(f"accounts/{address.to_bech32()}/nfts")
+        return [token_amount_from_api_response(token) for token in result]
+
+    def get_definition_of_fungible_token(self, token_identifier: str) -> FungibleTokenMetadata:
+        """Fetches the definition of a fungible token."""
+        result = self.do_get_generic(f"tokens/{token_identifier}")
+        return definition_of_fungible_token_from_api_response(result)
+
+    def get_definition_of_tokens_collection(self, collection_name: str) -> TokensCollectionMetadata:
+        """Fetches the definition of a tokens collection."""
+        result = self.do_get_generic(f"collections/{collection_name}")
+        return definition_of_tokens_collection_from_api_response(result)
 
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         request = smart_contract_query_to_vm_query_request(query)
         response = self.do_post_generic('query', request)
         return vm_query_response_to_smart_contract_query_response(response, query.function)
 
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        try:
-            response = self.do_get_generic(f'transactions/{tx_hash}')
-        except GenericError as ge:
-            raise TransactionFetchingError(ge.url, ge.data)
+    def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]] = None) -> Any:
+        """Does a generic GET request against the network(handles API enveloping)."""
+        url = f'{self.url}/{url}'
 
-        transaction = transaction_from_api_response(tx_hash, response)
-        return transaction
+        if url_parameters is not None:
+            params = urllib.parse.urlencode(url_parameters)
+            url = f"{url}?{params}"
 
-    def get_account_transactions(self, address: IAddress, pagination: Optional[IPagination] = None) -> List[TransactionOnNetwork]:
-        pagination = pagination if pagination is not None else DefaultPagination()
-
-        url = f"accounts/{address.to_bech32()}/transactions?{self._build_pagination_params(pagination)}"
-        response = self.do_get_generic_collection(url)
-        transactions = [transaction_from_api_response(tx.get("txHash", ""), tx) for tx in response]
-        return transactions
-
-    def get_bunch_of_transactions(self, tx_hashes: List[str], with_block_info: bool = True, with_results: bool = True) -> List[TransactionOnNetwork]:
-        hashes = ",".join(tx_hashes)
-        url = f"transactions?hashes={hashes}"
-
-        if with_block_info:
-            url += "&withBlockInfo=true"
-
-        if with_results:
-            url += "&withResults=true"
-
-        result = self.do_get_generic_collection(url)
-        transactions = [transaction_from_api_response(transaction["txHash"], transaction) for transaction in result]
-        return transactions
-
-    def get_transactions_in_mempool_for_account(self, address: IAddress) -> List[TransactionInMempool]:
-        url = f"transaction/pool?by-sender={address.to_bech32()}&fields=sender,receiver,gaslimit,gasprice,value,nonce,data"
-        response = self.do_get_generic(url)
-        tx_pool = response["data"]["txPool"]
-        mempool_transactions = tx_pool.get("transactions", [])
-
-        if not mempool_transactions:
-            return []
-
-        transactions = [TransactionInMempool.from_http_response(transaction) for transaction in mempool_transactions]
-        return transactions
-
-    def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
-        response = self.do_get_generic(f'transactions/{tx_hash}?fields=status')
-        status = TransactionStatus(response.get('status', ''))
-        return status
-
-    def send_transaction(self, transaction: ITransaction) -> str:
-        url = 'transactions'
-        transactions_converter = TransactionsConverter()
-        response = self.do_post_generic(url, transactions_converter.transaction_to_dictionary(transaction))
-        tx_hash: str = response.get('txHash', '')
-        return tx_hash
-
-    def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
-        response = self.backing_proxy.send_transactions(transactions)
+        response = self._do_get(url)
         return response
 
-    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        tx_hash = convert_tx_hash_to_string(tx_hash)
+    def do_post_generic(
+            self, url: str, data: Any, url_parameters: Optional[dict[str, Any]] = None) -> Any:
+        """Does a generic GET request against the network(handles API enveloping)."""
+        url = f'{self.url}/{url}'
 
-        if options is None:
-            options = AwaitingOptions()
+        if url_parameters is not None:
+            params = urllib.parse.urlencode(url_parameters)
+            url = f"{url}?{params}"
 
-        awaiter = TransactionAwaiter(
-            fetcher=self,
-            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
-            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
-            patience_time_in_milliseconds=options.patience_in_milliseconds
-        )
-
-        return awaiter.await_completed(tx_hash)
-
-    def await_transaction_on_condition(self,
-                                       tx_hash: Union[str, bytes],
-                                       condition: Callable[[TransactionOnNetwork], bool],
-                                       options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        tx_hash = convert_tx_hash_to_string(tx_hash)
-
-        if options is None:
-            options = AwaitingOptions()
-
-        awaiter = TransactionAwaiter(
-            fetcher=self,
-            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
-            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
-            patience_time_in_milliseconds=options.patience_in_milliseconds
-        )
-
-        return awaiter.await_on_condition(tx_hash, condition)
-
-    def _build_pagination_params(self, pagination: IPagination) -> str:
-        return f'from={pagination.get_start()}&size={pagination.get_size()}'
-
-    def do_get_generic(self, resource_url: str) -> Dict[str, Any]:
-        url = f'{self.url}/{resource_url}'
-        response = self.__do_get(url)
+        response = self._do_post(url, data)
         return response
 
-    def do_get_generic_collection(self, resource_url: str) -> List[Dict[str, Any]]:
-        url = f'{self.url}/{resource_url}'
-        response = self.__do_get(url)
-        return response
-
-    def do_post_generic(self, resource_url: str, payload: Any) -> Dict[str, Any]:
-        url = f'{self.url}/{resource_url}'
-        response = self.do_post(url, payload)
-        return response
-
-    def __do_get(self, url: str) -> Any:
+    def _do_get(self, url: str) -> Any:
         try:
             response = requests.get(url, **self.config.requests_options)
             response.raise_for_status()
@@ -253,7 +254,7 @@ class ApiNetworkProvider:
         except Exception as err:
             raise GenericError(url, err)
 
-    def do_post(self, url: str, payload: Any) -> Dict[str, Any]:
+    def _do_post(self, url: str, payload: Any) -> Dict[str, Any]:
         try:
             response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()
@@ -268,7 +269,7 @@ class ApiNetworkProvider:
             raise GenericError(url, err)
 
     def _get_data(self, parsed: Any, url: str) -> Any:
-        if isinstance(parsed, List):
+        if isinstance(parsed, list):
             return cast(Any, parsed)
         else:
             err = parsed.get("error", None)

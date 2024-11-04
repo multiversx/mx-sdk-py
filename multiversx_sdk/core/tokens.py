@@ -98,6 +98,17 @@ class TokenComputer:
         identifier = parts.ticker + "-" + parts.random_sequence
         return self.compute_extended_identifier_from_identifier_and_nonce(identifier, parts.nonce)
 
+    def compute_extended_identifier(self, token: Token) -> str:
+        identifier_parts = token.identifier.split("-")
+
+        self._ensure_token_ticker_validity(identifier_parts[0])
+        self._check_length_of_random_sequence(identifier_parts[1])
+
+        nonce_as_hex = f'{token.nonce:x}'
+        padded_nonce = "0" + nonce_as_hex if len(nonce_as_hex) % 2 else nonce_as_hex
+
+        return f"{token.identifier}-{padded_nonce}"
+
     def _check_if_extended_identifier_was_provided(self, token_parts: List[str]) -> None:
         # this is for the identifiers of fungible tokens
         MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT = 2
@@ -122,4 +133,5 @@ class TokenComputer:
 
     def _check_length_of_random_sequence(self, random_sequence: str) -> None:
         if len(random_sequence) != TOKEN_RANDOM_SEQUENCE_LENGTH:
-            raise InvalidTokenIdentifierError("The identifier is not valid. The random sequence does not have the right length")
+            raise InvalidTokenIdentifierError(
+                "The identifier is not valid. The random sequence does not have the right length")

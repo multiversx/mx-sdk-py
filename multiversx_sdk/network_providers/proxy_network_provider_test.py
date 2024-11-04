@@ -322,7 +322,6 @@ class TestProxy:
         transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         tx_on_network = self.proxy.simulate_transaction(transaction)
-        print("aaaaaaaaa")
         print(tx_on_network.contract_results[0].data)
 
         assert tx_on_network.status == TransactionStatus("success")

@@ -203,7 +203,7 @@ def _smart_contract_result_from_response(raw_response: dict[str, Any]) -> SmartC
 def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
     chain_id = raw_response.get("erd_chain_id", "")
     gas_per_data_byte = raw_response.get("erd_gas_per_data_byte", 0)
-    gas_price_modifier = float(raw_response.get("erd_gas_price_modifier", 0.01))
+    gas_price_modifier = float(raw_response.get("erd_gas_price_modifier", 0))
     min_gas_limit = raw_response.get("erd_min_gas_limit", 0)
     min_gas_price = raw_response.get("erd_min_gas_price", 0)
     extra_gas_limit_guarded_tx = raw_response.get("erd_extra_gas_limit_guarded_tx", 0)
@@ -248,7 +248,7 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
     shard = raw_response.get("shard", 0)
     nonce = raw_response.get("nonce", 0)
     hash = raw_response.get("hash", "")
-    previous_hash = raw_response.get("prevBlockHash", "")
+    previous_hash = raw_response.get("prevBlockHash", "") or raw_response.get("prevHash", "")
     timestamp = raw_response.get("timestamp", 0)
     round = raw_response.get("round", 0)
     epoch = raw_response.get("epoch", 0)
@@ -265,7 +265,7 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
     )
 
 
-def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
+def account_from_proxy_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
     account: dict[str, Any] = raw_response.get("account", {})
     block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
@@ -283,6 +283,11 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
 
     code_metadata = account.get("codeMetadata", None)
 
+    is_upgradeable = False
+    is_readable = False
+    is_payable = False
+    is_payable_by_sc = False
+
     if code_metadata is not None:
         code_metadata = base64.b64decode(code_metadata)
         metadata = CodeMetadata.new_from_bytes(code_metadata)
@@ -291,11 +296,6 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
         is_readable = metadata.readable
         is_payable = metadata.payable
         is_payable_by_sc = metadata.payable_by_contract
-    else:
-        is_upgradeable = account.get("isUpgradeable", False)
-        is_readable = account.get("isReadable", False)
-        is_payable = account.get("isPayable", False)
-        is_payable_by_sc = account.get("isPayableBySmartContract", False)
 
     return AccountOnNetwork(
         raw=raw_response,
@@ -313,6 +313,42 @@ def account_from_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
         is_contract_payable=is_payable,
         is_contract_payable_by_contract=is_payable_by_sc,
         block_coordinates=block_coordinates
+    )
+
+
+def account_from_api_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
+    address = raw_response.get("address", "")
+    owner_address = raw_response.get("ownerAddress", "")
+    nonce = raw_response.get("nonce", 0)
+    balance = int(raw_response.get("balance", 0))
+    developer_reward = int(raw_response.get("developerReward", 0))
+    code = bytes.fromhex(raw_response.get("code", ""))
+    username = raw_response.get("username", "")
+
+    code_hash = raw_response.get("codeHash", "")
+    code_hash = base64.b64decode(code_hash) if code_hash else b""
+    is_guarded = raw_response.get("isGuarded", False)
+
+    is_upgradeable = bool(raw_response.get("isUpgradeable", False))
+    is_readable = bool(raw_response.get("isReadable", False))
+    is_payable = bool(raw_response.get("isPayable", False))
+    is_payable_by_sc = bool(raw_response.get("isPayableBySmartContract", False))
+
+    return AccountOnNetwork(
+        raw=raw_response,
+        address=address,
+        nonce=nonce,
+        balance=balance,
+        is_guarded=is_guarded,
+        username=username,
+        contract_code_hash=code_hash,
+        contract_code=code,
+        contract_developer_reward=developer_reward,
+        contract_owner_address=owner_address,
+        is_contract_upgradable=is_upgradeable,
+        is_contract_readable=is_readable,
+        is_contract_payable=is_payable,
+        is_contract_payable_by_contract=is_payable_by_sc,
     )
 
 
@@ -371,7 +407,7 @@ def transactions_from_send_multiple_response(raw_response: dict[str, Any],
     return (num_sent, hashes)
 
 
-def token_amount_on_network_from_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
+def token_amount_on_network_from_proxy_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
     token_data: dict[str, Any] = raw_response.get("tokenData", {})
     block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
@@ -388,7 +424,21 @@ def token_amount_on_network_from_response(raw_response: dict[str, Any]) -> Token
     )
 
 
-def token_amounts_from_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
+def token_amount_from_api_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
+    identifier = raw_response.get("identifier", "")
+    nonce = raw_response.get("nonce", 0)
+
+    # nfts don't have the balance field, thus in case it's nft we set the balance to 1
+    amount = int(raw_response.get("balance", 1))
+
+    return TokenAmountOnNetwork(
+        raw=raw_response,
+        token=Token(identifier, nonce),
+        amount=amount
+    )
+
+
+def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
     tokens = raw_response.get("esdts", {})
     block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
@@ -434,6 +484,23 @@ def definition_of_fungible_token_from_query_response(
     )
 
 
+def definition_of_fungible_token_from_api_response(raw_response: dict[str, Any]) -> FungibleTokenMetadata:
+    name = raw_response.get("name", "")
+    ticker = raw_response.get("ticker", "")
+    owner = raw_response.get("owner", "")
+    identifier = raw_response.get("identifier", "")
+    decimals = raw_response.get("decimals", 0)
+
+    return FungibleTokenMetadata(
+        raw=raw_response,
+        identifier=identifier,
+        name=name,
+        ticker=ticker,
+        owner=owner,
+        decimals=decimals
+    )
+
+
 def definition_of_tokens_collection_from_query_response(
         raw_response: list[bytes],
         identifier: str,
@@ -455,6 +522,25 @@ def definition_of_tokens_collection_from_query_response(
         name=name,
         ticker=ticker,
         owner=owner.to_bech32(),
+        decimals=decimals
+    )
+
+
+def definition_of_tokens_collection_from_api_response(raw_response: dict[str, Any]) -> TokensCollectionMetadata:
+    collection = raw_response.get("collection", "")
+    type = raw_response.get("type", "")
+    name = raw_response.get("name", "")
+    ticker = raw_response.get("ticker", "")
+    owner = raw_response.get("owner", "")
+    decimals = raw_response.get("decimals", 0)
+
+    return TokensCollectionMetadata(
+        collection=collection,
+        type=type,
+        raw=raw_response,
+        name=name,
+        ticker=ticker,
+        owner=owner,
         decimals=decimals
     )
 
