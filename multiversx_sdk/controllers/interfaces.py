@@ -20,7 +20,7 @@ class INetworkProvider(Protocol):
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         ...
 
-    def await_transaction_completed(self, tx_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+    def await_transaction_completed(self, transaction_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
         ...
 
 
