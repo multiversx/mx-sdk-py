@@ -27,7 +27,8 @@ class TestTokenComputer:
         extended_fungible_identifier = "FNG-123456"
 
         assert self.token_computer.extract_identifier_from_extended_identifier(extended_nft_identifier) == "TEST-123456"
-        assert self.token_computer.extract_identifier_from_extended_identifier(extended_fungible_identifier) == "FNG-123456"
+        assert self.token_computer.extract_identifier_from_extended_identifier(
+            extended_fungible_identifier) == "FNG-123456"
 
     def test_extract_ticker_from_identifier(self):
         fungible_identifier = "FNG-123456"
@@ -86,6 +87,19 @@ class TestTokenComputer:
 
         assert fungible_identifier == "FNG-123456"
         assert nft_identifier == "NFT-987654-0a"
+
+    def test_compute_extended_identifier_from_token(self):
+        token = Token("NFT-123456", 7)
+        identifier = self.token_computer.compute_extended_identifier(token)
+        assert identifier == "NFT-123456-07"
+
+        token = Token("NFT-123456", 17)
+        identifier = self.token_computer.compute_extended_identifier(token)
+        assert identifier == "NFT-123456-11"
+
+        token = Token("NFT-123456", 777)
+        identifier = self.token_computer.compute_extended_identifier(token)
+        assert identifier == "NFT-123456-0309"
 
 
 def test_token_transfer_from_native_amount():

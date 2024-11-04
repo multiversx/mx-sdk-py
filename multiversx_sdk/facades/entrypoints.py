@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Protocol, Sequence, Tuple, Union
+from typing import Any, List, Optional, Protocol, Tuple, Union
 
 from multiversx_sdk.controllers.account_controller import AccountController
 from multiversx_sdk.controllers.delegation_controller import \
@@ -88,22 +88,22 @@ class NetworkEntrypoint:
     def recall_account_nonce(self, address: Address) -> int:
         return self.network_provider.get_account(address).nonce
 
-    def send_transactions(self, transactions: Sequence[Transaction]) -> Tuple[int, Dict[str, str]]:
+    def send_transactions(self, transactions: list[Transaction]) -> Tuple[int, list[bytes]]:
         """
         Sends multiple transactions.
 
         Args:
-            transactions (Sequence[Transaction]): An iterable containing multiple transactions (e.g. a list of transactions).
+            transactions (list[Transaction]): An iterable containing multiple transactions (e.g. a list of transactions).
 
         Returns:
-            Tuple (int, Dict[str, str]): The integer indicates the total number of transactions sent, while the dictionary maps the transaction's index in the list to its corresponding hash.
+            Tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
         """
         return self.network_provider.send_transactions(transactions)
 
-    def send_transaction(self, transaction: Transaction) -> str:
+    def send_transaction(self, transaction: Transaction) -> bytes:
         return self.network_provider.send_transaction(transaction)
 
-    def await_completed_transaction(self, tx_hash: str) -> TransactionOnNetwork:
+    def await_completed_transaction(self, tx_hash: Union[str, bytes]) -> TransactionOnNetwork:
         return self.network_provider.await_transaction_completed(tx_hash)
 
     def create_network_provider(self) -> Union[ApiNetworkProvider, ProxyNetworkProvider]:

@@ -35,7 +35,7 @@ class TransactionOnNetwork:
         self.gas_price: int = 0
         self.data: str = ""
         self.signature: str = ""
-        self.status: TransactionStatus = TransactionStatus()
+        self.status: TransactionStatus = TransactionStatus("")
         self.timestamp: int = 0
         self.function: str = ""
 

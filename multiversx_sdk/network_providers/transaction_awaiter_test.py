@@ -14,14 +14,6 @@ from multiversx_sdk.testutils.mock_network_provider import (
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
-class ProxyWrapper:
-    def __init__(self, proxy: ProxyNetworkProvider) -> None:
-        self.proxy = proxy
-
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
-        return self.proxy.get_transaction(tx_hash, True)
-
-
 class TestTransactionAwaiter:
     provider = MockNetworkProvider()
     watcher = TransactionAwaiter(
@@ -43,15 +35,14 @@ class TestTransactionAwaiter:
         )
         tx_from_network = self.watcher.await_completed(tx_hash)
 
-        assert tx_from_network.status.is_executed()
+        assert tx_from_network.status.is_completed
 
     @pytest.mark.networkInteraction
     @pytest.mark.skip
     def test_on_network(self):
         alice = load_wallets()["alice"]
         proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-        proxy_wrapper = ProxyWrapper(proxy)
-        watcher = TransactionAwaiter(proxy_wrapper)
+        watcher = TransactionAwaiter(proxy)
         tx_computer = TransactionComputer()
 
         transaction = Transaction(
@@ -65,7 +56,7 @@ class TestTransactionAwaiter:
 
         hash = proxy.send_transaction(transaction)
         tx_on_network = watcher.await_completed(hash)
-        assert tx_on_network.status.is_executed()
+        assert tx_on_network.status.is_completed
 
     def test_await_on_condition(self):
         tx_hash = "abbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba"
@@ -75,11 +66,17 @@ class TestTransactionAwaiter:
 
         self.provider.mock_transaction_timeline_by_hash(
             tx_hash,
-            [TimelinePointWait(40), TransactionStatus("pending"), TimelinePointWait(40), TransactionStatus("pending"), TimelinePointWait(40), TransactionStatus("failed")]
-        )
+            [
+                TimelinePointWait(40),
+                TransactionStatus("pending"),
+                TimelinePointWait(40),
+                TransactionStatus("pending"),
+                TimelinePointWait(40),
+                TransactionStatus("failed")
+            ])
 
         def condition(tx: TransactionOnNetwork) -> bool:
-            return tx.status.is_failed()
+            return tx.status.status == "failed"
 
         tx_from_network = self.watcher.await_on_condition(tx_hash, condition)
-        assert tx_from_network.status.is_failed()
+        assert tx_from_network.status.status == "failed"

@@ -1,6 +1,6 @@
 import threading
 import time
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Union
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.interfaces import IAddress
@@ -11,7 +11,7 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionOnNetwork)
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.accounts import AccountOnNetwork
+from multiversx_sdk.network_providers.resources import AccountOnNetwork
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 
 
@@ -23,20 +23,29 @@ class MockNetworkProvider:
     def __init__(self) -> None:
         self.transactions: Dict[str, TransactionOnNetwork] = {}
 
-        alice_account = AccountOnNetwork()
-        alice_account.address = MockNetworkProvider.alice
-        alice_account.nonce = 0
-        alice_account.balance = create_account_egld_balance(1000)
+        alice_account = AccountOnNetwork(
+            raw={},
+            address=MockNetworkProvider.alice.to_bech32(),
+            nonce=0,
+            balance=create_account_egld_balance(1000),
+            is_guarded=False
+        )
 
-        bob_account = AccountOnNetwork()
-        bob_account.address = MockNetworkProvider.bob
-        bob_account.nonce = 5
-        bob_account.balance = create_account_egld_balance(500)
+        bob_account = AccountOnNetwork(
+            raw={},
+            address=MockNetworkProvider.bob.to_bech32(),
+            nonce=5,
+            balance=create_account_egld_balance(500),
+            is_guarded=False
+        )
 
-        carol_account = AccountOnNetwork()
-        carol_account.address = MockNetworkProvider.carol
-        carol_account.nonce = 42
-        carol_account.balance = create_account_egld_balance(300)
+        carol_account = AccountOnNetwork(
+            raw={},
+            address=MockNetworkProvider.carol.to_bech32(),
+            nonce=42,
+            balance=create_account_egld_balance(300),
+            is_guarded=False
+        )
 
         self.accounts: Dict[str, AccountOnNetwork] = {
             MockNetworkProvider.alice.to_bech32(): alice_account,
@@ -113,12 +122,15 @@ class MockNetworkProvider:
 
         raise Exception("Account not found")
 
-    def get_transaction(self, tx_hash: str) -> TransactionOnNetwork:
+    def get_transaction(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
+        if isinstance(transaction_hash, bytes):
+            transaction_hash = transaction_hash.hex()
+
         for responder in self.get_transaction_responders:
-            if responder.matches(tx_hash):
+            if responder.matches(transaction_hash):
                 return responder.response
 
-        transaction = self.transactions.get(tx_hash, None)
+        transaction = self.transactions.get(transaction_hash, None)
         if transaction:
             return transaction
 
