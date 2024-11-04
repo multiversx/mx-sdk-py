@@ -15,7 +15,6 @@ def extend_user_agent(user_agent_prefix: str, config: NetworkProviderConfig):
     resolved_client_name = config.client_name or UNKNOWN_CLIENT_NAME
 
     current_user_agent = headers.get("User-Agent", "")
-    new_user_agent = f"{current_user_agent} {
-        user_agent_prefix}/{resolved_client_name}" if current_user_agent else f"{user_agent_prefix}/{resolved_client_name}"
+    new_user_agent = f"{current_user_agent} {user_agent_prefix}/{resolved_client_name}" if current_user_agent else f"{user_agent_prefix}/{resolved_client_name}"
 
     headers["User-Agent"] = new_user_agent
