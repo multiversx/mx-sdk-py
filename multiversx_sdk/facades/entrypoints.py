@@ -14,7 +14,7 @@ from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.facades.account import Account
+from multiversx_sdk.core.account import Account
 from multiversx_sdk.facades.config import (DevnetEntrypointConfig,
                                            MainnetEntrypointConfig,
                                            TestnetEntrypointConfig)

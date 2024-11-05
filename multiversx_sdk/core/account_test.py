@@ -1,14 +1,18 @@
 
-from multiversx_sdk.core.account import AccountNonceHolder
+from pathlib import Path
+
+from multiversx_sdk.core.account import Account
+
+alice = Path(__file__).parent.parent / "testutils" / "testwallets" / "alice.pem"
 
 
 def test_account_nonce_holder():
-    account = AccountNonceHolder(41)
+    account = Account.new_from_pem(alice)
     account.nonce = 42
     assert account.get_nonce_then_increment() == 42
     assert account.get_nonce_then_increment() == 43
 
-    account.increment_nonce()
-    account.increment_nonce()
-    account.increment_nonce()
+    account.get_nonce_then_increment()
+    account.get_nonce_then_increment()
+    account.get_nonce_then_increment()
     assert account.nonce == 47
