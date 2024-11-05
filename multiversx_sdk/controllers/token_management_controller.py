@@ -1,8 +1,6 @@
 from typing import List, Union
 
 from multiversx_sdk.controllers.interfaces import IAccount, INetworkProvider
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionsConverter
 from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
@@ -23,7 +21,6 @@ class TokenManagementController:
         self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.network_provider = network_provider
         self.tx_computer = TransactionComputer()
-        self.tx_converter = TransactionsConverter()
         self.parser = TokenManagementTransactionsOutcomeParser()
 
     def create_transaction_for_issuing_fungible(self,

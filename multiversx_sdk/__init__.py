@@ -7,8 +7,6 @@ from multiversx_sdk.controllers.smart_contract_controller import \
 from multiversx_sdk.controllers.token_management_controller import \
     TokenManagementController
 from multiversx_sdk.controllers.transfers_controller import TransfersController
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionsConverter
 from multiversx_sdk.core.account import AccountNonceHolder
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
@@ -96,7 +94,7 @@ __all__ = [
     "AccountTransactionsFactory", "GenericError", "GenericResponse", "ApiNetworkProvider", "ProxyNetworkProvider",
     "UserSigner", "Mnemonic", "UserSecretKey", "UserPublicKey", "ValidatorSecretKey", "ValidatorPublicKey",
     "UserVerifier", "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM", "UserWallet", "UserPEM",
-    "TransactionsConverter", "DelegationTransactionsOutcomeParser", "find_events_by_identifier",
+    "DelegationTransactionsOutcomeParser", "find_events_by_identifier",
     "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
     "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse", "TransactionDecoder",
     "TransactionMetadata", "TransactionEventsParser", "NetworkProviderConfig", "Account", "DevnetEntrypoint",
