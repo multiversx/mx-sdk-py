@@ -6,23 +6,6 @@ from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.resources import AwaitingOptions
 
 
-class IAddress(Protocol):
-    def to_bech32(self) -> str:
-        ...
-
-    def to_hex(self) -> str:
-        ...
-
-
-class IAccount(Protocol):
-    @property
-    def address(self) -> IAddress:
-        ...
-
-    def sign(self, data: bytes) -> bytes:
-        ...
-
-
 class INetworkProvider(Protocol):
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         ...

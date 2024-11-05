@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, List, Optional, Sequence, Union
 
 from multiversx_sdk.controllers.interfaces import IAbi, INetworkProvider
+from multiversx_sdk.core.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
@@ -13,7 +14,6 @@ from multiversx_sdk.core.transactions_factories import (
     SmartContractTransactionsFactory, TransactionsFactoryConfig)
 from multiversx_sdk.core.transactions_outcome_parsers import (
     SmartContractDeployOutcome, SmartContractTransactionsOutcomeParser)
-from multiversx_sdk.core.account import Account
 
 
 class SmartContractController:
@@ -53,8 +53,7 @@ class SmartContractController:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 

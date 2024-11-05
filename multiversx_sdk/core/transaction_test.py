@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import \
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
@@ -12,8 +13,6 @@ from multiversx_sdk.testutils.wallets import load_wallets
 from multiversx_sdk.wallet import UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
 from multiversx_sdk.wallet.user_verifer import UserVerifier
-
-from multiversx_sdk.core.address import Address
 
 
 class NetworkConfig:
@@ -359,9 +358,6 @@ class TestTransaction:
         )
 
         tx_as_dict = transaction.to_dictionary()
-        print(transaction.__dict__)
         restored_tx = Transaction.new_from_dictionary(tx_as_dict)
-        print("------------")
-        print(restored_tx.__dict__)
 
         assert transaction == restored_tx

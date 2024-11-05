@@ -6,6 +6,7 @@ from typing import Any, Dict
 
 from Cryptodome.Hash import keccak
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (
     BECH32_ADDRESS_LENGTH, DIGEST_SIZE,
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS,
@@ -15,16 +16,13 @@ from multiversx_sdk.core.interfaces import INetworkConfig
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
 from multiversx_sdk.core.transaction import Transaction
 
-from multiversx_sdk.core.address import Address
-
 
 class TransactionComputer:
     def __init__(self) -> None:
         pass
 
     def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
-        move_balance_gas = network_config.min_gas_limit + \
-            len(transaction.data) * network_config.gas_per_data_byte
+        move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
         if move_balance_gas > transaction.gas_limit:
             raise NotEnoughGasError(transaction.gas_limit)
 

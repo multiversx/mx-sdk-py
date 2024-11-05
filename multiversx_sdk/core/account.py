@@ -23,8 +23,7 @@ class Account:
                           password: str,
                           address_index: int = 0,
                           hrp: str = DEFAULT_HRP) -> "Account":
-        secret_key = UserWallet.load_secret_key(
-            file_path, password, address_index)
+        secret_key = UserWallet.load_secret_key(file_path, password, address_index)
         signer = UserSigner(secret_key)
         return Account(signer, hrp)
 
