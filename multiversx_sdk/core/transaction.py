@@ -48,8 +48,8 @@ class Transaction:
         return {
             "nonce": self.nonce,
             "value": str(self.value),
-            "receiver": self.receiver,
-            "sender": self.sender,
+            "receiver": self.receiver.to_bech32(),
+            "sender": self.sender.to_bech32(),
             "senderUsername": self._value_to_b64_or_empty(self.sender_username),
             "receiverUsername": self._value_to_b64_or_empty(self.receiver_username),
             "gasPrice": self.gas_price,
@@ -58,7 +58,7 @@ class Transaction:
             "chainID": self.chain_id,
             "version": self.version,
             "options": self.options,
-            "guardian": self.guardian,
+            "guardian": self.guardian.to_bech32() if self.guardian else "",
             "signature": self._value_to_hex_or_empty(self.signature),
             "guardianSignature": self._value_to_hex_or_empty(self.guardian_signature)
         }
@@ -67,14 +67,18 @@ class Transaction:
     def new_from_dictionary(dictionary: dict[str, Any]) -> "Transaction":
         _ensure_mandatory_fields_for_transaction(dictionary)
 
+        guardian = dictionary.get("guardian") or None
+        if guardian:
+            guardian = Address.new_from_bech32(guardian)
+
         return Transaction(
             nonce=dictionary.get("nonce", None),
             value=int(dictionary.get("value", None)),
-            receiver=dictionary["receiver"],
+            receiver=Address.new_from_bech32(dictionary["receiver"]),
             receiver_username=_bytes_from_b64(dictionary.get("receiverUsername", "")).decode(),
-            sender=dictionary["sender"],
+            sender=Address.new_from_bech32(dictionary["sender"]),
             sender_username=_bytes_from_b64(dictionary.get("senderUsername", "")).decode(),
-            guardian=dictionary.get("guardian", None),
+            guardian=guardian,
             gas_price=dictionary.get("gasPrice", None),
             gas_limit=dictionary["gasLimit"],
             data=_bytes_from_b64(dictionary.get("data", "")),
@@ -98,7 +102,6 @@ class Transaction:
         return ""
 
     def __eq__(self, other: object) -> bool:
-        # don;t think this is properly working
         if not isinstance(other, Transaction):
             return False
 

@@ -100,8 +100,8 @@ class TransactionComputer:
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
 
-        dictionary["receiver"] = transaction.receiver
-        dictionary["sender"] = transaction.sender
+        dictionary["receiver"] = transaction.receiver.to_bech32()
+        dictionary["sender"] = transaction.sender.to_bech32()
 
         if transaction.sender_username:
             dictionary["senderUsername"] = b64encode(transaction.sender_username.encode()).decode()
@@ -128,7 +128,7 @@ class TransactionComputer:
             dictionary["options"] = transaction.options
 
         if transaction.guardian:
-            dictionary["guardian"] = transaction.guardian
+            dictionary["guardian"] = transaction.guardian.to_bech32()
 
         return dictionary
 

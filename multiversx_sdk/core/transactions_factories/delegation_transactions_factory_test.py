@@ -19,8 +19,8 @@ class TestDelegationTransactionsFactory:
             amount=1250000000000000000000
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == DELEGATION_MANAGER_SC_ADDRESS
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == DELEGATION_MANAGER_SC_ADDRESS
         assert transaction.data
         assert transaction.data.decode() == "createNewDelegationContract@010f0cf064dd59200000@0a"
         assert transaction.gas_limit == 60126500
@@ -46,8 +46,8 @@ class TestDelegationTransactionsFactory:
             signed_messages=signed_messages
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "addNodes@e7beaa95b3877f47348df4dd1cb578a4f7cabf7a20bfeefe5cdd263878ff132b765e04fef6f40c93512b666c47ed7719b8902f6c922c04247989b7137e837cc81a62e54712471c97a2ddab75aa9c2f58f813ed4c0fa722bde0ab718bff382208@81109fa1c8d3dc7b6c2d6e65206cc0bc1a83c9b2d1eb91a601d66ad32def430827d5eb52917bd2b0d04ce195738db216"
         assert transaction.value == 0
@@ -64,8 +64,8 @@ class TestDelegationTransactionsFactory:
             public_keys=public_keys
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "removeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
         assert transaction.value == 0
@@ -82,8 +82,8 @@ class TestDelegationTransactionsFactory:
             public_keys=public_keys
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "stakeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
         assert transaction.value == 0
@@ -100,8 +100,8 @@ class TestDelegationTransactionsFactory:
             public_keys=public_keys
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unBondNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
         assert transaction.value == 0
@@ -118,8 +118,8 @@ class TestDelegationTransactionsFactory:
             public_keys=public_keys
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unStakeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
         assert transaction.value == 0
@@ -137,8 +137,8 @@ class TestDelegationTransactionsFactory:
             amount=25000000000000000000  # 2.5 egld
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unJailNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
         assert transaction.value == 25000000000000000000
@@ -153,8 +153,8 @@ class TestDelegationTransactionsFactory:
             service_fee=10
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "changeServiceFee@0a"
         assert transaction.value == 0
@@ -169,8 +169,8 @@ class TestDelegationTransactionsFactory:
             delegation_cap=5000000000000000000000
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "modifyTotalDelegationCap@010f0cf064dd59200000"
         assert transaction.value == 0
@@ -184,8 +184,8 @@ class TestDelegationTransactionsFactory:
             delegation_contract=delegation_contract
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setAutomaticActivation@74727565"
         assert transaction.value == 0
@@ -199,8 +199,8 @@ class TestDelegationTransactionsFactory:
             delegation_contract=delegation_contract
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setAutomaticActivation@66616c7365"
         assert transaction.value == 0
@@ -214,8 +214,8 @@ class TestDelegationTransactionsFactory:
             delegation_contract=delegation_contract
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setCheckCapOnReDelegateRewards@74727565"
         assert transaction.value == 0
@@ -229,8 +229,8 @@ class TestDelegationTransactionsFactory:
             delegation_contract=delegation_contract
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setCheckCapOnReDelegateRewards@66616c7365"
         assert transaction.value == 0
@@ -247,8 +247,8 @@ class TestDelegationTransactionsFactory:
             identifier="identifier"
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "setMetaData@6e616d65@77656273697465@6964656e746966696572"
         assert transaction.value == 0
@@ -263,8 +263,8 @@ class TestDelegationTransactionsFactory:
             amount=1000000000000000000
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "delegate"
         assert transaction.value == 1000000000000000000
@@ -279,8 +279,8 @@ class TestDelegationTransactionsFactory:
             delegation_contract=delegation_contract
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "claimRewards"
         assert transaction.value == 0
@@ -295,8 +295,8 @@ class TestDelegationTransactionsFactory:
             delegation_contract=delegation_contract
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "reDelegateRewards"
         assert transaction.value == 0
@@ -312,8 +312,8 @@ class TestDelegationTransactionsFactory:
             amount=1000000000000000000
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "unDelegate@0de0b6b3a7640000"
         assert transaction.value == 0
@@ -328,8 +328,8 @@ class TestDelegationTransactionsFactory:
             delegation_contract=delegation_contract
         )
 
-        assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
         assert transaction.data.decode() == "withdraw"
         assert transaction.value == 0

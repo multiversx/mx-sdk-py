@@ -24,8 +24,8 @@ def test_create_transaction_for_registering_and_setting_roles():
 
     assert transaction.data
     assert transaction.data.decode() == "registerAndSetAllRoles@54455354@54455354@464e47@02"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
 
 
@@ -46,8 +46,8 @@ def test_create_transaction_for_issuing_fungible():
 
     assert transaction.data
     assert transaction.data.decode() == "issue@4652414e4b@4652414e4b@64@@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
 
 
@@ -67,8 +67,8 @@ def test_create_transaction_for_issuing_semi_fungible():
 
     assert transaction.data
     assert transaction.data.decode() == "issueSemiFungible@4652414e4b@4652414e4b@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
 
 
@@ -88,8 +88,8 @@ def test_create_transaction_for_issuing_non_fungible():
 
     assert transaction.data
     assert transaction.data.decode() == "issueNonFungible@4652414e4b@4652414e4b@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
 
 
@@ -110,8 +110,8 @@ def test_create_transaction_for_registering_meta_esdt():
 
     assert transaction.data
     assert transaction.data.decode() == "registerMetaESDT@4652414e4b@4652414e4b@0a@63616e467265657a65@74727565@63616e57697065@74727565@63616e5061757365@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565@63616e4368616e67654f776e6572@74727565@63616e55706772616465@66616c7365@63616e4164645370656369616c526f6c6573@66616c7365"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
 
 
@@ -131,8 +131,8 @@ def test_create_transaction_for_setting_special_role_on_non_fungible_token():
 
     assert transaction.data
     assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e465455706461746541747472696275746573@45534454526f6c654e4654416464555249@45534454526f6c654d6f6469667943726561746f72@45534454526f6c654e46545265637265617465"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 0
 
 
@@ -151,8 +151,8 @@ def test_create_transaction_for_unsetting_special_role_on_non_fungible_token():
 
     assert transaction.data
     assert transaction.data.decode() == "unSetSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e465455706461746541747472696275746573@45534454526f6c654e4654416464555249@45534454526f6c654d6f6469667943726561746f72@45534454526f6c654e46545265637265617465"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 0
 
 
@@ -166,8 +166,8 @@ def test_set_roles_on_nft():
 
     assert transaction.data
     assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@455344545472616e73666572526f6c65"
-    assert transaction.sender == frank.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == frank
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 0
 
     transaction = factory.create_transaction_for_setting_special_role_on_non_fungible_token(
@@ -202,8 +202,8 @@ def test_create_transaction_for_creating_nft():
 
     assert transaction.data
     assert transaction.data.decode() == "ESDTNFTCreate@4652414e4b2d616139653864@01@74657374@03e8@61626261@74657374@61@62"
-    assert transaction.sender == grace.to_bech32()
-    assert transaction.receiver == grace.to_bech32()
+    assert transaction.sender.to_bech32() == grace.to_bech32()
+    assert transaction.receiver.to_bech32() == grace.to_bech32()
     assert transaction.value == 0
 
 
@@ -221,7 +221,7 @@ def test_create_transaction_for_setting_special_role_on_fungible_token():
 
     assert transaction.data
     assert transaction.data.decode() == f"setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@{mint_role_as_hex}"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -239,7 +239,7 @@ def test_create_transaction_for_unsetting_special_role_on_fungible_token():
 
     assert transaction.data
     assert transaction.data.decode() == f"unSetSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@{mint_role_as_hex}"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -259,7 +259,7 @@ def test_set_all_roles_on_fungible_token():
 
     assert transaction.data
     assert transaction.data.decode() == f"setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@{mint_role_as_hex}@{burn_role_as_hex}@{transfer_role_as_hex}"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -276,7 +276,7 @@ def test_create_transaction_for_setting_special_role_on_semi_fungible_token():
 
     assert transaction.data
     assert transaction.data.decode() == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e46544275726e@45534454526f6c654e46544164645175616e74697479@455344545472616e73666572526f6c65"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -292,7 +292,7 @@ def test_create_transaction_for_unsetting_special_role_on_semi_fungible_token():
 
     assert transaction.data
     assert transaction.data.decode() == "unSetSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e46544275726e@45534454526f6c654e46544164645175616e74697479@455344545472616e73666572526f6c65"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -304,7 +304,7 @@ def test_create_transaction_for_pausing():
 
     assert transaction.data
     assert transaction.data.decode() == "pause@4652414e4b2d313163653365"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -316,7 +316,7 @@ def test_create_transaction_for_unpausing():
 
     assert transaction.data
     assert transaction.data.decode() == "unPause@4652414e4b2d313163653365"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -329,7 +329,7 @@ def test_create_transaction_for_freezing():
 
     assert transaction.data
     assert transaction.data.decode() == "freeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -342,7 +342,7 @@ def test_create_transaction_for_unfreezing():
 
     assert transaction.data
     assert transaction.data.decode() == "unFreeze@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -355,7 +355,7 @@ def test_create_transaction_for_local_minting():
 
     assert transaction.data
     assert transaction.data.decode() == "ESDTLocalMint@4652414e4b2d313163653365@0a"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -368,7 +368,7 @@ def test_create_transaction_for_local_burning():
 
     assert transaction.data
     assert transaction.data.decode() == "ESDTLocalBurn@4652414e4b2d313163653365@0a"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -382,7 +382,7 @@ def test_create_transaction_for_updating_attributes():
 
     assert transaction.data
     assert transaction.data.decode() == "ESDTNFTUpdateAttributes@4652414e4b2d313163653365@0a@74657374"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -396,7 +396,7 @@ def test_create_transaction_for_adding_quantity():
 
     assert transaction.data
     assert transaction.data.decode() == "ESDTNFTAddQuantity@4652414e4b2d313163653365@0a@0a"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -410,7 +410,7 @@ def test_create_transaction_for_burning_quantity():
 
     assert transaction.data
     assert transaction.data.decode() == "ESDTNFTBurn@4652414e4b2d313163653365@0a@0a"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -422,7 +422,7 @@ def test_create_transaction_for_setting_burn_role_globally():
 
     assert transaction.data
     assert transaction.data.decode() == "setBurnRoleGlobally@4652414e4b2d313163653365"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -434,7 +434,7 @@ def test_create_transaction_for_unsetting_burn_role_globally():
 
     assert transaction.data
     assert transaction.data.decode() == "unsetBurnRoleGlobally@4652414e4b2d313163653365"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -447,7 +447,7 @@ def test_create_transaction_for_wiping():
 
     assert transaction.data
     assert transaction.data.decode() == "wipe@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13"
-    assert transaction.sender == frank.to_bech32()
+    assert transaction.sender == frank
     assert transaction.value == 0
 
 
@@ -460,8 +460,8 @@ def test_create_transaction_for_modifying_royalties():
     )
 
     assert transaction.data.decode() == "ESDTModifyRoyalties@544553542d313233343536@01@04d2"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == alice.to_bech32()
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == alice.to_bech32()
     assert transaction.value == 0
     assert transaction.gas_limit == 60_125_000
 
@@ -475,8 +475,8 @@ def test_create_transaction_for_setting_new_uris():
     )
 
     assert transaction.data.decode() == "ESDTSetNewURIs@544553542d313233343536@01@6669727374555249@7365636f6e64555249"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == alice.to_bech32()
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == alice.to_bech32()
     assert transaction.value == 0
     assert transaction.gas_limit == 60_164_000
 
@@ -489,8 +489,8 @@ def test_create_transaction_for_modifying_creator():
     )
 
     assert transaction.data.decode() == "ESDTModifyCreator@544553542d313233343536@01"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == alice.to_bech32()
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == alice.to_bech32()
     assert transaction.value == 0
     assert transaction.gas_limit == 60_114_500
 
@@ -508,8 +508,8 @@ def test_create_transaction_for_updating_metadata():
     )
 
     assert transaction.data.decode() == "ESDTMetaDataUpdate@544553542d313233343536@01@54657374@04d2@61626261@74657374@6669727374555249@7365636f6e64555249"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == alice.to_bech32()
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == alice.to_bech32()
     assert transaction.value == 0
     assert transaction.gas_limit == 60_218_000
 
@@ -527,8 +527,8 @@ def test_create_transaction_for_recreating_metadata():
     )
 
     assert transaction.data.decode() == "ESDTMetaDataRecreate@544553542d313233343536@01@54657374@04d2@61626261@74657374@6669727374555249@7365636f6e64555249"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == alice.to_bech32()
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == alice.to_bech32()
     assert transaction.value == 0
     assert transaction.gas_limit == 60_221_000
 
@@ -540,8 +540,8 @@ def test_create_transaction_for_changing_to_dynamic():
     )
 
     assert transaction.data.decode() == "changeToDynamic@544553542d313233343536"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 0
     assert transaction.gas_limit == 60_107_000
 
@@ -553,8 +553,8 @@ def test_create_transaction_for_updating_token_id():
     )
 
     assert transaction.data.decode() == "updateTokenID@544553542d313233343536"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 0
     assert transaction.gas_limit == 60_104_000
 
@@ -568,8 +568,8 @@ def test_create_transaction_for_registering_dynamic():
     )
 
     assert transaction.data.decode() == "registerDynamic@54657374@544553542d313233343536@534654"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_131_000
 
@@ -583,8 +583,8 @@ def test_create_transaction_for_registering_and_setting_all_roles():
     )
 
     assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d313233343536@534654"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_152_000
 
@@ -617,8 +617,8 @@ def test_register_dynamic_meta():
     )
 
     assert transaction.data.decode() == "registerDynamic@54657374@544553542d393837363534@4d455441@12"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_138_500
 
@@ -633,7 +633,7 @@ def test_register_dynamic_and_set_all_roles_meta():
     )
 
     assert transaction.data.decode() == "registerAndSetAllRolesDynamic@54657374@544553542d393837363534@4d455441@12"
-    assert transaction.sender == alice.to_bech32()
-    assert transaction.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_159_500
