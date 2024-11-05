@@ -5,8 +5,6 @@ from typing import Any, Callable, Optional, Union
 
 import requests
 
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionsConverter
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (DEFAULT_HRP, ESDT_CONTRACT_ADDRESS,
                                            METACHAIN_ID)
@@ -126,23 +124,20 @@ class ProxyNetworkProvider(INetworkProvider):
 
     def send_transaction(self, transaction: Transaction) -> bytes:
         """Broadcasts a transaction and returns its hash."""
-        transactions_converter = TransactionsConverter()
         response = self.do_post_generic(
-            'transaction/send', transactions_converter.transaction_to_dictionary(transaction))
+            'transaction/send', transaction.to_dictionary())
         return bytes.fromhex(response.get('txHash', ''))
 
     def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork:
         """Simulates a transaction."""
-        transactions_converter = TransactionsConverter()
         response = self.do_post_generic(
-            'transaction/simulate', transactions_converter.transaction_to_dictionary(transaction))
+            'transaction/simulate', transaction.to_dictionary())
         return transaction_from_simulate_response(response.to_dictionary().get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""
-        transactions_converter = TransactionsConverter()
         response = self.do_post_generic(
-            'transaction/cost', transactions_converter.transaction_to_dictionary(transaction))
+            'transaction/cost', transaction.to_dictionary())
         return transaction_cost_estimation_from_response(response.to_dictionary())
 
     def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
@@ -151,9 +146,7 @@ class ProxyNetworkProvider(INetworkProvider):
         In the returned list, the order of transaction hashes corresponds to the order of transactions in the input list.
         If a transaction is not accepted, its hash is empty in the returned list.
         """
-        transactions_converter = TransactionsConverter()
-        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(
-            transaction) for transaction in transactions]
+        transactions_as_dictionaries = [transaction.to_dictionary() for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         return transactions_from_send_multiple_response(response.to_dictionary(), len(transactions))
 

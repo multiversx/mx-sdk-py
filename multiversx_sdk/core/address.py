@@ -9,10 +9,6 @@ from multiversx_sdk.core.errors import ErrBadAddress, ErrBadPubkeyLength
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 PUBKEY_LENGTH = 32
 
-# can be deleted
-PUBKEY_STRING_LENGTH = PUBKEY_LENGTH * 2  # hex-encoded
-BECH32_LENGTH = 62
-
 logger = logging.getLogger("address")
 
 
@@ -98,6 +94,15 @@ class Address:
 
     def __bytes__(self) -> bytes:
         return self.get_public_key()
+
+    def __str__(self) -> str:
+        return self.to_bech32()
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Address):
+            return False
+
+        return self.pubkey == other.pubkey and self.hrp == other.hrp
 
 
 class AddressFactory:
