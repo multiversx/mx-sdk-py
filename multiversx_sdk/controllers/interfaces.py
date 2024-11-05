@@ -1,10 +1,17 @@
 from typing import Any, List, Optional, Protocol, Union
 
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.resources import AwaitingOptions
+
+
+class IAddress(Protocol):
+    def to_bech32(self) -> str:
+        ...
+
+    def to_hex(self) -> str:
+        ...
 
 
 class IAccount(Protocol):

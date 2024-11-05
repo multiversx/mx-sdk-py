@@ -21,8 +21,8 @@ class TestRelayedTransactionsFactory:
         alice = self.wallets["alice"]
 
         inner_transaction = Transaction(
-            sender=alice.label,
-            receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
             gas_limit=10000000,
             data="getContractConfig".encode(),
             chain_id=self.config.chain_id
@@ -48,8 +48,8 @@ class TestRelayedTransactionsFactory:
         bob = self.wallets["bob"]
 
         inner_transaction = Transaction(
-            sender=bob.label,
-            receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
             gas_limit=60000000,
             chain_id=self.config.chain_id,
             data=b"getContractConfig",
@@ -77,8 +77,8 @@ class TestRelayedTransactionsFactory:
         frank = self.wallets["frank"]
 
         inner_transaction = Transaction(
-            sender=carol.label,
-            receiver=alice.label,
+            sender=Address.new_from_bech32(carol.label),
+            receiver=Address.new_from_bech32(alice.label),
             gas_limit=50000,
             chain_id=self.config.chain_id,
             nonce=208,
@@ -108,15 +108,15 @@ class TestRelayedTransactionsFactory:
         grace = self.wallets["grace"]
 
         inner_transaction = Transaction(
-            sender=bob.label,
-            receiver="erd1qqqqqqqqqqqqqpgq54tsxmej537z9leghvp69hfu4f8gg5eu396q83gnnz",
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq54tsxmej537z9leghvp69hfu4f8gg5eu396q83gnnz"),
             gas_limit=60000000,
             chain_id=self.config.chain_id,
             data=b"getContractConfig",
             nonce=198,
             version=2,
             options=2,
-            guardian=grace.label
+            guardian=Address.new_from_bech32(grace.label)
         )
 
         inner_tx_bytes = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
@@ -142,15 +142,15 @@ class TestRelayedTransactionsFactory:
         frank = self.wallets["frank"]
 
         inner_transaction = Transaction(
-            sender=bob.label,
-            receiver="erd1qqqqqqqqqqqqqpgq54tsxmej537z9leghvp69hfu4f8gg5eu396q83gnnz",
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq54tsxmej537z9leghvp69hfu4f8gg5eu396q83gnnz"),
             gas_limit=60000000,
             chain_id=self.config.chain_id,
             data=b"addNumber",
             nonce=198,
             version=2,
             options=2,
-            guardian=grace.label
+            guardian=Address.new_from_bech32(grace.label)
         )
 
         inner_tx_bytes = self.transaction_computer.compute_bytes_for_signing(inner_transaction)
@@ -163,7 +163,7 @@ class TestRelayedTransactionsFactory:
         )
         relayed_transaction.options = 2
         relayed_transaction.nonce = 2627
-        relayed_transaction.guardian = frank.label
+        relayed_transaction.guardian = Address.new_from_bech32(frank.label)
 
         relayed_tx_bytes = self.transaction_computer.compute_bytes_for_signing(relayed_transaction)
         relayed_transaction.signature = alice.secret_key.sign(relayed_tx_bytes)
@@ -178,8 +178,8 @@ class TestRelayedTransactionsFactory:
         carol = self.wallets["carol"]
 
         inner_transaction = Transaction(
-            sender=alice.label,
-            receiver=bob.label,
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id=self.config.chain_id
         )
@@ -204,8 +204,8 @@ class TestRelayedTransactionsFactory:
         bob = self.wallets["bob"]
 
         inner_transaction = Transaction(
-            sender=bob.label,
-            receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
             gas_limit=0,
             chain_id=self.config.chain_id,
             data=b"getContractConfig",

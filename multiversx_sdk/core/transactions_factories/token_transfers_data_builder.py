@@ -1,8 +1,9 @@
 from typing import List, Protocol
 
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.serializer import arg_to_string, args_to_strings
 from multiversx_sdk.core.tokens import TokenTransfer
+
+from multiversx_sdk.core.address import Address
 
 
 class ITokenComputer(Protocol):
@@ -20,7 +21,7 @@ class TokenTransfersDataBuilder:
 
         return args
 
-    def build_args_for_single_esdt_nft_transfer(self, transfer: TokenTransfer, receiver: IAddress) -> List[str]:
+    def build_args_for_single_esdt_nft_transfer(self, transfer: TokenTransfer, receiver: Address) -> List[str]:
         args = ["ESDTNFTTransfer"]
         token = transfer.token
         identifier = self.token_computer.extract_identifier_from_extended_identifier(token.identifier)
@@ -29,7 +30,7 @@ class TokenTransfersDataBuilder:
 
         return args
 
-    def build_args_for_multi_esdt_nft_transfer(self, receiver: IAddress, transfers: List[TokenTransfer]) -> List[str]:
+    def build_args_for_multi_esdt_nft_transfer(self, receiver: Address, transfers: List[TokenTransfer]) -> List[str]:
         args = ["MultiESDTNFTTransfer", receiver.to_hex(), arg_to_string(len(transfers))]
 
         for transfer in transfers:

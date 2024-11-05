@@ -100,8 +100,8 @@ class TestApi:
 
     def test_send_transaction(self):
         transaction = Transaction(
-            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            sender=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
+            receiver=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
             gas_limit=50000,
             chain_id="D",
             value=5000000000000000000,
@@ -120,8 +120,8 @@ class TestApi:
 
     def test_send_transaction_with_data(self):
         transaction = Transaction(
-            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            sender=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
+            receiver=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
             gas_limit=70000,
             chain_id="D",
             nonce=105,
@@ -137,8 +137,8 @@ class TestApi:
 
     def test_send_transactions(self):
         first_tx = Transaction(
-            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            sender=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
+            receiver=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
             gas_limit=50000,
             chain_id="D",
             nonce=103,
@@ -150,16 +150,16 @@ class TestApi:
         )
 
         invalid_tx = Transaction(
-            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            sender=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
+            receiver=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
             gas_limit=50000,
             chain_id="D",
             nonce=77
         )
 
         last_tx = Transaction(
-            sender="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
-            receiver="erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            sender=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
+            receiver=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
             gas_limit=50000,
             chain_id="D",
             nonce=104,
@@ -187,8 +187,8 @@ class TestApi:
         tx_computer = TransactionComputer()
 
         transaction = Transaction(
-            sender=bob.label,
-            receiver=bob.label,
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id="D",
         )
@@ -202,8 +202,8 @@ class TestApi:
         assert tx_on_network.status == TransactionStatus("success")
 
         transaction = Transaction(
-            sender=bob.label,
-            receiver="erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen",
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"),
             gas_limit=10000000,
             chain_id="D",
             data=b"add@07"
@@ -225,8 +225,8 @@ class TestApi:
         tx_computer = TransactionComputer()
 
         transaction = Transaction(
-            sender=bob.label,
-            receiver=bob.label,
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id="D",
             data="test transaction".encode()
@@ -280,8 +280,8 @@ class TestApi:
         tx_computer = TransactionComputer()
 
         transaction = Transaction(
-            sender=bob.label,
-            receiver=bob.label,
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id="D",
         )
@@ -296,8 +296,8 @@ class TestApi:
         assert tx_on_network.status.is_completed
 
         transaction = Transaction(
-            sender=bob.label,
-            receiver="erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094",
+            sender=Address.new_from_bech32(bob.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094"),
             gas_limit=5000000,
             chain_id="D",
             data="dummy@05".encode()
@@ -317,8 +317,8 @@ class TestApi:
         tx_computer = TransactionComputer()
 
         transaction = Transaction(
-            sender=alice.label,
-            receiver=alice.label,
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32(alice.label),
             gas_limit=50000,
             chain_id="D",
         )
@@ -334,8 +334,8 @@ class TestApi:
         assert tx_on_network.status.is_completed
 
         transaction = Transaction(
-            sender=alice.label,
-            receiver="erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094",
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094"),
             gas_limit=5000000,
             chain_id="D",
             data="dummy@05".encode()

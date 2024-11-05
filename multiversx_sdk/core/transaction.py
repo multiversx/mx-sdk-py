@@ -1,5 +1,6 @@
 from typing import Optional
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
@@ -7,8 +8,8 @@ from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
 
 class Transaction:
     def __init__(self,
-                 sender: str,
-                 receiver: str,
+                 sender: Address,
+                 receiver: Address,
                  gas_limit: int,
                  chain_id: str,
                  nonce: Optional[int] = None,
@@ -19,7 +20,7 @@ class Transaction:
                  data: Optional[bytes] = None,
                  version: Optional[int] = None,
                  options: Optional[int] = None,
-                 guardian: Optional[str] = None,
+                 guardian: Optional[Address] = None,
                  signature: Optional[bytes] = None,
                  guardian_signature: Optional[bytes] = None) -> None:
         self.chain_id = chain_id
@@ -39,10 +40,11 @@ class Transaction:
         self.version = version or TRANSACTION_VERSION_DEFAULT
         self.options = options or TRANSACTION_OPTIONS_DEFAULT
 
-        self.guardian = guardian or ""
+        self.guardian = guardian
         self.guardian_signature = guardian_signature or bytes()
 
     def __eq__(self, other: object) -> bool:
+        # don;t think this is properly working
         if not isinstance(other, Transaction):
             return False
 

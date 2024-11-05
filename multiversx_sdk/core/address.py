@@ -1,5 +1,4 @@
 import logging
-from typing import Protocol, Tuple
 
 from Cryptodome.Hash import keccak
 
@@ -9,18 +8,12 @@ from multiversx_sdk.core.errors import ErrBadAddress, ErrBadPubkeyLength
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 PUBKEY_LENGTH = 32
+
+# can be deleted
 PUBKEY_STRING_LENGTH = PUBKEY_LENGTH * 2  # hex-encoded
 BECH32_LENGTH = 62
 
 logger = logging.getLogger("address")
-
-
-class IAddress(Protocol):
-    def get_public_key(self) -> bytes:
-        ...
-
-    def get_hrp(self) -> str:
-        ...
 
 
 class Address:
@@ -144,11 +137,11 @@ class AddressComputer:
             number_of_shards (int): The number of shards in the network (default: 3)."""
         self.number_of_shards = number_of_shards
 
-    def compute_contract_address(self, deployer: IAddress, deployment_nonce: int) -> Address:
+    def compute_contract_address(self, deployer: Address, deployment_nonce: int) -> Address:
         """Computes the contract address based on the deployer's address and deployment nonce.
 
         Args:
-            deployer (IAddress): The address of the deployer\n
+            deployer (Address): The address of the deployer\n
             deployment_nonce (int): The nonce of the deployment
 
         Returns:
@@ -162,11 +155,11 @@ class AddressComputer:
         contract_pubkey = bytes([0] * 8) + bytes([5, 0]) + contract_pubkey[10:30] + deployer_pubkey[30:]
         return Address(contract_pubkey, deployer.get_hrp())
 
-    def get_shard_of_address(self, address: IAddress) -> int:
+    def get_shard_of_address(self, address: Address) -> int:
         """Returns the shard number of a given address.
 
         Args:
-            address (IAddress): The address for which to determine the shard.
+            address (Address): The address for which to determine the shard.
 
         Returns:
             int: The shard number."""
@@ -178,7 +171,7 @@ def is_valid_bech32(value: str, expected_hrp: str) -> bool:
     return hrp == expected_hrp and value_bytes is not None
 
 
-def _decode_bech32(value: str) -> Tuple[str, bytes]:
+def _decode_bech32(value: str) -> tuple[str, bytes]:
     hrp, value_bytes = bech32.bech32_decode(value)
     if hrp is None or value_bytes is None:
         raise ErrBadAddress(value)
@@ -207,7 +200,8 @@ def get_shard_of_pubkey(pubkey: bytes, number_of_shards: int) -> int:
 
 
 def _is_pubkey_of_metachain(pubkey: bytes) -> bool:
-    metachain_prefix = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    metachain_prefix = bytearray(
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     pubkey_prefix = pubkey[0:len(metachain_prefix)]
     if pubkey_prefix == bytes(metachain_prefix):
         return True

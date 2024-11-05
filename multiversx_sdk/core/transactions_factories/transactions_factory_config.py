@@ -1,6 +1,5 @@
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import DEFAULT_HRP
-from multiversx_sdk.core.interfaces import IAddress
 
 
 class TransactionsFactoryConfig:
@@ -34,7 +33,7 @@ class TransactionsFactoryConfig:
         self.gas_limit_update_token_id = 60_000_000
         self.gas_limit_register_dynamic = 60_000_000
         self.issue_cost = 50_000_000_000_000_000
-        self.esdt_contract_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
+        self.esdt_contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
 
         # Configuration for delegation operations
         self.gas_limit_stake = 5_000_000

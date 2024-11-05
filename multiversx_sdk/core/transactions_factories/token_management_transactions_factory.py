@@ -3,11 +3,12 @@ from enum import Enum
 from typing import Optional, Protocol
 
 from multiversx_sdk.core.errors import BadUsageError
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.transaction_builder import \
     TransactionBuilder
+
+from multiversx_sdk.core.address import Address
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ class IConfig(Protocol):
     gas_limit_update_token_id: int
     gas_limit_register_dynamic: int
     issue_cost: int
-    esdt_contract_address: IAddress
+    esdt_contract_address: Address
 
 
 class TokenType(Enum):
@@ -56,7 +57,7 @@ class TokenManagementTransactionsFactory:
 
     def create_transaction_for_issuing_fungible(
         self,
-        sender: IAddress,
+        sender: Address,
         token_name: str,
         token_ticker: str,
         initial_supply: int,
@@ -104,7 +105,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_issuing_semi_fungible(
         self,
-        sender: IAddress,
+        sender: Address,
         token_name: str,
         token_ticker: str,
         can_freeze: bool,
@@ -142,7 +143,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_issuing_non_fungible(
         self,
-        sender: IAddress,
+        sender: Address,
         token_name: str,
         token_ticker: str,
         can_freeze: bool,
@@ -180,7 +181,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_registering_meta_esdt(
         self,
-        sender: IAddress,
+        sender: Address,
         token_name: str,
         token_ticker: str,
         num_decimals: int,
@@ -220,7 +221,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_registering_and_setting_roles(
         self,
-        sender: IAddress,
+        sender: Address,
         token_name: str,
         token_ticker: str,
         token_type: TokenType,
@@ -248,7 +249,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_setting_burn_role_globally(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str
     ) -> Transaction:
         parts: list[str] = [
@@ -268,7 +269,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_unsetting_burn_role_globally(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str
     ) -> Transaction:
         parts: list[str] = [
@@ -288,8 +289,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_setting_special_role_on_fungible_token(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str,
         add_role_local_mint: bool,
         add_role_local_burn: bool,
@@ -316,8 +317,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_unsetting_special_role_on_fungible_token(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str,
         remove_role_local_mint: bool,
         remove_role_local_burn: bool,
@@ -344,8 +345,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_setting_special_role_on_semi_fungible_token(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str,
         add_role_nft_create: bool = False,
         add_role_nft_burn: bool = False,
@@ -384,8 +385,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_unsetting_special_role_on_semi_fungible_token(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str,
         remove_role_nft_burn: bool = False,
         remove_role_nft_add_quantity: bool = False,
@@ -422,8 +423,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_setting_special_role_on_non_fungible_token(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str,
         add_role_nft_create: bool = False,
         add_role_nft_burn: bool = False,
@@ -464,8 +465,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_unsetting_special_role_on_non_fungible_token(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str,
         remove_role_nft_burn: bool = False,
         remove_role_nft_update_attributes: bool = False,
@@ -504,7 +505,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_creating_nft(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str,
         initial_quantity: int,
         name: str,
@@ -543,7 +544,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_pausing(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str
     ) -> Transaction:
         parts: list[str] = [
@@ -563,7 +564,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_unpausing(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str
     ) -> Transaction:
         parts: list[str] = [
@@ -583,8 +584,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_freezing(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str
     ) -> Transaction:
         parts: list[str] = [
@@ -605,8 +606,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_unfreezing(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str
     ) -> Transaction:
         parts: list[str] = [
@@ -627,8 +628,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_wiping(
         self,
-        sender: IAddress,
-        user: IAddress,
+        sender: Address,
+        user: Address,
         token_identifier: str
     ) -> Transaction:
         parts: list[str] = [
@@ -649,7 +650,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_local_minting(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str,
         supply_to_mint: int
     ) -> Transaction:
@@ -671,7 +672,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_local_burning(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str,
         supply_to_burn: int
     ) -> Transaction:
@@ -693,7 +694,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_updating_attributes(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str,
         token_nonce: int,
         attributes: bytes
@@ -717,7 +718,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_adding_quantity(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str,
         token_nonce: int,
         quantity_to_add: int
@@ -741,7 +742,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
     def create_transaction_for_burning_quantity(
         self,
-        sender: IAddress,
+        sender: Address,
         token_identifier: str,
         token_nonce: int,
         quantity_to_burn: int
@@ -764,7 +765,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_modifying_royalties(self,
-                                                   sender: IAddress,
+                                                   sender: Address,
                                                    token_identifier: str,
                                                    token_nonce: int,
                                                    new_royalties: int) -> Transaction:
@@ -786,7 +787,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_setting_new_uris(self,
-                                                sender: IAddress,
+                                                sender: Address,
                                                 token_identifier: str,
                                                 token_nonce: int,
                                                 new_uris: list[str]) -> Transaction:
@@ -811,7 +812,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_modifying_creator(self,
-                                                 sender: IAddress,
+                                                 sender: Address,
                                                  token_identifier: str,
                                                  token_nonce: int) -> Transaction:
         parts: list[str] = [
@@ -831,7 +832,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_updating_metadata(self,
-                                                 sender: IAddress,
+                                                 sender: Address,
                                                  token_identifier: str,
                                                  token_nonce: int,
                                                  new_token_name: str,
@@ -861,7 +862,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_nft_metadata_recreate(self,
-                                                     sender: IAddress,
+                                                     sender: Address,
                                                      token_identifier: str,
                                                      token_nonce: int,
                                                      new_token_name: str,
@@ -891,7 +892,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_changing_token_to_dynamic(self,
-                                                         sender: IAddress,
+                                                         sender: Address,
                                                          token_identifier: str) -> Transaction:
         """The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2"""
         parts: list[str] = [
@@ -910,7 +911,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_updating_token_id(self,
-                                                 sender: IAddress,
+                                                 sender: Address,
                                                  token_identifier: str) -> Transaction:
         parts: list[str] = [
             "updateTokenID",
@@ -928,7 +929,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_registering_dynamic_token(self,
-                                                         sender: IAddress,
+                                                         sender: Address,
                                                          token_name: str,
                                                          token_ticker: str,
                                                          token_type: TokenType,
@@ -957,7 +958,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         ).build()
 
     def create_transaction_for_registering_dynamic_and_setting_roles(self,
-                                                                     sender: IAddress,
+                                                                     sender: Address,
                                                                      token_name: str,
                                                                      token_ticker: str,
                                                                      token_type: TokenType,

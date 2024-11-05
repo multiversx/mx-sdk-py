@@ -1,9 +1,10 @@
 from typing import Dict, List, Protocol
 
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.transaction_builder import \
     TransactionBuilder
+
+from multiversx_sdk.core.address import Address
 
 
 class IConfig(Protocol):
@@ -24,7 +25,7 @@ class AccountTransactionsFactory:
 
     def create_transaction_for_saving_key_value(
         self,
-        sender: IAddress,
+        sender: Address,
         key_value_pairs: Dict[bytes, bytes]
     ) -> Transaction:
         function = "SaveKeyValue"
@@ -45,8 +46,8 @@ class AccountTransactionsFactory:
 
     def create_transaction_for_setting_guardian(
             self,
-            sender: IAddress,
-            guardian_address: IAddress,
+            sender: Address,
+            guardian_address: Address,
             service_id: str
     ) -> Transaction:
         data_parts = [
@@ -64,7 +65,7 @@ class AccountTransactionsFactory:
             add_data_movement_gas=True
         ).build()
 
-    def create_transaction_for_guarding_account(self, sender: IAddress) -> Transaction:
+    def create_transaction_for_guarding_account(self, sender: Address) -> Transaction:
         data_parts = ["GuardAccount"]
 
         return TransactionBuilder(
@@ -76,7 +77,7 @@ class AccountTransactionsFactory:
             add_data_movement_gas=True
         ).build()
 
-    def create_transaction_for_unguarding_account(self, sender: IAddress) -> Transaction:
+    def create_transaction_for_unguarding_account(self, sender: Address) -> Transaction:
         data_parts = ["UnGuardAccount"]
 
         transaction = TransactionBuilder(

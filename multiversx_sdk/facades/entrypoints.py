@@ -60,7 +60,7 @@ class NetworkEntrypoint:
         transaction.signature = account.sign(tx_computer.compute_bytes_for_signing(transaction))
 
     def verify_transaction_signature(self, transaction: Transaction) -> bool:
-        verifier = UserVerifier.from_address(Address.new_from_bech32(transaction.sender))
+        verifier = UserVerifier.from_address(transaction.sender)
         tx_computer = TransactionComputer()
 
         return verifier.verify(

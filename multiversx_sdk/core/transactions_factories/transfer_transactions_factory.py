@@ -3,13 +3,14 @@ from typing import Optional, Protocol
 from multiversx_sdk.core.constants import \
     EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER
 from multiversx_sdk.core.errors import BadUsageError
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
     TokenTransfersDataBuilder
 from multiversx_sdk.core.transactions_factories.transaction_builder import \
     TransactionBuilder
+
+from multiversx_sdk.core.address import Address
 
 ADDITIONAL_GAS_FOR_ESDT_TRANSFER = 100000
 ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER = 800000
@@ -31,8 +32,8 @@ class TransferTransactionsFactory:
         self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
 
     def create_transaction_for_native_token_transfer(self,
-                                                     sender: IAddress,
-                                                     receiver: IAddress,
+                                                     sender: Address,
+                                                     receiver: Address,
                                                      native_amount: int,
                                                      data: Optional[str] = None) -> Transaction:
         transaction_data = data if data else ""
@@ -47,8 +48,8 @@ class TransferTransactionsFactory:
         ).build()
 
     def create_transaction_for_esdt_token_transfer(self,
-                                                   sender: IAddress,
-                                                   receiver: IAddress,
+                                                   sender: Address,
+                                                   receiver: Address,
                                                    token_transfers: list[TokenTransfer]) -> Transaction:
         if not token_transfers:
             raise BadUsageError("No token transfer has been provided")
@@ -68,9 +69,9 @@ class TransferTransactionsFactory:
         ).build()
 
     def _single_transfer(self,
-                         sender: IAddress,
-                         receiver: IAddress,
-                         transfer: TokenTransfer) -> tuple[list[str], int, IAddress]:
+                         sender: Address,
+                         receiver: Address,
+                         transfer: TokenTransfer) -> tuple[list[str], int, Address]:
         if self.token_computer.is_fungible(transfer.token):
             if transfer.token.identifier == EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER:
                 data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, [transfer])
@@ -86,17 +87,17 @@ class TransferTransactionsFactory:
         return data_parts, gas, sender
 
     def _multi_transfer(self,
-                        sender: IAddress,
-                        receiver: IAddress,
-                        token_transfers: list[TokenTransfer]) -> tuple[list[str], int, IAddress]:
+                        sender: Address,
+                        receiver: Address,
+                        token_transfers: list[TokenTransfer]) -> tuple[list[str], int, Address]:
         data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(receiver, token_transfers)
         gas = self.config.gas_limit_multi_esdt_nft_transfer * len(
             token_transfers) + ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER
         return data_parts, gas, sender
 
     def create_transaction_for_transfer(self,
-                                        sender: IAddress,
-                                        receiver: IAddress,
+                                        sender: Address,
+                                        receiver: Address,
                                         native_amount: Optional[int] = None,
                                         token_transfers: Optional[list[TokenTransfer]] = None,
                                         data: Optional[bytes] = None) -> Transaction:

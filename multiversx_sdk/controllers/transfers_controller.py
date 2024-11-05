@@ -1,12 +1,14 @@
 from typing import List, Optional
 
-from multiversx_sdk.controllers.interfaces import IAccount
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transactions_factories import (
     TransactionsFactoryConfig, TransferTransactionsFactory)
+
+from multiversx_sdk.core.account import Account
+
+from multiversx_sdk.core.address import Address
 
 
 class TransfersController:
@@ -15,9 +17,9 @@ class TransfersController:
         self.tx_computer = TransactionComputer()
 
     def create_transaction_for_native_token_transfer(self,
-                                                     sender: IAccount,
+                                                     sender: Account,
                                                      nonce: int,
-                                                     receiver: IAddress,
+                                                     receiver: Address,
                                                      native_transfer_amount: int = 0,
                                                      data: Optional[bytes] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_native_token_transfer(
@@ -33,9 +35,9 @@ class TransfersController:
         return transaction
 
     def create_transaction_for_esdt_token_transfer(self,
-                                                   sender: IAccount,
+                                                   sender: Account,
                                                    nonce: int,
-                                                   receiver: IAddress,
+                                                   receiver: Address,
                                                    token_transfers: List[TokenTransfer]) -> Transaction:
         transaction = self.factory.create_transaction_for_esdt_token_transfer(
             sender=sender.address,
@@ -49,9 +51,9 @@ class TransfersController:
         return transaction
 
     def create_transaction_for_transfer(self,
-                                        sender: IAccount,
+                                        sender: Account,
                                         nonce: int,
-                                        receiver: IAddress,
+                                        receiver: Address,
                                         native_transfer_amount: Optional[int] = None,
                                         token_transfers: Optional[List[TokenTransfer]] = None,
                                         data: Optional[bytes] = None) -> Transaction:

@@ -2,7 +2,6 @@ import base64
 from typing import Any, Dict, Union
 
 from multiversx_sdk.converters.errors import MissingFieldError
-from multiversx_sdk.core.interfaces import ITransaction
 from multiversx_sdk.core.transaction import Transaction
 
 
@@ -10,7 +9,7 @@ class TransactionsConverter:
     def __init__(self) -> None:
         pass
 
-    def transaction_to_dictionary(self, transaction: ITransaction) -> Dict[str, Any]:
+    def transaction_to_dictionary(self, transaction: Transaction) -> Dict[str, Any]:
         return {
             "nonce": transaction.nonce,
             "value": str(transaction.value),

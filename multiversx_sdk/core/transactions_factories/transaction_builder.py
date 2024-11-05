@@ -1,7 +1,7 @@
 from typing import List, Optional, Protocol
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.transaction import Transaction
 
 
@@ -14,8 +14,8 @@ class IConfig(Protocol):
 class TransactionBuilder:
     def __init__(self,
                  config: IConfig,
-                 sender: IAddress,
-                 receiver: IAddress,
+                 sender: Address,
+                 receiver: Address,
                  data_parts: List[str],
                  gas_limit: int,
                  add_data_movement_gas: bool,
@@ -46,8 +46,8 @@ class TransactionBuilder:
         gas_limit = self.compute_gas_limit(data)
 
         transaction = Transaction(
-            sender=self.sender.to_bech32(),
-            receiver=self.receiver.to_bech32(),
+            sender=self.sender,
+            receiver=self.receiver,
             gas_limit=gas_limit,
             chain_id=self.config.chain_id,
             data=data,

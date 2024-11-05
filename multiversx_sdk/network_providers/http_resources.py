@@ -13,9 +13,8 @@ from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, BlockCoordinates,
-    BlockOnNetwork, EmptyAddress, FungibleTokenMetadata, NetworkConfig,
-    NetworkStatus, TokenAmountOnNetwork, TokensCollectionMetadata,
-    TransactionCostResponse)
+    BlockOnNetwork, FungibleTokenMetadata, NetworkConfig, NetworkStatus,
+    TokenAmountOnNetwork, TokensCollectionMetadata, TransactionCostResponse)
 
 
 def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[str, Any]:
@@ -83,10 +82,12 @@ def _transaction_from_network_response(tx_hash: str, response: dict[str, Any]) -
     result.value = response.get("value", 0)
 
     sender = response.get("sender", "")
-    result.sender = Address.new_from_bech32(sender) if sender else EmptyAddress()
+    if sender:
+        result.sender = Address.new_from_bech32(sender)
 
     receiver = response.get("receiver", "")
-    result.receiver = Address.new_from_bech32(receiver) if receiver else EmptyAddress()
+    if receiver:
+        result.receiver = Address.new_from_bech32(receiver)
 
     result.gas_price = response.get("gasPrice", 0)
     result.gas_limit = response.get("gasLimit", 0)

@@ -1,38 +1,4 @@
-from typing import Optional, Protocol
-
-
-class IAddress(Protocol):
-    def to_bech32(self) -> str:
-        ...
-
-    def to_hex(self) -> str:
-        ...
-
-
-class ITransaction(Protocol):
-    sender: str
-    receiver: str
-    gas_limit: int
-    chain_id: str
-    nonce: int
-    value: int
-    sender_username: str
-    receiver_username: str
-    gas_price: int
-    data: bytes
-    version: int
-    options: int
-    guardian: str
-    signature: bytes
-    guardian_signature: bytes
-
-
-class IMessage(Protocol):
-    data: bytes
-    signature: bytes
-    address: Optional[IAddress]
-    version: int
-    signer: str
+from typing import Protocol
 
 
 class IToken(Protocol):
