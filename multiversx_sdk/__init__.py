@@ -1,3 +1,4 @@
+from multiversx_sdk.accounts import Account
 from multiversx_sdk.controllers.account_controller import AccountController
 from multiversx_sdk.controllers.delegation_controller import \
     DelegationController
@@ -7,7 +8,6 @@ from multiversx_sdk.controllers.smart_contract_controller import \
 from multiversx_sdk.controllers.token_management_controller import \
     TokenManagementController
 from multiversx_sdk.controllers.transfers_controller import TransfersController
-from multiversx_sdk.core.account import Account
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata

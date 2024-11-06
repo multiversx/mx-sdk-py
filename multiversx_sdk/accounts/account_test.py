@@ -1,7 +1,7 @@
 
 from pathlib import Path
 
-from multiversx_sdk.core.account import Account
+from multiversx_sdk.accounts.account import Account
 
 alice = Path(__file__).parent.parent / "testutils" / "testwallets" / "alice.pem"
 

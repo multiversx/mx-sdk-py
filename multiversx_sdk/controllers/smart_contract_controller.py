@@ -1,8 +1,7 @@
 from pathlib import Path
 from typing import Any, List, Optional, Sequence, Union
 
-from multiversx_sdk.controllers.interfaces import IAbi, INetworkProvider
-from multiversx_sdk.core.account import Account
+from multiversx_sdk.controllers.interfaces import IAbi, IAccount, INetworkProvider
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
@@ -30,7 +29,7 @@ class SmartContractController:
         self.tx_computer = TransactionComputer()
 
     def create_transaction_for_deploy(self,
-                                      sender: Account,
+                                      sender: IAccount,
                                       nonce: int,
                                       bytecode: Union[Path, bytes],
                                       gas_limit: int,
@@ -66,7 +65,7 @@ class SmartContractController:
         return self.parse_deploy(transaction)
 
     def create_transaction_for_upgrade(self,
-                                       sender: Account,
+                                       sender: IAccount,
                                        nonce: int,
                                        contract: Address,
                                        bytecode: Union[Path, bytes],
@@ -96,7 +95,7 @@ class SmartContractController:
         return transaction
 
     def create_transaction_for_execute(self,
-                                       sender: Account,
+                                       sender: IAccount,
                                        nonce: int,
                                        contract: Address,
                                        gas_limit: int,

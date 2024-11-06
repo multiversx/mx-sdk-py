@@ -1,6 +1,6 @@
 from typing import List, Sequence
 
-from multiversx_sdk.controllers.interfaces import INetworkProvider
+from multiversx_sdk.controllers.interfaces import IAccount, INetworkProvider
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.interfaces import IValidatorPublicKey
 from multiversx_sdk.core.transaction import Transaction
@@ -10,7 +10,6 @@ from multiversx_sdk.core.transactions_factories import (
     DelegationTransactionsFactory, TransactionsFactoryConfig)
 from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser import (
     CreateNewDelegationContractOutcome, DelegationTransactionsOutcomeParser)
-from multiversx_sdk.core.account import Account
 
 
 class DelegationController:
@@ -21,7 +20,7 @@ class DelegationController:
         self.tx_computer = TransactionComputer()
 
     def create_transaction_for_new_delegation_contract(self,
-                                                       sender: Account,
+                                                       sender: IAccount,
                                                        nonce: int,
                                                        total_delegation_cap: int,
                                                        service_fee: int,
@@ -48,7 +47,7 @@ class DelegationController:
         return self.parse_create_new_delegation_contract(transaction)
 
     def create_transaction_for_adding_nodes(self,
-                                            sender: Account,
+                                            sender: IAccount,
                                             nonce: int,
                                             delegation_contract: Address,
                                             public_keys: Sequence[IValidatorPublicKey],
@@ -66,7 +65,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_removing_nodes(self,
-                                              sender: Account,
+                                              sender: IAccount,
                                               nonce: int,
                                               delegation_contract: Address,
                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
@@ -82,7 +81,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_staking_nodes(self,
-                                             sender: Account,
+                                             sender: IAccount,
                                              nonce: int,
                                              delegation_contract: Address,
                                              public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
@@ -98,7 +97,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_unbonding_nodes(self,
-                                               sender: Account,
+                                               sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
                                                public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
@@ -114,7 +113,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_unstaking_nodes(self,
-                                               sender: Account,
+                                               sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
                                                public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
@@ -130,7 +129,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_unjailing_nodes(self,
-                                               sender: Account,
+                                               sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
                                                public_keys: Sequence[IValidatorPublicKey],
@@ -148,7 +147,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_changing_service_fee(self,
-                                                    sender: Account,
+                                                    sender: IAccount,
                                                     nonce: int,
                                                     delegation_contract: Address,
                                                     service_fee: int) -> Transaction:
@@ -164,7 +163,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_modifying_delegation_cap(self,
-                                                        sender: Account,
+                                                        sender: IAccount,
                                                         nonce: int,
                                                         delegation_contract: Address,
                                                         delegation_cap: int) -> Transaction:
@@ -180,7 +179,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_setting_automatic_activation(self,
-                                                            sender: Account,
+                                                            sender: IAccount,
                                                             nonce: int,
                                                             delegation_contract: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_automatic_activation(
@@ -194,7 +193,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_unsetting_automatic_activation(self,
-                                                              sender: Account,
+                                                              sender: IAccount,
                                                               nonce: int,
                                                               delegation_contract: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_automatic_activation(
@@ -208,7 +207,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_setting_cap_check_on_redelegate_rewards(self,
-                                                                       sender: Account,
+                                                                       sender: IAccount,
                                                                        nonce: int,
                                                                        delegation_contract: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_cap_check_on_redelegate_rewards(
@@ -222,7 +221,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_unsetting_cap_check_on_redelegate_rewards(self,
-                                                                         sender: Account,
+                                                                         sender: IAccount,
                                                                          nonce: int,
                                                                          delegation_contract: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards(
@@ -236,7 +235,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_setting_metadata(self,
-                                                sender: Account,
+                                                sender: IAccount,
                                                 nonce: int,
                                                 delegation_contract: Address,
                                                 name: str,
@@ -256,7 +255,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_delegating(self,
-                                          sender: Account,
+                                          sender: IAccount,
                                           nonce: int,
                                           delegation_contract: Address,
                                           amount: int) -> Transaction:
@@ -272,7 +271,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_claiming_rewards(self,
-                                                sender: Account,
+                                                sender: IAccount,
                                                 nonce: int,
                                                 delegation_contract: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_claiming_rewards(
@@ -286,7 +285,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_redelegating_rewards(self,
-                                                    sender: Account,
+                                                    sender: IAccount,
                                                     nonce: int,
                                                     delegation_contract: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_redelegating_rewards(
@@ -300,7 +299,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_undelegating(self,
-                                            sender: Account,
+                                            sender: IAccount,
                                             nonce: int,
                                             delegation_contract: Address,
                                             amount: int) -> Transaction:
@@ -316,7 +315,7 @@ class DelegationController:
         return transaction
 
     def create_transaction_for_withdrawing(self,
-                                           sender: Account,
+                                           sender: IAccount,
                                            nonce: int,
                                            delegation_contract: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_withdrawing(

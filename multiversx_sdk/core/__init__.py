@@ -1,4 +1,3 @@
-from multiversx_sdk.core.account import Account
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata
@@ -33,7 +32,7 @@ from multiversx_sdk.core.transactions_outcome_parsers import (
     UnFreezeOutcome, UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
 
 __all__ = [
-    "Account", "Address", "AddressFactory", "AddressComputer",
+    "Address", "AddressFactory", "AddressComputer",
     "Transaction", "TransactionComputer",
     "Message", "MessageComputer", "CodeMetadata",
     "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",

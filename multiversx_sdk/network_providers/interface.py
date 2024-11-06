@@ -13,14 +13,6 @@ from multiversx_sdk.network_providers.resources import (
     TransactionCostResponse)
 
 
-class IAddress(Protocol):
-    def to_bech32(self) -> str:
-        ...
-
-    def to_hex(self) -> str:
-        ...
-
-
 class INetworkProvider(Protocol):
     def get_network_config(self) -> NetworkConfig:
         ...
@@ -98,12 +90,4 @@ class INetworkProvider(Protocol):
         ...
 
     def do_post_generic(self, url: str, data: Any, url_parameters: Optional[dict[str, Any]]) -> Any:
-        ...
-
-
-class IPagination(Protocol):
-    def get_start(self) -> int:
-        ...
-
-    def get_size(self) -> int:
         ...

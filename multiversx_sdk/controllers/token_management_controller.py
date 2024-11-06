@@ -1,6 +1,7 @@
 from typing import List, Union
 
-from multiversx_sdk.controllers.interfaces import INetworkProvider
+from multiversx_sdk.controllers.interfaces import IAccount, INetworkProvider
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
@@ -14,10 +15,6 @@ from multiversx_sdk.core.transactions_outcome_parsers import (
     TokenManagementTransactionsOutcomeParser, UnFreezeOutcome, UnPauseOutcome,
     UpdateAttributesOutcome, WipeOutcome)
 
-from multiversx_sdk.core.account import Account
-
-from multiversx_sdk.core.address import Address
-
 
 class TokenManagementController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
@@ -27,7 +24,7 @@ class TokenManagementController:
         self.parser = TokenManagementTransactionsOutcomeParser()
 
     def create_transaction_for_issuing_fungible(self,
-                                                sender: Account,
+                                                sender: IAccount,
                                                 nonce: int,
                                                 token_name: str,
                                                 token_ticker: str,
@@ -66,7 +63,7 @@ class TokenManagementController:
         return self.parse_issue_fungible(transaction)
 
     def create_transaction_for_issuing_semi_fungible(self,
-                                                     sender: Account,
+                                                     sender: IAccount,
                                                      nonce: int,
                                                      token_name: str,
                                                      token_ticker: str,
@@ -104,7 +101,7 @@ class TokenManagementController:
         return self.parse_issue_semi_fungible(transaction)
 
     def create_transaction_for_issuing_non_fungible(self,
-                                                    sender: Account,
+                                                    sender: IAccount,
                                                     nonce: int,
                                                     token_name: str,
                                                     token_ticker: str,
@@ -141,7 +138,7 @@ class TokenManagementController:
         return self.parse_issue_non_fungible(transaction)
 
     def create_transaction_for_registering_meta_esdt(self,
-                                                     sender: Account,
+                                                     sender: IAccount,
                                                      nonce: int,
                                                      token_name: str,
                                                      token_ticker: str,
@@ -180,7 +177,7 @@ class TokenManagementController:
         return self.parse_register_meta_esdt(transaction)
 
     def create_transaction_for_registering_and_setting_roles(self,
-                                                             sender: Account,
+                                                             sender: IAccount,
                                                              nonce: int,
                                                              token_name: str,
                                                              token_ticker: str,
@@ -199,17 +196,15 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_register_and_set_all_roles(
-            self, transaction_on_network: TransactionOnNetwork) -> List[RegisterAndSetAllRolesOutcome]:
+    def parse_register_and_set_all_roles(self, transaction_on_network: TransactionOnNetwork) -> List[RegisterAndSetAllRolesOutcome]:
         return self.parser.parse_register_and_set_all_roles(transaction_on_network)
 
-    def await_completed_register_and_set_all_roles(
-            self, transaction_hash: Union[str, bytes]) -> List[RegisterAndSetAllRolesOutcome]:
+    def await_completed_register_and_set_all_roles(self, transaction_hash: Union[str, bytes]) -> List[RegisterAndSetAllRolesOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_register_and_set_all_roles(transaction)
 
     def create_transaction_for_setting_burn_role_globally(self,
-                                                          sender: Account,
+                                                          sender: IAccount,
                                                           nonce: int,
                                                           token_identifier: str) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_burn_role_globally(
@@ -230,7 +225,7 @@ class TokenManagementController:
         return self.parse_set_burn_role_globally(transaction)
 
     def create_transaction_for_unsetting_burn_role_globally(self,
-                                                            sender: Account,
+                                                            sender: IAccount,
                                                             nonce: int,
                                                             token_identifier: str) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_burn_role_globally(
@@ -251,7 +246,7 @@ class TokenManagementController:
         return self.parse_unset_burn_role_globally(transaction)
 
     def create_transaction_for_setting_special_role_on_fungible_token(self,
-                                                                      sender: Account,
+                                                                      sender: IAccount,
                                                                       nonce: int,
                                                                       user: Address,
                                                                       token_identifier: str,
@@ -272,18 +267,22 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_fungible_token(
-            self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_fungible_token(
-            self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_fungible_token(transaction)
 
-    def create_transaction_for_setting_special_role_on_semi_fungible_token(
-            self, sender: Account, nonce: int, user: Address, token_identifier: str, add_role_nft_create: bool,
-            add_role_nft_burn: bool, add_role_nft_add_quantity: bool, add_role_esdt_transfer_role: bool) -> Transaction:
+    def create_transaction_for_setting_special_role_on_semi_fungible_token(self,
+                                                                           sender: IAccount,
+                                                                           nonce: int,
+                                                                           user: Address,
+                                                                           token_identifier: str,
+                                                                           add_role_nft_create: bool,
+                                                                           add_role_nft_burn: bool,
+                                                                           add_role_nft_add_quantity: bool,
+                                                                           add_role_esdt_transfer_role: bool) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_semi_fungible_token(
             sender=sender.address,
             user=user,
@@ -299,19 +298,23 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_semi_fungible_token(
-            self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_semi_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_semi_fungible_token(
-            self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_semi_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_semi_fungible_token(transaction)
 
-    def create_transaction_for_setting_special_role_on_non_fungible_token(
-            self, sender: Account, nonce: int, user: Address, token_identifier: str, add_role_nft_create: bool,
-            add_role_nft_burn: bool, add_role_nft_update_attributes: bool, add_role_nft_add_uri: bool,
-            add_role_esdt_transfer_role: bool) -> Transaction:
+    def create_transaction_for_setting_special_role_on_non_fungible_token(self,
+                                                                          sender: IAccount,
+                                                                          nonce: int,
+                                                                          user: Address,
+                                                                          token_identifier: str,
+                                                                          add_role_nft_create: bool,
+                                                                          add_role_nft_burn: bool,
+                                                                          add_role_nft_update_attributes: bool,
+                                                                          add_role_nft_add_uri: bool,
+                                                                          add_role_esdt_transfer_role: bool) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_non_fungible_token(
             sender=sender.address,
             user=user,
@@ -328,17 +331,15 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_non_fungible_token(
-            self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_non_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_non_fungible_token(
-            self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_non_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_non_fungible_token(transaction)
 
     def create_transaction_for_creating_nft(self,
-                                            sender: Account,
+                                            sender: IAccount,
                                             nonce: int,
                                             token_identifier: str,
                                             initial_quantity: int,
@@ -371,7 +372,7 @@ class TokenManagementController:
         return self.parse_create_nft(transaction)
 
     def create_transaction_for_pausing(self,
-                                       sender: Account,
+                                       sender: IAccount,
                                        nonce: int,
                                        token_identifier: str) -> Transaction:
         transaction = self.factory.create_transaction_for_pausing(
@@ -392,7 +393,7 @@ class TokenManagementController:
         return self.parse_pause(transaction)
 
     def create_transaction_for_unpausing(self,
-                                         sender: Account,
+                                         sender: IAccount,
                                          nonce: int,
                                          token_identifier: str) -> Transaction:
         transaction = self.factory.create_transaction_for_unpausing(
@@ -413,7 +414,7 @@ class TokenManagementController:
         return self.parse_unpause(transaction)
 
     def create_transaction_for_freezing(self,
-                                        sender: Account,
+                                        sender: IAccount,
                                         nonce: int,
                                         user: Address,
                                         token_identifier: str) -> Transaction:
@@ -436,7 +437,7 @@ class TokenManagementController:
         return self.parse_freeze(transaction)
 
     def create_transaction_for_unfreezing(self,
-                                          sender: Account,
+                                          sender: IAccount,
                                           nonce: int,
                                           user: Address,
                                           token_identifier: str) -> Transaction:
@@ -459,7 +460,7 @@ class TokenManagementController:
         return self.parse_unfreeze(transaction)
 
     def create_transaction_for_wiping(self,
-                                      sender: Account,
+                                      sender: IAccount,
                                       nonce: int,
                                       user: Address,
                                       token_identifier: str) -> Transaction:
@@ -482,7 +483,7 @@ class TokenManagementController:
         return self.parse_wipe(transaction)
 
     def create_transaction_for_local_minting(self,
-                                             sender: Account,
+                                             sender: IAccount,
                                              nonce: int,
                                              token_identifier: str,
                                              supply_to_mint: int) -> Transaction:
@@ -505,7 +506,7 @@ class TokenManagementController:
         return self.parse_local_mint(transaction)
 
     def create_transaction_for_local_burning(self,
-                                             sender: Account,
+                                             sender: IAccount,
                                              nonce: int,
                                              token_identifier: str,
                                              supply_to_burn: int) -> Transaction:
@@ -528,7 +529,7 @@ class TokenManagementController:
         return self.parse_local_burn(transaction)
 
     def create_transaction_for_updating_attributes(self,
-                                                   sender: Account,
+                                                   sender: IAccount,
                                                    nonce: int,
                                                    token_identifier: str,
                                                    token_nonce: int,
@@ -553,7 +554,7 @@ class TokenManagementController:
         return self.parse_update_attributes(transaction)
 
     def create_transaction_for_adding_quantity(self,
-                                               sender: Account,
+                                               sender: IAccount,
                                                nonce: int,
                                                token_identifier: str,
                                                token_nonce: int,
@@ -578,7 +579,7 @@ class TokenManagementController:
         return self.parse_add_quantity(transaction)
 
     def create_transaction_for_burning_quantity(self,
-                                                sender: Account,
+                                                sender: IAccount,
                                                 nonce: int,
                                                 token_identifier: str,
                                                 token_nonce: int,

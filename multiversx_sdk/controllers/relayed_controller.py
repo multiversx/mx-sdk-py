@@ -1,9 +1,8 @@
+from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transactions_factories import (
     RelayedTransactionsFactory, TransactionsFactoryConfig)
-
-from multiversx_sdk.core.account import Account
 
 
 class RelayedController:
@@ -14,7 +13,7 @@ class RelayedController:
         self.tx_computer = TransactionComputer()
 
     def create_relayed_v1_transaction(self,
-                                      sender: Account,
+                                      sender: IAccount,
                                       nonce: int,
                                       inner_transaction: Transaction) -> Transaction:
         transaction = self.factory.create_relayed_v1_transaction(
@@ -28,7 +27,7 @@ class RelayedController:
         return transaction
 
     def create_relayed_v2_transaction(self,
-                                      sender: Account,
+                                      sender: IAccount,
                                       nonce: int,
                                       inner_transaction: Transaction,
                                       inner_transaction_gas_limit: int) -> Transaction:

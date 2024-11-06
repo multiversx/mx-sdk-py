@@ -3,8 +3,8 @@ from pathlib import Path
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.accounts import Account
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.account import Account
 from multiversx_sdk.facades.entrypoints import DevnetEntrypoint
 
 testutils = Path(__file__).parent.parent / "testutils"

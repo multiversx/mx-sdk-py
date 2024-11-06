@@ -1,6 +1,6 @@
 from typing import Dict
 
-from multiversx_sdk.core.account import Account
+from multiversx_sdk.controllers.interfaces import IAccount
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
@@ -15,7 +15,7 @@ class AccountController:
         self.tx_computer = TransactionComputer()
 
     def create_transaction_for_saving_key_value(self,
-                                                sender: Account,
+                                                sender: IAccount,
                                                 nonce: int,
                                                 key_value_pairs: Dict[bytes, bytes]) -> Transaction:
         transaction = self.factory.create_transaction_for_saving_key_value(
@@ -29,7 +29,7 @@ class AccountController:
         return transaction
 
     def create_transaction_for_setting_guardian(self,
-                                                sender: Account,
+                                                sender: IAccount,
                                                 nonce: int,
                                                 guardian_address: Address,
                                                 service_id: str) -> Transaction:
@@ -45,7 +45,7 @@ class AccountController:
         return transaction
 
     def create_transaction_for_guarding_account(self,
-                                                sender: Account,
+                                                sender: IAccount,
                                                 nonce: int) -> Transaction:
         transaction = self.factory.create_transaction_for_guarding_account(
             sender=sender.address
@@ -58,7 +58,7 @@ class AccountController:
         return transaction
 
     def create_transaction_for_unguarding_account(self,
-                                                  sender: Account,
+                                                  sender: IAccount,
                                                   nonce: int) -> Transaction:
         transaction = self.factory.create_transaction_for_unguarding_account(
             sender=sender.address
