@@ -1,13 +1,19 @@
 import binascii
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Protocol
 
 from multiversx_sdk.core import TokenTransfer
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.network_providers.interface import IAddress
 
 DEFAULT_HRP = "erd"
+
+
+class IAddress(Protocol):
+    """For internal use only"""
+
+    def to_bech32(self) -> str:
+        ...
 
 
 class TransactionMetadata:
