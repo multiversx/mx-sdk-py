@@ -15,10 +15,10 @@ from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.facades.config import (DevnetEntrypointConfig,
-                                           MainnetEntrypointConfig,
-                                           TestnetEntrypointConfig)
-from multiversx_sdk.facades.errors import InvalidNetworkProviderKindError
+from multiversx_sdk.entrypoints.config import (DevnetEntrypointConfig,
+                                               MainnetEntrypointConfig,
+                                               TestnetEntrypointConfig)
+from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.proxy_network_provider import \
