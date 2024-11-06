@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from multiversx_sdk.controllers.interfaces import IAccount, INetworkProvider
-from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
@@ -196,12 +196,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_register_and_set_all_roles(
-            self, transaction_on_network: TransactionOnNetwork) -> List[RegisterAndSetAllRolesOutcome]:
+    def parse_register_and_set_all_roles(self, transaction_on_network: TransactionOnNetwork) -> List[RegisterAndSetAllRolesOutcome]:
         return self.parser.parse_register_and_set_all_roles(transaction_on_network)
 
-    def await_completed_register_and_set_all_roles(
-            self, transaction_hash: Union[str, bytes]) -> List[RegisterAndSetAllRolesOutcome]:
+    def await_completed_register_and_set_all_roles(self, transaction_hash: Union[str, bytes]) -> List[RegisterAndSetAllRolesOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_register_and_set_all_roles(transaction)
 
@@ -250,7 +248,7 @@ class TokenManagementController:
     def create_transaction_for_setting_special_role_on_fungible_token(self,
                                                                       sender: IAccount,
                                                                       nonce: int,
-                                                                      user: IAddress,
+                                                                      user: Address,
                                                                       token_identifier: str,
                                                                       add_role_local_mint: bool,
                                                                       add_role_local_burn: bool,
@@ -269,18 +267,22 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_fungible_token(
-            self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_fungible_token(
-            self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_fungible_token(transaction)
 
-    def create_transaction_for_setting_special_role_on_semi_fungible_token(
-            self, sender: IAccount, nonce: int, user: IAddress, token_identifier: str, add_role_nft_create: bool,
-            add_role_nft_burn: bool, add_role_nft_add_quantity: bool, add_role_esdt_transfer_role: bool) -> Transaction:
+    def create_transaction_for_setting_special_role_on_semi_fungible_token(self,
+                                                                           sender: IAccount,
+                                                                           nonce: int,
+                                                                           user: Address,
+                                                                           token_identifier: str,
+                                                                           add_role_nft_create: bool,
+                                                                           add_role_nft_burn: bool,
+                                                                           add_role_nft_add_quantity: bool,
+                                                                           add_role_esdt_transfer_role: bool) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_semi_fungible_token(
             sender=sender.address,
             user=user,
@@ -296,19 +298,23 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_semi_fungible_token(
-            self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_semi_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_semi_fungible_token(
-            self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_semi_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_semi_fungible_token(transaction)
 
-    def create_transaction_for_setting_special_role_on_non_fungible_token(
-            self, sender: IAccount, nonce: int, user: IAddress, token_identifier: str, add_role_nft_create: bool,
-            add_role_nft_burn: bool, add_role_nft_update_attributes: bool, add_role_nft_add_uri: bool,
-            add_role_esdt_transfer_role: bool) -> Transaction:
+    def create_transaction_for_setting_special_role_on_non_fungible_token(self,
+                                                                          sender: IAccount,
+                                                                          nonce: int,
+                                                                          user: Address,
+                                                                          token_identifier: str,
+                                                                          add_role_nft_create: bool,
+                                                                          add_role_nft_burn: bool,
+                                                                          add_role_nft_update_attributes: bool,
+                                                                          add_role_nft_add_uri: bool,
+                                                                          add_role_esdt_transfer_role: bool) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_non_fungible_token(
             sender=sender.address,
             user=user,
@@ -325,12 +331,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_non_fungible_token(
-            self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_non_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_non_fungible_token(
-            self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_non_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_non_fungible_token(transaction)
 
@@ -412,7 +416,7 @@ class TokenManagementController:
     def create_transaction_for_freezing(self,
                                         sender: IAccount,
                                         nonce: int,
-                                        user: IAddress,
+                                        user: Address,
                                         token_identifier: str) -> Transaction:
         transaction = self.factory.create_transaction_for_freezing(
             sender=sender.address,
@@ -435,7 +439,7 @@ class TokenManagementController:
     def create_transaction_for_unfreezing(self,
                                           sender: IAccount,
                                           nonce: int,
-                                          user: IAddress,
+                                          user: Address,
                                           token_identifier: str) -> Transaction:
         transaction = self.factory.create_transaction_for_unfreezing(
             sender=sender.address,
@@ -458,7 +462,7 @@ class TokenManagementController:
     def create_transaction_for_wiping(self,
                                       sender: IAccount,
                                       nonce: int,
-                                      user: IAddress,
+                                      user: Address,
                                       token_identifier: str) -> Transaction:
         transaction = self.factory.create_transaction_for_wiping(
             sender=sender.address,

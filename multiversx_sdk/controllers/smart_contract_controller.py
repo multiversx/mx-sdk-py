@@ -1,9 +1,8 @@
 from pathlib import Path
 from typing import Any, List, Optional, Sequence, Union
 
-from multiversx_sdk.controllers.interfaces import (IAbi, IAccount,
-                                                   INetworkProvider)
-from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.controllers.interfaces import IAbi, IAccount, INetworkProvider
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.tokens import TokenTransfer
@@ -19,7 +18,8 @@ from multiversx_sdk.core.transactions_outcome_parsers import (
 class SmartContractController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Optional[IAbi] = None) -> None:
         self.abi = abi
-        self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id))
+        self.factory = SmartContractTransactionsFactory(
+            TransactionsFactoryConfig(chain_id))
         self.parser = SmartContractTransactionsOutcomeParser()
         self.query_controller = SmartContractQueriesController(
             network_provider=network_provider,
@@ -60,13 +60,14 @@ class SmartContractController:
         return self.parser.parse_deploy(transaction_on_network)
 
     def await_completed_deploy(self, transaction_hash: Union[str, bytes]) -> SmartContractDeployOutcome:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(
+            transaction_hash)
         return self.parse_deploy(transaction)
 
     def create_transaction_for_upgrade(self,
                                        sender: IAccount,
                                        nonce: int,
-                                       contract: IAddress,
+                                       contract: Address,
                                        bytecode: Union[Path, bytes],
                                        gas_limit: int,
                                        arguments: Sequence[Any] = [],
@@ -96,7 +97,7 @@ class SmartContractController:
     def create_transaction_for_execute(self,
                                        sender: IAccount,
                                        nonce: int,
-                                       contract: IAddress,
+                                       contract: Address,
                                        gas_limit: int,
                                        function: str,
                                        arguments: Sequence[Any] = [],
@@ -124,10 +125,10 @@ class SmartContractController:
         raise NotImplementedError("This feature is not yet implemented")
 
     def query_contract(self,
-                       contract: IAddress,
+                       contract: Address,
                        function: str,
                        arguments: List[Any],
-                       caller: Optional[IAddress] = None,
+                       caller: Optional[Address] = None,
                        value: Optional[int] = None) -> List[Any]:
         return self.query_controller.query(
             contract=contract.to_bech32(),

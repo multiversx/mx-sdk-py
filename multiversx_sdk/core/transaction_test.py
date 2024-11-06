@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import \
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
@@ -30,8 +31,8 @@ class TestTransaction:
     transaction_computer = TransactionComputer()
 
     def test_serialize_for_signing(self):
-        sender = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        receiver = "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        receiver = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         transaction = Transaction(
             nonce=89,
@@ -63,8 +64,8 @@ class TestTransaction:
     def test_with_usernames(self):
         transaction = Transaction(
             chain_id="T",
-            sender=self.carol.label,
-            receiver=self.alice.label,
+            sender=Address.new_from_bech32(self.carol.label),
+            receiver=Address.new_from_bech32(self.alice.label),
             nonce=204,
             gas_limit=50000,
             sender_username="carol",
@@ -77,8 +78,8 @@ class TestTransaction:
 
     def test_compute_transaction_hash(self):
         transaction = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_limit=100000,
             chain_id="D",
             nonce=17243,
@@ -92,8 +93,8 @@ class TestTransaction:
 
     def test_compute_transaction_hash_with_usernames(self):
         transaction = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_limit=100000,
             chain_id="D",
             nonce=17244,
@@ -109,8 +110,8 @@ class TestTransaction:
 
     def test_compute_transaction_fee_insufficient(self):
         transaction = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_limit=50000,
             chain_id="D",
             data=b"toolittlegaslimit",
@@ -121,8 +122,8 @@ class TestTransaction:
 
     def test_compute_transaction_fee(self):
         transaction = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_price=500,
             gas_limit=20,
             chain_id="D",
@@ -133,8 +134,8 @@ class TestTransaction:
 
     def test_compute_transaction_fee_with_data_field(self):
         transaction = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_price=500,
             gas_limit=12010,
             chain_id="D",
@@ -150,8 +151,8 @@ class TestTransaction:
         sender_secret_key = UserSecretKey(bytes.fromhex(sender_secret_key_hex))
 
         transaction = Transaction(
-            sender="erd1fp4zaxvyc8jh99vauwns99kvs9tn0k6cwrr0zpyz2jvyurcepuhsfzvlar",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1fp4zaxvyc8jh99vauwns99kvs9tn0k6cwrr0zpyz2jvyurcepuhsfzvlar"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_limit=139000,
             gas_price=1000000000,
             chain_id="D",
@@ -160,7 +161,7 @@ class TestTransaction:
             data=b"this is a test transaction",
             version=2,
             options=2,
-            guardian="erd1nn8apn09vmf72l7kzr3nd90rr5r2q74he7hseghs3v68c5p7ud2qhhwf96",
+            guardian=Address.new_from_bech32("erd1nn8apn09vmf72l7kzr3nd90rr5r2q74he7hseghs3v68c5p7ud2qhhwf96"),
             guardian_signature=bytes.fromhex("487150c26d38a01fe19fbe26dac20ec2b42ec3abf5763a47a508e62bcd6ad3437c4d404684442e864a1dbad446dc0f852889a09f0650b5fdb55f4ee18147920d")
         )
 
@@ -176,8 +177,8 @@ class TestTransaction:
         alice_secret_key = UserSecretKey(bytes.fromhex(alice_private_key_hex))
 
         transaction = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
             gas_limit=150000,
             chain_id="local-testnet",
             gas_price=1000000000,
@@ -186,7 +187,7 @@ class TestTransaction:
             options=2,
             nonce=92,
             value=123456789000000000000000000000,
-            guardian="erd1x23lzn8483xs2su4fak0r0dqx6w38enpmmqf2yrkylwq7mfnvyhsxqw57y",
+            guardian=Address.new_from_bech32("erd1x23lzn8483xs2su4fak0r0dqx6w38enpmmqf2yrkylwq7mfnvyhsxqw57y"),
             guardian_signature=bytes([0] * 64)
         )
 
@@ -202,8 +203,8 @@ class TestTransaction:
 
     def test_tx_computer_has_options_set(self):
         tx = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_limit=50000,
             chain_id="D",
             options=3
@@ -214,8 +215,8 @@ class TestTransaction:
 
     def test_tx_computer_apply_guardian(self):
         tx = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
             gas_limit=200000,
             chain_id="D",
             version=1,
@@ -224,20 +225,20 @@ class TestTransaction:
 
         self.transaction_computer.apply_guardian(
             transaction=tx,
-            guardian="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+            guardian=Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         )
 
         assert tx.version == 2
         assert tx.options == 3
-        assert tx.guardian == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+        assert str(tx.guardian) == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
 
     def test_sign_transaction_by_hash(self):
         parent = Path(__file__).parent.parent
         pem = UserPEM.from_file(parent / "testutils" / "testwallets" / "alice.pem")
 
         tx = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
             value=0,
             gas_limit=50000,
             version=2,
@@ -252,8 +253,8 @@ class TestTransaction:
 
     def test_apply_guardian_with_hash_signing(self):
         tx = Transaction(
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
             value=0,
             gas_limit=50000,
             version=1,
@@ -265,22 +266,18 @@ class TestTransaction:
         assert tx.version == 2
         assert tx.options == 1
 
-        self.transaction_computer.apply_guardian(transaction=tx, guardian=self.carol.label)
+        self.transaction_computer.apply_guardian(transaction=tx, guardian=Address.new_from_bech32(self.carol.label))
         assert tx.version == 2
         assert tx.options == 3
 
     def test_ensure_transaction_is_valid(self):
         tx = Transaction(
-            sender="invalid_sender",
-            receiver=self.bob.label,
+            sender=Address.new_from_bech32(self.bob.label),
+            receiver=Address.new_from_bech32(self.bob.label),
             gas_limit=50000,
             chain_id=""
         )
 
-        with pytest.raises(BadUsageError, match="Invalid `sender` field. Should be the bech32 address of the sender."):
-            self.transaction_computer.compute_bytes_for_signing(tx)
-
-        tx.sender = self.alice.label
         with pytest.raises(BadUsageError, match="The `chainID` field is not set"):
             self.transaction_computer.compute_bytes_for_signing(tx)
 
@@ -296,8 +293,8 @@ class TestTransaction:
 
     def test_compute_bytes_for_verifying_signature(self):
         tx = Transaction(
-            sender=self.alice.label,
-            receiver=self.bob.label,
+            sender=Address.new_from_bech32(self.alice.label),
+            receiver=Address.new_from_bech32(self.bob.label),
             gas_limit=50000,
             chain_id="D",
             nonce=7
@@ -322,8 +319,8 @@ class TestTransaction:
 
     def test_compute_bytes_for_verifying_transaction_signed_by_hash(self):
         tx = Transaction(
-            sender=self.alice.label,
-            receiver=self.bob.label,
+            sender=Address.new_from_bech32(self.alice.label),
+            receiver=Address.new_from_bech32(self.bob.label),
             gas_limit=50000,
             chain_id="D",
             nonce=7
@@ -350,8 +347,8 @@ class TestTransaction:
         transaction = Transaction(
             nonce=90,
             value=123456789000000000000000000000,
-            sender="erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th",
-            receiver="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+            sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            receiver=Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
             sender_username="alice",
             receiver_username="bob",
             gas_price=1000000000,

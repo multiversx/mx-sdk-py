@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, Protocol, Tuple, Union
 
+from multiversx_sdk.accounts import Account
 from multiversx_sdk.controllers.account_controller import AccountController
 from multiversx_sdk.controllers.delegation_controller import \
     DelegationController
@@ -14,7 +15,6 @@ from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.facades.account import Account
 from multiversx_sdk.facades.config import (DevnetEntrypointConfig,
                                            MainnetEntrypointConfig,
                                            TestnetEntrypointConfig)
@@ -60,7 +60,7 @@ class NetworkEntrypoint:
         transaction.signature = account.sign(tx_computer.compute_bytes_for_signing(transaction))
 
     def verify_transaction_signature(self, transaction: Transaction) -> bool:
-        verifier = UserVerifier.from_address(Address.new_from_bech32(transaction.sender))
+        verifier = UserVerifier.from_address(transaction.sender)
         tx_computer = TransactionComputer()
 
         return verifier.verify(

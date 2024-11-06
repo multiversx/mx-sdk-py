@@ -46,8 +46,8 @@ class TestTransactionAwaiter:
         tx_computer = TransactionComputer()
 
         transaction = Transaction(
-            sender=alice.label,
-            receiver=alice.label,
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32(alice.label),
             gas_limit=50000,
             chain_id="D",
         )

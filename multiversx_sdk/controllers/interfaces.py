@@ -1,6 +1,6 @@
 from typing import Any, List, Optional, Protocol, Union
 
-from multiversx_sdk.core.interfaces import IAddress
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
@@ -9,7 +9,7 @@ from multiversx_sdk.network_providers.resources import AwaitingOptions
 
 class IAccount(Protocol):
     @property
-    def address(self) -> IAddress:
+    def address(self) -> Address:
         ...
 
     def sign(self, data: bytes) -> bytes:

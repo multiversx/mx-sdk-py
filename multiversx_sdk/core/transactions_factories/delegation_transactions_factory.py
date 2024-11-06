@@ -3,7 +3,7 @@ from typing import Protocol, Sequence
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
 from multiversx_sdk.core.errors import ErrListsLengthMismatch
-from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
+from multiversx_sdk.core.interfaces import IValidatorPublicKey
 from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.transaction_builder import \
@@ -28,7 +28,7 @@ class DelegationTransactionsFactory:
         self.config = config
 
     def create_transaction_for_new_delegation_contract(self,
-                                                       sender: IAddress,
+                                                       sender: Address,
                                                        total_delegation_cap: int,
                                                        service_fee: int,
                                                        amount: int) -> Transaction:
@@ -51,8 +51,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_adding_nodes(self,
-                                            sender: IAddress,
-                                            delegation_contract: IAddress,
+                                            sender: Address,
+                                            delegation_contract: Address,
                                             public_keys: Sequence[IValidatorPublicKey],
                                             signed_messages: Sequence[bytes]) -> Transaction:
         if len(public_keys) != len(signed_messages):
@@ -80,8 +80,8 @@ class DelegationTransactionsFactory:
         return self.config.gas_limit_delegation_operations + num_nodes * self.config.additional_gas_limit_per_validator_node
 
     def create_transaction_for_removing_nodes(self,
-                                              sender: IAddress,
-                                              delegation_contract: IAddress,
+                                              sender: Address,
+                                              delegation_contract: Address,
                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
@@ -101,8 +101,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_staking_nodes(self,
-                                             sender: IAddress,
-                                             delegation_contract: IAddress,
+                                             sender: Address,
+                                             delegation_contract: Address,
                                              public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
@@ -122,8 +122,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_unbonding_nodes(self,
-                                               sender: IAddress,
-                                               delegation_contract: IAddress,
+                                               sender: Address,
+                                               delegation_contract: Address,
                                                public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
@@ -143,8 +143,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_unstaking_nodes(self,
-                                               sender: IAddress,
-                                               delegation_contract: IAddress,
+                                               sender: Address,
+                                               delegation_contract: Address,
                                                public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
@@ -164,8 +164,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_unjailing_nodes(self,
-                                               sender: IAddress,
-                                               delegation_contract: IAddress,
+                                               sender: Address,
+                                               delegation_contract: Address,
                                                public_keys: Sequence[IValidatorPublicKey],
                                                amount: int) -> Transaction:
         num_nodes = len(public_keys)
@@ -187,8 +187,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_changing_service_fee(self,
-                                                    sender: IAddress,
-                                                    delegation_contract: IAddress,
+                                                    sender: Address,
+                                                    delegation_contract: Address,
                                                     service_fee: int) -> Transaction:
         parts = [
             "changeServiceFee",
@@ -207,8 +207,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_modifying_delegation_cap(self,
-                                                        sender: IAddress,
-                                                        delegation_contract: IAddress,
+                                                        sender: Address,
+                                                        delegation_contract: Address,
                                                         delegation_cap: int) -> Transaction:
         parts = [
             "modifyTotalDelegationCap",
@@ -227,8 +227,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_setting_automatic_activation(self,
-                                                            sender: IAddress,
-                                                            delegation_contract: IAddress) -> Transaction:
+                                                            sender: Address,
+                                                            delegation_contract: Address) -> Transaction:
         parts = [
             "setAutomaticActivation",
             arg_to_string('true')
@@ -246,8 +246,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_unsetting_automatic_activation(self,
-                                                              sender: IAddress,
-                                                              delegation_contract: IAddress) -> Transaction:
+                                                              sender: Address,
+                                                              delegation_contract: Address) -> Transaction:
         parts = [
             "setAutomaticActivation",
             arg_to_string('false')
@@ -265,8 +265,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_setting_cap_check_on_redelegate_rewards(self,
-                                                                       sender: IAddress,
-                                                                       delegation_contract: IAddress) -> Transaction:
+                                                                       sender: Address,
+                                                                       delegation_contract: Address) -> Transaction:
         parts = [
             "setCheckCapOnReDelegateRewards",
             arg_to_string('true')
@@ -284,8 +284,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_unsetting_cap_check_on_redelegate_rewards(self,
-                                                                         sender: IAddress,
-                                                                         delegation_contract: IAddress) -> Transaction:
+                                                                         sender: Address,
+                                                                         delegation_contract: Address) -> Transaction:
         parts = [
             "setCheckCapOnReDelegateRewards",
             arg_to_string('false')
@@ -303,8 +303,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_setting_metadata(self,
-                                                sender: IAddress,
-                                                delegation_contract: IAddress,
+                                                sender: Address,
+                                                delegation_contract: Address,
                                                 name: str,
                                                 website: str,
                                                 identifier: str) -> Transaction:
@@ -327,8 +327,8 @@ class DelegationTransactionsFactory:
         return transaction
 
     def create_transaction_for_delegating(self,
-                                          sender: IAddress,
-                                          delegation_contract: IAddress,
+                                          sender: Address,
+                                          delegation_contract: Address,
                                           amount: int) -> Transaction:
         return TransactionBuilder(
             config=self.config,
@@ -341,8 +341,8 @@ class DelegationTransactionsFactory:
         ).build()
 
     def create_transaction_for_claiming_rewards(self,
-                                                sender: IAddress,
-                                                delegation_contract: IAddress) -> Transaction:
+                                                sender: Address,
+                                                delegation_contract: Address) -> Transaction:
         return TransactionBuilder(
             config=self.config,
             sender=sender,
@@ -354,8 +354,8 @@ class DelegationTransactionsFactory:
         ).build()
 
     def create_transaction_for_redelegating_rewards(self,
-                                                    sender: IAddress,
-                                                    delegation_contract: IAddress) -> Transaction:
+                                                    sender: Address,
+                                                    delegation_contract: Address) -> Transaction:
         return TransactionBuilder(
             config=self.config,
             sender=sender,
@@ -367,8 +367,8 @@ class DelegationTransactionsFactory:
         ).build()
 
     def create_transaction_for_undelegating(self,
-                                            sender: IAddress,
-                                            delegation_contract: IAddress,
+                                            sender: Address,
+                                            delegation_contract: Address,
                                             amount: int) -> Transaction:
         return TransactionBuilder(
             config=self.config,
@@ -381,8 +381,8 @@ class DelegationTransactionsFactory:
         ).build()
 
     def create_transaction_for_withdrawing(self,
-                                           sender: IAddress,
-                                           delegation_contract: IAddress) -> Transaction:
+                                           sender: Address,
+                                           delegation_contract: Address) -> Transaction:
         return TransactionBuilder(
             config=self.config,
             sender=sender,

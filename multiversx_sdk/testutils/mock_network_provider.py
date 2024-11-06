@@ -3,7 +3,6 @@ import time
 from typing import Any, Callable, Dict, List, Union
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction import Transaction
@@ -114,7 +113,7 @@ class MockNetworkProvider:
         thread = threading.Thread(target=fn)
         thread.start()
 
-    def get_account(self, address: IAddress) -> AccountOnNetwork:
+    def get_account(self, address: Address) -> AccountOnNetwork:
         account = self.accounts.get(address.to_bech32(), None)
 
         if account:

@@ -1,3 +1,4 @@
+from multiversx_sdk.accounts import Account
 from multiversx_sdk.controllers.account_controller import AccountController
 from multiversx_sdk.controllers.delegation_controller import \
     DelegationController
@@ -7,7 +8,6 @@ from multiversx_sdk.controllers.smart_contract_controller import \
 from multiversx_sdk.controllers.token_management_controller import \
     TokenManagementController
 from multiversx_sdk.controllers.transfers_controller import TransfersController
-from multiversx_sdk.core.account import AccountNonceHolder
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata
@@ -57,7 +57,6 @@ from multiversx_sdk.core.transactions_outcome_parsers.token_management_transacti
     UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
 from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
     TransactionEventsParser
-from multiversx_sdk.facades.account import Account
 from multiversx_sdk.facades.entrypoints import (DevnetEntrypoint,
                                                 MainnetEntrypoint,
                                                 NetworkEntrypoint,
@@ -86,7 +85,7 @@ from multiversx_sdk.wallet.validator_signer import ValidatorSigner
 from multiversx_sdk.wallet.validator_verifier import ValidatorVerifier
 
 __all__ = [
-    "AccountNonceHolder", "Address", "AddressFactory", "AddressComputer", "Transaction", "TransactionComputer",
+    "Account", "Address", "AddressFactory", "AddressComputer", "Transaction", "TransactionComputer",
     "Message", "MessageComputer", "CodeMetadata", "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",
     "TokenManagementTransactionsOutcomeParser", "SmartContractResult", "TransactionEvent", "TransactionLogs",
     "DelegationTransactionsFactory", "TokenManagementTransactionsFactory", "TransactionsFactoryConfig", "TokenType",
@@ -97,7 +96,7 @@ __all__ = [
     "DelegationTransactionsOutcomeParser", "find_events_by_identifier",
     "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser", "TransactionAwaiter",
     "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse", "TransactionDecoder",
-    "TransactionMetadata", "TransactionEventsParser", "NetworkProviderConfig", "Account", "DevnetEntrypoint",
+    "TransactionMetadata", "TransactionEventsParser", "NetworkProviderConfig", "DevnetEntrypoint",
     "MainnetEntrypoint", "NetworkEntrypoint", "TestnetEntrypoint", "AccountController", "DelegationController",
     "RelayedController", "SmartContractController", "TokenManagementController", "TransfersController",
     "CreateNewDelegationContractOutcome", "SmartContractDeployOutcome", "DeployedSmartContract", "IssueFungibleOutcome",

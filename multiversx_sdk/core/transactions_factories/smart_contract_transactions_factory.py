@@ -8,7 +8,6 @@ from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
                                            CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
-from multiversx_sdk.core.interfaces import IAddress
 from multiversx_sdk.core.serializer import arg_to_string, args_to_buffers
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
@@ -46,7 +45,7 @@ class SmartContractTransactionsFactory:
         self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
 
     def create_transaction_for_deploy(self,
-                                      sender: IAddress,
+                                      sender: Address,
                                       bytecode: Union[Path, bytes],
                                       gas_limit: int,
                                       arguments: Sequence[Any] = [],
@@ -80,8 +79,8 @@ class SmartContractTransactionsFactory:
         ).build()
 
     def create_transaction_for_execute(self,
-                                       sender: IAddress,
-                                       contract: IAddress,
+                                       sender: Address,
+                                       contract: Address,
                                        function: str,
                                        gas_limit: int,
                                        arguments: Sequence[Any] = [],
@@ -129,8 +128,8 @@ class SmartContractTransactionsFactory:
         ).build()
 
     def create_transaction_for_upgrade(self,
-                                       sender: IAddress,
-                                       contract: IAddress,
+                                       sender: Address,
+                                       contract: Address,
                                        bytecode: Union[Path, bytes],
                                        gas_limit: int,
                                        arguments: Sequence[Any] = [],
@@ -164,8 +163,8 @@ class SmartContractTransactionsFactory:
         ).build()
 
     def create_transaction_for_claiming_developer_rewards(self,
-                                                          sender: IAddress,
-                                                          contract: IAddress) -> Transaction:
+                                                          sender: Address,
+                                                          contract: Address) -> Transaction:
         data_parts = ["ClaimDeveloperRewards"]
 
         return TransactionBuilder(
@@ -178,9 +177,9 @@ class SmartContractTransactionsFactory:
         ).build()
 
     def create_transaction_for_changing_owner_address(self,
-                                                      sender: IAddress,
-                                                      contract: IAddress,
-                                                      new_owner: IAddress) -> Transaction:
+                                                      sender: Address,
+                                                      contract: Address,
+                                                      new_owner: Address) -> Transaction:
         data_parts = ["ChangeOwnerAddress", new_owner.to_hex()]
 
         return TransactionBuilder(

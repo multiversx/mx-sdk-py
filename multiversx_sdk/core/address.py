@@ -146,7 +146,7 @@ class AddressComputer:
         """Computes the contract address based on the deployer's address and deployment nonce.
 
         Args:
-            deployer (IAddress): The address of the deployer\n
+            deployer (Address): The address of the deployer\n
             deployment_nonce (int): The nonce of the deployment
 
         Returns:
@@ -164,7 +164,7 @@ class AddressComputer:
         """Returns the shard number of a given address.
 
         Args:
-            address (IAddress): The address for which to determine the shard.
+            address (Address): The address for which to determine the shard.
 
         Returns:
             int: The shard number."""
@@ -205,7 +205,8 @@ def get_shard_of_pubkey(pubkey: bytes, number_of_shards: int) -> int:
 
 
 def _is_pubkey_of_metachain(pubkey: bytes) -> bool:
-    metachain_prefix = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+    metachain_prefix = bytearray(
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     pubkey_prefix = pubkey[0:len(metachain_prefix)]
     if pubkey_prefix == bytes(metachain_prefix):
         return True

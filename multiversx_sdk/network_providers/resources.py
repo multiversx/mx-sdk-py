@@ -20,14 +20,6 @@ class GenericResponse:
         return self.__dict__
 
 
-class EmptyAddress:
-    def to_bech32(self) -> str:
-        return ""
-
-    def to_hex(self) -> str:
-        return ""
-
-
 @dataclass
 class NetworkConfig:
     raw: dict[str, Any]

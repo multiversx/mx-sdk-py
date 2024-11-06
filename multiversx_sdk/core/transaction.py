@@ -1,6 +1,7 @@
 import base64
 from typing import Any, Optional, Union
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
                                            TRANSACTION_OPTIONS_DEFAULT,
                                            TRANSACTION_VERSION_DEFAULT)
@@ -8,8 +9,8 @@ from multiversx_sdk.core.constants import (TRANSACTION_MIN_GAS_PRICE,
 
 class Transaction:
     def __init__(self,
-                 sender: str,
-                 receiver: str,
+                 sender: Address,
+                 receiver: Address,
                  gas_limit: int,
                  chain_id: str,
                  nonce: Optional[int] = None,
@@ -20,7 +21,7 @@ class Transaction:
                  data: Optional[bytes] = None,
                  version: Optional[int] = None,
                  options: Optional[int] = None,
-                 guardian: Optional[str] = None,
+                 guardian: Optional[Address] = None,
                  signature: Optional[bytes] = None,
                  guardian_signature: Optional[bytes] = None) -> None:
         self.chain_id = chain_id
@@ -40,15 +41,15 @@ class Transaction:
         self.version = version or TRANSACTION_VERSION_DEFAULT
         self.options = options or TRANSACTION_OPTIONS_DEFAULT
 
-        self.guardian = guardian or ""
+        self.guardian = guardian
         self.guardian_signature = guardian_signature or bytes()
 
     def to_dictionary(self) -> dict[str, Any]:
         return {
             "nonce": self.nonce,
             "value": str(self.value),
-            "receiver": self.receiver,
-            "sender": self.sender,
+            "receiver": self.receiver.to_bech32(),
+            "sender": self.sender.to_bech32(),
             "senderUsername": self._value_to_b64_or_empty(self.sender_username),
             "receiverUsername": self._value_to_b64_or_empty(self.receiver_username),
             "gasPrice": self.gas_price,
@@ -57,7 +58,7 @@ class Transaction:
             "chainID": self.chain_id,
             "version": self.version,
             "options": self.options,
-            "guardian": self.guardian,
+            "guardian": self.guardian.to_bech32() if self.guardian else "",
             "signature": self._value_to_hex_or_empty(self.signature),
             "guardianSignature": self._value_to_hex_or_empty(self.guardian_signature)
         }
@@ -66,14 +67,18 @@ class Transaction:
     def new_from_dictionary(dictionary: dict[str, Any]) -> "Transaction":
         _ensure_mandatory_fields_for_transaction(dictionary)
 
+        guardian = dictionary.get("guardian") or None
+        if guardian:
+            guardian = Address.new_from_bech32(guardian)
+
         return Transaction(
             nonce=dictionary.get("nonce", None),
             value=int(dictionary.get("value", None)),
-            receiver=dictionary["receiver"],
+            receiver=Address.new_from_bech32(dictionary["receiver"]),
             receiver_username=_bytes_from_b64(dictionary.get("receiverUsername", "")).decode(),
-            sender=dictionary["sender"],
+            sender=Address.new_from_bech32(dictionary["sender"]),
             sender_username=_bytes_from_b64(dictionary.get("senderUsername", "")).decode(),
-            guardian=dictionary.get("guardian", None),
+            guardian=guardian,
             gas_price=dictionary.get("gasPrice", None),
             gas_limit=dictionary["gasLimit"],
             data=_bytes_from_b64(dictionary.get("data", "")),

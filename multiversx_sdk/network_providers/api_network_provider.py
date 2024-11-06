@@ -1,5 +1,5 @@
 import urllib.parse
-from typing import Any, Callable, Dict, Optional, Union, cast
+from typing import Any, Callable, Optional, Union, cast
 
 import requests
 
@@ -245,12 +245,12 @@ class ApiNetworkProvider(INetworkProvider):
         except Exception as err:
             raise GenericError(url, err)
 
-    def _do_post(self, url: str, payload: Any) -> Dict[str, Any]:
+    def _do_post(self, url: str, payload: Any) -> dict[str, Any]:
         try:
             response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
-            return cast(Dict[str, Any], self._get_data(parsed, url))
+            return cast(dict[str, Any], self._get_data(parsed, url))
         except requests.HTTPError as err:
             error_data = self._extract_error_from_response(err.response)
             raise GenericError(url, error_data)

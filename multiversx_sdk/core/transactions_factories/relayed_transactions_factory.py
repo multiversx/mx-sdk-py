@@ -4,7 +4,6 @@ from typing import Any, Dict, List, Protocol
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
-from multiversx_sdk.core.interfaces import IAddress, ITransaction
 from multiversx_sdk.core.serializer import args_to_string
 from multiversx_sdk.core.transaction import Transaction
 
@@ -20,49 +19,56 @@ class RelayedTransactionsFactory:
         self._config = config
 
     def create_relayed_v1_transaction(self,
-                                      inner_transaction: ITransaction,
-                                      relayer_address: IAddress) -> Transaction:
+                                      inner_transaction: Transaction,
+                                      relayer_address: Address) -> Transaction:
         if not inner_transaction.gas_limit:
-            raise InvalidInnerTransactionError("The gas limit is not set for the inner transaction")
+            raise InvalidInnerTransactionError(
+                "The gas limit is not set for the inner transaction")
 
         if not inner_transaction.signature:
-            raise InvalidInnerTransactionError("The inner transaction is not signed")
+            raise InvalidInnerTransactionError(
+                "The inner transaction is not signed")
 
-        serialized_transaction = self._prepare_inner_transaction_for_relayed_v1(inner_transaction)
+        serialized_transaction = self._prepare_inner_transaction_for_relayed_v1(
+            inner_transaction)
         data = f"relayedTx@{serialized_transaction.encode().hex()}"
 
-        gas_limit = self._config.min_gas_limit + self._config.gas_limit_per_byte * len(data) + inner_transaction.gas_limit
+        gas_limit = self._config.min_gas_limit + self._config.gas_limit_per_byte * \
+            len(data) + inner_transaction.gas_limit
 
         return Transaction(
             chain_id=self._config.chain_id,
-            sender=relayer_address.to_bech32(),
+            sender=relayer_address,
             receiver=inner_transaction.sender,
             gas_limit=gas_limit,
             data=data.encode()
         )
 
     def create_relayed_v2_transaction(self,
-                                      inner_transaction: ITransaction,
+                                      inner_transaction: Transaction,
                                       inner_transaction_gas_limit: int,
-                                      relayer_address: IAddress) -> Transaction:
+                                      relayer_address: Address) -> Transaction:
         if inner_transaction.gas_limit:
-            raise InvalidInnerTransactionError("The gas limit should not be set for the inner transaction")
+            raise InvalidInnerTransactionError(
+                "The gas limit should not be set for the inner transaction")
 
         if not inner_transaction.signature:
-            raise InvalidInnerTransactionError("The inner transaction is not signed")
+            raise InvalidInnerTransactionError(
+                "The inner transaction is not signed")
 
         arguments: List[Any] = [
-            Address.new_from_bech32(inner_transaction.receiver),
+            inner_transaction.receiver,
             inner_transaction.nonce,
             inner_transaction.data,
             inner_transaction.signature
         ]
 
         data = f"relayedTxV2@{args_to_string(arguments)}"
-        gas_limit = inner_transaction_gas_limit + self._config.min_gas_limit + self._config.gas_limit_per_byte * len(data)
+        gas_limit = inner_transaction_gas_limit + self._config.min_gas_limit + \
+            self._config.gas_limit_per_byte * len(data)
 
         return Transaction(
-            sender=relayer_address.to_bech32(),
+            sender=relayer_address,
             receiver=inner_transaction.sender,
             value=0,
             gas_limit=gas_limit,
@@ -72,9 +78,9 @@ class RelayedTransactionsFactory:
             options=inner_transaction.options
         )
 
-    def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:
-        sender = Address.new_from_bech32(inner_transaction.sender).to_hex()
-        receiver = Address.new_from_bech32(inner_transaction.receiver).to_hex()
+    def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: Transaction) -> str:
+        sender = inner_transaction.sender.to_hex()
+        receiver = inner_transaction.receiver.to_hex()
 
         tx: Dict[str, Any] = {
             "nonce": inner_transaction.nonce,
@@ -93,7 +99,7 @@ class RelayedTransactionsFactory:
             tx["options"] = inner_transaction.options
 
         if inner_transaction.guardian:
-            guardian = Address.new_from_bech32(inner_transaction.guardian).to_hex()
+            guardian = inner_transaction.guardian.to_hex()
             tx["guardian"] = base64.b64encode(bytes.fromhex(guardian)).decode()
 
         if inner_transaction.guardian_signature:
