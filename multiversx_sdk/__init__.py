@@ -57,10 +57,10 @@ from multiversx_sdk.core.transactions_outcome_parsers.token_management_transacti
     UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
 from multiversx_sdk.core.transactions_outcome_parsers.transaction_events_parser import \
     TransactionEventsParser
-from multiversx_sdk.facades.entrypoints import (DevnetEntrypoint,
-                                                MainnetEntrypoint,
-                                                NetworkEntrypoint,
-                                                TestnetEntrypoint)
+from multiversx_sdk.entrypoints.entrypoints import (DevnetEntrypoint,
+                                                    MainnetEntrypoint,
+                                                    NetworkEntrypoint,
+                                                    TestnetEntrypoint)
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
