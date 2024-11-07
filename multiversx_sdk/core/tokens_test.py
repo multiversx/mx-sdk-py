@@ -56,7 +56,7 @@ class TestTokenComputer:
         fungible_identifier = "FNG-123456"
         fungible_nonce = -10
 
-        with pytest.raises(BadUsageError, match="The token nonce can not be less than 0"):
+        with pytest.raises(BadUsageError, match="The token nonce can't be less than 0"):
             self.token_computer.compute_extended_identifier_from_identifier_and_nonce(
                 fungible_identifier, fungible_nonce
             )

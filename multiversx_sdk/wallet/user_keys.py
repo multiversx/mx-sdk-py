@@ -3,15 +3,15 @@ import nacl.signing
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.wallet.constants import (USER_PUBKEY_LENGTH,
                                              USER_SEED_LENGTH)
-from multiversx_sdk.wallet.errors import (ErrBadPublicKeyLength,
-                                          ErrBadSecretKeyLength)
+from multiversx_sdk.wallet.errors import (InvalidPublicKeyLength,
+                                          InvalidSecretKeyLengthError)
 from multiversx_sdk.wallet.interfaces import ISignature
 
 
 class UserSecretKey:
     def __init__(self, buffer: bytes) -> None:
         if len(buffer) != USER_SEED_LENGTH:
-            raise ErrBadSecretKeyLength()
+            raise InvalidSecretKeyLengthError()
 
         self.buffer = buffer
 
@@ -49,7 +49,7 @@ class UserSecretKey:
 class UserPublicKey:
     def __init__(self, buffer: bytes) -> None:
         if len(buffer) != USER_PUBKEY_LENGTH:
-            raise ErrBadPublicKeyLength()
+            raise InvalidPublicKeyLength()
 
         self.buffer = bytes(buffer)
 

@@ -2,9 +2,11 @@ import base64
 import json
 from typing import Any, Dict, List, Protocol
 
+from multiversx_sdk.abi import AddressValue, Serializer, BigUIntValue
+from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
-from multiversx_sdk.core.serializer import args_to_string
 from multiversx_sdk.core.transaction import Transaction
 
 
@@ -57,13 +59,14 @@ class RelayedTransactionsFactory:
                 "The inner transaction is not signed")
 
         arguments: List[Any] = [
-            inner_transaction.receiver,
-            inner_transaction.nonce,
-            inner_transaction.data,
-            inner_transaction.signature
+            AddressValue.from_address(inner_transaction.receiver),
+            BigUIntValue(inner_transaction.nonce),
+            BytesValue(inner_transaction.data),
+            BytesValue(inner_transaction.signature)
         ]
 
-        data = f"relayedTxV2@{args_to_string(arguments)}"
+        serializer = Serializer(ARGS_SEPARATOR)
+        data = f"relayedTxV2@{serializer.serialize(arguments)}"
         gas_limit = inner_transaction_gas_limit + self._config.min_gas_limit + \
             self._config.gas_limit_per_byte * len(data)
 

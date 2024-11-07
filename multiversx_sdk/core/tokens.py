@@ -1,9 +1,10 @@
 from typing import List
 
-from multiversx_sdk.core.codec import (decode_unsigned_number,
-                                       encode_unsigned_number)
+from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.core.constants import (
-    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER, TOKEN_RANDOM_SEQUENCE_LENGTH)
+    ARGS_SEPARATOR, EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER,
+    TOKEN_RANDOM_SEQUENCE_LENGTH)
 from multiversx_sdk.core.errors import (BadUsageError,
                                         InvalidTokenIdentifierError)
 
@@ -35,7 +36,7 @@ class TokenIdentifierParts:
 
 class TokenComputer:
     def __init__(self) -> None:
-        pass
+        self._serializer = Serializer(ARGS_SEPARATOR)
 
     def is_fungible(self, token: Token) -> bool:
         return token.nonce == 0
@@ -50,8 +51,9 @@ class TokenComputer:
         if len(parts) == 2:
             return 0
 
-        hex_nonce = bytes.fromhex(parts[2])
-        return decode_unsigned_number(hex_nonce)
+        nonce_value = BigUIntValue()
+        self._serializer.deserialize(parts[2], [nonce_value])
+        return nonce_value.get_payload()
 
     def extract_identifier_from_extended_identifier(self, identifier: str) -> str:
         parts = identifier.split("-")
@@ -76,7 +78,13 @@ class TokenComputer:
         self._check_length_of_random_sequence(parts[1])
         self._ensure_token_ticker_validity(parts[0])
 
-        nonce = decode_unsigned_number(bytes.fromhex(parts[2])) if len(parts) == 3 else 0
+        if len(parts) == 3:
+            nonce_value = BigUIntValue()
+            self._serializer.deserialize(parts[2], [nonce_value])
+            nonce = nonce_value.get_payload()
+        else:
+            nonce = 0
+
         return TokenIdentifierParts(parts[0], parts[1], nonce)
 
     def compute_extended_identifier_from_identifier_and_nonce(self, identifier: str, nonce: int) -> str:
@@ -86,12 +94,12 @@ class TokenComputer:
         self._ensure_token_ticker_validity(identifier_parts[0])
 
         if nonce < 0:
-            raise BadUsageError("The token nonce can not be less than 0")
+            raise BadUsageError("The token nonce can't be less than 0")
 
         if nonce == 0:
             return identifier
 
-        nonce_hex = encode_unsigned_number(nonce).hex()
+        nonce_hex = self._serializer.serialize([BigUIntValue(nonce)])
         return identifier + "-" + nonce_hex
 
     def compute_extended_identifier_from_parts(self, parts: TokenIdentifierParts) -> str:

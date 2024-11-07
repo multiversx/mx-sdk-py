@@ -5,8 +5,10 @@ import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition
+from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.small_int_values import U64Value
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.codec import encode_unsigned_number
+from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.transaction_on_network import (
     SmartContractResult, TransactionEvent, TransactionLogs,
     TransactionOnNetwork, find_events_by_first_topic,
@@ -143,20 +145,21 @@ def test_parse_event_with_multi_values():
     )
     abi = Abi(abi_definition)
     parser = TransactionEventsParser(abi=abi)
+    serializer = Serializer(ARGS_SEPARATOR)
     value = 42
     parsed = parser.parse_event(
         TransactionEvent(
             identifier="foobar",
             topics=[
                 "doFoobar".encode(),
-                encode_unsigned_number(value),
+                serializer.serialize_to_parts([U64Value(value)])[0],
                 "test".encode(),
-                encode_unsigned_number(value + 1),
+                serializer.serialize_to_parts([U64Value(value + 1)])[0],
                 "test".encode(),
                 "test".encode(),
-                encode_unsigned_number(value + 2),
+                serializer.serialize_to_parts([U64Value(value + 2)])[0],
             ],
-            additional_data=[encode_unsigned_number(value)]
+            additional_data=[serializer.serialize_to_parts([U64Value(value)])[0]]
         )
     )
 
