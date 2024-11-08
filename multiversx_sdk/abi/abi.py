@@ -35,13 +35,12 @@ from multiversx_sdk.abi.tuple_value import TupleValue
 from multiversx_sdk.abi.type_formula import TypeFormula
 from multiversx_sdk.abi.type_formula_parser import TypeFormulaParser
 from multiversx_sdk.abi.variadic_values import VariadicValues
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 
 
 class Abi:
     def __init__(self, definition: AbiDefinition) -> None:
         self._type_formula_parser = TypeFormulaParser()
-        self._serializer = Serializer(parts_separator=ARGS_SEPARATOR)
+        self._serializer = Serializer()
 
         self.definition = definition
         self.custom_types_prototypes_by_name: Dict[str, Any] = {}

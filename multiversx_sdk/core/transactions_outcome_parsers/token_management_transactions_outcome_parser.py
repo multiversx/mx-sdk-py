@@ -1,7 +1,8 @@
 from typing import List
 
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.codec import decode_unsigned_number
 from multiversx_sdk.core.constants import DEFAULT_HRP
 from multiversx_sdk.core.errors import ParseTransactionOnNetworkError
 from multiversx_sdk.core.transaction_on_network import (
@@ -16,7 +17,7 @@ from multiversx_sdk.core.transactions_outcome_parsers.token_management_transacti
 
 class TokenManagementTransactionsOutcomeParser:
     def __init__(self) -> None:
-        pass
+        self._serializer = Serializer()
 
     def parse_issue_fungible(self, transaction: TransactionOnNetwork) -> List[IssueFungibleOutcome]:
         self._ensure_no_error(transaction.logs.events)
@@ -235,13 +236,17 @@ class TokenManagementTransactionsOutcomeParser:
         if not event.topics[1]:
             return 0
 
-        return decode_unsigned_number(event.topics[1])
+        nonce_value = BigUIntValue()
+        self._serializer.deserialize_parts([event.topics[1]], [nonce_value])
+        return nonce_value.get_payload()
 
     def _extract_amount(self, event: TransactionEvent) -> int:
         if not event.topics[2]:
             return 0
 
-        return decode_unsigned_number(event.topics[2])
+        amount_value = BigUIntValue()
+        self._serializer.deserialize_parts([event.topics[2]], [amount_value])
+        return amount_value.get_payload()
 
     def _extract_address(self, event: TransactionEvent) -> str:
         if not event.topics[3]:

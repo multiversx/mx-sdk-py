@@ -8,6 +8,7 @@ from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.parts import PartsHolder
 from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.abi.variadic_values import VariadicValues
+from multiversx_sdk.core.constants import ARGS_SEPARATOR
 
 
 class Serializer:
@@ -16,7 +17,7 @@ class Serializer:
     https://docs.multiversx.com/developers/data/serialization-overview
     """
 
-    def __init__(self, parts_separator: str):
+    def __init__(self, parts_separator: str = ARGS_SEPARATOR):
         if not parts_separator:
             raise ValueError("cannot create serializer: parts separator must not be empty")
 

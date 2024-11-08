@@ -4,7 +4,7 @@ from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core import bech32
 from multiversx_sdk.core.constants import DEFAULT_HRP, METACHAIN_ID
-from multiversx_sdk.core.errors import ErrBadAddress, ErrBadPubkeyLength
+from multiversx_sdk.core.errors import BadAddressError, BadPubkeyLengthError
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 PUBKEY_LENGTH = 32
@@ -22,7 +22,7 @@ class Address:
             pubkey (bytes): the sequence of bytes\n
             hrp (str): the human readable part"""
         if len(pubkey) != PUBKEY_LENGTH:
-            raise ErrBadPubkeyLength(len(pubkey), PUBKEY_LENGTH)
+            raise BadPubkeyLengthError(len(pubkey), PUBKEY_LENGTH)
 
         self.pubkey = bytes(pubkey)
         self.hrp = hrp
@@ -119,7 +119,7 @@ class AddressFactory:
         """Creates an address object from the bech32 representation of an address"""
         hrp, pubkey = _decode_bech32(value)
         if hrp != self.hrp:
-            raise ErrBadAddress(value)
+            raise BadAddressError(value)
 
         return Address(pubkey, hrp)
 
@@ -179,11 +179,11 @@ def is_valid_bech32(value: str, expected_hrp: str) -> bool:
 def _decode_bech32(value: str) -> tuple[str, bytes]:
     hrp, value_bytes = bech32.bech32_decode(value)
     if hrp is None or value_bytes is None:
-        raise ErrBadAddress(value)
+        raise BadAddressError(value)
 
     decoded_bytes = bech32.convertbits(value_bytes, 5, 8, False)
     if decoded_bytes is None:
-        raise ErrBadAddress(value)
+        raise BadAddressError(value)
 
     return hrp, bytes(bytearray(decoded_bytes))
 

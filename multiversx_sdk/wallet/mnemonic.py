@@ -4,7 +4,7 @@ import mnemonic
 
 from multiversx_sdk.wallet import core
 from multiversx_sdk.wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
-from multiversx_sdk.wallet.errors import ErrBadMnemonic
+from multiversx_sdk.wallet.errors import InvalidMnemonicError
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 
 
@@ -17,7 +17,7 @@ class Mnemonic:
     @classmethod
     def assert_text_is_valid(cls, text: str) -> None:
         if not cls.is_text_valid(text):
-            raise ErrBadMnemonic()
+            raise InvalidMnemonicError()
 
     @classmethod
     def is_text_valid(cls, text: str) -> bool:

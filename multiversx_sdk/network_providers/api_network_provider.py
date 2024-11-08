@@ -12,7 +12,8 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
-from multiversx_sdk.network_providers.errors import GenericError
+from multiversx_sdk.network_providers.errors import (GenericError,
+                                                     TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
     account_from_api_response, account_storage_entry_from_response,
     account_storage_from_response, block_from_response,
@@ -123,7 +124,10 @@ class ApiNetworkProvider(INetworkProvider):
     def get_transaction(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
         """Fetches a transaction that was previously broadcasted (maybe already processed by the network)."""
         transaction_hash = convert_tx_hash_to_string(transaction_hash)
-        response = self.do_get_generic(f'transactions/{transaction_hash}')
+        try:
+            response = self.do_get_generic(f'transactions/{transaction_hash}')
+        except GenericError as ge:
+            raise TransactionFetchingError(ge.url, ge.data)
         return transaction_from_api_response(transaction_hash, response)
 
     def await_transaction_completed(

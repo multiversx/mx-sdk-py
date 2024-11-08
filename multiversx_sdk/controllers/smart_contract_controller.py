@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import Any, List, Optional, Sequence, Union
 
-from multiversx_sdk.controllers.interfaces import IAbi, IAccount, INetworkProvider
+from multiversx_sdk.controllers.interfaces import (IAbi, IAccount,
+                                                   INetworkProvider)
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
@@ -19,7 +20,7 @@ class SmartContractController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Optional[IAbi] = None) -> None:
         self.abi = abi
         self.factory = SmartContractTransactionsFactory(
-            TransactionsFactoryConfig(chain_id))
+            TransactionsFactoryConfig(chain_id), abi=self.abi)
         self.parser = SmartContractTransactionsOutcomeParser()
         self.query_controller = SmartContractQueriesController(
             network_provider=network_provider,

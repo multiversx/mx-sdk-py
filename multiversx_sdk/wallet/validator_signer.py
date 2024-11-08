@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from multiversx_sdk.wallet.errors import ErrCannotSign
+from multiversx_sdk.wallet.errors import CannotSignError
 from multiversx_sdk.wallet.interfaces import ISignature
 from multiversx_sdk.wallet.validator_keys import (ValidatorPublicKey,
                                                   ValidatorSecretKey)
@@ -24,7 +24,7 @@ class ValidatorSigner:
         try:
             return self._try_sign(data)
         except Exception as err:
-            raise ErrCannotSign() from err
+            raise CannotSignError() from err
 
     def _try_sign(self, data: bytes) -> ISignature:
         signature = self.secret_key.sign(data)

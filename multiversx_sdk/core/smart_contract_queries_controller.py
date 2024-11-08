@@ -3,9 +3,7 @@ from typing import Any, List, Optional, Protocol
 from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.typesystem import (is_list_of_bytes,
                                            is_list_of_typed_values)
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.errors import SmartContractQueryError
-from multiversx_sdk.core.serializer import args_to_buffers
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 
@@ -27,7 +25,7 @@ class SmartContractQueriesController:
     def __init__(self, network_provider: INetworkProvider, abi: Optional[IAbi] = None) -> None:
         self.network_provider = network_provider
         self.abi = abi
-        self.serializer = Serializer(parts_separator=ARGS_SEPARATOR)
+        self.serializer = Serializer()
 
     def query(
         self,
@@ -82,7 +80,7 @@ class SmartContractQueriesController:
         if is_list_of_bytes(args):
             return args
 
-        return args_to_buffers(args)
+        raise Exception("Can't serialize arguments")
 
     def run_query(self, query: SmartContractQuery) -> SmartContractQueryResponse:
         return self.network_provider.query_contract(query)

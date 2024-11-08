@@ -1,10 +1,12 @@
 from typing import Protocol, Sequence
 
+from multiversx_sdk.abi import Serializer
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
-from multiversx_sdk.core.errors import ErrListsLengthMismatch
+from multiversx_sdk.core.errors import ListsLengthMismatchError
 from multiversx_sdk.core.interfaces import IValidatorPublicKey
-from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.transaction_builder import \
     TransactionBuilder
@@ -26,17 +28,21 @@ class IConfig(Protocol):
 class DelegationTransactionsFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
+        self.serializer = Serializer()
 
     def create_transaction_for_new_delegation_contract(self,
                                                        sender: Address,
                                                        total_delegation_cap: int,
                                                        service_fee: int,
                                                        amount: int) -> Transaction:
-        parts = [
-            "createNewDelegationContract",
-            arg_to_string(total_delegation_cap),
-            arg_to_string(service_fee)
-        ]
+        parts = ["createNewDelegationContract"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            BigUIntValue(total_delegation_cap),
+            BigUIntValue(service_fee)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         transaction = TransactionBuilder(
             config=self.config,
@@ -56,7 +62,7 @@ class DelegationTransactionsFactory:
                                             public_keys: Sequence[IValidatorPublicKey],
                                             signed_messages: Sequence[bytes]) -> Transaction:
         if len(public_keys) != len(signed_messages):
-            raise ErrListsLengthMismatch("The number of public keys should match the number of signed messages")
+            raise ListsLengthMismatchError("The number of public keys should match the number of signed messages")
 
         parts = ["addNodes"]
         for i in range(len(public_keys)):
@@ -115,7 +121,8 @@ class DelegationTransactionsFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_stake + num_nodes * self.config.additional_gas_limit_per_validator_node,
+            gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_stake +
+            num_nodes * self.config.additional_gas_limit_per_validator_node,
             add_data_movement_gas=True
         ).build()
 
@@ -136,7 +143,8 @@ class DelegationTransactionsFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_unbond + num_nodes * self.config.additional_gas_limit_per_validator_node,
+            gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_unbond +
+            num_nodes * self.config.additional_gas_limit_per_validator_node,
             add_data_movement_gas=True
         ).build()
 
@@ -157,7 +165,8 @@ class DelegationTransactionsFactory:
             sender=sender,
             receiver=delegation_contract,
             data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_unstake + num_nodes * self.config.additional_gas_limit_per_validator_node,
+            gas_limit=self.config.gas_limit_delegation_operations + self.config.gas_limit_unstake +
+            num_nodes * self.config.additional_gas_limit_per_validator_node,
             add_data_movement_gas=True
         ).build()
 
@@ -192,7 +201,7 @@ class DelegationTransactionsFactory:
                                                     service_fee: int) -> Transaction:
         parts = [
             "changeServiceFee",
-            arg_to_string(service_fee)
+            self.serializer.serialize([BigUIntValue(service_fee)])
         ]
 
         transaction = TransactionBuilder(
@@ -212,7 +221,7 @@ class DelegationTransactionsFactory:
                                                         delegation_cap: int) -> Transaction:
         parts = [
             "modifyTotalDelegationCap",
-            arg_to_string(delegation_cap)
+            self.serializer.serialize([BigUIntValue(delegation_cap)])
         ]
 
         transaction = TransactionBuilder(
@@ -231,7 +240,7 @@ class DelegationTransactionsFactory:
                                                             delegation_contract: Address) -> Transaction:
         parts = [
             "setAutomaticActivation",
-            arg_to_string('true')
+            self.serializer.serialize([StringValue('true')])
         ]
 
         transaction = TransactionBuilder(
@@ -250,7 +259,7 @@ class DelegationTransactionsFactory:
                                                               delegation_contract: Address) -> Transaction:
         parts = [
             "setAutomaticActivation",
-            arg_to_string('false')
+            self.serializer.serialize([StringValue('false')])
         ]
 
         transaction = TransactionBuilder(
@@ -269,7 +278,7 @@ class DelegationTransactionsFactory:
                                                                        delegation_contract: Address) -> Transaction:
         parts = [
             "setCheckCapOnReDelegateRewards",
-            arg_to_string('true')
+            self.serializer.serialize([StringValue('true')])
         ]
 
         transaction = TransactionBuilder(
@@ -288,7 +297,7 @@ class DelegationTransactionsFactory:
                                                                          delegation_contract: Address) -> Transaction:
         parts = [
             "setCheckCapOnReDelegateRewards",
-            arg_to_string('false')
+            self.serializer.serialize([StringValue('false')])
         ]
 
         transaction = TransactionBuilder(
@@ -308,12 +317,15 @@ class DelegationTransactionsFactory:
                                                 name: str,
                                                 website: str,
                                                 identifier: str) -> Transaction:
-        parts = [
-            "setMetaData",
-            arg_to_string(name),
-            arg_to_string(website),
-            arg_to_string(identifier)
-        ]
+        parts = ["setMetaData"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(name),
+            StringValue(website),
+            StringValue(identifier)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         transaction = TransactionBuilder(
             config=self.config,
@@ -374,7 +386,7 @@ class DelegationTransactionsFactory:
             config=self.config,
             sender=sender,
             receiver=delegation_contract,
-            data_parts=["unDelegate", arg_to_string(amount)],
+            data_parts=["unDelegate", self.serializer.serialize([BigUIntValue(amount)])],
             gas_limit=12000000,
             add_data_movement_gas=False,
             amount=0

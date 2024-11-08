@@ -2,13 +2,15 @@ import logging
 from enum import Enum
 from typing import Optional, Protocol
 
+from multiversx_sdk.abi import Serializer
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.string_value import StringValue
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import BadUsageError
-from multiversx_sdk.core.serializer import arg_to_string
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.transaction_builder import \
     TransactionBuilder
-
-from multiversx_sdk.core.address import Address
 
 logger = logging.getLogger(__name__)
 
@@ -52,8 +54,7 @@ class TokenType(Enum):
 class TokenManagementTransactionsFactory:
     def __init__(self, config: IConfig):
         self._config = config
-        self._true_as_hex = arg_to_string("true")
-        self._false_as_hex = arg_to_string("false")
+        self.serializer = Serializer()
 
     def create_transaction_for_issuing_fungible(
         self,
@@ -71,19 +72,22 @@ class TokenManagementTransactionsFactory:
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
-        parts: list[str] = [
-            "issue",
-            arg_to_string(token_name),
-            arg_to_string(token_ticker),
-            arg_to_string(initial_supply),
-            arg_to_string(num_decimals),
-            *([arg_to_string("canFreeze"), self._true_as_hex if can_freeze else self._false_as_hex]),
-            *([arg_to_string("canWipe"), self._true_as_hex if can_wipe else self._false_as_hex]),
-            *([arg_to_string("canPause"), self._true_as_hex if can_pause else self._false_as_hex]),
-            *([arg_to_string("canChangeOwner"), self._true_as_hex if can_change_owner else self._false_as_hex]),
-            *([arg_to_string("canUpgrade"), self._true_as_hex if can_upgrade else self._false_as_hex]),
-            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex if can_add_special_roles else self._false_as_hex])
-        ]
+        parts = ["issue",]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_name),
+            StringValue(token_ticker),
+            BigUIntValue(initial_supply),
+            BigUIntValue(num_decimals),
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -118,18 +122,21 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
-        parts: list[str] = [
-            "issueSemiFungible",
-            arg_to_string(token_name),
-            arg_to_string(token_ticker),
-            *([arg_to_string("canFreeze"), self._true_as_hex if can_freeze else self._false_as_hex]),
-            *([arg_to_string("canWipe"), self._true_as_hex if can_wipe else self._false_as_hex]),
-            *([arg_to_string("canPause"), self._true_as_hex if can_pause else self._false_as_hex]),
-            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
-            *([arg_to_string("canChangeOwner"), self._true_as_hex if can_change_owner else self._false_as_hex]),
-            *([arg_to_string("canUpgrade"), self._true_as_hex if can_upgrade else self._false_as_hex]),
-            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex if can_add_special_roles else self._false_as_hex])
-        ]
+        parts = ["issueSemiFungible"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_name),
+            StringValue(token_ticker),
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canTransferNFTCreateRole"), self._bool_to_typed_string(can_transfer_nft_create_role)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -156,18 +163,21 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
-        parts: list[str] = [
-            "issueNonFungible",
-            arg_to_string(token_name),
-            arg_to_string(token_ticker),
-            *([arg_to_string("canFreeze"), self._true_as_hex if can_freeze else self._false_as_hex]),
-            *([arg_to_string("canWipe"), self._true_as_hex if can_wipe else self._false_as_hex]),
-            *([arg_to_string("canPause"), self._true_as_hex if can_pause else self._false_as_hex]),
-            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
-            *([arg_to_string("canChangeOwner"), self._true_as_hex if can_change_owner else self._false_as_hex]),
-            *([arg_to_string("canUpgrade"), self._true_as_hex if can_upgrade else self._false_as_hex]),
-            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex if can_add_special_roles else self._false_as_hex])
-        ]
+        parts = ["issueNonFungible"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_name),
+            StringValue(token_ticker),
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canTransferNFTCreateRole"), self._bool_to_typed_string(can_transfer_nft_create_role)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -195,19 +205,22 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
-        parts: list[str] = [
-            "registerMetaESDT",
-            arg_to_string(token_name),
-            arg_to_string(token_ticker),
-            arg_to_string(num_decimals),
-            *([arg_to_string("canFreeze"), self._true_as_hex if can_freeze else self._false_as_hex]),
-            *([arg_to_string("canWipe"), self._true_as_hex if can_wipe else self._false_as_hex]),
-            *([arg_to_string("canPause"), self._true_as_hex if can_pause else self._false_as_hex]),
-            *([arg_to_string("canTransferNFTCreateRole"), self._true_as_hex if can_transfer_nft_create_role else self._false_as_hex]),
-            *([arg_to_string("canChangeOwner"), self._true_as_hex if can_change_owner else self._false_as_hex]),
-            *([arg_to_string("canUpgrade"), self._true_as_hex if can_upgrade else self._false_as_hex]),
-            *([arg_to_string("canAddSpecialRoles"), self._true_as_hex if can_add_special_roles else self._false_as_hex])
-        ]
+        parts = ["registerMetaESDT"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_name),
+            StringValue(token_ticker),
+            BigUIntValue(num_decimals),
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canTransferNFTCreateRole"), self._bool_to_typed_string(can_transfer_nft_create_role)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -229,13 +242,16 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     ) -> Transaction:
         self._notify_about_unsetting_burn_role_globally()
 
-        parts: list[str] = [
-            "registerAndSetAllRoles",
-            arg_to_string(token_name),
-            arg_to_string(token_ticker),
-            arg_to_string(token_type.value),
-            arg_to_string(num_decimals)
-        ]
+        parts = ["registerAndSetAllRoles"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_name),
+            StringValue(token_ticker),
+            StringValue(token_type.value),
+            BigUIntValue(num_decimals)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -252,9 +268,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: Address,
         token_identifier: str
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "setBurnRoleGlobally",
-            arg_to_string(token_identifier)
+            self.serializer.serialize([StringValue(token_identifier)])
         ]
 
         return TransactionBuilder(
@@ -272,9 +288,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: Address,
         token_identifier: str
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "unsetBurnRoleGlobally",
-            arg_to_string(token_identifier)
+            self.serializer.serialize([StringValue(token_identifier)])
         ]
 
         return TransactionBuilder(
@@ -296,14 +312,19 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         add_role_local_burn: bool,
         add_role_esdt_transfer_role: bool
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "setSpecialRole",
-            arg_to_string(token_identifier),
+            self.serializer.serialize([StringValue(token_identifier)]),
             user.to_hex(),
-            *([arg_to_string("ESDTRoleLocalMint")] if add_role_local_mint else []),
-            *([arg_to_string("ESDTRoleLocalBurn")] if add_role_local_burn else []),
-            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else [])
         ]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            *([StringValue("ESDTRoleLocalMint")] if add_role_local_mint else []),
+            *([StringValue("ESDTRoleLocalBurn")] if add_role_local_burn else []),
+            *([StringValue("ESDTTransferRole")]if add_role_esdt_transfer_role else [])
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -324,14 +345,19 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         remove_role_local_burn: bool,
         remove_role_esdt_transfer_role: bool
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "unSetSpecialRole",
-            arg_to_string(token_identifier),
-            user.to_hex(),
-            *([arg_to_string("ESDTRoleLocalMint")] if remove_role_local_mint else []),
-            *([arg_to_string("ESDTRoleLocalBurn")] if remove_role_local_burn else []),
-            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else [])
+            self.serializer.serialize([StringValue(token_identifier)]),
+            user.to_hex()
         ]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            *([StringValue("ESDTRoleLocalMint")] if remove_role_local_mint else []),
+            *([StringValue("ESDTRoleLocalBurn")] if remove_role_local_burn else []),
+            *([StringValue("ESDTTransferRole")]if remove_role_esdt_transfer_role else [])
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -358,20 +384,25 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         add_role_esdt_modify_creator: bool = False,
         add_role_nft_recreate: bool = False,
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "setSpecialRole",
-            arg_to_string(token_identifier),
-            user.to_hex(),
-            *([arg_to_string("ESDTRoleNFTCreate")] if add_role_nft_create else []),
-            *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
-            *([arg_to_string("ESDTRoleNFTAddQuantity")] if add_role_nft_add_quantity else []),
-            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
-            *([arg_to_string("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
-            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
-            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
-            *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
-            *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
+            self.serializer.serialize([StringValue(token_identifier)]),
+            user.to_hex()
         ]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            *([StringValue("ESDTRoleNFTCreate")] if add_role_nft_create else []),
+            *([StringValue("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
+            *([StringValue("ESDTRoleNFTAddQuantity")]if add_role_nft_add_quantity else []),
+            *([StringValue("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
+            *([StringValue("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
+            *([StringValue("ESDTRoleModifyRoyalties")]if add_role_esdt_modify_royalties else []),
+            *([StringValue("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
+            *([StringValue("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
+            *([StringValue("ESDTRoleNFTRecreate")]if add_role_nft_recreate else [])
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -397,19 +428,24 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         remove_role_esdt_modify_creator: bool = False,
         remove_role_nft_recreate: bool = False,
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "unSetSpecialRole",
-            arg_to_string(token_identifier),
-            user.to_hex(),
-            *([arg_to_string("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
-            *([arg_to_string("ESDTRoleNFTAddQuantity")] if remove_role_nft_add_quantity else []),
-            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
-            *([arg_to_string("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
-            *([arg_to_string("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
-            *([arg_to_string("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
-            *([arg_to_string("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
-            *([arg_to_string("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else []),
+            self.serializer.serialize([StringValue(token_identifier)]),
+            user.to_hex()
         ]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            *([StringValue("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
+            *([StringValue("ESDTRoleNFTAddQuantity")]if remove_role_nft_add_quantity else []),
+            *([StringValue("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
+            *([StringValue("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
+            *([StringValue("ESDTRoleModifyRoyalties")]if remove_role_esdt_modify_royalties else []),
+            *([StringValue("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
+            *([StringValue("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
+            *([StringValue("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else [])
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -437,21 +473,26 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         add_role_esdt_modify_creator: bool = False,
         add_role_nft_recreate: bool = False,
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "setSpecialRole",
-            arg_to_string(token_identifier),
-            user.to_hex(),
-            *([arg_to_string("ESDTRoleNFTCreate")] if add_role_nft_create else []),
-            *([arg_to_string("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
-            *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if add_role_nft_update_attributes else []),
-            *([arg_to_string("ESDTRoleNFTAddURI")] if add_role_nft_add_uri else []),
-            *([arg_to_string("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
-            *([arg_to_string("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
-            *([arg_to_string("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
-            *([arg_to_string("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
-            *([arg_to_string("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
-            *([arg_to_string("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
+            self.serializer.serialize([StringValue(token_identifier)]),
+            user.to_hex()
         ]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            *([StringValue("ESDTRoleNFTCreate")] if add_role_nft_create else []),
+            *([StringValue("ESDTRoleNFTBurn")]if add_role_nft_burn else []),
+            *([StringValue("ESDTRoleNFTUpdateAttributes")] if add_role_nft_update_attributes else []),
+            *([StringValue("ESDTRoleNFTAddURI")] if add_role_nft_add_uri else []),
+            *([StringValue("ESDTTransferRole")]if add_role_esdt_transfer_role else []),
+            *([StringValue("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
+            *([StringValue("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
+            *([StringValue("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
+            *([StringValue("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
+            *([StringValue("ESDTRoleNFTRecreate")] if add_role_nft_recreate else [])
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -478,20 +519,25 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         remove_role_esdt_modify_creator: bool = False,
         remove_role_nft_recreate: bool = False,
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "unSetSpecialRole",
-            arg_to_string(token_identifier),
-            user.to_hex(),
-            *([arg_to_string("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
-            *([arg_to_string("ESDTRoleNFTUpdateAttributes")] if remove_role_nft_update_attributes else []),
-            *([arg_to_string("ESDTRoleNFTAddURI")] if remove_role_nft_remove_uri else []),
-            *([arg_to_string("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
-            *([arg_to_string("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
-            *([arg_to_string("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
-            *([arg_to_string("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
-            *([arg_to_string("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
-            *([arg_to_string("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else []),
+            self.serializer.serialize([StringValue(token_identifier)]),
+            user.to_hex()
         ]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            *([StringValue("ESDTRoleNFTBurn")]if remove_role_nft_burn else []),
+            *([StringValue("ESDTRoleNFTUpdateAttributes")] if remove_role_nft_update_attributes else []),
+            *([StringValue("ESDTRoleNFTAddURI")] if remove_role_nft_remove_uri else []),
+            *([StringValue("ESDTTransferRole")]if remove_role_esdt_transfer_role else []),
+            *([StringValue("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
+            *([StringValue("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
+            *([StringValue("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
+            *([StringValue("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
+            *([StringValue("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else [])
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -517,16 +563,19 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         if not uris:
             raise BadUsageError("No URIs provided")
 
-        parts: list[str] = [
-            "ESDTNFTCreate",
-            arg_to_string(token_identifier),
-            arg_to_string(initial_quantity),
-            arg_to_string(name),
-            arg_to_string(royalties),
-            arg_to_string(hash),
-            arg_to_string(attributes),
-            *map(arg_to_string, uris)
-        ]
+        parts = ["ESDTNFTCreate"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(initial_quantity),
+            StringValue(name),
+            BigUIntValue(royalties),
+            StringValue(hash),
+            BytesValue(attributes),
+            *map(StringValue, uris)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         # Note that the following is an approximation (a reasonable one):
         nft_data = name + hash + attributes.hex() + "".join(uris)
@@ -547,9 +596,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: Address,
         token_identifier: str
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "pause",
-            arg_to_string(token_identifier)
+            self.serializer.serialize([StringValue(token_identifier)])
         ]
 
         return TransactionBuilder(
@@ -567,9 +616,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: Address,
         token_identifier: str
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "unPause",
-            arg_to_string(token_identifier)
+            self.serializer.serialize([StringValue(token_identifier)])
         ]
 
         return TransactionBuilder(
@@ -588,9 +637,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         user: Address,
         token_identifier: str
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "freeze",
-            arg_to_string(token_identifier),
+            self.serializer.serialize([StringValue(token_identifier)]),
             user.to_hex()
         ]
 
@@ -610,9 +659,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         user: Address,
         token_identifier: str
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "unFreeze",
-            arg_to_string(token_identifier),
+            self.serializer.serialize([StringValue(token_identifier)]),
             user.to_hex()
         ]
 
@@ -632,9 +681,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         user: Address,
         token_identifier: str
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "wipe",
-            arg_to_string(token_identifier),
+            self.serializer.serialize([StringValue(token_identifier)]),
             user.to_hex()
         ]
 
@@ -654,10 +703,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         token_identifier: str,
         supply_to_mint: int
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "ESDTLocalMint",
-            arg_to_string(token_identifier),
-            arg_to_string(supply_to_mint)
+            self.serializer.serialize([StringValue(token_identifier)]),
+            self.serializer.serialize([BigUIntValue(supply_to_mint)])
         ]
 
         return TransactionBuilder(
@@ -676,10 +725,10 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         token_identifier: str,
         supply_to_burn: int
     ) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "ESDTLocalBurn",
-            arg_to_string(token_identifier),
-            arg_to_string(supply_to_burn)
+            self.serializer.serialize([StringValue(token_identifier)]),
+            self.serializer.serialize([BigUIntValue(supply_to_burn)])
         ]
 
         return TransactionBuilder(
@@ -699,12 +748,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         token_nonce: int,
         attributes: bytes
     ) -> Transaction:
-        parts: list[str] = [
-            "ESDTNFTUpdateAttributes",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce),
-            arg_to_string(attributes)
-        ]
+        parts = ["ESDTNFTUpdateAttributes"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(token_nonce),
+            BytesValue(attributes)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -723,12 +775,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         token_nonce: int,
         quantity_to_add: int
     ) -> Transaction:
-        parts: list[str] = [
-            "ESDTNFTAddQuantity",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce),
-            arg_to_string(quantity_to_add)
-        ]
+        parts = ["ESDTNFTAddQuantity"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(token_nonce),
+            BigUIntValue(quantity_to_add)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -747,12 +802,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         token_nonce: int,
         quantity_to_burn: int
     ) -> Transaction:
-        parts: list[str] = [
-            "ESDTNFTBurn",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce),
-            arg_to_string(quantity_to_burn)
-        ]
+        parts = ["ESDTNFTBurn"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(token_nonce),
+            BigUIntValue(quantity_to_burn)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -769,12 +827,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                    token_identifier: str,
                                                    token_nonce: int,
                                                    new_royalties: int) -> Transaction:
-        parts: list[str] = [
-            "ESDTModifyRoyalties",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce),
-            arg_to_string(new_royalties)
-        ]
+        parts = ["ESDTModifyRoyalties"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(token_nonce),
+            BigUIntValue(new_royalties)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -794,12 +855,15 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         if not new_uris:
             raise BadUsageError("No URIs provided")
 
-        parts: list[str] = [
-            "ESDTSetNewURIs",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce),
-            *map(arg_to_string, new_uris)
-        ]
+        parts = ["ESDTSetNewURIs"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(token_nonce),
+            *map(StringValue, new_uris)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -817,8 +881,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                  token_nonce: int) -> Transaction:
         parts: list[str] = [
             "ESDTModifyCreator",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce)
+            self.serializer.serialize([StringValue(token_identifier)]),
+            self.serializer.serialize([BigUIntValue(token_nonce)])
         ]
 
         return TransactionBuilder(
@@ -840,16 +904,19 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                  new_hash: str,
                                                  new_attributes: bytes,
                                                  new_uris: list[str]) -> Transaction:
-        parts: list[str] = [
-            "ESDTMetaDataUpdate",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce),
-            arg_to_string(new_token_name),
-            arg_to_string(new_royalties),
-            arg_to_string(new_hash),
-            arg_to_string(new_attributes),
-            *map(arg_to_string, new_uris)
-        ]
+        parts = ["ESDTMetaDataUpdate"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(token_nonce),
+            StringValue(new_token_name),
+            BigUIntValue(new_royalties),
+            StringValue(new_hash),
+            BytesValue(new_attributes),
+            *map(StringValue, new_uris)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -870,16 +937,19 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                      new_hash: str,
                                                      new_attributes: bytes,
                                                      new_uris: list[str]) -> Transaction:
-        parts: list[str] = [
-            "ESDTMetaDataRecreate",
-            arg_to_string(token_identifier),
-            arg_to_string(token_nonce),
-            arg_to_string(new_token_name),
-            arg_to_string(new_royalties),
-            arg_to_string(new_hash),
-            arg_to_string(new_attributes),
-            *map(arg_to_string, new_uris)
-        ]
+        parts = ["ESDTMetaDataRecreate"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            BigUIntValue(token_nonce),
+            StringValue(new_token_name),
+            BigUIntValue(new_royalties),
+            StringValue(new_hash),
+            BytesValue(new_attributes),
+            *map(StringValue, new_uris)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         return TransactionBuilder(
             config=self._config,
@@ -895,9 +965,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                          sender: Address,
                                                          token_identifier: str) -> Transaction:
         """The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2"""
-        parts: list[str] = [
+        parts = [
             "changeToDynamic",
-            arg_to_string(token_identifier)
+            self.serializer.serialize([StringValue(token_identifier)])
         ]
 
         return TransactionBuilder(
@@ -913,9 +983,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
     def create_transaction_for_updating_token_id(self,
                                                  sender: Address,
                                                  token_identifier: str) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "updateTokenID",
-            arg_to_string(token_identifier)
+            self.serializer.serialize([StringValue(token_identifier)])
         ]
 
         return TransactionBuilder(
@@ -937,15 +1007,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         if token_type == TokenType.FNG:
             raise Exception("Cannot register fungible token as dynamic")
 
-        parts: list[str] = [
-            "registerDynamic",
-            arg_to_string(token_name),
-            arg_to_string(token_ticker),
-            arg_to_string(token_type.value)
-        ]
+        parts = ["registerDynamic"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_name),
+            StringValue(token_ticker),
+            StringValue(token_type.value)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         if token_type == TokenType.META and denominator is not None:
-            parts.append(arg_to_string(denominator))
+            parts.append(self.serializer.serialize([BigUIntValue(denominator)]))
 
         return TransactionBuilder(
             config=self._config,
@@ -966,15 +1039,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         if token_type == TokenType.FNG:
             raise Exception("Cannot register fungible token as dynamic")
 
-        parts: list[str] = [
-            "registerAndSetAllRolesDynamic",
-            arg_to_string(token_name),
-            arg_to_string(token_ticker),
-            arg_to_string(token_type.value)
-        ]
+        parts = ["registerAndSetAllRolesDynamic"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_name),
+            StringValue(token_ticker),
+            StringValue(token_type.value)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
 
         if token_type == TokenType.META and denominator is not None:
-            parts.append(arg_to_string(denominator))
+            parts.append(self.serializer.serialize([BigUIntValue(denominator)]))
 
         return TransactionBuilder(
             config=self._config,
@@ -985,3 +1061,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             add_data_movement_gas=True,
             data_parts=parts
         ).build()
+
+    def _bool_to_typed_string(self, value: bool) -> StringValue:
+        if value:
+            return StringValue("true")
+        return StringValue("false")

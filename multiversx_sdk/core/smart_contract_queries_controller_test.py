@@ -3,8 +3,8 @@ from pathlib import Path
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.abi.small_int_values import U64Value
 from multiversx_sdk.abi.string_value import StringValue
-from multiversx_sdk.core.codec import encode_unsigned_number
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
@@ -42,12 +42,12 @@ class TestSmartContractQueriesController:
         query = controller.create_query(
             contract=contract,
             function=function,
-            arguments=[encode_unsigned_number(7), "abba".encode()]
+            arguments=[U64Value(7), StringValue("abba")]
         )
 
         assert query.contract == contract
         assert query.function == function
-        assert query.arguments == [encode_unsigned_number(7), "abba".encode()]
+        assert query.arguments == [b'\x07', b"abba"]
         assert query.caller is None
         assert query.value is None
 

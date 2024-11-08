@@ -4,7 +4,8 @@ import platform
 from pathlib import Path
 from typing import Optional
 
-from multiversx_sdk.wallet.errors import ErrLibraryNotFound, ErrUnsupportedOS
+from multiversx_sdk.wallet.errors import (LibraryNotFoundError,
+                                          UnsupportedOSError)
 
 
 class BLSFacade:
@@ -66,7 +67,7 @@ class BLSFacade:
         lib_path = self._get_library_path()
 
         if not lib_path.exists():
-            raise ErrLibraryNotFound(lib_path)
+            raise LibraryNotFoundError(lib_path)
 
         lib = ctypes.CDLL(str(lib_path), winmode=0)
 
@@ -100,6 +101,6 @@ class BLSFacade:
         elif os_name == "Linux":
             lib_name = "libbls.so"
         else:
-            raise ErrUnsupportedOS(os_name)
+            raise UnsupportedOSError(os_name)
 
         return Path(__file__).parent / lib_name

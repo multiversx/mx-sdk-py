@@ -33,11 +33,12 @@ class TestEntrypoint:
 
     @pytest.mark.networkInteraction
     def test_contract_flow(self):
-        abi = Abi.load(testutils / "testdata" / "adder.abi.json")
         sender = Account.new_from_pem(self.grace_pem)
         sender.nonce = self.entrypoint.recall_account_nonce(sender.address)
 
+        abi = Abi.load(testutils / "testdata" / "adder.abi.json")
         controller = self.entrypoint.create_smart_contract_controller(abi)
+
         bytecode = (testutils / "testdata" / "adder.wasm").read_bytes()
         transaction = controller.create_transaction_for_deploy(
             sender=sender,

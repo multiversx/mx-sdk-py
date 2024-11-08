@@ -1,14 +1,16 @@
 from pathlib import Path
 from typing import Any, List, Optional, Protocol, Sequence, Union
 
+from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.typesystem import is_list_of_typed_values
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
-from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
-                                           CONTRACT_DEPLOY_ADDRESS,
+from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
-from multiversx_sdk.core.serializer import arg_to_string, args_to_buffers
+from multiversx_sdk.core.errors import ArgumentSerializationError
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
@@ -40,7 +42,7 @@ class SmartContractTransactionsFactory:
     def __init__(self, config: IConfig, abi: Optional[IAbi] = None) -> None:
         self.config = config
         self.abi = abi
-        self.serializer = Serializer(parts_separator=ARGS_SEPARATOR)
+        self.serializer = Serializer()
         self.token_computer = TokenComputer()
         self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
 
@@ -59,14 +61,14 @@ class SmartContractTransactionsFactory:
 
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
 
-        parts = [
-            arg_to_string(bytecode),
-            arg_to_string(VM_TYPE_WASM_VM),
-            str(metadata)
-        ]
+        serialized_parts = self.serializer.serialize_to_parts([
+            BytesValue(bytecode),
+            BytesValue(VM_TYPE_WASM_VM),
+            CodeMetadataValue.new_from_code_metadata(metadata)
+        ])
 
-        prepared_arguments = self._encode_deploy_arguments(list(arguments))
-        parts += [arg.hex() for arg in prepared_arguments]
+        prepared_arg = self._encode_deploy_arguments(list(arguments))
+        parts = [arg.hex() for arg in serialized_parts + prepared_arg]
 
         return TransactionBuilder(
             config=self.config,
@@ -114,7 +116,9 @@ class SmartContractTransactionsFactory:
 
         prepared_arguments = self._encode_execute_arguments(function, list(arguments))
 
-        data_parts.append(function) if not data_parts else data_parts.append(arg_to_string(function))
+        data_parts.append(function) if not data_parts else data_parts.append(
+            self.serializer.serialize([StringValue(function)])
+        )
         data_parts += [arg.hex() for arg in prepared_arguments]
 
         return TransactionBuilder(
@@ -143,14 +147,14 @@ class SmartContractTransactionsFactory:
 
         metadata = CodeMetadata(is_upgradeable, is_readable, is_payable, is_payable_by_sc)
 
-        parts = [
-            "upgradeContract",
-            arg_to_string(bytecode),
-            str(metadata)
-        ]
+        parts = ["upgradeContract"]
+        serialized_parts = self.serializer.serialize_to_parts([
+            BytesValue(bytecode),
+            CodeMetadataValue.new_from_code_metadata(metadata)
+        ])
 
         prepared_arguments = self._encode_upgrade_arguments(list(arguments))
-        parts += [arg.hex() for arg in prepared_arguments]
+        parts += [arg.hex() for arg in serialized_parts + prepared_arguments]
 
         return TransactionBuilder(
             config=self.config,
@@ -198,7 +202,7 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
-        return args_to_buffers(args)
+        raise ArgumentSerializationError()
 
     def _encode_execute_arguments(self, function_name: str, args: List[Any]) -> List[bytes]:
         if self.abi:
@@ -207,7 +211,7 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
-        return args_to_buffers(args)
+        raise ArgumentSerializationError()
 
     def _encode_upgrade_arguments(self, args: List[Any]) -> List[bytes]:
         if self.abi:
@@ -216,4 +220,4 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
-        return args_to_buffers(args)
+        raise ArgumentSerializationError()

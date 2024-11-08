@@ -1,10 +1,13 @@
 from pathlib import Path
 
+import pytest
+
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
+from multiversx_sdk.core.errors import ArgumentSerializationError
 from multiversx_sdk.core.tokens import Token, TokenTransfer
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
@@ -25,13 +28,13 @@ class TestSmartContractTransactionsFactory:
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         gas_limit = 6000000
 
-        # Works due to legacy encoding fallbacks.
-        transaction = self.factory.create_transaction_for_deploy(
-            sender=sender,
-            bytecode=self.bytecode,
-            gas_limit=gas_limit,
-            arguments=[1]
-        )
+        with pytest.raises(ArgumentSerializationError, match="Unable to encode arguments: unsupported format or missing ABI file"):
+            self.factory.create_transaction_for_deploy(
+                sender=sender,
+                bytecode=self.bytecode,
+                gas_limit=gas_limit,
+                arguments=[1]
+            )
 
         transaction_with_typed = self.factory.create_transaction_for_deploy(
             sender=sender,
@@ -54,15 +57,14 @@ class TestSmartContractTransactionsFactory:
             arguments=[BigUIntValue(1)]
         )
 
-        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver.to_bech32() == CONTRACT_DEPLOY_ADDRESS
-        assert transaction.data == f"{self.bytecode.hex()}@0500@0504@01".encode()
-        assert transaction.gas_limit == gas_limit
-        assert transaction.value == 0
+        assert transaction_with_typed.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction_with_typed.receiver.to_bech32() == CONTRACT_DEPLOY_ADDRESS
+        assert transaction_with_typed.data == f"{self.bytecode.hex()}@0500@0504@01".encode()
+        assert transaction_with_typed.gas_limit == gas_limit
+        assert transaction_with_typed.value == 0
 
-        assert transaction_with_typed == transaction
-        assert transaction_abi_aware_with_untyped == transaction
-        assert transaction_abi_aware_with_typed == transaction
+        assert transaction_with_typed == transaction_abi_aware_with_untyped
+        assert transaction_with_typed == transaction_abi_aware_with_typed
 
     def test_create_transaction_for_execute_no_transfer(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
@@ -70,14 +72,14 @@ class TestSmartContractTransactionsFactory:
         function = "add"
         gas_limit = 6000000
 
-        # Works due to legacy encoding fallbacks.
-        transaction = self.factory.create_transaction_for_execute(
-            sender=sender,
-            contract=contract,
-            function=function,
-            gas_limit=gas_limit,
-            arguments=[7]
-        )
+        with pytest.raises(ArgumentSerializationError, match="Unable to encode arguments: unsupported format or missing ABI file"):
+            self.factory.create_transaction_for_execute(
+                sender=sender,
+                contract=contract,
+                function=function,
+                gas_limit=gas_limit,
+                arguments=[7]
+            )
 
         transaction_with_typed = self.factory.create_transaction_for_execute(
             sender=sender,
@@ -103,23 +105,22 @@ class TestSmartContractTransactionsFactory:
             arguments=[U32Value(7)]
         )
 
-        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
-        assert transaction.gas_limit == gas_limit
-        assert transaction.data
-        assert transaction.data.decode() == "add@07"
-        assert transaction.value == 0
+        assert transaction_with_typed.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction_with_typed.receiver.to_bech32() == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
+        assert transaction_with_typed.gas_limit == gas_limit
+        assert transaction_with_typed.data
+        assert transaction_with_typed.data.decode() == "add@07"
+        assert transaction_with_typed.value == 0
 
-        assert transaction_with_typed == transaction
-        assert transaction_abi_aware_with_untyped == transaction
-        assert transaction_abi_aware_with_typed == transaction
+        assert transaction_with_typed == transaction_abi_aware_with_untyped
+        assert transaction_with_typed == transaction_abi_aware_with_typed
 
     def test_create_transaction_for_execute_and_tranfer_native_token(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "add"
         gas_limit = 6000000
-        args = [7]
+        args = [U32Value(7)]
         egld_amount = 1000000000000000000
 
         transaction = self.factory.create_transaction_for_execute(
@@ -143,7 +144,7 @@ class TestSmartContractTransactionsFactory:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
         gas_limit = 6000000
-        args = [7]
+        args = [U32Value(7)]
         token = Token("FOO-6ce17b", 0)
         transfer = TokenTransfer(token, 10)
 
@@ -168,7 +169,7 @@ class TestSmartContractTransactionsFactory:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3")
         function = "dummy"
         gas_limit = 6000000
-        args = [7]
+        args = [U32Value(7)]
 
         foo_token = Token("FOO-6ce17b", 0)
         foo_transfer = TokenTransfer(foo_token, 10)
@@ -197,7 +198,7 @@ class TestSmartContractTransactionsFactory:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
         gas_limit = 6000000
-        args = [7]
+        args = [U32Value(7)]
         token = Token("NFT-123456", 1)
         transfer = TokenTransfer(token, 1)
 
@@ -223,7 +224,7 @@ class TestSmartContractTransactionsFactory:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
         gas_limit = 6000000
-        args = [7]
+        args = [U32Value(7)]
 
         first_token = Token("NFT-123456", 1)
         first_transfer = TokenTransfer(first_token, 1)
@@ -251,7 +252,7 @@ class TestSmartContractTransactionsFactory:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
         function = "dummy"
         gas_limit = 6000000
-        args = [7]
+        args = [U32Value(7)]
 
         first_token = Token("NFT-123456", 1)
         first_transfer = TokenTransfer(first_token, 1)
@@ -281,14 +282,14 @@ class TestSmartContractTransactionsFactory:
         contract = self.testdata / "adder.wasm"
         gas_limit = 6000000
 
-        # Works due to legacy encoding fallbacks.
-        transaction = self.factory.create_transaction_for_upgrade(
-            sender=sender,
-            contract=contract_address,
-            bytecode=contract,
-            gas_limit=gas_limit,
-            arguments=[7]
-        )
+        with pytest.raises(ArgumentSerializationError, match="Unable to encode arguments: unsupported format or missing ABI file"):
+            self.factory.create_transaction_for_upgrade(
+                sender=sender,
+                contract=contract_address,
+                bytecode=contract,
+                gas_limit=gas_limit,
+                arguments=[7]
+            )
 
         transaction_with_typed = self.factory.create_transaction_for_upgrade(
             sender=sender,
@@ -314,16 +315,15 @@ class TestSmartContractTransactionsFactory:
             arguments=[BigUIntValue(7)]
         )
 
-        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
-        assert transaction.data == f"upgradeContract@{self.bytecode.hex()}@0504@07".encode()
-        assert transaction.data.decode().startswith("upgradeContract@")
-        assert transaction.gas_limit == gas_limit
-        assert transaction.value == 0
+        assert transaction_with_typed.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction_with_typed.receiver.to_bech32() == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
+        assert transaction_with_typed.data == f"upgradeContract@{self.bytecode.hex()}@0504@07".encode()
+        assert transaction_with_typed.data.decode().startswith("upgradeContract@")
+        assert transaction_with_typed.gas_limit == gas_limit
+        assert transaction_with_typed.value == 0
 
-        assert transaction_with_typed == transaction
-        assert transaction_abi_aware_with_untyped == transaction
-        assert transaction_abi_aware_with_typed == transaction
+        assert transaction_with_typed == transaction_abi_aware_with_untyped
+        assert transaction_with_typed == transaction_abi_aware_with_typed
 
     def test_create_transaction_for_claiming_developer_rewards(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
