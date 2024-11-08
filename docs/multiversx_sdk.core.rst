@@ -8,21 +8,11 @@ Subpackages
    :maxdepth: 4
 
    multiversx_sdk.core.proto
-   multiversx_sdk.core.transaction_builders
-   multiversx_sdk.core.transaction_parsers
    multiversx_sdk.core.transactions_factories
    multiversx_sdk.core.transactions_outcome_parsers
 
 Submodules
 ----------
-
-multiversx\_sdk.core.account module
------------------------------------
-
-.. automodule:: multiversx_sdk.core.account
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 multiversx\_sdk.core.address module
 -----------------------------------
@@ -44,30 +34,6 @@ multiversx\_sdk.core.code\_metadata module
 ------------------------------------------
 
 .. automodule:: multiversx_sdk.core.code_metadata
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.codec module
----------------------------------
-
-.. automodule:: multiversx_sdk.core.codec
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.contract\_query module
--------------------------------------------
-
-.. automodule:: multiversx_sdk.core.contract_query
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.contract\_query\_builder module
-----------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.contract_query_builder
    :members:
    :undoc-members:
    :show-inheritance:
@@ -96,14 +62,6 @@ multiversx\_sdk.core.message module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.serializer module
---------------------------------------
-
-.. automodule:: multiversx_sdk.core.serializer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.smart\_contract\_queries\_controller module
 ----------------------------------------------------------------
 
@@ -116,14 +74,6 @@ multiversx\_sdk.core.smart\_contract\_query module
 --------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.smart_contract_query
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.token\_payment module
-------------------------------------------
-
-.. automodule:: multiversx_sdk.core.token_payment
    :members:
    :undoc-members:
    :show-inheritance:
@@ -152,10 +102,18 @@ multiversx\_sdk.core.transaction\_computer module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.transaction\_payload module
-------------------------------------------------
+multiversx\_sdk.core.transaction\_on\_network module
+----------------------------------------------------
 
-.. automodule:: multiversx_sdk.core.transaction_payload
+.. automodule:: multiversx_sdk.core.transaction_on_network
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+multiversx\_sdk.core.transaction\_status module
+-----------------------------------------------
+
+.. automodule:: multiversx_sdk.core.transaction_status
    :members:
    :undoc-members:
    :show-inheritance:
