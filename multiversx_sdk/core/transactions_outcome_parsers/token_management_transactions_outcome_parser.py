@@ -1,9 +1,9 @@
 from typing import List
 
-from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import ARGS_SEPARATOR, DEFAULT_HRP
+from multiversx_sdk.core.constants import DEFAULT_HRP
 from multiversx_sdk.core.errors import ParseTransactionOnNetworkError
 from multiversx_sdk.core.transaction_on_network import (
     TransactionEvent, TransactionOnNetwork, find_events_by_identifier)
@@ -17,7 +17,7 @@ from multiversx_sdk.core.transactions_outcome_parsers.token_management_transacti
 
 class TokenManagementTransactionsOutcomeParser:
     def __init__(self) -> None:
-        self._serializer = Serializer(ARGS_SEPARATOR)
+        self._serializer = Serializer()
 
     def parse_issue_fungible(self, transaction: TransactionOnNetwork) -> List[IssueFungibleOutcome]:
         self._ensure_no_error(transaction.logs.events)

@@ -25,7 +25,7 @@ one_quintillion = 1_000_000_000_000_000_000
 
 
 def test_serialize():
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
     # u8
     data = serializer.serialize([
@@ -168,7 +168,7 @@ def test_serialize():
 
 
 def test_deserialize():
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
     # nil destination
     with pytest.raises(ValueError, match="^cannot deserialize into null value$"):
@@ -416,7 +416,7 @@ def test_real_world_multisig_propose_batch():
     serialize input of multisig.proposeBatch(variadic<Action>
     """
 
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
     def create_esdt_token_payment(token_identifier: str, token_nonce: int, amount: int) -> StructValue:
         return StructValue([
@@ -479,7 +479,7 @@ def test_real_world_multisig_get_pending_action_full_info():
     deserialize output of multisig.getPendingActionFullInfo() -> variadic<ActionFullInfo>
     """
 
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
     data_hex = "".join([
         "0000002A",

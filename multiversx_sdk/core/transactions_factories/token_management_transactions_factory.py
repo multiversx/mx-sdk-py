@@ -3,11 +3,10 @@ from enum import Enum
 from typing import Optional, Protocol
 
 from multiversx_sdk.abi import Serializer
-from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.transaction_builder import \
@@ -55,7 +54,7 @@ class TokenType(Enum):
 class TokenManagementTransactionsFactory:
     def __init__(self, config: IConfig):
         self._config = config
-        self.serializer = Serializer(ARGS_SEPARATOR)
+        self.serializer = Serializer()
         self._true_as_typed_value = StringValue("true")
         self._false_as_typed_value = StringValue("false")
 
@@ -82,12 +81,12 @@ class TokenManagementTransactionsFactory:
             StringValue(token_ticker),
             BigUIntValue(initial_supply),
             BigUIntValue(num_decimals),
-            *[StringValue("canFreeze"), self._true_as_typed_value if can_freeze else self._false_as_typed_value],
-            *[StringValue("canWipe"), self._true_as_typed_value if can_wipe else self._false_as_typed_value],
-            *[StringValue("canPause"), self._true_as_typed_value if can_pause else self._false_as_typed_value],
-            *[StringValue("canChangeOwner"), self._true_as_typed_value if can_change_owner else self._false_as_typed_value],
-            *[StringValue("canUpgrade"), self._true_as_typed_value if can_upgrade else self._false_as_typed_value],
-            *[StringValue("canAddSpecialRoles"), self._true_as_typed_value if can_add_special_roles else self._false_as_typed_value]
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
         ])
 
         parts.extend([part.hex() for part in serialized_parts])
@@ -130,14 +129,13 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         serialized_parts = self.serializer.serialize_to_parts([
             StringValue(token_name),
             StringValue(token_ticker),
-            *[StringValue("canFreeze"), self._true_as_typed_value if can_freeze else self._false_as_typed_value],
-            *[StringValue("canWipe"), self._true_as_typed_value if can_wipe else self._false_as_typed_value],
-            *[StringValue("canPause"), self._true_as_typed_value if can_pause else self._false_as_typed_value],
-            *[StringValue("canTransferNFTCreateRole"),
-              self._true_as_typed_value if can_transfer_nft_create_role else self._false_as_typed_value],
-            *[StringValue("canChangeOwner"), self._true_as_typed_value if can_change_owner else self._false_as_typed_value],
-            *[StringValue("canUpgrade"), self._true_as_typed_value if can_upgrade else self._false_as_typed_value],
-            *[StringValue("canAddSpecialRoles"), self._true_as_typed_value if can_add_special_roles else self._false_as_typed_value]
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canTransferNFTCreateRole"), self._bool_to_typed_string(can_transfer_nft_create_role)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
         ])
 
         parts.extend([part.hex() for part in serialized_parts])
@@ -172,14 +170,13 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         serialized_parts = self.serializer.serialize_to_parts([
             StringValue(token_name),
             StringValue(token_ticker),
-            *[StringValue("canFreeze"), self._true_as_typed_value if can_freeze else self._false_as_typed_value],
-            *[StringValue("canWipe"), self._true_as_typed_value if can_wipe else self._false_as_typed_value],
-            *[StringValue("canPause"), self._true_as_typed_value if can_pause else self._false_as_typed_value],
-            *[StringValue("canTransferNFTCreateRole"),
-              self._true_as_typed_value if can_transfer_nft_create_role else self._false_as_typed_value],
-            *[StringValue("canChangeOwner"), self._true_as_typed_value if can_change_owner else self._false_as_typed_value],
-            *[StringValue("canUpgrade"), self._true_as_typed_value if can_upgrade else self._false_as_typed_value],
-            *[StringValue("canAddSpecialRoles"), self._true_as_typed_value if can_add_special_roles else self._false_as_typed_value]
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canTransferNFTCreateRole"), self._bool_to_typed_string(can_transfer_nft_create_role)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
         ])
 
         parts.extend([part.hex() for part in serialized_parts])
@@ -216,14 +213,13 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             StringValue(token_name),
             StringValue(token_ticker),
             BigUIntValue(num_decimals),
-            *[StringValue("canFreeze"), self._true_as_typed_value if can_freeze else self._false_as_typed_value],
-            *[StringValue("canWipe"), self._true_as_typed_value if can_wipe else self._false_as_typed_value],
-            *[StringValue("canPause"), self._true_as_typed_value if can_pause else self._false_as_typed_value],
-            *[StringValue("canTransferNFTCreateRole"),
-              self._true_as_typed_value if can_transfer_nft_create_role else self._false_as_typed_value],
-            *[StringValue("canChangeOwner"), self._true_as_typed_value if can_change_owner else self._false_as_typed_value],
-            *[StringValue("canUpgrade"), self._true_as_typed_value if can_upgrade else self._false_as_typed_value],
-            *[StringValue("canAddSpecialRoles"), self._true_as_typed_value if can_add_special_roles else self._false_as_typed_value]
+            *[StringValue("canFreeze"), self._bool_to_typed_string(can_freeze)],
+            *[StringValue("canWipe"), self._bool_to_typed_string(can_wipe)],
+            *[StringValue("canPause"), self._bool_to_typed_string(can_pause)],
+            *[StringValue("canTransferNFTCreateRole"), self._bool_to_typed_string(can_transfer_nft_create_role)],
+            *[StringValue("canChangeOwner"), self._bool_to_typed_string(can_change_owner)],
+            *[StringValue("canUpgrade"), self._bool_to_typed_string(can_upgrade)],
+            *[StringValue("canAddSpecialRoles"), self._bool_to_typed_string(can_add_special_roles)]
         ])
 
         parts.extend([part.hex() for part in serialized_parts])
@@ -1067,3 +1063,8 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             add_data_movement_gas=True,
             data_parts=parts
         ).build()
+
+    def _bool_to_typed_string(self, value: bool) -> StringValue:
+        if value:
+            return StringValue("true")
+        return StringValue("false")

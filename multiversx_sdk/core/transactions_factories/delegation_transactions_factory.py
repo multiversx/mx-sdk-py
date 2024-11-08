@@ -4,8 +4,7 @@ from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
-                                           DELEGATION_MANAGER_SC_ADDRESS)
+from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
 from multiversx_sdk.core.errors import ListsLengthMismatchError
 from multiversx_sdk.core.interfaces import IValidatorPublicKey
 from multiversx_sdk.core.transaction import Transaction
@@ -29,7 +28,7 @@ class IConfig(Protocol):
 class DelegationTransactionsFactory:
     def __init__(self, config: IConfig) -> None:
         self.config = config
-        self.serializer = Serializer(ARGS_SEPARATOR)
+        self.serializer = Serializer()
 
     def create_transaction_for_new_delegation_contract(self,
                                                        sender: Address,

@@ -8,7 +8,6 @@ from multiversx_sdk.abi.abi_definition import AbiDefinition
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import U64Value
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.transaction_on_network import (
     SmartContractResult, TransactionEvent, TransactionLogs,
     TransactionOnNetwork, find_events_by_first_topic,
@@ -145,21 +144,24 @@ def test_parse_event_with_multi_values():
     )
     abi = Abi(abi_definition)
     parser = TransactionEventsParser(abi=abi)
-    serializer = Serializer(ARGS_SEPARATOR)
-    value = 42
+    serializer = Serializer()
+    first_value, second_value, third_value = serializer.serialize_to_parts(
+        [U64Value(42), U64Value(43), U64Value(44)]
+    )
+
     parsed = parser.parse_event(
         TransactionEvent(
             identifier="foobar",
             topics=[
                 "doFoobar".encode(),
-                serializer.serialize_to_parts([U64Value(value)])[0],
+                first_value,
                 "test".encode(),
-                serializer.serialize_to_parts([U64Value(value + 1)])[0],
+                second_value,
                 "test".encode(),
                 "test".encode(),
-                serializer.serialize_to_parts([U64Value(value + 2)])[0],
+                third_value,
             ],
-            additional_data=[serializer.serialize_to_parts([U64Value(value)])[0]]
+            additional_data=[first_value]
         )
     )
 

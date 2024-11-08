@@ -8,9 +8,9 @@ from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.typesystem import is_list_of_typed_values
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
-from multiversx_sdk.core.constants import (ARGS_SEPARATOR,
-                                           CONTRACT_DEPLOY_ADDRESS,
+from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
+from multiversx_sdk.core.errors import ArgumentSerializationError
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factories.token_transfers_data_builder import \
@@ -42,7 +42,7 @@ class SmartContractTransactionsFactory:
     def __init__(self, config: IConfig, abi: Optional[IAbi] = None) -> None:
         self.config = config
         self.abi = abi
-        self.serializer = Serializer(parts_separator=ARGS_SEPARATOR)
+        self.serializer = Serializer()
         self.token_computer = TokenComputer()
         self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
 
@@ -202,7 +202,7 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
-        raise Exception("Can't serialize arguments")
+        raise ArgumentSerializationError()
 
     def _encode_execute_arguments(self, function_name: str, args: List[Any]) -> List[bytes]:
         if self.abi:
@@ -211,7 +211,7 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
-        raise Exception("Can't serialize arguments")
+        raise ArgumentSerializationError()
 
     def _encode_upgrade_arguments(self, args: List[Any]) -> List[bytes]:
         if self.abi:
@@ -220,4 +220,4 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
-        raise Exception("Can't serialize arguments")
+        raise ArgumentSerializationError()

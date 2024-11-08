@@ -7,6 +7,7 @@ from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
+from multiversx_sdk.core.errors import ArgumentSerializationError
 from multiversx_sdk.core.tokens import Token, TokenTransfer
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
@@ -27,7 +28,7 @@ class TestSmartContractTransactionsFactory:
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         gas_limit = 6000000
 
-        with pytest.raises(Exception, match="Can't serialize arguments"):
+        with pytest.raises(ArgumentSerializationError, match="Unable to encode arguments: unsupported format or missing ABI file"):
             self.factory.create_transaction_for_deploy(
                 sender=sender,
                 bytecode=self.bytecode,
@@ -71,7 +72,7 @@ class TestSmartContractTransactionsFactory:
         function = "add"
         gas_limit = 6000000
 
-        with pytest.raises(Exception, match="Can't serialize arguments"):
+        with pytest.raises(ArgumentSerializationError, match="Unable to encode arguments: unsupported format or missing ABI file"):
             self.factory.create_transaction_for_execute(
                 sender=sender,
                 contract=contract,
@@ -281,7 +282,7 @@ class TestSmartContractTransactionsFactory:
         contract = self.testdata / "adder.wasm"
         gas_limit = 6000000
 
-        with pytest.raises(Exception, match="Can't serialize arguments"):
+        with pytest.raises(ArgumentSerializationError, match="Unable to encode arguments: unsupported format or missing ABI file"):
             self.factory.create_transaction_for_upgrade(
                 sender=sender,
                 contract=contract_address,

@@ -1,7 +1,6 @@
 import multiversx_sdk.core.proto.transaction_pb2 as ProtoTransaction
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.transaction import Transaction
 
 
@@ -17,7 +16,7 @@ class ProtoSerializer:
         if tx_value == 0:
             return bytes([0, 0])
 
-        serializer = Serializer(ARGS_SEPARATOR)
+        serializer = Serializer()
         buffer = serializer.serialize_to_parts([BigUIntValue(tx_value)])[0]
         buffer = bytes([0x00]) + buffer
 

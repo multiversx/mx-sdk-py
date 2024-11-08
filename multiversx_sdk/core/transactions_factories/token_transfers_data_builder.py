@@ -1,14 +1,13 @@
-from multiversx_sdk.abi import Serializer, BigUIntValue
+from multiversx_sdk.abi import BigUIntValue, Serializer
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.tokens import TokenComputer, TokenTransfer
 
 
 class TokenTransfersDataBuilder:
     def __init__(self, token_computer: TokenComputer) -> None:
         self.token_computer = token_computer
-        self.serializer = Serializer(ARGS_SEPARATOR)
+        self.serializer = Serializer()
 
     def build_args_for_esdt_transfer(self, transfer: TokenTransfer) -> list[str]:
         args = ["ESDTTransfer"]

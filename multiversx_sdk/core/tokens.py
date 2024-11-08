@@ -1,10 +1,9 @@
 from typing import List
 
-from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.core.constants import (
-    ARGS_SEPARATOR, EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER,
-    TOKEN_RANDOM_SEQUENCE_LENGTH)
+    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER, TOKEN_RANDOM_SEQUENCE_LENGTH)
 from multiversx_sdk.core.errors import (BadUsageError,
                                         InvalidTokenIdentifierError)
 
@@ -36,7 +35,7 @@ class TokenIdentifierParts:
 
 class TokenComputer:
     def __init__(self) -> None:
-        self._serializer = Serializer(ARGS_SEPARATOR)
+        self._serializer = Serializer()
 
     def is_fungible(self, token: Token) -> bool:
         return token.nonce == 0

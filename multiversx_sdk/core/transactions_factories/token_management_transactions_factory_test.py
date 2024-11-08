@@ -1,9 +1,6 @@
 import pytest
 
-from multiversx_sdk.abi.serializer import Serializer
-from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.transactions_factories.token_management_transactions_factory import (
     TokenManagementTransactionsFactory, TokenType)
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
@@ -210,8 +207,7 @@ def test_create_transaction_for_creating_nft():
 
 
 def test_create_transaction_for_setting_special_role_on_fungible_token():
-    serializer = Serializer(ARGS_SEPARATOR)
-    mint_role_as_hex = serializer.serialize([StringValue("ESDTRoleLocalMint")])
+    mint_role_as_hex = "ESDTRoleLocalMint".encode().hex()
 
     transaction = factory.create_transaction_for_setting_special_role_on_fungible_token(
         sender=frank,
@@ -229,8 +225,7 @@ def test_create_transaction_for_setting_special_role_on_fungible_token():
 
 
 def test_create_transaction_for_unsetting_special_role_on_fungible_token():
-    serializer = Serializer(ARGS_SEPARATOR)
-    mint_role_as_hex = serializer.serialize([StringValue("ESDTRoleLocalMint")])
+    mint_role_as_hex = "ESDTRoleLocalMint".encode().hex()
 
     transaction = factory.create_transaction_for_unsetting_special_role_on_fungible_token(
         sender=frank,
@@ -248,10 +243,9 @@ def test_create_transaction_for_unsetting_special_role_on_fungible_token():
 
 
 def test_set_all_roles_on_fungible_token():
-    serializer = Serializer(ARGS_SEPARATOR)
-    mint_role_as_hex = serializer.serialize([StringValue("ESDTRoleLocalMint")])
-    burn_role_as_hex = serializer.serialize([StringValue("ESDTRoleLocalBurn")])
-    transfer_role_as_hex = serializer.serialize([StringValue("ESDTTransferRole")])
+    mint_role_as_hex = "ESDTRoleLocalMint".encode().hex()
+    burn_role_as_hex = "ESDTRoleLocalBurn".encode().hex()
+    transfer_role_as_hex = "ESDTTransferRole".encode().hex()
 
     transaction = factory.create_transaction_for_setting_special_role_on_fungible_token(
         sender=frank,

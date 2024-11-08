@@ -3,10 +3,8 @@ from pathlib import Path
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
-from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import U64Value
 from multiversx_sdk.abi.string_value import StringValue
-from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.smart_contract_queries_controller import \
     SmartContractQueriesController
 from multiversx_sdk.core.smart_contract_query import (
@@ -40,12 +38,11 @@ class TestSmartContractQueriesController:
         controller = SmartContractQueriesController(MockNetworkProvider())
         contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
         function = "getSum"
-        serializer = Serializer(ARGS_SEPARATOR)
 
         query = controller.create_query(
             contract=contract,
             function=function,
-            arguments=serializer.serialize_to_parts([U64Value(7), StringValue("abba")])
+            arguments=[U64Value(7), StringValue("abba")]
         )
 
         assert query.contract == contract
