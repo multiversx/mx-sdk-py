@@ -55,8 +55,6 @@ class TokenManagementTransactionsFactory:
     def __init__(self, config: IConfig):
         self._config = config
         self.serializer = Serializer()
-        self._true_as_typed_value = StringValue("true")
-        self._false_as_typed_value = StringValue("false")
 
     def create_transaction_for_issuing_fungible(
         self,
