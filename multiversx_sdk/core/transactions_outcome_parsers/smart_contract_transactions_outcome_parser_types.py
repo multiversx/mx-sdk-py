@@ -1,15 +1,17 @@
 from dataclasses import dataclass
 from typing import Any
 
+from multiversx_sdk.core.address import Address
+
 
 @dataclass
 class DeployedSmartContract:
-    address: str
-    owner_address: str
+    address: Address
+    owner_address: Address
     code_hash: bytes
 
     def __repr__(self) -> str:
-        return f"DeployedSmartContract(address={self.address}, owner_address={self.owner_address}, code_hash={self.code_hash.hex()})"
+        return f"DeployedSmartContract(address={self.address.to_bech32()}, owner_address={self.owner_address.to_bech32()}, code_hash={self.code_hash.hex()})"
 
 
 @dataclass

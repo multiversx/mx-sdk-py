@@ -72,18 +72,19 @@ class TestProxy:
         )
         result = self.proxy.get_account(address)
 
-        assert result.address == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        assert result.username == ""
-        assert result.contract_owner_address == ""
+        assert result.address.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
+        assert not result.username
+        assert result.contract_owner_address is None
 
         address = Address.new_from_bech32(
             "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
         )
         result = self.proxy.get_account(address)
 
-        assert result.address == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
-        assert result.username == ""
-        assert result.contract_owner_address == "erd1wzx0tak22f2me4g7wpxfae2w3htfue7khrg28fy6wu8x9hzq05vqm8qhnm"
+        assert result.address.to_bech32() == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert not result.username
+        assert result.contract_owner_address == Address.new_from_bech32(
+            "erd1wzx0tak22f2me4g7wpxfae2w3htfue7khrg28fy6wu8x9hzq05vqm8qhnm")
         assert result.is_contract_payable is False
         assert result.is_contract_readable
 
@@ -326,8 +327,8 @@ class TestProxy:
 
         assert tx_on_network.status == TransactionStatus("success")
         assert len(tx_on_network.contract_results) == 1
-        assert tx_on_network.contract_results[0].sender == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
-        assert tx_on_network.contract_results[0].receiver == bob.label
+        assert tx_on_network.contract_results[0].sender.to_bech32() == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert tx_on_network.contract_results[0].receiver.to_bech32() == bob.label
         assert tx_on_network.contract_results[0].data == b"@6f6b"
 
     def test_estimate_transaction_cost(self):

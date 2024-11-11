@@ -248,8 +248,8 @@ class TokenManagementTransactionsOutcomeParser:
         self._serializer.deserialize_parts([event.topics[2]], [amount_value])
         return amount_value.get_payload()
 
-    def _extract_address(self, event: TransactionEvent) -> str:
+    def _extract_address(self, event: TransactionEvent) -> Address:
         if not event.topics[3]:
-            return ""
+            raise Exception("No topic found for contract address")
 
-        return Address(event.topics[3], DEFAULT_HRP).to_bech32()
+        return Address(event.topics[3], DEFAULT_HRP)

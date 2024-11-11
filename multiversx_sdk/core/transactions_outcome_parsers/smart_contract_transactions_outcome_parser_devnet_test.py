@@ -22,8 +22,8 @@ class TestSmartContractDeployDevnet:
         assert len(parsed.contracts) == 1
 
         contract = parsed.contracts[0]
-        assert contract.address == "erd1qqqqqqqqqqqqqpgqpayq2es08gq8798xhnpr0kzgn7495qt5q6uqd7lpwf"
-        assert contract.owner_address == "erd1tn62hjp72rznp8vq0lplva5csav6rccpqqdungpxtqz0g2hcq6uq9k4cc6"
+        assert contract.address.to_bech32() == "erd1qqqqqqqqqqqqqpgqpayq2es08gq8798xhnpr0kzgn7495qt5q6uqd7lpwf"
+        assert contract.owner_address.to_bech32() == "erd1tn62hjp72rznp8vq0lplva5csav6rccpqqdungpxtqz0g2hcq6uq9k4cc6"
         assert contract.code_hash == bytes.fromhex("c876625ec34a04445cfd99067777ebe488afdbc6899cd958f4c1d36107ca02d9")
 
     def test_parse_deploy_transaction_2(self):

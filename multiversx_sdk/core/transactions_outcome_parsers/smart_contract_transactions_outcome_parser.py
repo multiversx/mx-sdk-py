@@ -91,7 +91,7 @@ class SmartContractTransactionsOutcomeParser:
 
         for result in transaction.contract_results:
             matches_criteria_on_data = result.data.decode().startswith(ARGS_SEPARATOR)
-            matches_criteria_on_receiver = result.receiver == transaction.sender.to_bech32()
+            matches_criteria_on_receiver = result.receiver == transaction.sender
             matches_criteria_on_previous_hash = result
 
             matches_criteria = matches_criteria_on_data and matches_criteria_on_receiver and matches_criteria_on_previous_hash
@@ -195,12 +195,18 @@ class SmartContractTransactionsOutcomeParser:
         )
 
     def _parse_sc_deploy_event(self, event: TransactionEvent) -> DeployedSmartContract:
-        contract_address_topic = event.topics[0] if event.topics[0] else b''
-        owner_address_topic = event.topics[1] if event.topics[1] else b''
+        if not event.topics[0]:
+            raise Exception("No topic found for contract address")
+        contract_address_topic = event.topics[0]
+
+        if not event.topics[1]:
+            raise Exception("No topic found for owner address")
+        owner_address_topic = event.topics[1]
+
         code_hash_topic = event.topics[2] if event.topics[2] else b''
 
-        contract_address = Address(contract_address_topic, DEFAULT_HRP).to_bech32() if len(contract_address_topic) else ""
-        owner_address = Address(owner_address_topic, DEFAULT_HRP).to_bech32() if len(owner_address_topic) else ""
+        contract_address = Address(contract_address_topic, DEFAULT_HRP)
+        owner_address = Address(owner_address_topic, DEFAULT_HRP)
         code_hash = code_hash_topic
 
         return DeployedSmartContract(contract_address, owner_address, code_hash)
