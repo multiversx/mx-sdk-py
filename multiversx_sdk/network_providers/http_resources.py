@@ -110,10 +110,8 @@ def _transaction_from_network_response(tx_hash: str, response: dict[str, Any]) -
 
 
 def transaction_logs_from_response(raw_response: dict[str, Any]) -> TransactionLogs:
-    address = raw_response.get("address", "") or None
-    if not address:
-        address = EmptyAddress()
-    else:
+    address = raw_response.get("address", "") or EmptyAddress()
+    if not isinstance(address, EmptyAddress):
         address = Address.new_from_bech32(address)
 
     events = raw_response.get("events", [])
@@ -126,10 +124,8 @@ def transaction_logs_from_response(raw_response: dict[str, Any]) -> TransactionL
 
 
 def transaction_events_from_response(raw_response: dict[str, Any]) -> TransactionEvent:
-    address = raw_response.get("address", "") or None
-    if not address:
-        address = EmptyAddress()
-    else:
+    address = raw_response.get("address", "") or EmptyAddress()
+    if not isinstance(address, EmptyAddress):
         address = Address.new_from_bech32(address)
 
     identifier = raw_response.get("identifier", "")
@@ -199,16 +195,12 @@ def smart_contract_result_from_proxy_response(raw_response: dict[str, Any]) -> S
 
 
 def _smart_contract_result_from_response(raw_response: dict[str, Any]) -> SmartContractResult:
-    sender = raw_response.get("sender", "") or None
-    if not sender:
-        sender = EmptyAddress()
-    else:
+    sender = raw_response.get("sender", "") or EmptyAddress()
+    if not isinstance(sender, EmptyAddress):
         sender = Address.new_from_bech32(sender)
 
-    receiver = raw_response.get("receiver", "") or None
-    if not receiver:
-        receiver = EmptyAddress()
-    else:
+    receiver = raw_response.get("receiver", "") or EmptyAddress()
+    if not isinstance(receiver, EmptyAddress):
         receiver = Address.new_from_bech32(receiver)
 
     logs = transaction_logs_from_response(raw_response.get("logs", {}))
