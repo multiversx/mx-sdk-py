@@ -4,12 +4,27 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction_status import TransactionStatus
 
 
-class EmptyAddress:
+class EmptyAddress(Address):
+    def __init__(self):
+        ...
+
     def to_bech32(self) -> str:
         return ""
 
     def to_hex(self) -> str:
         return ""
+
+    def hex(self) -> str:
+        return ""
+
+    def get_public_key(self) -> bytes:
+        return b""
+
+    def get_hrp(self) -> str:
+        return ""
+
+    def is_smart_contract(self) -> bool:
+        return False
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, EmptyAddress):
@@ -26,8 +41,8 @@ class TransactionOnNetwork:
         self.round: int = 0
         self.epoch: int = 0
         self.value: int = 0
-        self.receiver: Address = EmptyAddress()  # type: ignore
-        self.sender: Address = EmptyAddress()  # type: ignore
+        self.receiver: Address = EmptyAddress()
+        self.sender: Address = EmptyAddress()
         self.gas_limit: int = 0
         self.gas_price: int = 0
         self.data: str = ""
@@ -75,7 +90,7 @@ class TransactionOnNetwork:
 class TransactionEvent:
     def __init__(self,
                  raw: dict[str, Any] = {},
-                 address: Address = EmptyAddress(),  # type:ignore
+                 address: Address = EmptyAddress(),
                  identifier: str = "",
                  topics: list[bytes] = [],
                  data: bytes = b"",
@@ -90,7 +105,7 @@ class TransactionEvent:
 
 class TransactionLogs:
     def __init__(self,
-                 address: Address = EmptyAddress(),  # type:ignore
+                 address: Address = EmptyAddress(),
                  events: list[TransactionEvent] = []) -> None:
         self.address = address
         self.events = events
@@ -99,8 +114,8 @@ class TransactionLogs:
 class SmartContractResult:
     def __init__(self,
                  raw: dict[str, Any] = {},
-                 sender: Address = EmptyAddress(),  # type:ignore
-                 receiver: Address = EmptyAddress(),  # type:ignore
+                 sender: Address = EmptyAddress(),
+                 receiver: Address = EmptyAddress(),
                  data: bytes = b"",
                  logs: TransactionLogs = TransactionLogs()) -> None:
         self.raw = raw

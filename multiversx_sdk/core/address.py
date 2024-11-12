@@ -87,11 +87,6 @@ class Address:
         """Returns whether the address is a smart contract address"""
         return self.to_hex().startswith(SC_HEX_PUBKEY_PREFIX)
 
-    # this will be removed in v1.0.0; it's here for compatibility reasons with the deprecated transaction builders
-    # the transaction builders will also be removed in v1.0.0
-    def serialize(self) -> bytes:
-        return self.get_public_key()
-
     def __bytes__(self) -> bytes:
         return self.get_public_key()
 
