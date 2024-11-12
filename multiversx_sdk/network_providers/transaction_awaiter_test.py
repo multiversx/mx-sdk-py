@@ -13,6 +13,8 @@ from multiversx_sdk.testutils.mock_network_provider import (
     MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
 from multiversx_sdk.testutils.wallets import load_wallets
 
+from multiversx_sdk.testutils.mock_transaction_on_network import get_empty_transaction_on_network
+
 
 class TestTransactionAwaiter:
     provider = MockNetworkProvider()
@@ -25,7 +27,7 @@ class TestTransactionAwaiter:
 
     def test_await_status_executed(self):
         tx_hash = "abbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba"
-        tx_on_network = TransactionOnNetwork()
+        tx_on_network = get_empty_transaction_on_network()
         tx_on_network.status = TransactionStatus("unknown")
         self.provider.mock_put_transaction(tx_hash, tx_on_network)
 
@@ -60,7 +62,7 @@ class TestTransactionAwaiter:
 
     def test_await_on_condition(self):
         tx_hash = "abbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba"
-        tx_on_network = TransactionOnNetwork()
+        tx_on_network = get_empty_transaction_on_network()
         tx_on_network.status = TransactionStatus("unknown")
         self.provider.mock_put_transaction(tx_hash, tx_on_network)
 

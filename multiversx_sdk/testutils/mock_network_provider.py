@@ -8,9 +8,12 @@ from multiversx_sdk.core.smart_contract_query import (
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
+                                                        TransactionLogs,
                                                         TransactionOnNetwork)
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.resources import AccountOnNetwork
+from multiversx_sdk.testutils.mock_transaction_on_network import \
+    get_empty_transaction_on_network
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 
 
@@ -67,7 +70,7 @@ class MockNetworkProvider:
             mutate(transaction)
 
     def mock_put_transaction(self, hash: str, transaction: TransactionOnNetwork) -> None:
-        transaction.is_completed = False
+        transaction.status.is_completed = False
         self.transactions[hash] = transaction
 
     def mock_query_contract_on_function(self, function: str, response: SmartContractQueryResponse) -> None:
@@ -80,10 +83,17 @@ class MockNetworkProvider:
         def predicate(hash: str) -> bool:
             return True
 
-        response = TransactionOnNetwork()
+        response = get_empty_transaction_on_network()
         response.status = TransactionStatus("executed")
-        response.contract_results = [SmartContractResult(data=return_code_and_data.encode())]
-        response.is_completed = True
+        response.smart_contract_results = [
+            SmartContractResult(
+                raw={},
+                sender=Address.empty(),
+                receiver=Address.empty(),
+                data=return_code_and_data.encode(),
+                logs=TransactionLogs(address=Address.empty(), events=[])
+            )
+        ]
 
         self.get_transaction_responders.insert(0, GetTransactionResponder(predicate, response))
 
@@ -103,7 +113,7 @@ class MockNetworkProvider:
 
                 elif isinstance(point, TimelinePointMarkCompleted):
                     def mark_tx_as_completed(transaction: TransactionOnNetwork):
-                        transaction.is_completed = True
+                        transaction.status.is_completed = True
 
                     self.mock_update_transaction(hash, mark_tx_as_completed)
 

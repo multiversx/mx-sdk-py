@@ -89,7 +89,7 @@ class SmartContractTransactionsOutcomeParser:
             SmartContractCallOutcome, None]:
         eligible_results: list[SmartContractResult] = []
 
-        for result in transaction.contract_results:
+        for result in transaction.smart_contract_results:
             matches_criteria_on_data = result.data.decode().startswith(ARGS_SEPARATOR)
             matches_criteria_on_receiver = result.receiver == transaction.sender
             matches_criteria_on_previous_hash = result
@@ -124,7 +124,7 @@ class SmartContractTransactionsOutcomeParser:
         eligible_events = [event for event in transaction.logs.events if event.identifier == event_identifier]
 
         # then, we search in the logs of contract_results
-        for result in transaction.contract_results:
+        for result in transaction.smart_contract_results:
             if result.raw.get("prevTxHash", "") != transaction.hash:
                 continue
 
@@ -168,7 +168,7 @@ class SmartContractTransactionsOutcomeParser:
         eligible_events = [event for event in transaction.logs.events if event.identifier == event_identifier]
 
         # then, we search in the logs of contract_results
-        for restult in transaction.contract_results:
+        for restult in transaction.smart_contract_results:
             if restult.raw.get("prevTxHash", "") != transaction.hash:
                 continue
 

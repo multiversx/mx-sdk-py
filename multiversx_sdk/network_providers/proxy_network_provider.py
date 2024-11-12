@@ -132,7 +132,7 @@ class ProxyNetworkProvider(INetworkProvider):
         """Simulates a transaction."""
         response = self.do_post_generic(
             'transaction/simulate', transaction.to_dictionary())
-        return transaction_from_simulate_response(response.to_dictionary().get("result", {}))
+        return transaction_from_simulate_response(transaction, response.to_dictionary().get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""

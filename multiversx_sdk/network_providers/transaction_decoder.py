@@ -79,7 +79,7 @@ class TransactionDecoder:
         metadata.value = transaction.value
 
         if transaction.data:
-            data_components = transaction.data.split("@")
+            data_components = transaction.data.decode().split("@")
 
             args = data_components[1:]
             if all(self.is_smart_contract_call_argument(x) for x in args):

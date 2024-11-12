@@ -104,7 +104,7 @@ class ApiNetworkProvider(INetworkProvider):
     def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork:
         """Simulates a transaction."""
         response: dict[str, Any] = self.do_post_generic('transaction/simulate', transaction.to_dictionary())
-        return transaction_from_simulate_response(response.get("data", {}).get("result", {}))
+        return transaction_from_simulate_response(transaction, response.get("data", {}).get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""
