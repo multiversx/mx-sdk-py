@@ -1,23 +1,35 @@
-from typing import Any, Callable, Optional, Protocol
+from typing import Any, Callable, Optional
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction_status import TransactionStatus
 
 
-class IAddress(Protocol):
-    def to_bech32(self) -> str:
+class EmptyAddress(Address):
+    def __init__(self):
         ...
 
-    def to_hex(self) -> str:
-        ...
-
-
-# This class is duplicated to get rid of the circular dependency; will be removed very soon as it will not be needed anymore
-class EmptyAddress:
     def to_bech32(self) -> str:
         return ""
 
     def to_hex(self) -> str:
         return ""
+
+    def hex(self) -> str:
+        return ""
+
+    def get_public_key(self) -> bytes:
+        return b""
+
+    def get_hrp(self) -> str:
+        return ""
+
+    def is_smart_contract(self) -> bool:
+        return False
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, EmptyAddress):
+            return False
+        return True
 
 
 class TransactionOnNetwork:
@@ -29,8 +41,8 @@ class TransactionOnNetwork:
         self.round: int = 0
         self.epoch: int = 0
         self.value: int = 0
-        self.receiver: IAddress = EmptyAddress()
-        self.sender: IAddress = EmptyAddress()
+        self.receiver: Address = EmptyAddress()
+        self.sender: Address = EmptyAddress()
         self.gas_limit: int = 0
         self.gas_price: int = 0
         self.data: str = ""
@@ -78,7 +90,7 @@ class TransactionOnNetwork:
 class TransactionEvent:
     def __init__(self,
                  raw: dict[str, Any] = {},
-                 address: str = "",
+                 address: Address = EmptyAddress(),
                  identifier: str = "",
                  topics: list[bytes] = [],
                  data: bytes = b"",
@@ -93,7 +105,7 @@ class TransactionEvent:
 
 class TransactionLogs:
     def __init__(self,
-                 address: str = "",
+                 address: Address = EmptyAddress(),
                  events: list[TransactionEvent] = []) -> None:
         self.address = address
         self.events = events
@@ -102,8 +114,8 @@ class TransactionLogs:
 class SmartContractResult:
     def __init__(self,
                  raw: dict[str, Any] = {},
-                 sender: str = "",
-                 receiver: str = "",
+                 sender: Address = EmptyAddress(),
+                 receiver: Address = EmptyAddress(),
                  data: bytes = b"",
                  logs: TransactionLogs = TransactionLogs()) -> None:
         self.raw = raw

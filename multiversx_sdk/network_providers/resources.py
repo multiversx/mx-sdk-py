@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.constants import (
@@ -67,7 +68,7 @@ class BlockCoordinates:
 @dataclass
 class AccountOnNetwork:
     raw: dict[str, Any]
-    address: str
+    address: Address
     nonce: int
     balance: int
     is_guarded: bool
@@ -77,7 +78,7 @@ class AccountOnNetwork:
     contract_code_hash: bytes = b""
     contract_code: bytes = b""
     contract_developer_reward: int = 0
-    contract_owner_address: str = ""
+    contract_owner_address: Optional[Address] = None
     is_contract_upgradable: bool = False
     is_contract_readable: bool = False
     is_contract_payable: bool = False

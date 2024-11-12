@@ -33,8 +33,8 @@ class TestSmartContractTransactionsOutcomeParser:
 
         parsed = self.parser.parse_deploy(transaction)
         assert len(parsed.contracts) == 1
-        assert parsed.contracts[0].address == contract.to_bech32()
-        assert parsed.contracts[0].owner_address == deployer.to_bech32()
+        assert parsed.contracts[0].address == contract
+        assert parsed.contracts[0].owner_address == deployer
         assert parsed.contracts[0].code_hash == code_hash
 
     def test_parse_deploy_outcome(self):
@@ -63,8 +63,8 @@ class TestSmartContractTransactionsOutcomeParser:
         assert parsed.return_code == "ok"
         assert parsed.return_message == "ok"
         assert len(parsed.contracts) == 1
-        assert parsed.contracts[0].address == contract.to_bech32()
-        assert parsed.contracts[0].owner_address == deployer.to_bech32()
+        assert parsed.contracts[0].address == contract
+        assert parsed.contracts[0].owner_address == deployer
         assert parsed.contracts[0].code_hash == code_hash
 
     def test_parse_deploy_outcome_with_error(self):
@@ -128,8 +128,8 @@ class TestSmartContractTransactionsOutcomeParser:
         tx_on_network = proxy.get_transaction(successful_tx_hash)
 
         parsed = self.parser.parse_deploy(tx_on_network)
-        assert parsed.contracts[0].address == "erd1qqqqqqqqqqqqqpgq29deu3uhcvuk7jhxd5cxrvh23xulkcewd8ssyf38ec"
-        assert parsed.contracts[0].owner_address == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert parsed.contracts[0].address.to_bech32() == "erd1qqqqqqqqqqqqqpgq29deu3uhcvuk7jhxd5cxrvh23xulkcewd8ssyf38ec"
+        assert parsed.contracts[0].owner_address.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
     @pytest.mark.networkInteraction
     def test_parse_failed_deploy(self):

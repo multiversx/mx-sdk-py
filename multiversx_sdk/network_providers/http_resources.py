@@ -1,12 +1,13 @@
 import base64
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import Token
-from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
+from multiversx_sdk.core.transaction_on_network import (EmptyAddress,
+                                                        SmartContractResult,
                                                         TransactionEvent,
                                                         TransactionLogs,
                                                         TransactionOnNetwork)
@@ -109,7 +110,7 @@ def _transaction_from_network_response(tx_hash: str, response: dict[str, Any]) -
 
 
 def transaction_logs_from_response(raw_response: dict[str, Any]) -> TransactionLogs:
-    address = raw_response.get("address", "")
+    address = _convert_bech32_to_address(raw_response.get("address", ""))
 
     events = raw_response.get("events", [])
     events = [transaction_events_from_response(event) for event in events]
@@ -120,8 +121,15 @@ def transaction_logs_from_response(raw_response: dict[str, Any]) -> TransactionL
     )
 
 
+def _convert_bech32_to_address(address: str) -> Address:
+    if address:
+        return Address.new_from_bech32(address)
+    return EmptyAddress()
+
+
 def transaction_events_from_response(raw_response: dict[str, Any]) -> TransactionEvent:
-    address = raw_response.get("address", "")
+    address = _convert_bech32_to_address(raw_response.get("address", ""))
+
     identifier = raw_response.get("identifier", "")
     topics = raw_response.get("topics", None)
 
@@ -189,8 +197,9 @@ def smart_contract_result_from_proxy_response(raw_response: dict[str, Any]) -> S
 
 
 def _smart_contract_result_from_response(raw_response: dict[str, Any]) -> SmartContractResult:
-    sender = raw_response.get("sender", "")
-    receiver = raw_response.get("receiver", "")
+    sender = _convert_bech32_to_address(raw_response.get("sender", ""))
+    receiver = _convert_bech32_to_address(raw_response.get("receiver", ""))
+
     logs = transaction_logs_from_response(raw_response.get("logs", {}))
 
     return SmartContractResult(
@@ -270,8 +279,9 @@ def account_from_proxy_response(raw_response: dict[str, Any]) -> AccountOnNetwor
     account: dict[str, Any] = raw_response.get("account", {})
     block_coordinates = _get_block_coordinates_from_raw_response(raw_response)
 
-    address = account.get("address", "")
-    owner_address = account.get("ownerAddress", "")
+    address = Address.new_from_bech32(account.get("address", ""))
+    owner_address = _get_address_or_none(account.get("ownerAddress", ""))
+
     nonce = account.get("nonce", 0)
     balance = int(account.get("balance", 0))
     developer_reward = int(account.get("developerReward", 0))
@@ -317,9 +327,16 @@ def account_from_proxy_response(raw_response: dict[str, Any]) -> AccountOnNetwor
     )
 
 
+def _get_address_or_none(address: str) -> Union[Address, None]:
+    if address:
+        return Address.new_from_bech32(address)
+    return None
+
+
 def account_from_api_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
-    address = raw_response.get("address", "")
-    owner_address = raw_response.get("ownerAddress", "")
+    address = Address.new_from_bech32(raw_response.get("address", ""))
+    owner_address = _get_address_or_none(raw_response.get("ownerAddress", ""))
+
     nonce = raw_response.get("nonce", 0)
     balance = int(raw_response.get("balance", 0))
     developer_reward = int(raw_response.get("developerReward", 0))

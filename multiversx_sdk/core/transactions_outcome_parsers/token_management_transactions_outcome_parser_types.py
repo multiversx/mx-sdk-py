@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
+from multiversx_sdk.core.address import Address
+
 
 @dataclass
 class IssueFungibleOutcome:
@@ -30,7 +32,7 @@ class RegisterAndSetAllRolesOutcome:
 
 @dataclass
 class SetSpecialRoleOutcome:
-    user_address: str
+    user_address: Address
     token_identifier: str
     roles: List[str]
 
@@ -44,7 +46,7 @@ class NFTCreateOutcome:
 
 @dataclass
 class MintOutcome:
-    user_address: str
+    user_address: Address
     token_identifier: str
     nonce: int
     minted_supply: int
@@ -52,7 +54,7 @@ class MintOutcome:
 
 @dataclass
 class BurnOutcome:
-    user_address: str
+    user_address: Address
     token_identifier: str
     nonce: int
     burnt_supply: int
@@ -70,7 +72,7 @@ class UnPauseOutcome:
 
 @dataclass
 class FreezeOutcome:
-    user_address: str
+    user_address: Address
     token_identifier: str
     nonce: int
     balance: int
@@ -78,7 +80,7 @@ class FreezeOutcome:
 
 @dataclass
 class UnFreezeOutcome:
-    user_address: str
+    user_address: Address
     token_identifier: str
     nonce: int
     balance: int
@@ -86,7 +88,7 @@ class UnFreezeOutcome:
 
 @dataclass
 class WipeOutcome:
-    user_address: str
+    user_address: Address
     token_identifier: str
     nonce: int
     balance: int

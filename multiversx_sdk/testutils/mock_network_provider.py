@@ -24,7 +24,7 @@ class MockNetworkProvider:
 
         alice_account = AccountOnNetwork(
             raw={},
-            address=MockNetworkProvider.alice.to_bech32(),
+            address=MockNetworkProvider.alice,
             nonce=0,
             balance=create_account_egld_balance(1000),
             is_guarded=False
@@ -32,7 +32,7 @@ class MockNetworkProvider:
 
         bob_account = AccountOnNetwork(
             raw={},
-            address=MockNetworkProvider.bob.to_bech32(),
+            address=MockNetworkProvider.bob,
             nonce=5,
             balance=create_account_egld_balance(500),
             is_guarded=False
@@ -40,7 +40,7 @@ class MockNetworkProvider:
 
         carol_account = AccountOnNetwork(
             raw={},
-            address=MockNetworkProvider.carol.to_bech32(),
+            address=MockNetworkProvider.carol,
             nonce=42,
             balance=create_account_egld_balance(300),
             is_guarded=False

@@ -25,7 +25,7 @@ class TestDelegationTransactionsOutcomeParser:
         ]
 
         delegate_event = TransactionEvent(
-            address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
             identifier="delegate",
             topics=base64_topics_to_bytes(encodedTopics)
         )
@@ -36,7 +36,7 @@ class TestDelegationTransactionsOutcomeParser:
         ]
 
         sc_deploy_event = TransactionEvent(
-            address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqy8lllls62y8s5",
+            address=Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqy8lllls62y8s5"),
             identifier="SCDeploy",
             topics=base64_topics_to_bytes(encodedTopics)
         )
@@ -45,20 +45,21 @@ class TestDelegationTransactionsOutcomeParser:
 
         encoded_topics = ["b2g6sUl6beG17FCUIkFwCOTGJjoJJi5SjkP2077e6xA="]
         sc_result_event = TransactionEvent(
-            address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
             identifier="completedTxEvent",
             topics=base64_topics_to_bytes(encoded_topics)
         )
 
         sc_result_log = TransactionLogs(
-            address="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
             events=[sc_result_event]
         )
 
         sc_result = SmartContractResult(
-            sender="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6",
-            receiver="erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2",
-            data=base64.b64decode("QDZmNmJAMDAwMDAwMDAwMDAwMDAwMDAwMDEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAxMGZmZmZmZg=="),
+            sender=Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"),
+            receiver=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            data=base64.b64decode(
+                "QDZmNmJAMDAwMDAwMDAwMDAwMDAwMDAwMDEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAxMGZmZmZmZg=="),
             logs=sc_result_log
         )
 
@@ -69,4 +70,4 @@ class TestDelegationTransactionsOutcomeParser:
         outcome = self.parser.parse_create_new_delegation_contract(tx)
 
         assert len(outcome) == 1
-        assert outcome[0].contract_address == contract_address.to_bech32()
+        assert outcome[0].contract_address == contract_address

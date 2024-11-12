@@ -29,7 +29,7 @@ class DelegationTransactionsOutcomeParser:
 
                 raise ParseTransactionOnNetworkError(f"encountered signalError: {message} ({bytes.fromhex(data).decode()})")
 
-    def _extract_contract_address(self, event: TransactionEvent) -> str:
+    def _extract_contract_address(self, event: TransactionEvent) -> Address:
         if not event.topics[0]:
-            return ""
-        return Address(event.topics[0], DEFAULT_HRP).to_bech32()
+            raise Exception("No topic found for contract address")
+        return Address(event.topics[0], DEFAULT_HRP)
