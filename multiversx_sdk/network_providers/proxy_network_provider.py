@@ -8,8 +8,6 @@ import requests
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (DEFAULT_HRP, ESDT_CONTRACT_ADDRESS,
                                            METACHAIN_ID)
-from multiversx_sdk.core.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
@@ -41,6 +39,8 @@ from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
+from multiversx_sdk.smart_contracts.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 
 
 class ProxyNetworkProvider(INetworkProvider):

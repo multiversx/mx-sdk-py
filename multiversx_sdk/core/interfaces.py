@@ -1,5 +1,7 @@
 from typing import Protocol
 
+from multiversx_sdk.core.address import Address
+
 
 class INetworkConfig(Protocol):
     min_gas_limit: int
@@ -9,4 +11,13 @@ class INetworkConfig(Protocol):
 
 class IValidatorPublicKey(Protocol):
     def hex(self) -> str:
+        ...
+
+
+class IAccount(Protocol):
+    @property
+    def address(self) -> Address:
+        ...
+
+    def sign(self, data: bytes) -> bytes:
         ...

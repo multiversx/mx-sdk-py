@@ -1,13 +1,16 @@
+from multiversx_sdk.account_management.account_controller import \
+    AccountController
+from multiversx_sdk.account_management.account_transactions_factory import \
+    AccountTransactionsFactory
 from multiversx_sdk.accounts import Account
-from multiversx_sdk.controllers.account_controller import AccountController
-from multiversx_sdk.controllers.delegation_controller import \
+from multiversx_sdk.delegation.delegation_controller import \
     DelegationController
-from multiversx_sdk.controllers.relayed_controller import RelayedController
-from multiversx_sdk.controllers.smart_contract_controller import \
+from multiversx_sdk.relayed.relayed_controller import RelayedController
+from multiversx_sdk.smart_contracts.smart_contract_controller import \
     SmartContractController
-from multiversx_sdk.controllers.token_management_controller import \
+from multiversx_sdk.token_management.token_management_controller import \
     TokenManagementController
-from multiversx_sdk.controllers.transfers_controller import TransfersController
+from multiversx_sdk.transfers.transfers_controller import TransfersController
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata
@@ -24,9 +27,7 @@ from multiversx_sdk.core.transaction_on_network import (
     SmartContractResult, TransactionEvent, TransactionLogs,
     TransactionOnNetwork, TransactionStatus, find_events_by_first_topic,
     find_events_by_identifier)
-from multiversx_sdk.core.transactions_factories.account_transactions_factory import \
-    AccountTransactionsFactory
-from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
+from multiversx_sdk.delegation.delegation_transactions_factory import \
     DelegationTransactionsFactory
 from multiversx_sdk.core.transactions_factories.relayed_transactions_factory import \
     RelayedTransactionsFactory

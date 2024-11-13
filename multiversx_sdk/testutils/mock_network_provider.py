@@ -3,8 +3,6 @@ import time
 from typing import Any, Callable, Dict, List, Union
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
@@ -12,6 +10,8 @@ from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionOnNetwork)
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.resources import AccountOnNetwork
+from multiversx_sdk.smart_contracts.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.testutils.mock_transaction_on_network import \
     get_empty_transaction_on_network
 from multiversx_sdk.testutils.utils import create_account_egld_balance
