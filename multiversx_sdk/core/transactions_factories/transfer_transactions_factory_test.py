@@ -193,3 +193,69 @@ class TestTransferTransactionsFactory:
         assert transaction.chain_id == "D"
         assert transaction.data.decode() == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@01@45474c442d303030303030@@0de0b6b3a7640000"
         assert transaction.gas_limit == 1_243_500
+
+    def test_create_nft_transfer_with_prefix(self):
+        nft = Token("t0-NFT-123456", 10)
+        transfer = TokenTransfer(nft, 1)
+
+        transaction = self.transfer_factory.create_transaction_for_esdt_token_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            token_transfers=[transfer]
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.value == 0
+        assert transaction.chain_id == "D"
+        assert transaction.data.decode(
+        ) == "ESDTNFTTransfer@74302d4e46542d313233343536@0a@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+        assert transaction.gas_limit == 1_219_500
+
+    def test_multiple_nft_transfers_with_prefix(self):
+        first_nft = Token("t0-NFT-123456", 10)
+        first_transfer = TokenTransfer(first_nft, 1)
+
+        second_nft = Token("t0-TEST-987654", 1)
+        second_transfer = TokenTransfer(second_nft, 1)
+
+        transaction = self.transfer_factory.create_transaction_for_esdt_token_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            token_transfers=[first_transfer, second_transfer]
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.value == 0
+        assert transaction.chain_id == "D"
+        assert transaction.data.decode() == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@02@74302d4e46542d313233343536@0a@01@74302d544553542d393837363534@01@01"
+        assert transaction.gas_limit == 1_484_000
+
+        second_transaction = self.transfer_factory.create_transaction_for_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            token_transfers=[first_transfer, second_transfer]
+        )
+        assert second_transaction == transaction
+
+    def test_multiple_token_transfers_with_prefix(self):
+        first_nft = Token("t0-NFT-123456", 10)
+        first_transfer = TokenTransfer(first_nft, 1)
+
+        second_nft = Token("t0-TEST-987654", 0)
+        second_transfer = TokenTransfer(second_nft, 1)
+
+        transaction = self.transfer_factory.create_transaction_for_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            native_amount=1000000000000000000,
+            token_transfers=[first_transfer, second_transfer]
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.value == 0
+        assert transaction.chain_id == "D"
+        assert transaction.data.decode() == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@03@74302d4e46542d313233343536@0a@01@74302d544553542d393837363534@@01@45474c442d303030303030@@0de0b6b3a7640000"
+        assert transaction.gas_limit == 1_742_500
