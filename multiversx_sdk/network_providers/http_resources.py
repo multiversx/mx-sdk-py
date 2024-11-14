@@ -20,14 +20,14 @@ from multiversx_sdk.smart_contracts.smart_contract_query import (
 
 def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[str, Any]:
     request: dict[str, Any] = {
-        "scAddress": query.contract,
+        "scAddress": query.contract.to_bech32(),
         "funcName": query.function,
         "value": str(query.value if query.value else 0),
         "args": [arg.hex() for arg in query.arguments]
     }
 
     if query.caller:
-        request["caller"] = query.caller
+        request["caller"] = query.caller.to_bech32()
 
     return request
 

@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Optional, Protocol, Sequence, Union
 
+from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.serializer import Serializer
@@ -13,7 +14,7 @@ from multiversx_sdk.core import (Address, CodeMetadata, TokenComputer,
                                  TokenTransfer, Transaction)
 from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
-from multiversx_sdk.core.errors import ArgumentSerializationError
+from multiversx_sdk.smart_contracts.errors import ArgumentSerializationError
 
 
 class IConfig(Protocol):
@@ -24,19 +25,8 @@ class IConfig(Protocol):
     gas_limit_change_owner_address: int
 
 
-class IAbi(Protocol):
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: list[Any]) -> list[bytes]:
-        ...
-
-    def encode_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
-        ...
-
-    def encode_upgrade_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
-        ...
-
-
 class SmartContractTransactionsFactory:
-    def __init__(self, config: IConfig, abi: Optional[IAbi] = None) -> None:
+    def __init__(self, config: IConfig, abi: Optional[Abi] = None) -> None:
         self.config = config
         self.abi = abi
         self.serializer = Serializer()

@@ -1,16 +1,11 @@
 from types import SimpleNamespace
-from typing import Protocol
 
+from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.transaction_on_network import TransactionEvent
 
 
-class IAbi(Protocol):
-    def decode_event(self, event_name: str, topics: list[bytes], additional_data: list[bytes]) -> SimpleNamespace:
-        ...
-
-
 class TransactionEventsParser:
-    def __init__(self, abi: IAbi, first_topic_as_identifier: bool = True) -> None:
+    def __init__(self, abi: Abi, first_topic_as_identifier: bool = True) -> None:
         self.abi = abi
         # By default, we consider that the first topic is the event identifier.
         # This is true for log entries emitted by smart contracts:

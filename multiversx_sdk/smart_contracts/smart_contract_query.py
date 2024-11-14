@@ -1,12 +1,14 @@
 from typing import Optional
 
+from multiversx_sdk.core.address import Address
+
 
 class SmartContractQuery:
     def __init__(self,
-                 contract: str,
+                 contract: Address,
                  function: str,
                  arguments: list[bytes],
-                 caller: Optional[str] = None,
+                 caller: Optional[Address] = None,
                  value: Optional[int] = None) -> None:
         self.contract = contract
         self.function = function

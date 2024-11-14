@@ -7,10 +7,10 @@ from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
-from multiversx_sdk.core.errors import ArgumentSerializationError
 from multiversx_sdk.core.tokens import Token, TokenTransfer
 from multiversx_sdk.core.transactions_factory_config import \
     TransactionsFactoryConfig
+from multiversx_sdk.smart_contracts.errors import ArgumentSerializationError
 from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
 
