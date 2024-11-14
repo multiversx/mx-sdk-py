@@ -85,7 +85,7 @@ class TestSmartContractDeployMainnet:
             assert len(parsed.values) == 0
 
     def _load_records(self, kind: str) -> list[dict[str, str]]:
-        path = Path(__file__).parent.parent.parent / "testutils" / "testdata" / "transactions.mainnet.json"
+        path = Path(__file__).parent.parent / "testutils" / "testdata" / "transactions.mainnet.json"
         with open(path, "r") as f:
             content = json.load(f)
 

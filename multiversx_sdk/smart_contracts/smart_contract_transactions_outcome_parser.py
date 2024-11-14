@@ -22,6 +22,8 @@ class Events(Enum):
 
 
 class SmartContractCallOutcome:
+    """**For internal use only.**"""
+
     def __init__(self,
                  function: str = "",
                  return_data_parts: list[bytes] = [],

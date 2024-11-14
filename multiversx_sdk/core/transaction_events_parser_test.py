@@ -17,7 +17,7 @@ from multiversx_sdk.network_providers import ApiNetworkProvider
 from multiversx_sdk.testutils.mock_transaction_on_network import (
     get_empty_smart_contract_result, get_empty_transaction_on_network)
 
-testdata = Path(__file__).parent.parent.parent / "testutils" / "testdata"
+testdata = Path(__file__).parent.parent / "testutils" / "testdata"
 
 
 def test_parse_events_minimalistic():

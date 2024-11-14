@@ -1,4 +1,4 @@
-from typing import List, Optional, Protocol, Union
+from typing import Optional, Protocol, Union
 
 from multiversx_sdk.core import (Address, Transaction, TransactionComputer,
                                  TransactionOnNetwork)
@@ -62,10 +62,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_issue_fungible(self, transaction_on_network: TransactionOnNetwork) -> List[IssueFungibleOutcome]:
+    def parse_issue_fungible(self, transaction_on_network: TransactionOnNetwork) -> list[IssueFungibleOutcome]:
         return self.parser.parse_issue_fungible(transaction_on_network)
 
-    def await_completed_issue_fungible(self, transaction_hash: Union[str, bytes]) -> List[IssueFungibleOutcome]:
+    def await_completed_issue_fungible(self, transaction_hash: Union[str, bytes]) -> list[IssueFungibleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_issue_fungible(transaction)
 
@@ -99,11 +99,11 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_issue_semi_fungible(self, transaction_on_network: TransactionOnNetwork) -> List[IssueSemiFungibleOutcome]:
+    def parse_issue_semi_fungible(self, transaction_on_network: TransactionOnNetwork) -> list[IssueSemiFungibleOutcome]:
         return self.parser.parse_issue_semi_fungible(transaction_on_network)
 
     def await_completed_issue_semi_fungible(
-            self, transaction_hash: Union[str, bytes]) -> List[IssueSemiFungibleOutcome]:
+            self, transaction_hash: Union[str, bytes]) -> list[IssueSemiFungibleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_issue_semi_fungible(transaction)
 
@@ -137,10 +137,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_issue_non_fungible(self, transaction_on_network: TransactionOnNetwork) -> List[IssueNonFungibleOutcome]:
+    def parse_issue_non_fungible(self, transaction_on_network: TransactionOnNetwork) -> list[IssueNonFungibleOutcome]:
         return self.parser.parse_issue_non_fungible(transaction_on_network)
 
-    def await_completed_issue_non_fungible(self, transaction_hash: Union[str, bytes]) -> List[IssueNonFungibleOutcome]:
+    def await_completed_issue_non_fungible(self, transaction_hash: Union[str, bytes]) -> list[IssueNonFungibleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_issue_non_fungible(transaction)
 
@@ -176,10 +176,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_register_meta_esdt(self, transaction_on_network: TransactionOnNetwork) -> List[RegisterMetaEsdtOutcome]:
+    def parse_register_meta_esdt(self, transaction_on_network: TransactionOnNetwork) -> list[RegisterMetaEsdtOutcome]:
         return self.parser.parse_register_meta_esdt(transaction_on_network)
 
-    def await_completed_register_meta_esdt(self, transaction_hash: Union[str, bytes]) -> List[RegisterMetaEsdtOutcome]:
+    def await_completed_register_meta_esdt(self, transaction_hash: Union[str, bytes]) -> list[RegisterMetaEsdtOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_register_meta_esdt(transaction)
 
@@ -203,10 +203,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_register_and_set_all_roles(self, transaction_on_network: TransactionOnNetwork) -> List[RegisterAndSetAllRolesOutcome]:
+    def parse_register_and_set_all_roles(self, transaction_on_network: TransactionOnNetwork) -> list[RegisterAndSetAllRolesOutcome]:
         return self.parser.parse_register_and_set_all_roles(transaction_on_network)
 
-    def await_completed_register_and_set_all_roles(self, transaction_hash: Union[str, bytes]) -> List[RegisterAndSetAllRolesOutcome]:
+    def await_completed_register_and_set_all_roles(self, transaction_hash: Union[str, bytes]) -> list[RegisterAndSetAllRolesOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_register_and_set_all_roles(transaction)
 
@@ -274,10 +274,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> list[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_fungible_token(self, transaction_hash: Union[str, bytes]) -> list[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_fungible_token(transaction)
 
@@ -305,10 +305,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_semi_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_semi_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> list[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_semi_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_semi_fungible_token(self, transaction_hash: Union[str, bytes]) -> list[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_semi_fungible_token(transaction)
 
@@ -338,10 +338,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_set_special_role_on_non_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> List[SetSpecialRoleOutcome]:
+    def parse_set_special_role_on_non_fungible_token(self, transaction_on_network: TransactionOnNetwork) -> list[SetSpecialRoleOutcome]:
         return self.parser.parse_set_special_role(transaction_on_network)
 
-    def await_completed_set_special_role_on_non_fungible_token(self, transaction_hash: Union[str, bytes]) -> List[SetSpecialRoleOutcome]:
+    def await_completed_set_special_role_on_non_fungible_token(self, transaction_hash: Union[str, bytes]) -> list[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_non_fungible_token(transaction)
 
@@ -354,7 +354,7 @@ class TokenManagementController:
                                             royalties: int,
                                             hash: str,
                                             attributes: bytes,
-                                            uris: List[str]) -> Transaction:
+                                            uris: list[str]) -> Transaction:
         transaction = self.factory.create_transaction_for_creating_nft(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -371,10 +371,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_create_nft(self, transaction_on_network: TransactionOnNetwork) -> List[NFTCreateOutcome]:
+    def parse_create_nft(self, transaction_on_network: TransactionOnNetwork) -> list[NFTCreateOutcome]:
         return self.parser.parse_nft_create(transaction_on_network)
 
-    def await_completed_create_nft(self, transaction_hash: Union[str, bytes]) -> List[NFTCreateOutcome]:
+    def await_completed_create_nft(self, transaction_hash: Union[str, bytes]) -> list[NFTCreateOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_create_nft(transaction)
 
@@ -392,10 +392,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_pause(self, transaction_on_network: TransactionOnNetwork) -> List[PauseOutcome]:
+    def parse_pause(self, transaction_on_network: TransactionOnNetwork) -> list[PauseOutcome]:
         return self.parser.parse_pause(transaction_on_network)
 
-    def await_completed_pause(self, transaction_hash: Union[str, bytes]) -> List[PauseOutcome]:
+    def await_completed_pause(self, transaction_hash: Union[str, bytes]) -> list[PauseOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_pause(transaction)
 
@@ -413,10 +413,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_unpause(self, transaction_on_network: TransactionOnNetwork) -> List[UnPauseOutcome]:
+    def parse_unpause(self, transaction_on_network: TransactionOnNetwork) -> list[UnPauseOutcome]:
         return self.parser.parse_unpause(transaction_on_network)
 
-    def await_completed_unpause(self, transaction_hash: Union[str, bytes]) -> List[UnPauseOutcome]:
+    def await_completed_unpause(self, transaction_hash: Union[str, bytes]) -> list[UnPauseOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_unpause(transaction)
 
@@ -436,10 +436,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_freeze(self, transaction_on_network: TransactionOnNetwork) -> List[FreezeOutcome]:
+    def parse_freeze(self, transaction_on_network: TransactionOnNetwork) -> list[FreezeOutcome]:
         return self.parser.parse_freeze(transaction_on_network)
 
-    def await_completed_freeze(self, transaction_hash: Union[str, bytes]) -> List[FreezeOutcome]:
+    def await_completed_freeze(self, transaction_hash: Union[str, bytes]) -> list[FreezeOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_freeze(transaction)
 
@@ -459,10 +459,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_unfreeze(self, transaction_on_network: TransactionOnNetwork) -> List[UnFreezeOutcome]:
+    def parse_unfreeze(self, transaction_on_network: TransactionOnNetwork) -> list[UnFreezeOutcome]:
         return self.parser.parse_unfreeze(transaction_on_network)
 
-    def await_completed_unfreeze(self, transaction_hash: Union[str, bytes]) -> List[UnFreezeOutcome]:
+    def await_completed_unfreeze(self, transaction_hash: Union[str, bytes]) -> list[UnFreezeOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_unfreeze(transaction)
 
@@ -482,10 +482,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_wipe(self, transaction_on_network: TransactionOnNetwork) -> List[WipeOutcome]:
+    def parse_wipe(self, transaction_on_network: TransactionOnNetwork) -> list[WipeOutcome]:
         return self.parser.parse_wipe(transaction_on_network)
 
-    def await_completed_wipe(self, transaction_hash: Union[str, bytes]) -> List[WipeOutcome]:
+    def await_completed_wipe(self, transaction_hash: Union[str, bytes]) -> list[WipeOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_wipe(transaction)
 
@@ -505,10 +505,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_local_mint(self, transaction_on_network: TransactionOnNetwork) -> List[MintOutcome]:
+    def parse_local_mint(self, transaction_on_network: TransactionOnNetwork) -> list[MintOutcome]:
         return self.parser.parse_local_mint(transaction_on_network)
 
-    def await_completed_local_mint(self, transaction_hash: Union[str, bytes]) -> List[MintOutcome]:
+    def await_completed_local_mint(self, transaction_hash: Union[str, bytes]) -> list[MintOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_local_mint(transaction)
 
@@ -528,10 +528,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_local_burn(self, transaction_on_network: TransactionOnNetwork) -> List[BurnOutcome]:
+    def parse_local_burn(self, transaction_on_network: TransactionOnNetwork) -> list[BurnOutcome]:
         return self.parser.parse_local_burn(transaction_on_network)
 
-    def await_completed_local_burn(self, transaction_hash: Union[str, bytes]) -> List[BurnOutcome]:
+    def await_completed_local_burn(self, transaction_hash: Union[str, bytes]) -> list[BurnOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_local_burn(transaction)
 
@@ -553,10 +553,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_update_attributes(self, transaction_on_network: TransactionOnNetwork) -> List[UpdateAttributesOutcome]:
+    def parse_update_attributes(self, transaction_on_network: TransactionOnNetwork) -> list[UpdateAttributesOutcome]:
         return self.parser.parse_update_attributes(transaction_on_network)
 
-    def await_completed_update_attributes(self, transaction_hash: Union[str, bytes]) -> List[UpdateAttributesOutcome]:
+    def await_completed_update_attributes(self, transaction_hash: Union[str, bytes]) -> list[UpdateAttributesOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_update_attributes(transaction)
 
@@ -578,10 +578,10 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_add_quantity(self, transaction_on_network: TransactionOnNetwork) -> List[AddQuantityOutcome]:
+    def parse_add_quantity(self, transaction_on_network: TransactionOnNetwork) -> list[AddQuantityOutcome]:
         return self.parser.parse_add_quantity(transaction_on_network)
 
-    def await_completed_add_quantity(self, transaction_hash: Union[str, bytes]) -> List[AddQuantityOutcome]:
+    def await_completed_add_quantity(self, transaction_hash: Union[str, bytes]) -> list[AddQuantityOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_add_quantity(transaction)
 
@@ -603,9 +603,9 @@ class TokenManagementController:
 
         return transaction
 
-    def parse_burn_quantity(self, transaction_on_network: TransactionOnNetwork) -> List[BurnQuantityOutcome]:
+    def parse_burn_quantity(self, transaction_on_network: TransactionOnNetwork) -> list[BurnQuantityOutcome]:
         return self.parser.parse_burn_quantity(transaction_on_network)
 
-    def await_completed_burn_quantity(self, transaction_hash: Union[str, bytes]) -> List[BurnQuantityOutcome]:
+    def await_completed_burn_quantity(self, transaction_hash: Union[str, bytes]) -> list[BurnQuantityOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_burn_quantity(transaction)

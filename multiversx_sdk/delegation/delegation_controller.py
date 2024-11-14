@@ -4,9 +4,12 @@ from multiversx_sdk.core import (Address, Transaction, TransactionComputer,
                                  TransactionOnNetwork,
                                  TransactionsFactoryConfig)
 from multiversx_sdk.core.interfaces import IAccount, IValidatorPublicKey
-from multiversx_sdk.delegation import (CreateNewDelegationContractOutcome,
-                                       DelegationTransactionsFactory,
-                                       DelegationTransactionsOutcomeParser)
+from multiversx_sdk.delegation.delegation_transactions_factory import \
+    DelegationTransactionsFactory
+from multiversx_sdk.delegation.delegation_transactions_outcome_parser import \
+    DelegationTransactionsOutcomeParser
+from multiversx_sdk.delegation.delegation_transactions_outcome_parser_types import \
+    CreateNewDelegationContractOutcome
 from multiversx_sdk.network_providers.resources import AwaitingOptions
 
 

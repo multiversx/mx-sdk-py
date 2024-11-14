@@ -113,7 +113,7 @@ class TestSmartContractTransactionsOutcomeParser:
         assert parsed.contracts == []
 
     def test_parse_execute_outcome_with_abi(self):
-        abi_path = Path(__file__).parent.parent.parent / "testutils" / "testdata" / "answer.abi.json"
+        abi_path = Path(__file__).parent.parent / "testutils" / "testdata" / "answer.abi.json"
         abi = Abi.load(abi_path)
         parser = SmartContractTransactionsOutcomeParser(abi)
 
@@ -130,7 +130,7 @@ class TestSmartContractTransactionsOutcomeParser:
         assert parsed_tx.values == [42]
 
     def test_parse_execute_without_function_name(self):
-        abi_path = Path(__file__).parent.parent.parent / "testutils" / "testdata" / "answer.abi.json"
+        abi_path = Path(__file__).parent.parent / "testutils" / "testdata" / "answer.abi.json"
         abi = Abi.load(abi_path)
         parser = SmartContractTransactionsOutcomeParser(abi)
 

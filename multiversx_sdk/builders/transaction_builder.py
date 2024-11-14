@@ -1,6 +1,6 @@
 from typing import List, Optional, Protocol
 
-from multiversx_sdk import Address, Transaction
+from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
 
 

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, List, Optional, Protocol, Sequence, Union
+from typing import Any, Optional, Protocol, Sequence, Union
 
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
@@ -25,13 +25,13 @@ class IConfig(Protocol):
 
 
 class IAbi(Protocol):
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
+    def encode_endpoint_input_parameters(self, endpoint_name: str, values: list[Any]) -> list[bytes]:
         ...
 
-    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+    def encode_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
         ...
 
-    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+    def encode_upgrade_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
         ...
 
 
@@ -84,7 +84,7 @@ class SmartContractTransactionsFactory:
                                        gas_limit: int,
                                        arguments: Sequence[Any] = [],
                                        native_transfer_amount: int = 0,
-                                       token_transfers: List[TokenTransfer] = []) -> Transaction:
+                                       token_transfers: list[TokenTransfer] = []) -> Transaction:
         number_of_tokens = len(token_transfers)
         receiver = contract
 
@@ -95,7 +95,7 @@ class SmartContractTransactionsFactory:
             native_transfer_amount = 0
             number_of_tokens += 1
 
-        data_parts: List[str] = []
+        data_parts: list[str] = []
 
         if number_of_tokens == 1:
             transfer = token_transfers[0]
@@ -192,7 +192,7 @@ class SmartContractTransactionsFactory:
             add_data_movement_gas=False,
         ).build()
 
-    def _encode_deploy_arguments(self, args: List[Any]) -> List[bytes]:
+    def _encode_deploy_arguments(self, args: list[Any]) -> list[bytes]:
         if self.abi:
             return self.abi.encode_constructor_input_parameters(args)
 
@@ -201,7 +201,7 @@ class SmartContractTransactionsFactory:
 
         raise ArgumentSerializationError()
 
-    def _encode_execute_arguments(self, function_name: str, args: List[Any]) -> List[bytes]:
+    def _encode_execute_arguments(self, function_name: str, args: list[Any]) -> list[bytes]:
         if self.abi:
             return self.abi.encode_endpoint_input_parameters(function_name, args)
 
@@ -210,7 +210,7 @@ class SmartContractTransactionsFactory:
 
         raise ArgumentSerializationError()
 
-    def _encode_upgrade_arguments(self, args: List[Any]) -> List[bytes]:
+    def _encode_upgrade_arguments(self, args: list[Any]) -> list[bytes]:
         if self.abi:
             return self.abi.encode_upgrade_constructor_input_parameters(args)
 

@@ -4,7 +4,8 @@ from multiversx_sdk.core import Address, Transaction, TransactionComputer
 from multiversx_sdk.core.errors import InvalidInnerTransactionError
 from multiversx_sdk.core.transactions_factory_config import \
     TransactionsFactoryConfig
-from multiversx_sdk.relayed import RelayedTransactionsFactory
+from multiversx_sdk.relayed.relayed_transactions_factory import \
+    RelayedTransactionsFactory
 from multiversx_sdk.testutils.wallets import load_wallets
 
 

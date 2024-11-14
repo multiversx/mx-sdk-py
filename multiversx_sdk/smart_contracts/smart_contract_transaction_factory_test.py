@@ -16,7 +16,7 @@ from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import \
 
 
 class TestSmartContractTransactionsFactory:
-    testdata = Path(__file__).parent.parent.parent / "testutils" / "testdata"
+    testdata = Path(__file__).parent.parent / "testutils" / "testdata"
     bytecode = (testdata / "adder.wasm").read_bytes()
     abi = Abi.load(testdata / "adder.abi.json")
 
