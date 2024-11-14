@@ -21,11 +21,26 @@ class Address:
         Args:
             pubkey (bytes): the sequence of bytes\n
             hrp (str): the human readable part"""
+
+        # used for creating an empty address
+        if not len(pubkey):
+            self.pubkey = bytes()
+            self.hrp = DEFAULT_HRP
+            return
+
         if len(pubkey) != PUBKEY_LENGTH:
             raise BadPubkeyLengthError(len(pubkey), PUBKEY_LENGTH)
 
         self.pubkey = bytes(pubkey)
         self.hrp = hrp
+
+    @classmethod
+    def empty(cls,) -> 'Address':
+        """
+        Creates an empty address object.
+        Generally speaking, this should not be used by client code **(internal use only)**.
+        """
+        return Address(b"", "")
 
     @classmethod
     def new_from_bech32(cls, value: str) -> 'Address':

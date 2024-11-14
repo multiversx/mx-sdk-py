@@ -183,12 +183,11 @@ class TestProxy:
         )
 
         assert transaction.nonce == 0
-        assert transaction.block_nonce == 835600
         assert transaction.epoch == 348
-        assert transaction.hash == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
-        assert transaction.is_completed
+        assert transaction.hash.hex() == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
+        assert transaction.status.is_completed
         assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.contract_results == []
+        assert transaction.smart_contract_results == []
 
     def test_get_transaction_with_events(self):
         transaction = self.proxy.get_transaction(
@@ -207,10 +206,10 @@ class TestProxy:
             "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb"
         )
 
-        assert transaction.is_completed is True
-        assert len(transaction.contract_results) > 0
-        assert transaction.data == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
-        assert sum([r.raw.get("isRefund", False) for r in transaction.contract_results]) == 1
+        assert transaction.status.is_completed
+        assert len(transaction.smart_contract_results) > 0
+        assert transaction.data.decode() == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
+        assert sum([r.raw.get("isRefund", False) for r in transaction.smart_contract_results]) == 1
 
     def test_send_transaction(self):
         transaction = Transaction(
@@ -323,13 +322,13 @@ class TestProxy:
         transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         tx_on_network = self.proxy.simulate_transaction(transaction)
-        print(tx_on_network.contract_results[0].data)
 
         assert tx_on_network.status == TransactionStatus("success")
-        assert len(tx_on_network.contract_results) == 1
-        assert tx_on_network.contract_results[0].sender.to_bech32() == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
-        assert tx_on_network.contract_results[0].receiver.to_bech32() == bob.label
-        assert tx_on_network.contract_results[0].data == b"@6f6b"
+        assert len(tx_on_network.smart_contract_results) == 1
+        assert tx_on_network.smart_contract_results[0].sender.to_bech32(
+        ) == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert tx_on_network.smart_contract_results[0].receiver.to_bech32() == bob.label
+        assert tx_on_network.smart_contract_results[0].data == b"@6f6b"
 
     def test_estimate_transaction_cost(self):
         bob = load_wallets()["bob"]

@@ -61,7 +61,9 @@ class TokenComputer:
         The second element is the ticker.
         The third element is the random sequence.
         """
-        if token_parts[0].isalnum() and token_parts[0].islower():
+        has_prefix = token_parts[0].isalnum() and token_parts[0].islower()
+
+        if has_prefix:
             return token_parts[0], token_parts[1], token_parts[2]
         return None, token_parts[0], token_parts[1]
 

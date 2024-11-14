@@ -56,10 +56,10 @@ class TransactionAwaiter:
     def await_completed(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
         """Waits until the transaction is completely processed."""
         def is_completed(tx: TransactionOnNetwork):
-            if tx.is_completed is None:
+            if tx.status.is_completed is None:
                 raise IsCompletedFieldMissingOnTransaction()
 
-            return tx.is_completed
+            return tx.status.is_completed
 
         def do_fetch():
             return self.fetcher.get_transaction(transaction_hash)
