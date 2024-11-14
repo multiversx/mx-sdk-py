@@ -3,8 +3,6 @@ from typing import Any, Optional, Union
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
-from multiversx_sdk.core.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
@@ -16,6 +14,8 @@ from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, BlockCoordinates,
     BlockOnNetwork, FungibleTokenMetadata, NetworkConfig, NetworkStatus,
     TokenAmountOnNetwork, TokensCollectionMetadata, TransactionCostResponse)
+from multiversx_sdk.smart_contracts.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 
 
 def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[str, Any]:
