@@ -53,7 +53,7 @@ class RelayedTransactionsFactory:
                 "The inner transaction is not signed")
 
         arguments: list[Any] = [
-            AddressValue.from_address(inner_transaction.receiver),
+            AddressValue.new_from_address(inner_transaction.receiver),
             BigUIntValue(inner_transaction.nonce),
             BytesValue(inner_transaction.data),
             BytesValue(inner_transaction.signature)

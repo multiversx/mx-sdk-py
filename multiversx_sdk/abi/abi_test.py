@@ -245,7 +245,7 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
                 {
                     "__discriminant__": 5,
                     "0": {
-                        "to": AddressValue.from_address(alice),
+                        "to": AddressValue.new_from_address(alice),
                         "egld_amount": 1000000000000000000,
                         "endpoint_name": StringValue("example"),
                         "arguments": [
@@ -271,7 +271,7 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
                         discriminant=5,
                         fields=[
                             Field("0", StructValue([
-                                Field("to", AddressValue.from_address(alice)),
+                                Field("to", AddressValue.new_from_address(alice)),
                                 Field("egld_amount", BigUIntValue(1000000000000000000)),
                                 Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
                                 Field("endpoint_name", BytesValue(b"example")),
