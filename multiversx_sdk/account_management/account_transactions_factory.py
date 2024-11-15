@@ -1,29 +1,17 @@
-from typing import Dict, Protocol
-
 from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
-
-
-class IConfig(Protocol):
-    chain_id: str
-    min_gas_limit: int
-    gas_limit_per_byte: int
-    gas_limit_save_key_value: int
-    gas_limit_persist_per_byte: int
-    gas_limit_store_per_byte: int
-    gas_limit_set_guardian: int
-    gas_limit_guard_account: int
-    gas_limit_unguard_account: int
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 
 
 class AccountTransactionsFactory:
-    def __init__(self, config: IConfig) -> None:
+    def __init__(self, config: TransactionsFactoryConfig) -> None:
         self.config = config
 
     def create_transaction_for_saving_key_value(self,
                                                 sender: Address,
-                                                key_value_pairs: Dict[bytes, bytes]) -> Transaction:
+                                                key_value_pairs: dict[bytes, bytes]) -> Transaction:
         function = "SaveKeyValue"
 
         extra_gas = self._compute_extra_gas_for_saving_key_value(key_value_pairs)
@@ -86,7 +74,7 @@ class AccountTransactionsFactory:
 
         return transaction
 
-    def _compute_data_parts_for_saving_key_value(self, key_value_pairs: Dict[bytes, bytes]) -> list[str]:
+    def _compute_data_parts_for_saving_key_value(self, key_value_pairs: dict[bytes, bytes]) -> list[str]:
         data_parts: list[str] = []
 
         for key, value in key_value_pairs.items():
@@ -94,7 +82,7 @@ class AccountTransactionsFactory:
 
         return data_parts
 
-    def _compute_extra_gas_for_saving_key_value(self, key_value_pairs: Dict[bytes, bytes]) -> int:
+    def _compute_extra_gas_for_saving_key_value(self, key_value_pairs: dict[bytes, bytes]) -> int:
         extra_gas = 0
 
         for key, value in key_value_pairs.items():
