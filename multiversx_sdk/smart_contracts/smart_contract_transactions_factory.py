@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Protocol, Sequence, Union
+from typing import Any, Optional, Sequence, Union
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.bytes_value import BytesValue
@@ -14,19 +14,13 @@ from multiversx_sdk.core import (Address, CodeMetadata, TokenComputer,
                                  TokenTransfer, Transaction)
 from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
                                            VM_TYPE_WASM_VM)
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 from multiversx_sdk.smart_contracts.errors import ArgumentSerializationError
 
 
-class IConfig(Protocol):
-    chain_id: str
-    min_gas_limit: int
-    gas_limit_per_byte: int
-    gas_limit_claim_developer_rewards: int
-    gas_limit_change_owner_address: int
-
-
 class SmartContractTransactionsFactory:
-    def __init__(self, config: IConfig, abi: Optional[Abi] = None) -> None:
+    def __init__(self, config: TransactionsFactoryConfig, abi: Optional[Abi] = None) -> None:
         self.config = config
         self.abi = abi
         self.serializer = Serializer()

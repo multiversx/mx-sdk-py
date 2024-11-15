@@ -1,4 +1,4 @@
-from typing import Protocol, Sequence
+from typing import Sequence
 
 from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
@@ -7,24 +7,13 @@ from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
 from multiversx_sdk.core.interfaces import IValidatorPublicKey
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 from multiversx_sdk.delegation.errors import ListsLengthMismatchError
 
 
-class IConfig(Protocol):
-    chain_id: str
-    min_gas_limit: int
-    gas_limit_per_byte: int
-    gas_limit_stake: int
-    gas_limit_unstake: int
-    gas_limit_unbond: int
-    gas_limit_create_delegation_contract: int
-    gas_limit_delegation_operations: int
-    additional_gas_limit_per_validator_node: int
-    additional_gas_for_delegation_operations: int
-
-
 class DelegationTransactionsFactory:
-    def __init__(self, config: IConfig) -> None:
+    def __init__(self, config: TransactionsFactoryConfig) -> None:
         self.config = config
         self.serializer = Serializer()
 

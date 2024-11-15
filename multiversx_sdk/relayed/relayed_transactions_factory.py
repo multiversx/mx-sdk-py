@@ -1,21 +1,17 @@
 import base64
 import json
-from typing import Any, Protocol
+from typing import Any
 
 from multiversx_sdk.abi import AddressValue, BigUIntValue, Serializer
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.core import Address, Transaction
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 from multiversx_sdk.relayed.errors import InvalidInnerTransactionError
 
 
-class IConfig(Protocol):
-    chain_id: str
-    min_gas_limit: int
-    gas_limit_per_byte: int
-
-
 class RelayedTransactionsFactory:
-    def __init__(self, config: IConfig) -> None:
+    def __init__(self, config: TransactionsFactoryConfig) -> None:
         self._config = config
 
     def create_relayed_v1_transaction(self,

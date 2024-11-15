@@ -1,6 +1,6 @@
 import logging
 from enum import Enum
-from typing import Optional, Protocol
+from typing import Optional
 
 from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
@@ -9,37 +9,10 @@ from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.errors import BadUsageError
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 
 logger = logging.getLogger(__name__)
-
-
-class IConfig(Protocol):
-    chain_id: str
-    min_gas_limit: int
-    gas_limit_per_byte: int
-    gas_limit_issue: int
-    gas_limit_toggle_burn_role_globally: int
-    gas_limit_esdt_local_mint: int
-    gas_limit_esdt_local_burn: int
-    gas_limit_set_special_role: int
-    gas_limit_pausing: int
-    gas_limit_freezing: int
-    gas_limit_wiping: int
-    gas_limit_esdt_nft_create: int
-    gas_limit_esdt_nft_update_attributes: int
-    gas_limit_esdt_nft_add_quantity: int
-    gas_limit_esdt_nft_burn: int
-    gas_limit_store_per_byte: int
-    gas_limit_esdt_modify_royalties: int
-    gas_limit_esdt_modify_creator: int
-    gas_limit_esdt_metadata_update: int
-    gas_limit_set_new_uris: int
-    gas_limit_nft_metadata_recreate: int
-    gas_limit_nft_change_to_dynamic: int
-    gas_limit_update_token_id: int
-    gas_limit_register_dynamic: int
-    issue_cost: int
-    esdt_contract_address: Address
 
 
 class TokenType(Enum):
@@ -50,7 +23,7 @@ class TokenType(Enum):
 
 
 class TokenManagementTransactionsFactory:
-    def __init__(self, config: IConfig):
+    def __init__(self, config: TransactionsFactoryConfig):
         self._config = config
         self.serializer = Serializer()
 

@@ -1,13 +1,9 @@
-from typing import List, Optional, Protocol
+from typing import Optional
 
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
-
-
-class IConfig(Protocol):
-    chain_id: str
-    min_gas_limit: int
-    gas_limit_per_byte: int
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 
 
 class TransactionBuilder:
@@ -17,10 +13,10 @@ class TransactionBuilder:
     """
 
     def __init__(self,
-                 config: IConfig,
+                 config: TransactionsFactoryConfig,
                  sender: Address,
                  receiver: Address,
-                 data_parts: List[str],
+                 data_parts: list[str],
                  gas_limit: int,
                  add_data_movement_gas: bool,
                  amount: Optional[int] = None) -> None:
@@ -41,7 +37,7 @@ class TransactionBuilder:
 
         return gas
 
-    def build_transaction_payload(self, parts: List[str]) -> bytes:
+    def build_transaction_payload(self, parts: list[str]) -> bytes:
         data = ARGS_SEPARATOR.join(parts)
         return data.encode("utf-8")
 

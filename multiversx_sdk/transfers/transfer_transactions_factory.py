@@ -1,4 +1,4 @@
-from typing import Optional, Protocol
+from typing import Optional
 
 from multiversx_sdk.builders.token_transfers_data_builder import \
     TokenTransfersDataBuilder
@@ -8,22 +8,15 @@ from multiversx_sdk.core import (Address, TokenComputer, TokenTransfer,
 from multiversx_sdk.core.constants import \
     EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER
 from multiversx_sdk.core.errors import BadUsageError
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 
 ADDITIONAL_GAS_FOR_ESDT_TRANSFER = 100000
 ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER = 800000
 
 
-class IConfig(Protocol):
-    chain_id: str
-    min_gas_limit: int
-    gas_limit_per_byte: int
-    gas_limit_esdt_transfer: int
-    gas_limit_esdt_nft_transfer: int
-    gas_limit_multi_esdt_nft_transfer: int
-
-
 class TransferTransactionsFactory:
-    def __init__(self, config: IConfig) -> None:
+    def __init__(self, config: TransactionsFactoryConfig) -> None:
         self.config = config
         self.token_computer = TokenComputer()
         self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
