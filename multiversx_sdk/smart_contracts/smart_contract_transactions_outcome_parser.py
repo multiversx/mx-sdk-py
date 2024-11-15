@@ -1,6 +1,7 @@
 from enum import Enum
-from typing import Any, Optional, Protocol, Union
+from typing import Optional, Union
 
+from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core import (Address, SmartContractResult,
                                  TransactionEvent, TransactionOnNetwork,
                                  find_events_by_identifier)
@@ -8,11 +9,6 @@ from multiversx_sdk.core.constants import ARGS_SEPARATOR, DEFAULT_HRP
 from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_types import (
     DeployedSmartContract, ParsedSmartContractCallOutcome,
     SmartContractDeployOutcome)
-
-
-class IAbi(Protocol):
-    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: list[bytes]) -> list[Any]:
-        ...
 
 
 class Events(Enum):
@@ -36,7 +32,7 @@ class SmartContractCallOutcome:
 
 
 class SmartContractTransactionsOutcomeParser:
-    def __init__(self, abi: Optional[IAbi] = None) -> None:
+    def __init__(self, abi: Optional[Abi] = None) -> None:
         self.abi = abi
 
     def parse_deploy(self, transaction: TransactionOnNetwork) -> SmartContractDeployOutcome:

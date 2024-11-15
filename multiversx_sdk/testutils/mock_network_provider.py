@@ -1,6 +1,6 @@
 import threading
 import time
-from typing import Any, Callable, Union
+from typing import Any, Callable, Optional, Union
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
@@ -9,7 +9,8 @@ from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionLogs,
                                                         TransactionOnNetwork)
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.resources import AccountOnNetwork
+from multiversx_sdk.network_providers.resources import (AccountOnNetwork,
+                                                        AwaitingOptions)
 from multiversx_sdk.smart_contracts.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.testutils.mock_transaction_on_network import \
@@ -155,6 +156,9 @@ class MockNetworkProvider:
                 return responder.response
 
         raise Exception("No query response to return")
+
+    def await_transaction_completed(self, transaction_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        ...
 
 
 class QueryContractResponder:

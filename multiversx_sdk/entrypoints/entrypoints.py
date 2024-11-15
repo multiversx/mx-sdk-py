@@ -1,5 +1,6 @@
-from typing import Any, Optional, Protocol, Tuple, Union
+from typing import Optional, Union
 
+from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.account_management import AccountController
 from multiversx_sdk.accounts import Account
 from multiversx_sdk.core import (Address, Message, MessageComputer,
@@ -19,20 +20,6 @@ from multiversx_sdk.token_management.token_management_controller import \
     TokenManagementController
 from multiversx_sdk.transfers.transfers_controller import TransfersController
 from multiversx_sdk.wallet.user_verifer import UserVerifier
-
-
-class IAbi(Protocol):
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: list[Any]) -> list[bytes]:
-        ...
-
-    def encode_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
-        ...
-
-    def encode_upgrade_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
-        ...
-
-    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: list[bytes]) -> list[Any]:
-        ...
 
 
 class NetworkEntrypoint:
@@ -83,7 +70,7 @@ class NetworkEntrypoint:
     def recall_account_nonce(self, address: Address) -> int:
         return self.network_provider.get_account(address).nonce
 
-    def send_transactions(self, transactions: list[Transaction]) -> Tuple[int, list[bytes]]:
+    def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
         """
         Sends multiple transactions.
 
@@ -91,7 +78,7 @@ class NetworkEntrypoint:
             transactions (list[Transaction]): An iterable containing multiple transactions (e.g. a list of transactions).
 
         Returns:
-            Tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
+            tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
         """
         return self.network_provider.send_transactions(transactions)
 
@@ -113,7 +100,7 @@ class NetworkEntrypoint:
     def create_relayed_controller(self) -> RelayedController:
         return RelayedController(self.chain_id)
 
-    def create_smart_contract_controller(self, abi: Optional[IAbi] = None) -> SmartContractController:
+    def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
         return SmartContractController(self.chain_id, self.network_provider, abi)
 
     def create_token_management_controller(self) -> TokenManagementController:

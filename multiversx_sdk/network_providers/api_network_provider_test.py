@@ -267,7 +267,7 @@ class TestApi:
 
     def test_query_contract(self):
         query = SmartContractQuery(
-            contract="erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4",
+            contract=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4"),
             function="getSum",
             arguments=[],
         )

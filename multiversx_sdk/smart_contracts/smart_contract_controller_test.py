@@ -3,12 +3,16 @@ from pathlib import Path
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
-from multiversx_sdk.abi.small_int_values import U64Value
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
+from multiversx_sdk.accounts.account import Account
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
-from multiversx_sdk.smart_contracts.smart_contract_queries_controller import \
-    SmartContractQueriesController
+from multiversx_sdk.smart_contracts.smart_contract_controller import \
+    SmartContractController
 from multiversx_sdk.smart_contracts.smart_contract_query import (
     SmartContractQuery, SmartContractQueryResponse)
 from multiversx_sdk.testutils.mock_network_provider import MockNetworkProvider
@@ -16,10 +20,73 @@ from multiversx_sdk.testutils.mock_network_provider import MockNetworkProvider
 
 class TestSmartContractQueriesController:
     testdata = Path(__file__).parent.parent / "testutils" / "testdata"
+    testwallets = Path(__file__).parent.parent / "testutils" / "testwallets"
+    alice = Account.new_from_pem(testwallets / "alice.pem")
+    bytecode = (testdata / "adder.wasm").read_bytes()
+    abi = Abi.load(testdata / "adder.abi.json")
+
+    def test_create_transaction_for_deploy(self):
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider(), abi=self.abi)
+        gas_limit = 6000000
+
+        transaction = controller.create_transaction_for_deploy(
+            sender=self.alice,
+            nonce=self.alice.get_nonce_then_increment(),
+            bytecode=self.bytecode,
+            gas_limit=gas_limit,
+            arguments=[BigUIntValue(1)]
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == CONTRACT_DEPLOY_ADDRESS
+        assert transaction.data == f"{self.bytecode.hex()}@0500@0504@01".encode()
+        assert transaction.gas_limit == gas_limit
+        assert transaction.value == 0
+
+    def test_create_transaction_for_execute(self):
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider(), abi=self.abi)
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        function = "add"
+        gas_limit = 6000000
+
+        transaction = controller.create_transaction_for_execute(
+            sender=self.alice,
+            nonce=self.alice.get_nonce_then_increment(),
+            contract=contract,
+            function=function,
+            gas_limit=gas_limit,
+            arguments=[U32Value(7)]
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
+        assert transaction.gas_limit == gas_limit
+        assert transaction.data.decode() == "add@07"
+        assert transaction.value == 0
+
+    def test_create_transaction_for_upgrade(self):
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider(), abi=self.abi)
+        contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
+        gas_limit = 6000000
+
+        transaction = controller.create_transaction_for_upgrade(
+            sender=self.alice,
+            nonce=self.alice.get_nonce_then_increment(),
+            contract=contract_address,
+            bytecode=self.bytecode,
+            gas_limit=gas_limit,
+            arguments=[BigUIntValue(0)]
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4"
+        assert transaction.data == f"upgradeContract@{self.bytecode.hex()}@0504@".encode()
+        assert transaction.gas_limit == gas_limit
+        assert transaction.value == 0
 
     def test_create_query_without_arguments(self):
-        controller = SmartContractQueriesController(MockNetworkProvider())
-        contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider())
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getSum"
 
         query = controller.create_query(
@@ -35,8 +102,8 @@ class TestSmartContractQueriesController:
         assert query.value is None
 
     def test_create_query_with_arguments(self):
-        controller = SmartContractQueriesController(MockNetworkProvider())
-        contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider())
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getSum"
 
         query = controller.create_query(
@@ -53,8 +120,8 @@ class TestSmartContractQueriesController:
 
     def test_create_query_with_arguments_with_abi(self):
         abi = Abi.load(self.testdata / "lottery-esdt.abi.json")
-        controller = SmartContractQueriesController(MockNetworkProvider(), abi)
-        contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider(), abi=abi)
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getLotteryInfo"
 
         query = controller.create_query(
@@ -79,7 +146,7 @@ class TestSmartContractQueriesController:
 
     def test_run_query_with_mock_provider(self):
         network_provider = MockNetworkProvider()
-        controller = SmartContractQueriesController(network_provider)
+        controller = SmartContractController(chain_id="D", network_provider=network_provider)
 
         contract_query_response = SmartContractQueryResponse(
             function="bar",
@@ -91,7 +158,7 @@ class TestSmartContractQueriesController:
         network_provider.mock_query_contract_on_function("bar", contract_query_response)
 
         query = SmartContractQuery(
-            contract="erd1qqqqqqqqqqqqqpgqvc7gdl0p4s97guh498wgz75k8sav6sjfjlwqh679jy",
+            contract=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqvc7gdl0p4s97guh498wgz75k8sav6sjfjlwqh679jy"),
             function="bar",
             arguments=[]
         )
@@ -101,7 +168,7 @@ class TestSmartContractQueriesController:
         assert response.return_data_parts == ["abba".encode()]
 
     def test_parse_query_response(self):
-        controller = SmartContractQueriesController(MockNetworkProvider())
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider())
 
         response = SmartContractQueryResponse(
             function="bar",
@@ -115,7 +182,7 @@ class TestSmartContractQueriesController:
 
     def test_parse_query_response_with_abi(self):
         abi = Abi.load(self.testdata / "lottery-esdt.abi.json")
-        controller = SmartContractQueriesController(MockNetworkProvider(), abi)
+        controller = SmartContractController(chain_id="D", network_provider=MockNetworkProvider(), abi=abi)
 
         response = SmartContractQueryResponse(
             function="getLotteryInfo",
@@ -137,8 +204,8 @@ class TestSmartContractQueriesController:
     @pytest.mark.networkInteraction
     def test_run_query_on_network(self):
         provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
-        controller = SmartContractQueriesController(provider)
-        contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+        controller = SmartContractController(chain_id="D", network_provider=provider)
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getSum"
 
         query = controller.create_query(
@@ -155,8 +222,8 @@ class TestSmartContractQueriesController:
     @pytest.mark.networkInteraction
     def test_query_on_network(self):
         provider = ApiNetworkProvider("https://devnet-api.multiversx.com")
-        controller = SmartContractQueriesController(provider)
-        contract = "erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx"
+        controller = SmartContractController(chain_id="D", network_provider=provider)
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getSum"
 
         return_data_parts = controller.query(

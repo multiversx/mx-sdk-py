@@ -260,8 +260,6 @@ class ExplicitEnumVariantDefinition:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "ExplicitEnumVariantDefinition":
-        fields = [FieldDefinition.from_dict(item) for item in data.get("fields", [])]
-
         return cls(
             name=data.get("name", "")
         )

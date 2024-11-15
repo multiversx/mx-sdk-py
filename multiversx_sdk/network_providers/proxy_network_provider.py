@@ -247,7 +247,7 @@ class ProxyNetworkProvider(INetworkProvider):
         """Fetches the definition of a fungible token."""
         encoded_identifier = token_identifier.encode()
         query = SmartContractQuery(
-            contract=ESDT_CONTRACT_ADDRESS,
+            contract=Address.new_from_bech32(ESDT_CONTRACT_ADDRESS),
             function="getTokenProperties",
             arguments=[encoded_identifier],
         )
@@ -261,7 +261,7 @@ class ProxyNetworkProvider(INetworkProvider):
         """Fetches the definition of a tokens collection."""
         encoded_identifier = collection_name.encode()
         query = SmartContractQuery(
-            contract=ESDT_CONTRACT_ADDRESS,
+            contract=Address.new_from_bech32(ESDT_CONTRACT_ADDRESS),
             function="getTokenProperties",
             arguments=[encoded_identifier],
         )

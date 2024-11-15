@@ -1,5 +1,3 @@
-from typing import List
-
 from multiversx_sdk.core import (Address, TransactionEvent,
                                  TransactionOnNetwork,
                                  find_events_by_identifier)
@@ -14,13 +12,13 @@ class DelegationTransactionsOutcomeParser:
         pass
 
     def parse_create_new_delegation_contract(self,
-                                             transaction: TransactionOnNetwork) -> List[CreateNewDelegationContractOutcome]:
+                                             transaction: TransactionOnNetwork) -> list[CreateNewDelegationContractOutcome]:
         self._ensure_no_error(transaction.logs.events)
 
         events = find_events_by_identifier(transaction, "SCDeploy")
         return [CreateNewDelegationContractOutcome(self._extract_contract_address(event)) for event in events]
 
-    def _ensure_no_error(self, transaction_events: List[TransactionEvent]) -> None:
+    def _ensure_no_error(self, transaction_events: list[TransactionEvent]) -> None:
         for event in transaction_events:
             if event.identifier == "signalError":
                 data = event.additional_data[0].decode()[1:] if len(event.additional_data[0]) else ""

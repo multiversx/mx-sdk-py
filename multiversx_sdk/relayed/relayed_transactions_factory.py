@@ -5,7 +5,7 @@ from typing import Any, Protocol
 from multiversx_sdk.abi import AddressValue, BigUIntValue, Serializer
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.core import Address, Transaction
-from multiversx_sdk.core.errors import InvalidInnerTransactionError
+from multiversx_sdk.relayed.errors import InvalidInnerTransactionError
 
 
 class IConfig(Protocol):

@@ -3,11 +3,11 @@ from typing import Protocol, Sequence
 from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.string_value import StringValue
+from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
-from multiversx_sdk.core.errors import ListsLengthMismatchError
 from multiversx_sdk.core.interfaces import IValidatorPublicKey
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
+from multiversx_sdk.delegation.errors import ListsLengthMismatchError
 
 
 class IConfig(Protocol):

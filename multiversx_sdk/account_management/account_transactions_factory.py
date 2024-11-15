@@ -1,8 +1,8 @@
-from typing import Dict, List, Protocol
+from typing import Dict, Protocol
 
+from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 
 
 class IConfig(Protocol):
@@ -86,8 +86,8 @@ class AccountTransactionsFactory:
 
         return transaction
 
-    def _compute_data_parts_for_saving_key_value(self, key_value_pairs: Dict[bytes, bytes]) -> List[str]:
-        data_parts: List[str] = []
+    def _compute_data_parts_for_saving_key_value(self, key_value_pairs: Dict[bytes, bytes]) -> list[str]:
+        data_parts: list[str] = []
 
         for key, value in key_value_pairs.items():
             data_parts.extend([key.hex(), value.hex()])
