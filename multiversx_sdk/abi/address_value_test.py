@@ -40,6 +40,9 @@ def test_set_payload_and_get_payload():
     )
     assert value.get_payload() == address.get_public_key()
 
+    value = AddressValue.new_from_address(address)
+    assert value.get_payload() == address.get_public_key()
+
     # With errors
     with pytest.raises(ValueError, match=re.escape("public key (address) has invalid length: 3")):
         AddressValue().set_payload(bytes([1, 2, 3]))
