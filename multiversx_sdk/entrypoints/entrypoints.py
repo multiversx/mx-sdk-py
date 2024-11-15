@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.account_management import AccountController
@@ -70,7 +70,7 @@ class NetworkEntrypoint:
     def recall_account_nonce(self, address: Address) -> int:
         return self.network_provider.get_account(address).nonce
 
-    def send_transactions(self, transactions: list[Transaction]) -> Tuple[int, list[bytes]]:
+    def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
         """
         Sends multiple transactions.
 
@@ -78,7 +78,7 @@ class NetworkEntrypoint:
             transactions (list[Transaction]): An iterable containing multiple transactions (e.g. a list of transactions).
 
         Returns:
-            Tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
+            tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
         """
         return self.network_provider.send_transactions(transactions)
 
