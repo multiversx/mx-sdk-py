@@ -124,6 +124,21 @@ class MockNetworkProvider:
         thread = threading.Thread(target=fn)
         thread.start()
 
+    def mock_account_balance_timeline_by_address(self, address: Address, timeline_points: list[Any]) -> None:
+        def fn():
+            for point in timeline_points:
+                if isinstance(point, TimelinePointMarkCompleted):
+                    def mark_account_condition_reached(account: AccountOnNetwork):
+                        account.balance = account.balance + create_account_egld_balance(7)
+
+                    self.mock_update_account(address, mark_account_condition_reached)
+
+                elif isinstance(point, TimelinePointWait):
+                    time.sleep(point.milliseconds // 1000)
+
+        thread = threading.Thread(target=fn)
+        thread.start()
+
     def get_account(self, address: Address) -> AccountOnNetwork:
         account = self.accounts.get(address.to_bech32(), None)
 
