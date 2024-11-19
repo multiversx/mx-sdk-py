@@ -8,8 +8,7 @@ from multiversx_sdk.network_providers.constants import (
     DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS)
 from multiversx_sdk.network_providers.errors import (
-    ExpectedTransactionStatusNotReached, IsCompletedFieldMissingOnTransaction,
-    TransactionFetchingError)
+    ExpectedTransactionStatusNotReachedError, TransactionFetchingError)
 
 ONE_SECOND_IN_MILLISECONDS = 1000
 
@@ -56,9 +55,6 @@ class TransactionAwaiter:
     def await_completed(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
         """Waits until the transaction is completely processed."""
         def is_completed(tx: TransactionOnNetwork):
-            if tx.status.is_completed is None:
-                raise IsCompletedFieldMissingOnTransaction()
-
             return tx.status.is_completed
 
         def do_fetch():
@@ -67,7 +63,7 @@ class TransactionAwaiter:
         return self._await_conditionally(
             is_satisfied=is_completed,
             do_fetch=do_fetch,
-            error=ExpectedTransactionStatusNotReached()
+            error=ExpectedTransactionStatusNotReachedError()
         )
 
     def await_on_condition(
@@ -80,7 +76,7 @@ class TransactionAwaiter:
         return self._await_conditionally(
             is_satisfied=condition,
             do_fetch=do_fetch,
-            error=ExpectedTransactionStatusNotReached()
+            error=ExpectedTransactionStatusNotReachedError()
         )
 
     def _await_conditionally(self,

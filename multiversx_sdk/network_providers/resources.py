@@ -136,9 +136,9 @@ class TokensCollectionMetadata:
 
 @dataclass
 class AwaitingOptions:
-    polling_interval_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
-    timeout_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
-    patience_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
+    polling_interval_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
+    timeout_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
+    patience_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
 
 
 @dataclass
