@@ -13,7 +13,7 @@ from multiversx_sdk.testutils.utils import create_account_egld_balance
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
-class TestTransactionAwaiter:
+class TestAccountAwaiter:
     provider = MockNetworkProvider()
     watcher = AccountAwaiter(
         fetcher=provider,
@@ -22,9 +22,9 @@ class TestTransactionAwaiter:
         patience_time_in_milliseconds=0
     )
 
-    @pytest.mark.only
     def test_await_on_balance_increase(self):
         alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        # alice account is created with 1000 EGLD
         initial_balance = self.provider.get_account(alice).balance
 
         # adds 7 EGLD to the account balance
@@ -40,7 +40,7 @@ class TestTransactionAwaiter:
         assert account.balance == create_account_egld_balance(1007)
 
     @pytest.mark.networkInteraction
-    def test_on_network(self):
+    def test_await_for_account_balance_increase_on_network(self):
         alice = load_wallets()["alice"]
         alice_address = Address.new_from_bech32(alice.label)
         frank = Address.new_from_bech32("erd1kdl46yctawygtwg2k462307dmz2v55c605737dp3zkxh04sct7asqylhyv")
@@ -61,7 +61,6 @@ class TestTransactionAwaiter:
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         initial_balance = api.get_account(frank).balance
-        print("initial:", initial_balance)
 
         def condition(account: AccountOnNetwork):
             return account.balance == initial_balance + value

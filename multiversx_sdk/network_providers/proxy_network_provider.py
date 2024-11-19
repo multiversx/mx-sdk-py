@@ -12,8 +12,10 @@ from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_status import TransactionStatus
+from multiversx_sdk.network_providers.account_awaiter import AccountAwaiter
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
+from multiversx_sdk.network_providers.constants import (
+    BASE_USER_AGENT, DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS)
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
@@ -120,7 +122,17 @@ class ProxyNetworkProvider(INetworkProvider):
                                                         bool],
             options: Optional[AwaitingOptions] = None) -> AccountOnNetwork:
         """Waits until an account satisfies a given condition."""
-        raise NotImplementedError("Method not yet implemented")
+        if options is None:
+            options = AwaitingOptions(patience_in_milliseconds=DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS)
+
+        awaiter = AccountAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_on_condition(address=address, condition=condition)
 
     def send_transaction(self, transaction: Transaction) -> bytes:
         """Broadcasts a transaction and returns its hash."""
