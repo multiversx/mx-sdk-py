@@ -640,3 +640,117 @@ def test_register_dynamic_and_set_all_roles_meta():
     assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
     assert transaction.value == 50000000000000000
     assert transaction.gas_limit == 60_159_500
+
+
+def test_transfer_ownership():
+    transaction = factory.create_transaction_for_transferring_ownership(
+        sender=alice,
+        token_identifier="AND-1d56f2",
+        new_owner=frank
+    )
+
+    assert transaction.data.decode() == "transferOwnership@414e442d316435366632@b37f5d130beb8885b90ab574a8bfcdd894ca531a7d3d1f3431158d77d6185fbb"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_204_500
+
+
+def test_create_transaction_for_freezing_single_nft():
+    transaction = factory.create_transaction_for_freezing_single_nft(
+        sender=alice,
+        token_identifier="TEST-123456",
+        token_nonce=1,
+        user=frank
+    )
+
+    assert transaction.data.decode() == "freezeSingleNFT@544553542d313233343536@01@b37f5d130beb8885b90ab574a8bfcdd894ca531a7d3d1f3431158d77d6185fbb"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_209_000
+
+
+def test_create_transaction_for_unfreezing_single_nft():
+    transaction = factory.create_transaction_for_unfreezing_single_nft(
+        sender=alice,
+        token_identifier="TEST-123456",
+        token_nonce=1,
+        user=frank
+    )
+
+    assert transaction.data.decode() == "unFreezeSingleNFT@544553542d313233343536@01@b37f5d130beb8885b90ab574a8bfcdd894ca531a7d3d1f3431158d77d6185fbb"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_212_000
+
+
+def test_create_transaction_for_changing_sft_to_meta_esdt():
+    transaction = factory.create_transaction_for_changing_sft_to_meta_esdt(
+        sender=alice,
+        collection="SFT-123456",
+        num_decimals=6,
+    )
+
+    assert transaction.data.decode() == "changeSFTToMetaESDT@5346542d313233343536@06"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_114_500
+
+
+def test_create_transaction_for_transferring_nft_create_role():
+    transaction = factory.create_transaction_for_transferring_nft_create_role(
+        sender=alice,
+        token_identifier="SFT-123456",
+        user=frank,
+    )
+
+    assert transaction.data.decode() == "transferNFTCreateRole@5346542d313233343536@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1@b37f5d130beb8885b90ab574a8bfcdd894ca531a7d3d1f3431158d77d6185fbb"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_308_000
+
+
+def test_create_transaction_for_stopping_nft_creation():
+    transaction = factory.create_transaction_for_stopping_nft_creation(
+        sender=alice,
+        token_identifier="SFT-123456"
+    )
+
+    assert transaction.data.decode() == "stopNFTCreate@5346542d313233343536"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_101_000
+
+
+def test_create_transaction_for_wiping_single_nft():
+    transaction = factory.create_transaction_for_wiping_single_nft(
+        sender=alice,
+        token_identifier="SFT-123456",
+        token_nonce=10,
+        user=frank,
+    )
+
+    assert transaction.data.decode() == "wipeSingleNFT@5346542d313233343536@0a@b37f5d130beb8885b90ab574a8bfcdd894ca531a7d3d1f3431158d77d6185fbb"
+    assert transaction.sender == alice
+    assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+    assert transaction.value == 0
+    assert transaction.gas_limit == 60_203_000
+
+
+def test_create_transaction_for_adding_uris():
+    transaction = factory.create_transction_for_adding_uris(
+        sender=alice,
+        token_identifier="SFT-123456",
+        uris=["firstURI", "secondURI"]
+    )
+
+    assert transaction.data.decode() == "ESDTNFTAddURI@5346542d313233343536@6669727374555249@7365636f6e64555249"
+    assert transaction.sender == alice
+    assert transaction.receiver == alice
+    assert transaction.value == 0
+    assert transaction.gas_limit == 10_155_000

@@ -17,7 +17,8 @@ from multiversx_sdk.delegation import (CreateNewDelegationContractOutcome,
                                        DelegationTransactionsOutcomeParser)
 from multiversx_sdk.entrypoints import (DevnetEntrypoint, MainnetEntrypoint,
                                         NetworkEntrypoint, TestnetEntrypoint)
-from multiversx_sdk.network_providers import (AccountOnNetwork, AccountStorage,
+from multiversx_sdk.network_providers import (AccountAwaiter, AccountOnNetwork,
+                                              AccountStorage,
                                               AccountStorageEntry,
                                               ApiNetworkProvider,
                                               AwaitingOptions,
@@ -79,5 +80,5 @@ __all__ = [
     "BurnQuantityOutcome", "TransactionOnNetwork", "TransactionStatus", "ParsedSmartContractCallOutcome",
     "AccountOnNetwork", "AccountStorage", "AccountStorageEntry", "AwaitingOptions", "BlockCoordinates",
     "BlockOnNetwork", "FungibleTokenMetadata", "GetBlockArguments", "NetworkConfig", "NetworkStatus",
-    "TokenAmountOnNetwork", "TokensCollectionMetadata", "TransactionCostResponse"
+    "TokenAmountOnNetwork", "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter"
 ]

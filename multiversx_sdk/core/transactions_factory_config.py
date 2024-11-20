@@ -35,6 +35,14 @@ class TransactionsFactoryConfig:
     gas_limit_update_token_id: int = 60_000_000
     gas_limit_register_dynamic: int = 60_000_000
     issue_cost: int = 50_000_000_000_000_000
+    gas_limit_transfer_ownership: int = 60_000_000
+    gas_limit_freeze_single_nft: int = 60_000_000
+    gas_limit_unfreeze_single_nft: int = 60_000_000
+    gas_limit_change_sft_to_meta_esdt: int = 60_000_000
+    gas_limit_transfer_nft_create_role: int = 60_000_000
+    gas_limit_stop_nft_create: int = 60_000_000
+    gas_limit_wipe_single_nft: int = 60_000_000
+    gas_limit_esdt_nft_add_uri: int = 10_000_000
     esdt_contract_address: Address = field(default_factory=lambda: Address.new_from_bech32(
         "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"))
 

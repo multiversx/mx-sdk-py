@@ -609,3 +609,135 @@ class TokenManagementController:
     def await_completed_burn_quantity(self, transaction_hash: Union[str, bytes]) -> list[BurnQuantityOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_burn_quantity(transaction)
+
+    def create_transaction_for_transferring_ownership(self,
+                                                      sender: IAccount,
+                                                      nonce: int,
+                                                      token_identifier: str,
+                                                      new_owner: Address) -> Transaction:
+        transaction = self.factory.create_transaction_for_transferring_ownership(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            new_owner=new_owner
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_freezing_single_nft(self,
+                                                   sender: IAccount,
+                                                   nonce: int,
+                                                   token_identifier: str,
+                                                   token_nonce: int,
+                                                   user: Address) -> Transaction:
+        transaction = self.factory.create_transaction_for_freezing_single_nft(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            user=user
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_unfreezing_single_nft(self,
+                                                     sender: IAccount,
+                                                     nonce: int,
+                                                     token_identifier: str,
+                                                     token_nonce: int,
+                                                     user: Address) -> Transaction:
+        transaction = self.factory.create_transaction_for_unfreezing_single_nft(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            user=user
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_changing_sft_to_meta_esdt(self,
+                                                         sender: IAccount,
+                                                         nonce: int,
+                                                         collection: str,
+                                                         num_decimals: int) -> Transaction:
+        transaction = self.factory.create_transaction_for_changing_sft_to_meta_esdt(
+            sender=sender.address,
+            collection=collection,
+            num_decimals=num_decimals
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_transferring_nft_create_role(self,
+                                                            sender: IAccount,
+                                                            nonce: int,
+                                                            token_identifier: str,
+                                                            user: Address) -> Transaction:
+        transaction = self.factory.create_transaction_for_transferring_nft_create_role(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            user=user
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_stopping_nft_creation(self,
+                                                     sender: IAccount,
+                                                     nonce: int,
+                                                     token_identifier: str) -> Transaction:
+        transaction = self.factory.create_transaction_for_stopping_nft_creation(
+            sender=sender.address,
+            token_identifier=token_identifier
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transaction_for_wiping_single_nft(self,
+                                                 sender: IAccount,
+                                                 nonce: int,
+                                                 token_identifier: str,
+                                                 token_nonce: int,
+                                                 user: Address) -> Transaction:
+        transaction = self.factory.create_transaction_for_wiping_single_nft(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            user=user
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
+
+    def create_transction_for_adding_uris(self,
+                                          sender: IAccount,
+                                          nonce: int,
+                                          token_identifier: str,
+                                          uris: list[str]) -> Transaction:
+        transaction = self.factory.create_transction_for_adding_uris(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            uris=uris
+        )
+
+        transaction.nonce = nonce
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+
+        return transaction
