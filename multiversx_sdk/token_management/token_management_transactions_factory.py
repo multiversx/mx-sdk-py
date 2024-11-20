@@ -608,6 +608,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         user: Address,
         token_identifier: str
     ) -> Transaction:
+        """Can be used for FungibleESDT"""
         parts = [
             "freeze",
             self.serializer.serialize([StringValue(token_identifier)]),
@@ -630,6 +631,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         user: Address,
         token_identifier: str
     ) -> Transaction:
+        """Can be used for FungibleESDT"""
         parts = [
             "unFreeze",
             self.serializer.serialize([StringValue(token_identifier)]),
@@ -850,7 +852,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                                                  sender: Address,
                                                  token_identifier: str,
                                                  token_nonce: int) -> Transaction:
-        parts: list[str] = [
+        parts = [
             "ESDTModifyCreator",
             self.serializer.serialize([StringValue(token_identifier)]),
             self.serializer.serialize([BigUIntValue(token_nonce)])
@@ -1029,6 +1031,175 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             receiver=self._config.esdt_contract_address,
             amount=self._config.issue_cost,
             gas_limit=self._config.gas_limit_register_dynamic,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_transferring_ownership(self,
+                                                      sender: Address,
+                                                      token_identifier: str,
+                                                      new_owner: Address) -> Transaction:
+        parts = [
+            "transferOwnership",
+            self.serializer.serialize([StringValue(token_identifier)]),
+            new_owner.to_hex()
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=0,
+            gas_limit=self._config.gas_limit_transfer_ownership,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_freezing_single_nft(self,
+                                                   sender: Address,
+                                                   token_identifier: str,
+                                                   token_nonce: int,
+                                                   user: Address) -> Transaction:
+        parts = [
+            "freezeSingleNFT",
+            self.serializer.serialize([StringValue(token_identifier)]),
+            self.serializer.serialize([BigUIntValue(token_nonce)]),
+            user.to_hex()
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=0,
+            gas_limit=self._config.gas_limit_freeze_single_nft,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_unfreezing_single_nft(self,
+                                                     sender: Address,
+                                                     token_identifier: str,
+                                                     token_nonce: int,
+                                                     user: Address) -> Transaction:
+        parts = [
+            "unFreezeSingleNFT",
+            self.serializer.serialize([StringValue(token_identifier)]),
+            self.serializer.serialize([BigUIntValue(token_nonce)]),
+            user.to_hex()
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=0,
+            gas_limit=self._config.gas_limit_unfreeze_single_nft,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_changing_sft_to_meta_esdt(self,
+                                                         sender: Address,
+                                                         collection: str,
+                                                         num_decimals: int) -> Transaction:
+        parts = [
+            "changeSFTToMetaESDT",
+            self.serializer.serialize([StringValue(collection)]),
+            self.serializer.serialize([BigUIntValue(num_decimals)])
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=0,
+            gas_limit=self._config.gas_limit_change_sft_to_meta_esdt,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_transferring_nft_create_role(self,
+                                                            sender: Address,
+                                                            token_identifier: str,
+                                                            user: Address) -> Transaction:
+        """This role can be transferred only if the `canTransferNFTCreateRole` property of the token is set to `true`."""
+        parts = [
+            "transferNFTCreateRole",
+            self.serializer.serialize([StringValue(token_identifier)]),
+            sender.to_hex(),
+            user.to_hex()
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=0,
+            gas_limit=self._config.gas_limit_transfer_nft_create_role,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_stopping_nft_creation(self,
+                                                     sender: Address,
+                                                     token_identifier: str) -> Transaction:
+        parts = [
+            "stopNFTCreate",
+            self.serializer.serialize([StringValue(token_identifier)])
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=0,
+            gas_limit=self._config.gas_limit_stop_nft_create,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transaction_for_wiping_single_nft(self,
+                                                 sender: Address,
+                                                 token_identifier: str,
+                                                 token_nonce: int,
+                                                 user: Address) -> Transaction:
+        parts = [
+            "wipeSingleNFT",
+            self.serializer.serialize([StringValue(token_identifier)]),
+            self.serializer.serialize([BigUIntValue(token_nonce)]),
+            user.to_hex()
+        ]
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=self._config.esdt_contract_address,
+            amount=0,
+            gas_limit=self._config.gas_limit_wipe_single_nft,
+            add_data_movement_gas=True,
+            data_parts=parts
+        ).build()
+
+    def create_transction_for_adding_uris(self,
+                                          sender: Address,
+                                          token_identifier: str,
+                                          uris: list[str]) -> Transaction:
+        parts = ["ESDTNFTAddURI"]
+
+        serialized_parts = self.serializer.serialize_to_parts([
+            StringValue(token_identifier),
+            *map(StringValue, uris)
+        ])
+
+        parts.extend([part.hex() for part in serialized_parts])
+
+        return TransactionBuilder(
+            config=self._config,
+            sender=sender,
+            receiver=sender,
+            amount=0,
+            gas_limit=self._config.gas_limit_esdt_nft_add_uri,
             add_data_movement_gas=True,
             data_parts=parts
         ).build()

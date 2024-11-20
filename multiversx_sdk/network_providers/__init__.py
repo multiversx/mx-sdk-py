@@ -1,3 +1,4 @@
+from multiversx_sdk.network_providers.account_awaiter import AccountAwaiter
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
@@ -21,5 +22,5 @@ __all__ = [
     "AccountOnNetwork", "AccountStorage", "AccountStorageEntry", "AwaitingOptions",
     "BlockCoordinates", "BlockOnNetwork", "FungibleTokenMetadata",
     "GetBlockArguments", "NetworkConfig", "NetworkStatus", "TokenAmountOnNetwork",
-    "TokensCollectionMetadata", "TransactionCostResponse"
+    "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter"
 ]
