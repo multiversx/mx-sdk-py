@@ -28,6 +28,11 @@ class Mnemonic:
         text = mnemonic.Mnemonic(BIP39_LANGUAGE).generate(strength=BIP39_STRENGTH)
         return Mnemonic(text)
 
+    @classmethod
+    def from_entropy(cls, entropy: bytes) -> "Mnemonic":
+        text = mnemonic.Mnemonic(BIP39_LANGUAGE).to_mnemonic(entropy)
+        return Mnemonic(text)
+
     def derive_key(self, address_index: int = 0) -> UserSecretKey:
         secret_key = core.derive_keys(self.text, address_index)
         return UserSecretKey(secret_key)
@@ -37,6 +42,10 @@ class Mnemonic:
 
     def get_words(self) -> List[str]:
         return self.text.split()
+
+    def get_entropy(self) -> bytes:
+        entropy = mnemonic.Mnemonic(BIP39_LANGUAGE).to_entropy(self.text)
+        return bytes(entropy)
 
     def __str__(self) -> str:
         return Mnemonic.__name__
