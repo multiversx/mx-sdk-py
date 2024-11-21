@@ -70,3 +70,5 @@ class TransactionsFactoryConfig:
     # Configuration for smart contract operations
     gas_limit_claim_developer_rewards: int = 6_000_000
     gas_limit_change_owner_address: int = 6_000_000
+
+    extra_gas_limit_for_relayed_v3: int = 50_000

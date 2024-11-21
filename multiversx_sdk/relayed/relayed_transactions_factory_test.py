@@ -233,3 +233,30 @@ class TestRelayedTransactionsFactory:
         assert relayed_transaction.options == 0
         assert relayed_transaction.gas_limit == 60414500
         assert relayed_transaction.data.decode() == "relayedTxV2@000000000000000000010000000000000000000000000000000000000002ffff@0f@676574436f6e7472616374436f6e666967@fc3ed87a51ee659f937c1a1ed11c1ae677e99629fae9cc289461f033e6514d1a8cfad1144ae9c1b70f28554d196bd6ba1604240c1c1dc19c959e96c1c3b62d0c"
+
+    def test_relayed_v3(self):
+        alice = self.wallets["alice"]
+        alice_address = Address.new_from_bech32(alice.label)
+        bob = self.wallets["bob"]
+        bob_address = Address.new_from_bech32(bob.label)
+
+        tx = Transaction(
+            sender=bob_address,
+            receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+            gas_limit=1_000_000,
+            chain_id=self.config.chain_id,
+            data=b"add@07",
+            nonce=15,
+            version=2,
+            options=0
+        )
+
+        relayed_tx = self.factory.create_relayed_v3_transaction(
+            transaction=tx,
+            relayer_address=alice_address
+        )
+
+        assert relayed_tx.sender == bob_address
+        assert relayed_tx.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
+        assert relayed_tx.relayer == alice_address
+        assert relayed_tx.gas_limit == 1_050_000
