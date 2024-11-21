@@ -345,3 +345,20 @@ class TestTransaction:
 
         assert is_signed_by_alice
         assert is_signed_by_bob is False
+
+    def test_serialize_tx_with_relayed_v3(self):
+        sender = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        relayer = "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+
+        transaction = Transaction(
+            nonce=89,
+            sender=sender,
+            receiver=sender,
+            value=0,
+            gas_limit=50000,
+            gas_price=1000000000,
+            chain_id="D",
+            relayer=relayer
+        )
+        serialized_tx = self.transaction_computer.compute_bytes_for_signing(transaction)
+        assert serialized_tx.decode() == r"""{"nonce":89,"value":"0","receiver":"erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th","sender":"erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th","gasPrice":1000000000,"gasLimit":50000,"chainID":"D","version":2,"relayer":"erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"}"""
