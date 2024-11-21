@@ -21,6 +21,8 @@ class ITransaction(Protocol):
     guardian: str
     signature: bytes
     guardian_signature: bytes
+    relayer: str
+    relayer_signature: bytes
 
 
 class ProtoSerializer:
@@ -65,5 +67,9 @@ class ProtoSerializer:
             guardian_address = transaction.guardian
             proto_transaction.GuardAddr = Address.new_from_bech32(guardian_address).get_public_key()
             proto_transaction.GuardSignature = transaction.guardian_signature
+
+        if transaction.relayer:
+            proto_transaction.Relayer = Address.new_from_bech32(transaction.relayer).get_public_key()
+            proto_transaction.RelayerSignature = transaction.relayer_signature
 
         return proto_transaction

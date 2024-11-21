@@ -87,7 +87,7 @@ class TestApi:
         address = Address.new_from_bech32('erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl')
         result = self.api.get_nonfungible_token_of_account(address, "NFTEST-ec88b8", 1)
 
-        assert result.balance == 0
+        assert result.balance == 1
         assert result.nonce == 1
         assert result.collection == "NFTEST-ec88b8"
         assert result.identifier == "NFTEST-ec88b8-01"
