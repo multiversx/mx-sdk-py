@@ -85,7 +85,8 @@
 <span class="k">class</span> <span class="nc">IConfig</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
     <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">min_gas_limit</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">gas_limit_per_byte</span><span class="p">:</span> <span class="nb">int</span></div>
+    <span class="n">gas_limit_per_byte</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">extra_gas_limit_for_relayed_v3</span><span class="p">:</span> <span class="nb">int</span></div>
 
 
 
@@ -151,6 +152,32 @@
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
             <span class="n">version</span><span class="o">=</span><span class="n">inner_transaction</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
             <span class="n">options</span><span class="o">=</span><span class="n">inner_transaction</span><span class="o">.</span><span class="n">options</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RelayedTransactionsFactory.create_relayed_v3_transaction">
+<a class="viewcode-back" href="../../../../multiversx_sdk.core.transactions_factories.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v3_transaction">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_relayed_v3_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                      <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">,</span>
+                                      <span class="n">relayer_address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Relayer address must be in the same shard with sender address.&quot;&quot;&quot;</span>
+        <span class="n">gas_limit</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">extra_gas_limit_for_relayed_v3</span>
+
+        <span class="k">return</span> <span class="n">Transaction</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">nonce</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">sender_username</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender_username</span><span class="p">,</span>
+            <span class="n">receiver_username</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver_username</span><span class="p">,</span>
+            <span class="n">gas_price</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">gas_price</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">options</span><span class="p">,</span>
+            <span class="n">guardian</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="p">,</span>
+            <span class="n">relayer</span><span class="o">=</span><span class="n">relayer_address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
         <span class="p">)</span></div>
 
 

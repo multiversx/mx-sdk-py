@@ -108,7 +108,9 @@
             <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span><span class="p">,</span>
             <span class="s2">&quot;guardian&quot;</span><span class="p">:</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="p">,</span>
             <span class="s2">&quot;signature&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_to_hex_or_empty</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="p">),</span>
-            <span class="s2">&quot;guardianSignature&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_to_hex_or_empty</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">guardian_signature</span><span class="p">)</span>
+            <span class="s2">&quot;guardianSignature&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_to_hex_or_empty</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">guardian_signature</span><span class="p">),</span>
+            <span class="s2">&quot;relayer&quot;</span><span class="p">:</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="p">,</span>
+            <span class="s2">&quot;relayerSignature&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_to_hex_or_empty</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">relayer_signature</span><span class="p">)</span>
         <span class="p">}</span></div>
 
 
@@ -133,6 +135,8 @@
             <span class="n">options</span><span class="o">=</span><span class="n">dictionary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
             <span class="n">signature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bytes_from_hex</span><span class="p">(</span><span class="n">dictionary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;signature&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)),</span>
             <span class="n">guardian_signature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bytes_from_hex</span><span class="p">(</span><span class="n">dictionary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardianSignature&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)),</span>
+            <span class="n">relayer</span><span class="o">=</span><span class="n">dictionary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;relayer&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">relayer_signature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_bytes_from_hex</span><span class="p">(</span><span class="n">dictionary</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;relayerSignature&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
         <span class="p">)</span></div>
 
 

@@ -93,7 +93,9 @@
     <span class="n">options</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">guardian</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">guardian_signature</span><span class="p">:</span> <span class="nb">bytes</span></div>
+    <span class="n">guardian_signature</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">relayer</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">relayer_signature</span><span class="p">:</span> <span class="nb">bytes</span></div>
 
 
 
@@ -149,6 +151,10 @@
             <span class="n">guardian_address</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span>
             <span class="n">proto_transaction</span><span class="o">.</span><span class="n">GuardAddr</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">guardian_address</span><span class="p">)</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
             <span class="n">proto_transaction</span><span class="o">.</span><span class="n">GuardSignature</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian_signature</span>
+
+        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="p">:</span>
+            <span class="n">proto_transaction</span><span class="o">.</span><span class="n">Relayer</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="p">)</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
+            <span class="n">proto_transaction</span><span class="o">.</span><span class="n">RelayerSignature</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer_signature</span>
 
         <span class="k">return</span> <span class="n">proto_transaction</span></div>
 </div>
