@@ -242,7 +242,7 @@ class TestRelayedTransactionsFactory:
             receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
             gas_limit=1_000_000,
             chain_id=self.config.chain_id,
-            data=b"getContractConfig",
+            data=b"add@07",
             nonce=15,
             version=2,
             options=0
@@ -257,32 +257,3 @@ class TestRelayedTransactionsFactory:
         assert relayed_tx.receiver == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
         assert relayed_tx.relayer == alice.label
         assert relayed_tx.gas_limit == 1_050_000
-
-    def test_invalid_data_relayed_v3(self):
-        alice = self.wallets["alice"]
-        alice_address = Address.new_from_bech32(alice.label)
-        bob = self.wallets["bob"]
-
-        tx = Transaction(
-            sender=bob.label,
-            receiver="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
-            gas_limit=1_000_000,
-            chain_id=self.config.chain_id,
-            data=b"relayedTx@abba",
-            nonce=15,
-            version=2,
-            options=0
-        )
-
-        with pytest.raises(Exception):
-            self.factory.create_relayed_v3_transaction(
-                transaction=tx,
-                relayer_address=alice_address
-            )
-
-        tx.data = b"relayedTxV2@abba"
-        with pytest.raises(Exception):
-            self.factory.create_relayed_v3_transaction(
-                transaction=tx,
-                relayer_address=alice_address
-            )

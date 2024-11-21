@@ -77,9 +77,6 @@ class RelayedTransactionsFactory:
                                       transaction: ITransaction,
                                       relayer_address: IAddress) -> Transaction:
         """Relayer address must be in the same shard with sender address."""
-        if transaction.data.decode().startswith("relayed"):
-            raise Exception("Transaction can't contain another relayed transaction")
-
         gas_limit = transaction.gas_limit + self._config.extra_gas_limit_for_relayed_v3
 
         return Transaction(
