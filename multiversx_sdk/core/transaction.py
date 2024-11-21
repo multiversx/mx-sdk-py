@@ -21,7 +21,9 @@ class Transaction:
                  options: Optional[int] = None,
                  guardian: Optional[str] = None,
                  signature: Optional[bytes] = None,
-                 guardian_signature: Optional[bytes] = None) -> None:
+                 guardian_signature: Optional[bytes] = None,
+                 relayer: Optional[str] = None,
+                 relayer_signature: Optional[bytes] = None) -> None:
         self.chain_id = chain_id
         self.sender = sender
         self.receiver = receiver
@@ -41,6 +43,9 @@ class Transaction:
 
         self.guardian = guardian or ""
         self.guardian_signature = guardian_signature or bytes()
+
+        self.relayer = relayer or ""
+        self.relayer_signature = relayer_signature or bytes()
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Transaction):

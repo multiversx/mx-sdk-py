@@ -33,7 +33,9 @@ class TransactionsConverter:
             "options": transaction.options,
             "guardian": transaction.guardian,
             "signature": self._value_to_hex_or_empty(transaction.signature),
-            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature)
+            "guardianSignature": self._value_to_hex_or_empty(transaction.guardian_signature),
+            "relayer": transaction.relayer,
+            "relayerSignature": self._value_to_hex_or_empty(transaction.relayer_signature)
         }
 
     def dictionary_to_transaction(self, dictionary: Dict[str, Any]) -> Transaction:
@@ -55,6 +57,8 @@ class TransactionsConverter:
             options=dictionary.get("options", None),
             signature=self._bytes_from_hex(dictionary.get("signature", "")),
             guardian_signature=self._bytes_from_hex(dictionary.get("guardianSignature", "")),
+            relayer=dictionary.get("relayer", None),
+            relayer_signature=self._bytes_from_hex(dictionary.get("relayerSignature", ""))
         )
 
     def transaction_on_network_to_outcome(self, transaction_on_network: TransactionOnNetwork) -> TransactionOutcome:
