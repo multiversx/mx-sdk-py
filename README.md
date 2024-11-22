@@ -72,7 +72,7 @@
 | multiversx\_sdk/core/transaction\_builders/relayed\_v2\_builder.py                                             |       39 |        0 |    100% |           |
 | multiversx\_sdk/core/transaction\_builders/transaction\_builder.py                                             |       65 |        2 |     97% |   83, 107 |
 | multiversx\_sdk/core/transaction\_builders/transfers\_builders.py                                              |       71 |        0 |    100% |           |
-| multiversx\_sdk/core/transaction\_computer.py                                                                  |       92 |        3 |     97% |85, 115-116 |
+| multiversx\_sdk/core/transaction\_computer.py                                                                  |       94 |        3 |     97% |85, 115-116 |
 | multiversx\_sdk/core/transaction\_parsers/\_\_init\_\_.py                                                      |        2 |        0 |    100% |           |
 | multiversx\_sdk/core/transaction\_parsers/interfaces.py                                                        |       28 |        0 |    100% |           |
 | multiversx\_sdk/core/transaction\_parsers/token\_operations\_outcome\_parser.py                                |      154 |       88 |     43% |35-40, 43-48, 51-56, 59-68, 71-72, 75-76, 113-122, 125-129, 132-136, 139-148, 151-160, 163-172, 175-183, 186-194, 197-205, 217 |
@@ -82,12 +82,12 @@
 | multiversx\_sdk/core/transactions\_factories/\_\_init\_\_.py                                                   |        8 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/account\_transactions\_factory.py                                 |       44 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/delegation\_transactions\_factory.py                              |      111 |        1 |     99% |        59 |
-| multiversx\_sdk/core/transactions\_factories/relayed\_transactions\_factory.py                                 |       53 |        0 |    100% |           |
+| multiversx\_sdk/core/transactions\_factories/relayed\_transactions\_factory.py                                 |       49 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/smart\_contract\_transactions\_factory.py                         |       95 |        4 |     96% |31, 34, 37, 59 |
 | multiversx\_sdk/core/transactions\_factories/token\_management\_transactions\_factory.py                       |      166 |        2 |     99% |  517, 794 |
 | multiversx\_sdk/core/transactions\_factories/token\_transfers\_data\_builder.py                                |       27 |        1 |     96% |        10 |
 | multiversx\_sdk/core/transactions\_factories/transaction\_builder.py                                           |       31 |        0 |    100% |           |
-| multiversx\_sdk/core/transactions\_factories/transactions\_factory\_config.py                                  |       50 |        0 |    100% |           |
+| multiversx\_sdk/core/transactions\_factories/transactions\_factory\_config.py                                  |       49 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_factories/transfer\_transactions\_factory.py                                |       58 |        1 |     98% |        54 |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/\_\_init\_\_.py                                            |        6 |        0 |    100% |           |
 | multiversx\_sdk/core/transactions\_outcome\_parsers/delegation\_transactions\_outcome\_parser.py               |       23 |        4 |     83% | 28-31, 35 |
@@ -153,7 +153,7 @@
 | multiversx\_sdk/wallet/validator\_pem.py                                                                       |       34 |        2 |     94% |     24-25 |
 | multiversx\_sdk/wallet/validator\_signer.py                                                                    |       22 |        3 |     86% | 26-27, 34 |
 | multiversx\_sdk/wallet/validator\_verifier.py                                                                  |       11 |        0 |    100% |           |
-|                                                                                                      **TOTAL** | **6554** |  **731** | **89%** |           |
+|                                                                                                      **TOTAL** | **6551** |  **731** | **89%** |           |
 
 
 ## Setup coverage badge
