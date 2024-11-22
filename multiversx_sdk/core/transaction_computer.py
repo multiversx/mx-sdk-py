@@ -12,7 +12,7 @@ from multiversx_sdk.core.constants import (
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS,
     TRANSACTION_OPTIONS_TX_GUARDED, TRANSACTION_OPTIONS_TX_HASH_SIGN)
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
-from multiversx_sdk.core.interfaces import INetworkConfig
+from multiversx_sdk.core.interfaces import IAccount, INetworkConfig
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
 from multiversx_sdk.core.transaction import Transaction
 
@@ -73,11 +73,30 @@ class TransactionComputer:
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_GUARDED
         transaction.guardian = guardian
 
+    def apply_guardina_signature(self, transaction: Transaction, guardian: IAccount):
+        if transaction.guardian != guardian.address:
+            raise Exception("The transaction's guardian does not match the provided guardian account.")
+
+        serialized_tx = self.compute_bytes_for_signing(transaction)
+        transaction.guardian_signature = guardian.sign(serialized_tx)
+
     def apply_options_for_hash_signing(self, transaction: Transaction) -> None:
         if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
             transaction.version = MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
 
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_HASH_SIGN
+
+    def is_relayed_v3_transaction(self, transaction: Transaction) -> bool:
+        if transaction.relayer:
+            return True
+        return False
+
+    def apply_relayer_signature(self, transaction: Transaction, relayer: IAccount):
+        if transaction.relayer != relayer.address:
+            raise Exception("The transaction's relayer does not match the provided relayer account.")
+
+        serialized_tx = self.compute_bytes_for_signing(transaction)
+        transaction.relayer_signature = relayer.sign(serialized_tx)
 
     def _ensure_fields(self, transaction: Transaction) -> None:
         if len(transaction.sender.to_bech32()) != BECH32_ADDRESS_LENGTH:
@@ -94,6 +113,7 @@ class TransactionComputer:
                 raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
 
     def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> Dict[str, Any]:
+        """Only used when serializing transaction for signing. Internal use only."""
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
