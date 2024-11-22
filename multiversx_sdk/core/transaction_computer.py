@@ -128,6 +128,9 @@ class TransactionComputer:
         if transaction.guardian:
             dictionary["guardian"] = transaction.guardian.to_bech32()
 
+        if transaction.relayer:
+            dictionary["relayer"] = transaction.relayer.to_bech32()
+
         return dictionary
 
     def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
