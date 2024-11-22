@@ -13,7 +13,6 @@ class IConfig(Protocol):
     chain_id: str
     min_gas_limit: int
     gas_limit_per_byte: int
-    extra_gas_limit_for_relayed_v3: int
 
 
 class RelayedTransactionsFactory:
@@ -71,29 +70,6 @@ class RelayedTransactionsFactory:
             data=data.encode(),
             version=inner_transaction.version,
             options=inner_transaction.options
-        )
-
-    def create_relayed_v3_transaction(self,
-                                      transaction: ITransaction,
-                                      relayer_address: IAddress) -> Transaction:
-        """Relayer address must be in the same shard with sender address."""
-        gas_limit = transaction.gas_limit + self._config.extra_gas_limit_for_relayed_v3
-
-        return Transaction(
-            sender=transaction.sender,
-            receiver=transaction.receiver,
-            gas_limit=gas_limit,
-            chain_id=transaction.chain_id,
-            nonce=transaction.nonce,
-            value=transaction.value,
-            sender_username=transaction.sender_username,
-            receiver_username=transaction.receiver_username,
-            gas_price=transaction.gas_price,
-            data=transaction.data,
-            version=transaction.version,
-            options=transaction.options,
-            guardian=transaction.guardian,
-            relayer=relayer_address.to_bech32()
         )
 
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: ITransaction) -> str:

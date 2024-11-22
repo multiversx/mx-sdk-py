@@ -126,6 +126,9 @@ class TransactionComputer:
         if transaction.guardian:
             dictionary["guardian"] = transaction.guardian
 
+        if transaction.relayer:
+            dictionary["relayer"] = transaction.relayer
+
         return dictionary
 
     def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
