@@ -13,7 +13,6 @@ class IConfig(Protocol):
     chain_id: str
     min_gas_limit: int
     gas_limit_per_byte: int
-    extra_gas_limit_for_relayed_v3: int
 
 
 class RelayedTransactionsFactory:
