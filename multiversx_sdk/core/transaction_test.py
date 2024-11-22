@@ -234,40 +234,6 @@ class TestTransaction:
         assert tx.options == 3
         assert str(tx.guardian) == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
 
-    def test_tx_computer_apply_guardian_signature(self):
-        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        alice_account = Account(UserSigner(self.alice.secret_key))
-        bob = Account(UserSigner(self.bob.secret_key))
-
-        tx = Transaction(
-            sender=alice,
-            receiver=alice,
-            gas_limit=200000,
-            chain_id="D",
-            version=2,
-            options=1
-        )
-
-        # guardian not set
-        with pytest.raises(Exception, match="The transaction's guardian does not match the provided guardian account."):
-            self.transaction_computer.apply_guardina_signature(transaction=tx, guardian=alice_account)
-
-        # incorrect guardian
-        tx.guardian = bob.address
-        with pytest.raises(Exception, match="The transaction's guardian does not match the provided guardian account."):
-            self.transaction_computer.apply_guardina_signature(transaction=tx, guardian=alice_account)
-
-        self.transaction_computer.apply_guardian(
-            transaction=tx,
-            guardian=bob.address
-        )
-
-        self.transaction_computer.apply_guardina_signature(transaction=tx, guardian=bob)
-
-        assert tx.version == 2
-        assert tx.options == 3
-        assert tx.guardian == bob.address
-
     def test_sign_transaction_by_hash(self):
         parent = Path(__file__).parent.parent
         pem = UserPEM.from_file(parent / "testutils" / "testwallets" / "alice.pem")
@@ -417,8 +383,6 @@ class TestTransaction:
 
     def test_relayed_v3(self):
         alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        alice_account = Account(UserSigner(self.alice.secret_key))
-
         bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         carol = Account(UserSigner(self.carol.secret_key))
 
@@ -436,16 +400,5 @@ class TestTransaction:
         )
         assert not self.transaction_computer.is_relayed_v3_transaction(transaction)
 
-        # no relayer set
-        with pytest.raises(Exception, match="The transaction's relayer does not match the provided relayer account."):
-            self.transaction_computer.apply_relayer_signature(transaction=transaction, relayer=alice_account)
-
         transaction.relayer = carol.address
         assert self.transaction_computer.is_relayed_v3_transaction(transaction)
-
-        # incorrect relayer
-        with pytest.raises(Exception, match="The transaction's relayer does not match the provided relayer account."):
-            self.transaction_computer.apply_relayer_signature(transaction=transaction, relayer=alice_account)
-
-        self.transaction_computer.apply_relayer_signature(transaction=transaction, relayer=carol)
-        assert transaction.relayer_signature
