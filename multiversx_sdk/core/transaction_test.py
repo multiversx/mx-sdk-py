@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import \
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
@@ -12,6 +13,7 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.testutils.wallets import load_wallets
 from multiversx_sdk.wallet import UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
+from multiversx_sdk.wallet.user_signer import UserSigner
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
@@ -361,3 +363,42 @@ class TestTransaction:
         restored_tx = Transaction.new_from_dictionary(tx_as_dict)
 
         assert transaction == restored_tx
+
+    def test_serialize_tx_with_relayed_v3(self):
+        sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        relayer = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+
+        transaction = Transaction(
+            nonce=89,
+            sender=sender,
+            receiver=sender,
+            value=0,
+            gas_limit=50000,
+            gas_price=1000000000,
+            chain_id="D",
+            relayer=relayer
+        )
+        serialized_tx = self.transaction_computer.compute_bytes_for_signing(transaction)
+        assert serialized_tx.decode() == r"""{"nonce":89,"value":"0","receiver":"erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th","sender":"erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th","gasPrice":1000000000,"gasLimit":50000,"chainID":"D","version":2,"relayer":"erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"}"""
+
+    def test_relayed_v3(self):
+        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        carol = Account(UserSigner(self.carol.secret_key))
+
+        transaction = Transaction(
+            nonce=90,
+            value=123456789000000000000000000000,
+            sender=alice,
+            receiver=bob,
+            sender_username="alice",
+            receiver_username="bob",
+            gas_price=1000000000,
+            gas_limit=80000,
+            data=b"hello",
+            chain_id="localnet"
+        )
+        assert not self.transaction_computer.is_relayed_v3_transaction(transaction)
+
+        transaction.relayer = carol.address
+        assert self.transaction_computer.is_relayed_v3_transaction(transaction)

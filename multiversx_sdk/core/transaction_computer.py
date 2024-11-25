@@ -79,6 +79,11 @@ class TransactionComputer:
 
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_HASH_SIGN
 
+    def is_relayed_v3_transaction(self, transaction: Transaction) -> bool:
+        if transaction.relayer:
+            return True
+        return False
+
     def _ensure_fields(self, transaction: Transaction) -> None:
         if len(transaction.sender.to_bech32()) != BECH32_ADDRESS_LENGTH:
             raise BadUsageError("Invalid `sender` field. Should be the bech32 address of the sender.")
@@ -94,6 +99,7 @@ class TransactionComputer:
                 raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
 
     def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> Dict[str, Any]:
+        """Only used when serializing transaction for signing. Internal use only."""
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
@@ -127,6 +133,9 @@ class TransactionComputer:
 
         if transaction.guardian:
             dictionary["guardian"] = transaction.guardian.to_bech32()
+
+        if transaction.relayer:
+            dictionary["relayer"] = transaction.relayer.to_bech32()
 
         return dictionary
 

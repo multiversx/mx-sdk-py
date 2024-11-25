@@ -1,6 +1,6 @@
 import multiversx_sdk.core.proto.transaction_pb2 as ProtoTransaction
-from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.core.transaction import Transaction
 
 
@@ -45,5 +45,9 @@ class ProtoSerializer:
             guardian_address = transaction.guardian
             proto_transaction.GuardAddr = guardian_address.get_public_key()
             proto_transaction.GuardSignature = transaction.guardian_signature
+
+        if transaction.relayer:
+            proto_transaction.Relayer = transaction.relayer.get_public_key()
+            proto_transaction.RelayerSignature = transaction.relayer_signature
 
         return proto_transaction
