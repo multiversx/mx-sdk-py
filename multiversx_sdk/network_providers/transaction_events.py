@@ -12,7 +12,7 @@ class TransactionEvent:
         self.identifier: str = ''
         self.topics: List[TransactionEventTopic] = []
         self.data_payload: Optional[TransactionEventData] = None
-        self.data: str = ''
+        self.data: bytes = b''
         self.additional_data: List[TransactionEventData] = []
 
     @staticmethod
@@ -26,9 +26,9 @@ class TransactionEvent:
         topics = response.get('topics') or []
         result.topics = [TransactionEventTopic(item) for item in topics]
 
-        raw_data = base64.b64decode(response.get('responseData', b''))
+        raw_data = base64.b64decode(response.get('data', b'') or b'')
         result.data_payload = TransactionEventData(raw_data)
-        result.data = raw_data.decode()
+        result.data = raw_data
 
         additional_data: Any = response.get("additionalData") or []
         if additional_data is None:
@@ -43,7 +43,7 @@ class TransactionEvent:
             "identifier": self.identifier,
             "topics": [item.hex() for item in self.topics],
             "data_payload": self.data_payload.hex() if self.data_payload else "",
-            "data": self.data,
+            "data": self.data.hex(),
             "additional_data": [data.hex() for data in self.additional_data]
         }
 

@@ -78,7 +78,7 @@ class TransactionsConverter:
         identifier = event.identifier
         topics = [topic.raw for topic in event.topics]
 
-        legacy_data = event.data_payload.raw if event.data_payload else b'' or event.data.encode()
+        legacy_data = event.data_payload.raw if event.data_payload else b'' or event.data
         data_items = [data.raw for data in event.additional_data] if event.additional_data else []
 
         if len(data_items) == 0:
