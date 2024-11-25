@@ -11,6 +11,8 @@ from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.testutils.mock_network_provider import (
     MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
+from multiversx_sdk.testutils.mock_transaction_on_network import \
+    get_empty_transaction_on_network
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
@@ -25,20 +27,20 @@ class TestTransactionAwaiter:
 
     def test_await_status_executed(self):
         tx_hash = "abbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba"
-        tx_on_network = TransactionOnNetwork()
+        tx_on_network = get_empty_transaction_on_network()
         tx_on_network.status = TransactionStatus("unknown")
         self.provider.mock_put_transaction(tx_hash, tx_on_network)
 
         self.provider.mock_transaction_timeline_by_hash(
             tx_hash,
-            [TimelinePointWait(40), TransactionStatus("pending"), TimelinePointWait(40), TransactionStatus("executed"), TimelinePointMarkCompleted()]
+            [TimelinePointWait(40), TransactionStatus("pending"), TimelinePointWait(
+                40), TransactionStatus("executed"), TimelinePointMarkCompleted()]
         )
         tx_from_network = self.watcher.await_completed(tx_hash)
 
         assert tx_from_network.status.is_completed
 
     @pytest.mark.networkInteraction
-    @pytest.mark.skip
     def test_on_network(self):
         alice = load_wallets()["alice"]
         proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
@@ -60,7 +62,7 @@ class TestTransactionAwaiter:
 
     def test_await_on_condition(self):
         tx_hash = "abbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba"
-        tx_on_network = TransactionOnNetwork()
+        tx_on_network = get_empty_transaction_on_network()
         tx_on_network.status = TransactionStatus("unknown")
         self.provider.mock_put_transaction(tx_hash, tx_on_network)
 

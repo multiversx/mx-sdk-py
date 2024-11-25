@@ -4,7 +4,6 @@ import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.accounts import Account
-from multiversx_sdk.core.address import Address
 from multiversx_sdk.entrypoints.entrypoints import DevnetEntrypoint
 
 testutils = Path(__file__).parent.parent / "testutils"
@@ -53,7 +52,7 @@ class TestEntrypoint:
 
         assert len(outcome.contracts) == 1
 
-        contract_address = Address.new_from_bech32(outcome.contracts[0].address)
+        contract_address = outcome.contracts[0].address
 
         transaction = controller.create_transaction_for_execute(
             sender=sender,
@@ -67,7 +66,7 @@ class TestEntrypoint:
         tx_hash = self.entrypoint.send_transaction(transaction)
         self.entrypoint.await_completed_transaction(tx_hash)
 
-        query_result = controller.query_contract(
+        query_result = controller.query(
             contract=contract_address,
             function="getSum",
             arguments=[]

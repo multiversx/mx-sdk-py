@@ -23,7 +23,9 @@ class Transaction:
                  options: Optional[int] = None,
                  guardian: Optional[Address] = None,
                  signature: Optional[bytes] = None,
-                 guardian_signature: Optional[bytes] = None) -> None:
+                 guardian_signature: Optional[bytes] = None,
+                 relayer: Optional[Address] = None,
+                 relayer_signature: Optional[bytes] = None) -> None:
         self.chain_id = chain_id
         self.sender = sender
         self.receiver = receiver
@@ -44,6 +46,9 @@ class Transaction:
         self.guardian = guardian
         self.guardian_signature = guardian_signature or bytes()
 
+        self.relayer = relayer
+        self.relayer_signature = relayer_signature or bytes()
+
     def to_dictionary(self) -> dict[str, Any]:
         return {
             "nonce": self.nonce,
@@ -60,7 +65,9 @@ class Transaction:
             "options": self.options,
             "guardian": self.guardian.to_bech32() if self.guardian else "",
             "signature": self._value_to_hex_or_empty(self.signature),
-            "guardianSignature": self._value_to_hex_or_empty(self.guardian_signature)
+            "guardianSignature": self._value_to_hex_or_empty(self.guardian_signature),
+            "relayer": self.relayer.to_bech32() if self.relayer else "",
+            "relayerSignature": self._value_to_hex_or_empty(self.relayer_signature)
         }
 
     @staticmethod
@@ -70,6 +77,10 @@ class Transaction:
         guardian = dictionary.get("guardian") or None
         if guardian:
             guardian = Address.new_from_bech32(guardian)
+
+        relayer = dictionary.get("relayer") or None
+        if relayer:
+            relayer = Address.new_from_bech32(relayer)
 
         return Transaction(
             nonce=dictionary.get("nonce", None),
@@ -87,6 +98,8 @@ class Transaction:
             options=dictionary.get("options", None),
             signature=_bytes_from_hex(dictionary.get("signature", "")),
             guardian_signature=_bytes_from_hex(dictionary.get("guardianSignature", "")),
+            relayer=relayer,
+            relayer_signature=_bytes_from_hex(dictionary.get("relayerSignature", ""))
         )
 
     def _value_to_b64_or_empty(self, value: Union[str, bytes]) -> str:

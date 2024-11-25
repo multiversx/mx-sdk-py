@@ -1,43 +1,25 @@
-from typing import Any, List, Optional, Protocol, Tuple, Union
+from typing import Optional, Union
 
+from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.account_management import AccountController
 from multiversx_sdk.accounts import Account
-from multiversx_sdk.controllers.account_controller import AccountController
-from multiversx_sdk.controllers.delegation_controller import \
-    DelegationController
-from multiversx_sdk.controllers.relayed_controller import RelayedController
-from multiversx_sdk.controllers.smart_contract_controller import \
-    SmartContractController
-from multiversx_sdk.controllers.token_management_controller import \
-    TokenManagementController
-from multiversx_sdk.controllers.transfers_controller import TransfersController
-from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.message import Message, MessageComputer
-from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
+from multiversx_sdk.core import (Address, Message, MessageComputer,
+                                 Transaction, TransactionComputer,
+                                 TransactionOnNetwork)
+from multiversx_sdk.delegation import DelegationController
 from multiversx_sdk.entrypoints.config import (DevnetEntrypointConfig,
                                                MainnetEntrypointConfig,
                                                TestnetEntrypointConfig)
 from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
-from multiversx_sdk.network_providers.api_network_provider import \
-    ApiNetworkProvider
-from multiversx_sdk.network_providers.proxy_network_provider import \
-    ProxyNetworkProvider
+from multiversx_sdk.network_providers import (ApiNetworkProvider,
+                                              ProxyNetworkProvider)
+from multiversx_sdk.relayed.relayed_controller import RelayedController
+from multiversx_sdk.smart_contracts.smart_contract_controller import \
+    SmartContractController
+from multiversx_sdk.token_management.token_management_controller import \
+    TokenManagementController
+from multiversx_sdk.transfers.transfers_controller import TransfersController
 from multiversx_sdk.wallet.user_verifer import UserVerifier
-
-
-class IAbi(Protocol):
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
-        ...
-
-    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
-        ...
-
-    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
-        ...
-
-    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: List[bytes]) -> List[Any]:
-        ...
 
 
 class NetworkEntrypoint:
@@ -88,7 +70,7 @@ class NetworkEntrypoint:
     def recall_account_nonce(self, address: Address) -> int:
         return self.network_provider.get_account(address).nonce
 
-    def send_transactions(self, transactions: list[Transaction]) -> Tuple[int, list[bytes]]:
+    def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
         """
         Sends multiple transactions.
 
@@ -96,7 +78,7 @@ class NetworkEntrypoint:
             transactions (list[Transaction]): An iterable containing multiple transactions (e.g. a list of transactions).
 
         Returns:
-            Tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
+            tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.
         """
         return self.network_provider.send_transactions(transactions)
 
@@ -118,7 +100,7 @@ class NetworkEntrypoint:
     def create_relayed_controller(self) -> RelayedController:
         return RelayedController(self.chain_id)
 
-    def create_smart_contract_controller(self, abi: Optional[IAbi] = None) -> SmartContractController:
+    def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
         return SmartContractController(self.chain_id, self.network_provider, abi)
 
     def create_token_management_controller(self) -> TokenManagementController:

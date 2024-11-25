@@ -19,10 +19,14 @@ def test_address():
     assert "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz" == address.to_bech32()
 
     with pytest.raises(BadPubkeyLengthError):
-        address = Address(bytes(), "erd")
+        address = Address(bytes.fromhex("fd691bb5e85d102687d8"), "erd")
 
     with pytest.raises(BadAddressError):
         address = Address.new_from_bech32("bad")
+
+    address = Address.empty()
+    assert address.pubkey == bytes()
+    assert address.hrp == "erd"
 
 
 def test_address_with_custom_hrp():

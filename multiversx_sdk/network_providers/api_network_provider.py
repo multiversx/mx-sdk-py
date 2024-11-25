@@ -3,15 +3,13 @@ from typing import Any, Callable, Optional, Union, cast
 
 import requests
 
-from multiversx_sdk.core.address import Address
+from multiversx_sdk.core import (Address, Token, TokenComputer, Transaction,
+                                 TransactionOnNetwork)
 from multiversx_sdk.core.constants import DEFAULT_HRP, METACHAIN_ID
-from multiversx_sdk.core.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
-from multiversx_sdk.core.tokens import Token, TokenComputer
-from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
+from multiversx_sdk.network_providers.account_awaiter import AccountAwaiter
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
+from multiversx_sdk.network_providers.constants import (
+    BASE_USER_AGENT, DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS)
 from multiversx_sdk.network_providers.errors import (GenericError,
                                                      TransactionFetchingError)
 from multiversx_sdk.network_providers.http_resources import (
@@ -36,6 +34,8 @@ from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
+from multiversx_sdk.smart_contracts.smart_contract_query import (
+    SmartContractQuery, SmartContractQueryResponse)
 
 
 class ApiNetworkProvider(INetworkProvider):
@@ -94,7 +94,17 @@ class ApiNetworkProvider(INetworkProvider):
                                                         bool],
             options: Optional[AwaitingOptions] = None) -> AccountOnNetwork:
         """Waits until an account satisfies a given condition."""
-        raise NotImplementedError("Method not yet implemented")
+        if options is None:
+            options = AwaitingOptions(patience_in_milliseconds=DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS)
+
+        awaiter = AccountAwaiter(
+            fetcher=self,
+            polling_interval_in_milliseconds=options.polling_interval_in_milliseconds,
+            timeout_interval_in_milliseconds=options.timeout_in_milliseconds,
+            patience_time_in_milliseconds=options.patience_in_milliseconds
+        )
+
+        return awaiter.await_on_condition(address=address, condition=condition)
 
     def send_transaction(self, transaction: Transaction) -> bytes:
         """Broadcasts a transaction and returns its hash."""
@@ -104,7 +114,7 @@ class ApiNetworkProvider(INetworkProvider):
     def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork:
         """Simulates a transaction."""
         response: dict[str, Any] = self.do_post_generic('transaction/simulate', transaction.to_dictionary())
-        return transaction_from_simulate_response(response.get("data", {}).get("result", {}))
+        return transaction_from_simulate_response(transaction, response.get("data", {}).get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""

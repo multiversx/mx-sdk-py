@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
-from multiversx_sdk.core.tokens import Token
-from multiversx_sdk.core.transaction_status import TransactionStatus
+from multiversx_sdk.core import Address, Token, TransactionStatus
 from multiversx_sdk.network_providers.constants import (
     DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
@@ -67,7 +66,7 @@ class BlockCoordinates:
 @dataclass
 class AccountOnNetwork:
     raw: dict[str, Any]
-    address: str
+    address: Address
     nonce: int
     balance: int
     is_guarded: bool
@@ -77,7 +76,7 @@ class AccountOnNetwork:
     contract_code_hash: bytes = b""
     contract_code: bytes = b""
     contract_developer_reward: int = 0
-    contract_owner_address: str = ""
+    contract_owner_address: Optional[Address] = None
     is_contract_upgradable: bool = False
     is_contract_readable: bool = False
     is_contract_payable: bool = False
@@ -137,9 +136,9 @@ class TokensCollectionMetadata:
 
 @dataclass
 class AwaitingOptions:
-    polling_interval_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
-    timeout_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
-    patience_in_milliseconds = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
+    polling_interval_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
+    timeout_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
+    patience_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
 
 
 @dataclass

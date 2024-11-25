@@ -1,19 +1,17 @@
 import pytest
 import requests
 
-from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.smart_contract_query import SmartContractQuery
-from multiversx_sdk.core.tokens import Token
-from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.core.transaction_status import TransactionStatus
+from multiversx_sdk.core import (Address, Token, Transaction,
+                                 TransactionComputer, TransactionOnNetwork,
+                                 TransactionStatus)
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.http_resources import block_from_response
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
 from multiversx_sdk.network_providers.resources import (GetBlockArguments,
                                                         TokenAmountOnNetwork)
+from multiversx_sdk.smart_contracts.smart_contract_query import \
+    SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
@@ -72,18 +70,19 @@ class TestProxy:
         )
         result = self.proxy.get_account(address)
 
-        assert result.address == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        assert result.username == ""
-        assert result.contract_owner_address == ""
+        assert result.address.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
+        assert not result.username
+        assert result.contract_owner_address is None
 
         address = Address.new_from_bech32(
             "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
         )
         result = self.proxy.get_account(address)
 
-        assert result.address == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
-        assert result.username == ""
-        assert result.contract_owner_address == "erd1wzx0tak22f2me4g7wpxfae2w3htfue7khrg28fy6wu8x9hzq05vqm8qhnm"
+        assert result.address.to_bech32() == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert not result.username
+        assert result.contract_owner_address == Address.new_from_bech32(
+            "erd1wzx0tak22f2me4g7wpxfae2w3htfue7khrg28fy6wu8x9hzq05vqm8qhnm")
         assert result.is_contract_payable is False
         assert result.is_contract_readable
 
@@ -152,7 +151,7 @@ class TestProxy:
 
     def test_query_contract(self):
         query = SmartContractQuery(
-            contract="erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4",
+            contract=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqqy34h7he2ya6qcagqre7ur7cc65vt0mxrc8qnudkr4"),
             function="getSum",
             arguments=[]
         )
@@ -182,12 +181,11 @@ class TestProxy:
         )
 
         assert transaction.nonce == 0
-        assert transaction.block_nonce == 835600
         assert transaction.epoch == 348
-        assert transaction.hash == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
-        assert transaction.is_completed
+        assert transaction.hash.hex() == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
+        assert transaction.status.is_completed
         assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.contract_results == []
+        assert transaction.smart_contract_results == []
 
     def test_get_transaction_with_events(self):
         transaction = self.proxy.get_transaction(
@@ -206,10 +204,10 @@ class TestProxy:
             "6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb"
         )
 
-        assert transaction.is_completed is True
-        assert len(transaction.contract_results) > 0
-        assert transaction.data == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
-        assert sum([r.raw.get("isRefund", False) for r in transaction.contract_results]) == 1
+        assert transaction.status.is_completed
+        assert len(transaction.smart_contract_results) > 0
+        assert transaction.data.decode() == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
+        assert sum([r.raw.get("isRefund", False) for r in transaction.smart_contract_results]) == 1
 
     def test_send_transaction(self):
         transaction = Transaction(
@@ -322,13 +320,13 @@ class TestProxy:
         transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         tx_on_network = self.proxy.simulate_transaction(transaction)
-        print(tx_on_network.contract_results[0].data)
 
         assert tx_on_network.status == TransactionStatus("success")
-        assert len(tx_on_network.contract_results) == 1
-        assert tx_on_network.contract_results[0].sender == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
-        assert tx_on_network.contract_results[0].receiver == bob.label
-        assert tx_on_network.contract_results[0].data == b"@6f6b"
+        assert len(tx_on_network.smart_contract_results) == 1
+        assert tx_on_network.smart_contract_results[0].sender.to_bech32(
+        ) == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert tx_on_network.smart_contract_results[0].receiver.to_bech32() == bob.label
+        assert tx_on_network.smart_contract_results[0].data == b"@6f6b"
 
     def test_estimate_transaction_cost(self):
         bob = load_wallets()["bob"]
