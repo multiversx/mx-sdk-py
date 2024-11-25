@@ -103,7 +103,7 @@ class TestSmartContractTransactionsOutcomeParser:
             TxEventTopicOnNetwork(base64.b64encode(deployer.get_public_key()).decode()),
             TxEventTopicOnNetwork(base64.b64encode(b"wrong number of arguments").decode()),
         ]
-        event.data = "@75736572206572726f72"
+        event.data = "@75736572206572726f72".encode()
 
         logs = TxLogsOnNetwork()
         logs.events = [event]
