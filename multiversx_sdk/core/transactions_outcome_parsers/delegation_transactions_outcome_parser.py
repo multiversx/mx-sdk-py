@@ -1,12 +1,12 @@
 from typing import List
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.errors import ParseTransactionOutcomeError
 from multiversx_sdk.core.transactions_outcome_parsers.delegation_transactions_outcome_parser_types import \
     CreateNewDelegationContractOutcome
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     TransactionEvent, TransactionOutcome, find_events_by_identifier)
-from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
 
 
 class DelegationTransactionsOutcomeParser:
@@ -34,4 +34,4 @@ class DelegationTransactionsOutcomeParser:
         if not event.topics[0]:
             return ""
 
-        return Address(event.topics[0], DEFAULT_ADDRESS_HRP).to_bech32()
+        return Address(event.topics[0], LibraryConfig.default_address_hrp).to_bech32()

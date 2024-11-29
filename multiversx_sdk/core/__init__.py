@@ -2,6 +2,7 @@ from multiversx_sdk.core.account import AccountNonceHolder
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.contract_query import ContractQuery
 from multiversx_sdk.core.contract_query_builder import ContractQueryBuilder
 from multiversx_sdk.core.message import Message, MessageComputer
@@ -54,5 +55,6 @@ __all__ = [
     "SmartContractTransactionsFactory", "TransferTransactionsFactory",
     "RelayedTransactionsFactory", "AccountTransactionsFactory", "DelegationTransactionsOutcomeParser",
     "find_events_by_identifier", "find_events_by_first_topic", "SmartContractTransactionsOutcomeParser",
-    "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse", "TransactionEventsParser"
+    "SmartContractQueriesController", "SmartContractQuery", "SmartContractQueryResponse", "TransactionEventsParser",
+    "LibraryConfig"
 ]

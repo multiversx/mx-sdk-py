@@ -4,7 +4,7 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
+from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS_HEX
 from multiversx_sdk.core.tokens import Token, TokenTransfer
 from multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory import \
     SmartContractTransactionsFactory
@@ -55,7 +55,7 @@ class TestSmartContractTransactionsFactory:
         )
 
         assert transaction.sender == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver == CONTRACT_DEPLOY_ADDRESS
+        assert transaction.receiver == Address.new_from_hex(CONTRACT_DEPLOY_ADDRESS_HEX).to_bech32()
         assert transaction.data == f"{self.bytecode.hex()}@0500@0504@01".encode()
         assert transaction.gas_limit == gas_limit
         assert transaction.value == 0

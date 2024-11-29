@@ -3,14 +3,11 @@ from typing import Any, Dict, List, Optional, Tuple, Union, cast
 import requests
 from requests.auth import AuthBase
 
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionsConverter
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import (DefaultPagination,
                                                      NetworkProviderConfig)
-from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
-                                                        DEFAULT_ADDRESS_HRP)
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
 from multiversx_sdk.network_providers.contract_query_response import \
@@ -33,7 +30,8 @@ from multiversx_sdk.network_providers.tokens import (
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
-    ITransaction, TransactionInMempool, TransactionOnNetwork)
+    ITransaction, TransactionInMempool, TransactionOnNetwork,
+    transaction_to_dictionary)
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.network_providers.utils import decimal_to_padded_hex
 
@@ -43,7 +41,7 @@ class ApiNetworkProvider:
             self,
             url: str,
             auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP,
+            address_hrp: Optional[str] = None,
             config: Optional[NetworkProviderConfig] = None
     ) -> None:
         self.url = url
@@ -173,8 +171,7 @@ class ApiNetworkProvider:
 
     def send_transaction(self, transaction: ITransaction) -> str:
         url = 'transactions'
-        transactions_converter = TransactionsConverter()
-        response = self.do_post_generic(url, transactions_converter.transaction_to_dictionary(transaction))
+        response = self.do_post_generic(url, transaction_to_dictionary(transaction))
         tx_hash: str = response.get('txHash', '')
         return tx_hash
 

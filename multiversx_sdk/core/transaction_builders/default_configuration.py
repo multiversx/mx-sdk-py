@@ -4,6 +4,8 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.interfaces import (IAddress, IChainID, IGasPrice,
                                             ITransactionValue)
 
+from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS_HEX, ESDT_CONTRACT_ADDRESS_HEX
+
 
 @dataclass
 class DefaultTransactionBuildersConfiguration:
@@ -19,5 +21,5 @@ class DefaultTransactionBuildersConfiguration:
     additional_gas_for_esdt_transfer = 100000
     additional_gas_for_esdt_nft_transfer = 800000
 
-    esdt_contract_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u")
-    deployment_address: IAddress = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu")
+    esdt_contract_address: IAddress = Address.new_from_hex(ESDT_CONTRACT_ADDRESS_HEX)
+    deployment_address: IAddress = Address.new_from_hex(CONTRACT_DEPLOY_ADDRESS_HEX)
