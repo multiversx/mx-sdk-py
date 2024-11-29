@@ -54,8 +54,8 @@
             </div>
         </aside>
         <h2>
-            <span class="text">17 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">17<span class="text"> run</span></button>
+            <span class="text">18 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">18<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">0<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_f97162c20e8a7072_esdt_builders_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-25 14:12 +0000
+            created at 2024-11-29 09:42 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -86,23 +86,25 @@
     <p class="run"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">interfaces</span> <span class="key">import</span> <span class="op">(</span><span class="nam">IAddress</span><span class="op">,</span> <span class="nam">IChainID</span><span class="op">,</span> <span class="nam">IGasPrice</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t">                                            <span class="nam">ITransactionValue</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t"><span class="op">@</span><span class="nam">dataclass</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t"><span class="key">class</span> <span class="nam">DefaultTransactionBuildersConfiguration</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">    <span class="nam">chain_id</span><span class="op">:</span> <span class="nam">IChainID</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">    <span class="nam">min_gas_price</span><span class="op">:</span> <span class="nam">IGasPrice</span> <span class="op">=</span> <span class="num">1000000000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">    <span class="nam">min_gas_limit</span> <span class="op">=</span> <span class="num">50000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="nam">gas_limit_per_byte</span> <span class="op">=</span> <span class="num">1500</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">    <span class="nam">issue_cost</span><span class="op">:</span> <span class="nam">ITransactionValue</span> <span class="op">=</span> <span class="num">50000000000000000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">    <span class="nam">gas_limit_esdt_issue</span> <span class="op">=</span> <span class="num">60000000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t">    <span class="nam">gas_limit_esdt_transfer</span> <span class="op">=</span> <span class="num">200000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="nam">gas_limit_esdt_nft_transfer</span> <span class="op">=</span> <span class="num">200000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">    <span class="nam">additional_gas_for_esdt_transfer</span> <span class="op">=</span> <span class="num">100000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">    <span class="nam">additional_gas_for_esdt_nft_transfer</span> <span class="op">=</span> <span class="num">800000</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">    <span class="nam">esdt_contract_address</span><span class="op">:</span> <span class="nam">IAddress</span> <span class="op">=</span> <span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_bech32</span><span class="op">(</span><span class="str">"erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t">    <span class="nam">deployment_address</span><span class="op">:</span> <span class="nam">IAddress</span> <span class="op">=</span> <span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_bech32</span><span class="op">(</span><span class="str">"erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">constants</span> <span class="key">import</span> <span class="nam">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="op">,</span> <span class="nam">ESDT_CONTRACT_ADDRESS_HEX</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t"><span class="op">@</span><span class="nam">dataclass</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t"><span class="key">class</span> <span class="nam">DefaultTransactionBuildersConfiguration</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">    <span class="nam">chain_id</span><span class="op">:</span> <span class="nam">IChainID</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="nam">min_gas_price</span><span class="op">:</span> <span class="nam">IGasPrice</span> <span class="op">=</span> <span class="num">1000000000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">    <span class="nam">min_gas_limit</span> <span class="op">=</span> <span class="num">50000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">    <span class="nam">gas_limit_per_byte</span> <span class="op">=</span> <span class="num">1500</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t">    <span class="nam">issue_cost</span><span class="op">:</span> <span class="nam">ITransactionValue</span> <span class="op">=</span> <span class="num">50000000000000000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="nam">gas_limit_esdt_issue</span> <span class="op">=</span> <span class="num">60000000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">    <span class="nam">gas_limit_esdt_transfer</span> <span class="op">=</span> <span class="num">200000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">    <span class="nam">gas_limit_esdt_nft_transfer</span> <span class="op">=</span> <span class="num">200000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">    <span class="nam">additional_gas_for_esdt_transfer</span> <span class="op">=</span> <span class="num">100000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">    <span class="nam">additional_gas_for_esdt_nft_transfer</span> <span class="op">=</span> <span class="num">800000</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">    <span class="nam">esdt_contract_address</span><span class="op">:</span> <span class="nam">IAddress</span> <span class="op">=</span> <span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_hex</span><span class="op">(</span><span class="nam">ESDT_CONTRACT_ADDRESS_HEX</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">    <span class="nam">deployment_address</span><span class="op">:</span> <span class="nam">IAddress</span> <span class="op">=</span> <span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_hex</span><span class="op">(</span><span class="nam">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -112,7 +114,7 @@
             <a class="nav" href="z_f97162c20e8a7072_esdt_builders_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-25 14:12 +0000
+            created at 2024-11-29 09:42 +0000
         </p>
     </div>
 </footer>

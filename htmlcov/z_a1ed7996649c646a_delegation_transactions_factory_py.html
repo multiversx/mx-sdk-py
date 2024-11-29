@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_a1ed7996649c646a_relayed_transactions_factory_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-25 14:12 +0000
+            created at 2024-11-29 09:42 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -83,7 +83,7 @@
     <p class="run"><span class="n"><a id="t1" href="#t1">1</a></span><span class="t"><span class="key">from</span> <span class="nam">typing</span> <span class="key">import</span> <span class="nam">Protocol</span><span class="op">,</span> <span class="nam">Sequence</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t2" href="#t2">2</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">address</span> <span class="key">import</span> <span class="nam">Address</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">constants</span> <span class="key">import</span> <span class="nam">DELEGATION_MANAGER_SC_ADDRESS</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">constants</span> <span class="key">import</span> <span class="nam">DELEGATION_MANAGER_SC_ADDRESS_HEX</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">errors</span> <span class="key">import</span> <span class="nam">ErrListsLengthMismatch</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">interfaces</span> <span class="key">import</span> <span class="nam">IAddress</span><span class="op">,</span> <span class="nam">IValidatorPublicKey</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">serializer</span> <span class="key">import</span> <span class="nam">arg_to_string</span>&nbsp;</span><span class="r"></span></p>
@@ -123,7 +123,7 @@
     <p class="run"><span class="n"><a id="t41" href="#t41">41</a></span><span class="t">        <span class="nam">transaction</span> <span class="op">=</span> <span class="nam">TransactionBuilder</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t42" href="#t42">42</a></span><span class="t">            <span class="nam">config</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t43" href="#t43">43</a></span><span class="t">            <span class="nam">sender</span><span class="op">=</span><span class="nam">sender</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t44" href="#t44">44</a></span><span class="t">            <span class="nam">receiver</span><span class="op">=</span><span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_bech32</span><span class="op">(</span><span class="nam">DELEGATION_MANAGER_SC_ADDRESS</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t44" href="#t44">44</a></span><span class="t">            <span class="nam">receiver</span><span class="op">=</span><span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_hex</span><span class="op">(</span><span class="nam">DELEGATION_MANAGER_SC_ADDRESS_HEX</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t45" href="#t45">45</a></span><span class="t">            <span class="nam">data_parts</span><span class="op">=</span><span class="nam">parts</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t46" href="#t46">46</a></span><span class="t">            <span class="nam">gas_limit</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">.</span><span class="nam">gas_limit_create_delegation_contract</span> <span class="op">+</span> <span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">.</span><span class="nam">additional_gas_for_delegation_operations</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t47" href="#t47">47</a></span><span class="t">            <span class="nam">add_data_movement_gas</span><span class="op">=</span><span class="key">True</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -483,7 +483,7 @@
             <a class="nav" href="z_a1ed7996649c646a_relayed_transactions_factory_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-25 14:12 +0000
+            created at 2024-11-29 09:42 +0000
         </p>
     </div>
 </footer>

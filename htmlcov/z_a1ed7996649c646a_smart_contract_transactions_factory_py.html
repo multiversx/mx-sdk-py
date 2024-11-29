@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_a1ed7996649c646a_token_management_transactions_factory_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-25 14:12 +0000
+            created at 2024-11-29 09:42 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -88,7 +88,7 @@
     <p class="run"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">address</span> <span class="key">import</span> <span class="nam">Address</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">code_metadata</span> <span class="key">import</span> <span class="nam">CodeMetadata</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">constants</span> <span class="key">import</span> <span class="op">(</span><span class="nam">ARGS_SEPARATOR</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">                                           <span class="nam">CONTRACT_DEPLOY_ADDRESS</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">                                           <span class="nam">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">                                           <span class="nam">VM_TYPE_WASM_VM</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">interfaces</span> <span class="key">import</span> <span class="nam">IAddress</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t"><span class="key">from</span> <span class="nam">multiversx_sdk</span><span class="op">.</span><span class="nam">core</span><span class="op">.</span><span class="nam">serializer</span> <span class="key">import</span> <span class="nam">arg_to_string</span><span class="op">,</span> <span class="nam">args_to_buffers</span>&nbsp;</span><span class="r"></span></p>
@@ -154,7 +154,7 @@
     <p class="run"><span class="n"><a id="t72" href="#t72">72</a></span><span class="t">        <span class="key">return</span> <span class="nam">TransactionBuilder</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">            <span class="nam">config</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">config</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t74" href="#t74">74</a></span><span class="t">            <span class="nam">sender</span><span class="op">=</span><span class="nam">sender</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t75" href="#t75">75</a></span><span class="t">            <span class="nam">receiver</span><span class="op">=</span><span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_bech32</span><span class="op">(</span><span class="nam">CONTRACT_DEPLOY_ADDRESS</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t75" href="#t75">75</a></span><span class="t">            <span class="nam">receiver</span><span class="op">=</span><span class="nam">Address</span><span class="op">.</span><span class="nam">new_from_hex</span><span class="op">(</span><span class="nam">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t76" href="#t76">76</a></span><span class="t">            <span class="nam">data_parts</span><span class="op">=</span><span class="nam">parts</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t77" href="#t77">77</a></span><span class="t">            <span class="nam">gas_limit</span><span class="op">=</span><span class="nam">gas_limit</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t78" href="#t78">78</a></span><span class="t">            <span class="nam">add_data_movement_gas</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -309,7 +309,7 @@
             <a class="nav" href="z_a1ed7996649c646a_token_management_transactions_factory_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.6.4">coverage.py v7.6.4</a>,
-            created at 2024-11-25 14:12 +0000
+            created at 2024-11-29 09:42 +0000
         </p>
     </div>
 </footer>
