@@ -4,14 +4,13 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 import requests
 from requests.auth import AuthBase
 
-from multiversx_sdk.converters.transactions_converter import \
-    TransactionsConverter
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.config import LibraryConfig
+from multiversx_sdk.core.constants import ESDT_CONTRACT_ADDRESS_HEX
 from multiversx_sdk.network_providers.accounts import (AccountOnNetwork,
                                                        GuardianData)
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import (BASE_USER_AGENT,
-                                                        DEFAULT_ADDRESS_HRP,
-                                                        ESDT_CONTRACT_ADDRESS,
                                                         METACHAIN_ID)
 from multiversx_sdk.network_providers.contract_query_requests import \
     ContractQueryRequest
@@ -30,7 +29,7 @@ from multiversx_sdk.network_providers.tokens import (
 from multiversx_sdk.network_providers.transaction_status import \
     TransactionStatus
 from multiversx_sdk.network_providers.transactions import (
-    ITransaction, TransactionOnNetwork)
+    ITransaction, TransactionOnNetwork, transaction_to_dictionary)
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 
 
@@ -39,13 +38,12 @@ class ProxyNetworkProvider:
             self,
             url: str,
             auth: Union[AuthBase, None] = None,
-            address_hrp: str = DEFAULT_ADDRESS_HRP,
+            address_hrp: Optional[str] = None,
             config: Optional[NetworkProviderConfig] = None
     ) -> None:
         self.url = url
         self.auth = auth
-        self.address_hrp = address_hrp
-        self.address_hrp = address_hrp or DEFAULT_ADDRESS_HRP
+        self.address_hrp = address_hrp or LibraryConfig.default_address_hrp
         self.config = config if config is not None else NetworkProviderConfig()
 
         self.user_agent_prefix = f"{BASE_USER_AGENT}/proxy"
@@ -128,13 +126,11 @@ class ProxyNetworkProvider:
         return status
 
     def send_transaction(self, transaction: ITransaction) -> str:
-        transactions_converter = TransactionsConverter()
-        response = self.do_post_generic('transaction/send', transactions_converter.transaction_to_dictionary(transaction))
+        response = self.do_post_generic('transaction/send', transaction_to_dictionary(transaction))
         return response.get('txHash', '')
 
     def send_transactions(self, transactions: Sequence[ITransaction]) -> Tuple[int, Dict[str, str]]:
-        transactions_converter = TransactionsConverter()
-        transactions_as_dictionaries = [transactions_converter.transaction_to_dictionary(transaction) for transaction in transactions]
+        transactions_as_dictionaries = [transaction_to_dictionary(transaction) for transaction in transactions]
         response = self.do_post_generic('transaction/send-multiple', transactions_as_dictionaries)
         # Proxy and Observers have different response format:
         num_sent = response.get("numOfSentTxs", 0) or response.get("txsSent", 0)
@@ -153,7 +149,7 @@ class ProxyNetworkProvider:
 
     def __get_token_properties(self, identifier: str) -> List[bytes]:
         encoded_identifier = identifier.encode()
-        query = ContractQuery(ESDT_CONTRACT_ADDRESS, 'getTokenProperties', 0, [encoded_identifier])
+        query = ContractQuery(Address.new_from_hex(ESDT_CONTRACT_ADDRESS_HEX, self.address_hrp), 'getTokenProperties', 0, [encoded_identifier])
         query_response = self.query_contract(query)
         properties = query_response.get_return_data_parts()
         return properties
@@ -165,8 +161,7 @@ class ProxyNetworkProvider:
 
     def simulate_transaction(self, transaction: ITransaction) -> SimulateResponse:
         url = "transaction/simulate"
-        transactions_converter = TransactionsConverter()
-        response = self.do_post_generic(url, transactions_converter.transaction_to_dictionary(transaction))
+        response = self.do_post_generic(url, transaction_to_dictionary(transaction))
         return SimulateResponse(response)
 
     def get_hyperblock(self, key: Union[int, str]) -> Dict[str, Any]:

@@ -1,5 +1,5 @@
 import base64
-from typing import Any, Dict, Optional, Protocol
+from typing import Any, Dict, Optional, Protocol, Union
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.network_providers.contract_results import ContractResults
@@ -202,3 +202,41 @@ class TransactionInMempool:
             "gasPrice": self.gas_price,
             "data": self.data
         }
+
+
+# this is duplicated code, added here to get rid of a circular dependency
+# will be removed in V1
+def transaction_to_dictionary(transaction: ITransaction) -> Dict[str, Any]:
+    return {
+        "nonce": transaction.nonce,
+        "value": str(transaction.value),
+        "receiver": transaction.receiver,
+        "sender": transaction.sender,
+        "senderUsername": _value_to_b64_or_empty(transaction.sender_username),
+        "receiverUsername": _value_to_b64_or_empty(transaction.receiver_username),
+        "gasPrice": transaction.gas_price,
+        "gasLimit": transaction.gas_limit,
+        "data": _value_to_b64_or_empty(transaction.data),
+        "chainID": transaction.chain_id,
+        "version": transaction.version,
+        "options": transaction.options,
+        "guardian": transaction.guardian,
+        "signature": _value_to_hex_or_empty(transaction.signature),
+        "guardianSignature": _value_to_hex_or_empty(transaction.guardian_signature),
+        "relayer": transaction.relayer,
+        "relayerSignature": _value_to_hex_or_empty(transaction.relayer_signature)
+    }
+
+
+def _value_to_b64_or_empty(value: Union[str, bytes]) -> str:
+    value_as_bytes = value.encode() if isinstance(value, str) else value
+
+    if len(value):
+        return base64.b64encode(value_as_bytes).decode()
+    return ""
+
+
+def _value_to_hex_or_empty(value: bytes) -> str:
+    if len(value):
+        return value.hex()
+    return ""

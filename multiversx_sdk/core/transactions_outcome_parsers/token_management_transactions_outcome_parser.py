@@ -2,7 +2,7 @@ from typing import List
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.codec import decode_unsigned_number
-from multiversx_sdk.core.constants import DEFAULT_HRP
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.errors import ParseTransactionOutcomeError
 from multiversx_sdk.core.transactions_outcome_parsers.resources import (
     TransactionEvent, TransactionOutcome, find_events_by_identifier)
@@ -247,4 +247,4 @@ class TokenManagementTransactionsOutcomeParser:
         if not event.topics[3]:
             return ""
 
-        return Address(event.topics[3], DEFAULT_HRP).to_bech32()
+        return Address(event.topics[3], LibraryConfig.default_address_hrp).to_bech32()

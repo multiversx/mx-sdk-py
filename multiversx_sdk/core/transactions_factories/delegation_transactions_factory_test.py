@@ -1,5 +1,5 @@
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
+from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS_HEX
 from multiversx_sdk.core.transactions_factories.delegation_transactions_factory import \
     DelegationTransactionsFactory
 from multiversx_sdk.core.transactions_factories.transactions_factory_config import \
@@ -20,7 +20,7 @@ class TestDelegationTransactionsFactory:
         )
 
         assert transaction.sender == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
-        assert transaction.receiver == DELEGATION_MANAGER_SC_ADDRESS
+        assert transaction.receiver == Address.new_from_hex(DELEGATION_MANAGER_SC_ADDRESS_HEX).to_bech32()
         assert transaction.data
         assert transaction.data.decode() == "createNewDelegationContract@010f0cf064dd59200000@0a"
         assert transaction.gas_limit == 60126500

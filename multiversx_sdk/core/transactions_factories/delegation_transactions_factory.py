@@ -1,7 +1,7 @@
 from typing import Protocol, Sequence
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
+from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS_HEX
 from multiversx_sdk.core.errors import ErrListsLengthMismatch
 from multiversx_sdk.core.interfaces import IAddress, IValidatorPublicKey
 from multiversx_sdk.core.serializer import arg_to_string
@@ -41,7 +41,7 @@ class DelegationTransactionsFactory:
         transaction = TransactionBuilder(
             config=self.config,
             sender=sender,
-            receiver=Address.new_from_bech32(DELEGATION_MANAGER_SC_ADDRESS),
+            receiver=Address.new_from_hex(DELEGATION_MANAGER_SC_ADDRESS_HEX),
             data_parts=parts,
             gas_limit=self.config.gas_limit_create_delegation_contract + self.config.additional_gas_for_delegation_operations,
             add_data_movement_gas=True,
