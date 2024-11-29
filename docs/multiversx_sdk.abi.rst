@@ -68,6 +68,14 @@ multiversx\_sdk.abi.bytes\_value module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.abi.code\_metadata\_value module
+------------------------------------------------
+
+.. automodule:: multiversx_sdk.abi.code_metadata_value
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.abi.codec module
 --------------------------------
 
@@ -88,6 +96,14 @@ multiversx\_sdk.abi.enum\_value module
 --------------------------------------
 
 .. automodule:: multiversx_sdk.abi.enum_value
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+multiversx\_sdk.abi.explicit\_enum\_value module
+------------------------------------------------
+
+.. automodule:: multiversx_sdk.abi.explicit_enum_value
    :members:
    :undoc-members:
    :show-inheritance:
