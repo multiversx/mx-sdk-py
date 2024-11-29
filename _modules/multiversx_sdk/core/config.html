@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.abi.explicit_enum_value &mdash; multiversx-sdk 0.19.0 documentation</title>
+  <title>multiversx_sdk.core.config &mdash; multiversx-sdk 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -59,7 +59,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">multiversx_sdk.abi.explicit_enum_value</li>
+      <li class="breadcrumb-item active">multiversx_sdk.core.config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,20 +68,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for multiversx_sdk.abi.explicit_enum_value</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
-
-<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.string_value</span> <span class="kn">import</span> <span class="n">StringValue</span>
+  <h1>Source code for multiversx_sdk.core.config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
 
-<div class="viewcode-block" id="ExplicitEnumValue">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.explicit_enum_value.ExplicitEnumValue">[docs]</a>
-<span class="k">class</span> <span class="nc">ExplicitEnumValue</span><span class="p">(</span><span class="n">StringValue</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+<div class="viewcode-block" id="LibraryConfig">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.LibraryConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LibraryConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Global configuration of the library.</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ExplicitEnumValue</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span></div>
+<span class="sd">    Generally speaking, this configuration should only be altered in exotic use cases.</span>
+<span class="sd">    It can be seen as a collection of constants or, more precisely, variables that are rarely changed and used throughout the library.</span>
+
+<span class="sd">    Never alter the configuration within a library!</span>
+<span class="sd">    Only alter the configuration, if needed, within a final application that uses this library.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The human-readable part of the bech32 addresses</span>
+    <span class="n">default_address_hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;erd&quot;</span></div>
 
 </pre></div>
 

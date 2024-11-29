@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.address &mdash; multiversx-sdk 0.11.0 documentation</title>
+  <title>multiversx_sdk.core.address &mdash; multiversx-sdk 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f3b36f1a"></script>
+      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -70,12 +70,13 @@
              
   <h1>Source code for multiversx_sdk.core.address</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">Cryptodome.Hash</span> <span class="kn">import</span> <span class="n">keccak</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core</span> <span class="kn">import</span> <span class="n">bech32</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_HRP</span><span class="p">,</span> <span class="n">METACHAIN_ID</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.config</span> <span class="kn">import</span> <span class="n">LibraryConfig</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">METACHAIN_ID</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">ErrBadAddress</span><span class="p">,</span> <span class="n">ErrBadPubkeyLength</span>
 
 <span class="n">SC_HEX_PUBKEY_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span> <span class="o">*</span> <span class="mi">16</span>
@@ -108,7 +109,7 @@
 <span class="k">class</span> <span class="nc">Address</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An Address, as an immutable object.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object, given a sequence of bytes and the human readable part(hrp).</span>
 
 <span class="sd">        Args:</span>
@@ -118,7 +119,7 @@
             <span class="k">raise</span> <span class="n">ErrBadPubkeyLength</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pubkey</span><span class="p">),</span> <span class="n">PUBKEY_LENGTH</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">pubkey</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">hrp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">hrp</span> <span class="k">if</span> <span class="n">hrp</span> <span class="k">else</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
 
 <div class="viewcode-block" id="Address.new_from_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.new_from_bech32">[docs]</a>
@@ -143,7 +144,7 @@
 <div class="viewcode-block" id="Address.new_from_hex">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.new_from_hex">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">new_from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Address&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new_from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Address&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object from the hexed sequence of bytes and the human readable part(hrp).</span>
 
 <span class="sd">        Args:</span>
@@ -231,12 +232,12 @@
 <span class="k">class</span> <span class="nc">AddressFactory</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A factory used to create address objects.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_HRP</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;All the addresses created with the factory have the same human readable part</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            hrp (str): the human readable part of the address (default: erd)&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">hrp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">hrp</span> <span class="k">if</span> <span class="n">hrp</span> <span class="k">else</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
 
 <div class="viewcode-block" id="AddressFactory.create_from_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressFactory.create_from_bech32">[docs]</a>

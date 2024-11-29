@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.abi.code_metadata_value &mdash; multiversx-sdk 0.11.0 documentation</title>
+  <title>multiversx_sdk.abi.code_metadata_value &mdash; multiversx-sdk 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f3b36f1a"></script>
+      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -78,32 +78,32 @@
 
 
 <div class="viewcode-block" id="CodeMetadataValue">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue">[docs]</a>
 <span class="k">class</span> <span class="nc">CodeMetadataValue</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
 <div class="viewcode-block" id="CodeMetadataValue.new_from_code_metadata">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.new_from_code_metadata">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue.new_from_code_metadata">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">new_from_code_metadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">code_metadata</span><span class="p">:</span> <span class="n">CodeMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CodeMetadataValue&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">code_metadata</span><span class="o">.</span><span class="n">serialize</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="CodeMetadataValue.encode_nested">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.encode_nested">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue.encode_nested">[docs]</a>
     <span class="k">def</span> <span class="nf">encode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writer</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CodeMetadataValue.encode_top_level">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.encode_top_level">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue.encode_top_level">[docs]</a>
     <span class="k">def</span> <span class="nf">encode_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writer</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CodeMetadataValue.decode_nested">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.decode_nested">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue.decode_nested">[docs]</a>
     <span class="k">def</span> <span class="nf">decode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">CODE_METADATA_LENGTH</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
@@ -111,13 +111,13 @@
 
 
 <div class="viewcode-block" id="CodeMetadataValue.decode_top_level">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.decode_top_level">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue.decode_top_level">[docs]</a>
     <span class="k">def</span> <span class="nf">decode_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">data</span></div>
 
 
 <div class="viewcode-block" id="CodeMetadataValue.set_payload">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.set_payload">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue.set_payload">[docs]</a>
     <span class="k">def</span> <span class="nf">set_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">CodeMetadata</span><span class="o">.</span><span class="n">new_from_bytes</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
@@ -138,7 +138,7 @@
         <span class="k">return</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">hex_value</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CodeMetadataValue.get_payload">
-<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.CodeMetadataValue.get_payload">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.code_metadata_value.CodeMetadataValue.get_payload">[docs]</a>
     <span class="k">def</span> <span class="nf">get_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
 

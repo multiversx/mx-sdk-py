@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory &mdash; multiversx-sdk 0.11.0 documentation</title>
+  <title>multiversx_sdk.core.transactions_factories.smart_contract_transactions_factory &mdash; multiversx-sdk 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=f3b36f1a"></script>
+      <script src="../../../../_static/documentation_options.js?v=cbfb3150"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -77,7 +77,7 @@
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.code_metadata</span> <span class="kn">import</span> <span class="n">CodeMetadata</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ARGS_SEPARATOR</span><span class="p">,</span>
-                                           <span class="n">CONTRACT_DEPLOY_ADDRESS</span><span class="p">,</span>
+                                           <span class="n">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="p">,</span>
                                            <span class="n">VM_TYPE_WASM_VM</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.serializer</span> <span class="kn">import</span> <span class="n">arg_to_string</span><span class="p">,</span> <span class="n">args_to_buffers</span>
@@ -162,7 +162,7 @@
         <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">CONTRACT_DEPLOY_ADDRESS</span><span class="p">),</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="p">),</span>
             <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
             <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
             <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>

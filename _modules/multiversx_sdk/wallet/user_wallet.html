@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.wallet.user_wallet &mdash; multiversx-sdk 0.11.0 documentation</title>
+  <title>multiversx_sdk.wallet.user_wallet &mdash; multiversx-sdk 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f3b36f1a"></script>
+      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -211,14 +211,12 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserWallet.to_dict">[docs]</a>
     <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">UserWalletKind</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">address_hrp</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;address_hrp must be provided when kind == &#39;secretKey&#39;&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dict_when_kind_is_secret_key</span><span class="p">(</span><span class="n">address_hrp</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dict_when_kind_is_mnemonic</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_to_dict_when_kind_is_secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_to_dict_when_kind_is_secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">public_key_when_kind_is_secret_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Public key isn&#39;t available&quot;</span><span class="p">)</span>
 

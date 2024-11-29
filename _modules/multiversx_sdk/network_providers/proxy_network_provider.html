@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.network_providers.proxy_network_provider &mdash; multiversx-sdk 0.11.0 documentation</title>
+  <title>multiversx_sdk.network_providers.proxy_network_provider &mdash; multiversx-sdk 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f3b36f1a"></script>
+      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -75,14 +75,13 @@
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">requests.auth</span> <span class="kn">import</span> <span class="n">AuthBase</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.converters.transactions_converter</span> <span class="kn">import</span> \
-    <span class="n">TransactionsConverter</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.config</span> <span class="kn">import</span> <span class="n">LibraryConfig</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">ESDT_CONTRACT_ADDRESS_HEX</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.accounts</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AccountOnNetwork</span><span class="p">,</span>
                                                        <span class="n">GuardianData</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.config</span> <span class="kn">import</span> <span class="n">NetworkProviderConfig</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BASE_USER_AGENT</span><span class="p">,</span>
-                                                        <span class="n">DEFAULT_ADDRESS_HRP</span><span class="p">,</span>
-                                                        <span class="n">ESDT_CONTRACT_ADDRESS</span><span class="p">,</span>
                                                         <span class="n">METACHAIN_ID</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.contract_query_requests</span> <span class="kn">import</span> \
     <span class="n">ContractQueryRequest</span>
@@ -101,7 +100,7 @@
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transaction_status</span> <span class="kn">import</span> \
     <span class="n">TransactionStatus</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transactions</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ITransaction</span><span class="p">,</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span>
+    <span class="n">ITransaction</span><span class="p">,</span> <span class="n">TransactionOnNetwork</span><span class="p">,</span> <span class="n">transaction_to_dictionary</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.user_agent</span> <span class="kn">import</span> <span class="n">extend_user_agent</span>
 
 
@@ -112,13 +111,12 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">auth</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AuthBase</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_ADDRESS_HRP</span><span class="p">,</span>
+            <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NetworkProviderConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">auth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span> <span class="o">=</span> <span class="n">address_hrp</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span> <span class="o">=</span> <span class="n">address_hrp</span> <span class="ow">or</span> <span class="n">DEFAULT_ADDRESS_HRP</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span> <span class="o">=</span> <span class="n">address_hrp</span> <span class="ow">or</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">NetworkProviderConfig</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">user_agent_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_USER_AGENT</span><span class="si">}</span><span class="s2">/proxy&quot;</span>
@@ -236,16 +234,14 @@
 <div class="viewcode-block" id="ProxyNetworkProvider.send_transaction">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.send_transaction">[docs]</a>
     <span class="k">def</span> <span class="nf">send_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">transactions_converter</span> <span class="o">=</span> <span class="n">TransactionsConverter</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;transaction/send&#39;</span><span class="p">,</span> <span class="n">transactions_converter</span><span class="o">.</span><span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;transaction/send&#39;</span><span class="p">,</span> <span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;txHash&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider.send_transactions">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.send_transactions">[docs]</a>
     <span class="k">def</span> <span class="nf">send_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ITransaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-        <span class="n">transactions_converter</span> <span class="o">=</span> <span class="n">TransactionsConverter</span><span class="p">()</span>
-        <span class="n">transactions_as_dictionaries</span> <span class="o">=</span> <span class="p">[</span><span class="n">transactions_converter</span><span class="o">.</span><span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span> <span class="k">for</span> <span class="n">transaction</span> <span class="ow">in</span> <span class="n">transactions</span><span class="p">]</span>
+        <span class="n">transactions_as_dictionaries</span> <span class="o">=</span> <span class="p">[</span><span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span> <span class="k">for</span> <span class="n">transaction</span> <span class="ow">in</span> <span class="n">transactions</span><span class="p">]</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;transaction/send-multiple&#39;</span><span class="p">,</span> <span class="n">transactions_as_dictionaries</span><span class="p">)</span>
         <span class="c1"># Proxy and Observers have different response format:</span>
         <span class="n">num_sent</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numOfSentTxs&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;txsSent&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -271,7 +267,7 @@
 
     <span class="k">def</span> <span class="nf">__get_token_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
         <span class="n">encoded_identifier</span> <span class="o">=</span> <span class="n">identifier</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">ContractQuery</span><span class="p">(</span><span class="n">ESDT_CONTRACT_ADDRESS</span><span class="p">,</span> <span class="s1">&#39;getTokenProperties&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">encoded_identifier</span><span class="p">])</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">ContractQuery</span><span class="p">(</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">ESDT_CONTRACT_ADDRESS_HEX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">),</span> <span class="s1">&#39;getTokenProperties&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">encoded_identifier</span><span class="p">])</span>
         <span class="n">query_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_contract</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="n">properties</span> <span class="o">=</span> <span class="n">query_response</span><span class="o">.</span><span class="n">get_return_data_parts</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">properties</span>
@@ -288,8 +284,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.simulate_transaction">[docs]</a>
     <span class="k">def</span> <span class="nf">simulate_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimulateResponse</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;transaction/simulate&quot;</span>
-        <span class="n">transactions_converter</span> <span class="o">=</span> <span class="n">TransactionsConverter</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transactions_converter</span><span class="o">.</span><span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">SimulateResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
 
 
