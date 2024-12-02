@@ -6,8 +6,6 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 
-DEFAULT_HRP = "erd"
-
 
 class IAddress(Protocol):
     """For internal use only"""
@@ -143,7 +141,7 @@ class TransactionDecoder:
         collection_identifier = self.hex_to_string(args[0])
         nonce = args[1]
         value = self.hex_to_number(args[2])
-        receiver = Address.new_from_hex(args[3], DEFAULT_HRP)
+        receiver = Address.new_from_hex(args[3])
 
         result = TransactionMetadata()
         result.sender = metadata.sender
@@ -178,7 +176,7 @@ class TransactionDecoder:
         if not self.is_address_valid(args[0]):
             return None
 
-        receiver = Address.new_from_hex(args[0], DEFAULT_HRP)
+        receiver = Address.new_from_hex(args[0])
         transfer_count = self.hex_to_number(args[1])
 
         result = TransactionMetadata()

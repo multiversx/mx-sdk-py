@@ -5,7 +5,7 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core import (Address, SmartContractResult,
                                  TransactionEvent, TransactionOnNetwork,
                                  find_events_by_identifier)
-from multiversx_sdk.core.constants import ARGS_SEPARATOR, DEFAULT_HRP
+from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_types import (
     DeployedSmartContract, ParsedSmartContractCallOutcome,
     SmartContractDeployOutcome)
@@ -202,8 +202,8 @@ class SmartContractTransactionsOutcomeParser:
 
         code_hash_topic = event.topics[2] if event.topics[2] else b''
 
-        contract_address = Address(contract_address_topic, DEFAULT_HRP)
-        owner_address = Address(owner_address_topic, DEFAULT_HRP)
+        contract_address = Address(contract_address_topic)
+        owner_address = Address(owner_address_topic)
         code_hash = code_hash_topic
 
         return DeployedSmartContract(contract_address, owner_address, code_hash)
