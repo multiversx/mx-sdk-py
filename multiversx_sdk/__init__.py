@@ -2,12 +2,13 @@ from multiversx_sdk.account_management import (AccountController,
                                                AccountTransactionsFactory)
 from multiversx_sdk.accounts import Account
 from multiversx_sdk.core import (Address, AddressComputer, AddressFactory,
-                                 CodeMetadata, Message, MessageComputer,
-                                 SmartContractResult, Token, TokenComputer,
-                                 TokenIdentifierParts, TokenTransfer,
-                                 Transaction, TransactionComputer,
-                                 TransactionEvent, TransactionEventsParser,
-                                 TransactionLogs, TransactionOnNetwork,
+                                 CodeMetadata, LibraryConfig, Message,
+                                 MessageComputer, SmartContractResult, Token,
+                                 TokenComputer, TokenIdentifierParts,
+                                 TokenTransfer, Transaction,
+                                 TransactionComputer, TransactionEvent,
+                                 TransactionEventsParser, TransactionLogs,
+                                 TransactionOnNetwork,
                                  TransactionsFactoryConfig, TransactionStatus,
                                  find_events_by_first_topic,
                                  find_events_by_identifier)
@@ -80,5 +81,6 @@ __all__ = [
     "BurnQuantityOutcome", "TransactionOnNetwork", "TransactionStatus", "ParsedSmartContractCallOutcome",
     "AccountOnNetwork", "AccountStorage", "AccountStorageEntry", "AwaitingOptions", "BlockCoordinates",
     "BlockOnNetwork", "FungibleTokenMetadata", "GetBlockArguments", "NetworkConfig", "NetworkStatus",
-    "TokenAmountOnNetwork", "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter"
+    "TokenAmountOnNetwork", "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter",
+    "LibraryConfig"
 ]

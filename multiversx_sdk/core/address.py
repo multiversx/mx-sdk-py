@@ -1,9 +1,11 @@
 import logging
+from typing import Optional
 
 from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core import bech32
-from multiversx_sdk.core.constants import DEFAULT_HRP, METACHAIN_ID
+from multiversx_sdk.core.config import LibraryConfig
+from multiversx_sdk.core.constants import METACHAIN_ID
 from multiversx_sdk.core.errors import BadAddressError, BadPubkeyLengthError
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
@@ -15,7 +17,7 @@ logger = logging.getLogger("address")
 class Address:
     """An Address, as an immutable object."""
 
-    def __init__(self, pubkey: bytes, hrp: str) -> None:
+    def __init__(self, pubkey: bytes, hrp: Optional[str] = None) -> None:
         """Creates an address object, given a sequence of bytes and the human readable part(hrp).
 
         Args:
@@ -25,14 +27,14 @@ class Address:
         # used for creating an empty address
         if not len(pubkey):
             self.pubkey = bytes()
-            self.hrp = DEFAULT_HRP
+            self.hrp = LibraryConfig.default_address_hrp
             return
 
         if len(pubkey) != PUBKEY_LENGTH:
             raise BadPubkeyLengthError(len(pubkey), PUBKEY_LENGTH)
 
         self.pubkey = bytes(pubkey)
-        self.hrp = hrp
+        self.hrp = hrp if hrp else LibraryConfig.default_address_hrp
 
     @classmethod
     def empty(cls,) -> 'Address':
@@ -57,7 +59,7 @@ class Address:
         return Address.new_from_bech32(value)
 
     @classmethod
-    def new_from_hex(cls, value: str, hrp: str) -> 'Address':
+    def new_from_hex(cls, value: str, hrp: Optional[str] = None) -> 'Address':
         """Creates an address object from the hexed sequence of bytes and the human readable part(hrp).
 
         Args:
@@ -118,12 +120,12 @@ class Address:
 class AddressFactory:
     """A factory used to create address objects."""
 
-    def __init__(self, hrp: str = DEFAULT_HRP) -> None:
+    def __init__(self, hrp: Optional[str] = None) -> None:
         """All the addresses created with the factory have the same human readable part
 
         Args:
             hrp (str): the human readable part of the address (default: erd)"""
-        self.hrp = hrp
+        self.hrp = hrp if hrp else LibraryConfig.default_address_hrp
 
     def create_from_bech32(self, value: str) -> Address:
         """Creates an address object from the bech32 representation of an address"""

@@ -1,3 +1,5 @@
+from typing import Optional
+
 import nacl.signing
 
 from multiversx_sdk.core.address import Address
@@ -62,7 +64,7 @@ class UserPublicKey:
         except Exception:
             return False
 
-    def to_address(self, hrp: str) -> Address:
+    def to_address(self, hrp: Optional[str] = None) -> Address:
         return Address(self.buffer, hrp)
 
     def hex(self) -> str:

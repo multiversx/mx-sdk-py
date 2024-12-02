@@ -8,7 +8,7 @@ from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS
+from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS_HEX
 from multiversx_sdk.network_providers.api_network_provider import \
     ApiNetworkProvider
 from multiversx_sdk.smart_contracts.smart_contract_controller import \
@@ -38,7 +38,7 @@ class TestSmartContractQueriesController:
         )
 
         assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-        assert transaction.receiver.to_bech32() == CONTRACT_DEPLOY_ADDRESS
+        assert transaction.receiver.to_bech32() == Address.new_from_hex(CONTRACT_DEPLOY_ADDRESS_HEX).to_bech32()
         assert transaction.data == f"{self.bytecode.hex()}@0500@0504@01".encode()
         assert transaction.gas_limit == gas_limit
         assert transaction.value == 0

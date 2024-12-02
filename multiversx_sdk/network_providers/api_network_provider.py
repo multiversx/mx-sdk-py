@@ -5,7 +5,8 @@ import requests
 
 from multiversx_sdk.core import (Address, Token, TokenComputer, Transaction,
                                  TransactionOnNetwork)
-from multiversx_sdk.core.constants import DEFAULT_HRP, METACHAIN_ID
+from multiversx_sdk.core.config import LibraryConfig
+from multiversx_sdk.core.constants import METACHAIN_ID
 from multiversx_sdk.network_providers.account_awaiter import AccountAwaiter
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import (
@@ -44,7 +45,7 @@ class ApiNetworkProvider(INetworkProvider):
                  address_hrp: Optional[str] = None,
                  config: Optional[NetworkProviderConfig] = None) -> None:
         self.url = url
-        self.address_hrp = address_hrp or DEFAULT_HRP
+        self.address_hrp = address_hrp or LibraryConfig.default_address_hrp
         self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
         self.config = config if config is not None else NetworkProviderConfig()
 

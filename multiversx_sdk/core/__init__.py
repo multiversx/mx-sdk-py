@@ -1,6 +1,7 @@
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory)
 from multiversx_sdk.core.code_metadata import CodeMetadata
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.core.tokens import (Token, TokenComputer,
                                         TokenIdentifierParts, TokenTransfer)
@@ -22,5 +23,6 @@ __all__ = [
     "Token", "TokenComputer", "TokenTransfer", "TokenIdentifierParts",
     "SmartContractResult", "TransactionEvent", "TransactionLogs",
     "TransactionOnNetwork", "TransactionStatus", "TransactionsFactoryConfig",
-    "find_events_by_identifier", "find_events_by_first_topic", "TransactionEventsParser"
+    "find_events_by_identifier", "find_events_by_first_topic", "TransactionEventsParser",
+    "LibraryConfig"
 ]

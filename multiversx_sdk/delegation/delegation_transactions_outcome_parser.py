@@ -1,7 +1,7 @@
 from multiversx_sdk.core import (Address, TransactionEvent,
                                  TransactionOnNetwork,
                                  find_events_by_identifier)
-from multiversx_sdk.core.constants import DEFAULT_HRP
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.errors import ParseTransactionOnNetworkError
 from multiversx_sdk.delegation.delegation_transactions_outcome_parser_types import \
     CreateNewDelegationContractOutcome
@@ -29,4 +29,4 @@ class DelegationTransactionsOutcomeParser:
     def _extract_contract_address(self, event: TransactionEvent) -> Address:
         if not event.topics[0]:
             raise Exception("No topic found for contract address")
-        return Address(event.topics[0], DEFAULT_HRP)
+        return Address(event.topics[0], LibraryConfig.default_address_hrp)

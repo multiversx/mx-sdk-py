@@ -1,14 +1,15 @@
 from dataclasses import dataclass, field
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import DEFAULT_HRP
+from multiversx_sdk.core.config import LibraryConfig
+from multiversx_sdk.core.constants import ESDT_CONTRACT_ADDRESS_HEX
 
 
 @dataclass
 class TransactionsFactoryConfig:
     # General-purpose configuration
     chain_id: str
-    address_hrp: str = DEFAULT_HRP
+    address_hrp: str = LibraryConfig.default_address_hrp
     min_gas_limit: int = 50_000
     gas_limit_per_byte: int = 1_500
 
@@ -43,8 +44,7 @@ class TransactionsFactoryConfig:
     gas_limit_stop_nft_create: int = 60_000_000
     gas_limit_wipe_single_nft: int = 60_000_000
     gas_limit_esdt_nft_add_uri: int = 10_000_000
-    esdt_contract_address: Address = field(default_factory=lambda: Address.new_from_bech32(
-        "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"))
+    esdt_contract_address: Address = field(default_factory=lambda: Address.new_from_hex(value=ESDT_CONTRACT_ADDRESS_HEX))
 
     # Configuration for delegation operations
     gas_limit_stake: int = 5_000_000
