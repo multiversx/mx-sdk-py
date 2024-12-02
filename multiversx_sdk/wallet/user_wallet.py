@@ -112,13 +112,11 @@ class UserWallet:
 
     def to_dict(self, address_hrp: Optional[str] = None) -> Dict[str, Any]:
         if self.kind == UserWalletKind.SECRET_KEY.value:
-            if not address_hrp:
-                raise Exception("address_hrp must be provided when kind == 'secretKey'")
             return self._to_dict_when_kind_is_secret_key(address_hrp)
 
         return self._to_dict_when_kind_is_mnemonic()
 
-    def _to_dict_when_kind_is_secret_key(self, address_hrp: str) -> Dict[str, Any]:
+    def _to_dict_when_kind_is_secret_key(self, address_hrp: Optional[str] = None) -> Dict[str, Any]:
         if self.public_key_when_kind_is_secret_key is None:
             raise Exception("Public key isn't available")
 

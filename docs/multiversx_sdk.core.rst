@@ -56,6 +56,14 @@ multiversx\_sdk.core.codec module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.core.config module
+----------------------------------
+
+.. automodule:: multiversx_sdk.core.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.core.contract\_query module
 -------------------------------------------
 

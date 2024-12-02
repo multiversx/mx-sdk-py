@@ -188,6 +188,14 @@ multiversx\_sdk.network\_providers.transactions module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.network\_providers.user\_agent module
+-----------------------------------------------------
+
+.. automodule:: multiversx_sdk.network_providers.user_agent
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.network\_providers.utils module
 -----------------------------------------------
 

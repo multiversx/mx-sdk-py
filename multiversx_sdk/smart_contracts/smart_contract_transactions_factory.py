@@ -12,7 +12,7 @@ from multiversx_sdk.builders.token_transfers_data_builder import \
 from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import (Address, CodeMetadata, TokenComputer,
                                  TokenTransfer, Transaction)
-from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS,
+from multiversx_sdk.core.constants import (CONTRACT_DEPLOY_ADDRESS_HEX,
                                            VM_TYPE_WASM_VM)
 from multiversx_sdk.core.transactions_factory_config import \
     TransactionsFactoryConfig
@@ -54,7 +54,7 @@ class SmartContractTransactionsFactory:
         return TransactionBuilder(
             config=self.config,
             sender=sender,
-            receiver=Address.new_from_bech32(CONTRACT_DEPLOY_ADDRESS),
+            receiver=Address.new_from_hex(CONTRACT_DEPLOY_ADDRESS_HEX),
             data_parts=parts,
             gas_limit=gas_limit,
             add_data_movement_gas=False,

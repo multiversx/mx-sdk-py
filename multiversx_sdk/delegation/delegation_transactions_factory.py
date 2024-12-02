@@ -5,7 +5,7 @@ from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, Transaction
-from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS
+from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS_HEX
 from multiversx_sdk.core.interfaces import IValidatorPublicKey
 from multiversx_sdk.core.transactions_factory_config import \
     TransactionsFactoryConfig
@@ -34,7 +34,7 @@ class DelegationTransactionsFactory:
         transaction = TransactionBuilder(
             config=self.config,
             sender=sender,
-            receiver=Address.new_from_bech32(DELEGATION_MANAGER_SC_ADDRESS),
+            receiver=Address.new_from_hex(DELEGATION_MANAGER_SC_ADDRESS_HEX),
             data_parts=parts,
             gas_limit=self.config.gas_limit_create_delegation_contract + self.config.additional_gas_for_delegation_operations,
             add_data_movement_gas=True,
