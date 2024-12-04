@@ -79,10 +79,10 @@ class TestEntrypoint:
         sender = Account.new_from_pem(self.alice_pem)
         sender.nonce = self.entrypoint.recall_account_nonce(sender.address)
 
-        factory = self.entrypoint.create_account_factory()
+        factory = self.entrypoint.create_account_transactions_factory()
         transaction = factory.create_transaction_for_saving_key_value(
             sender=sender.address,
-            key_value_pairs={ "key".encode(): "pair".encode()}
+            key_value_pairs={"key".encode(): "pair".encode()}
         )
 
         assert transaction.chain_id == "D"

@@ -108,37 +108,37 @@ class NetworkEntrypoint:
     def create_delegation_controller(self) -> DelegationController:
         return DelegationController(self.chain_id, self.network_provider)
 
-    def create_delegation_factory(self) -> DelegationTransactionsFactory:
+    def create_delegation_transactions_factory(self) -> DelegationTransactionsFactory:
         return DelegationTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_account_controller(self) -> AccountController:
         return AccountController(self.chain_id)
 
-    def create_account_factory(self) -> AccountTransactionsFactory:
+    def create_account_transactions_factory(self) -> AccountTransactionsFactory:
         return AccountTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_relayed_controller(self) -> RelayedController:
         return RelayedController(self.chain_id)
 
-    def create_relayed_factory(self) -> RelayedTransactionsFactory:
+    def create_relayed_transactions_factory(self) -> RelayedTransactionsFactory:
         return RelayedTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
         return SmartContractController(self.chain_id, self.network_provider, abi)
 
-    def create_smart_contract_factory(self, abi: Optional[Abi] = None) -> SmartContractTransactionsFactory:
+    def create_smart_contract_transactions_factory(self, abi: Optional[Abi] = None) -> SmartContractTransactionsFactory:
         return SmartContractTransactionsFactory(config=TransactionsFactoryConfig(self.chain_id), abi=abi)
 
     def create_token_management_controller(self) -> TokenManagementController:
         return TokenManagementController(self.chain_id, self.network_provider)
 
-    def create_token_management_factory(self) -> TokenManagementTransactionsFactory:
+    def create_token_management_transactions_factory(self) -> TokenManagementTransactionsFactory:
         return TokenManagementTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_transfers_controller(self) -> TransfersController:
         return TransfersController(self.chain_id)
 
-    def create_transfers_factory(self) -> TransferTransactionsFactory:
+    def create_transfers_transactions_factory(self) -> TransferTransactionsFactory:
         return TransferTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
 
