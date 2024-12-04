@@ -30,13 +30,21 @@ class DelegationController:
                                                        nonce: int,
                                                        total_delegation_cap: int,
                                                        service_fee: int,
-                                                       amount: int) -> Transaction:
+                                                       amount: int,
+                                                       guardian: Optional[Address] = None,
+                                                       relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_new_delegation_contract(
             sender=sender.address,
             total_delegation_cap=total_delegation_cap,
             service_fee=service_fee,
             amount=amount
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -57,13 +65,21 @@ class DelegationController:
                                             nonce: int,
                                             delegation_contract: Address,
                                             public_keys: Sequence[IValidatorPublicKey],
-                                            signed_messages: Sequence[bytes]) -> Transaction:
+                                            signed_messages: Sequence[bytes],
+                                            guardian: Optional[Address] = None,
+                                            relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_adding_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys,
             signed_messages=signed_messages
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -74,12 +90,20 @@ class DelegationController:
                                               sender: IAccount,
                                               nonce: int,
                                               delegation_contract: Address,
-                                              public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                              public_keys: Sequence[IValidatorPublicKey],
+                                              guardian: Optional[Address] = None,
+                                              relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_removing_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -90,12 +114,20 @@ class DelegationController:
                                              sender: IAccount,
                                              nonce: int,
                                              delegation_contract: Address,
-                                             public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                             public_keys: Sequence[IValidatorPublicKey],
+                                             guardian: Optional[Address] = None,
+                                             relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_staking_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -106,12 +138,20 @@ class DelegationController:
                                                sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                               public_keys: Sequence[IValidatorPublicKey],
+                                               guardian: Optional[Address] = None,
+                                               relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unbonding_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -122,12 +162,20 @@ class DelegationController:
                                                sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                               public_keys: Sequence[IValidatorPublicKey],
+                                               guardian: Optional[Address] = None,
+                                               relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unstaking_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -139,13 +187,21 @@ class DelegationController:
                                                nonce: int,
                                                delegation_contract: Address,
                                                public_keys: Sequence[IValidatorPublicKey],
-                                               amount: int) -> Transaction:
+                                               amount: int,
+                                               guardian: Optional[Address] = None,
+                                               relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unjailing_nodes(
             sender=sender.address,
             delegation_contract=delegation_contract,
             public_keys=public_keys,
             amount=amount
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -156,12 +212,20 @@ class DelegationController:
                                                     sender: IAccount,
                                                     nonce: int,
                                                     delegation_contract: Address,
-                                                    service_fee: int) -> Transaction:
+                                                    service_fee: int,
+                                                    guardian: Optional[Address] = None,
+                                                    relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_changing_service_fee(
             sender=sender.address,
             delegation_contract=delegation_contract,
             service_fee=service_fee
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -172,12 +236,20 @@ class DelegationController:
                                                         sender: IAccount,
                                                         nonce: int,
                                                         delegation_contract: Address,
-                                                        delegation_cap: int) -> Transaction:
+                                                        delegation_cap: int,
+                                                        guardian: Optional[Address] = None,
+                                                        relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_modifying_delegation_cap(
             sender=sender.address,
             delegation_contract=delegation_contract,
             delegation_cap=delegation_cap
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -187,25 +259,42 @@ class DelegationController:
     def create_transaction_for_setting_automatic_activation(self,
                                                             sender: IAccount,
                                                             nonce: int,
-                                                            delegation_contract: Address) -> Transaction:
+                                                            delegation_contract: Address,
+                                                            guardian: Optional[Address] = None,
+                                                            relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_automatic_activation(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
 
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
+
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_unsetting_automatic_activation(self,
                                                               sender: IAccount,
                                                               nonce: int,
-                                                              delegation_contract: Address) -> Transaction:
+                                                              delegation_contract: Address,
+                                                              guardian: Optional[Address] = None,
+                                                              relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_automatic_activation(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -215,11 +304,19 @@ class DelegationController:
     def create_transaction_for_setting_cap_check_on_redelegate_rewards(self,
                                                                        sender: IAccount,
                                                                        nonce: int,
-                                                                       delegation_contract: Address) -> Transaction:
+                                                                       delegation_contract: Address,
+                                                                       guardian: Optional[Address] = None,
+                                                                       relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_cap_check_on_redelegate_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -229,11 +326,19 @@ class DelegationController:
     def create_transaction_for_unsetting_cap_check_on_redelegate_rewards(self,
                                                                          sender: IAccount,
                                                                          nonce: int,
-                                                                         delegation_contract: Address) -> Transaction:
+                                                                         delegation_contract: Address,
+                                                                         guardian: Optional[Address] = None,
+                                                                         relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -246,7 +351,9 @@ class DelegationController:
                                                 delegation_contract: Address,
                                                 name: str,
                                                 website: str,
-                                                identifier: str) -> Transaction:
+                                                identifier: str,
+                                                guardian: Optional[Address] = None,
+                                                relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_metadata(
             sender=sender.address,
             delegation_contract=delegation_contract,
@@ -254,6 +361,12 @@ class DelegationController:
             website=website,
             identifier=identifier
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -264,26 +377,43 @@ class DelegationController:
                                           sender: IAccount,
                                           nonce: int,
                                           delegation_contract: Address,
-                                          amount: int) -> Transaction:
+                                          amount: int,
+                                          guardian: Optional[Address] = None,
+                                          relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_delegating(
             sender=sender.address,
             delegation_contract=delegation_contract,
             amount=amount
         )
 
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
+
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_claiming_rewards(self,
                                                 sender: IAccount,
                                                 nonce: int,
-                                                delegation_contract: Address) -> Transaction:
+                                                delegation_contract: Address,
+                                                guardian: Optional[Address] = None,
+                                                relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_claiming_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -293,11 +423,19 @@ class DelegationController:
     def create_transaction_for_redelegating_rewards(self,
                                                     sender: IAccount,
                                                     nonce: int,
-                                                    delegation_contract: Address) -> Transaction:
+                                                    delegation_contract: Address,
+                                                    guardian: Optional[Address] = None,
+                                                    relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_redelegating_rewards(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -308,12 +446,20 @@ class DelegationController:
                                             sender: IAccount,
                                             nonce: int,
                                             delegation_contract: Address,
-                                            amount: int) -> Transaction:
+                                            amount: int,
+                                            guardian: Optional[Address] = None,
+                                            relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_undelegating(
             sender=sender.address,
             delegation_contract=delegation_contract,
             amount=amount
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
@@ -323,11 +469,19 @@ class DelegationController:
     def create_transaction_for_withdrawing(self,
                                            sender: IAccount,
                                            nonce: int,
-                                           delegation_contract: Address) -> Transaction:
+                                           delegation_contract: Address,
+                                           guardian: Optional[Address] = None,
+                                           relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_withdrawing(
             sender=sender.address,
             delegation_contract=delegation_contract
         )
+
+        if guardian:
+            transaction.guardian = guardian
+
+        if relayer:
+            transaction.relayer = relayer
 
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
