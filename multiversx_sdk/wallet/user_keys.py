@@ -49,6 +49,12 @@ class UserSecretKey:
     def __repr__(self) -> str:
         return UserSecretKey.__name__
 
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, UserSecretKey):
+            return False
+
+        return self.buffer == value.buffer
+
 
 class UserPublicKey:
     def __init__(self, buffer: bytes) -> None:
@@ -80,3 +86,9 @@ class UserPublicKey:
 
     def __repr__(self) -> str:
         return self.hex()
+
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, UserPublicKey):
+            return False
+
+        return self.buffer == value.buffer
