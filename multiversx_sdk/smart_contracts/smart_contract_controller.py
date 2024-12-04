@@ -65,12 +65,8 @@ class SmartContractController:
             is_payable_by_sc=is_payable_by_sc
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -111,12 +107,8 @@ class SmartContractController:
             is_payable_by_sc=is_payable_by_sc
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -143,12 +135,8 @@ class SmartContractController:
             token_transfers=token_transfers
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 

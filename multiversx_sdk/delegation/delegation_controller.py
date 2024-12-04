@@ -40,12 +40,8 @@ class DelegationController:
             amount=amount
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -75,12 +71,8 @@ class DelegationController:
             signed_messages=signed_messages
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -99,12 +91,8 @@ class DelegationController:
             public_keys=public_keys
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -123,12 +111,8 @@ class DelegationController:
             public_keys=public_keys
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -147,12 +131,8 @@ class DelegationController:
             public_keys=public_keys
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -171,12 +151,8 @@ class DelegationController:
             public_keys=public_keys
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -197,12 +173,8 @@ class DelegationController:
             amount=amount
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -221,12 +193,8 @@ class DelegationController:
             service_fee=service_fee
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -245,12 +213,8 @@ class DelegationController:
             delegation_cap=delegation_cap
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -267,15 +231,10 @@ class DelegationController:
             delegation_contract=delegation_contract
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -290,12 +249,8 @@ class DelegationController:
             delegation_contract=delegation_contract
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -312,12 +267,8 @@ class DelegationController:
             delegation_contract=delegation_contract
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -334,12 +285,8 @@ class DelegationController:
             delegation_contract=delegation_contract
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -362,12 +309,8 @@ class DelegationController:
             identifier=identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -386,15 +329,10 @@ class DelegationController:
             amount=amount
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -409,12 +347,8 @@ class DelegationController:
             delegation_contract=delegation_contract
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -431,12 +365,8 @@ class DelegationController:
             delegation_contract=delegation_contract
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -455,12 +385,8 @@ class DelegationController:
             amount=amount
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -477,12 +403,8 @@ class DelegationController:
             delegation_contract=delegation_contract
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 

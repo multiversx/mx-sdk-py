@@ -29,15 +29,10 @@ class TransfersController:
             data=data.decode() if data else None
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -54,12 +49,8 @@ class TransfersController:
             token_transfers=token_transfers
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -82,12 +73,8 @@ class TransfersController:
             data=data
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 

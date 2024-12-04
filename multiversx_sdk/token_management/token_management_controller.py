@@ -59,12 +59,8 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -105,12 +101,8 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -151,12 +143,8 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(
             self.tx_computer.compute_bytes_for_signing(transaction))
@@ -199,12 +187,8 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -235,12 +219,8 @@ class TokenManagementController:
             num_decimals=num_decimals,
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -264,12 +244,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -294,12 +270,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -331,12 +303,8 @@ class TokenManagementController:
             add_role_esdt_transfer_role=add_role_esdt_transfer_role
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -370,12 +338,8 @@ class TokenManagementController:
             add_role_esdt_transfer_role=add_role_esdt_transfer_role
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -411,12 +375,8 @@ class TokenManagementController:
             add_role_esdt_transfer_role=add_role_esdt_transfer_role
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -452,12 +412,8 @@ class TokenManagementController:
             uris=uris
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -481,12 +437,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -510,12 +462,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -541,12 +489,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -572,12 +516,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -603,12 +543,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -634,12 +570,8 @@ class TokenManagementController:
             supply_to_mint=supply_to_mint
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -665,12 +597,8 @@ class TokenManagementController:
             supply_to_burn=supply_to_burn
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -698,12 +626,8 @@ class TokenManagementController:
             attributes=attributes
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -731,12 +655,8 @@ class TokenManagementController:
             quantity_to_add=quantity_to_add
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -764,12 +684,8 @@ class TokenManagementController:
             quantity_to_burn=quantity_to_burn
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -795,12 +711,8 @@ class TokenManagementController:
             new_owner=new_owner
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -821,12 +733,8 @@ class TokenManagementController:
             user=user
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -847,12 +755,8 @@ class TokenManagementController:
             user=user
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -871,12 +775,8 @@ class TokenManagementController:
             num_decimals=num_decimals
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -895,12 +795,8 @@ class TokenManagementController:
             user=user
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -917,12 +813,8 @@ class TokenManagementController:
             token_identifier=token_identifier
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -943,12 +835,8 @@ class TokenManagementController:
             user=user
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -967,12 +855,8 @@ class TokenManagementController:
             uris=uris
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 

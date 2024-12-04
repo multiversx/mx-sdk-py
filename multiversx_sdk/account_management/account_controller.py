@@ -24,12 +24,8 @@ class AccountController:
             key_value_pairs=key_value_pairs
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -47,9 +43,7 @@ class AccountController:
             service_id=service_id
         )
 
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -63,9 +57,7 @@ class AccountController:
             sender=sender.address
         )
 
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -80,12 +72,8 @@ class AccountController:
             sender=sender.address
         )
 
-        if guardian:
-            transaction.guardian = guardian
-
-        if relayer:
-            transaction.relayer = relayer
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
