@@ -2,11 +2,17 @@ from typing import Optional, Union
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.account_management import AccountController
+from multiversx_sdk.account_management.account_transactions_factory import \
+    AccountTransactionsFactory
 from multiversx_sdk.accounts import Account
 from multiversx_sdk.core import (Address, Message, MessageComputer,
                                  Transaction, TransactionComputer,
                                  TransactionOnNetwork)
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
 from multiversx_sdk.delegation import DelegationController
+from multiversx_sdk.delegation.delegation_transactions_factory import \
+    DelegationTransactionsFactory
 from multiversx_sdk.entrypoints.config import (DevnetEntrypointConfig,
                                                MainnetEntrypointConfig,
                                                TestnetEntrypointConfig)
@@ -14,10 +20,18 @@ from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
 from multiversx_sdk.network_providers import (ApiNetworkProvider,
                                               ProxyNetworkProvider)
 from multiversx_sdk.relayed.relayed_controller import RelayedController
+from multiversx_sdk.relayed.relayed_transactions_factory import \
+    RelayedTransactionsFactory
 from multiversx_sdk.smart_contracts.smart_contract_controller import \
     SmartContractController
+from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import \
+    SmartContractTransactionsFactory
 from multiversx_sdk.token_management.token_management_controller import \
     TokenManagementController
+from multiversx_sdk.token_management.token_management_transactions_factory import \
+    TokenManagementTransactionsFactory
+from multiversx_sdk.transfers.transfer_transactions_factory import \
+    TransferTransactionsFactory
 from multiversx_sdk.transfers.transfers_controller import TransfersController
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
@@ -94,20 +108,38 @@ class NetworkEntrypoint:
     def create_delegation_controller(self) -> DelegationController:
         return DelegationController(self.chain_id, self.network_provider)
 
+    def create_delegation_transactions_factory(self) -> DelegationTransactionsFactory:
+        return DelegationTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+
     def create_account_controller(self) -> AccountController:
         return AccountController(self.chain_id)
+
+    def create_account_transactions_factory(self) -> AccountTransactionsFactory:
+        return AccountTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_relayed_controller(self) -> RelayedController:
         return RelayedController(self.chain_id)
 
+    def create_relayed_transactions_factory(self) -> RelayedTransactionsFactory:
+        return RelayedTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+
     def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
         return SmartContractController(self.chain_id, self.network_provider, abi)
+
+    def create_smart_contract_transactions_factory(self, abi: Optional[Abi] = None) -> SmartContractTransactionsFactory:
+        return SmartContractTransactionsFactory(config=TransactionsFactoryConfig(self.chain_id), abi=abi)
 
     def create_token_management_controller(self) -> TokenManagementController:
         return TokenManagementController(self.chain_id, self.network_provider)
 
+    def create_token_management_transactions_factory(self) -> TokenManagementTransactionsFactory:
+        return TokenManagementTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+
     def create_transfers_controller(self) -> TransfersController:
         return TransfersController(self.chain_id)
+
+    def create_transfers_transactions_factory(self) -> TransferTransactionsFactory:
+        return TransferTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
 
 class TestnetEntrypoint(NetworkEntrypoint):
