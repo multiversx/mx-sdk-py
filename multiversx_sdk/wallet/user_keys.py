@@ -5,9 +5,8 @@ import nacl.signing
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.wallet.constants import (USER_PUBKEY_LENGTH,
                                              USER_SEED_LENGTH)
-from multiversx_sdk.wallet.errors import (InvalidPublicKeyLength,
+from multiversx_sdk.wallet.errors import (InvalidPublicKeyLengthError,
                                           InvalidSecretKeyLengthError)
-from multiversx_sdk.wallet.interfaces import ISignature
 
 
 class UserSecretKey:
@@ -24,7 +23,7 @@ class UserSecretKey:
         return UserSecretKey(secret_key)
 
     @classmethod
-    def from_string(cls, buffer_hex: str) -> 'UserSecretKey':
+    def new_from_string(cls, buffer_hex: str) -> 'UserSecretKey':
         buffer = bytes.fromhex(buffer_hex)
         return UserSecretKey(buffer)
 
@@ -32,7 +31,7 @@ class UserSecretKey:
         public_key = bytes(nacl.signing.SigningKey(self.buffer).verify_key)
         return UserPublicKey(public_key)
 
-    def sign(self, data: bytes) -> ISignature:
+    def sign(self, data: bytes) -> bytes:
         signing_key = nacl.signing.SigningKey(self.buffer)
         signed = signing_key.sign(data)
         signature = signed.signature
@@ -40,6 +39,9 @@ class UserSecretKey:
 
     def hex(self) -> str:
         return self.buffer.hex()
+
+    def get_bytes(self) -> bytes:
+        return self.buffer
 
     def __str__(self) -> str:
         return UserSecretKey.__name__
@@ -51,11 +53,11 @@ class UserSecretKey:
 class UserPublicKey:
     def __init__(self, buffer: bytes) -> None:
         if len(buffer) != USER_PUBKEY_LENGTH:
-            raise InvalidPublicKeyLength()
+            raise InvalidPublicKeyLengthError()
 
         self.buffer = bytes(buffer)
 
-    def verify(self, data: bytes, signature: ISignature) -> bool:
+    def verify(self, data: bytes, signature: bytes) -> bool:
         verify_key = nacl.signing.VerifyKey(self.buffer)
 
         try:
@@ -66,6 +68,9 @@ class UserPublicKey:
 
     def to_address(self, hrp: Optional[str] = None) -> Address:
         return Address(self.buffer, hrp)
+
+    def get_bytes(self) -> bytes:
+        return self.buffer
 
     def hex(self) -> str:
         return self.buffer.hex()

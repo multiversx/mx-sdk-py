@@ -31,7 +31,7 @@ class InvalidSecretKeyLengthError(Exception):
         super().__init__("Bad length of secret key")
 
 
-class InvalidPublicKeyLength(Exception):
+class InvalidPublicKeyLengthError(Exception):
     def __init__(self) -> None:
         super().__init__("Bad length of public key")
 
