@@ -1,4 +1,3 @@
-from multiversx_sdk.wallet.interfaces import ISignature
 from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
@@ -11,5 +10,5 @@ class ValidatorVerifier:
         public_key = ValidatorPublicKey.from_string(buffer_hex)
         return ValidatorVerifier(public_key)
 
-    def verify(self, data: bytes, signature: ISignature) -> bool:
+    def verify(self, data: bytes, signature: bytes) -> bool:
         return self.public_key.verify(data, signature)

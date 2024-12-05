@@ -30,6 +30,27 @@ class TestEntrypoint:
         assert transaction.signature.hex(
         ) == "69bc7d1777edd0a901e6cf94830475716205c5efdf2fd44d4be31badead59fc8418b34f0aa3b2c80ba14aed5edd30031757d826af58a1abb690a0bee89ba9309"
 
+    def test_native_transfer_with_guardian_and_relayer(self):
+        grace = Account.new_from_pem(self.grace_pem)
+        controller = self.entrypoint.create_transfers_controller()
+        sender = Account.new_from_pem(self.alice_pem)
+        sender.nonce = 77777
+
+        transaction = controller.create_transaction_for_transfer(
+            sender=sender,
+            nonce=sender.get_nonce_then_increment(),
+            receiver=sender.address,
+            native_transfer_amount=0,
+            data="hello".encode(),
+            guardian=grace.address,
+            relayer=grace.address
+        )
+
+        assert transaction.guardian == grace.address
+        assert transaction.relayer == grace.address
+        assert transaction.guardian_signature == b""
+        assert transaction.relayer_signature == b""
+
     @pytest.mark.networkInteraction
     def test_contract_flow(self):
         sender = Account.new_from_pem(self.grace_pem)
@@ -74,3 +95,21 @@ class TestEntrypoint:
 
         assert len(query_result) == 1
         assert query_result[0] == 7
+
+    def test_get_account_factory_and_create_transaction(self):
+        sender = Account.new_from_pem(self.alice_pem)
+        sender.nonce = self.entrypoint.recall_account_nonce(sender.address)
+
+        factory = self.entrypoint.create_account_transactions_factory()
+        transaction = factory.create_transaction_for_saving_key_value(
+            sender=sender.address,
+            key_value_pairs={"key".encode(): "pair".encode()}
+        )
+
+        assert transaction.chain_id == "D"
+
+    def test_create_account(self):
+        account = self.entrypoint.create_account()
+        assert account.address
+        assert len(account.secret_key.get_bytes()) == 32
+        assert len(account.public_key.get_bytes()) == 32
