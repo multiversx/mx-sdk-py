@@ -86,3 +86,9 @@ class TestEntrypoint:
         )
 
         assert transaction.chain_id == "D"
+
+    def test_create_account(self):
+        account = self.entrypoint.create_account()
+        assert account.address
+        assert len(account.secret_key.get_bytes()) == 32
+        assert len(account.public_key.get_bytes()) == 32
