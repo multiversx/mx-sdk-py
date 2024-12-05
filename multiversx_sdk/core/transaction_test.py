@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import \
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
@@ -383,7 +382,7 @@ class TestTransaction:
     def test_relayed_v3(self):
         alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
-        carol = Account(self.carol.secret_key)
+        carol = Address(self.carol.public_key.get_bytes())
 
         transaction = Transaction(
             nonce=90,
@@ -399,5 +398,5 @@ class TestTransaction:
         )
         assert not self.transaction_computer.is_relayed_v3_transaction(transaction)
 
-        transaction.relayer = carol.address
+        transaction.relayer = carol
         assert self.transaction_computer.is_relayed_v3_transaction(transaction)
