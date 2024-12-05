@@ -13,7 +13,6 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.testutils.wallets import load_wallets
 from multiversx_sdk.wallet import UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
-from multiversx_sdk.wallet.user_signer import UserSigner
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
@@ -384,7 +383,7 @@ class TestTransaction:
     def test_relayed_v3(self):
         alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
-        carol = Account(UserSigner(self.carol.secret_key))
+        carol = Account(self.carol.secret_key)
 
         transaction = Transaction(
             nonce=90,

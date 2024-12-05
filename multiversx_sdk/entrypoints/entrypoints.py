@@ -4,7 +4,7 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.account_management import AccountController
 from multiversx_sdk.account_management.account_transactions_factory import \
     AccountTransactionsFactory
-from multiversx_sdk.accounts import Account
+from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core import (Address, Message, MessageComputer,
                                  Transaction, TransactionComputer,
                                  TransactionOnNetwork)
@@ -33,6 +33,7 @@ from multiversx_sdk.token_management.token_management_transactions_factory impor
 from multiversx_sdk.transfers.transfer_transactions_factory import \
     TransferTransactionsFactory
 from multiversx_sdk.transfers.transfers_controller import TransfersController
+from multiversx_sdk.wallet.user_keys import UserSecretKey
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
@@ -50,10 +51,14 @@ class NetworkEntrypoint:
 
         self.chain_id = chain_id
 
-    def sign_transaction(self, transaction: Transaction, account: Account):
-        """Signs the transactions and applies the signature on the transaction."""
-        tx_computer = TransactionComputer()
-        transaction.signature = account.sign(tx_computer.compute_bytes_for_signing(transaction))
+    def create_account(self) -> Account:
+        """Generates a new secret key and instantiates an account."""
+        secret_key = UserSecretKey.generate()
+        return Account(secret_key)
+
+    def get_airdrop(self, address: Address) -> None:
+        """Get xEGLD tokens on Devnet or Testnet."""
+        raise NotImplementedError("The faucet is unavailable at the moment.")
 
     def verify_transaction_signature(self, transaction: Transaction) -> bool:
         verifier = UserVerifier.from_address(transaction.sender)
@@ -63,11 +68,6 @@ class NetworkEntrypoint:
             data=tx_computer.compute_bytes_for_verifying(transaction),
             signature=transaction.signature
         )
-
-    def sign_message(self, message: Message, account: Account):
-        """Signs the message and applies the signature on the message."""
-        message_computer = MessageComputer()
-        message.signature = account.sign(message_computer.compute_bytes_for_signing(message))
 
     def verify_message_signature(self, message: Message) -> bool:
         if message.address is None:
