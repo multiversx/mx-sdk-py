@@ -50,7 +50,9 @@ class SmartContractController:
                                       is_upgradeable: bool = True,
                                       is_readable: bool = True,
                                       is_payable: bool = False,
-                                      is_payable_by_sc: bool = True) -> Transaction:
+                                      is_payable_by_sc: bool = True,
+                                      guardian: Optional[Address] = None,
+                                      relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_deploy(
             sender=sender.address,
             bytecode=bytecode,
@@ -63,6 +65,8 @@ class SmartContractController:
             is_payable_by_sc=is_payable_by_sc
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -87,7 +91,9 @@ class SmartContractController:
                                        is_upgradeable: bool = True,
                                        is_readable: bool = True,
                                        is_payable: bool = False,
-                                       is_payable_by_sc: bool = True) -> Transaction:
+                                       is_payable_by_sc: bool = True,
+                                       guardian: Optional[Address] = None,
+                                       relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_upgrade(
             sender=sender.address,
             contract=contract,
@@ -101,6 +107,8 @@ class SmartContractController:
             is_payable_by_sc=is_payable_by_sc
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -114,7 +122,9 @@ class SmartContractController:
                                        function: str,
                                        arguments: Sequence[Any] = [],
                                        native_transfer_amount: int = 0,
-                                       token_transfers: list[TokenTransfer] = []) -> Transaction:
+                                       token_transfers: list[TokenTransfer] = [],
+                                       guardian: Optional[Address] = None,
+                                       relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
@@ -125,6 +135,8 @@ class SmartContractController:
             token_transfers=token_transfers
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -159,7 +171,8 @@ class SmartContractController:
     def _raise_for_status(self, query_response: SmartContractQueryResponse):
         is_ok = query_response.return_code == "ok"
         if not is_ok:
-            raise SmartContractQueryError(query_response.return_code, query_response.return_message)
+            raise SmartContractQueryError(
+                query_response.return_code, query_response.return_message)
 
     def create_query(self,
                      contract: Address,

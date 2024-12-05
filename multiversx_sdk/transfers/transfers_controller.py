@@ -19,7 +19,9 @@ class TransfersController:
                                                      nonce: int,
                                                      receiver: Address,
                                                      native_transfer_amount: int = 0,
-                                                     data: Optional[bytes] = None) -> Transaction:
+                                                     data: Optional[bytes] = None,
+                                                     guardian: Optional[Address] = None,
+                                                     relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_native_token_transfer(
             sender=sender.address,
             receiver=receiver,
@@ -27,6 +29,8 @@ class TransfersController:
             data=data.decode() if data else None
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -36,13 +40,17 @@ class TransfersController:
                                                    sender: IAccount,
                                                    nonce: int,
                                                    receiver: Address,
-                                                   token_transfers: list[TokenTransfer]) -> Transaction:
+                                                   token_transfers: list[TokenTransfer],
+                                                   guardian: Optional[Address] = None,
+                                                   relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_esdt_token_transfer(
             sender=sender.address,
             receiver=receiver,
             token_transfers=token_transfers
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -54,7 +62,9 @@ class TransfersController:
                                         receiver: Address,
                                         native_transfer_amount: Optional[int] = None,
                                         token_transfers: Optional[list[TokenTransfer]] = None,
-                                        data: Optional[bytes] = None) -> Transaction:
+                                        data: Optional[bytes] = None,
+                                        guardian: Optional[Address] = None,
+                                        relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_transfer(
             sender=sender.address,
             receiver=receiver,
@@ -63,6 +73,8 @@ class TransfersController:
             data=data
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 

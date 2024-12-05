@@ -42,7 +42,9 @@ class TokenManagementController:
                                                 can_pause: bool,
                                                 can_change_owner: bool,
                                                 can_upgrade: bool,
-                                                can_add_special_roles: bool) -> Transaction:
+                                                can_add_special_roles: bool,
+                                                guardian: Optional[Address] = None,
+                                                relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_issuing_fungible(
             sender=sender.address,
             token_name=token_name,
@@ -57,6 +59,8 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -66,7 +70,8 @@ class TokenManagementController:
         return self.parser.parse_issue_fungible(transaction_on_network)
 
     def await_completed_issue_fungible(self, transaction_hash: Union[str, bytes]) -> list[IssueFungibleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(
+            transaction_hash)
         return self.parse_issue_fungible(transaction)
 
     def create_transaction_for_issuing_semi_fungible(self,
@@ -80,7 +85,9 @@ class TokenManagementController:
                                                      can_transfer_nft_create_role: bool,
                                                      can_change_owner: bool,
                                                      can_upgrade: bool,
-                                                     can_add_special_roles: bool) -> Transaction:
+                                                     can_add_special_roles: bool,
+                                                     guardian: Optional[Address] = None,
+                                                     relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_issuing_semi_fungible(
             sender=sender.address,
             token_name=token_name,
@@ -94,6 +101,8 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -118,7 +127,9 @@ class TokenManagementController:
                                                     can_transfer_nft_create_role: bool,
                                                     can_change_owner: bool,
                                                     can_upgrade: bool,
-                                                    can_add_special_roles: bool) -> Transaction:
+                                                    can_add_special_roles: bool,
+                                                    guardian: Optional[Address] = None,
+                                                    relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_issuing_non_fungible(
             sender=sender.address,
             token_name=token_name,
@@ -132,8 +143,11 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -156,7 +170,9 @@ class TokenManagementController:
                                                      can_transfer_nft_create_role: bool,
                                                      can_change_owner: bool,
                                                      can_upgrade: bool,
-                                                     can_add_special_roles: bool) -> Transaction:
+                                                     can_add_special_roles: bool,
+                                                     guardian: Optional[Address] = None,
+                                                     relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_registering_meta_esdt(
             sender=sender.address,
             token_name=token_name,
@@ -171,6 +187,8 @@ class TokenManagementController:
             can_add_special_roles=can_add_special_roles
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -180,7 +198,8 @@ class TokenManagementController:
         return self.parser.parse_register_meta_esdt(transaction_on_network)
 
     def await_completed_register_meta_esdt(self, transaction_hash: Union[str, bytes]) -> list[RegisterMetaEsdtOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(
+            transaction_hash)
         return self.parse_register_meta_esdt(transaction)
 
     def create_transaction_for_registering_and_setting_roles(self,
@@ -189,7 +208,9 @@ class TokenManagementController:
                                                              token_name: str,
                                                              token_ticker: str,
                                                              token_type: TokenType,
-                                                             num_decimals: int) -> Transaction:
+                                                             num_decimals: int,
+                                                             guardian: Optional[Address] = None,
+                                                             relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_registering_and_setting_roles(
             sender=sender.address,
             token_name=token_name,
@@ -198,6 +219,8 @@ class TokenManagementController:
             num_decimals=num_decimals,
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -213,12 +236,16 @@ class TokenManagementController:
     def create_transaction_for_setting_burn_role_globally(self,
                                                           sender: IAccount,
                                                           nonce: int,
-                                                          token_identifier: str) -> Transaction:
+                                                          token_identifier: str,
+                                                          guardian: Optional[Address] = None,
+                                                          relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_burn_role_globally(
             sender=sender.address,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -228,18 +255,23 @@ class TokenManagementController:
         return self.parser.parse_set_burn_role_globally(transaction_on_network)
 
     def await_completed_set_burn_role_globally(self, transaction_hash: Union[str, bytes]):
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(
+            transaction_hash)
         return self.parse_set_burn_role_globally(transaction)
 
     def create_transaction_for_unsetting_burn_role_globally(self,
                                                             sender: IAccount,
                                                             nonce: int,
-                                                            token_identifier: str) -> Transaction:
+                                                            token_identifier: str,
+                                                            guardian: Optional[Address] = None,
+                                                            relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_burn_role_globally(
             sender=sender.address,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -259,7 +291,9 @@ class TokenManagementController:
                                                                       token_identifier: str,
                                                                       add_role_local_mint: bool,
                                                                       add_role_local_burn: bool,
-                                                                      add_role_esdt_transfer_role: bool) -> Transaction:
+                                                                      add_role_esdt_transfer_role: bool,
+                                                                      guardian: Optional[Address] = None,
+                                                                      relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_fungible_token(
             sender=sender.address,
             user=user,
@@ -269,6 +303,8 @@ class TokenManagementController:
             add_role_esdt_transfer_role=add_role_esdt_transfer_role
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -289,7 +325,9 @@ class TokenManagementController:
                                                                            add_role_nft_create: bool,
                                                                            add_role_nft_burn: bool,
                                                                            add_role_nft_add_quantity: bool,
-                                                                           add_role_esdt_transfer_role: bool) -> Transaction:
+                                                                           add_role_esdt_transfer_role: bool,
+                                                                           guardian: Optional[Address] = None,
+                                                                           relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_semi_fungible_token(
             sender=sender.address,
             user=user,
@@ -300,6 +338,8 @@ class TokenManagementController:
             add_role_esdt_transfer_role=add_role_esdt_transfer_role
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -321,7 +361,9 @@ class TokenManagementController:
                                                                           add_role_nft_burn: bool,
                                                                           add_role_nft_update_attributes: bool,
                                                                           add_role_nft_add_uri: bool,
-                                                                          add_role_esdt_transfer_role: bool) -> Transaction:
+                                                                          add_role_esdt_transfer_role: bool,
+                                                                          guardian: Optional[Address] = None,
+                                                                          relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_non_fungible_token(
             sender=sender.address,
             user=user,
@@ -333,6 +375,8 @@ class TokenManagementController:
             add_role_esdt_transfer_role=add_role_esdt_transfer_role
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -354,7 +398,9 @@ class TokenManagementController:
                                             royalties: int,
                                             hash: str,
                                             attributes: bytes,
-                                            uris: list[str]) -> Transaction:
+                                            uris: list[str],
+                                            guardian: Optional[Address] = None,
+                                            relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_creating_nft(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -366,6 +412,8 @@ class TokenManagementController:
             uris=uris
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -381,12 +429,16 @@ class TokenManagementController:
     def create_transaction_for_pausing(self,
                                        sender: IAccount,
                                        nonce: int,
-                                       token_identifier: str) -> Transaction:
+                                       token_identifier: str,
+                                       guardian: Optional[Address] = None,
+                                       relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_pausing(
             sender=sender.address,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -402,12 +454,16 @@ class TokenManagementController:
     def create_transaction_for_unpausing(self,
                                          sender: IAccount,
                                          nonce: int,
-                                         token_identifier: str) -> Transaction:
+                                         token_identifier: str,
+                                         guardian: Optional[Address] = None,
+                                         relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unpausing(
             sender=sender.address,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -424,13 +480,17 @@ class TokenManagementController:
                                         sender: IAccount,
                                         nonce: int,
                                         user: Address,
-                                        token_identifier: str) -> Transaction:
+                                        token_identifier: str,
+                                        guardian: Optional[Address] = None,
+                                        relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_freezing(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -447,13 +507,17 @@ class TokenManagementController:
                                           sender: IAccount,
                                           nonce: int,
                                           user: Address,
-                                          token_identifier: str) -> Transaction:
+                                          token_identifier: str,
+                                          guardian: Optional[Address] = None,
+                                          relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unfreezing(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -470,13 +534,17 @@ class TokenManagementController:
                                       sender: IAccount,
                                       nonce: int,
                                       user: Address,
-                                      token_identifier: str) -> Transaction:
+                                      token_identifier: str,
+                                      guardian: Optional[Address] = None,
+                                      relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_wiping(
             sender=sender.address,
             user=user,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -493,13 +561,17 @@ class TokenManagementController:
                                              sender: IAccount,
                                              nonce: int,
                                              token_identifier: str,
-                                             supply_to_mint: int) -> Transaction:
+                                             supply_to_mint: int,
+                                             guardian: Optional[Address] = None,
+                                             relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_local_minting(
             sender=sender.address,
             token_identifier=token_identifier,
             supply_to_mint=supply_to_mint
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -516,13 +588,17 @@ class TokenManagementController:
                                              sender: IAccount,
                                              nonce: int,
                                              token_identifier: str,
-                                             supply_to_burn: int) -> Transaction:
+                                             supply_to_burn: int,
+                                             guardian: Optional[Address] = None,
+                                             relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_local_burning(
             sender=sender.address,
             token_identifier=token_identifier,
             supply_to_burn=supply_to_burn
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -540,7 +616,9 @@ class TokenManagementController:
                                                    nonce: int,
                                                    token_identifier: str,
                                                    token_nonce: int,
-                                                   attributes: bytes) -> Transaction:
+                                                   attributes: bytes,
+                                                   guardian: Optional[Address] = None,
+                                                   relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_updating_attributes(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -548,6 +626,8 @@ class TokenManagementController:
             attributes=attributes
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -565,7 +645,9 @@ class TokenManagementController:
                                                nonce: int,
                                                token_identifier: str,
                                                token_nonce: int,
-                                               quantity_to_add: int) -> Transaction:
+                                               quantity_to_add: int,
+                                               guardian: Optional[Address] = None,
+                                               relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_adding_quantity(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -573,6 +655,8 @@ class TokenManagementController:
             quantity_to_add=quantity_to_add
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -590,7 +674,9 @@ class TokenManagementController:
                                                 nonce: int,
                                                 token_identifier: str,
                                                 token_nonce: int,
-                                                quantity_to_burn: int) -> Transaction:
+                                                quantity_to_burn: int,
+                                                guardian: Optional[Address] = None,
+                                                relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_burning_quantity(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -598,6 +684,8 @@ class TokenManagementController:
             quantity_to_burn=quantity_to_burn
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -614,13 +702,17 @@ class TokenManagementController:
                                                       sender: IAccount,
                                                       nonce: int,
                                                       token_identifier: str,
-                                                      new_owner: Address) -> Transaction:
+                                                      new_owner: Address,
+                                                      guardian: Optional[Address] = None,
+                                                      relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_transferring_ownership(
             sender=sender.address,
             token_identifier=token_identifier,
             new_owner=new_owner
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -631,7 +723,9 @@ class TokenManagementController:
                                                    nonce: int,
                                                    token_identifier: str,
                                                    token_nonce: int,
-                                                   user: Address) -> Transaction:
+                                                   user: Address,
+                                                   guardian: Optional[Address] = None,
+                                                   relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_freezing_single_nft(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -639,6 +733,8 @@ class TokenManagementController:
             user=user
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -649,7 +745,9 @@ class TokenManagementController:
                                                      nonce: int,
                                                      token_identifier: str,
                                                      token_nonce: int,
-                                                     user: Address) -> Transaction:
+                                                     user: Address,
+                                                     guardian: Optional[Address] = None,
+                                                     relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unfreezing_single_nft(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -657,6 +755,8 @@ class TokenManagementController:
             user=user
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -666,13 +766,17 @@ class TokenManagementController:
                                                          sender: IAccount,
                                                          nonce: int,
                                                          collection: str,
-                                                         num_decimals: int) -> Transaction:
+                                                         num_decimals: int,
+                                                         guardian: Optional[Address] = None,
+                                                         relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_changing_sft_to_meta_esdt(
             sender=sender.address,
             collection=collection,
             num_decimals=num_decimals
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -682,13 +786,17 @@ class TokenManagementController:
                                                             sender: IAccount,
                                                             nonce: int,
                                                             token_identifier: str,
-                                                            user: Address) -> Transaction:
+                                                            user: Address,
+                                                            guardian: Optional[Address] = None,
+                                                            relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_transferring_nft_create_role(
             sender=sender.address,
             token_identifier=token_identifier,
             user=user
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -697,12 +805,16 @@ class TokenManagementController:
     def create_transaction_for_stopping_nft_creation(self,
                                                      sender: IAccount,
                                                      nonce: int,
-                                                     token_identifier: str) -> Transaction:
+                                                     token_identifier: str,
+                                                     guardian: Optional[Address] = None,
+                                                     relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_stopping_nft_creation(
             sender=sender.address,
             token_identifier=token_identifier
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -713,7 +825,9 @@ class TokenManagementController:
                                                  nonce: int,
                                                  token_identifier: str,
                                                  token_nonce: int,
-                                                 user: Address) -> Transaction:
+                                                 user: Address,
+                                                 guardian: Optional[Address] = None,
+                                                 relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_wiping_single_nft(
             sender=sender.address,
             token_identifier=token_identifier,
@@ -721,6 +835,8 @@ class TokenManagementController:
             user=user
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
@@ -730,13 +846,17 @@ class TokenManagementController:
                                           sender: IAccount,
                                           nonce: int,
                                           token_identifier: str,
-                                          uris: list[str]) -> Transaction:
+                                          uris: list[str],
+                                          guardian: Optional[Address] = None,
+                                          relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transction_for_adding_uris(
             sender=sender.address,
             token_identifier=token_identifier,
             uris=uris
         )
 
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
