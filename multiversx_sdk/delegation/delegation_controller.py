@@ -52,7 +52,7 @@ class DelegationController:
         return self.parser.parse_create_new_delegation_contract(transaction_on_network)
 
     def await_completed_create_new_delegation_contract(self,
-                                                       transaction_hash: str) -> list[CreateNewDelegationContractOutcome]:
+                                                       transaction_hash: Union[str, bytes]) -> list[CreateNewDelegationContractOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_create_new_delegation_contract(transaction)
 
