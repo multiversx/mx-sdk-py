@@ -53,7 +53,7 @@ from multiversx_sdk.token_management import (
     UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
 from multiversx_sdk.transfers import (TransfersController,
                                       TransferTransactionsFactory)
-from multiversx_sdk.wallet import (Mnemonic, UserPEM, UserPublicKey,
+from multiversx_sdk.wallet import (KeyPair, Mnemonic, UserPEM, UserPublicKey,
                                    UserSecretKey, UserSigner, UserVerifier,
                                    UserWallet, ValidatorPEM,
                                    ValidatorPublicKey, ValidatorSecretKey,
@@ -82,5 +82,5 @@ __all__ = [
     "AccountOnNetwork", "AccountStorage", "AccountStorageEntry", "AwaitingOptions", "BlockCoordinates",
     "BlockOnNetwork", "FungibleTokenMetadata", "GetBlockArguments", "NetworkConfig", "NetworkStatus",
     "TokenAmountOnNetwork", "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter",
-    "LibraryConfig"
+    "LibraryConfig", "KeyPair"
 ]
