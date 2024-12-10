@@ -1,66 +1,23 @@
-from typing import Optional, Protocol
+from typing import Protocol
 
-
-class IAddress(Protocol):
-    def to_bech32(self) -> str:
-        ...
-
-    def to_hex(self) -> str:
-        ...
-
-
-class ITransaction(Protocol):
-    sender: str
-    receiver: str
-    gas_limit: int
-    chain_id: str
-    nonce: int
-    value: int
-    sender_username: str
-    receiver_username: str
-    gas_price: int
-    data: bytes
-    version: int
-    options: int
-    guardian: str
-    signature: bytes
-    guardian_signature: bytes
-
-
-class IMessage(Protocol):
-    data: bytes
-    signature: bytes
-    address: Optional[IAddress]
-    version: int
-    signer: str
-
-
-class IToken(Protocol):
-    identifier: str
-    nonce: int
-
-
-class ITokenTransfer(Protocol):
-    @property
-    def token(self) -> IToken:
-        ...
-
-    amount: int
-
-
-class ITokenIdentifierParts(Protocol):
-    ticker: str
-    random_sequence: str
-    nonce: int
+from multiversx_sdk.core.address import Address
 
 
 class INetworkConfig(Protocol):
     min_gas_limit: int
     gas_per_data_byte: int
     gas_price_modifier: float
-    chain_id: str
 
 
 class IValidatorPublicKey(Protocol):
     def hex(self) -> str:
+        ...
+
+
+class IAccount(Protocol):
+    @property
+    def address(self) -> Address:
+        ...
+
+    def sign(self, data: bytes) -> bytes:
         ...

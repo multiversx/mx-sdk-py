@@ -3,6 +3,8 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.testutils.wallets import load_wallets
 
+from multiversx_sdk.core.address import Address
+
 
 class TestProtoSerializer:
     wallets = load_wallets()
@@ -14,8 +16,8 @@ class TestProtoSerializer:
 
     def test_serialize_tx_no_data_no_value(self):
         transaction = Transaction(
-            sender=self.alice.label,
-            receiver=self.bob.label,
+            sender=Address.new_from_bech32(self.alice.label),
+            receiver=Address.new_from_bech32(self.bob.label),
             gas_limit=50000,
             chain_id="local-testnet",
             nonce=89,
@@ -28,8 +30,8 @@ class TestProtoSerializer:
 
     def test_serialize_tx_with_data_no_value(self):
         transaction = Transaction(
-            sender=self.alice.label,
-            receiver=self.bob.label,
+            sender=Address.new_from_bech32(self.alice.label),
+            receiver=Address.new_from_bech32(self.bob.label),
             gas_limit=80000,
             chain_id="local-testnet",
             data=b"hello",
@@ -42,8 +44,8 @@ class TestProtoSerializer:
 
     def test_serialize_tx_with_data_and_value(self):
         transaction = Transaction(
-            sender=self.alice.label,
-            receiver=self.bob.label,
+            sender=Address.new_from_bech32(self.alice.label),
+            receiver=Address.new_from_bech32(self.bob.label),
             gas_limit=100000,
             chain_id="local-testnet",
             nonce=92,
@@ -57,8 +59,8 @@ class TestProtoSerializer:
 
     def test_serialize_tx_with_nonce_zero(self):
         transaction = Transaction(
-            sender=self.alice.label,
-            receiver=self.bob.label,
+            sender=Address.new_from_bech32(self.alice.label),
+            receiver=Address.new_from_bech32(self.bob.label),
             chain_id="local-testnet",
             gas_limit=80000,
             nonce=0,
@@ -73,8 +75,8 @@ class TestProtoSerializer:
 
     def test_serialized_tx_with_usernames(self):
         transaction = Transaction(
-            sender=self.carol.label,
-            receiver=self.alice.label,
+            sender=Address.new_from_bech32(self.carol.label),
+            receiver=Address.new_from_bech32(self.alice.label),
             gas_limit=50000,
             chain_id="T",
             nonce=204,

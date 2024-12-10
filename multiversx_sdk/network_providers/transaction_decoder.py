@@ -1,13 +1,17 @@
 import binascii
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Protocol
 
 from multiversx_sdk.core import TokenTransfer
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.network_providers.interface import IAddress
 
-DEFAULT_HRP = "erd"
+
+class IAddress(Protocol):
+    """For internal use only"""
+
+    def to_bech32(self) -> str:
+        ...
 
 
 class TransactionMetadata:
@@ -73,7 +77,7 @@ class TransactionDecoder:
         metadata.value = transaction.value
 
         if transaction.data:
-            data_components = transaction.data.split("@")
+            data_components = transaction.data.decode().split("@")
 
             args = data_components[1:]
             if all(self.is_smart_contract_call_argument(x) for x in args):
@@ -137,7 +141,7 @@ class TransactionDecoder:
         collection_identifier = self.hex_to_string(args[0])
         nonce = args[1]
         value = self.hex_to_number(args[2])
-        receiver = Address.new_from_hex(args[3], DEFAULT_HRP)
+        receiver = Address.new_from_hex(args[3])
 
         result = TransactionMetadata()
         result.sender = metadata.sender
@@ -172,7 +176,7 @@ class TransactionDecoder:
         if not self.is_address_valid(args[0]):
             return None
 
-        receiver = Address.new_from_hex(args[0], DEFAULT_HRP)
+        receiver = Address.new_from_hex(args[0])
         transfer_count = self.hex_to_number(args[1])
 
         result = TransactionMetadata()

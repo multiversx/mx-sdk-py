@@ -6,20 +6,22 @@ from typing import Any, Dict
 
 from Cryptodome.Hash import keccak
 
+from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (
     BECH32_ADDRESS_LENGTH, DIGEST_SIZE,
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS,
     TRANSACTION_OPTIONS_TX_GUARDED, TRANSACTION_OPTIONS_TX_HASH_SIGN)
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
-from multiversx_sdk.core.interfaces import INetworkConfig, ITransaction
+from multiversx_sdk.core.interfaces import INetworkConfig
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
+from multiversx_sdk.core.transaction import Transaction
 
 
 class TransactionComputer:
     def __init__(self) -> None:
         pass
 
-    def compute_transaction_fee(self, transaction: ITransaction, network_config: INetworkConfig) -> int:
+    def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
         move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
         if move_balance_gas > transaction.gas_limit:
             raise NotEnoughGasError(transaction.gas_limit)
@@ -34,14 +36,14 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: ITransaction) -> bytes:
+    def compute_bytes_for_signing(self, transaction: Transaction) -> bytes:
         self._ensure_fields(transaction)
 
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
         return serialized
 
-    def compute_bytes_for_verifying(self, transaction: ITransaction) -> bytes:
+    def compute_bytes_for_verifying(self, transaction: Transaction) -> bytes:
         is_signed_by_hash = self.has_options_set_for_hash_signing(transaction)
 
         if is_signed_by_hash:
@@ -49,39 +51,44 @@ class TransactionComputer:
 
         return self.compute_bytes_for_signing(transaction)
 
-    def compute_hash_for_signing(self, transaction: ITransaction) -> bytes:
+    def compute_hash_for_signing(self, transaction: Transaction) -> bytes:
         return keccak.new(digest_bits=256).update(self.compute_bytes_for_signing(transaction)).digest()
 
-    def compute_transaction_hash(self, transaction: ITransaction) -> bytes:
+    def compute_transaction_hash(self, transaction: Transaction) -> bytes:
         proto = ProtoSerializer()
         serialized_tx = proto.serialize_transaction(transaction)
         tx_hash = blake2b(serialized_tx, digest_size=DIGEST_SIZE).hexdigest()
         return bytes.fromhex(tx_hash)
 
-    def has_options_set_for_guarded_transaction(self, transaction: ITransaction) -> bool:
+    def has_options_set_for_guarded_transaction(self, transaction: Transaction) -> bool:
         return (transaction.options & TRANSACTION_OPTIONS_TX_GUARDED) == TRANSACTION_OPTIONS_TX_GUARDED
 
-    def has_options_set_for_hash_signing(self, transaction: ITransaction) -> bool:
+    def has_options_set_for_hash_signing(self, transaction: Transaction) -> bool:
         return (transaction.options & TRANSACTION_OPTIONS_TX_HASH_SIGN) == TRANSACTION_OPTIONS_TX_HASH_SIGN
 
-    def apply_guardian(self, transaction: ITransaction, guardian: str) -> None:
+    def apply_guardian(self, transaction: Transaction, guardian: Address) -> None:
         if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
             transaction.version = MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
 
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_GUARDED
         transaction.guardian = guardian
 
-    def apply_options_for_hash_signing(self, transaction: ITransaction) -> None:
+    def apply_options_for_hash_signing(self, transaction: Transaction) -> None:
         if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
             transaction.version = MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS
 
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_HASH_SIGN
 
-    def _ensure_fields(self, transaction: ITransaction) -> None:
-        if len(transaction.sender) != BECH32_ADDRESS_LENGTH:
+    def is_relayed_v3_transaction(self, transaction: Transaction) -> bool:
+        if transaction.relayer:
+            return True
+        return False
+
+    def _ensure_fields(self, transaction: Transaction) -> None:
+        if len(transaction.sender.to_bech32()) != BECH32_ADDRESS_LENGTH:
             raise BadUsageError("Invalid `sender` field. Should be the bech32 address of the sender.")
 
-        if len(transaction.receiver) != BECH32_ADDRESS_LENGTH:
+        if len(transaction.receiver.to_bech32()) != BECH32_ADDRESS_LENGTH:
             raise BadUsageError("Invalid `receiver` field. Should be the bech32 address of the receiver.")
 
         if not len(transaction.chain_id):
@@ -91,13 +98,14 @@ class TransactionComputer:
             if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(transaction):
                 raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
 
-    def _to_dictionary(self, transaction: ITransaction, with_signature: bool = False) -> Dict[str, Any]:
+    def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> Dict[str, Any]:
+        """Only used when serializing transaction for signing. Internal use only."""
         dictionary: Dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
 
-        dictionary["receiver"] = transaction.receiver
-        dictionary["sender"] = transaction.sender
+        dictionary["receiver"] = transaction.receiver.to_bech32()
+        dictionary["sender"] = transaction.sender.to_bech32()
 
         if transaction.sender_username:
             dictionary["senderUsername"] = b64encode(transaction.sender_username.encode()).decode()
@@ -124,10 +132,12 @@ class TransactionComputer:
             dictionary["options"] = transaction.options
 
         if transaction.guardian:
-            dictionary["guardian"] = transaction.guardian
+            dictionary["guardian"] = transaction.guardian.to_bech32()
+
+        if transaction.relayer:
+            dictionary["relayer"] = transaction.relayer.to_bech32()
 
         return dictionary
 
     def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
-        serialized = json.dumps(dictionary, separators=(',', ':')).encode("utf-8")
-        return serialized
+        return json.dumps(dictionary, separators=(',', ':')).encode("utf-8")

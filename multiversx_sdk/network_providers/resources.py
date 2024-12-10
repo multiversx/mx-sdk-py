@@ -1,5 +1,7 @@
-from typing import Any, Dict, List
+from dataclasses import dataclass
+from typing import Any, Dict, Optional
 
+from multiversx_sdk.core import Address, Token, TransactionStatus
 from multiversx_sdk.network_providers.constants import (
     DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
@@ -17,75 +19,130 @@ class GenericResponse:
         return self.__dict__
 
 
-class SmartContractResult:
-    def __init__(self, raw: Dict[str, Any]) -> None:
-        self.raw = raw
-        self.return_message = self._parse_return_message()
-        self.arguments = self._parse_arguments()
-        self.parsed_log = Log(raw.get("logs", {}))
-
-    def _parse_return_message(self) -> str:
-        try:
-            data_parts = self._parse_data_parts()
-            return_message_encoded = data_parts[0]
-            return_message = bytes.fromhex(return_message_encoded).decode("ascii")
-            return return_message
-        except:
-            return ""
-
-    def _parse_arguments(self) -> List[str]:
-        try:
-            data_parts = self._parse_data_parts()
-            arguments = data_parts[1:]
-            return arguments
-        except:
-            return []
-
-    def _parse_data_parts(self) -> List[str]:
-        data: str = self.raw.get("data", "").lstrip("@")
-        return data.split("@")
-
-    def to_dictionary(self) -> Dict[str, Any]:
-        result: Dict[str, Any] = dict()
-        result.update(self.raw)
-        result["parsed"] = {
-            "returnMessage": self.return_message,
-            "arguments": self.arguments,
-            "log": self.parsed_log
-        }
-
-        return result
+@dataclass
+class NetworkConfig:
+    raw: dict[str, Any]
+    chain_id: str
+    gas_per_data_byte: int
+    gas_price_modifier: float
+    min_gas_limit: int
+    min_gas_price: int
+    extra_gas_limit_for_guarded_transactions: int
+    num_shards: int
+    round_duration: int
+    num_rounds_per_epoch: int
+    genesis_timestamp: int
 
 
-class Log:
-    def __init__(self, raw: Dict[str, Any]) -> None:
-        self.raw = raw
+@dataclass
+class NetworkStatus:
+    raw: dict[str, Any]
+    block_timestamp: int
+    block_nonce: int
+    highest_final_block_nonce: int
+    current_round: int
+    current_epoch: int
 
 
-class SimulateResponse:
-    def __init__(self, response: GenericResponse) -> None:
-        result: Dict[str, Any] = response.get("result") or dict()
-        contract_results: Dict[str, Any] = result.get("scResults") or dict()
-
-        self.raw = response.to_dictionary()
-        self.parsed_contract_results = [SmartContractResult(item) for item in contract_results.values()]
-
-    def to_dictionary(self) -> Dict[str, Any]:
-        result: Dict[str, Any] = dict()
-        result.update(self.raw)
-        result["parsed"] = dict()
-
-        if self.parsed_contract_results:
-            result["parsed"]["smartContractResults"] = self.parsed_contract_results
-
-        return result
+@dataclass
+class BlockOnNetwork:
+    raw: dict[str, Any]
+    shard: int
+    nonce: int
+    hash: bytes
+    previous_hash: bytes
+    timestamp: int
+    round: int
+    epoch: int
 
 
+@dataclass
+class BlockCoordinates:
+    nonce: str
+    hash: bytes
+    root_hash: bytes
+
+
+@dataclass
+class AccountOnNetwork:
+    raw: dict[str, Any]
+    address: Address
+    nonce: int
+    balance: int
+    is_guarded: bool
+    username: str = ""
+    block_coordinates: Optional[BlockCoordinates] = None
+
+    contract_code_hash: bytes = b""
+    contract_code: bytes = b""
+    contract_developer_reward: int = 0
+    contract_owner_address: Optional[Address] = None
+    is_contract_upgradable: bool = False
+    is_contract_readable: bool = False
+    is_contract_payable: bool = False
+    is_contract_payable_by_contract: bool = False
+
+
+@dataclass
+class AccountStorageEntry:
+    raw: dict[str, Any]
+    key: str
+    value: bytes
+    block_coordinates: Optional[BlockCoordinates] = None
+
+
+@dataclass
+class AccountStorage:
+    raw: dict[str, Any]
+    entries: list[AccountStorageEntry]
+    block_coordinates: Optional[BlockCoordinates] = None
+
+
+@dataclass
+class TransactionCostResponse:
+    raw: dict[str, Any]
+    gas_limit: int
+    status: TransactionStatus
+
+
+@dataclass
+class TokenAmountOnNetwork:
+    raw: dict[str, Any]
+    token: Token
+    amount: int
+    block_coordinates: Optional[BlockCoordinates] = None
+
+
+@dataclass
+class FungibleTokenMetadata:
+    raw: dict[str, Any]
+    identifier: str
+    name: str
+    ticker: str
+    owner: str
+    decimals: int
+
+
+@dataclass
+class TokensCollectionMetadata:
+    raw: dict[str, Any]
+    collection: str
+    type: str
+    name: str
+    ticker: str
+    owner: str
+    decimals: int
+
+
+@dataclass
 class AwaitingOptions:
-    def __init__(self,
-                 polling_interval_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
-                 timeout_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS,
-                 patience_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS) -> None:
-        self.polling_interval_in_milliseconds = polling_interval_in_milliseconds
-        self.timeout_in_milliseconds = timeout_in_milliseconds
-        self.patience_in_milliseconds = patience_in_milliseconds
+    polling_interval_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
+    timeout_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
+    patience_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
+
+
+@dataclass
+class GetBlockArguments:
+    shard: Optional[int] = None
+    block_nonce: Optional[int] = None
+    block_hash: Optional[bytes] = None

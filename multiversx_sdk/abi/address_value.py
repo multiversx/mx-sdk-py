@@ -1,5 +1,5 @@
 import io
-from typing import Any, Dict, Protocol, cast
+from typing import Any, Protocol, cast
 
 from multiversx_sdk.abi.shared import read_bytes_exactly
 from multiversx_sdk.core.address import PUBKEY_LENGTH, Address
@@ -19,7 +19,7 @@ class AddressValue:
         self.value = value
 
     @classmethod
-    def from_address(cls, address: IAddress) -> "AddressValue":
+    def new_from_address(cls, address: IAddress) -> "AddressValue":
         return cls(address.get_public_key())
 
     def encode_nested(self, writer: io.BytesIO):
@@ -43,7 +43,7 @@ class AddressValue:
 
     def set_payload(self, value: Any):
         if isinstance(value, dict):
-            value = cast(Dict[str, str], value)
+            value = cast(dict[str, str], value)
             pubkey = self._extract_pubkey_from_dict(value)
         else:
             pubkey = bytes(value)
@@ -51,7 +51,7 @@ class AddressValue:
         self._check_pub_key_length(pubkey)
         self.value = pubkey
 
-    def _extract_pubkey_from_dict(self, value: Dict[str, str]) -> bytes:
+    def _extract_pubkey_from_dict(self, value: dict[str, str]) -> bytes:
         bech32_address = value.get("bech32", None)
         if bech32_address:
             return Address.new_from_bech32(bech32_address).get_public_key()

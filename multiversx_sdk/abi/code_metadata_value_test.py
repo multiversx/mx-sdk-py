@@ -25,9 +25,16 @@ def test_set_payload_and_get_payload():
     value.set_payload(CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True))
     assert value.get_payload() == bytes([0x05, 0x06])
 
+    # From dictionary
+    value = CodeMetadataValue()
+    value.set_payload({
+        "hex": "0500"
+    })
+    assert value.get_payload() == bytes([0x05, 0x00])
+
     # With errors
-    with pytest.raises(ValueError, match=re.escape("cannot set payload for code metadata (should be either a CodeMetadata or bytes, but got: <class 'dict'>)")):
-        CodeMetadataValue().set_payload({})
+    with pytest.raises(ValueError, match=re.escape("cannot set payload for code metadata (should be either a CodeMetadata, bytes or dict, but got: <class 'int'>)")):
+        CodeMetadataValue().set_payload(5)
 
     with pytest.raises(ValueError, match="code metadata buffer has length 4, expected 2"):
         CodeMetadataValue().set_payload(bytes([0, 1, 2, 3]))

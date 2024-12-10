@@ -3,11 +3,15 @@ import pytest
 
 from multiversx_sdk.core.address import (Address, AddressComputer,
                                          AddressFactory, is_valid_bech32)
-from multiversx_sdk.core.errors import ErrBadAddress, ErrBadPubkeyLength
+from multiversx_sdk.core.config import LibraryConfig
+from multiversx_sdk.core.errors import BadAddressError, BadPubkeyLengthError
 
 
 def test_address():
     address = Address.new_from_bech32("erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz")
+    assert str(address) == "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz"
+    assert address == Address.new_from_bech32("erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz")
+    assert not address == Address(bytes.fromhex("fd691bb5e85d102687d81079dffce842d4dc328276d2d4c60d8fd1c3433c3293"), "test")
     assert "fd691bb5e85d102687d81079dffce842d4dc328276d2d4c60d8fd1c3433c3293" == address.to_hex()
     assert "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz" == address.to_bech32()
 
@@ -15,11 +19,15 @@ def test_address():
     assert "fd691bb5e85d102687d81079dffce842d4dc328276d2d4c60d8fd1c3433c3293" == address.to_hex()
     assert "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz" == address.to_bech32()
 
-    with pytest.raises(ErrBadPubkeyLength):
-        address = Address(bytes(), "erd")
+    with pytest.raises(BadPubkeyLengthError):
+        address = Address(bytes.fromhex("fd691bb5e85d102687d8"), "erd")
 
-    with pytest.raises(ErrBadAddress):
+    with pytest.raises(BadAddressError):
         address = Address.new_from_bech32("bad")
+
+    address = Address.empty()
+    assert address.pubkey == bytes()
+    assert address.hrp == "erd"
 
 
 def test_address_with_custom_hrp():
@@ -71,3 +79,13 @@ def test_compute_contract_address():
     contract_address = address_computer.compute_contract_address(deployer, deployment_nonce=1)
     assert contract_address.to_hex() == "000000000000000005006e4f90488e27342f9a46e1809452c85ee7186566bd5e"
     assert contract_address.to_bech32() == "erd1qqqqqqqqqqqqqpgqde8eqjywyu6zlxjxuxqfg5kgtmn3setxh40qen8egy"
+
+
+def test_address_with_library_config_hrp():
+    address = Address(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
+    assert address.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+    LibraryConfig.default_address_hrp = "test"
+    address = Address(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
+    assert address.to_bech32() == "test1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ss5hqhtr"
+    LibraryConfig.default_address_hrp = "erd"

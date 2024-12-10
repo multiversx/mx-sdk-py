@@ -4,7 +4,7 @@ import mnemonic
 
 from multiversx_sdk.wallet import core
 from multiversx_sdk.wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
-from multiversx_sdk.wallet.errors import ErrBadMnemonic
+from multiversx_sdk.wallet.errors import InvalidMnemonicError
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 
 
@@ -17,7 +17,7 @@ class Mnemonic:
     @classmethod
     def assert_text_is_valid(cls, text: str) -> None:
         if not cls.is_text_valid(text):
-            raise ErrBadMnemonic()
+            raise InvalidMnemonicError()
 
     @classmethod
     def is_text_valid(cls, text: str) -> bool:
@@ -26,6 +26,11 @@ class Mnemonic:
     @classmethod
     def generate(cls) -> 'Mnemonic':
         text = mnemonic.Mnemonic(BIP39_LANGUAGE).generate(strength=BIP39_STRENGTH)
+        return Mnemonic(text)
+
+    @classmethod
+    def from_entropy(cls, entropy: bytes) -> "Mnemonic":
+        text = mnemonic.Mnemonic(BIP39_LANGUAGE).to_mnemonic(entropy)
         return Mnemonic(text)
 
     def derive_key(self, address_index: int = 0) -> UserSecretKey:
@@ -37,6 +42,10 @@ class Mnemonic:
 
     def get_words(self) -> List[str]:
         return self.text.split()
+
+    def get_entropy(self) -> bytes:
+        entropy = mnemonic.Mnemonic(BIP39_LANGUAGE).to_entropy(self.text)
+        return bytes(entropy)
 
     def __str__(self) -> str:
         return Mnemonic.__name__
