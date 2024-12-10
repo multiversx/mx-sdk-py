@@ -66,13 +66,13 @@ class AccountController:
     def create_transaction_for_unguarding_account(self,
                                                   sender: IAccount,
                                                   nonce: int,
-                                                  guardian: Optional[Address] = None,
+                                                  guardian: Address,
                                                   relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unguarding_account(
-            sender=sender.address
+            sender=sender.address,
+            guardian=guardian
         )
 
-        transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
         transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))

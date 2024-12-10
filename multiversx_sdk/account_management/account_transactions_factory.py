@@ -59,7 +59,7 @@ class AccountTransactionsFactory:
             add_data_movement_gas=True
         ).build()
 
-    def create_transaction_for_unguarding_account(self, sender: Address) -> Transaction:
+    def create_transaction_for_unguarding_account(self, sender: Address, guardian: Address) -> Transaction:
         data_parts = ["UnGuardAccount"]
 
         transaction = TransactionBuilder(
@@ -71,6 +71,7 @@ class AccountTransactionsFactory:
             add_data_movement_gas=True
         ).build()
         transaction.options = 2
+        transaction.guardian = guardian
 
         return transaction
 
