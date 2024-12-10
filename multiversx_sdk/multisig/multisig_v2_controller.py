@@ -1,40 +1,50 @@
 from pathlib import Path
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any, List, Optional, Protocol, Union
 
-from multiversx_sdk.controllers.interfaces import IAbi, IAccount
-from multiversx_sdk.controllers.multisig_v2_resources import (
-    ActionFullInfo, ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
-    ProposeSCUpgradeFromSourceInput, ProposeSyncCallInput,
-    ProposeTransferExecuteEsdtInput, ProposeTransferExecuteInput, UserRole)
-from multiversx_sdk.controllers.smart_contract_controller import \
-    INetworkProvider
+from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.interfaces import IAddress
-from multiversx_sdk.core.smart_contract_queries_controller import \
-    SmartContractQueriesController
+from multiversx_sdk.core.config import LibraryConfig
+from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-from multiversx_sdk.core.transactions_factories import (
-    SmartContractTransactionsFactory, TransactionsFactoryConfig)
-from multiversx_sdk.core.transactions_outcome_parsers import \
-    SmartContractTransactionsOutcomeParser
-from multiversx_sdk.core.transactions_outcome_parsers.smart_contract_transactions_outcome_parser_types import \
-    ParsedSmartContractCallOutcome
-from multiversx_sdk.network_providers.constants import DEFAULT_ADDRESS_HRP
+from multiversx_sdk.core.transactions_factory_config import \
+    TransactionsFactoryConfig
+from multiversx_sdk.multisig.multisig_v2_resources import (
+    ActionFullInfo, ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
+    ProposeSCUpgradeFromSourceInput, ProposeSyncCallInput,
+    ProposeTransferExecuteEsdtInput, ProposeTransferExecuteInput, UserRole)
+from multiversx_sdk.network_providers.resources import AwaitingOptions
+from multiversx_sdk.smart_contracts import (
+    ParsedSmartContractCallOutcome, SmartContractController,
+    SmartContractQuery, SmartContractQueryResponse,
+    SmartContractTransactionsFactory, SmartContractTransactionsOutcomeParser)
+
+
+class INetworkProvider(Protocol):
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
+        ...
+
+    def await_transaction_completed(self, transaction_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
+        ...
 
 
 class MultisigV2Controller:
-    def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: IAbi) -> None:
+    def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Abi, address_hrp: Optional[str] = None) -> None:
         self.network_provider = network_provider
-        self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id), abi=abi)
+        self.factory = SmartContractTransactionsFactory(
+            TransactionsFactoryConfig(chain_id),
+            abi=abi
+        )
         self.parser = SmartContractTransactionsOutcomeParser(abi=abi)
         self.transaction_computer = TransactionComputer()
-        self.query_controller = SmartContractQueriesController(
+        self.smart_contract_controller = SmartContractController(
+            chain_id=chain_id,
             network_provider=network_provider,
             abi=abi
         )
+        self.address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
 
     def create_transaction_for_deploy(self,
                                       sender: IAccount,
@@ -42,7 +52,7 @@ class MultisigV2Controller:
                                       bytecode: Union[Path, bytes],
                                       gas_limit: int,
                                       quorum: int,
-                                      board: list[IAddress],
+                                      board: list[Address],
                                       is_upgradeable: bool = True,
                                       is_readable: bool = True,
                                       is_payable: bool = False,
@@ -59,22 +69,24 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def parse_deploy(self, transaction_on_network: TransactionOnNetwork) -> Address:
         outcome = self.parser.parse_deploy(transaction_on_network)
-        return Address.new_from_bech32(outcome.contracts[0].address)
+        return outcome.contracts[0].address
 
     def await_completed_deploy(self, tx_hash: str) -> Address:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
+        transaction = self.network_provider.await_transaction_completed(
+            tx_hash)
         return self.parse_deploy(transaction)
 
     def create_transaction_for_deposit(self,
                                        sender: IAccount,
                                        nonce: int,
-                                       contract: IAddress,
+                                       contract: Address,
                                        gas_limit: int,
                                        native_transfer_amount: int = 0,
                                        token_transfers: Optional[List[TokenTransfer]] = None) -> Transaction:
@@ -89,14 +101,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_discard_action(self,
                                               sender: IAccount,
                                               nonce: int,
-                                              contract: IAddress,
+                                              contract: Address,
                                               gas_limit: int,
                                               action_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -108,14 +121,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_discard_batch(self,
                                              sender: IAccount,
                                              nonce: int,
-                                             contract: IAddress,
+                                             contract: Address,
                                              gas_limit: int,
                                              actions_ids: list[int]) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -127,67 +141,68 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
-    def get_quorum(self, contract: IAddress) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_quorum(self, contract: Address) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getQuorum",
             arguments=[],
         )
 
         return value
 
-    def get_num_board_members(self, contract: IAddress) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_num_board_members(self, contract: Address) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getNumBoardMembers",
             arguments=[],
         )
 
         return value
 
-    def get_num_groups(self, contract: IAddress) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_num_groups(self, contract: Address) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getNumGroups",
             arguments=[],
         )
 
         return value
 
-    def get_num_proposers(self, contract: IAddress) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_num_proposers(self, contract: Address) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getNumProposers",
             arguments=[],
         )
 
         return value
 
-    def get_action_group(self, contract: IAddress, group_id: int) -> list[int]:
-        values = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_action_group(self, contract: Address, group_id: int) -> list[int]:
+        values = self.smart_contract_controller.query(
+            contract=contract,
             function="getActionGroup",
             arguments=[group_id],
         )
 
         return values
 
-    def get_last_group_action_id(self, contract: IAddress) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_last_group_action_id(self, contract: Address) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getLastGroupActionId",
             arguments=[],
         )
 
         return value
 
-    def get_action_last_index(self, contract: IAddress) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_action_last_index(self, contract: Address) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getActionLastIndex",
             arguments=[],
         )
@@ -197,9 +212,9 @@ class MultisigV2Controller:
     def create_transaction_for_propose_add_board_member(self,
                                                         sender: IAccount,
                                                         nonce: int,
-                                                        contract: IAddress,
+                                                        contract: Address,
                                                         gas_limit: int,
-                                                        board_member: IAddress,) -> Transaction:
+                                                        board_member: Address,) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
@@ -209,16 +224,17 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_add_proposer(self,
                                                     sender: IAccount,
                                                     nonce: int,
-                                                    contract: IAddress,
+                                                    contract: Address,
                                                     gas_limit: int,
-                                                    proposer: IAddress) -> Transaction:
+                                                    proposer: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
@@ -228,16 +244,17 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_remove_user(self,
                                                    sender: IAccount,
                                                    nonce: int,
-                                                   contract: IAddress,
+                                                   contract: Address,
                                                    gas_limit: int,
-                                                   user: IAddress) -> Transaction:
+                                                   user: Address) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
@@ -247,14 +264,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_change_quorum(self,
                                                      sender: IAccount,
                                                      nonce: int,
-                                                     contract: IAddress,
+                                                     contract: Address,
                                                      gas_limit: int,
                                                      new_quorum: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -266,14 +284,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_transfer_execute(self,
                                                         sender: IAccount,
                                                         nonce: int,
-                                                        contract: IAddress,
+                                                        contract: Address,
                                                         gas_limit: int,
                                                         input: ProposeTransferExecuteInput) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -281,18 +300,20 @@ class MultisigV2Controller:
             contract=contract,
             function="proposeTransferExecute",
             gas_limit=gas_limit,
-            arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
+            arguments=[input.to, input.egld_amount,
+                       input.opt_gas_limit, input.function_call],
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_transfer_execute_esdt(self,
                                                              sender: IAccount,
                                                              nonce: int,
-                                                             contract: IAddress,
+                                                             contract: Address,
                                                              gas_limit: int,
                                                              input: ProposeTransferExecuteEsdtInput) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -300,18 +321,20 @@ class MultisigV2Controller:
             contract=contract,
             function="proposeTransferExecuteEsdt",
             gas_limit=gas_limit,
-            arguments=[input.to, input.tokens, input.opt_gas_limit, input.function_call],
+            arguments=[input.to, input.tokens,
+                       input.opt_gas_limit, input.function_call],
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_async_call(self,
                                                   sender: IAccount,
                                                   nonce: int,
-                                                  contract: IAddress,
+                                                  contract: Address,
                                                   gas_limit: int,
                                                   input: ProposeAsyncCallInput) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -319,37 +342,41 @@ class MultisigV2Controller:
             contract=contract,
             function="proposeAsyncCall",
             gas_limit=gas_limit,
-            arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
+            arguments=[input.to, input.egld_amount,
+                       input.opt_gas_limit, input.function_call],
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_sync_call(self,
-                                                  sender: IAccount,
-                                                  nonce: int,
-                                                  contract: IAddress,
-                                                  gas_limit: int,
-                                                  input: ProposeSyncCallInput) -> Transaction:
+                                                 sender: IAccount,
+                                                 nonce: int,
+                                                 contract: Address,
+                                                 gas_limit: int,
+                                                 input: ProposeSyncCallInput) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
             function="proposeSyncCall",
             gas_limit=gas_limit,
-            arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
+            arguments=[input.to, input.egld_amount,
+                       input.opt_gas_limit, input.function_call],
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_deploy_contract_from_source(self,
                                                                    sender: IAccount,
                                                                    nonce: int,
-                                                                   contract: IAddress,
+                                                                   contract: Address,
                                                                    gas_limit: int,
                                                                    input: ProposeSCDeployFromSourceInput) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -357,18 +384,20 @@ class MultisigV2Controller:
             contract=contract,
             function="proposeSCDeployFromSource",
             gas_limit=gas_limit,
-            arguments=[input.amount, input.source, input.code_metadata, input.arguments],
+            arguments=[input.amount, input.source,
+                       input.code_metadata, input.arguments],
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_upgrade_contract_from_source(self,
                                                                     sender: IAccount,
                                                                     nonce: int,
-                                                                    contract: IAddress,
+                                                                    contract: Address,
                                                                     gas_limit: int,
                                                                     input: ProposeSCUpgradeFromSourceInput) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -376,18 +405,20 @@ class MultisigV2Controller:
             contract=contract,
             function="proposeSCUpgradeFromSource",
             gas_limit=gas_limit,
-            arguments=[input.sc_address, input.amount, input.source, input.code_metadata, input.arguments],
+            arguments=[input.sc_address, input.amount,
+                       input.source, input.code_metadata, input.arguments],
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_propose_batch(self,
                                              sender: IAccount,
                                              nonce: int,
-                                             contract: IAddress,
+                                             contract: Address,
                                              gas_limit: int,
                                              actions: list[Any]) -> Transaction:
         raise NotImplementedError("Not implemented yet")
@@ -395,7 +426,7 @@ class MultisigV2Controller:
     def create_transaction_for_sign(self,
                                     sender: IAccount,
                                     nonce: int,
-                                    contract: IAddress,
+                                    contract: Address,
                                     gas_limit: int,
                                     action_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -407,14 +438,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_sign_batch(self,
                                           sender: IAccount,
                                           nonce: int,
-                                          contract: IAddress,
+                                          contract: Address,
                                           gas_limit: int,
                                           group_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -426,14 +458,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_sign_and_perform(self,
                                                 sender: IAccount,
                                                 nonce: int,
-                                                contract: IAddress,
+                                                contract: Address,
                                                 gas_limit: int,
                                                 action_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -445,14 +478,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_sign_batch_and_perform(self,
                                                       sender: IAccount,
                                                       nonce: int,
-                                                      contract: IAddress,
+                                                      contract: Address,
                                                       gas_limit: int,
                                                       group_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -464,14 +498,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_unsign(self,
                                       sender: IAccount,
                                       nonce: int,
-                                      contract: IAddress,
+                                      contract: Address,
                                       gas_limit: int,
                                       action_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -483,14 +518,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_unsign_batch(self,
                                             sender: IAccount,
                                             nonce: int,
-                                            contract: IAddress,
+                                            contract: Address,
                                             gas_limit: int,
                                             group_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -502,13 +538,14 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
-    def is_signed_by(self, contract: IAddress, user: IAddress, action_id: int) -> bool:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def is_signed_by(self, contract: Address, user: Address, action_id: int) -> bool:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="signed",
             arguments=[user, action_id],
         )
@@ -518,7 +555,7 @@ class MultisigV2Controller:
     def create_transaction_for_unsign_for_outdated_board_members(self,
                                                                  sender: IAccount,
                                                                  nonce: int,
-                                                                 contract: IAddress,
+                                                                 contract: Address,
                                                                  gas_limit: int,
                                                                  action_id: int,
                                                                  outdated_board_members: list[int]) -> Transaction:
@@ -531,13 +568,14 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
-    def is_quorum_reached(self, contract: IAddress, action_id: int) -> bool:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def is_quorum_reached(self, contract: Address, action_id: int) -> bool:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="quorumReached",
             arguments=[action_id],
         )
@@ -547,7 +585,7 @@ class MultisigV2Controller:
     def create_transaction_for_perform_action(self,
                                               sender: IAccount,
                                               nonce: int,
-                                              contract: IAddress,
+                                              contract: Address,
                                               gas_limit: int,
                                               action_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -559,14 +597,15 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
     def create_transaction_for_perform_batch(self,
                                              sender: IAccount,
                                              nonce: int,
-                                             contract: IAddress,
+                                             contract: Address,
                                              gas_limit: int,
                                              group_id: int) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
@@ -578,13 +617,14 @@ class MultisigV2Controller:
         )
 
         transaction.nonce = nonce
-        transaction.signature = sender.sign(self.transaction_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(
+            self.transaction_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
-    def get_pending_actions_full_info(self, contract: IAddress) -> list[ActionFullInfo]:
-        [values] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_pending_actions_full_info(self, contract: Address) -> list[ActionFullInfo]:
+        [values] = self.smart_contract_controller.query(
+            contract=contract,
             function="getPendingActionFullInfo",
             # For now, we don't support the `opt_range` argument.
             arguments=[None],
@@ -593,63 +633,63 @@ class MultisigV2Controller:
         actions = [ActionFullInfo.new_from_object(value) for value in values]
         return actions
 
-    def get_user_role(self, contract: IAddress, user: IAddress) -> UserRole:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_user_role(self, contract: Address, user: Address) -> UserRole:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="userRole",
             arguments=[user],
         )
 
         return UserRole(int(value))
 
-    def get_all_board_members(self, contract: IAddress) -> list[Address]:
-        [public_keys] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_all_board_members(self, contract: Address) -> list[Address]:
+        [public_keys] = self.smart_contract_controller.query(
+            contract=contract,
             function="getAllBoardMembers",
             arguments=[],
         )
 
-        return [Address(value, DEFAULT_ADDRESS_HRP) for value in public_keys]
+        return [Address(value, self.address_hrp) for value in public_keys]
 
-    def get_all_proposers(self, contract: IAddress) -> list[Address]:
-        [public_keys] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_all_proposers(self, contract: Address) -> list[Address]:
+        [public_keys] = self.smart_contract_controller.query(
+            contract=contract,
             function="getAllProposers",
             arguments=[],
         )
 
-        return [Address(value, DEFAULT_ADDRESS_HRP) for value in public_keys]
+        return [Address(value, self.address_hrp) for value in public_keys]
 
-    def get_action_data(self, contract: IAddress, action_id: int) -> list[Address]:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_action_data(self, contract: Address, action_id: int) -> list[Address]:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getActionData",
             arguments=[action_id],
         )
 
         return value
 
-    def get_action_signers(self, contract: IAddress, action_id: int) -> list[Address]:
-        [public_keys] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_action_signers(self, contract: Address, action_id: int) -> list[Address]:
+        [public_keys] = self.smart_contract_controller.query(
+            contract=contract,
             function="getActionSigners",
             arguments=[action_id],
         )
 
-        return [Address(value, DEFAULT_ADDRESS_HRP) for value in public_keys]
+        return [Address(value, self.address_hrp) for value in public_keys]
 
-    def get_action_signer_count(self, contract: IAddress, action_id: int) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_action_signer_count(self, contract: Address, action_id: int) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getActionValidSignerCount",
             arguments=[action_id],
         )
 
         return value
 
-    def get_action_valid_signer_count(self, contract: IAddress, action_id: int) -> int:
-        [value] = self.query_controller.query(
-            contract=contract.to_bech32(),
+    def get_action_valid_signer_count(self, contract: Address, action_id: int) -> int:
+        [value] = self.smart_contract_controller.query(
+            contract=contract,
             function="getActionSignerCount",
             arguments=[action_id],
         )
@@ -663,17 +703,19 @@ class MultisigV2Controller:
         return value
 
     def await_completed_execute_propose_any(self, tx_hash: str) -> int:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
+        transaction = self.network_provider.await_transaction_completed(
+            tx_hash)
         return self.parse_execute_propose_any(transaction)
 
     def parse_execute_perform(self, transaction_on_network: TransactionOnNetwork) -> Optional[Address]:
         outcome = self.parser.parse_execute(transaction_on_network)
         self._raise_for_return_code_in_outcome(outcome)
         [value] = outcome.values
-        return Address(value, DEFAULT_ADDRESS_HRP) if value else None
+        return Address(value, self.address_hrp) if value else None
 
     def await_completed_execute_perform(self, tx_hash: str) -> Optional[Address]:
-        transaction = self.network_provider.await_transaction_completed(tx_hash)
+        transaction = self.network_provider.await_transaction_completed(
+            tx_hash)
         return self.parse_execute_perform(transaction)
 
     # TODO: maybe move to the generic outcome parser, just like we did in the query controller?
