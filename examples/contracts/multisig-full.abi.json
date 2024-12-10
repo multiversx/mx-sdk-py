@@ -14,20 +14,20 @@
     ],
     "outputs": []
   },
+  "upgradeConstructor": {
+    "inputs": [],
+    "outputs": []
+  },
   "endpoints": [
-    {
-      "name": "upgrade",
-      "mutability": "mutable",
-      "inputs": [],
-      "outputs": []
-    },
     {
       "docs": [
         "Allows the contract to receive funds even if it is marked as unpayable in the protocol."
       ],
       "name": "deposit",
       "mutability": "mutable",
-      "payableInTokens": ["*"],
+      "payableInTokens": [
+        "*"
+      ],
       "inputs": [],
       "outputs": []
     },
@@ -48,7 +48,9 @@
       "outputs": []
     },
     {
-      "docs": ["Discard all the actions with the given IDs"],
+      "docs": [
+        "Discard all the actions with the given IDs"
+      ],
       "name": "discardBatch",
       "mutability": "mutable",
       "inputs": [
@@ -61,7 +63,9 @@
       "outputs": []
     },
     {
-      "docs": ["Minimum number of signatures needed to perform any action."],
+      "docs": [
+        "Minimum number of signatures needed to perform any action."
+      ],
       "name": "getQuorum",
       "mutability": "readonly",
       "inputs": [],
@@ -394,7 +398,9 @@
       ]
     },
     {
-      "docs": ["Used by board members to sign actions."],
+      "docs": [
+        "Used by board members to sign actions."
+      ],
       "name": "sign",
       "mutability": "mutable",
       "inputs": [
@@ -406,7 +412,9 @@
       "outputs": []
     },
     {
-      "docs": ["Sign all the actions in the given batch"],
+      "docs": [
+        "Sign all the actions in the given batch"
+      ],
       "name": "signBatch",
       "mutability": "mutable",
       "inputs": [
@@ -460,7 +468,9 @@
       "outputs": []
     },
     {
-      "docs": ["Unsign all actions with the given IDs"],
+      "docs": [
+        "Unsign all actions with the given IDs"
+      ],
       "name": "unsignBatch",
       "mutability": "mutable",
       "inputs": [
@@ -548,7 +558,9 @@
       ]
     },
     {
-      "docs": ["Perform all the actions in the given batch"],
+      "docs": [
+        "Perform all the actions in the given batch"
+      ],
       "name": "performBatch",
       "mutability": "mutable",
       "inputs": [
@@ -563,7 +575,9 @@
       "name": "dnsRegister",
       "onlyOwner": true,
       "mutability": "mutable",
-      "payableInTokens": ["EGLD"],
+      "payableInTokens": [
+        "EGLD"
+      ],
       "inputs": [
         {
           "name": "dns_address",
@@ -599,7 +613,9 @@
           "multi_result": true
         }
       ],
-      "labels": ["multisig-external-view"],
+      "labels": [
+        "multisig-external-view"
+      ],
       "allow_multiple_var_args": true
     },
     {
@@ -622,10 +638,14 @@
           "type": "UserRole"
         }
       ],
-      "labels": ["multisig-external-view"]
+      "labels": [
+        "multisig-external-view"
+      ]
     },
     {
-      "docs": ["Lists all users that can sign actions."],
+      "docs": [
+        "Lists all users that can sign actions."
+      ],
       "name": "getAllBoardMembers",
       "mutability": "readonly",
       "inputs": [],
@@ -635,10 +655,14 @@
           "multi_result": true
         }
       ],
-      "labels": ["multisig-external-view"]
+      "labels": [
+        "multisig-external-view"
+      ]
     },
     {
-      "docs": ["Lists all proposers that are not board members."],
+      "docs": [
+        "Lists all proposers that are not board members."
+      ],
       "name": "getAllProposers",
       "mutability": "readonly",
       "inputs": [],
@@ -648,10 +672,14 @@
           "multi_result": true
         }
       ],
-      "labels": ["multisig-external-view"]
+      "labels": [
+        "multisig-external-view"
+      ]
     },
     {
-      "docs": ["Serialized action data of an action with index."],
+      "docs": [
+        "Serialized action data of an action with index."
+      ],
       "name": "getActionData",
       "mutability": "readonly",
       "inputs": [
@@ -665,7 +693,9 @@
           "type": "Action"
         }
       ],
-      "labels": ["multisig-external-view"]
+      "labels": [
+        "multisig-external-view"
+      ]
     },
     {
       "docs": [
@@ -686,7 +716,9 @@
           "type": "List<Address>"
         }
       ],
-      "labels": ["multisig-external-view"]
+      "labels": [
+        "multisig-external-view"
+      ]
     },
     {
       "docs": [
@@ -706,7 +738,9 @@
           "type": "u32"
         }
       ],
-      "labels": ["multisig-external-view"]
+      "labels": [
+        "multisig-external-view"
+      ]
     },
     {
       "docs": [
@@ -729,7 +763,9 @@
           "type": "u32"
         }
       ],
-      "labels": ["multisig-external-view"]
+      "labels": [
+        "multisig-external-view"
+      ]
     }
   ],
   "events": [
@@ -1120,7 +1156,9 @@
     },
     "ActionFullInfo": {
       "type": "struct",
-      "docs": ["Not used internally, just to retrieve results via endpoint."],
+      "docs": [
+        "Not used internally, just to retrieve results via endpoint."
+      ],
       "fields": [
         {
           "name": "action_id",
