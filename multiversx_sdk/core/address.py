@@ -168,10 +168,8 @@ class AddressComputer:
         deployer_pubkey = deployer.get_public_key()
         nonce_bytes = deployment_nonce.to_bytes(8, byteorder="little")
         bytes_to_hash = deployer_pubkey + nonce_bytes
-        contract_pubkey = keccak.new(
-            digest_bits=256).update(bytes_to_hash).digest()
-        contract_pubkey = bytes([0] * 8) + bytes([5, 0]) + \
-            contract_pubkey[10:30] + deployer_pubkey[30:]
+        contract_pubkey = keccak.new(digest_bits=256).update(bytes_to_hash).digest()
+        contract_pubkey = bytes([0] * 8) + bytes([5, 0]) + contract_pubkey[10:30] + deployer_pubkey[30:]
         return Address(contract_pubkey, deployer.get_hrp())
 
     def get_shard_of_address(self, address: Address) -> int:

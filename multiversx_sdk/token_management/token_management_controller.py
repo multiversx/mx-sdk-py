@@ -25,8 +25,7 @@ class INetworkProvider(Protocol):
 
 class TokenManagementController:
     def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
-        self.factory = TokenManagementTransactionsFactory(
-            TransactionsFactoryConfig(chain_id))
+        self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self.network_provider = network_provider
         self.tx_computer = TransactionComputer()
         self.parser = TokenManagementTransactionsOutcomeParser()
@@ -63,8 +62,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -106,8 +104,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -116,8 +113,7 @@ class TokenManagementController:
 
     def await_completed_issue_semi_fungible(
             self, transaction_hash: Union[str, bytes]) -> list[IssueSemiFungibleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_issue_semi_fungible(transaction)
 
     def create_transaction_for_issuing_non_fungible(self,
@@ -159,8 +155,7 @@ class TokenManagementController:
         return self.parser.parse_issue_non_fungible(transaction_on_network)
 
     def await_completed_issue_non_fungible(self, transaction_hash: Union[str, bytes]) -> list[IssueNonFungibleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_issue_non_fungible(transaction)
 
     def create_transaction_for_registering_meta_esdt(self,
@@ -195,8 +190,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -228,8 +222,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -237,8 +230,7 @@ class TokenManagementController:
         return self.parser.parse_register_and_set_all_roles(transaction_on_network)
 
     def await_completed_register_and_set_all_roles(self, transaction_hash: Union[str, bytes]) -> list[RegisterAndSetAllRolesOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_register_and_set_all_roles(transaction)
 
     def create_transaction_for_setting_burn_role_globally(self,
@@ -255,8 +247,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -282,8 +273,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -291,8 +281,7 @@ class TokenManagementController:
         return self.parser.parse_unset_burn_role_globally(transaction_on_network)
 
     def await_completed_unset_burn_role_globally(self, transaction_hash: Union[str, bytes]):
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_unset_burn_role_globally(transaction)
 
     def create_transaction_for_setting_special_role_on_fungible_token(self,
@@ -317,8 +306,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -326,8 +314,7 @@ class TokenManagementController:
         return self.parser.parse_set_special_role(transaction_on_network)
 
     def await_completed_set_special_role_on_fungible_token(self, transaction_hash: Union[str, bytes]) -> list[SetSpecialRoleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_fungible_token(transaction)
 
     def create_transaction_for_setting_special_role_on_semi_fungible_token(self,
@@ -354,8 +341,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -363,8 +349,7 @@ class TokenManagementController:
         return self.parser.parse_set_special_role(transaction_on_network)
 
     def await_completed_set_special_role_on_semi_fungible_token(self, transaction_hash: Union[str, bytes]) -> list[SetSpecialRoleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_semi_fungible_token(transaction)
 
     def create_transaction_for_setting_special_role_on_non_fungible_token(self,
@@ -393,8 +378,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -402,8 +386,7 @@ class TokenManagementController:
         return self.parser.parse_set_special_role(transaction_on_network)
 
     def await_completed_set_special_role_on_non_fungible_token(self, transaction_hash: Union[str, bytes]) -> list[SetSpecialRoleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_non_fungible_token(transaction)
 
     def create_transaction_for_creating_nft(self,
@@ -432,8 +415,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -441,8 +423,7 @@ class TokenManagementController:
         return self.parser.parse_nft_create(transaction_on_network)
 
     def await_completed_create_nft(self, transaction_hash: Union[str, bytes]) -> list[NFTCreateOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_create_nft(transaction)
 
     def create_transaction_for_pausing(self,
@@ -459,8 +440,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -468,8 +448,7 @@ class TokenManagementController:
         return self.parser.parse_pause(transaction_on_network)
 
     def await_completed_pause(self, transaction_hash: Union[str, bytes]) -> list[PauseOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_pause(transaction)
 
     def create_transaction_for_unpausing(self,
@@ -486,8 +465,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -495,8 +473,7 @@ class TokenManagementController:
         return self.parser.parse_unpause(transaction_on_network)
 
     def await_completed_unpause(self, transaction_hash: Union[str, bytes]) -> list[UnPauseOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_unpause(transaction)
 
     def create_transaction_for_freezing(self,
@@ -515,8 +492,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -524,8 +500,7 @@ class TokenManagementController:
         return self.parser.parse_freeze(transaction_on_network)
 
     def await_completed_freeze(self, transaction_hash: Union[str, bytes]) -> list[FreezeOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_freeze(transaction)
 
     def create_transaction_for_unfreezing(self,
@@ -544,8 +519,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -553,8 +527,7 @@ class TokenManagementController:
         return self.parser.parse_unfreeze(transaction_on_network)
 
     def await_completed_unfreeze(self, transaction_hash: Union[str, bytes]) -> list[UnFreezeOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_unfreeze(transaction)
 
     def create_transaction_for_wiping(self,
@@ -573,8 +546,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -582,8 +554,7 @@ class TokenManagementController:
         return self.parser.parse_wipe(transaction_on_network)
 
     def await_completed_wipe(self, transaction_hash: Union[str, bytes]) -> list[WipeOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_wipe(transaction)
 
     def create_transaction_for_local_minting(self,
@@ -602,8 +573,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -611,8 +581,7 @@ class TokenManagementController:
         return self.parser.parse_local_mint(transaction_on_network)
 
     def await_completed_local_mint(self, transaction_hash: Union[str, bytes]) -> list[MintOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_local_mint(transaction)
 
     def create_transaction_for_local_burning(self,
@@ -631,8 +600,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -640,8 +608,7 @@ class TokenManagementController:
         return self.parser.parse_local_burn(transaction_on_network)
 
     def await_completed_local_burn(self, transaction_hash: Union[str, bytes]) -> list[BurnOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_local_burn(transaction)
 
     def create_transaction_for_updating_attributes(self,
@@ -662,8 +629,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -671,8 +637,7 @@ class TokenManagementController:
         return self.parser.parse_update_attributes(transaction_on_network)
 
     def await_completed_update_attributes(self, transaction_hash: Union[str, bytes]) -> list[UpdateAttributesOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_update_attributes(transaction)
 
     def create_transaction_for_adding_quantity(self,
@@ -693,8 +658,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -702,8 +666,7 @@ class TokenManagementController:
         return self.parser.parse_add_quantity(transaction_on_network)
 
     def await_completed_add_quantity(self, transaction_hash: Union[str, bytes]) -> list[AddQuantityOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_add_quantity(transaction)
 
     def create_transaction_for_burning_quantity(self,
@@ -724,8 +687,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -733,8 +695,7 @@ class TokenManagementController:
         return self.parser.parse_burn_quantity(transaction_on_network)
 
     def await_completed_burn_quantity(self, transaction_hash: Union[str, bytes]) -> list[BurnQuantityOutcome]:
-        transaction = self.network_provider.await_transaction_completed(
-            transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_burn_quantity(transaction)
 
     def create_transaction_for_transferring_ownership(self,
@@ -753,8 +714,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -776,8 +736,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -799,8 +758,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -820,8 +778,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -841,8 +798,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -860,8 +816,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -883,8 +838,7 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction
 
@@ -904,7 +858,6 @@ class TokenManagementController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
-        transaction.signature = sender.sign(
-            self.tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = sender.sign(self.tx_computer.compute_bytes_for_signing(transaction))
 
         return transaction

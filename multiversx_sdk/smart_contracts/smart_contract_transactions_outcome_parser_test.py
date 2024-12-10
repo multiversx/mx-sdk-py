@@ -5,7 +5,6 @@ import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.codec import encode_unsigned_number
 from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
                                                         TransactionEvent,
                                                         TransactionLogs)

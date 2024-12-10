@@ -35,12 +35,9 @@ def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[
 def vm_query_response_to_smart_contract_query_response(
         raw_response: dict[str, Any],
         function: str) -> SmartContractQueryResponse:
-    return_data = raw_response.get(
-        "returnData", []) or raw_response.get("ReturnData", [])
-    return_code = raw_response.get(
-        "returnCode", "") or raw_response.get("ReturnCode", "")
-    return_message = raw_response.get(
-        "returnMessage", "") or raw_response.get("ReturnMessage", "")
+    return_data = raw_response.get("returnData", []) or raw_response.get("ReturnData", [])
+    return_code = raw_response.get("returnCode", "") or raw_response.get("ReturnCode", "")
+    return_message = raw_response.get("returnMessage", "") or raw_response.get("ReturnMessage", "")
 
     return SmartContractQueryResponse(
         function=function,
@@ -74,8 +71,7 @@ def transaction_from_api_response(tx_hash: str, response: dict[str, Any]) -> Tra
     logs = transaction_logs_from_response(response.get("logs", {}))
 
     sc_results = response.get("results", [])
-    smart_contract_results = [smart_contract_result_from_api_response(
-        result) for result in sc_results]
+    smart_contract_results = [smart_contract_result_from_api_response(result) for result in sc_results]
 
     return TransactionOnNetwork(
         raw=response,
@@ -130,8 +126,7 @@ def transaction_from_proxy_response(
     logs = transaction_logs_from_response(response.get("logs", {}))
 
     sc_results = response.get("smartContractResults", [])
-    smart_contract_results = [smart_contract_result_from_proxy_response(
-        result) for result in sc_results]
+    smart_contract_results = [smart_contract_result_from_proxy_response(result) for result in sc_results]
 
     if process_status:
         status = process_status
@@ -293,8 +288,7 @@ def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
     gas_price_modifier = float(raw_response.get("erd_gas_price_modifier", 0))
     min_gas_limit = raw_response.get("erd_min_gas_limit", 0)
     min_gas_price = raw_response.get("erd_min_gas_price", 0)
-    extra_gas_limit_guarded_tx = raw_response.get(
-        "erd_extra_gas_limit_guarded_tx", 0)
+    extra_gas_limit_guarded_tx = raw_response.get("erd_extra_gas_limit_guarded_tx", 0)
     num_shards = raw_response.get("erd_num_shards_without_meta", 0)
     round_duration = raw_response.get("erd_round_duration", 0)
     rounds_per_epoch = raw_response.get("erd_rounds_per_epoch", 0)
@@ -336,8 +330,7 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
     shard = raw_response.get("shard", 0)
     nonce = raw_response.get("nonce", 0)
     hash = raw_response.get("hash", "")
-    previous_hash = raw_response.get(
-        "prevBlockHash", "") or raw_response.get("prevHash", "")
+    previous_hash = raw_response.get("prevBlockHash", "") or raw_response.get("prevHash", "")
     timestamp = raw_response.get("timestamp", 0)
     round = raw_response.get("round", 0)
     epoch = raw_response.get("epoch", 0)
@@ -429,8 +422,7 @@ def account_from_api_response(raw_response: dict[str, Any]) -> AccountOnNetwork:
     is_upgradeable = bool(raw_response.get("isUpgradeable", False))
     is_readable = bool(raw_response.get("isReadable", False))
     is_payable = bool(raw_response.get("isPayable", False))
-    is_payable_by_sc = bool(raw_response.get(
-        "isPayableBySmartContract", False))
+    is_payable_by_sc = bool(raw_response.get("isPayableBySmartContract", False))
 
     return AccountOnNetwork(
         raw=raw_response,
