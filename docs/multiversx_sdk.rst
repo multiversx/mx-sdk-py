@@ -8,9 +8,10 @@ Subpackages
    :maxdepth: 4
 
    multiversx_sdk.abi
-   multiversx_sdk.adapters
-   multiversx_sdk.converters
+   multiversx_sdk.accounts
+   multiversx_sdk.controllers
    multiversx_sdk.core
+   multiversx_sdk.entrypoints
    multiversx_sdk.network_providers
    multiversx_sdk.wallet
 

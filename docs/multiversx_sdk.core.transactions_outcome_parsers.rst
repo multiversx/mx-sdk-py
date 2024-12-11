@@ -20,14 +20,6 @@ multiversx\_sdk.core.transactions\_outcome\_parsers.delegation\_transactions\_ou
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.transactions\_outcome\_parsers.resources module
---------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.transactions_outcome_parsers.resources
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.core.transactions\_outcome\_parsers.smart\_contract\_transactions\_outcome\_parser module
 ---------------------------------------------------------------------------------------------------------
 

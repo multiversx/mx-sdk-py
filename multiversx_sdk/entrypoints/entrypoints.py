@@ -99,8 +99,11 @@ class NetworkEntrypoint:
     def send_transaction(self, transaction: Transaction) -> bytes:
         return self.network_provider.send_transaction(transaction)
 
-    def await_completed_transaction(self, tx_hash: Union[str, bytes]) -> TransactionOnNetwork:
+    def await_transaction_completed(self, tx_hash: Union[str, bytes]) -> TransactionOnNetwork:
         return self.network_provider.await_transaction_completed(tx_hash)
+
+    def get_transaction(self, tx_hash: Union[str, bytes]) -> TransactionOnNetwork:
+        return self.network_provider.get_transaction(tx_hash)
 
     def create_network_provider(self) -> Union[ApiNetworkProvider, ProxyNetworkProvider]:
         return self.network_provider

@@ -61,11 +61,11 @@ class ApiNetworkProvider(INetworkProvider):
         return self.backing_proxy.get_network_status(shard)
 
     def get_block(self, arguments: GetBlockArguments) -> BlockOnNetwork:
-        """Fetches a block by nonce or by hash."""
+        """Fetches a block by hash."""
         if not arguments.block_hash:
             raise Exception("Block hash not provided. Please set the `block_hash` in the arguments.")
 
-        result = self.do_get_generic(f"blocks/{arguments.block_hash.decode()}")
+        result = self.do_get_generic(f"blocks/{arguments.block_hash.hex()}")
         return block_from_response(result)
 
     def get_latest_block(self, shard: Optional[int] = None) -> BlockOnNetwork:
@@ -80,7 +80,10 @@ class ApiNetworkProvider(INetworkProvider):
         return account
 
     def get_account_storage(self, address: Address) -> AccountStorage:
-        """Fetches the storage (key-value pairs) of an account."""
+        """
+        Fetches the storage (key-value pairs) of an account.
+        When decoding the keys, the errors are ignored. Use the raw values if needed.
+        """
         response: dict[str, Any] = self.do_get_generic(f"address/{address.to_bech32()}/keys")
         return account_storage_from_response(response.get("data", {}))
 
@@ -112,9 +115,14 @@ class ApiNetworkProvider(INetworkProvider):
         response = self.do_post_generic("transactions", transaction.to_dictionary())
         return bytes.fromhex(response.get('txHash', ''))
 
-    def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork:
+    def simulate_transaction(self, transaction: Transaction, check_signature: bool = False) -> TransactionOnNetwork:
         """Simulates a transaction."""
-        response: dict[str, Any] = self.do_post_generic('transaction/simulate', transaction.to_dictionary())
+        url = 'transaction/simulate?checkSignature=false'
+
+        if check_signature:
+            url = 'transaction/simulate'
+
+        response: dict[str, Any] = self.do_post_generic(url, transaction.to_dictionary())
         return transaction_from_simulate_response(transaction, response.get("data", {}).get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:

@@ -4,14 +4,6 @@ multiversx\_sdk.network\_providers package
 Submodules
 ----------
 
-multiversx\_sdk.network\_providers.accounts module
---------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.accounts
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.network\_providers.api\_network\_provider module
 ----------------------------------------------------------------
 
@@ -28,30 +20,6 @@ multiversx\_sdk.network\_providers.config module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.network\_providers.contract\_query\_requests module
--------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.contract_query_requests
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.contract\_query\_response module
--------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.contract_query_response
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.contract\_results module
------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.contract_results
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.network\_providers.errors module
 ------------------------------------------------
 
@@ -60,42 +28,18 @@ multiversx\_sdk.network\_providers.errors module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.network\_providers.http\_resources module
+---------------------------------------------------------
+
+.. automodule:: multiversx_sdk.network_providers.http_resources
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.network\_providers.interface module
 ---------------------------------------------------
 
 .. automodule:: multiversx_sdk.network_providers.interface
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.network\_config module
----------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.network_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.network\_general\_statistics module
-----------------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.network_general_statistics
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.network\_stake module
---------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.network_stake
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.network\_status module
----------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.network_status
    :members:
    :undoc-members:
    :show-inheritance:
@@ -116,18 +60,10 @@ multiversx\_sdk.network\_providers.resources module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.network\_providers.token\_definitions module
-------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.token_definitions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.tokens module
+multiversx\_sdk.network\_providers.shared module
 ------------------------------------------------
 
-.. automodule:: multiversx_sdk.network_providers.tokens
+.. automodule:: multiversx_sdk.network_providers.shared
    :members:
    :undoc-members:
    :show-inheritance:
@@ -148,58 +84,10 @@ multiversx\_sdk.network\_providers.transaction\_decoder module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.network\_providers.transaction\_events module
--------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.transaction_events
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.transaction\_logs module
------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.transaction_logs
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.transaction\_receipt module
---------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.transaction_receipt
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.transaction\_status module
--------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.transaction_status
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.transactions module
-------------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.transactions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 multiversx\_sdk.network\_providers.user\_agent module
 -----------------------------------------------------
 
 .. automodule:: multiversx_sdk.network_providers.user_agent
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.network\_providers.utils module
------------------------------------------------
-
-.. automodule:: multiversx_sdk.network_providers.utils
    :members:
    :undoc-members:
    :show-inheritance:
