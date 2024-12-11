@@ -74,7 +74,7 @@ class ProxyNetworkProvider(INetworkProvider):
             raise Exception("Shard not provided. Please set the shard in the arguments.")
 
         if arguments.block_hash:
-            response = self.do_get_generic(f"block/{arguments.shard}/by-hash/{arguments.block_hash.decode()}")
+            response = self.do_get_generic(f"block/{arguments.shard}/by-hash/{arguments.block_hash.hex()}")
         elif arguments.block_nonce:
             response = self.do_get_generic(f"block/{arguments.shard}/by-nonce/{arguments.block_nonce}")
         else:
@@ -108,7 +108,10 @@ class ProxyNetworkProvider(INetworkProvider):
         return_data["is_guarded"] = bool(guardian_data.get("guardianData", {}).get("guarded"))
 
     def get_account_storage(self, address: Address) -> AccountStorage:
-        """Fetches the storage (key-value pairs) of an account."""
+        """
+        Fetches the storage (key-value pairs) of an account.
+        When decoding the keys, the errors are ignored. Use the raw values if needed.
+        """
         response = self.do_get_generic(f"address/{address.to_bech32()}/keys")
         return account_storage_from_response(response.to_dictionary())
 
@@ -141,10 +144,14 @@ class ProxyNetworkProvider(INetworkProvider):
             'transaction/send', transaction.to_dictionary())
         return bytes.fromhex(response.get('txHash', ''))
 
-    def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork:
+    def simulate_transaction(self, transaction: Transaction, check_signature: bool = False) -> TransactionOnNetwork:
         """Simulates a transaction."""
-        response = self.do_post_generic(
-            'transaction/simulate', transaction.to_dictionary())
+        url = 'transaction/simulate?checkSignature=false'
+
+        if check_signature:
+            url = 'transaction/simulate'
+
+        response = self.do_post_generic(url, transaction.to_dictionary())
         return transaction_from_simulate_response(transaction, response.to_dictionary().get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:

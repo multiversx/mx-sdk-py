@@ -454,7 +454,7 @@ def account_storage_from_response(raw_response: dict[str, Any]) -> AccountStorag
         entries.append(
             AccountStorageEntry(
                 raw={key: value},
-                key=decoded_key.decode(),
+                key=decoded_key.decode(errors="ignore"),
                 value=decoded_value
             )
         )

@@ -46,7 +46,7 @@ class TestProxy:
             self.proxy.get_block(args)
 
         args = GetBlockArguments(
-            shard=1, block_hash="ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f".encode()
+            shard=1, block_hash=bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
         )
         result_by_hash = self.proxy.get_block(args)
 
@@ -301,12 +301,14 @@ class TestProxy:
             chain_id="D",
         )
         nonce = self.proxy.get_account(Address.new_from_bech32(bob.label)).nonce
-
         transaction.nonce = nonce
-        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         tx_on_network = self.proxy.simulate_transaction(transaction)
+        assert tx_on_network.status == TransactionStatus("success")
 
+        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        tx_on_network = self.proxy.simulate_transaction(transaction=transaction, check_signature=True)
         assert tx_on_network.status == TransactionStatus("success")
 
         transaction = Transaction(
@@ -314,12 +316,21 @@ class TestProxy:
             receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"),
             gas_limit=10000000,
             chain_id="D",
-            data=b"add@07"
+            data=b"add@07",
+            nonce=nonce
         )
-        transaction.nonce = nonce
+        tx_on_network = self.proxy.simulate_transaction(transaction)
+
+        assert tx_on_network.status == TransactionStatus("success")
+        assert len(tx_on_network.smart_contract_results) == 1
+        assert tx_on_network.smart_contract_results[0].sender.to_bech32(
+        ) == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert tx_on_network.smart_contract_results[0].receiver.to_bech32() == bob.label
+        assert tx_on_network.smart_contract_results[0].data == b"@6f6b"
+
         transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
-        tx_on_network = self.proxy.simulate_transaction(transaction)
+        tx_on_network = self.proxy.simulate_transaction(transaction=transaction, check_signature=True)
 
         assert tx_on_network.status == TransactionStatus("success")
         assert len(tx_on_network.smart_contract_results) == 1
