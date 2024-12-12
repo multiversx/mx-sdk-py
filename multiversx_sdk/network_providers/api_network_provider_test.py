@@ -190,6 +190,7 @@ class TestApi:
             receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id="D",
+            signature=bytes.fromhex("".join(["0"] * 128))
         )
         nonce = self.api.get_account(Address.new_from_bech32(bob.label)).nonce
         transaction.nonce = nonce
@@ -208,7 +209,8 @@ class TestApi:
             gas_limit=10000000,
             chain_id="D",
             data=b"add@07",
-            nonce=nonce
+            nonce=nonce,
+            signature=bytes.fromhex("".join(["0"] * 128))
         )
         tx_on_network = self.api.simulate_transaction(transaction)
 
