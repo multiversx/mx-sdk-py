@@ -2,7 +2,7 @@ import json
 import logging
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from multiversx_sdk.wallet.crypto import (EncryptedData, Randomness, decryptor,
                                           encryptor)
@@ -53,7 +53,7 @@ class UserWallet:
         )
 
     @classmethod
-    def decrypt_secret_key(cls, keyfile_object: Dict[str, Any], password: str) -> UserSecretKey:
+    def decrypt_secret_key(cls, keyfile_object: dict[str, Any], password: str) -> UserSecretKey:
         # Here, we check the "kind" field only for files that have it. Older keystore files (holding only secret keys) do not have this field.
         kind = keyfile_object.get("kind", None)
         if kind and kind != UserWalletKind.SECRET_KEY.value:
@@ -66,7 +66,7 @@ class UserWallet:
         return UserSecretKey(seed)
 
     @classmethod
-    def decrypt_mnemonic(cls, keyfile_object: Dict[str, Any], password: str) -> Mnemonic:
+    def decrypt_mnemonic(cls, keyfile_object: dict[str, Any], password: str) -> Mnemonic:
         if keyfile_object['kind'] != UserWalletKind.MNEMONIC.value:
             raise Exception(f"Expected kind to be {UserWalletKind.MNEMONIC.value}, but it was {keyfile_object['kind']}")
 
@@ -110,13 +110,13 @@ class UserWallet:
         obj = self.to_dict(address_hrp)
         return json.dumps(obj, indent=4)
 
-    def to_dict(self, address_hrp: Optional[str] = None) -> Dict[str, Any]:
+    def to_dict(self, address_hrp: Optional[str] = None) -> dict[str, Any]:
         if self.kind == UserWalletKind.SECRET_KEY.value:
             return self._to_dict_when_kind_is_secret_key(address_hrp)
 
         return self._to_dict_when_kind_is_mnemonic()
 
-    def _to_dict_when_kind_is_secret_key(self, address_hrp: Optional[str] = None) -> Dict[str, Any]:
+    def _to_dict_when_kind_is_secret_key(self, address_hrp: Optional[str] = None) -> dict[str, Any]:
         if self.public_key_when_kind_is_secret_key is None:
             raise Exception("Public key isn't available")
 
@@ -133,7 +133,7 @@ class UserWallet:
 
         return envelope
 
-    def _to_dict_when_kind_is_mnemonic(self) -> Dict[str, Any]:
+    def _to_dict_when_kind_is_mnemonic(self) -> dict[str, Any]:
         crypto_section = self._get_crypto_section_as_dict()
 
         envelope = {
@@ -145,7 +145,7 @@ class UserWallet:
 
         return envelope
 
-    def _get_crypto_section_as_dict(self) -> Dict[str, Any]:
+    def _get_crypto_section_as_dict(self) -> dict[str, Any]:
         return {
             "ciphertext": self.encrypted_data.ciphertext,
             "cipherparams": {"iv": self.encrypted_data.iv},

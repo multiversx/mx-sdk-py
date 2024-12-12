@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import List
 
 from multiversx_sdk.wallet.constants import USER_SEED_LENGTH
 from multiversx_sdk.wallet.pem_entry import PemEntry
@@ -17,7 +16,7 @@ class UserPEM:
         return cls.from_file_all(path)[index]
 
     @classmethod
-    def from_file_all(cls, path: Path) -> List['UserPEM']:
+    def from_file_all(cls, path: Path) -> list['UserPEM']:
         text = path.expanduser().resolve().read_text()
         return cls.from_text_all(text)
 
@@ -27,9 +26,9 @@ class UserPEM:
         return items[index]
 
     @classmethod
-    def from_text_all(cls, text: str) -> List['UserPEM']:
+    def from_text_all(cls, text: str) -> list['UserPEM']:
         entries = PemEntry.from_text_all(text)
-        result_items: List[UserPEM] = []
+        result_items: list[UserPEM] = []
 
         for entry in entries:
             secret_key = UserSecretKey(entry.message[0:USER_SEED_LENGTH])

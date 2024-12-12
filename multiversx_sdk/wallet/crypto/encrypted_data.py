@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 
 class KeyDerivationParams:
@@ -38,7 +38,7 @@ class EncryptedData:
         self.mac = mac
 
     @classmethod
-    def from_keyfile_object(cls, keyfile_object: Dict[str, Any]) -> "EncryptedData":
+    def from_keyfile_object(cls, keyfile_object: dict[str, Any]) -> "EncryptedData":
         return cls(
             id=keyfile_object["id"],
             version=keyfile_object["version"],

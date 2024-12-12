@@ -1,6 +1,6 @@
 import io
 from types import SimpleNamespace
-from typing import Any, List
+from typing import Any
 
 from multiversx_sdk.abi.fields import (Field, decode_fields_nested,
                                        encode_fields_nested,
@@ -11,7 +11,7 @@ from multiversx_sdk.abi.shared import (convert_native_value_to_dictionary,
 
 
 class StructValue:
-    def __init__(self, fields: List[Field]) -> None:
+    def __init__(self, fields: list[Field]) -> None:
         self.fields = fields
 
     def encode_nested(self, writer: io.BytesIO):

@@ -1,5 +1,5 @@
 import io
-from typing import Any, Dict, List
+from typing import Any
 
 from multiversx_sdk.abi.interface import ISingleValue
 
@@ -19,7 +19,7 @@ class Field:
         return isinstance(other, Field) and self.name == other.name and self.value == other.value
 
 
-def encode_fields_nested(fields: List[Field], writer: io.BytesIO):
+def encode_fields_nested(fields: list[Field], writer: io.BytesIO):
     for field in fields:
         try:
             field.value.encode_nested(writer)
@@ -27,7 +27,7 @@ def encode_fields_nested(fields: List[Field], writer: io.BytesIO):
             raise Exception(f"cannot encode field '{field.name}', because of: {e}")
 
 
-def decode_fields_nested(fields: List[Field], reader: io.BytesIO):
+def decode_fields_nested(fields: list[Field], reader: io.BytesIO):
     for field in fields:
         try:
             field.value.decode_nested(reader)
@@ -35,7 +35,7 @@ def decode_fields_nested(fields: List[Field], reader: io.BytesIO):
             raise Exception(f"cannot decode field '{field.name}', because of: {e}")
 
 
-def set_fields_from_dictionary(fields: List[Field], dictionary: Dict[str, Any]):
+def set_fields_from_dictionary(fields: list[Field], dictionary: dict[str, Any]):
     for field in fields:
         if field.name not in dictionary:
             raise ValueError(f"the dictionary is missing the key '{field.name}'")
@@ -48,7 +48,7 @@ def set_fields_from_dictionary(fields: List[Field], dictionary: Dict[str, Any]):
             raise ValueError(f"cannot set payload for field '{field.name}', because of: {error}")
 
 
-def set_fields_from_list(fields: List[Field], items: List[Any]):
+def set_fields_from_list(fields: list[Field], items: list[Any]):
     if len(fields) != len(items):
         raise ValueError(f"the number of fields ({len(fields)}) does not match the number of provided items ({len(items)})")
 

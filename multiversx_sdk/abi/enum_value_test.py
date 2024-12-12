@@ -1,6 +1,5 @@
 import re
 from types import SimpleNamespace
-from typing import List
 
 import pytest
 
@@ -26,7 +25,7 @@ def test_set_payload_and_get_payload():
     assert value.get_payload() == SimpleNamespace(__discriminant__=42)
 
     # With fields (from SimpleNamespace, object, dictionary or list)
-    def provide_fields(discriminant: int) -> List[Field]:
+    def provide_fields(discriminant: int) -> list[Field]:
         if discriminant == 41:
             return [
                 Field("a", U32Value()),

@@ -1,5 +1,5 @@
 import io
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, Optional
 
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.shared import (convert_native_value_to_list,
@@ -8,7 +8,7 @@ from multiversx_sdk.abi.shared import (convert_native_value_to_list,
 
 class ListValue:
     def __init__(self,
-                 items: Optional[List[ISingleValue]] = None,
+                 items: Optional[list[ISingleValue]] = None,
                  item_creator: Optional[Callable[[], ISingleValue]] = None) -> None:
         self.items = items or []
         self.item_creator = item_creator

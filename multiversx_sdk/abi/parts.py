@@ -1,4 +1,4 @@
-from typing import List, Sequence
+from typing import Sequence
 
 
 class PartsHolder:
@@ -18,7 +18,7 @@ class PartsHolder:
         self.parts = list(parts)
         self.focused_part_index = 0
 
-    def get_parts(self) -> List[bytes]:
+    def get_parts(self) -> list[bytes]:
         return self.parts
 
     def get_num_parts(self) -> int:

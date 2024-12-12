@@ -41,12 +41,12 @@ class ProtoSerializer:
         proto_transaction.Signature = transaction.signature
         proto_transaction.Options = transaction.options
 
-        if transaction.guardian:
+        if transaction.guardian and not transaction.guardian.is_empty():
             guardian_address = transaction.guardian
             proto_transaction.GuardAddr = guardian_address.get_public_key()
             proto_transaction.GuardSignature = transaction.guardian_signature
 
-        if transaction.relayer:
+        if transaction.relayer and not transaction.relayer.is_empty():
             proto_transaction.Relayer = transaction.relayer.get_public_key()
             proto_transaction.RelayerSignature = transaction.relayer_signature
 
