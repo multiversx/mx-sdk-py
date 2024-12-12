@@ -7,7 +7,10 @@ from multiversx_sdk.relayed.relayed_transactions_factory import \
 
 
 class RelayedController:
-    """The transactions are created from the perspective of the relayer. The 'sender' represents the relayer."""
+    """
+    The Relayed Transactions V1 and V2 will soon be deprecated from the network. Please use Relayed Transactions V3 instead.
+    The transactions are created from the perspective of the relayer. The 'sender' represents the relayer.
+    """
 
     def __init__(self, chain_id: str) -> None:
         self.factory = RelayedTransactionsFactory(TransactionsFactoryConfig(chain_id))

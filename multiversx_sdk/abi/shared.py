@@ -1,6 +1,6 @@
 import io
 import struct
-from typing import Any, Dict, List, Tuple
+from typing import Any, Tuple
 
 from multiversx_sdk.abi.constants import STRUCT_PACKING_FORMAT_FOR_UINT32
 
@@ -27,7 +27,7 @@ def read_bytes_exactly(reader: io.BytesIO, num_bytes: int):
     return data
 
 
-def convert_native_value_to_dictionary(obj: Any, raise_on_failure: bool = True) -> Tuple[Dict[str, Any], bool]:
+def convert_native_value_to_dictionary(obj: Any, raise_on_failure: bool = True) -> Tuple[dict[str, Any], bool]:
     try:
         return dict(obj), True
     except Exception as error:
@@ -44,7 +44,7 @@ def convert_native_value_to_dictionary(obj: Any, raise_on_failure: bool = True) 
     return {}, False
 
 
-def convert_native_value_to_list(obj: Any, raise_on_failure: bool = True) -> Tuple[List[Any], bool]:
+def convert_native_value_to_list(obj: Any, raise_on_failure: bool = True) -> Tuple[list[Any], bool]:
     if isinstance(obj, dict):
         raise ValueError("cannot properly convert dictionary to list")
 

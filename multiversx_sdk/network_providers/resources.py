@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from multiversx_sdk.core import Address, Token, TransactionStatus
 from multiversx_sdk.network_providers.constants import (
@@ -15,7 +15,7 @@ class GenericResponse:
     def get(self, key: str, default: Any = None) -> Any:
         return self.__dict__.get(key, default)
 
-    def to_dictionary(self) -> Dict[str, Any]:
+    def to_dictionary(self) -> dict[str, Any]:
         return self.__dict__
 
 

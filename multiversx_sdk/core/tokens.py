@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import Union
 
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.serializer import Serializer
@@ -134,7 +134,7 @@ class TokenComputer:
         nonce_as_hex = self._serializer.serialize([BigUIntValue(token.nonce)])
         return f"{token.identifier}-{nonce_as_hex}"
 
-    def _check_if_extended_identifier_was_provided(self, token_prefx: Union[str, None], token_parts: List[str]) -> None:
+    def _check_if_extended_identifier_was_provided(self, token_prefx: Union[str, None], token_parts: list[str]) -> None:
         # this is for the identifiers of fungible tokens
         MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT = 2
         # this is for the identifiers of nft, sft and meta-esdt

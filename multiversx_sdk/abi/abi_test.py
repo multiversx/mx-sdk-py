@@ -1,6 +1,6 @@
 from pathlib import Path
 from types import SimpleNamespace
-from typing import List, Optional
+from typing import Optional
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import ParameterDefinition
@@ -207,7 +207,7 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
 
     # All values untyped, structure as simple object (custom class)
     class CallActionData:
-        def __init__(self, to: Address, egld_amount: int, endpoint_name: str, arguments: List[bytes], opt_gas_limit: Optional[int] = None):
+        def __init__(self, to: Address, egld_amount: int, endpoint_name: str, arguments: list[bytes], opt_gas_limit: Optional[int] = None):
             self.to = to
             self.egld_amount = egld_amount
             self.endpoint_name = endpoint_name

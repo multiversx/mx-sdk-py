@@ -2,7 +2,7 @@ import json
 from base64 import b64encode
 from collections import OrderedDict
 from hashlib import blake2b
-from typing import Any, Dict
+from typing import Any
 
 from Cryptodome.Hash import keccak
 
@@ -81,7 +81,7 @@ class TransactionComputer:
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_HASH_SIGN
 
     def is_relayed_v3_transaction(self, transaction: Transaction) -> bool:
-        if transaction.relayer:
+        if transaction.relayer and not transaction.relayer.is_empty():
             return True
         return False
 
@@ -99,9 +99,9 @@ class TransactionComputer:
             if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(transaction):
                 raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
 
-    def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> Dict[str, Any]:
+    def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> dict[str, Any]:
         """Only used when serializing transaction for signing. Internal use only."""
-        dictionary: Dict[str, Any] = OrderedDict()
+        dictionary: dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
 
@@ -140,5 +140,5 @@ class TransactionComputer:
 
         return dictionary
 
-    def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
+    def _dict_to_json(self, dictionary: dict[str, Any]) -> bytes:
         return json.dumps(dictionary, separators=(',', ':')).encode("utf-8")
