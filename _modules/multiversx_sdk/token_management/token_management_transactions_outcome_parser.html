@@ -84,13 +84,13 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser">[docs]</a>
 <span class="k">class</span> <span class="nc">TokenManagementTransactionsOutcomeParser</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_issue_fungible">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_fungible">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_fungible">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_issue_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueFungibleOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -99,7 +99,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_issue_non_fungible">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_non_fungible">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_non_fungible">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_issue_non_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueNonFungibleOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -108,7 +108,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_issue_semi_fungible">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_semi_fungible">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_issue_semi_fungible">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_issue_semi_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueSemiFungibleOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -117,7 +117,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_register_meta_esdt">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_meta_esdt">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_meta_esdt">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_register_meta_esdt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterMetaEsdtOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -126,7 +126,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_register_and_set_all_roles">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_and_set_all_roles">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_and_set_all_roles">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_register_and_set_all_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -147,19 +147,19 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_set_burn_role_globally">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_set_burn_role_globally">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_set_burn_role_globally">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_set_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_unset_burn_role_globally">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unset_burn_role_globally">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unset_burn_role_globally">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_unset_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_set_special_role">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_set_special_role">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_set_special_role">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_set_special_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -175,7 +175,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_nft_create">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_nft_create">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_nft_create">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_nft_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">NFTCreateOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -192,7 +192,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_local_mint">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_local_mint">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_local_mint">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_local_mint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MintOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -209,7 +209,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_local_burn">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_local_burn">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_local_burn">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_local_burn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">BurnOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -226,7 +226,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_pause">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_pause">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_pause">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_pause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PauseOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -235,7 +235,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_unpause">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unpause">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unpause">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_unpause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UnPauseOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -244,7 +244,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_freeze">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_freeze">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_freeze">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">FreezeOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -261,7 +261,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_unfreeze">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unfreeze">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_unfreeze">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_unfreeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UnFreezeOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -278,7 +278,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_wipe">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_wipe">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_wipe">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_wipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">WipeOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -295,7 +295,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_update_attributes">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_update_attributes">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_update_attributes">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_update_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UpdateAttributesOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -311,7 +311,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_add_quantity">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_add_quantity">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_add_quantity">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_add_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AddQuantityOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 
@@ -327,7 +327,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_burn_quantity">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_burn_quantity">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_burn_quantity">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_burn_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">BurnQuantityOutcome</span><span class="p">]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
 

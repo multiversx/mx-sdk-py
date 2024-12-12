@@ -91,7 +91,7 @@
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractTransactionsFactory">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartContractTransactionsFactory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -101,7 +101,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_args_builder</span> <span class="o">=</span> <span class="n">TokenTransfersDataBuilder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_computer</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_deploy">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_deploy">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_deploy">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                       <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                       <span class="n">bytecode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
@@ -138,7 +138,7 @@
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_execute">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_execute">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_execute">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -192,7 +192,7 @@
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_upgrade">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_upgrade">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_upgrade">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_upgrade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -230,7 +230,7 @@
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_claiming_developer_rewards">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_claiming_developer_rewards">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_claiming_developer_rewards">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_claiming_developer_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                           <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                           <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
@@ -247,7 +247,7 @@
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_changing_owner_address">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_changing_owner_address">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_changing_owner_address">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_changing_owner_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                       <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                       <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>

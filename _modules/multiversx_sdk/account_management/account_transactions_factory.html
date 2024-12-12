@@ -77,13 +77,13 @@
 
 
 <div class="viewcode-block" id="AccountTransactionsFactory">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.AccountTransactionsFactory">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountTransactionsFactory">[docs]</a>
 <span class="k">class</span> <span class="nc">AccountTransactionsFactory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
 <div class="viewcode-block" id="AccountTransactionsFactory.create_transaction_for_saving_key_value">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_saving_key_value">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_saving_key_value">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_saving_key_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                 <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                 <span class="n">key_value_pairs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
@@ -105,7 +105,7 @@
 
 
 <div class="viewcode-block" id="AccountTransactionsFactory.create_transaction_for_setting_guardian">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_setting_guardian">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_setting_guardian">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_setting_guardian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                 <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                 <span class="n">guardian_address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -127,7 +127,7 @@
 
 
 <div class="viewcode-block" id="AccountTransactionsFactory.create_transaction_for_guarding_account">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_guarding_account">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_guarding_account">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_guarding_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;GuardAccount&quot;</span><span class="p">]</span>
 
@@ -142,7 +142,7 @@
 
 
 <div class="viewcode-block" id="AccountTransactionsFactory.create_transaction_for_unguarding_account">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_unguarding_account">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountTransactionsFactory.create_transaction_for_unguarding_account">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unguarding_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">guardian</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;UnGuardAccount&quot;</span><span class="p">]</span>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.delegation.delegation_transactions_outcome_parser_types &mdash; multiversx-sdk 0.19.0 documentation</title>
+  <title>multiversx_sdk.relayed.errors &mdash; multiversx-sdk 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
@@ -59,7 +59,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">multiversx_sdk.delegation.delegation_transactions_outcome_parser_types</li>
+      <li class="breadcrumb-item active">multiversx_sdk.relayed.errors</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,17 +68,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for multiversx_sdk.delegation.delegation_transactions_outcome_parser_types</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
-
-
-<div class="viewcode-block" id="CreateNewDelegationContractOutcome">
-<a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.CreateNewDelegationContractOutcome">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">CreateNewDelegationContractOutcome</span><span class="p">:</span>
-    <span class="n">contract_address</span><span class="p">:</span> <span class="n">Address</span></div>
+  <h1>Source code for multiversx_sdk.relayed.errors</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="InvalidInnerTransactionError">
+<a class="viewcode-back" href="../../../multiversx_sdk.relayed.html#multiversx_sdk.relayed.errors.InvalidInnerTransactionError">[docs]</a>
+<span></span><span class="k">class</span> <span class="nc">InvalidInnerTransactionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 </pre></div>
 

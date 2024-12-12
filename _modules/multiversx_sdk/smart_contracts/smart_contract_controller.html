@@ -93,16 +93,25 @@
     <span class="n">ParsedSmartContractCallOutcome</span><span class="p">,</span> <span class="n">SmartContractDeployOutcome</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="INetworkProvider">
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.INetworkProvider">[docs]</a>
 <span class="k">class</span> <span class="nc">INetworkProvider</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="INetworkProvider.query_contract">
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.INetworkProvider.query_contract">[docs]</a>
     <span class="k">def</span> <span class="nf">query_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
 
+
+<div class="viewcode-block" id="INetworkProvider.await_transaction_completed">
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.INetworkProvider.await_transaction_completed">[docs]</a>
     <span class="k">def</span> <span class="nf">await_transaction_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
-        <span class="o">...</span>
+        <span class="o">...</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="SmartContractController">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartContractController</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">network_provider</span><span class="p">:</span> <span class="n">INetworkProvider</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="n">abi</span>
@@ -114,7 +123,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SmartContractController.create_transaction_for_deploy">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.create_transaction_for_deploy">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.create_transaction_for_deploy">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                       <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
                                       <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -149,13 +158,13 @@
 
 
 <div class="viewcode-block" id="SmartContractController.parse_deploy">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.parse_deploy">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.parse_deploy">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_on_network</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractDeployOutcome</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_deploy</span><span class="p">(</span><span class="n">transaction_on_network</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmartContractController.await_completed_deploy">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.await_completed_deploy">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.await_completed_deploy">[docs]</a>
     <span class="k">def</span> <span class="nf">await_completed_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartContractDeployOutcome</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span>
             <span class="n">transaction_hash</span><span class="p">)</span>
@@ -163,7 +172,7 @@
 
 
 <div class="viewcode-block" id="SmartContractController.create_transaction_for_upgrade">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.create_transaction_for_upgrade">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.create_transaction_for_upgrade">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_upgrade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
                                        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -200,7 +209,7 @@
 
 
 <div class="viewcode-block" id="SmartContractController.create_transaction_for_execute">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.create_transaction_for_execute">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.create_transaction_for_execute">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
                                        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -231,20 +240,20 @@
 
 
 <div class="viewcode-block" id="SmartContractController.parse_execute">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.parse_execute">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.parse_execute">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_on_network</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParsedSmartContractCallOutcome</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_execute</span><span class="p">(</span><span class="n">transaction_on_network</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmartContractController.await_completed_execute">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.await_completed_execute">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.await_completed_execute">[docs]</a>
     <span class="k">def</span> <span class="nf">await_completed_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ParsedSmartContractCallOutcome</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_execute</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">transaction</span><span class="o">.</span><span class="n">function</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmartContractController.query">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.query">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.query">[docs]</a>
     <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
               <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
               <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -272,7 +281,7 @@
                 <span class="n">query_response</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span> <span class="n">query_response</span><span class="o">.</span><span class="n">return_message</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SmartContractController.create_query">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.create_query">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.create_query">[docs]</a>
     <span class="k">def</span> <span class="nf">create_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                      <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -303,13 +312,13 @@
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t serialize arguments&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SmartContractController.run_query">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.run_query">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.run_query">[docs]</a>
     <span class="k">def</span> <span class="nf">run_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">query_contract</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmartContractController.parse_query_response">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.SmartContractController.parse_query_response">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.parse_query_response">[docs]</a>
     <span class="k">def</span> <span class="nf">parse_query_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">SmartContractQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
         <span class="n">encoded_values</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">return_data_parts</span>
 

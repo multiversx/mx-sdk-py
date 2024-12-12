@@ -87,7 +87,7 @@
 
 
 <div class="viewcode-block" id="TransferTransactionsFactory">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TransferTransactionsFactory">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.transfers.html#multiversx_sdk.TransferTransactionsFactory">[docs]</a>
 <span class="k">class</span> <span class="nc">TransferTransactionsFactory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
@@ -95,7 +95,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_args_builder</span> <span class="o">=</span> <span class="n">TokenTransfersDataBuilder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_computer</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TransferTransactionsFactory.create_transaction_for_native_token_transfer">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TransferTransactionsFactory.create_transaction_for_native_token_transfer">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.transfers.html#multiversx_sdk.TransferTransactionsFactory.create_transaction_for_native_token_transfer">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_native_token_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                      <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                      <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -114,7 +114,7 @@
 
 
 <div class="viewcode-block" id="TransferTransactionsFactory.create_transaction_for_esdt_token_transfer">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TransferTransactionsFactory.create_transaction_for_esdt_token_transfer">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.transfers.html#multiversx_sdk.TransferTransactionsFactory.create_transaction_for_esdt_token_transfer">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_esdt_token_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                    <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                    <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -165,7 +165,7 @@
         <span class="k">return</span> <span class="n">data_parts</span><span class="p">,</span> <span class="n">gas</span><span class="p">,</span> <span class="n">sender</span>
 
 <div class="viewcode-block" id="TransferTransactionsFactory.create_transaction_for_transfer">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TransferTransactionsFactory.create_transaction_for_transfer">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.transfers.html#multiversx_sdk.TransferTransactionsFactory.create_transaction_for_transfer">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                         <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>

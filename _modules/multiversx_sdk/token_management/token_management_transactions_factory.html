@@ -87,7 +87,7 @@
 
 
 <div class="viewcode-block" id="TokenType">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenType">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenType">[docs]</a>
 <span class="k">class</span> <span class="nc">TokenType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">NFT</span> <span class="o">=</span> <span class="s2">&quot;NFT&quot;</span>
     <span class="n">SFT</span> <span class="o">=</span> <span class="s2">&quot;SFT&quot;</span>
@@ -97,14 +97,14 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory">[docs]</a>
 <span class="k">class</span> <span class="nc">TokenManagementTransactionsFactory</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_issuing_fungible">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_fungible">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_fungible">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_issuing_fungible</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -158,7 +158,7 @@
 <span class="s2">Once the token is registered, you can unset this role by calling &quot;unsetBurnRoleGlobally&quot; (in a separate transaction).&quot;&quot;&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_issuing_semi_fungible">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_semi_fungible">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_semi_fungible">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_issuing_semi_fungible</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -202,7 +202,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_issuing_non_fungible">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_non_fungible">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_issuing_non_fungible">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_issuing_non_fungible</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -246,7 +246,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_meta_esdt">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_meta_esdt">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_meta_esdt">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_registering_meta_esdt</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -292,7 +292,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_and_setting_roles">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_and_setting_roles">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_and_setting_roles">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_registering_and_setting_roles</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -326,7 +326,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_burn_role_globally">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_burn_role_globally">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_burn_role_globally">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_setting_burn_role_globally</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -349,7 +349,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_burn_role_globally">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_burn_role_globally">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_burn_role_globally">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_burn_role_globally</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -372,7 +372,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_fungible_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_fungible_token">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_fungible_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_setting_special_role_on_fungible_token</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -408,7 +408,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_fungible_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_fungible_token">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_fungible_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_special_role_on_fungible_token</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -444,7 +444,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_setting_special_role_on_semi_fungible_token</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -492,7 +492,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_semi_fungible_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_semi_fungible_token">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_semi_fungible_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_special_role_on_semi_fungible_token</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -538,7 +538,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_non_fungible_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_non_fungible_token">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_non_fungible_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_setting_special_role_on_non_fungible_token</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -588,7 +588,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_non_fungible_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_non_fungible_token">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_non_fungible_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unsetting_special_role_on_non_fungible_token</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -636,7 +636,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_creating_nft">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_creating_nft">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_creating_nft">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_creating_nft</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -681,7 +681,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_pausing">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_pausing">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_pausing">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_pausing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -704,7 +704,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unpausing">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unpausing">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unpausing">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unpausing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -727,7 +727,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_freezing">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_freezing">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_freezing">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_freezing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -753,7 +753,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unfreezing">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unfreezing">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unfreezing">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unfreezing</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -779,7 +779,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_wiping">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_wiping">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_wiping">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_wiping</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -804,7 +804,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_local_minting">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_local_minting">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_local_minting">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_local_minting</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -829,7 +829,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_local_burning">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_local_burning">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_local_burning">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_local_burning</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -854,7 +854,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_updating_attributes">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_updating_attributes">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_updating_attributes">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_updating_attributes</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -884,7 +884,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_adding_quantity">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_adding_quantity">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_adding_quantity">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_adding_quantity</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -914,7 +914,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_burning_quantity">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_burning_quantity">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_burning_quantity">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_burning_quantity</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
@@ -944,7 +944,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_modifying_royalties">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_modifying_royalties">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_modifying_royalties">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_modifying_royalties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                    <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -972,7 +972,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_new_uris">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_new_uris">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_setting_new_uris">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_setting_new_uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                 <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                 <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1003,7 +1003,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_modifying_creator">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_modifying_creator">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_modifying_creator">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_modifying_creator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                  <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                  <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1026,7 +1026,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_updating_metadata">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_updating_metadata">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_updating_metadata">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_updating_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                  <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                  <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1062,7 +1062,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_nft_metadata_recreate">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_nft_metadata_recreate">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_nft_metadata_recreate">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_nft_metadata_recreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                      <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                      <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1098,7 +1098,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_changing_token_to_dynamic">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_changing_token_to_dynamic">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_changing_token_to_dynamic">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_changing_token_to_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                          <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                          <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
@@ -1120,7 +1120,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_updating_token_id">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_updating_token_id">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_updating_token_id">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_updating_token_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                  <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                  <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
@@ -1141,7 +1141,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_token">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_token">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_registering_dynamic_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                          <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                          <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1176,7 +1176,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_and_setting_roles">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_and_setting_roles">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_and_setting_roles">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_registering_dynamic_and_setting_roles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                                      <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                                      <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1211,7 +1211,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_transferring_ownership">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_transferring_ownership">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_transferring_ownership">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_transferring_ownership</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                       <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                       <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1234,7 +1234,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_freezing_single_nft">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_freezing_single_nft">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_freezing_single_nft">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_freezing_single_nft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                    <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1259,7 +1259,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unfreezing_single_nft">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unfreezing_single_nft">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_unfreezing_single_nft">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_unfreezing_single_nft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                      <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                      <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1284,7 +1284,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_changing_sft_to_meta_esdt">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_changing_sft_to_meta_esdt">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_changing_sft_to_meta_esdt">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_changing_sft_to_meta_esdt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                          <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                          <span class="n">collection</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1307,7 +1307,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_transferring_nft_create_role">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_transferring_nft_create_role">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_transferring_nft_create_role">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_transferring_nft_create_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                             <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                             <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1332,7 +1332,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_stopping_nft_creation">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_stopping_nft_creation">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_stopping_nft_creation">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_stopping_nft_creation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                      <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                      <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
@@ -1353,7 +1353,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_wiping_single_nft">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_wiping_single_nft">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transaction_for_wiping_single_nft">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transaction_for_wiping_single_nft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                                  <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                                  <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1378,7 +1378,7 @@
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transction_for_adding_uris">
-<a class="viewcode-back" href="../../../multiversx_sdk.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transction_for_adding_uris">[docs]</a>
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory.create_transction_for_adding_uris">[docs]</a>
     <span class="k">def</span> <span class="nf">create_transction_for_adding_uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                           <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
                                           <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
