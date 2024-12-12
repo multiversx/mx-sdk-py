@@ -1,17 +1,10 @@
 import binascii
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Optional
 
 from multiversx_sdk.core import TokenTransfer
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
-
-
-class IAddress(Protocol):
-    """For internal use only"""
-
-    def to_bech32(self) -> str:
-        ...
 
 
 class TransactionMetadata:
@@ -20,10 +13,10 @@ class TransactionMetadata:
         self.receiver: str = ""
         self.value: int = 0
         self.function_name: Optional[str] = None
-        self.function_args: Optional[List[str]] = None
-        self.transfers: Optional[List[TokenTransfer]] = None
+        self.function_args: Optional[list[str]] = None
+        self.transfers: Optional[list[TokenTransfer]] = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "sender": self.sender,
             "receiver": self.receiver,
@@ -33,12 +26,12 @@ class TransactionMetadata:
             "transfers": self._transfers_to_dict()
         }
 
-    def _transfers_to_dict(self) -> List[Dict[str, Any]]:
+    def _transfers_to_dict(self) -> list[dict[str, Any]]:
         if self.transfers:
             if not len(self.transfers):
                 return []
 
-            transfers: List[Dict[str, Any]] = []
+            transfers: list[dict[str, Any]] = []
 
             for transfer in self.transfers:
                 transfers.append({
@@ -84,7 +77,7 @@ class TransactionDecoder:
                 metadata.function_name = data_components[0]
                 metadata.function_args = args
 
-            if len(args) == 0 and not self._is_smart_contract_address(transaction.receiver):
+            if len(args) == 0 and not transaction.receiver.is_smart_contract():
                 metadata.function_name = 'transfer'
                 metadata.function_args = []
 
@@ -236,6 +229,3 @@ class TransactionDecoder:
 
     def hex_to_number(self, hex: str) -> int:
         return int(hex or "00", 16)
-
-    def _is_smart_contract_address(self, address: IAddress) -> bool:
-        return Address.new_from_bech32(address.to_bech32()).is_smart_contract()

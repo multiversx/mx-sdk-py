@@ -1,5 +1,5 @@
 
-from typing import Any, List
+from typing import Any
 
 from multiversx_sdk.abi.type_formula import TypeFormula
 
@@ -13,7 +13,7 @@ class TypeFormulaParser:
     def parse_expression(self, expression: str) -> TypeFormula:
         expression = expression.strip()
         tokens = [token for token in self.tokenize_expression(expression) if token != self.COMMA]
-        stack: List[Any] = []
+        stack: list[Any] = []
 
         for token in tokens:
             if self.is_punctuation(token):
@@ -44,8 +44,8 @@ class TypeFormulaParser:
         else:
             raise ValueError(f"Unexpected item on stack: {item}")
 
-    def tokenize_expression(self, expression: str) -> List[str]:
-        tokens: List[str] = []
+    def tokenize_expression(self, expression: str) -> list[str]:
+        tokens: list[str] = []
         current_token = ""
 
         for character in expression:
@@ -66,14 +66,14 @@ class TypeFormulaParser:
 
         return tokens
 
-    def acquire_type_with_parameters(self, stack: List[Any]) -> TypeFormula:
+    def acquire_type_with_parameters(self, stack: list[Any]) -> TypeFormula:
         type_parameters = self.acquire_type_parameters(stack)
         type_name = stack.pop()
         type_formula = TypeFormula(type_name, type_parameters[::-1])
         return type_formula
 
-    def acquire_type_parameters(self, stack: List[Any]) -> List[TypeFormula]:
-        type_parameters: List[TypeFormula] = []
+    def acquire_type_parameters(self, stack: list[Any]) -> list[TypeFormula]:
+        type_parameters: list[TypeFormula] = []
 
         while True:
             item = stack.pop()

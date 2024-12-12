@@ -1,6 +1,6 @@
 import io
 from types import SimpleNamespace
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, Optional
 
 from multiversx_sdk.abi.constants import ENUM_DISCRIMINANT_FIELD_NAME
 from multiversx_sdk.abi.fields import (Field, decode_fields_nested,
@@ -15,8 +15,8 @@ from multiversx_sdk.abi.small_int_values import U8Value
 class EnumValue:
     def __init__(self,
                  discriminant: int = 0,
-                 fields: Optional[List[Field]] = None,
-                 fields_provider: Optional[Callable[[int], List[Field]]] = None) -> None:
+                 fields: Optional[list[Field]] = None,
+                 fields_provider: Optional[Callable[[int], list[Field]]] = None) -> None:
         self.discriminant = discriminant
         self.fields = fields or []
         self.fields_provider = fields_provider

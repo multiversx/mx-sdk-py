@@ -30,4 +30,3 @@ SDK_PY_SIGNER = "sdk-py"
 UNKNOWN_SIGNER = "unknown"
 
 EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER = "EGLD-000000"
-ESDT_CONTRACT_ADDRESS = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"

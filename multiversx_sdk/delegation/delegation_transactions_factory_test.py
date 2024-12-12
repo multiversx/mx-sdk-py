@@ -3,6 +3,8 @@ from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS_HEX
 from multiversx_sdk.delegation import DelegationTransactionsFactory
 from multiversx_sdk.wallet import ValidatorSecretKey, ValidatorSigner
 
+from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
+
 
 class TestDelegationTransactionsFactory:
     config = TransactionsFactoryConfig("D")
@@ -54,7 +56,7 @@ class TestDelegationTransactionsFactory:
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
         delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
-        public_keys = ["notavalidblskeyhexencoded".encode()]
+        public_keys = [ValidatorPublicKey(bytes([0] * 96))]
 
         transaction = self.factory.create_transaction_for_removing_nodes(
             sender=sender,
@@ -65,14 +67,14 @@ class TestDelegationTransactionsFactory:
         assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
-        assert transaction.data.decode() == "removeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
+        assert transaction.data.decode() == "removeNodes@000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         assert transaction.value == 0
 
     def test_create_transaction_for_staking_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
         delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
-        public_keys = ["notavalidblskeyhexencoded".encode()]
+        public_keys = [ValidatorPublicKey(bytes([0] * 96))]
 
         transaction = self.factory.create_transaction_for_staking_nodes(
             sender=sender,
@@ -83,14 +85,14 @@ class TestDelegationTransactionsFactory:
         assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
-        assert transaction.data.decode() == "stakeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
+        assert transaction.data.decode() == "stakeNodes@000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         assert transaction.value == 0
 
     def test_create_transaction_for_unbonding_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
         delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
-        public_keys = ["notavalidblskeyhexencoded".encode()]
+        public_keys = [ValidatorPublicKey(bytes([0] * 96))]
 
         transaction = self.factory.create_transaction_for_unbonding_nodes(
             sender=sender,
@@ -101,14 +103,14 @@ class TestDelegationTransactionsFactory:
         assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
-        assert transaction.data.decode() == "unBondNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
+        assert transaction.data.decode() == "unBondNodes@000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         assert transaction.value == 0
 
     def test_create_transaction_for_unstaking_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
         delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
-        public_keys = ["notavalidblskeyhexencoded".encode()]
+        public_keys = [ValidatorPublicKey(bytes([0] * 96))]
 
         transaction = self.factory.create_transaction_for_unstaking_nodes(
             sender=sender,
@@ -119,14 +121,14 @@ class TestDelegationTransactionsFactory:
         assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
-        assert transaction.data.decode() == "unStakeNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
+        assert transaction.data.decode() == "unStakeNodes@000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         assert transaction.value == 0
 
     def test_create_transaction_for_unjailing_nodes(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
         delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
 
-        public_keys = ["notavalidblskeyhexencoded".encode()]
+        public_keys = [ValidatorPublicKey(bytes([0] * 96))]
 
         transaction = self.factory.create_transaction_for_unjailing_nodes(
             sender=sender,
@@ -138,7 +140,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
         assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
         assert transaction.data
-        assert transaction.data.decode() == "unJailNodes@6e6f746176616c6964626c736b6579686578656e636f646564"
+        assert transaction.data.decode() == "unJailNodes@000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         assert transaction.value == 25000000000000000000
 
     def test_create_transaction_for_changing_service_fee(self):

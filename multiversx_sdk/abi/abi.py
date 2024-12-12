@@ -1,7 +1,7 @@
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, cast
+from typing import Any, cast
 
 from multiversx_sdk.abi.abi_definition import (AbiDefinition,
                                                EndpointDefinition,
@@ -43,9 +43,9 @@ class Abi:
         self._serializer = Serializer()
 
         self.definition = definition
-        self.custom_types_prototypes_by_name: Dict[str, Any] = {}
-        self.endpoints_prototypes_by_name: Dict[str, EndpointPrototype] = {}
-        self.events_prototypes_by_name: Dict[str, EventPrototype] = {}
+        self.custom_types_prototypes_by_name: dict[str, Any] = {}
+        self.endpoints_prototypes_by_name: dict[str, EndpointPrototype] = {}
+        self.events_prototypes_by_name: dict[str, EventPrototype] = {}
 
         for name in definition.types.enums:
             self.custom_types_prototypes_by_name[name] = self._create_custom_type_prototype(name)
@@ -102,12 +102,12 @@ class Abi:
     def _create_explicit_enum_prototype(self) -> Any:
         return ExplicitEnumValue()
 
-    def _provide_fields_for_enum_prototype(self, discriminant: int, enum_definition: EnumDefinition) -> List[Field]:
+    def _provide_fields_for_enum_prototype(self, discriminant: int, enum_definition: EnumDefinition) -> list[Field]:
         for variant in enum_definition.variants:
             if variant.discriminant != discriminant:
                 continue
 
-            fields_prototypes: List[Field] = []
+            fields_prototypes: list[Field] = []
 
             for field_definition in variant.fields:
                 type_formula = self._type_formula_parser.parse_expression(field_definition.type)
@@ -120,7 +120,7 @@ class Abi:
         raise ValueError(f"cannot provide fields from enum {enum_definition.name}: variant with discriminant {discriminant} not found")
 
     def _create_struct_prototype(self, struct_definition: StructDefinition) -> Any:
-        fields_prototypes: List[Field] = []
+        fields_prototypes: list[Field] = []
 
         for field_definition in struct_definition.fields:
             type_formula = self._type_formula_parser.parse_expression(field_definition.type)
@@ -130,8 +130,8 @@ class Abi:
 
         return StructValue(fields_prototypes)
 
-    def _create_endpoint_input_prototypes(self, endpoint: EndpointDefinition) -> List[Any]:
-        prototypes: List[Any] = []
+    def _create_endpoint_input_prototypes(self, endpoint: EndpointDefinition) -> list[Any]:
+        prototypes: list[Any] = []
 
         for parameter in endpoint.inputs:
             parameter_prototype = self._create_parameter_prototype(parameter)
@@ -139,8 +139,8 @@ class Abi:
 
         return prototypes
 
-    def _create_endpoint_output_prototypes(self, endpoint: EndpointDefinition) -> List[Any]:
-        prototypes: List[Any] = []
+    def _create_endpoint_output_prototypes(self, endpoint: EndpointDefinition) -> list[Any]:
+        prototypes: list[Any] = []
 
         for parameter in endpoint.outputs:
             parameter_prototype = self._create_parameter_prototype(parameter)
@@ -148,8 +148,8 @@ class Abi:
 
         return prototypes
 
-    def _create_event_input_prototypes(self, event: EventDefinition) -> List[Any]:
-        prototypes: List[Any] = []
+    def _create_event_input_prototypes(self, event: EventDefinition) -> list[Any]:
+        prototypes: list[Any] = []
 
         for topic in event.inputs:
             event_field_prototype = EventField(name=topic.name, value=self._create_event_field_prototype(topic))
@@ -165,22 +165,22 @@ class Abi:
         type_formula = self._type_formula_parser.parse_expression(parameter.type)
         return self._create_prototype(type_formula)
 
-    def encode_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+    def encode_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
         return self._do_encode_endpoint_input_parameters("constructor", self.constructor_prototype, values)
 
-    def encode_upgrade_constructor_input_parameters(self, values: List[Any]) -> List[bytes]:
+    def encode_upgrade_constructor_input_parameters(self, values: list[Any]) -> list[bytes]:
         return self._do_encode_endpoint_input_parameters("upgrade", self.upgrade_constructor_prototype, values)
 
-    def encode_endpoint_input_parameters(self, endpoint_name: str, values: List[Any]) -> List[bytes]:
+    def encode_endpoint_input_parameters(self, endpoint_name: str, values: list[Any]) -> list[bytes]:
         endpoint_prototype = self._get_endpoint_prototype(endpoint_name)
         return self._do_encode_endpoint_input_parameters(endpoint_name, endpoint_prototype, values)
 
-    def _do_encode_endpoint_input_parameters(self, endpoint_name: str, endpoint_prototype: 'EndpointPrototype', values: List[Any]):
+    def _do_encode_endpoint_input_parameters(self, endpoint_name: str, endpoint_prototype: 'EndpointPrototype', values: list[Any]):
         if len(values) != len(endpoint_prototype.input_parameters):
             raise ValueError(f"for {endpoint_name}, invalid value length: expected {len(endpoint_prototype.input_parameters)}, got {len(values)}")
 
         input_values = deepcopy(endpoint_prototype.input_parameters)
-        input_values_as_native_object_holders = cast(List[IPayloadHolder], input_values)
+        input_values_as_native_object_holders = cast(list[IPayloadHolder], input_values)
 
         # Populate the input values with the provided arguments
         for i, arg in enumerate(values):
@@ -189,16 +189,16 @@ class Abi:
         input_values_encoded = self._serializer.serialize_to_parts(input_values)
         return input_values_encoded
 
-    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: List[bytes]) -> List[Any]:
+    def decode_endpoint_output_parameters(self, endpoint_name: str, encoded_values: list[bytes]) -> list[Any]:
         endpoint_prototype = self._get_endpoint_prototype(endpoint_name)
         output_values = deepcopy(endpoint_prototype.output_parameters)
         self._serializer.deserialize_parts(encoded_values, output_values)
 
-        output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
+        output_values_as_native_object_holders = cast(list[IPayloadHolder], output_values)
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
         return output_native_values
 
-    def decode_event(self, event_name: str, topics: List[bytes], additional_data: List[bytes]) -> SimpleNamespace:
+    def decode_event(self, event_name: str, topics: list[bytes], additional_data: list[bytes]) -> SimpleNamespace:
         result = SimpleNamespace()
         event_definition = self.definition.get_event_definition(event_name)
         event_prototype = self._get_event_prototype(event_name)
@@ -211,7 +211,7 @@ class Abi:
         output_values = [field.value for field in fields if field.name in indexed_inputs_names]
         self._serializer.deserialize_parts(topics, output_values)
 
-        output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
+        output_values_as_native_object_holders = cast(list[IPayloadHolder], output_values)
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
 
         for i in range(len(indexed_inputs)):
@@ -223,7 +223,7 @@ class Abi:
         output_values = [field.value for field in fields if field.name in non_indexed_inputs_names]
         self._serializer.deserialize_parts(additional_data, output_values)
 
-        output_values_as_native_object_holders = cast(List[IPayloadHolder], output_values)
+        output_values_as_native_object_holders = cast(list[IPayloadHolder], output_values)
         output_native_values = [value.get_payload() for value in output_values_as_native_object_holders]
 
         for i in range(len(non_indexed_inputs)):
@@ -328,7 +328,7 @@ class Abi:
 
 
 class EndpointPrototype:
-    def __init__(self, input_parameters: List[Any], output_parameters: List[Any]) -> None:
+    def __init__(self, input_parameters: list[Any], output_parameters: list[Any]) -> None:
         self.input_parameters = input_parameters
         self.output_parameters = output_parameters
 
@@ -340,5 +340,5 @@ class EventField:
 
 
 class EventPrototype:
-    def __init__(self, fields: List[EventField]) -> None:
+    def __init__(self, fields: list[EventField]) -> None:
         self.fields = fields

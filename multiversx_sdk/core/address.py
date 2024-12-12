@@ -37,15 +37,18 @@ class Address:
         self.hrp = hrp if hrp else LibraryConfig.default_address_hrp
 
     @classmethod
-    def empty(cls,) -> 'Address':
+    def empty(cls) -> "Address":
         """
         Creates an empty address object.
         Generally speaking, this should not be used by client code **(internal use only)**.
         """
         return Address(b"", "")
 
+    def is_empty(self) -> bool:
+        return len(self.pubkey) == 0
+
     @classmethod
-    def new_from_bech32(cls, value: str) -> 'Address':
+    def new_from_bech32(cls, value: str) -> "Address":
         """Creates an address object from the bech32 representation of an address.
 
         Args:
@@ -54,12 +57,12 @@ class Address:
         return cls(pubkey, hrp)
 
     @classmethod
-    def from_bech32(cls, value: str) -> 'Address':
+    def from_bech32(cls, value: str) -> "Address":
         """The `from_bech32()` method is deprecated. Please use `new_from_bech32()` instead"""
         return Address.new_from_bech32(value)
 
     @classmethod
-    def new_from_hex(cls, value: str, hrp: Optional[str] = None) -> 'Address':
+    def new_from_hex(cls, value: str, hrp: Optional[str] = None) -> "Address":
         """Creates an address object from the hexed sequence of bytes and the human readable part(hrp).
 
         Args:
@@ -69,7 +72,7 @@ class Address:
         return cls(pubkey, hrp)
 
     @classmethod
-    def from_hex(cls, value: str, hrp: str) -> 'Address':
+    def from_hex(cls, value: str, hrp: str) -> "Address":
         """The `from_hex()` method is deprecated. Please use `new_from_hex()` instead"""
         return Address.new_from_hex(value, hrp)
 
@@ -164,12 +167,15 @@ class AddressComputer:
         Returns:
             Address: The computed contract address as below:
 
-            8 bytes of zero + 2 bytes for VM type + 20 bytes of hash(owner) + 2 bytes of shard(owner)"""
+            8 bytes of zero + 2 bytes for VM type + 20 bytes of hash(owner) + 2 bytes of shard(owner)
+        """
         deployer_pubkey = deployer.get_public_key()
         nonce_bytes = deployment_nonce.to_bytes(8, byteorder="little")
         bytes_to_hash = deployer_pubkey + nonce_bytes
         contract_pubkey = keccak.new(digest_bits=256).update(bytes_to_hash).digest()
-        contract_pubkey = bytes([0] * 8) + bytes([5, 0]) + contract_pubkey[10:30] + deployer_pubkey[30:]
+        contract_pubkey = (
+            bytes([0] * 8) + bytes([5, 0]) + contract_pubkey[10:30] + deployer_pubkey[30:]
+        )
         return Address(contract_pubkey, deployer.get_hrp())
 
     def get_shard_of_address(self, address: Address) -> int:
@@ -218,8 +224,9 @@ def get_shard_of_pubkey(pubkey: bytes, number_of_shards: int) -> int:
 
 def _is_pubkey_of_metachain(pubkey: bytes) -> bool:
     metachain_prefix = bytearray(
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-    pubkey_prefix = pubkey[0:len(metachain_prefix)]
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    )
+    pubkey_prefix = pubkey[0 : len(metachain_prefix)]
     if pubkey_prefix == bytes(metachain_prefix):
         return True
 

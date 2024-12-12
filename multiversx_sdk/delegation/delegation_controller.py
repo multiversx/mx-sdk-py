@@ -3,7 +3,7 @@ from typing import Optional, Protocol, Sequence, Union
 from multiversx_sdk.core import (Address, Transaction, TransactionComputer,
                                  TransactionOnNetwork,
                                  TransactionsFactoryConfig)
-from multiversx_sdk.core.interfaces import IAccount, IValidatorPublicKey
+from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.delegation.delegation_transactions_factory import \
     DelegationTransactionsFactory
 from multiversx_sdk.delegation.delegation_transactions_outcome_parser import \
@@ -11,6 +11,7 @@ from multiversx_sdk.delegation.delegation_transactions_outcome_parser import \
 from multiversx_sdk.delegation.delegation_transactions_outcome_parser_types import \
     CreateNewDelegationContractOutcome
 from multiversx_sdk.network_providers.resources import AwaitingOptions
+from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
 class INetworkProvider(Protocol):
@@ -60,7 +61,7 @@ class DelegationController:
                                             sender: IAccount,
                                             nonce: int,
                                             delegation_contract: Address,
-                                            public_keys: Sequence[IValidatorPublicKey],
+                                            public_keys: Sequence[ValidatorPublicKey],
                                             signed_messages: Sequence[bytes],
                                             guardian: Optional[Address] = None,
                                             relayer: Optional[Address] = None) -> Transaction:
@@ -82,7 +83,7 @@ class DelegationController:
                                               sender: IAccount,
                                               nonce: int,
                                               delegation_contract: Address,
-                                              public_keys: Sequence[IValidatorPublicKey],
+                                              public_keys: Sequence[ValidatorPublicKey],
                                               guardian: Optional[Address] = None,
                                               relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_removing_nodes(
@@ -102,7 +103,7 @@ class DelegationController:
                                              sender: IAccount,
                                              nonce: int,
                                              delegation_contract: Address,
-                                             public_keys: Sequence[IValidatorPublicKey],
+                                             public_keys: Sequence[ValidatorPublicKey],
                                              guardian: Optional[Address] = None,
                                              relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_staking_nodes(
@@ -122,7 +123,7 @@ class DelegationController:
                                                sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey],
+                                               public_keys: Sequence[ValidatorPublicKey],
                                                guardian: Optional[Address] = None,
                                                relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unbonding_nodes(
@@ -142,7 +143,7 @@ class DelegationController:
                                                sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey],
+                                               public_keys: Sequence[ValidatorPublicKey],
                                                guardian: Optional[Address] = None,
                                                relayer: Optional[Address] = None) -> Transaction:
         transaction = self.factory.create_transaction_for_unstaking_nodes(
@@ -162,7 +163,7 @@ class DelegationController:
                                                sender: IAccount,
                                                nonce: int,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey],
+                                               public_keys: Sequence[ValidatorPublicKey],
                                                amount: int,
                                                guardian: Optional[Address] = None,
                                                relayer: Optional[Address] = None) -> Transaction:

@@ -1,5 +1,3 @@
-from typing import List
-
 import mnemonic
 
 from multiversx_sdk.wallet import core
@@ -40,7 +38,7 @@ class Mnemonic:
     def get_text(self) -> str:
         return self.text
 
-    def get_words(self) -> List[str]:
+    def get_words(self) -> list[str]:
         return self.text.split()
 
     def get_entropy(self) -> bytes:
