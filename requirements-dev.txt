@@ -1,7 +1,7 @@
 pytest
 pytest-cov
 flake8
-autopep8
+black
 pre-commit
 ipykernel
 sphinx

@@ -6,10 +6,10 @@ from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS_HEX
-from multiversx_sdk.core.interfaces import IValidatorPublicKey
 from multiversx_sdk.core.transactions_factory_config import \
     TransactionsFactoryConfig
 from multiversx_sdk.delegation.errors import ListsLengthMismatchError
+from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
 class DelegationTransactionsFactory:
@@ -46,7 +46,7 @@ class DelegationTransactionsFactory:
     def create_transaction_for_adding_nodes(self,
                                             sender: Address,
                                             delegation_contract: Address,
-                                            public_keys: Sequence[IValidatorPublicKey],
+                                            public_keys: Sequence[ValidatorPublicKey],
                                             signed_messages: Sequence[bytes]) -> Transaction:
         if len(public_keys) != len(signed_messages):
             raise ListsLengthMismatchError("The number of public keys should match the number of signed messages")
@@ -75,7 +75,7 @@ class DelegationTransactionsFactory:
     def create_transaction_for_removing_nodes(self,
                                               sender: Address,
                                               delegation_contract: Address,
-                                              public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                              public_keys: Sequence[ValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
         parts = ["removeNodes"]
@@ -96,7 +96,7 @@ class DelegationTransactionsFactory:
     def create_transaction_for_staking_nodes(self,
                                              sender: Address,
                                              delegation_contract: Address,
-                                             public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                             public_keys: Sequence[ValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
         parts = ["stakeNodes"]
@@ -118,7 +118,7 @@ class DelegationTransactionsFactory:
     def create_transaction_for_unbonding_nodes(self,
                                                sender: Address,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                               public_keys: Sequence[ValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
         parts = ["unBondNodes"]
@@ -140,7 +140,7 @@ class DelegationTransactionsFactory:
     def create_transaction_for_unstaking_nodes(self,
                                                sender: Address,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey]) -> Transaction:
+                                               public_keys: Sequence[ValidatorPublicKey]) -> Transaction:
         num_nodes = len(public_keys)
 
         parts = ["unStakeNodes"]
@@ -162,7 +162,7 @@ class DelegationTransactionsFactory:
     def create_transaction_for_unjailing_nodes(self,
                                                sender: Address,
                                                delegation_contract: Address,
-                                               public_keys: Sequence[IValidatorPublicKey],
+                                               public_keys: Sequence[ValidatorPublicKey],
                                                amount: int) -> Transaction:
         num_nodes = len(public_keys)
 
