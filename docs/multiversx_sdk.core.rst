@@ -8,8 +8,6 @@ Subpackages
    :maxdepth: 4
 
    multiversx_sdk.core.proto
-   multiversx_sdk.core.transactions_factories
-   multiversx_sdk.core.transactions_outcome_parsers
 
 Submodules
 ----------
@@ -38,6 +36,14 @@ multiversx\_sdk.core.code\_metadata module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.core.config module
+----------------------------------
+
+.. automodule:: multiversx_sdk.core.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.core.errors module
 ----------------------------------
 
@@ -58,22 +64,6 @@ multiversx\_sdk.core.message module
 -----------------------------------
 
 .. automodule:: multiversx_sdk.core.message
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.smart\_contract\_queries\_controller module
-----------------------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.smart_contract_queries_controller
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-multiversx\_sdk.core.smart\_contract\_query module
---------------------------------------------------
-
-.. automodule:: multiversx_sdk.core.smart_contract_query
    :members:
    :undoc-members:
    :show-inheritance:
@@ -102,6 +92,14 @@ multiversx\_sdk.core.transaction\_computer module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.core.transaction\_events\_parser module
+-------------------------------------------------------
+
+.. automodule:: multiversx_sdk.core.transaction_events_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.core.transaction\_on\_network module
 ----------------------------------------------------
 
@@ -118,10 +116,10 @@ multiversx\_sdk.core.transaction\_status module
    :undoc-members:
    :show-inheritance:
 
-multiversx\_sdk.core.typecheck module
--------------------------------------
+multiversx\_sdk.core.transactions\_factory\_config module
+---------------------------------------------------------
 
-.. automodule:: multiversx_sdk.core.typecheck
+.. automodule:: multiversx_sdk.core.transactions_factory_config
    :members:
    :undoc-members:
    :show-inheritance:

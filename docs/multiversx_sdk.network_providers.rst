@@ -4,6 +4,14 @@ multiversx\_sdk.network\_providers package
 Submodules
 ----------
 
+multiversx\_sdk.network\_providers.account\_awaiter module
+----------------------------------------------------------
+
+.. automodule:: multiversx_sdk.network_providers.account_awaiter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.network\_providers.api\_network\_provider module
 ----------------------------------------------------------------
 

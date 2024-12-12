@@ -37,6 +37,14 @@ multiversx\_sdk.wallet.interfaces module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.wallet.keypair module
+-------------------------------------
+
+.. automodule:: multiversx_sdk.wallet.keypair
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.wallet.mnemonic module
 --------------------------------------
 
