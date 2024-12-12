@@ -9,11 +9,6 @@ class INetworkConfig(Protocol):
     gas_price_modifier: float
 
 
-class IValidatorPublicKey(Protocol):
-    def hex(self) -> str:
-        ...
-
-
 class IAccount(Protocol):
     @property
     def address(self) -> Address:

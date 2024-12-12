@@ -22,6 +22,7 @@ class TransactionComputer:
         pass
 
     def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
+        """`TransactionsFactoryConfig` can be used here as the `network_config`."""
         move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
         if move_balance_gas > transaction.gas_limit:
             raise NotEnoughGasError(transaction.gas_limit)

@@ -13,5 +13,6 @@
     },
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
-    "python.languageServer": "Pylance"
+    "python.languageServer": "Pylance",
+    "black-formatter.args": ["--line-length=100"]
   }
