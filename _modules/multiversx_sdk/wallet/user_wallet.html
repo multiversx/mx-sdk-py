@@ -73,7 +73,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.crypto</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EncryptedData</span><span class="p">,</span> <span class="n">Randomness</span><span class="p">,</span> <span class="n">decryptor</span><span class="p">,</span>
                                           <span class="n">encryptor</span><span class="p">)</span>
@@ -137,7 +137,7 @@
 <div class="viewcode-block" id="UserWallet.decrypt_secret_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserWallet.decrypt_secret_key">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">decrypt_secret_key</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">keyfile_object</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserSecretKey</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">decrypt_secret_key</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">keyfile_object</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserSecretKey</span><span class="p">:</span>
         <span class="c1"># Here, we check the &quot;kind&quot; field only for files that have it. Older keystore files (holding only secret keys) do not have this field.</span>
         <span class="n">kind</span> <span class="o">=</span> <span class="n">keyfile_object</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">kind</span> <span class="ow">and</span> <span class="n">kind</span> <span class="o">!=</span> <span class="n">UserWalletKind</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
@@ -153,7 +153,7 @@
 <div class="viewcode-block" id="UserWallet.decrypt_mnemonic">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserWallet.decrypt_mnemonic">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">decrypt_mnemonic</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">keyfile_object</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mnemonic</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">decrypt_mnemonic</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">keyfile_object</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mnemonic</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">keyfile_object</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">UserWalletKind</span><span class="o">.</span><span class="n">MNEMONIC</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected kind to be </span><span class="si">{</span><span class="n">UserWalletKind</span><span class="o">.</span><span class="n">MNEMONIC</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">, but it was </span><span class="si">{</span><span class="n">keyfile_object</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -209,14 +209,14 @@
 
 <div class="viewcode-block" id="UserWallet.to_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserWallet.to_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">UserWalletKind</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dict_when_kind_is_secret_key</span><span class="p">(</span><span class="n">address_hrp</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dict_when_kind_is_mnemonic</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_to_dict_when_kind_is_secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_to_dict_when_kind_is_secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">public_key_when_kind_is_secret_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Public key isn&#39;t available&quot;</span><span class="p">)</span>
 
@@ -233,7 +233,7 @@
 
         <span class="k">return</span> <span class="n">envelope</span>
 
-    <span class="k">def</span> <span class="nf">_to_dict_when_kind_is_mnemonic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_to_dict_when_kind_is_mnemonic</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="n">crypto_section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_crypto_section_as_dict</span><span class="p">()</span>
 
         <span class="n">envelope</span> <span class="o">=</span> <span class="p">{</span>
@@ -245,7 +245,7 @@
 
         <span class="k">return</span> <span class="n">envelope</span>
 
-    <span class="k">def</span> <span class="nf">_get_crypto_section_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_crypto_section_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;ciphertext&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">ciphertext</span><span class="p">,</span>
             <span class="s2">&quot;cipherparams&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;iv&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">iv</span><span class="p">},</span>

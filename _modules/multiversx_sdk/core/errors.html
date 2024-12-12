@@ -72,59 +72,19 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 
-<div class="viewcode-block" id="ErrBadPubkeyLength">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ErrBadPubkeyLength">[docs]</a>
-<span class="k">class</span> <span class="nc">ErrBadPubkeyLength</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="BadPubkeyLengthError">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.BadPubkeyLengthError">[docs]</a>
+<span class="k">class</span> <span class="nc">BadPubkeyLengthError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actual</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bad pubkey length: actual = </span><span class="si">{</span><span class="n">actual</span><span class="si">}</span><span class="s2">, expected = </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="ErrBadAddress">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ErrBadAddress">[docs]</a>
-<span class="k">class</span> <span class="nc">ErrBadAddress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="BadAddressError">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.BadAddressError">[docs]</a>
+<span class="k">class</span> <span class="nc">BadAddressError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bad address: </span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="ErrCannotSerializeArgument">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ErrCannotSerializeArgument">[docs]</a>
-<span class="k">class</span> <span class="nc">ErrCannotSerializeArgument</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot serialize: </span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="ErrInvalidRelayerV1BuilderArguments">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ErrInvalidRelayerV1BuilderArguments">[docs]</a>
-<span class="k">class</span> <span class="nc">ErrInvalidRelayerV1BuilderArguments</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Invalid arguments for relayed v1 builder&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="ErrInvalidRelayerV2BuilderArguments">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ErrInvalidRelayerV2BuilderArguments">[docs]</a>
-<span class="k">class</span> <span class="nc">ErrInvalidRelayerV2BuilderArguments</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Invalid arguments for relayed v2 builder&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="ErrInvalidGasLimitForInnerTransaction">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ErrInvalidGasLimitForInnerTransaction">[docs]</a>
-<span class="k">class</span> <span class="nc">ErrInvalidGasLimitForInnerTransaction</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Gas limit should be 0 for the inner transaction for relayed v2&quot;</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="ErrListsLengthMismatch">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ErrListsLengthMismatch">[docs]</a>
-<span class="k">class</span> <span class="nc">ErrListsLengthMismatch</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
 
@@ -152,28 +112,11 @@
 
 
 
-<div class="viewcode-block" id="InvalidInnerTransactionError">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.InvalidInnerTransactionError">[docs]</a>
-<span class="k">class</span> <span class="nc">InvalidInnerTransactionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="ParseTransactionOnNetworkError">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ParseTransactionOnNetworkError">[docs]</a>
+<span class="k">class</span> <span class="nc">ParseTransactionOnNetworkError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="ParseTransactionOutcomeError">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.ParseTransactionOutcomeError">[docs]</a>
-<span class="k">class</span> <span class="nc">ParseTransactionOutcomeError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="SmartContractQueryError">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.errors.SmartContractQueryError">[docs]</a>
-<span class="k">class</span> <span class="nc">SmartContractQueryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span></div>
 
 </pre></div>
 

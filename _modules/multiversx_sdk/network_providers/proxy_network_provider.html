@@ -69,53 +69,62 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.network_providers.proxy_network_provider</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">import</span> <span class="nn">urllib.parse</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="ne">TimeoutError</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">requests.auth</span> <span class="kn">import</span> <span class="n">AuthBase</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.config</span> <span class="kn">import</span> <span class="n">LibraryConfig</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">ESDT_CONTRACT_ADDRESS_HEX</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.accounts</span> <span class="kn">import</span> <span class="p">(</span><span class="n">AccountOnNetwork</span><span class="p">,</span>
-                                                       <span class="n">GuardianData</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ESDT_CONTRACT_ADDRESS_HEX</span><span class="p">,</span>
+                                           <span class="n">METACHAIN_ID</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.tokens</span> <span class="kn">import</span> <span class="n">Token</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction_on_network</span> <span class="kn">import</span> <span class="n">TransactionOnNetwork</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction_status</span> <span class="kn">import</span> <span class="n">TransactionStatus</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.account_awaiter</span> <span class="kn">import</span> <span class="n">AccountAwaiter</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.config</span> <span class="kn">import</span> <span class="n">NetworkProviderConfig</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BASE_USER_AGENT</span><span class="p">,</span>
-                                                        <span class="n">METACHAIN_ID</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.contract_query_requests</span> <span class="kn">import</span> \
-    <span class="n">ContractQueryRequest</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.contract_query_response</span> <span class="kn">import</span> \
-    <span class="n">ContractQueryResponse</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.errors</span> <span class="kn">import</span> <span class="n">GenericError</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.interface</span> <span class="kn">import</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">IContractQuery</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.network_config</span> <span class="kn">import</span> <span class="n">NetworkConfig</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.network_status</span> <span class="kn">import</span> <span class="n">NetworkStatus</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.resources</span> <span class="kn">import</span> <span class="p">(</span><span class="n">GenericResponse</span><span class="p">,</span>
-                                                        <span class="n">SimulateResponse</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.token_definitions</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">DefinitionOfFungibleTokenOnNetwork</span><span class="p">,</span> <span class="n">DefinitionOfTokenCollectionOnNetwork</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.tokens</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FungibleTokenOfAccountOnNetwork</span><span class="p">,</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transaction_status</span> <span class="kn">import</span> \
-    <span class="n">TransactionStatus</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transactions</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ITransaction</span><span class="p">,</span> <span class="n">TransactionOnNetwork</span><span class="p">,</span> <span class="n">transaction_to_dictionary</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BASE_USER_AGENT</span><span class="p">,</span> <span class="n">DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.errors</span> <span class="kn">import</span> <span class="p">(</span><span class="n">GenericError</span><span class="p">,</span>
+                                                     <span class="n">TransactionFetchingError</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.http_resources</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">account_from_proxy_response</span><span class="p">,</span> <span class="n">account_storage_entry_from_response</span><span class="p">,</span>
+    <span class="n">account_storage_from_response</span><span class="p">,</span> <span class="n">block_from_response</span><span class="p">,</span>
+    <span class="n">definition_of_fungible_token_from_query_response</span><span class="p">,</span>
+    <span class="n">definition_of_tokens_collection_from_query_response</span><span class="p">,</span>
+    <span class="n">network_config_from_response</span><span class="p">,</span> <span class="n">network_status_from_response</span><span class="p">,</span>
+    <span class="n">smart_contract_query_to_vm_query_request</span><span class="p">,</span>
+    <span class="n">token_amount_on_network_from_proxy_response</span><span class="p">,</span>
+    <span class="n">token_amounts_from_proxy_response</span><span class="p">,</span>
+    <span class="n">transaction_cost_estimation_from_response</span><span class="p">,</span> <span class="n">transaction_from_proxy_response</span><span class="p">,</span>
+    <span class="n">transaction_from_simulate_response</span><span class="p">,</span>
+    <span class="n">transactions_from_send_multiple_response</span><span class="p">,</span>
+    <span class="n">vm_query_response_to_smart_contract_query_response</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.interface</span> <span class="kn">import</span> <span class="n">INetworkProvider</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.resources</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AccountOnNetwork</span><span class="p">,</span> <span class="n">AccountStorage</span><span class="p">,</span> <span class="n">AccountStorageEntry</span><span class="p">,</span> <span class="n">AwaitingOptions</span><span class="p">,</span>
+    <span class="n">BlockOnNetwork</span><span class="p">,</span> <span class="n">FungibleTokenMetadata</span><span class="p">,</span> <span class="n">GenericResponse</span><span class="p">,</span> <span class="n">GetBlockArguments</span><span class="p">,</span>
+    <span class="n">NetworkConfig</span><span class="p">,</span> <span class="n">NetworkStatus</span><span class="p">,</span> <span class="n">TokenAmountOnNetwork</span><span class="p">,</span>
+    <span class="n">TokensCollectionMetadata</span><span class="p">,</span> <span class="n">TransactionCostResponse</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.shared</span> <span class="kn">import</span> <span class="n">convert_tx_hash_to_string</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.transaction_awaiter</span> <span class="kn">import</span> \
+    <span class="n">TransactionAwaiter</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.user_agent</span> <span class="kn">import</span> <span class="n">extend_user_agent</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.smart_contracts.smart_contract_query</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SmartContractQuery</span><span class="p">,</span> <span class="n">SmartContractQueryResponse</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider">[docs]</a>
-<span class="k">class</span> <span class="nc">ProxyNetworkProvider</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">auth</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AuthBase</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NetworkProviderConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">ProxyNetworkProvider</span><span class="p">(</span><span class="n">INetworkProvider</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NetworkProviderConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">auth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span> <span class="o">=</span> <span class="n">address_hrp</span> <span class="ow">or</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">NetworkProviderConfig</span><span class="p">()</span>
 
@@ -125,291 +134,387 @@
 <div class="viewcode-block" id="ProxyNetworkProvider.get_network_config">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_network_config">[docs]</a>
     <span class="k">def</span> <span class="nf">get_network_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the general configuration of the network.&quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="s1">&#39;network/config&#39;</span><span class="p">)</span>
-        <span class="n">network_config</span> <span class="o">=</span> <span class="n">NetworkConfig</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">network_config</span></div>
-
-
-<div class="viewcode-block" id="ProxyNetworkProvider.get_network_gas_configs">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_network_gas_configs">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_network_gas_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="s2">&quot;network/gas-configs&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">response</span></div>
+        <span class="k">return</span> <span class="n">network_config_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="p">{}))</span></div>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider.get_network_status">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_network_status">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_network_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shard</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">METACHAIN_ID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_network_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shard</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">METACHAIN_ID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the current status of the network.&quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;network/status/</span><span class="si">{</span><span class="n">shard</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">network_status</span> <span class="o">=</span> <span class="n">NetworkStatus</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">network_status</span></div>
+        <span class="k">return</span> <span class="n">network_status_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_block">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_block">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span> <span class="n">GetBlockArguments</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BlockOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches a block by nonce or by hash.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">arguments</span><span class="o">.</span><span class="n">shard</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Shard not provided. Please set the shard in the arguments.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">arguments</span><span class="o">.</span><span class="n">block_hash</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;block/</span><span class="si">{</span><span class="n">arguments</span><span class="o">.</span><span class="n">shard</span><span class="si">}</span><span class="s2">/by-hash/</span><span class="si">{</span><span class="n">arguments</span><span class="o">.</span><span class="n">block_hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">arguments</span><span class="o">.</span><span class="n">block_nonce</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;block/</span><span class="si">{</span><span class="n">arguments</span><span class="o">.</span><span class="n">shard</span><span class="si">}</span><span class="s2">/by-nonce/</span><span class="si">{</span><span class="n">arguments</span><span class="o">.</span><span class="n">block_nonce</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Block hash or block nonce not provided&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">block_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="p">{}))</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_latest_block">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_latest_block">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shard</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">METACHAIN_ID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BlockOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the latest block of a shard.&quot;&quot;&quot;</span>
+        <span class="n">block_nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_network_status</span><span class="p">(</span><span class="n">shard</span><span class="p">)</span><span class="o">.</span><span class="n">block_nonce</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;block/</span><span class="si">{</span><span class="n">shard</span><span class="si">}</span><span class="s2">/by-nonce/</span><span class="si">{</span><span class="n">block_nonce</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">block_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="p">{}))</span></div>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider.get_account">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_account">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches account information for a given address.&quot;&quot;&quot;</span>
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">get_guardian_data_thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_guardian_data</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">address</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
+        <span class="n">get_guardian_data_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">account</span> <span class="o">=</span> <span class="n">AccountOnNetwork</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;account&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        <span class="n">account</span> <span class="o">=</span> <span class="n">account_from_proxy_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span>
+
+        <span class="n">get_guardian_data_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">account</span><span class="o">.</span><span class="n">is_guarded</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_guarded&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">account</span></div>
 
 
-<div class="viewcode-block" id="ProxyNetworkProvider.get_guardian_data">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_guardian_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_guardian_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GuardianData</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/guardian-data&#39;</span><span class="p">)</span>
-        <span class="n">account_guardian</span> <span class="o">=</span> <span class="n">GuardianData</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;guardianData&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">account_guardian</span></div>
+    <span class="k">def</span> <span class="nf">_get_guardian_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">return_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]):</span>
+        <span class="n">guardian_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/guardian-data&quot;</span><span class="p">)</span>
+        <span class="n">return_data</span><span class="p">[</span><span class="s2">&quot;is_guarded&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">guardian_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardianData&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guarded&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_account_storage">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_account_storage">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_account_storage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountStorage</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches the storage (key-value pairs) of an account.</span>
+<span class="sd">        When decoding the keys, the errors are ignored. Use the raw values if needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/keys&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">account_storage_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="ProxyNetworkProvider.get_fungible_tokens_of_account">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_fungible_tokens_of_account">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_fungible_tokens_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">FungibleTokenOfAccountOnNetwork</span><span class="p">]:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/esdt&#39;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="n">items</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;esdts&#39;</span><span class="p">)</span>
-        <span class="n">esdts</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">items</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">items</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nonce&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
-        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">FungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">esdt</span><span class="p">)</span> <span class="k">for</span> <span class="n">esdt</span> <span class="ow">in</span> <span class="n">esdts</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">tokens</span></div>
+<div class="viewcode-block" id="ProxyNetworkProvider.get_account_storage_entry">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_account_storage_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_account_storage_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">entry_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountStorageEntry</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches a specific storage entry of an account.&quot;&quot;&quot;</span>
+        <span class="n">key_as_hex</span> <span class="o">=</span> <span class="n">entry_key</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/key/</span><span class="si">{</span><span class="n">key_as_hex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">account_storage_entry_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">(),</span> <span class="n">entry_key</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ProxyNetworkProvider.get_nonfungible_tokens_of_account">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_nonfungible_tokens_of_account">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_nonfungible_tokens_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="p">]:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/esdt&#39;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="n">items</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;esdts&#39;</span><span class="p">)</span>
-        <span class="n">nfts</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">items</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="n">items</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nonce&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_proxy_http_response</span><span class="p">(</span><span class="n">nft</span><span class="p">)</span> <span class="k">for</span> <span class="n">nft</span> <span class="ow">in</span> <span class="n">nfts</span><span class="p">]</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ProxyNetworkProvider.await_account_on_condition">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.await_account_on_condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">await_account_on_condition</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AccountOnNetwork</span><span class="p">],</span>
+                                                        <span class="nb">bool</span><span class="p">],</span>
+            <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Waits until an account satisfies a given condition.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">AwaitingOptions</span><span class="p">(</span><span class="n">patience_in_milliseconds</span><span class="o">=</span><span class="n">DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS</span><span class="p">)</span>
+
+        <span class="n">awaiter</span> <span class="o">=</span> <span class="n">AccountAwaiter</span><span class="p">(</span>
+            <span class="n">fetcher</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">polling_interval_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">polling_interval_in_milliseconds</span><span class="p">,</span>
+            <span class="n">timeout_interval_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">timeout_in_milliseconds</span><span class="p">,</span>
+            <span class="n">patience_time_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">patience_in_milliseconds</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">awaiter</span><span class="o">.</span><span class="n">await_on_condition</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ProxyNetworkProvider.get_fungible_token_of_account">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_fungible_token_of_account">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_fungible_token_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FungibleTokenOfAccountOnNetwork</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/esdt/</span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">FungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tokenData&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">token</span></div>
+<div class="viewcode-block" id="ProxyNetworkProvider.send_transaction">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.send_transaction">[docs]</a>
+    <span class="k">def</span> <span class="nf">send_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Broadcasts a transaction and returns its hash.&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span>
+            <span class="s1">&#39;transaction/send&#39;</span><span class="p">,</span> <span class="n">transaction</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;txHash&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="ProxyNetworkProvider.get_nonfungible_token_of_account">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_nonfungible_token_of_account">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_nonfungible_token_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s1">/nft/</span><span class="si">{</span><span class="n">collection</span><span class="si">}</span><span class="s1">/nonce/</span><span class="si">{</span><span class="n">nonce</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="n">NonFungibleTokenOfAccountOnNetwork</span><span class="o">.</span><span class="n">from_proxy_http_response_by_nonce</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tokenData&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">token</span></div>
+<div class="viewcode-block" id="ProxyNetworkProvider.simulate_transaction">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.simulate_transaction">[docs]</a>
+    <span class="k">def</span> <span class="nf">simulate_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">check_signature</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Simulates a transaction.&quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;transaction/simulate?checkSignature=false&#39;</span>
+
+        <span class="k">if</span> <span class="n">check_signature</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;transaction/simulate&#39;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transaction</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">transaction_from_simulate_response</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="p">{}))</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.estimate_transaction_cost">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.estimate_transaction_cost">[docs]</a>
+    <span class="k">def</span> <span class="nf">estimate_transaction_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionCostResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimates the cost of a transaction.&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span>
+            <span class="s1">&#39;transaction/cost&#39;</span><span class="p">,</span> <span class="n">transaction</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">transaction_cost_estimation_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.send_transactions">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.send_transactions">[docs]</a>
+    <span class="k">def</span> <span class="nf">send_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Transaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Broadcasts multiple transactions and returns a tuple of (number of accepted transactions, list of transaction hashes).</span>
+<span class="sd">        In the returned list, the order of transaction hashes corresponds to the order of transactions in the input list.</span>
+<span class="sd">        If a transaction is not accepted, its hash is empty in the returned list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">transactions_as_dictionaries</span> <span class="o">=</span> <span class="p">[</span><span class="n">transaction</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">()</span> <span class="k">for</span> <span class="n">transaction</span> <span class="ow">in</span> <span class="n">transactions</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;transaction/send-multiple&#39;</span><span class="p">,</span> <span class="n">transactions_as_dictionaries</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">transactions_from_send_multiple_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">transactions</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider.get_transaction">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">with_process_status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
-        <span class="k">def</span> <span class="nf">get_process_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TransactionStatus</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transaction_status</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches a transaction that was previously broadcasted (maybe already processed by the network).&quot;&quot;&quot;</span>
+        <span class="n">transaction_hash</span> <span class="o">=</span> <span class="n">convert_tx_hash_to_string</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">get_tx</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;transaction/</span><span class="si">{</span><span class="n">tx_hash</span><span class="si">}</span><span class="s2">?withResults=true&quot;</span>
+        <span class="k">def</span> <span class="nf">get_tx</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;transaction/</span><span class="si">{</span><span class="n">transaction_hash</span><span class="si">}</span><span class="s2">?withResults=true&quot;</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;transaction&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="n">status_task</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">with_process_status</span><span class="p">:</span>
-                <span class="n">status_task</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">get_process_status</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">status_task</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_transaction_status</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">)</span>
+                <span class="n">tx_task</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">get_tx</span><span class="p">)</span>
 
-            <span class="n">tx_task</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">get_tx</span><span class="p">)</span>
+                <span class="n">process_status</span> <span class="o">=</span> <span class="n">status_task</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="n">tx</span> <span class="o">=</span> <span class="n">tx_task</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-        <span class="n">process_status</span> <span class="o">=</span> <span class="n">status_task</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">if</span> <span class="n">status_task</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="n">tx</span> <span class="o">=</span> <span class="n">tx_task</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionOnNetwork</span><span class="o">.</span><span class="n">from_proxy_http_response</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">process_status</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s2">&quot;Fetching transaction or process status timed out&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">GenericError</span> <span class="k">as</span> <span class="n">ge</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TransactionFetchingError</span><span class="p">(</span><span class="n">ge</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">ge</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">transaction</span></div>
+        <span class="k">return</span> <span class="n">transaction_from_proxy_response</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">process_status</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.await_transaction_completed">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.await_transaction_completed">[docs]</a>
+    <span class="k">def</span> <span class="nf">await_transaction_completed</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+            <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Waits until the transaction is completely processed.&quot;&quot;&quot;</span>
+        <span class="n">transaction_hash</span> <span class="o">=</span> <span class="n">convert_tx_hash_to_string</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">AwaitingOptions</span><span class="p">()</span>
+
+        <span class="n">awaiter</span> <span class="o">=</span> <span class="n">TransactionAwaiter</span><span class="p">(</span>
+            <span class="n">fetcher</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">polling_interval_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">polling_interval_in_milliseconds</span><span class="p">,</span>
+            <span class="n">timeout_interval_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">timeout_in_milliseconds</span><span class="p">,</span>
+            <span class="n">patience_time_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">patience_in_milliseconds</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">awaiter</span><span class="o">.</span><span class="n">await_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.await_transaction_on_condition">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.await_transaction_on_condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">await_transaction_on_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                       <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+                                       <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">TransactionOnNetwork</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
+                                       <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Waits until a transaction satisfies a given condition.&quot;&quot;&quot;</span>
+        <span class="n">transaction_hash</span> <span class="o">=</span> <span class="n">convert_tx_hash_to_string</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">AwaitingOptions</span><span class="p">()</span>
+
+        <span class="n">awaiter</span> <span class="o">=</span> <span class="n">TransactionAwaiter</span><span class="p">(</span>
+            <span class="n">fetcher</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">polling_interval_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">polling_interval_in_milliseconds</span><span class="p">,</span>
+            <span class="n">timeout_interval_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">timeout_in_milliseconds</span><span class="p">,</span>
+            <span class="n">patience_time_in_milliseconds</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">patience_in_milliseconds</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">awaiter</span><span class="o">.</span><span class="n">await_on_condition</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">condition</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_token_of_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_token_of_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_token_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">Token</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenAmountOnNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches the balance of an account, for a given token.</span>
+<span class="sd">        Able to handle both fungible and non-fungible tokens (NFTs, SFTs, MetaESDTs).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">nonce</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/esdt/</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/nft/</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2">/nonce/</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">nonce</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">token_amount_on_network_from_proxy_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_fungible_tokens_of_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_fungible_tokens_of_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fungible_tokens_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenAmountOnNetwork</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches the balances of an account, for all fungible tokens held by the account.</span>
+<span class="sd">        Pagination isn&#39;t explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/esdt&quot;</span><span class="p">)</span>
+        <span class="n">all_tokens</span> <span class="o">=</span> <span class="n">token_amounts_from_proxy_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">all_tokens</span> <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">nonce</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_non_fungible_tokens_of_account">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_non_fungible_tokens_of_account">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_non_fungible_tokens_of_account</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenAmountOnNetwork</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches the balances of an account, for all non-fungible tokens held by the account.</span>
+<span class="sd">        Pagination isn&#39;t explicitly handled by a basic network provider, but can be achieved by using `do_get_generic`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;address/</span><span class="si">{</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">/esdt&quot;</span><span class="p">)</span>
+        <span class="n">all_tokens</span> <span class="o">=</span> <span class="n">token_amounts_from_proxy_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">all_tokens</span> <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">nonce</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_definition_of_fungible_token">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_definition_of_fungible_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_definition_of_fungible_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FungibleTokenMetadata</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the definition of a fungible token.&quot;&quot;&quot;</span>
+        <span class="n">encoded_identifier</span> <span class="o">=</span> <span class="n">token_identifier</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">SmartContractQuery</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">ESDT_CONTRACT_ADDRESS_HEX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">),</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getTokenProperties&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">encoded_identifier</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">query_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_contract</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">definition_of_fungible_token_from_query_response</span><span class="p">(</span>
+            <span class="n">query_response</span><span class="o">.</span><span class="n">return_data_parts</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.get_definition_of_tokens_collection">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_definition_of_tokens_collection">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_definition_of_tokens_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokensCollectionMetadata</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the definition of a tokens collection.&quot;&quot;&quot;</span>
+        <span class="n">encoded_identifier</span> <span class="o">=</span> <span class="n">collection_name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">SmartContractQuery</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">ESDT_CONTRACT_ADDRESS_HEX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">),</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getTokenProperties&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">encoded_identifier</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">query_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_contract</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">definition_of_tokens_collection_from_query_response</span><span class="p">(</span>
+            <span class="n">query_response</span><span class="o">.</span><span class="n">return_data_parts</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProxyNetworkProvider.query_contract">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.query_contract">[docs]</a>
+    <span class="k">def</span> <span class="nf">query_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Queries a smart contract.&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">smart_contract_query_to_vm_query_request</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;vm-values/query&#39;</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">vm_query_response_to_smart_contract_query_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">query</span><span class="o">.</span><span class="n">function</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider.get_transaction_status">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_transaction_status">[docs]</a>
     <span class="k">def</span> <span class="nf">get_transaction_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionStatus</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the status of a transaction.&quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;transaction/</span><span class="si">{</span><span class="n">tx_hash</span><span class="si">}</span><span class="s1">/process-status&#39;</span><span class="p">)</span>
-        <span class="n">status</span> <span class="o">=</span> <span class="n">TransactionStatus</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">status</span></div>
-
-
-<div class="viewcode-block" id="ProxyNetworkProvider.send_transaction">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.send_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;transaction/send&#39;</span><span class="p">,</span> <span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;txHash&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ProxyNetworkProvider.send_transactions">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.send_transactions">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ITransaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
-        <span class="n">transactions_as_dictionaries</span> <span class="o">=</span> <span class="p">[</span><span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span> <span class="k">for</span> <span class="n">transaction</span> <span class="ow">in</span> <span class="n">transactions</span><span class="p">]</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;transaction/send-multiple&#39;</span><span class="p">,</span> <span class="n">transactions_as_dictionaries</span><span class="p">)</span>
-        <span class="c1"># Proxy and Observers have different response format:</span>
-        <span class="n">num_sent</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numOfSentTxs&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;txsSent&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">hashes</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;txsHashes&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">num_sent</span><span class="p">,</span> <span class="n">hashes</span></div>
-
-
-<div class="viewcode-block" id="ProxyNetworkProvider.query_contract">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.query_contract">[docs]</a>
-    <span class="k">def</span> <span class="nf">query_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">IContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContractQueryResponse</span><span class="p">:</span>
-        <span class="n">request</span> <span class="o">=</span> <span class="n">ContractQueryRequest</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">to_http_request</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s1">&#39;vm-values/query&#39;</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ContractQueryResponse</span><span class="o">.</span><span class="n">from_http_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="ProxyNetworkProvider.get_definition_of_fungible_token">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_definition_of_fungible_token">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_definition_of_fungible_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefinitionOfFungibleTokenOnNetwork</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_token_properties</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="n">DefinitionOfFungibleTokenOnNetwork</span><span class="o">.</span><span class="n">from_response_of_get_token_properties</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">definition</span></div>
-
-
-    <span class="k">def</span> <span class="nf">__get_token_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="n">encoded_identifier</span> <span class="o">=</span> <span class="n">identifier</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">ContractQuery</span><span class="p">(</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">ESDT_CONTRACT_ADDRESS_HEX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">),</span> <span class="s1">&#39;getTokenProperties&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">encoded_identifier</span><span class="p">])</span>
-        <span class="n">query_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_contract</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="n">properties</span> <span class="o">=</span> <span class="n">query_response</span><span class="o">.</span><span class="n">get_return_data_parts</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">properties</span>
-
-<div class="viewcode-block" id="ProxyNetworkProvider.get_definition_of_token_collection">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_definition_of_token_collection">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_definition_of_token_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefinitionOfTokenCollectionOnNetwork</span><span class="p">:</span>
-        <span class="n">properties</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_token_properties</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
-        <span class="n">definition</span> <span class="o">=</span> <span class="n">DefinitionOfTokenCollectionOnNetwork</span><span class="o">.</span><span class="n">from_response_of_get_token_properties</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">definition</span></div>
-
-
-<div class="viewcode-block" id="ProxyNetworkProvider.simulate_transaction">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.simulate_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">simulate_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimulateResponse</span><span class="p">:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;transaction/simulate&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">transaction_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">SimulateResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ProxyNetworkProvider.get_hyperblock">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_hyperblock">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_hyperblock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;hyperblock/by-hash/</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;hyperblock/by-nonce/</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hyperblock&quot;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="k">return</span> <span class="n">response</span></div>
+        <span class="k">return</span> <span class="n">TransactionStatus</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider.do_get_generic">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.do_get_generic">[docs]</a>
-    <span class="k">def</span> <span class="nf">do_get_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">resource_url</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">do_get_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">url_parameters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Does a generic GET request against the network (handles API enveloping).&quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="n">url_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_parameters</span><span class="p">)</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">?</span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 
 <div class="viewcode-block" id="ProxyNetworkProvider.do_post_generic">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.do_post_generic">[docs]</a>
-    <span class="k">def</span> <span class="nf">do_post_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">resource_url</span><span class="si">}</span><span class="s1">&#39;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">do_post_generic</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">url_parameters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Does a generic GET request against the network (handles API enveloping).&quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="n">url_parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">url_parameters</span><span class="p">)</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">?</span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 
-<div class="viewcode-block" id="ProxyNetworkProvider.do_get">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.do_get">[docs]</a>
-    <span class="k">def</span> <span class="nf">do_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_do_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">requests_options</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">requests_options</span><span class="p">)</span>
             <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
             <span class="n">parsed</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="n">error_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_error_from_response</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">error_data</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="ProxyNetworkProvider.do_post">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.do_post">[docs]</a>
-    <span class="k">def</span> <span class="nf">do_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_do_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">requests_options</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">requests_options</span><span class="p">)</span>
             <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
             <span class="n">parsed</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="n">error_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_error_from_response</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">response</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">error_data</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">ConnectionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="ProxyNetworkProvider.get_data">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ProxyNetworkProvider.get_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenericResponse</span><span class="p">:</span>
         <span class="n">err</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
         <span class="n">code</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;code&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">GenericError</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;code:</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">, error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">GenericResponse</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
-
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">GenericResponse</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_extract_error_from_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span></div>
-
-
-
-<div class="viewcode-block" id="ContractQuery">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ContractQuery">[docs]</a>
-<span class="k">class</span> <span class="nc">ContractQuery</span><span class="p">(</span><span class="n">IContractQuery</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">caller</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IAddress</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">contract</span> <span class="o">=</span> <span class="n">address</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">caller</span> <span class="o">=</span> <span class="n">caller</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encoded_arguments</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">]</span>
-
-<div class="viewcode-block" id="ContractQuery.get_contract">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ContractQuery.get_contract">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IAddress</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contract</span></div>
-
-
-<div class="viewcode-block" id="ContractQuery.get_function">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ContractQuery.get_function">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span></div>
-
-
-<div class="viewcode-block" id="ContractQuery.get_encoded_arguments">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ContractQuery.get_encoded_arguments">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_encoded_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded_arguments</span></div>
-
-
-<div class="viewcode-block" id="ContractQuery.get_caller">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ContractQuery.get_caller">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_caller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IAddress</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">caller</span></div>
-
-
-<div class="viewcode-block" id="ContractQuery.get_value">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ContractQuery.get_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div>
-</div>
 
 </pre></div>
 

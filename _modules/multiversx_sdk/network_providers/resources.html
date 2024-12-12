@@ -69,7 +69,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.network_providers.resources</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core</span> <span class="kn">import</span> <span class="n">Address</span><span class="p">,</span> <span class="n">Token</span><span class="p">,</span> <span class="n">TransactionStatus</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS</span><span class="p">,</span>
+    <span class="n">DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS</span><span class="p">,</span>
+    <span class="n">DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="GenericResponse">
@@ -86,105 +93,177 @@
 
 <div class="viewcode-block" id="GenericResponse.to_dictionary">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.GenericResponse.to_dictionary">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span></div>
 </div>
 
 
 
-<div class="viewcode-block" id="EmptyAddress">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.EmptyAddress">[docs]</a>
-<span class="k">class</span> <span class="nc">EmptyAddress</span><span class="p">:</span>
-<div class="viewcode-block" id="EmptyAddress.to_bech32">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.EmptyAddress.to_bech32">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="EmptyAddress.to_hex">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.EmptyAddress.to_hex">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
-</div>
-
-
-
-<div class="viewcode-block" id="SmartContractResult">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.SmartContractResult">[docs]</a>
-<span class="k">class</span> <span class="nc">SmartContractResult</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">return_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_return_message</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_arguments</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parsed_log</span> <span class="o">=</span> <span class="n">Log</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="p">{}))</span>
-
-    <span class="k">def</span> <span class="nf">_parse_return_message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">data_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_data_parts</span><span class="p">()</span>
-            <span class="n">return_message_encoded</span> <span class="o">=</span> <span class="n">data_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">return_message</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">return_message_encoded</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">return_message</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">_parse_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">data_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_data_parts</span><span class="p">()</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">data_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="k">return</span> <span class="n">arguments</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-
-    <span class="k">def</span> <span class="nf">_parse_data_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)</span>
-
-<div class="viewcode-block" id="SmartContractResult.to_dictionary">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.SmartContractResult.to_dictionary">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;parsed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;returnMessage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_message</span><span class="p">,</span>
-            <span class="s2">&quot;arguments&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">,</span>
-            <span class="s2">&quot;log&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parsed_log</span>
-        <span class="p">}</span>
-
-        <span class="k">return</span> <span class="n">result</span></div>
-</div>
+<div class="viewcode-block" id="NetworkConfig">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.NetworkConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">NetworkConfig</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">gas_per_data_byte</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_price_modifier</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">min_gas_limit</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">min_gas_price</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">extra_gas_limit_for_guarded_transactions</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">num_shards</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">round_duration</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">num_rounds_per_epoch</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">genesis_timestamp</span><span class="p">:</span> <span class="nb">int</span></div>
 
 
 
-<div class="viewcode-block" id="Log">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.Log">[docs]</a>
-<span class="k">class</span> <span class="nc">Log</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span></div>
+<div class="viewcode-block" id="NetworkStatus">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.NetworkStatus">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">NetworkStatus</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">block_timestamp</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">block_nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">highest_final_block_nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">current_round</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">current_epoch</span><span class="p">:</span> <span class="nb">int</span></div>
 
 
 
-<div class="viewcode-block" id="SimulateResponse">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.SimulateResponse">[docs]</a>
-<span class="k">class</span> <span class="nc">SimulateResponse</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">GenericResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">contract_results</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scResults&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">dict</span><span class="p">()</span>
+<div class="viewcode-block" id="BlockOnNetwork">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.BlockOnNetwork">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">BlockOnNetwork</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">shard</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="nb">hash</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">previous_hash</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="nb">round</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span></div>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parsed_contract_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">SmartContractResult</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">contract_results</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
 
-<div class="viewcode-block" id="SimulateResponse.to_dictionary">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.SimulateResponse.to_dictionary">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>
-        <span class="n">result</span><span class="p">[</span><span class="s2">&quot;parsed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parsed_contract_results</span><span class="p">:</span>
-            <span class="n">result</span><span class="p">[</span><span class="s2">&quot;parsed&quot;</span><span class="p">][</span><span class="s2">&quot;smartContractResults&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parsed_contract_results</span>
+<div class="viewcode-block" id="BlockCoordinates">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.BlockCoordinates">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">BlockCoordinates</span><span class="p">:</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">hash</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">root_hash</span><span class="p">:</span> <span class="nb">bytes</span></div>
 
-        <span class="k">return</span> <span class="n">result</span></div>
-</div>
+
+
+<div class="viewcode-block" id="AccountOnNetwork">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.AccountOnNetwork">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AccountOnNetwork</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">address</span><span class="p">:</span> <span class="n">Address</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">balance</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">is_guarded</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">block_coordinates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BlockCoordinates</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">contract_code_hash</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+    <span class="n">contract_code</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+    <span class="n">contract_developer_reward</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">contract_owner_address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_contract_upgradable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">is_contract_readable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">is_contract_payable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">is_contract_payable_by_contract</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="AccountStorageEntry">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.AccountStorageEntry">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AccountStorageEntry</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">block_coordinates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BlockCoordinates</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="AccountStorage">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.AccountStorage">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AccountStorage</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AccountStorageEntry</span><span class="p">]</span>
+    <span class="n">block_coordinates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BlockCoordinates</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="TransactionCostResponse">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionCostResponse">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TransactionCostResponse</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">status</span><span class="p">:</span> <span class="n">TransactionStatus</span></div>
+
+
+
+<div class="viewcode-block" id="TokenAmountOnNetwork">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TokenAmountOnNetwork">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TokenAmountOnNetwork</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">token</span><span class="p">:</span> <span class="n">Token</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">block_coordinates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BlockCoordinates</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="FungibleTokenMetadata">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.FungibleTokenMetadata">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">FungibleTokenMetadata</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">decimals</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="TokensCollectionMetadata">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TokensCollectionMetadata">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TokensCollectionMetadata</span><span class="p">:</span>
+    <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">collection</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">decimals</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="AwaitingOptions">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.AwaitingOptions">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AwaitingOptions</span><span class="p">:</span>
+    <span class="n">polling_interval_in_milliseconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS</span>
+    <span class="n">timeout_in_milliseconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS</span>
+    <span class="n">patience_in_milliseconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS</span></div>
+
+
+
+<div class="viewcode-block" id="GetBlockArguments">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.GetBlockArguments">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">GetBlockArguments</span><span class="p">:</span>
+    <span class="n">shard</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">block_nonce</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">block_hash</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 </pre></div>
 

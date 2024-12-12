@@ -82,19 +82,27 @@
 
 
 
-<div class="viewcode-block" id="ExpectedTransactionStatusNotReached">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ExpectedTransactionStatusNotReached">[docs]</a>
-<span class="k">class</span> <span class="nc">ExpectedTransactionStatusNotReached</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="ExpectedTransactionStatusNotReachedError">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ExpectedTransactionStatusNotReachedError">[docs]</a>
+<span class="k">class</span> <span class="nc">ExpectedTransactionStatusNotReachedError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The expected transaction status was not reached&quot;</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="IsCompletedFieldMissingOnTransaction">
-<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.IsCompletedFieldMissingOnTransaction">[docs]</a>
-<span class="k">class</span> <span class="nc">IsCompletedFieldMissingOnTransaction</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="ExpectedAccountConditionNotReachedError">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ExpectedAccountConditionNotReachedError">[docs]</a>
+<span class="k">class</span> <span class="nc">ExpectedAccountConditionNotReachedError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The transaction awaiter requires the `is_completed` property to be defined on the transaction object. Perhaps you&#39;ve used `ProxyNetworkProvider.get_transaction()` and in that case you should also pass `with_process_status=True`&quot;</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The expected account condition was not reached&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TransactionFetchingError">
+<a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionFetchingError">[docs]</a>
+<span class="k">class</span> <span class="nc">TransactionFetchingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Couldn&#39;t fetch transaction on url = [</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">], error = [</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span></div>
 
 </pre></div>
 

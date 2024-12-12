@@ -69,34 +69,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.proto.transaction_serializer</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Protocol</span>
-
-<span class="kn">import</span> <span class="nn">multiversx_sdk.core.proto.transaction_pb2</span> <span class="k">as</span> <span class="nn">ProtoTransaction</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.codec</span> <span class="kn">import</span> <span class="n">encode_unsigned_number</span>
-
-
-<div class="viewcode-block" id="ITransaction">
-<a class="viewcode-back" href="../../../../multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ITransaction">[docs]</a>
-<span class="k">class</span> <span class="nc">ITransaction</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">sender</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">receiver</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">sender_username</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">receiver_username</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">gas_price</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">version</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">options</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">guardian</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">guardian_signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">relayer</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">relayer_signature</span><span class="p">:</span> <span class="nb">bytes</span></div>
-
+<span></span><span class="kn">import</span> <span class="nn">multiversx_sdk.core.proto.transaction_pb2</span> <span class="k">as</span> <span class="nn">ProtoTransaction</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.biguint_value</span> <span class="kn">import</span> <span class="n">BigUIntValue</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.serializer</span> <span class="kn">import</span> <span class="n">Serializer</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
 
 
 <div class="viewcode-block" id="ProtoSerializer">
@@ -107,11 +83,9 @@
 
 <div class="viewcode-block" id="ProtoSerializer.serialize_transaction">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer.serialize_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">serialize_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">serialize_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">proto_transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_proto_message</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
-
-        <span class="n">encoded_tx</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">proto_transaction</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">encoded_tx</span></div>
+        <span class="k">return</span> <span class="n">proto_transaction</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ProtoSerializer.serialize_transaction_value">
@@ -120,7 +94,8 @@
         <span class="k">if</span> <span class="n">tx_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
-        <span class="n">buffer</span> <span class="o">=</span> <span class="n">encode_unsigned_number</span><span class="p">(</span><span class="n">tx_value</span><span class="p">)</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">tx_value</span><span class="p">)])[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mh">0x00</span><span class="p">])</span> <span class="o">+</span> <span class="n">buffer</span>
 
         <span class="k">return</span> <span class="n">buffer</span></div>
@@ -128,9 +103,9 @@
 
 <div class="viewcode-block" id="ProtoSerializer.convert_to_proto_message">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer.convert_to_proto_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert_to_proto_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">ITransaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProtoTransaction</span><span class="o">.</span><span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">receiver_pubkey</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="p">)</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
-        <span class="n">sender_pubkey</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="p">)</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">convert_to_proto_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProtoTransaction</span><span class="o">.</span><span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">receiver_pubkey</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
+        <span class="n">sender_pubkey</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
 
         <span class="n">proto_transaction</span> <span class="o">=</span> <span class="n">ProtoTransaction</span><span class="o">.</span><span class="n">Transaction</span><span class="p">()</span>
         <span class="n">proto_transaction</span><span class="o">.</span><span class="n">Nonce</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span>
@@ -147,13 +122,13 @@
         <span class="n">proto_transaction</span><span class="o">.</span><span class="n">Signature</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span>
         <span class="n">proto_transaction</span><span class="o">.</span><span class="n">Options</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span>
 
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="o">.</span><span class="n">is_empty</span><span class="p">():</span>
             <span class="n">guardian_address</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span>
-            <span class="n">proto_transaction</span><span class="o">.</span><span class="n">GuardAddr</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">guardian_address</span><span class="p">)</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
+            <span class="n">proto_transaction</span><span class="o">.</span><span class="n">GuardAddr</span> <span class="o">=</span> <span class="n">guardian_address</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
             <span class="n">proto_transaction</span><span class="o">.</span><span class="n">GuardSignature</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian_signature</span>
 
-        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="p">:</span>
-            <span class="n">proto_transaction</span><span class="o">.</span><span class="n">Relayer</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="p">)</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="o">.</span><span class="n">is_empty</span><span class="p">():</span>
+            <span class="n">proto_transaction</span><span class="o">.</span><span class="n">Relayer</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
             <span class="n">proto_transaction</span><span class="o">.</span><span class="n">RelayerSignature</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer_signature</span>
 
         <span class="k">return</span> <span class="n">proto_transaction</span></div>

@@ -69,16 +69,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.abi.serializer</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span>
 
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.codec</span> <span class="kn">import</span> <span class="n">Codec</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.counted_variadic_values</span> <span class="kn">import</span> <span class="n">CountedVariadicValues</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.interface</span> <span class="kn">import</span> <span class="n">ISingleValue</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.multi_value</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.multi_value</span> <span class="kn">import</span> <span class="n">MultiValue</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.optional_value</span> <span class="kn">import</span> <span class="n">OptionalValue</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.parts</span> <span class="kn">import</span> <span class="n">PartsHolder</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.small_int_values</span> <span class="kn">import</span> <span class="n">U32Value</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.abi.variadic_values</span> <span class="kn">import</span> <span class="n">VariadicValues</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">ARGS_SEPARATOR</span>
 
 
 <div class="viewcode-block" id="Serializer">
@@ -89,7 +90,7 @@
 <span class="sd">    https://docs.multiversx.com/developers/data/serialization-overview</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts_separator</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts_separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ARGS_SEPARATOR</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">parts_separator</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cannot create serializer: parts separator must not be empty&quot;</span><span class="p">)</span>
 
@@ -105,7 +106,7 @@
 
 <div class="viewcode-block" id="Serializer.serialize_to_parts">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.serializer.Serializer.serialize_to_parts">[docs]</a>
-    <span class="k">def</span> <span class="nf">serialize_to_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">serialize_to_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
         <span class="n">parts_holder</span> <span class="o">=</span> <span class="n">PartsHolder</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_do_serialize</span><span class="p">(</span><span class="n">parts_holder</span><span class="p">,</span> <span class="n">input_values</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">parts_holder</span><span class="o">.</span><span class="n">get_parts</span><span class="p">()</span></div>
@@ -224,11 +225,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">codec</span><span class="o">.</span><span class="n">decode_top_level</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="n">parts_holder</span><span class="o">.</span><span class="n">focus_on_next_part</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_encode_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_encode_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">parts_hex</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parts_separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts_hex</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_decode_into_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoded</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_decode_into_parts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoded</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
         <span class="n">parts_hex</span> <span class="o">=</span> <span class="n">encoded</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parts_separator</span><span class="p">)</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">part_hex</span><span class="p">)</span> <span class="k">for</span> <span class="n">part_hex</span> <span class="ow">in</span> <span class="n">parts_hex</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">parts</span></div>

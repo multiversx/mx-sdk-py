@@ -75,7 +75,8 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.errors</span> <span class="kn">import</span> <span class="n">ErrLibraryNotFound</span><span class="p">,</span> <span class="n">ErrUnsupportedOS</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.errors</span> <span class="kn">import</span> <span class="p">(</span><span class="n">LibraryNotFoundError</span><span class="p">,</span>
+                                          <span class="n">UnsupportedOSError</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="BLSFacade">
@@ -151,7 +152,7 @@
         <span class="n">lib_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_library_path</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">lib_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="n">ErrLibraryNotFound</span><span class="p">(</span><span class="n">lib_path</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">LibraryNotFoundError</span><span class="p">(</span><span class="n">lib_path</span><span class="p">)</span>
 
         <span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lib_path</span><span class="p">),</span> <span class="n">winmode</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
@@ -185,7 +186,7 @@
         <span class="k">elif</span> <span class="n">os_name</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
             <span class="n">lib_name</span> <span class="o">=</span> <span class="s2">&quot;libbls.so&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ErrUnsupportedOS</span><span class="p">(</span><span class="n">os_name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">UnsupportedOSError</span><span class="p">(</span><span class="n">os_name</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">lib_name</span></div>
 

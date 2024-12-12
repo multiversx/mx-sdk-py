@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.accounts package &mdash; multiversx-sdk 0.19.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="multiversx_sdk.controllers package" href="multiversx_sdk.controllers.html" />
+    <link rel="prev" title="multiversx_sdk.abi package" href="multiversx_sdk.abi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">multiversx_sdk</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="multiversx_sdk.html">multiversx_sdk package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="multiversx_sdk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html">multiversx_sdk.abi package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">multiversx_sdk.accounts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.controllers.html">multiversx_sdk.controllers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.entrypoints.html">multiversx_sdk.entrypoints package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html">multiversx_sdk.network_providers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.html">multiversx_sdk.wallet package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#module-multiversx_sdk">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">multiversx_sdk</a></li>
+          <li class="breadcrumb-item"><a href="multiversx_sdk.html">multiversx_sdk package</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.accounts package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/multiversx_sdk.accounts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="multiversx-sdk-accounts-package">
+<h1>multiversx_sdk.accounts package<a class="headerlink" href="#multiversx-sdk-accounts-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-multiversx_sdk.accounts.account">
+<span id="multiversx-sdk-accounts-account-module"></span><h2>multiversx_sdk.accounts.account module<a class="headerlink" href="#module-multiversx_sdk.accounts.account" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.accounts.account.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.user_keys.UserSecretKey" title="multiversx_sdk.wallet.user_keys.UserSecretKey"><span class="pre">UserSecretKey</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.get_nonce_then_increment">
+<span class="sig-name descname"><span class="pre">get_nonce_then_increment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.get_nonce_then_increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.get_nonce_then_increment" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.new_from_keypair">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_keypair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keypair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.KeyPair" title="multiversx_sdk.wallet.keypair.KeyPair"><span class="pre">KeyPair</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_keypair"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.new_from_keypair" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.new_from_keystore">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_keystore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_keystore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.new_from_keystore" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.new_from_mnemonic">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_mnemonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mnemonic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_mnemonic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.new_from_mnemonic" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.new_from_pem">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_pem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_pem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.new_from_pem" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.save_to_keystore">
+<span class="sig-name descname"><span class="pre">save_to_keystore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.save_to_keystore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.save_to_keystore" title="Link to this definition"></a></dt>
+<dd><p>Saves the secret key to a keystore file with <cite>kind=secretKey</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.save_to_pem">
+<span class="sig-name descname"><span class="pre">save_to_pem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.save_to_pem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.save_to_pem" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.sign">
+<span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.sign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.sign" title="Link to this definition"></a></dt>
+<dd><p>Signs using the account’s secret key.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.sign_message">
+<span class="sig-name descname"><span class="pre">sign_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.message.Message" title="multiversx_sdk.core.message.Message"><span class="pre">Message</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.sign_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.sign_message" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.sign_transaction">
+<span class="sig-name descname"><span class="pre">sign_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction.Transaction" title="multiversx_sdk.core.transaction.Transaction"><span class="pre">Transaction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.sign_transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.sign_transaction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.account.Account.verify">
+<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.account.Account.verify" title="Link to this definition"></a></dt>
+<dd><p>Verifies the signature using the account’s public key.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.accounts">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-multiversx_sdk.accounts" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.accounts.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.user_keys.UserSecretKey" title="multiversx_sdk.wallet.user_keys.UserSecretKey"><span class="pre">UserSecretKey</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.get_nonce_then_increment">
+<span class="sig-name descname"><span class="pre">get_nonce_then_increment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.get_nonce_then_increment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.get_nonce_then_increment" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.new_from_keypair">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_keypair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keypair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.KeyPair" title="multiversx_sdk.wallet.keypair.KeyPair"><span class="pre">KeyPair</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_keypair"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.new_from_keypair" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.new_from_keystore">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_keystore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_keystore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.new_from_keystore" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.new_from_mnemonic">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_mnemonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mnemonic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_mnemonic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.new_from_mnemonic" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.new_from_pem">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_from_pem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.accounts.account.Account" title="multiversx_sdk.accounts.account.Account"><span class="pre">Account</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.new_from_pem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.new_from_pem" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.save_to_keystore">
+<span class="sig-name descname"><span class="pre">save_to_keystore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.save_to_keystore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.save_to_keystore" title="Link to this definition"></a></dt>
+<dd><p>Saves the secret key to a keystore file with <cite>kind=secretKey</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.save_to_pem">
+<span class="sig-name descname"><span class="pre">save_to_pem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.save_to_pem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.save_to_pem" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.sign">
+<span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.sign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.sign" title="Link to this definition"></a></dt>
+<dd><p>Signs using the account’s secret key.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.sign_message">
+<span class="sig-name descname"><span class="pre">sign_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.message.Message" title="multiversx_sdk.core.message.Message"><span class="pre">Message</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.sign_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.sign_message" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.sign_transaction">
+<span class="sig-name descname"><span class="pre">sign_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction.Transaction" title="multiversx_sdk.core.transaction.Transaction"><span class="pre">Transaction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.sign_transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.sign_transaction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.accounts.Account.verify">
+<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/accounts/account.html#Account.verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.accounts.Account.verify" title="Link to this definition"></a></dt>
+<dd><p>Verifies the signature using the account’s public key.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="multiversx_sdk.abi.html" class="btn btn-neutral float-left" title="multiversx_sdk.abi package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="multiversx_sdk.controllers.html" class="btn btn-neutral float-right" title="multiversx_sdk.controllers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

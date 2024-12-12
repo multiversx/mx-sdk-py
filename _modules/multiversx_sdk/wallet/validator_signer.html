@@ -71,8 +71,7 @@
   <h1>Source code for multiversx_sdk.wallet.validator_signer</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.errors</span> <span class="kn">import</span> <span class="n">ErrCannotSign</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.interfaces</span> <span class="kn">import</span> <span class="n">ISignature</span>
+<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.errors</span> <span class="kn">import</span> <span class="n">CannotSignError</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.validator_keys</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ValidatorPublicKey</span><span class="p">,</span>
                                                   <span class="n">ValidatorSecretKey</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.validator_pem</span> <span class="kn">import</span> <span class="n">ValidatorPEM</span>
@@ -98,14 +97,14 @@
 
 <div class="viewcode-block" id="ValidatorSigner.sign">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorSigner.sign">[docs]</a>
-    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ISignature</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_sign</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ErrCannotSign</span><span class="p">()</span> <span class="kn">from</span> <span class="nn">err</span></div>
+            <span class="k">raise</span> <span class="n">CannotSignError</span><span class="p">()</span> <span class="kn">from</span> <span class="nn">err</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_try_sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ISignature</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_try_sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">signature</span>
 

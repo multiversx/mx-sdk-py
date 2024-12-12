@@ -71,7 +71,7 @@
   <h1>Source code for multiversx_sdk.abi.abi_definition</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 
 <div class="viewcode-block" id="AbiDefinition">
@@ -80,9 +80,9 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">constructor</span><span class="p">:</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">,</span>
                  <span class="n">upgrade_constructor</span><span class="p">:</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">,</span>
-                 <span class="n">endpoints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">],</span>
+                 <span class="n">endpoints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">],</span>
                  <span class="n">types</span><span class="p">:</span> <span class="s2">&quot;TypesDefinitions&quot;</span><span class="p">,</span>
-                 <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EventDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">events</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;EventDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constructor</span> <span class="o">=</span> <span class="n">constructor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upgrade_constructor</span> <span class="o">=</span> <span class="n">upgrade_constructor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endpoints</span> <span class="o">=</span> <span class="n">endpoints</span>
@@ -92,7 +92,7 @@
 <div class="viewcode-block" id="AbiDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbiDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbiDefinition&quot;</span><span class="p">:</span>
         <span class="n">constructor</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_definition_for_constructor</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">constructor</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;constructor&quot;</span>
 
@@ -114,14 +114,14 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_get_definition_for_constructor</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">_get_definition_for_constructor</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
         <span class="k">if</span> <span class="s2">&quot;constructor&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">EndpointDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;constructor&quot;</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">NullEndpointDefinition</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_get_definition_for_upgrade</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_definition_for_upgrade</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;upgradeConstructor&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">EndpointDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;upgradeConstructor&quot;</span><span class="p">])</span>
 
@@ -168,9 +168,9 @@
                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">docs</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">mutability</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">],</span>
-                 <span class="n">outputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">],</span>
-                 <span class="n">payable_in_tokens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">],</span>
+                 <span class="n">outputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">],</span>
+                 <span class="n">payable_in_tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                  <span class="n">only_owner</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
                  <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -185,7 +185,7 @@
 <div class="viewcode-block" id="EndpointDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EndpointDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EndpointDefinition&quot;</span><span class="p">:</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ParameterDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">]]</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ParameterDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]]</span>
 
@@ -236,7 +236,7 @@
 <div class="viewcode-block" id="ParameterDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ParameterDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ParameterDefinition&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
@@ -259,20 +259,20 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.TypesDefinitions">[docs]</a>
 <span class="k">class</span> <span class="nc">TypesDefinitions</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EnumDefinition&quot;</span><span class="p">],</span>
-                 <span class="n">explicit_enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ExplicitEnumDefinition&quot;</span><span class="p">],</span>
-                 <span class="n">structs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;StructDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">enums</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">EnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">enum</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">enum</span> <span class="k">for</span> <span class="n">enum</span> <span class="ow">in</span> <span class="n">enums</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">explicit_enums</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ExplicitEnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">enum</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">enum</span> <span class="k">for</span> <span class="n">enum</span> <span class="ow">in</span> <span class="n">explicit_enums</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">structs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StructDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">struct</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">struct</span> <span class="k">for</span> <span class="n">struct</span> <span class="ow">in</span> <span class="n">structs</span><span class="p">}</span>
+                 <span class="n">enums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;EnumDefinition&quot;</span><span class="p">],</span>
+                 <span class="n">explicit_enums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;ExplicitEnumDefinition&quot;</span><span class="p">],</span>
+                 <span class="n">structs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;StructDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enums</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">EnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">enum</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">enum</span> <span class="k">for</span> <span class="n">enum</span> <span class="ow">in</span> <span class="n">enums</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">explicit_enums</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ExplicitEnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">enum</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">enum</span> <span class="k">for</span> <span class="n">enum</span> <span class="ow">in</span> <span class="n">explicit_enums</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">structs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StructDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">struct</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">struct</span> <span class="k">for</span> <span class="n">struct</span> <span class="ow">in</span> <span class="n">structs</span><span class="p">}</span>
 
 <div class="viewcode-block" id="TypesDefinitions.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.TypesDefinitions.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;TypesDefinitions&quot;</span><span class="p">:</span>
-        <span class="n">enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">explicit_enums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ExplicitEnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">structs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">StructDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;TypesDefinitions&quot;</span><span class="p">:</span>
+        <span class="n">enums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">explicit_enums</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ExplicitEnumDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">structs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">StructDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">definition</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">kind</span> <span class="o">=</span> <span class="n">definition</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
@@ -300,14 +300,14 @@
 <span class="k">class</span> <span class="nc">EnumDefinition</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">variants</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EnumVariantDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">variants</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;EnumVariantDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variants</span> <span class="o">=</span> <span class="n">variants</span>
 
 <div class="viewcode-block" id="EnumDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EnumDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EnumDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EnumDefinition&quot;</span><span class="p">:</span>
         <span class="n">variants</span> <span class="o">=</span> <span class="p">[</span><span class="n">EnumVariantDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;variants&quot;</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -327,7 +327,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">discriminant</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;FieldDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;FieldDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span> <span class="o">=</span> <span class="n">discriminant</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
@@ -335,7 +335,7 @@
 <div class="viewcode-block" id="EnumVariantDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EnumVariantDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EnumVariantDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EnumVariantDefinition&quot;</span><span class="p">:</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">FieldDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fields&quot;</span><span class="p">,</span> <span class="p">[])]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -355,14 +355,14 @@
 <span class="k">class</span> <span class="nc">ExplicitEnumDefinition</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">variants</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ExplicitEnumVariantDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">variants</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;ExplicitEnumVariantDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variants</span> <span class="o">=</span> <span class="n">variants</span>
 
 <div class="viewcode-block" id="ExplicitEnumDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ExplicitEnumDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExplicitEnumDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExplicitEnumDefinition&quot;</span><span class="p">:</span>
         <span class="n">variants</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExplicitEnumVariantDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;variants&quot;</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -385,9 +385,7 @@
 <div class="viewcode-block" id="ExplicitEnumVariantDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.ExplicitEnumVariantDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExplicitEnumVariantDefinition&quot;</span><span class="p">:</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">FieldDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fields&quot;</span><span class="p">,</span> <span class="p">[])]</span>
-
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ExplicitEnumVariantDefinition&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="p">)</span></div>
@@ -403,14 +401,14 @@
 <span class="k">class</span> <span class="nc">StructDefinition</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">fields</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;FieldDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;FieldDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
 
 <div class="viewcode-block" id="StructDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.StructDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;StructDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;StructDefinition&quot;</span><span class="p">:</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">FieldDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -438,7 +436,7 @@
 <div class="viewcode-block" id="FieldDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.FieldDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;FieldDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;FieldDefinition&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
             <span class="n">description</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
@@ -456,14 +454,14 @@
 <span class="k">class</span> <span class="nc">EventDefinition</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EventTopicDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">inputs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;EventTopicDefinition&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="n">identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span>
 
 <div class="viewcode-block" id="EventDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EventDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EventDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EventDefinition&quot;</span><span class="p">:</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">EventTopicDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
@@ -491,7 +489,7 @@
 <div class="viewcode-block" id="EventTopicDefinition.from_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.EventTopicDefinition.from_dict">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EventTopicDefinition&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EventTopicDefinition&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>

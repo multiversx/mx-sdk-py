@@ -69,146 +69,30 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.interfaces</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Protocol</span>
 
-
-<div class="viewcode-block" id="IAddress">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IAddress">[docs]</a>
-<span class="k">class</span> <span class="nc">IAddress</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<div class="viewcode-block" id="IAddress.to_bech32">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IAddress.to_bech32">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="o">...</span></div>
-
-
-<div class="viewcode-block" id="IAddress.to_hex">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IAddress.to_hex">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="o">...</span></div>
-</div>
-
-
-
-<div class="viewcode-block" id="ITransaction">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITransaction">[docs]</a>
-<span class="k">class</span> <span class="nc">ITransaction</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">sender</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">receiver</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">value</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">sender_username</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">receiver_username</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">gas_price</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">version</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">options</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">guardian</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">guardian_signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">relayer</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">relayer_signature</span><span class="p">:</span> <span class="nb">bytes</span></div>
-
-
-
-<div class="viewcode-block" id="IMessage">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IMessage">[docs]</a>
-<span class="k">class</span> <span class="nc">IMessage</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span>
-    <span class="n">address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IAddress</span><span class="p">]</span>
-    <span class="n">version</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">signer</span><span class="p">:</span> <span class="nb">str</span></div>
-
-
-
-<span class="n">INonce</span> <span class="o">=</span> <span class="nb">int</span>
-<span class="n">IGasPrice</span> <span class="o">=</span> <span class="nb">int</span>
-<span class="n">IGasLimit</span> <span class="o">=</span> <span class="nb">int</span>
-<span class="n">IChainID</span> <span class="o">=</span> <span class="nb">str</span>
-<span class="n">ITransactionVersion</span> <span class="o">=</span> <span class="nb">int</span>
-<span class="n">ITransactionOptions</span> <span class="o">=</span> <span class="nb">int</span>
-<span class="n">ISignature</span> <span class="o">=</span> <span class="nb">bytes</span>
-<span class="n">ITokenIdentifier</span> <span class="o">=</span> <span class="nb">str</span>
-<span class="n">IGasPerDataByte</span> <span class="o">=</span> <span class="nb">int</span>
-
-
-<div class="viewcode-block" id="ITokenPayment">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITokenPayment">[docs]</a>
-<span class="k">class</span> <span class="nc">ITokenPayment</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">token_identifier</span><span class="p">:</span> <span class="n">ITokenIdentifier</span>
-    <span class="n">token_nonce</span><span class="p">:</span> <span class="n">INonce</span>
-    <span class="n">amount_as_integer</span><span class="p">:</span> <span class="nb">int</span>
-
-<div class="viewcode-block" id="ITokenPayment.is_egld">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITokenPayment.is_egld">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_egld</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="o">...</span></div>
-
-
-<div class="viewcode-block" id="ITokenPayment.is_fungible">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITokenPayment.is_fungible">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="o">...</span></div>
-</div>
-
-
-
-<div class="viewcode-block" id="ITransactionValue">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITransactionValue">[docs]</a>
-<span class="k">class</span> <span class="nc">ITransactionValue</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="o">...</span></div>
-
-
-
-<div class="viewcode-block" id="ITransactionPayload">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITransactionPayload">[docs]</a>
-<span class="k">class</span> <span class="nc">ITransactionPayload</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span>
-
-<div class="viewcode-block" id="ITransactionPayload.encoded">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITransactionPayload.encoded">[docs]</a>
-    <span class="k">def</span> <span class="nf">encoded</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="o">...</span></div>
-
-
-<div class="viewcode-block" id="ITransactionPayload.length">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ITransactionPayload.length">[docs]</a>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="o">...</span></div>
-</div>
-
-
-
-<div class="viewcode-block" id="ICodeMetadata">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ICodeMetadata">[docs]</a>
-<span class="k">class</span> <span class="nc">ICodeMetadata</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<div class="viewcode-block" id="ICodeMetadata.serialize">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.ICodeMetadata.serialize">[docs]</a>
-    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="o">...</span></div>
-</div>
-
+<span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 
 
 <div class="viewcode-block" id="INetworkConfig">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.INetworkConfig">[docs]</a>
 <span class="k">class</span> <span class="nc">INetworkConfig</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">min_gas_limit</span><span class="p">:</span> <span class="n">IGasLimit</span>
-    <span class="n">gas_per_data_byte</span><span class="p">:</span> <span class="n">IGasPerDataByte</span>
-    <span class="n">gas_price_modifier</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">chain_id</span><span class="p">:</span> <span class="n">IChainID</span></div>
+    <span class="n">min_gas_limit</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_per_data_byte</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">gas_price_modifier</span><span class="p">:</span> <span class="nb">float</span></div>
 
 
 
-<div class="viewcode-block" id="IValidatorPublicKey">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IValidatorPublicKey">[docs]</a>
-<span class="k">class</span> <span class="nc">IValidatorPublicKey</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<div class="viewcode-block" id="IValidatorPublicKey.hex">
-<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IValidatorPublicKey.hex">[docs]</a>
-    <span class="k">def</span> <span class="nf">hex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="IAccount">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IAccount">[docs]</a>
+<span class="k">class</span> <span class="nc">IAccount</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
+        <span class="o">...</span>
+
+<div class="viewcode-block" id="IAccount.sign">
+<a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IAccount.sign">[docs]</a>
+    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="o">...</span></div>
 </div>
 

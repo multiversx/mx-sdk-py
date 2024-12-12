@@ -76,7 +76,6 @@
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DEFAULT_MESSAGE_VERSION</span><span class="p">,</span>
                                            <span class="n">SDK_PY_SIGNER</span><span class="p">,</span> <span class="n">UNKNOWN_SIGNER</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.interfaces</span> <span class="kn">import</span> <span class="n">IAddress</span><span class="p">,</span> <span class="n">IMessage</span>
 
 
 <div class="viewcode-block" id="Message">
@@ -85,7 +84,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
                  <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-                 <span class="n">address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IAddress</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_MESSAGE_VERSION</span><span class="p">,</span>
                  <span class="n">signer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">SDK_PY_SIGNER</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
@@ -110,7 +109,7 @@
 
 <div class="viewcode-block" id="MessageComputer.compute_bytes_for_signing">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.MessageComputer.compute_bytes_for_signing">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_bytes_for_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">IMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compute_bytes_for_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">PREFIX</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="s2">&quot;17456c726f6e64205369676e6564204d6573736167653a0a&quot;</span><span class="p">)</span>
         <span class="n">size</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">data</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">PREFIX</span> <span class="o">+</span> <span class="n">size</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="n">data</span>
@@ -121,13 +120,13 @@
 
 <div class="viewcode-block" id="MessageComputer.compute_bytes_for_verifying">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.MessageComputer.compute_bytes_for_verifying">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_bytes_for_verifying</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">IMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compute_bytes_for_verifying</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_bytes_for_signing</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MessageComputer.pack_message">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.MessageComputer.pack_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">pack_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">IMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">pack_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span> <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">address</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
             <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>
