@@ -5,13 +5,11 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/hhatto/autopep8
-    rev: v2.3.1
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
     hooks:
-      - id: autopep8
-        args:
-          - "-i"
-          - "--max-line-length=100"
+      - id: black
+        args: [--line-length=100]
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
