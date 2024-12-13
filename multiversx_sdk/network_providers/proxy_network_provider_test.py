@@ -145,7 +145,7 @@ class TestProxy:
 
     def test_get_transaction_status(self):
         result = self.proxy.get_transaction_status(
-            "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
+            bytes.fromhex("9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c")
         )
         assert result.status == "success"
 

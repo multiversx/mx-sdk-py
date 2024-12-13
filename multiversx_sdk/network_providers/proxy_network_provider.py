@@ -299,9 +299,11 @@ class ProxyNetworkProvider(INetworkProvider):
 
         return vm_query_response_to_smart_contract_query_response(response, query.function)
 
-    def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
+    def get_transaction_status(self, transaction_hash: Union[str, bytes]) -> TransactionStatus:
         """Fetches the status of a transaction."""
-        response = self.do_get_generic(f'transaction/{tx_hash}/process-status')
+        transaction_hash = convert_tx_hash_to_string(transaction_hash)
+        
+        response = self.do_get_generic(f'transaction/{transaction_hash}/process-status')
         return TransactionStatus(response.get('status', ''))
 
     def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]] = None) -> GenericResponse:
