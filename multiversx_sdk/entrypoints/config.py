@@ -2,6 +2,13 @@ from dataclasses import dataclass
 
 
 @dataclass
+class LocalnetEntrypointConfig:
+    network_provider_url = "http://localhost:7950"
+    network_provider_kind = "proxy"
+    chain_id = "localnet"
+
+
+@dataclass
 class TestnetEntrypointConfig:
     network_provider_url = "https://testnet-api.multiversx.com"
     network_provider_kind = "api"
