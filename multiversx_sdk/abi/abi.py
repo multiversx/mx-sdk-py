@@ -21,6 +21,7 @@ from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.interface import IPayloadHolder
 from multiversx_sdk.abi.list_value import ListValue
+from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.optional_value import OptionalValue
@@ -35,6 +36,8 @@ from multiversx_sdk.abi.tuple_value import TupleValue
 from multiversx_sdk.abi.type_formula import TypeFormula
 from multiversx_sdk.abi.type_formula_parser import TypeFormulaParser
 from multiversx_sdk.abi.variadic_values import VariadicValues
+
+from multiversx_sdk.abi.managed_decimal_signed_value import ManagedDecimalSignedValue
 
 
 class Abi:
@@ -316,6 +319,29 @@ class Abi:
             return CountedVariadicValues([], item_creator=lambda: self._create_prototype(type_parameter))
         if name == "multi":
             return MultiValue([self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
+        if name == "ManagedDecimal":
+            scale = type_formula.type_parameters[0].name
+
+            if scale == "usize":
+                scale = 0
+                is_variable = True
+            else:
+                scale = int(scale)
+                is_variable = False
+
+            return ManagedDecimalValue(scale=scale, is_variable=is_variable)
+        if name == "ManagedDecimalSigned":
+            scale = type_formula.type_parameters[0].name
+
+            if scale == "usize":
+                scale = 0
+                is_variable = True
+            else:
+                scale = int(scale)
+                is_variable = False
+
+            return ManagedDecimalSignedValue(scale=scale, is_variable=is_variable)
+
 
         # Handle custom types
         type_prototype = self._get_custom_type_prototype(name)
