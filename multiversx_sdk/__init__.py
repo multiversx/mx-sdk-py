@@ -26,7 +26,7 @@ from multiversx_sdk.network_providers import (AccountAwaiter, AccountOnNetwork,
                                               BlockCoordinates, BlockOnNetwork,
                                               FungibleTokenMetadata,
                                               GenericError, GenericResponse,
-                                              GetBlockArguments, NetworkConfig,
+                                              NetworkConfig,
                                               NetworkProviderConfig,
                                               NetworkStatus,
                                               ProxyNetworkProvider,
@@ -80,7 +80,7 @@ __all__ = [
     "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome", "AddQuantityOutcome",
     "BurnQuantityOutcome", "TransactionOnNetwork", "TransactionStatus", "ParsedSmartContractCallOutcome",
     "AccountOnNetwork", "AccountStorage", "AccountStorageEntry", "AwaitingOptions", "BlockCoordinates",
-    "BlockOnNetwork", "FungibleTokenMetadata", "GetBlockArguments", "NetworkConfig", "NetworkStatus",
+    "BlockOnNetwork", "FungibleTokenMetadata", "NetworkConfig", "NetworkStatus",
     "TokenAmountOnNetwork", "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter",
     "LibraryConfig", "KeyPair"
 ]

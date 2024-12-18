@@ -6,7 +6,7 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, AwaitingOptions,
-    BlockOnNetwork, FungibleTokenMetadata, GetBlockArguments, NetworkConfig,
+    BlockOnNetwork, FungibleTokenMetadata, NetworkConfig,
     NetworkStatus, TokenAmountOnNetwork, TokensCollectionMetadata,
     TransactionCostResponse)
 from multiversx_sdk.smart_contracts.smart_contract_query import (
@@ -18,12 +18,6 @@ class INetworkProvider(Protocol):
         ...
 
     def get_network_status(self, shard: int) -> NetworkStatus:
-        ...
-
-    def get_block(self, arguments: GetBlockArguments) -> BlockOnNetwork:
-        ...
-
-    def get_latest_block(self, shard: int) -> BlockOnNetwork:
         ...
 
     def get_account(self, address: Address) -> AccountOnNetwork:

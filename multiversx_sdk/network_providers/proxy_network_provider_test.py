@@ -8,8 +8,7 @@ from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.http_resources import block_from_response
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
-from multiversx_sdk.network_providers.resources import (GetBlockArguments,
-                                                        TokenAmountOnNetwork)
+from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
 from multiversx_sdk.smart_contracts.smart_contract_query import \
     SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
@@ -40,19 +39,13 @@ class TestProxy:
         assert result.raw
 
     def test_get_block(self):
-        args = GetBlockArguments(block_nonce=5949242)
+        shard=1
+        
+        block_hash=bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
+        result_by_hash = self.proxy.get_block(shard=shard, block_hash=block_hash)
 
-        with pytest.raises(Exception, match="Shard not provided. Please set the shard in the arguments."):
-            self.proxy.get_block(args)
-
-        args = GetBlockArguments(
-            shard=1, block_hash=bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
-        )
-        result_by_hash = self.proxy.get_block(args)
-
-        args = GetBlockArguments(
-            shard=1, block_nonce=5949242)
-        result_by_nonce = self.proxy.get_block(args)
+        block_nonce=5949242
+        result_by_nonce = self.proxy.get_block(shard=shard, block_nonce=block_nonce)
 
         assert result_by_hash.hash == bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
         assert result_by_hash.nonce == 5949242

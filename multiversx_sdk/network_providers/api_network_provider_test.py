@@ -9,8 +9,7 @@ from multiversx_sdk.network_providers.api_network_provider import \
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.http_resources import \
     account_from_api_response
-from multiversx_sdk.network_providers.resources import (GetBlockArguments,
-                                                        TokenAmountOnNetwork)
+from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
 from multiversx_sdk.smart_contracts.smart_contract_query import \
     SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
@@ -41,15 +40,8 @@ class TestApi:
         assert result.raw
 
     def test_get_block(self):
-        args = GetBlockArguments(block_nonce=5949242)
-
-        with pytest.raises(Exception, match="Block hash not provided. Please set the `block_hash` in the arguments."):
-            self.api.get_block(args)
-
-        args = GetBlockArguments(
-            block_hash=bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
-        )
-        result_by_hash = self.api.get_block(args)
+        block_hash=bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
+        result_by_hash = self.api.get_block(block_hash)
 
         assert result_by_hash.hash == bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
         assert result_by_hash.nonce == 5949242
