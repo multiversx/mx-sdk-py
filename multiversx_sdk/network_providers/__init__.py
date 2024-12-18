@@ -8,7 +8,7 @@ from multiversx_sdk.network_providers.proxy_network_provider import \
 from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, AwaitingOptions,
     BlockCoordinates, BlockOnNetwork, FungibleTokenMetadata, GenericResponse,
-    GetBlockArguments, NetworkConfig, NetworkStatus, TokenAmountOnNetwork,
+    NetworkConfig, NetworkStatus, TokenAmountOnNetwork,
     TokensCollectionMetadata, TransactionCostResponse)
 from multiversx_sdk.network_providers.transaction_awaiter import \
     TransactionAwaiter
@@ -21,6 +21,6 @@ __all__ = [
     "TransactionDecoder", "TransactionMetadata", "NetworkProviderConfig",
     "AccountOnNetwork", "AccountStorage", "AccountStorageEntry", "AwaitingOptions",
     "BlockCoordinates", "BlockOnNetwork", "FungibleTokenMetadata",
-    "GetBlockArguments", "NetworkConfig", "NetworkStatus", "TokenAmountOnNetwork",
+    "NetworkConfig", "NetworkStatus", "TokenAmountOnNetwork",
     "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter"
 ]

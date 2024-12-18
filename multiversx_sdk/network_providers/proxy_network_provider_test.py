@@ -8,8 +8,7 @@ from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.http_resources import block_from_response
 from multiversx_sdk.network_providers.proxy_network_provider import \
     ProxyNetworkProvider
-from multiversx_sdk.network_providers.resources import (GetBlockArguments,
-                                                        TokenAmountOnNetwork)
+from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
 from multiversx_sdk.smart_contracts.smart_contract_query import \
     SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
@@ -40,19 +39,13 @@ class TestProxy:
         assert result.raw
 
     def test_get_block(self):
-        args = GetBlockArguments(block_nonce=5949242)
+        shard=1
+        
+        block_hash=bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
+        result_by_hash = self.proxy.get_block(shard=shard, block_hash=block_hash)
 
-        with pytest.raises(Exception, match="Shard not provided. Please set the shard in the arguments."):
-            self.proxy.get_block(args)
-
-        args = GetBlockArguments(
-            shard=1, block_hash="ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f".encode()
-        )
-        result_by_hash = self.proxy.get_block(args)
-
-        args = GetBlockArguments(
-            shard=1, block_nonce=5949242)
-        result_by_nonce = self.proxy.get_block(args)
+        block_nonce=5949242
+        result_by_nonce = self.proxy.get_block(shard=shard, block_nonce=block_nonce)
 
         assert result_by_hash.hash == bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
         assert result_by_hash.nonce == 5949242
@@ -145,7 +138,7 @@ class TestProxy:
 
     def test_get_transaction_status(self):
         result = self.proxy.get_transaction_status(
-            "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
+            bytes.fromhex("9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c")
         )
         assert result.status == "success"
 
@@ -299,14 +292,17 @@ class TestProxy:
             receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id="D",
+            signature=bytes.fromhex("".join(["0"] * 128))
         )
         nonce = self.proxy.get_account(Address.new_from_bech32(bob.label)).nonce
-
         transaction.nonce = nonce
-        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         tx_on_network = self.proxy.simulate_transaction(transaction)
+        assert tx_on_network.status == TransactionStatus("success")
 
+        transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        tx_on_network = self.proxy.simulate_transaction(transaction=transaction, check_signature=True)
         assert tx_on_network.status == TransactionStatus("success")
 
         transaction = Transaction(
@@ -314,12 +310,22 @@ class TestProxy:
             receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"),
             gas_limit=10000000,
             chain_id="D",
-            data=b"add@07"
+            data=b"add@07",
+            nonce=nonce,
+            signature=bytes.fromhex("".join(["0"] * 128))
         )
-        transaction.nonce = nonce
+        tx_on_network = self.proxy.simulate_transaction(transaction)
+
+        assert tx_on_network.status == TransactionStatus("success")
+        assert len(tx_on_network.smart_contract_results) == 1
+        assert tx_on_network.smart_contract_results[0].sender.to_bech32(
+        ) == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert tx_on_network.smart_contract_results[0].receiver.to_bech32() == bob.label
+        assert tx_on_network.smart_contract_results[0].data == b"@6f6b"
+
         transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
-        tx_on_network = self.proxy.simulate_transaction(transaction)
+        tx_on_network = self.proxy.simulate_transaction(transaction=transaction, check_signature=True)
 
         assert tx_on_network.status == TransactionStatus("success")
         assert len(tx_on_network.smart_contract_results) == 1

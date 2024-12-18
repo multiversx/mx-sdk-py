@@ -161,8 +161,8 @@ class MockNetworkProvider:
 
         raise Exception("Transaction not found")
 
-    def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
-        transaction = self.get_transaction(tx_hash)
+    def get_transaction_status(self, transaction_hash: Union[str, bytes]) -> TransactionStatus:
+        transaction = self.get_transaction(transaction_hash)
         return transaction.status
 
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
