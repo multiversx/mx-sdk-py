@@ -6,11 +6,14 @@ import pytest
 from multiversx_sdk.abi.abi import Abi, AbiDefinition
 from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 from multiversx_sdk.accounts.account import Account
-from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
-from multiversx_sdk.smart_contracts.smart_contract_controller import SmartContractController
+from multiversx_sdk.network_providers.proxy_network_provider import \
+    ProxyNetworkProvider
+from multiversx_sdk.smart_contracts.smart_contract_controller import \
+    SmartContractController
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
+@pytest.mark.skip("Requires localnet")
 class TestLocalnetInteraction:
     wallets = load_wallets()
     alice = wallets["alice"]
@@ -105,7 +108,7 @@ class TestLocalnetInteraction:
         assert len(outcome.values) == 1
         assert outcome.values[0] == Decimal("0.000000000000000001")
 
-        # addition
+        # addition with const decimals
         addition_transaction = sc_controller.create_transaction_for_execute(
             sender=alice,
             nonce=alice.get_nonce_then_increment(),
@@ -114,6 +117,12 @@ class TestLocalnetInteraction:
             function="managed_decimal_addition",
             arguments=[ManagedDecimalValue("2.5", 2), ManagedDecimalValue("2.7", 2)],
         )
+
+        tx_hash = proxy.send_transaction(addition_transaction)
+        outcome = sc_controller.await_completed_execute(tx_hash)
+        assert outcome.return_code == "ok"
+        assert len(outcome.values) == 1
+        assert outcome.values[0] == Decimal("5.2")
 
         # log
         md_ln_transaction = sc_controller.create_transaction_for_execute(
@@ -125,7 +134,13 @@ class TestLocalnetInteraction:
             arguments=[ManagedDecimalValue("23", 9)],
         )
 
-        # addition var
+        tx_hash = proxy.send_transaction(md_ln_transaction)
+        outcome = sc_controller.await_completed_execute(tx_hash)
+        assert outcome.return_code == "ok"
+        assert len(outcome.values) == 1
+        assert outcome.values[0] == Decimal("3.135553845")
+
+        # addition var decimals
         addition_var_transaction = sc_controller.create_transaction_for_execute(
             sender=alice,
             nonce=alice.get_nonce_then_increment(),
@@ -135,6 +150,12 @@ class TestLocalnetInteraction:
             arguments=[ManagedDecimalValue("4", 2, True), ManagedDecimalValue("5", 2, True)],
         )
 
+        tx_hash = proxy.send_transaction(addition_var_transaction)
+        outcome = sc_controller.await_completed_execute(tx_hash)
+        assert outcome.return_code == "ok"
+        assert len(outcome.values) == 1
+        assert outcome.values[0] == Decimal("9")
+
         # ln var
         ln_var_transaction = sc_controller.create_transaction_for_execute(
             sender=alice,
@@ -142,5 +163,11 @@ class TestLocalnetInteraction:
             contract=contract,
             gas_limit=50_000_000,
             function="managed_decimal_ln_var",
-            arguments=[ManagedDecimalValue("23", 9)],
+            arguments=[ManagedDecimalValue("23", 9, True)],
         )
+
+        tx_hash = proxy.send_transaction(ln_var_transaction)
+        outcome = sc_controller.await_completed_execute(tx_hash)
+        assert outcome.return_code == "ok"
+        assert len(outcome.values) == 1
+        assert outcome.values[0] == Decimal("3.135553845")
