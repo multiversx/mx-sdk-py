@@ -35,7 +35,7 @@ class SmartContractController:
         self.abi = abi
         self.factory = SmartContractTransactionsFactory(
             TransactionsFactoryConfig(chain_id), abi=self.abi)
-        self.parser = SmartContractTransactionsOutcomeParser()
+        self.parser = SmartContractTransactionsOutcomeParser(abi=self.abi)
         self.network_provider = network_provider
         self.tx_computer = TransactionComputer()
         self.serializer = Serializer()
