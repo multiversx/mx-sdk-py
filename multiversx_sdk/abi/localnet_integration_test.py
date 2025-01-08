@@ -6,10 +6,8 @@ import pytest
 from multiversx_sdk.abi.abi import Abi, AbiDefinition
 from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 from multiversx_sdk.accounts.account import Account
-from multiversx_sdk.network_providers.proxy_network_provider import \
-    ProxyNetworkProvider
-from multiversx_sdk.smart_contracts.smart_contract_controller import \
-    SmartContractController
+from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
+from multiversx_sdk.smart_contracts.smart_contract_controller import SmartContractController
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
