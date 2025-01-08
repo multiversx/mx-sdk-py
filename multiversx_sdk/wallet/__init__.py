@@ -1,3 +1,4 @@
+from multiversx_sdk.wallet.keypair import KeyPair
 from multiversx_sdk.wallet.mnemonic import Mnemonic
 from multiversx_sdk.wallet.user_keys import UserPublicKey, UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
@@ -15,5 +16,5 @@ __all__ = [
     "UserPublicKey", "ValidatorSecretKey",
     "ValidatorPublicKey", "UserVerifier",
     "ValidatorSigner", "ValidatorVerifier", "ValidatorPEM",
-    "UserWallet", "UserPEM"
+    "UserWallet", "UserPEM", "KeyPair"
 ]

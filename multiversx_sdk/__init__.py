@@ -26,7 +26,7 @@ from multiversx_sdk.network_providers import (AccountAwaiter, AccountOnNetwork,
                                               BlockCoordinates, BlockOnNetwork,
                                               FungibleTokenMetadata,
                                               GenericError, GenericResponse,
-                                              GetBlockArguments, NetworkConfig,
+                                              NetworkConfig,
                                               NetworkProviderConfig,
                                               NetworkStatus,
                                               ProxyNetworkProvider,
@@ -53,7 +53,7 @@ from multiversx_sdk.token_management import (
     UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
 from multiversx_sdk.transfers import (TransfersController,
                                       TransferTransactionsFactory)
-from multiversx_sdk.wallet import (Mnemonic, UserPEM, UserPublicKey,
+from multiversx_sdk.wallet import (KeyPair, Mnemonic, UserPEM, UserPublicKey,
                                    UserSecretKey, UserSigner, UserVerifier,
                                    UserWallet, ValidatorPEM,
                                    ValidatorPublicKey, ValidatorSecretKey,
@@ -80,7 +80,7 @@ __all__ = [
     "FreezeOutcome", "UnFreezeOutcome", "WipeOutcome", "UpdateAttributesOutcome", "AddQuantityOutcome",
     "BurnQuantityOutcome", "TransactionOnNetwork", "TransactionStatus", "ParsedSmartContractCallOutcome",
     "AccountOnNetwork", "AccountStorage", "AccountStorageEntry", "AwaitingOptions", "BlockCoordinates",
-    "BlockOnNetwork", "FungibleTokenMetadata", "GetBlockArguments", "NetworkConfig", "NetworkStatus",
+    "BlockOnNetwork", "FungibleTokenMetadata", "NetworkConfig", "NetworkStatus",
     "TokenAmountOnNetwork", "TokensCollectionMetadata", "TransactionCostResponse", "AccountAwaiter",
-    "LibraryConfig"
+    "LibraryConfig", "KeyPair"
 ]

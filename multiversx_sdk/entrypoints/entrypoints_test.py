@@ -85,7 +85,7 @@ class TestEntrypoint:
         )
 
         tx_hash = self.entrypoint.send_transaction(transaction)
-        self.entrypoint.await_completed_transaction(tx_hash)
+        self.entrypoint.await_transaction_completed(tx_hash)
 
         query_result = controller.query(
             contract=contract_address,
