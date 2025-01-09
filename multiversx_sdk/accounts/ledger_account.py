@@ -23,14 +23,18 @@ class LedgerAccount:
         app.close()
 
     def sign_transaction(self, transaction: Transaction) -> bytes:
-        """Sets `version` and `options` fields to sign transaction by hash."""
+        transaction_computer = TransactionComputer()
+
+        if not transaction_computer.has_options_set_for_hash_signing(transaction):
+            raise Exception(
+                "Invalid transaction options. Set the least significant bit of the `options` property to `1`."
+            )
+
         app = LedgerApp()
         app.set_address(self.address_index)
 
-        transaction_computer = TransactionComputer()
-        transaction_computer.apply_options_for_hash_signing(transaction)
-        serialized_transaction = transaction_computer.compute_bytes_for_signing(transaction)
-        signature = app.sign_transaction(serialized_transaction)
+        hash = transaction_computer.compute_hash_for_signing(transaction)
+        signature = app.sign_transaction(hash)
 
         app.close()
         return bytes.fromhex(signature)
