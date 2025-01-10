@@ -1,4 +1,5 @@
 from multiversx_sdk.core import Transaction
+from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.relayed.relayed_transactions_factory import (
@@ -6,7 +7,7 @@ from multiversx_sdk.relayed.relayed_transactions_factory import (
 )
 
 
-class RelayedController:
+class RelayedController(BaseController):
     """
     The Relayed Transactions V1 and V2 will soon be deprecated from the network. Please use Relayed Transactions V3 instead.
     The transactions are created from the perspective of the relayer. The 'sender' represents the relayer.
@@ -23,6 +24,8 @@ class RelayedController:
         )
 
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -41,6 +44,8 @@ class RelayedController:
         )
 
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

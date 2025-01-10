@@ -1,9 +1,12 @@
+import pytest
+
 from multiversx_sdk.accounts.ledger_account import LedgerAccount
 from multiversx_sdk.core.message import Message, MessageComputer
 from multiversx_sdk.wallet.user_keys import UserPublicKey
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
+@pytest.mark.skip("Requires Ledger Device")
 def test_sign_message():
     account = LedgerAccount()
     address = account.address

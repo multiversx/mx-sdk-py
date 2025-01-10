@@ -18,6 +18,7 @@ class Account:
         self.public_key = self.secret_key.generate_public_key()
         self.address = self.public_key.to_address(hrp)
         self.nonce = 0
+        self.use_hash_signing = False
 
     @classmethod
     def new_from_pem(cls, file_path: Path, index: int = 0, hrp: Optional[str] = None) -> "Account":
@@ -36,9 +37,7 @@ class Account:
         return Account(secret_key, hrp)
 
     @classmethod
-    def new_from_mnemonic(
-        cls, mnemonic: str, address_index: int = 0, hrp: Optional[str] = None
-    ) -> "Account":
+    def new_from_mnemonic(cls, mnemonic: str, address_index: int = 0, hrp: Optional[str] = None) -> "Account":
         mnemonic_handler = Mnemonic(mnemonic)
         secret_key = mnemonic_handler.derive_key(address_index)
         return Account(secret_key, hrp)

@@ -43,9 +43,6 @@ class TransactionComputer:
     def compute_bytes_for_signing(self, transaction: Transaction) -> bytes:
         self._ensure_fields(transaction)
 
-        if self.has_options_set_for_hash_signing(transaction):
-            raise Exception("`options` property is set for hash signing (least significant bit is set).")
-
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
         return serialized

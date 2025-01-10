@@ -33,6 +33,8 @@ class TestEntrypoint:
             transaction.signature.hex()
             == "69bc7d1777edd0a901e6cf94830475716205c5efdf2fd44d4be31badead59fc8418b34f0aa3b2c80ba14aed5edd30031757d826af58a1abb690a0bee89ba9309"
         )
+        assert transaction.version == 2
+        assert transaction.options == 0
 
     def test_native_transfer_with_guardian_and_relayer(self):
         grace = Account.new_from_pem(self.grace_pem)
@@ -132,4 +134,22 @@ class TestEntrypoint:
             transaction.options = 1
 
             transaction.signature = account.sign_transaction(transaction)
-            self.entrypoint.send_transaction(transaction)
+            hash = self.entrypoint.send_transaction(transaction)
+            tx_on_network = self.entrypoint.await_transaction_completed(hash)
+
+            assert tx_on_network.status.is_completed
+
+    @pytest.mark.skip("Requires Ledger Device.")
+    def test_version_and_options_are_correct(self):
+        controller = self.entrypoint.create_account_controller()
+
+        account = LedgerAccount()
+        print(account.address.to_bech32())
+        account.nonce = self.entrypoint.recall_account_nonce(account.address)
+
+        transaction = controller.create_transaction_for_saving_key_value(
+            sender=account, nonce=account.nonce, key_value_pairs={b"testKey": b"testValue"}
+        )
+
+        assert transaction.version == 2
+        assert transaction.options == 1

@@ -6,6 +6,7 @@ from multiversx_sdk.core import (
     TransactionOnNetwork,
     TransactionsFactoryConfig,
 )
+from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.delegation.delegation_transactions_factory import (
     DelegationTransactionsFactory,
@@ -27,7 +28,7 @@ class INetworkProvider(Protocol):
 # fmt: on
 
 
-class DelegationController:
+class DelegationController(BaseController):
     def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
         self.network_provider = network_provider
         self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id))
@@ -53,6 +54,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -88,6 +91,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -108,6 +113,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -128,6 +135,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -148,6 +157,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -168,6 +179,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -192,6 +205,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -212,6 +227,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -234,6 +251,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -253,6 +272,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -272,6 +293,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -291,6 +314,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -310,6 +335,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -336,6 +363,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -356,6 +385,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -375,6 +406,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -394,6 +427,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -414,6 +449,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -433,6 +470,8 @@ class DelegationController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

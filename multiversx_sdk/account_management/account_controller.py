@@ -4,11 +4,12 @@ from multiversx_sdk.account_management.account_transactions_factory import (
     AccountTransactionsFactory,
 )
 from multiversx_sdk.core import Address, Transaction
+from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 
 
-class AccountController:
+class AccountController(BaseController):
     def __init__(self, chain_id: str) -> None:
         self.factory = AccountTransactionsFactory(TransactionsFactoryConfig(chain_id))
 
@@ -27,6 +28,8 @@ class AccountController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -45,6 +48,8 @@ class AccountController:
 
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -56,6 +61,8 @@ class AccountController:
 
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -63,12 +70,12 @@ class AccountController:
     def create_transaction_for_unguarding_account(
         self, sender: IAccount, nonce: int, guardian: Address, relayer: Optional[Address] = None
     ) -> Transaction:
-        transaction = self.factory.create_transaction_for_unguarding_account(
-            sender=sender.address, guardian=guardian
-        )
+        transaction = self.factory.create_transaction_for_unguarding_account(sender=sender.address, guardian=guardian)
 
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

@@ -10,6 +10,7 @@ from multiversx_sdk.core import (
     Transaction,
     TransactionOnNetwork,
 )
+from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.network_providers.resources import AwaitingOptions
@@ -30,22 +31,22 @@ from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_t
 )
 
 
+# fmt: off
 class INetworkProvider(Protocol):
-    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse: ...
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
+        ...
 
     def await_transaction_completed(
         self, transaction_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None
-    ) -> TransactionOnNetwork: ...
+    ) -> TransactionOnNetwork:
+        ...
+# fmt: on
 
 
-class SmartContractController:
-    def __init__(
-        self, chain_id: str, network_provider: INetworkProvider, abi: Optional[Abi] = None
-    ) -> None:
+class SmartContractController(BaseController):
+    def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Optional[Abi] = None) -> None:
         self.abi = abi
-        self.factory = SmartContractTransactionsFactory(
-            TransactionsFactoryConfig(chain_id), abi=self.abi
-        )
+        self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id), abi=self.abi)
         self.parser = SmartContractTransactionsOutcomeParser()
         self.network_provider = network_provider
         self.serializer = Serializer()
@@ -80,18 +81,16 @@ class SmartContractController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
 
-    def parse_deploy(
-        self, transaction_on_network: TransactionOnNetwork
-    ) -> SmartContractDeployOutcome:
+    def parse_deploy(self, transaction_on_network: TransactionOnNetwork) -> SmartContractDeployOutcome:
         return self.parser.parse_deploy(transaction_on_network)
 
-    def await_completed_deploy(
-        self, transaction_hash: Union[str, bytes]
-    ) -> SmartContractDeployOutcome:
+    def await_completed_deploy(self, transaction_hash: Union[str, bytes]) -> SmartContractDeployOutcome:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_deploy(transaction)
 
@@ -127,6 +126,8 @@ class SmartContractController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -157,6 +158,8 @@ class SmartContractController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -166,9 +169,7 @@ class SmartContractController:
     ) -> ParsedSmartContractCallOutcome:
         return self.parser.parse_execute(transaction_on_network, function)
 
-    def await_completed_execute(
-        self, transaction_hash: Union[str, bytes]
-    ) -> ParsedSmartContractCallOutcome:
+    def await_completed_execute(self, transaction_hash: Union[str, bytes]) -> ParsedSmartContractCallOutcome:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_execute(transaction, transaction.function)
 
@@ -181,9 +182,7 @@ class SmartContractController:
         value: Optional[int] = None,
     ) -> list[Any]:
         """It calls `create_query()`, `run_query()` and `parse_query_response()` in one go."""
-        query = self.create_query(
-            contract=contract, function=function, arguments=arguments, caller=caller, value=value
-        )
+        query = self.create_query(contract=contract, function=function, arguments=arguments, caller=caller, value=value)
 
         query_response = self.run_query(query)
         self._raise_for_status(query_response)

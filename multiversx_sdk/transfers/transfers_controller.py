@@ -1,6 +1,7 @@
 from typing import Optional
 
 from multiversx_sdk.core import Address, TokenTransfer, Transaction
+from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.transfers.transfer_transactions_factory import (
@@ -8,7 +9,7 @@ from multiversx_sdk.transfers.transfer_transactions_factory import (
 )
 
 
-class TransfersController:
+class TransfersController(BaseController):
     def __init__(self, chain_id: str) -> None:
         self.factory = TransferTransactionsFactory(TransactionsFactoryConfig(chain_id))
 
@@ -32,6 +33,8 @@ class TransfersController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -52,6 +55,8 @@ class TransfersController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -78,6 +83,8 @@ class TransfersController:
         transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

@@ -14,6 +14,7 @@ class LedgerAccount:
         self.address_index = address_index
         self.address = self._get_address()
         self.nonce = 0
+        self.use_hash_signing = True
 
     def set_address(self, address_index: int = 0):
         """Sets the working address for the device. Also sets the `address_index` and `address` properties of the class."""
