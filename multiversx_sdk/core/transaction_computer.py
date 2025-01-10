@@ -24,13 +24,9 @@ class TransactionComputer:
     def __init__(self) -> None:
         pass
 
-    def compute_transaction_fee(
-        self, transaction: Transaction, network_config: INetworkConfig
-    ) -> int:
+    def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
         """`TransactionsFactoryConfig` can be used here as the `network_config`."""
-        move_balance_gas = (
-            network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
-        )
+        move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
         if move_balance_gas > transaction.gas_limit:
             raise NotEnoughGasError(transaction.gas_limit)
 
@@ -48,7 +44,7 @@ class TransactionComputer:
         self._ensure_fields(transaction)
 
         if self.has_options_set_for_hash_signing(transaction):
-            return self.compute_hash_for_signing(transaction)
+            raise Exception("`options` property is set for hash signing (least significant bit is set).")
 
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
@@ -65,9 +61,13 @@ class TransactionComputer:
     def compute_hash_for_signing(self, transaction: Transaction) -> bytes:
         self._ensure_fields(transaction)
 
+        if not self.has_options_set_for_hash_signing(transaction):
+            raise Exception(
+                "`options` property is not set for hash signing. Please set the least signinficant bit of the `options` property to `1`."
+            )
+
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
-
         return keccak.new(digest_bits=256).update(serialized).digest()
 
     def compute_transaction_hash(self, transaction: Transaction) -> bytes:
@@ -77,14 +77,10 @@ class TransactionComputer:
         return bytes.fromhex(tx_hash)
 
     def has_options_set_for_guarded_transaction(self, transaction: Transaction) -> bool:
-        return (
-            transaction.options & TRANSACTION_OPTIONS_TX_GUARDED
-        ) == TRANSACTION_OPTIONS_TX_GUARDED
+        return (transaction.options & TRANSACTION_OPTIONS_TX_GUARDED) == TRANSACTION_OPTIONS_TX_GUARDED
 
     def has_options_set_for_hash_signing(self, transaction: Transaction) -> bool:
-        return (
-            transaction.options & TRANSACTION_OPTIONS_TX_HASH_SIGN
-        ) == TRANSACTION_OPTIONS_TX_HASH_SIGN
+        return (transaction.options & TRANSACTION_OPTIONS_TX_HASH_SIGN) == TRANSACTION_OPTIONS_TX_HASH_SIGN
 
     def apply_guardian(self, transaction: Transaction, guardian: Address) -> None:
         if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
@@ -106,29 +102,23 @@ class TransactionComputer:
 
     def _ensure_fields(self, transaction: Transaction) -> None:
         if len(transaction.sender.to_bech32()) != BECH32_ADDRESS_LENGTH:
-            raise BadUsageError(
-                "Invalid `sender` field. Should be the bech32 address of the sender."
-            )
+            raise BadUsageError("Invalid `sender` field. Should be the bech32 address of the sender.")
 
         if len(transaction.receiver.to_bech32()) != BECH32_ADDRESS_LENGTH:
-            raise BadUsageError(
-                "Invalid `receiver` field. Should be the bech32 address of the receiver."
-            )
+            raise BadUsageError("Invalid `receiver` field. Should be the bech32 address of the receiver.")
 
         if not len(transaction.chain_id):
             raise BadUsageError("The `chainID` field is not set")
 
         if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
-            if self.has_options_set_for_guarded_transaction(
+            if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(
                 transaction
-            ) or self.has_options_set_for_hash_signing(transaction):
+            ):
                 raise BadUsageError(
                     f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}"
                 )
 
-    def _to_dictionary(
-        self, transaction: Transaction, with_signature: bool = False
-    ) -> dict[str, Any]:
+    def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> dict[str, Any]:
         """Only used when serializing transaction for signing. Internal use only."""
         dictionary: dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
@@ -141,9 +131,7 @@ class TransactionComputer:
             dictionary["senderUsername"] = b64encode(transaction.sender_username.encode()).decode()
 
         if transaction.receiver_username:
-            dictionary["receiverUsername"] = b64encode(
-                transaction.receiver_username.encode()
-            ).decode()
+            dictionary["receiverUsername"] = b64encode(transaction.receiver_username.encode()).decode()
 
         dictionary["gasPrice"] = transaction.gas_price
         dictionary["gasLimit"] = transaction.gas_limit

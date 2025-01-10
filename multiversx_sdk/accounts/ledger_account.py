@@ -1,8 +1,12 @@
+import logging
+
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.message import Message, MessageComputer
+from multiversx_sdk.core.message import Message
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.ledger.ledger_app import LedgerApp
+
+logger = logging.getLogger("ledger_account")
 
 
 class LedgerAccount:
@@ -15,12 +19,11 @@ class LedgerAccount:
         """Sets the working address for the device. Also sets the `address_index` and `address` properties of the class."""
         app = LedgerApp()
         app.set_address(address_index)
+        bech32_address = app.get_address(address_index)
+        app.close()
 
         self.address_index = address_index
-        bech32_address = app.get_address(address_index)
         self.address = Address.new_from_bech32(bech32_address)
-
-        app.close()
 
     def sign_transaction(self, transaction: Transaction) -> bytes:
         transaction_computer = TransactionComputer()
@@ -30,21 +33,26 @@ class LedgerAccount:
                 "Invalid transaction options. Set the least significant bit of the `options` property to `1`."
             )
 
+        serialized_transaction = transaction_computer.compute_bytes_for_signing(transaction)
+
         app = LedgerApp()
         app.set_address(self.address_index)
 
-        hash = transaction_computer.compute_hash_for_signing(transaction)
-        signature = app.sign_transaction(hash)
-
+        logger.info("Confirm the transaction on the device.")
+        signature = app.sign_transaction(serialized_transaction)
         app.close()
+
         return bytes.fromhex(signature)
 
     def sign_message(self, message: Message) -> bytes:
+        message_length = len(message.data)
+        size = message_length.to_bytes(length=4, byteorder="big")
+        serialized_message = size + message.data
+
         app = LedgerApp()
         app.set_address(self.address_index)
 
-        message_computer = MessageComputer()
-        serialized_message = message_computer.compute_bytes_for_signing(message)
+        logger.info("Confirm the message on the device.")
         signature = app.sign_message(serialized_message)
         app.close()
 
