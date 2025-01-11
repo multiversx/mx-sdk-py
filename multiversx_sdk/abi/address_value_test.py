@@ -20,6 +20,12 @@ def test_set_payload_and_get_payload():
     value.set_payload(address)
     assert value.get_payload() == address.get_public_key()
 
+    # Simple (from bech32)
+    address = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+    value = AddressValue()
+    value.set_payload(address.bech32())
+    assert value.get_payload() == address.get_public_key()
+
     # From dict using a bech32 address
     address = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     value = AddressValue()
