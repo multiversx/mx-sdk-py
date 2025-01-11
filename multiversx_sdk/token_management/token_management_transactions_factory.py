@@ -279,9 +279,9 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         sender: Address,
         user: Address,
         token_identifier: str,
-        add_role_local_mint: bool,
-        add_role_local_burn: bool,
-        add_role_esdt_transfer_role: bool
+        add_role_local_mint: bool = False,
+        add_role_local_burn: bool = False,
+        add_role_esdt_transfer_role: bool = False
     ) -> Transaction:
         parts = [
             "setSpecialRole",
