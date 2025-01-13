@@ -12,7 +12,9 @@ class INetworkConfig(Protocol):
 
 # fmt: off
 class IAccount(Protocol):
-    use_hash_signing: bool
+    @property
+    def use_hash_signing(self) -> bool:
+        ...
 
     @property
     def address(self) -> Address:
