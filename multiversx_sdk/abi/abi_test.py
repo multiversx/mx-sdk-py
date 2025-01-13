@@ -354,3 +354,45 @@ def test_managed_decimals():
     assert second_input.is_variable
     assert second_input.scale == 0
     assert second_input.value == Decimal(0)
+
+
+def test_encode_decode_managed_decimals():
+    abi_definition = AbiDefinition.from_dict(
+            {
+                "endpoints": [
+                    {
+                        "name": "dummy",
+                        "inputs": [{"type": "ManagedDecimal<18>"}],
+                        "outputs": [],
+                    },
+                    {
+                        "name": "foo",
+                        "inputs": [{"name": "x", "type": "ManagedDecimal<usize>"}],
+                        "outputs": [{"type": "ManagedDecimalSigned<9>"}],
+                    },
+                    {
+                        "name": "foobar",
+                        "inputs": [{"name": "x", "type": "ManagedDecimal<usize>"}],
+                        "outputs": [{"type": "ManagedDecimal<usize>"}],
+                    },
+                ]
+            }
+        )
+
+    abi = Abi(abi_definition)
+
+    values = abi.encode_endpoint_input_parameters("dummy", [1])
+    assert values[0].hex() == "01"
+
+    values = abi.encode_endpoint_input_parameters("foo", [ManagedDecimalValue(7, 2, True)])
+    assert values[0].hex() == "0702"
+
+    values = abi.decode_endpoint_output_parameters("foo", [bytes.fromhex("07")])
+    assert values[0].get_payload() == Decimal("7")
+    assert values[0].scale == Decimal("7")
+    assert values[0].to_string() == "7.000000000"
+
+    values = abi.decode_endpoint_output_parameters("foobar", [bytes.fromhex("0700000003")])
+    assert values[0].get_payload() == Decimal("7")
+    assert values[0].scale == Decimal("3")
+    assert values[0].to_string() == "7.000"

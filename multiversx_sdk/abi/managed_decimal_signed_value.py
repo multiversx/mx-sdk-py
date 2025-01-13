@@ -1,5 +1,5 @@
 import io
-from decimal import ROUND_DOWN, Decimal
+from decimal import Decimal
 from typing import Any, Union
 
 from multiversx_sdk.abi.bigint_value import BigIntValue
@@ -17,7 +17,7 @@ class ManagedDecimalSignedValue:
     def set_payload(self, value: Any):
         if isinstance(value, ManagedDecimalSignedValue):
             if self.is_variable != value.is_variable:
-                raise Exception("Cannot set payload! Both ManagedDecimalValues should be variable.")
+                raise Exception("Cannot set payload! Both managed decimal values should be variable.")
 
             self.value = value.value
 
@@ -46,29 +46,29 @@ class ManagedDecimalSignedValue:
             self.scale = 0
             return
 
-        bigint = BigIntValue()
+        value = BigIntValue()
         scale = U32Value()
 
         if self.is_variable:
             # read biguint value length in bytes
-            big_int_size = self._unsigned_from_bytes(data[:U32_SIZE_IN_BYTES])
+            value_length = self._unsigned_from_bytes(data[:U32_SIZE_IN_BYTES])
 
             # remove biguint length; data is only biguint value and scale
             data = data[U32_SIZE_IN_BYTES:]
 
             # read biguint value
-            bigint.decode_top_level(data[:big_int_size])
+            value.decode_top_level(data[:value_length])
 
             # remove biguintvalue; data contains only scale
-            data = data[big_int_size:]
+            data = data[value_length:]
 
             # read scale
             scale.decode_top_level(data)
             self.scale = scale.get_payload()
         else:
-            bigint.decode_top_level(data)
+            value.decode_top_level(data)
 
-        self.value = self._convert_to_decimal(bigint.get_payload())
+        self.value = self._convert_to_decimal(value.get_payload())
 
     def decode_nested(self, reader: io.BytesIO):
         length = self._unsigned_from_bytes(read_bytes_exactly(reader, U32_SIZE_IN_BYTES))
@@ -76,23 +76,18 @@ class ManagedDecimalSignedValue:
         self.decode_top_level(payload)
 
     def to_string(self) -> str:
-        value_str = str(self._convert_value_to_int())
-        if self.scale == 0:
-            return value_str
-        if len(value_str) <= self.scale:
-            # If the value is smaller than the scale, prepend zeros
-            value_str = "0" * (self.scale - len(value_str) + 1) + value_str
-        return f"{value_str[:-self.scale]}.{value_str[-self.scale:]}"
+        scaled_value = self._convert_value_to_int()
+        return f"{scaled_value / (10 ** self.scale):.{self.scale}f}"
 
     def get_precision(self) -> int:
-        return len(str(self._convert_value_to_int()).lstrip("0"))
+        value_str = f"{self.value:.{self.scale}f}"
+        return len(value_str.replace(".", ""))
 
     def _unsigned_from_bytes(self, data: bytes) -> int:
         return int.from_bytes(data, byteorder="big", signed=False)
 
     def _convert_value_to_int(self) -> int:
-        scaled_value: Decimal = self.value * (10**self.scale)
-        return int(scaled_value.quantize(Decimal("1."), rounding=ROUND_DOWN))
+        return int(self.value.scaleb(self.scale))
 
     def _convert_to_decimal(self, value: Union[int, str]) -> Decimal:
         return Decimal(value) / (10**self.scale)

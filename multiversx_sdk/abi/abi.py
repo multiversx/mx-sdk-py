@@ -323,13 +323,11 @@ class Abi:
             scale = type_formula.type_parameters[0].name
 
             if scale == "usize":
-                scale = 0
-                is_variable = True
+                return ManagedDecimalValue(scale=0, is_variable=True)
             else:
-                scale = int(scale)
-                is_variable = False
+                return ManagedDecimalValue(scale=int(scale), is_variable=False)
 
-            return ManagedDecimalValue(scale=scale, is_variable=is_variable)
+            
         if name == "ManagedDecimalSigned":
             scale = type_formula.type_parameters[0].name
 
