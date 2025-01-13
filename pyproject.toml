@@ -29,6 +29,9 @@ dependencies = [
   "requests>=2.32.0,<3.0.0"
 ]
 
+[project.optional-dependencies]
+optional = ["ledgercomm[hid]"]
+
 [project.urls]
 "Homepage" = "https://github.com/multiversx/mx-sdk-py"
 
