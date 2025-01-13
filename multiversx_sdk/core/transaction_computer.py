@@ -8,9 +8,12 @@ from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (
-    BECH32_ADDRESS_LENGTH, DIGEST_SIZE,
+    BECH32_ADDRESS_LENGTH,
+    DIGEST_SIZE,
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS,
-    TRANSACTION_OPTIONS_TX_GUARDED, TRANSACTION_OPTIONS_TX_HASH_SIGN)
+    TRANSACTION_OPTIONS_TX_GUARDED,
+    TRANSACTION_OPTIONS_TX_HASH_SIGN,
+)
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
 from multiversx_sdk.core.interfaces import INetworkConfig
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
@@ -53,7 +56,16 @@ class TransactionComputer:
         return self.compute_bytes_for_signing(transaction)
 
     def compute_hash_for_signing(self, transaction: Transaction) -> bytes:
-        return keccak.new(digest_bits=256).update(self.compute_bytes_for_signing(transaction)).digest()
+        self._ensure_fields(transaction)
+
+        if not self.has_options_set_for_hash_signing(transaction):
+            raise Exception(
+                "`options` property is not set for hash signing. Please set the least signinficant bit of the `options` property to `1`."
+            )
+
+        dictionary = self._to_dictionary(transaction)
+        serialized = self._dict_to_json(dictionary)
+        return keccak.new(digest_bits=256).update(serialized).digest()
 
     def compute_transaction_hash(self, transaction: Transaction) -> bytes:
         proto = ProtoSerializer()
@@ -96,8 +108,12 @@ class TransactionComputer:
             raise BadUsageError("The `chainID` field is not set")
 
         if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
-            if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(transaction):
-                raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
+            if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(
+                transaction
+            ):
+                raise BadUsageError(
+                    f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}"
+                )
 
     def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> dict[str, Any]:
         """Only used when serializing transaction for signing. Internal use only."""
@@ -141,4 +157,4 @@ class TransactionComputer:
         return dictionary
 
     def _dict_to_json(self, dictionary: dict[str, Any]) -> bytes:
-        return json.dumps(dictionary, separators=(',', ':')).encode("utf-8")
+        return json.dumps(dictionary, separators=(",", ":")).encode("utf-8")

@@ -53,9 +53,11 @@ class TestAccountTransactionsFactory:
 
     def test_unguard_account(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
-        tx = self.factory.create_transaction_for_unguarding_account(sender)
+        guardian = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        tx = self.factory.create_transaction_for_unguarding_account(sender, guardian)
 
         assert tx.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.receiver.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
         assert tx.data.decode() == "UnGuardAccount"
         assert tx.gas_limit == 321000
+        assert tx.guardian == guardian

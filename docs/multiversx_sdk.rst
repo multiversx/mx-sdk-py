@@ -8,10 +8,17 @@ Subpackages
    :maxdepth: 4
 
    multiversx_sdk.abi
-   multiversx_sdk.adapters
-   multiversx_sdk.converters
+   multiversx_sdk.account_management
+   multiversx_sdk.accounts
+   multiversx_sdk.builders
    multiversx_sdk.core
+   multiversx_sdk.delegation
+   multiversx_sdk.entrypoints
    multiversx_sdk.network_providers
+   multiversx_sdk.relayed
+   multiversx_sdk.smart_contracts
+   multiversx_sdk.token_management
+   multiversx_sdk.transfers
    multiversx_sdk.wallet
 
 Module contents
