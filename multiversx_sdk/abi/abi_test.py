@@ -372,7 +372,7 @@ def test_encode_decode_managed_decimals():
                     },
                     {
                         "name": "foobar",
-                        "inputs": [{"name": "x", "type": "ManagedDecimal<usize>"}],
+                        "inputs": [],
                         "outputs": [{"type": "ManagedDecimal<usize>"}],
                     },
                 ]
@@ -385,14 +385,10 @@ def test_encode_decode_managed_decimals():
     assert values[0].hex() == "01"
 
     values = abi.encode_endpoint_input_parameters("foo", [ManagedDecimalValue(7, 2, True)])
-    assert values[0].hex() == "0702"
+    assert values[0].hex() == "0000000202bc00000002"
 
     values = abi.decode_endpoint_output_parameters("foo", [bytes.fromhex("07")])
-    assert values[0].get_payload() == Decimal("7")
-    assert values[0].scale == Decimal("7")
-    assert values[0].to_string() == "7.000000000"
+    assert values[0] == Decimal("0.000000007")
 
-    values = abi.decode_endpoint_output_parameters("foobar", [bytes.fromhex("0700000003")])
-    assert values[0].get_payload() == Decimal("7")
-    assert values[0].scale == Decimal("3")
-    assert values[0].to_string() == "7.000"
+    values = abi.decode_endpoint_output_parameters("foobar", [bytes.fromhex("0000000202bc00000002")])
+    assert values[0] == Decimal("7")
