@@ -1,9 +1,9 @@
 import io
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from typing import Any, Union
 
 from multiversx_sdk.abi.bigint_value import BigIntValue
-from multiversx_sdk.abi.constants import U32_SIZE_IN_BYTES
+from multiversx_sdk.abi.constants import U32_SIZE_IN_BYTES, LOCAL_CONTEXT_PRECISION_FOR_DECIMAL
 from multiversx_sdk.abi.shared import read_bytes_exactly
 from multiversx_sdk.abi.small_int_values import U32Value
 
@@ -75,10 +75,6 @@ class ManagedDecimalSignedValue:
         payload = read_bytes_exactly(reader, length)
         self.decode_top_level(payload)
 
-    def to_string(self) -> str:
-        scaled_value = self._convert_value_to_int()
-        return f"{scaled_value / (10 ** self.scale):.{self.scale}f}"
-
     def get_precision(self) -> int:
         value_str = f"{self.value:.{self.scale}f}"
         return len(value_str.replace(".", ""))
@@ -87,10 +83,14 @@ class ManagedDecimalSignedValue:
         return int.from_bytes(data, byteorder="big", signed=False)
 
     def _convert_value_to_int(self) -> int:
-        return int(self.value.scaleb(self.scale))
+        with localcontext() as ctx:
+            ctx.prec = LOCAL_CONTEXT_PRECISION_FOR_DECIMAL
+            return int(self.value.scaleb(self.scale))
 
     def _convert_to_decimal(self, value: Union[int, str]) -> Decimal:
-        return Decimal(value) / (10**self.scale)
+        with localcontext() as ctx:
+            ctx.prec = LOCAL_CONTEXT_PRECISION_FOR_DECIMAL
+            return Decimal(value) / (10**self.scale)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, ManagedDecimalSignedValue):
