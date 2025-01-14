@@ -1,9 +1,10 @@
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional
 
 from multiversx_sdk.abi.abi import Abi
-from multiversx_sdk.abi.abi_definition import ParameterDefinition
+from multiversx_sdk.abi.abi_definition import AbiDefinition, ParameterDefinition
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
@@ -18,6 +19,8 @@ from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
 from multiversx_sdk.core.address import Address
+
+from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 
 testdata = Path(__file__).parent.parent / "testutils" / "testdata"
 
@@ -318,3 +321,74 @@ def test_decode_endpoint_output_parameters_multisig_get_pending_action_full_info
         Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
         Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx").get_public_key(),
     ]
+
+
+def test_managed_decimals():
+    abi_definition = AbiDefinition.from_dict({
+        "endpoints": [{
+            "name": "foo",
+            "inputs": [
+                {
+                    "type": "ManagedDecimal<8>"
+                },
+                {
+                    "type": "ManagedDecimal<usize>"
+                }
+            ],
+            "outputs": []
+        }]
+    })
+
+    abi = Abi(abi_definition)
+    endpoint = abi.endpoints_prototypes_by_name["foo"]
+
+    first_input = endpoint.input_parameters[0]
+    second_input = endpoint.input_parameters[1]
+
+    assert isinstance(first_input, ManagedDecimalValue)
+    assert not first_input.is_variable
+    assert first_input.scale == 8
+    assert first_input.value == Decimal(0)
+
+    assert isinstance(second_input, ManagedDecimalValue)
+    assert second_input.is_variable
+    assert second_input.scale == 0
+    assert second_input.value == Decimal(0)
+
+
+def test_encode_decode_managed_decimals():
+    abi_definition = AbiDefinition.from_dict(
+            {
+                "endpoints": [
+                    {
+                        "name": "dummy",
+                        "inputs": [{"type": "ManagedDecimal<18>"}],
+                        "outputs": [],
+                    },
+                    {
+                        "name": "foo",
+                        "inputs": [{"name": "x", "type": "ManagedDecimal<usize>"}],
+                        "outputs": [{"type": "ManagedDecimalSigned<9>"}],
+                    },
+                    {
+                        "name": "foobar",
+                        "inputs": [],
+                        "outputs": [{"type": "ManagedDecimal<usize>"}],
+                    },
+                ]
+            }
+        )
+
+    abi = Abi(abi_definition)
+
+    values = abi.encode_endpoint_input_parameters("dummy", [1])
+    assert values[0].hex() == "01"
+
+    values = abi.encode_endpoint_input_parameters("foo", [ManagedDecimalValue(7, 2, True)])
+    assert values[0].hex() == "0000000202bc00000002"
+
+    values = abi.decode_endpoint_output_parameters("foo", [bytes.fromhex("07")])
+    assert values[0] == Decimal("0.000000007")
+
+    values = abi.decode_endpoint_output_parameters("foobar", [bytes.fromhex("0000000202bc00000002")])
+    assert values[0] == Decimal("7")

@@ -47,7 +47,7 @@ class SmartContractController(BaseController):
     def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Optional[Abi] = None) -> None:
         self.abi = abi
         self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id), abi=self.abi)
-        self.parser = SmartContractTransactionsOutcomeParser()
+        self.parser = SmartContractTransactionsOutcomeParser(abi=self.abi)
         self.network_provider = network_provider
         self.serializer = Serializer()
 
