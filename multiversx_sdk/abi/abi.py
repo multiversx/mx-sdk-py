@@ -332,14 +332,9 @@ class Abi:
             scale = type_formula.type_parameters[0].name
 
             if scale == "usize":
-                scale = 0
-                is_variable = True
+                return ManagedDecimalSignedValue(scale=0, is_variable=True)
             else:
-                scale = int(scale)
-                is_variable = False
-
-            return ManagedDecimalSignedValue(scale=scale, is_variable=is_variable)
-
+                return ManagedDecimalSignedValue(scale=int(scale), is_variable=False)
 
         # Handle custom types
         type_prototype = self._get_custom_type_prototype(name)
