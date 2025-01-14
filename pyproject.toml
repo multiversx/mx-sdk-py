@@ -30,7 +30,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-optional = ["ledgercomm[hid]"]
+ledger = ["ledgercomm[hid]"]
 
 [project.urls]
 "Homepage" = "https://github.com/multiversx/mx-sdk-py"
