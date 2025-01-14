@@ -47,7 +47,7 @@ class AddressValue:
             pubkey = self._extract_pubkey_from_dict(value)
         elif isinstance(value, str):
             address = Address.new_from_bech32(value)
-            pubkey = address.pubkey
+            pubkey = address.get_public_key()
         else:
             pubkey = bytes(value)
 
