@@ -2,13 +2,21 @@ import io
 from types import SimpleNamespace
 from typing import Any, Callable, Optional
 
-from multiversx_sdk.abi.constants import ENUM_DISCRIMINANT_FIELD_NAME
-from multiversx_sdk.abi.fields import (Field, decode_fields_nested,
-                                       encode_fields_nested,
-                                       set_fields_from_dictionary,
-                                       set_fields_from_list)
-from multiversx_sdk.abi.shared import (convert_native_value_to_dictionary,
-                                       convert_native_value_to_list)
+from multiversx_sdk.abi.constants import (
+    ENUM_DISCRIMINANT_FIELD_NAME,
+    ENUM_NAME_FIELD_NAME,
+)
+from multiversx_sdk.abi.fields import (
+    Field,
+    decode_fields_nested,
+    encode_fields_nested,
+    set_fields_from_dictionary,
+    set_fields_from_list,
+)
+from multiversx_sdk.abi.shared import (
+    convert_native_value_to_dictionary,
+    convert_native_value_to_list,
+)
 from multiversx_sdk.abi.small_int_values import U8Value
 
 
@@ -16,10 +24,12 @@ class EnumValue:
     def __init__(self,
                  discriminant: int = 0,
                  fields: Optional[list[Field]] = None,
-                 fields_provider: Optional[Callable[[int], list[Field]]] = None) -> None:
+                 fields_provider: Optional[Callable[[int], list[Field]]] = None,
+                 names_to_discriminants: Optional[dict[str, int]] = None) -> None:
         self.discriminant = discriminant
         self.fields = fields or []
         self.fields_provider = fields_provider
+        self.names_to_discriminants = names_to_discriminants
 
     def encode_nested(self, writer: io.BytesIO):
         discriminant = U8Value(self.discriminant)
@@ -56,6 +66,8 @@ class EnumValue:
     def set_payload(self, value: Any):
         if not self.fields_provider:
             raise ValueError("populating an enum from a native object requires the fields provider to be set")
+        if self.names_to_discriminants is None:
+            raise ValueError("populating an enum from a native object requires the names to discriminants dict to be set")
 
         if isinstance(value, int):
             if self.fields_provider(value):
@@ -64,22 +76,49 @@ class EnumValue:
             self.discriminant = value
             return
 
+        if isinstance(value, str):
+            discriminant = self.names_to_discriminants[value]
+            if self.fields_provider(discriminant):
+                raise ValueError("for enums, if the native object is a mere string, it must be the name of the variant, and the corresponding enum variant must have no fields")
+
+            self.discriminant = discriminant
+            return
+
         native_dictionary, ok = convert_native_value_to_dictionary(value, raise_on_failure=False)
         if ok:
-            if ENUM_DISCRIMINANT_FIELD_NAME not in native_dictionary:
-                raise ValueError(f"for enums, the native object (when it's a dictionary) must contain the special field '{ENUM_DISCRIMINANT_FIELD_NAME}'")
+            if ENUM_DISCRIMINANT_FIELD_NAME in native_dictionary:
+                self.discriminant = int(native_dictionary[ENUM_DISCRIMINANT_FIELD_NAME])
+            elif ENUM_NAME_FIELD_NAME in native_dictionary:
+                name = native_dictionary[ENUM_NAME_FIELD_NAME]
+                self.discriminant = int(self.names_to_discriminants[name])
+            else:
+                raise ValueError(
+                    "for enums, the native object (when it's a dictionary) must contain the special field "
+                    f"'{ENUM_DISCRIMINANT_FIELD_NAME}' or '{ENUM_NAME_FIELD_NAME}'"
+                )
 
-            self.discriminant = int(native_dictionary[ENUM_DISCRIMINANT_FIELD_NAME])
             self.fields = self.fields_provider(self.discriminant)
             set_fields_from_dictionary(self.fields, native_dictionary)
             return
 
         native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
         if ok:
-            if len(native_list) == 0 or not isinstance(native_list[0], int):
-                raise ValueError("for enums, the native object (when it's a list) must have the discriminant as the first element")
+            if len(native_list) == 0:
+                raise ValueError(
+                    "for enums, the native object (when it's a list) must have the discriminant or "
+                    "the name as the first element"
+                )
+            if isinstance(native_list[0], int):
+                self.discriminant = int(native_list[0])
+            elif isinstance(native_list[0], str):
+                name = native_list[0]
+                self.discriminant = self.names_to_discriminants[name]
+            else:
+                raise ValueError(
+                    "for enums, the native object (when it's a list) must have the discriminant (int) or the "
+                    f"name (str) as the first element, found {type(native_list[0])}"
+                )
 
-            self.discriminant = int(native_list[0])
             self.fields = self.fields_provider(self.discriminant)
             set_fields_from_list(self.fields, native_list[1:])
             return
