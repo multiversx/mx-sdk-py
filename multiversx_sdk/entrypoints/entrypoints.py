@@ -2,46 +2,41 @@ from typing import Optional, Union
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.account_management import AccountController
-from multiversx_sdk.account_management.account_transactions_factory import \
-    AccountTransactionsFactory
+from multiversx_sdk.account_management.account_transactions_factory import AccountTransactionsFactory
 from multiversx_sdk.accounts.account import Account
-from multiversx_sdk.core import (Address, Message, MessageComputer,
-                                 Transaction, TransactionComputer,
-                                 TransactionOnNetwork)
-from multiversx_sdk.core.transactions_factory_config import \
-    TransactionsFactoryConfig
+from multiversx_sdk.core import (
+    Address,
+    Message,
+    MessageComputer,
+    Transaction,
+    TransactionComputer,
+    TransactionOnNetwork,
+)
+from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.delegation import DelegationController
-from multiversx_sdk.delegation.delegation_transactions_factory import \
-    DelegationTransactionsFactory
-from multiversx_sdk.entrypoints.config import (DevnetEntrypointConfig,
-                                               MainnetEntrypointConfig,
-                                               TestnetEntrypointConfig)
+from multiversx_sdk.delegation.delegation_transactions_factory import DelegationTransactionsFactory
+from multiversx_sdk.entrypoints.config import (
+    DevnetEntrypointConfig,
+    MainnetEntrypointConfig,
+    TestnetEntrypointConfig,
+    LocalnetEntrypointConfig,
+)
 from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
-from multiversx_sdk.network_providers import (ApiNetworkProvider,
-                                              ProxyNetworkProvider)
+from multiversx_sdk.network_providers import ApiNetworkProvider, ProxyNetworkProvider
 from multiversx_sdk.relayed.relayed_controller import RelayedController
-from multiversx_sdk.relayed.relayed_transactions_factory import \
-    RelayedTransactionsFactory
-from multiversx_sdk.smart_contracts.smart_contract_controller import \
-    SmartContractController
-from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import \
-    SmartContractTransactionsFactory
-from multiversx_sdk.token_management.token_management_controller import \
-    TokenManagementController
-from multiversx_sdk.token_management.token_management_transactions_factory import \
-    TokenManagementTransactionsFactory
-from multiversx_sdk.transfers.transfer_transactions_factory import \
-    TransferTransactionsFactory
+from multiversx_sdk.relayed.relayed_transactions_factory import RelayedTransactionsFactory
+from multiversx_sdk.smart_contracts.smart_contract_controller import SmartContractController
+from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import SmartContractTransactionsFactory
+from multiversx_sdk.token_management.token_management_controller import TokenManagementController
+from multiversx_sdk.token_management.token_management_transactions_factory import TokenManagementTransactionsFactory
+from multiversx_sdk.transfers.transfer_transactions_factory import TransferTransactionsFactory
 from multiversx_sdk.transfers.transfers_controller import TransfersController
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
 class NetworkEntrypoint:
-    def __init__(self,
-                 network_provider_url: str,
-                 network_provider_kind: str,
-                 chain_id: str) -> None:
+    def __init__(self, network_provider_url: str, network_provider_kind: str, chain_id: str) -> None:
         if network_provider_kind == "proxy":
             self.network_provider = ProxyNetworkProvider(network_provider_url)
         elif network_provider_kind == "api":
@@ -65,8 +60,7 @@ class NetworkEntrypoint:
         tx_computer = TransactionComputer()
 
         return verifier.verify(
-            data=tx_computer.compute_bytes_for_verifying(transaction),
-            signature=transaction.signature
+            data=tx_computer.compute_bytes_for_verifying(transaction), signature=transaction.signature
         )
 
     def verify_message_signature(self, message: Message) -> bool:
@@ -76,10 +70,7 @@ class NetworkEntrypoint:
         verifier = UserVerifier.from_address(message.address)
         message_computer = MessageComputer()
 
-        return verifier.verify(
-            data=message_computer.compute_bytes_for_verifying(message),
-            signature=message.signature
-        )
+        return verifier.verify(data=message_computer.compute_bytes_for_verifying(message), signature=message.signature)
 
     def recall_account_nonce(self, address: Address) -> int:
         return self.network_provider.get_account(address).nonce
@@ -170,3 +161,12 @@ class MainnetEntrypoint(NetworkEntrypoint):
         kind = kind or MainnetEntrypointConfig.network_provider_kind
 
         super().__init__(url, kind, MainnetEntrypointConfig.chain_id)
+
+
+class LocalnetEntrypoint(NetworkEntrypoint):
+    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
+        url = url or LocalnetEntrypointConfig.network_provider_url
+
+        kind = kind or LocalnetEntrypointConfig.network_provider_kind
+
+        super().__init__(url, kind, LocalnetEntrypointConfig.chain_id)

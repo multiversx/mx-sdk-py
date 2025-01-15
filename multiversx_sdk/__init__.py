@@ -38,6 +38,7 @@ from multiversx_sdk.entrypoints import (
     MainnetEntrypoint,
     NetworkEntrypoint,
     TestnetEntrypoint,
+    LocalnetEntrypoint,
 )
 from multiversx_sdk.ledger.ledger_app import LedgerApp
 from multiversx_sdk.network_providers import (
@@ -217,4 +218,5 @@ __all__ = [
     "KeyPair",
     "LedgerApp",
     "LedgerAccount",
+    "LocalnetEntrypoint",
 ]
