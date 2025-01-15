@@ -368,6 +368,36 @@ class TokenManagementController(BaseController):
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_fungible_token(transaction)
 
+    def create_transaction_for_unsetting_special_role_on_fungible_token(
+        self,
+        sender: IAccount,
+        nonce: int,
+        user: Address,
+        token_identifier: str,
+        remove_role_local_mint: bool = False,
+        remove_role_local_burn: bool = False,
+        remove_role_esdt_transfer_role: bool = False,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_unsetting_special_role_on_fungible_token(
+            sender=sender.address,
+            user=user,
+            token_identifier=token_identifier,
+            remove_role_local_mint=remove_role_local_mint,
+            remove_role_local_burn=remove_role_local_burn,
+            remove_role_esdt_transfer_role=remove_role_esdt_transfer_role,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
     def create_transaction_for_setting_special_role_on_semi_fungible_token(
         self,
         sender: IAccount,
@@ -410,6 +440,46 @@ class TokenManagementController(BaseController):
     ) -> list[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_semi_fungible_token(transaction)
+
+    def create_transaction_for_unsetting_special_role_on_semi_fungible_token(
+        self,
+        sender: IAccount,
+        user: Address,
+        nonce: int,
+        token_identifier: str,
+        remove_role_nft_burn: bool = False,
+        remove_role_nft_add_quantity: bool = False,
+        remove_role_esdt_transfer_role: bool = False,
+        remove_role_nft_update: bool = False,
+        remove_role_esdt_modify_royalties: bool = False,
+        remove_role_esdt_set_new_uri: bool = False,
+        remove_role_esdt_modify_creator: bool = False,
+        remove_role_nft_recreate: bool = False,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_unsetting_special_role_on_semi_fungible_token(
+            sender=sender.address,
+            user=user,
+            token_identifier=token_identifier,
+            remove_role_nft_burn=remove_role_nft_burn,
+            remove_role_nft_add_quantity=remove_role_nft_add_quantity,
+            remove_role_esdt_transfer_role=remove_role_esdt_transfer_role,
+            remove_role_nft_update=remove_role_nft_update,
+            remove_role_esdt_modify_royalties=remove_role_esdt_modify_royalties,
+            remove_role_esdt_set_new_uri=remove_role_esdt_set_new_uri,
+            remove_role_esdt_modify_creator=remove_role_esdt_modify_creator,
+            remove_role_nft_recreate=remove_role_nft_recreate,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
 
     def create_transaction_for_setting_special_role_on_non_fungible_token(
         self,
@@ -455,6 +525,48 @@ class TokenManagementController(BaseController):
     ) -> list[SetSpecialRoleOutcome]:
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_set_special_role_on_non_fungible_token(transaction)
+
+    def create_transaction_for_unsetting_special_role_on_non_fungible_token(
+        self,
+        sender: IAccount,
+        nonce: int,
+        user: Address,
+        token_identifier: str,
+        remove_role_nft_burn: bool = False,
+        remove_role_nft_update_attributes: bool = False,
+        remove_role_nft_remove_uri: bool = False,
+        remove_role_esdt_transfer_role: bool = False,
+        remove_role_nft_update: bool = False,
+        remove_role_esdt_modify_royalties: bool = False,
+        remove_role_esdt_set_new_uri: bool = False,
+        remove_role_esdt_modify_creator: bool = False,
+        remove_role_nft_recreate: bool = False,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_unsetting_special_role_on_non_fungible_token(
+            sender=sender.address,
+            user=user,
+            token_identifier=token_identifier,
+            remove_role_nft_burn=remove_role_nft_burn,
+            remove_role_nft_update_attributes=remove_role_nft_update_attributes,
+            remove_role_nft_remove_uri=remove_role_nft_remove_uri,
+            remove_role_esdt_transfer_role=remove_role_esdt_transfer_role,
+            remove_role_nft_update=remove_role_nft_update,
+            remove_role_esdt_modify_royalties=remove_role_esdt_modify_royalties,
+            remove_role_esdt_set_new_uri=remove_role_esdt_set_new_uri,
+            remove_role_esdt_modify_creator=remove_role_esdt_modify_creator,
+            remove_role_nft_recreate=remove_role_nft_recreate,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
 
     def create_transaction_for_creating_nft(
         self,
