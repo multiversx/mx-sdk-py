@@ -29,3 +29,7 @@ repos:
         args:
           - --in-place
           - --remove-all-unused-imports
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.392
+    hooks:
+    - id: pyright
