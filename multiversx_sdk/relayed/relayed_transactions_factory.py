@@ -15,7 +15,7 @@ class RelayedTransactionsFactory:
     The Relayed Transactions V1 and V2 will soon be deprecated from the network. Please use Relayed Transactions V3 instead.
     The transactions are created from the perspective of the relayer. The 'sender' represents the relayer.
     """
-    
+
     def __init__(self, config: TransactionsFactoryConfig) -> None:
         self._config = config
 

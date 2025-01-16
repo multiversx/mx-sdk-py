@@ -326,8 +326,6 @@ class Abi:
                 return ManagedDecimalValue(scale=0, is_variable=True)
             else:
                 return ManagedDecimalValue(scale=int(scale), is_variable=False)
-
-            
         if name == "ManagedDecimalSigned":
             scale = type_formula.type_parameters[0].name
 

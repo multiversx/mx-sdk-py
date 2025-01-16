@@ -40,7 +40,7 @@ class TestApi:
         assert result.raw
 
     def test_get_block(self):
-        block_hash=bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
+        block_hash = bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")
         result_by_hash = self.api.get_block(block_hash)
 
         assert result_by_hash.hash == bytes.fromhex("ded535cc0afb2dc5f9787e9560dc48d0b83564a3f994a390b228d894d854699f")

@@ -6,7 +6,7 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.resources import (
     AccountOnNetwork, AccountStorage, AccountStorageEntry, AwaitingOptions,
-    BlockOnNetwork, FungibleTokenMetadata, NetworkConfig,
+    FungibleTokenMetadata, NetworkConfig,
     NetworkStatus, TokenAmountOnNetwork, TokensCollectionMetadata,
     TransactionCostResponse)
 from multiversx_sdk.smart_contracts.smart_contract_query import (
