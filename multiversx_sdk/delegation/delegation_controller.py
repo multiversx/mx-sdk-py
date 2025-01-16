@@ -107,7 +107,9 @@ class DelegationController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_removing_nodes(
-            sender=sender.address, delegation_contract=delegation_contract, public_keys=public_keys
+            sender=sender.address,
+            delegation_contract=delegation_contract,
+            public_keys=public_keys,
         )
 
         transaction.guardian = guardian
@@ -129,7 +131,9 @@ class DelegationController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_staking_nodes(
-            sender=sender.address, delegation_contract=delegation_contract, public_keys=public_keys
+            sender=sender.address,
+            delegation_contract=delegation_contract,
+            public_keys=public_keys,
         )
 
         transaction.guardian = guardian
@@ -151,7 +155,9 @@ class DelegationController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unbonding_nodes(
-            sender=sender.address, delegation_contract=delegation_contract, public_keys=public_keys
+            sender=sender.address,
+            delegation_contract=delegation_contract,
+            public_keys=public_keys,
         )
 
         transaction.guardian = guardian
@@ -173,7 +179,9 @@ class DelegationController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unstaking_nodes(
-            sender=sender.address, delegation_contract=delegation_contract, public_keys=public_keys
+            sender=sender.address,
+            delegation_contract=delegation_contract,
+            public_keys=public_keys,
         )
 
         transaction.guardian = guardian
@@ -221,7 +229,9 @@ class DelegationController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_changing_service_fee(
-            sender=sender.address, delegation_contract=delegation_contract, service_fee=service_fee
+            sender=sender.address,
+            delegation_contract=delegation_contract,
+            service_fee=service_fee,
         )
 
         transaction.guardian = guardian
@@ -379,7 +389,9 @@ class DelegationController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_delegating(
-            sender=sender.address, delegation_contract=delegation_contract, amount=amount
+            sender=sender.address,
+            delegation_contract=delegation_contract,
+            amount=amount,
         )
 
         transaction.guardian = guardian
@@ -443,7 +455,9 @@ class DelegationController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_undelegating(
-            sender=sender.address, delegation_contract=delegation_contract, amount=amount
+            sender=sender.address,
+            delegation_contract=delegation_contract,
+            amount=amount,
         )
 
         transaction.guardian = guardian

@@ -3,8 +3,13 @@ from pathlib import Path
 
 import pytest
 
-from multiversx_sdk.core import (Address, Message, MessageComputer,
-                                 Transaction, TransactionComputer)
+from multiversx_sdk.core import (
+    Address,
+    Message,
+    MessageComputer,
+    Transaction,
+    TransactionComputer,
+)
 from multiversx_sdk.wallet.crypto.randomness import Randomness
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
@@ -27,9 +32,24 @@ def test_user_secret_key_create():
 
 
 def test_user_secret_key_generate_public_key():
-    assert UserSecretKey.new_from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9").generate_public_key().hex() == "0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
-    assert UserSecretKey.new_from_string("b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639").generate_public_key().hex() == "8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
-    assert UserSecretKey.new_from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436").generate_public_key().hex() == "b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba"
+    assert (
+        UserSecretKey.new_from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9")
+        .generate_public_key()
+        .hex()
+        == "0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
+    )
+    assert (
+        UserSecretKey.new_from_string("b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639")
+        .generate_public_key()
+        .hex()
+        == "8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+    )
+    assert (
+        UserSecretKey.new_from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436")
+        .generate_public_key()
+        .hex()
+        == "b2a11555ce521e4944e09ab17549d85b487dcd26c84b5017a39e31a3670889ba"
+    )
 
 
 def test_user_signer_from_pem_file():
@@ -47,32 +67,53 @@ def test_load_signers_from_pem():
     signers = UserSigner.from_pem_file_all(testwallets / "multipleUserKeys.pem")
 
     assert len(signers) == 3
-    assert Address(signers[0].get_pubkey().buffer, "erd").to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-    assert Address(signers[1].get_pubkey().buffer, "erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
-    assert Address(signers[2].get_pubkey().buffer, "erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    assert (
+        Address(signers[0].get_pubkey().buffer, "erd").to_bech32()
+        == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    )
+    assert (
+        Address(signers[1].get_pubkey().buffer, "erd").to_bech32()
+        == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    )
+    assert (
+        Address(signers[2].get_pubkey().buffer, "erd").to_bech32()
+        == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    )
 
 
 def test_user_wallet_to_keyfile_object_using_known_test_wallets_with_their_randomness():
     alice_secret_key = UserSecretKey.new_from_string("413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9")
-    alice_wallet = UserWallet.from_secret_key(alice_secret_key, "password", Randomness(
-        salt=bytes.fromhex("4903bd0e7880baa04fc4f886518ac5c672cdc745a6bd13dcec2b6c12e9bffe8d"),
-        iv=bytes.fromhex("033182afaa1ebaafcde9ccc68a5eac31"),
-        id="0dc10c02-b59b-4bac-9710-6b2cfa4284ba"
-    ))
+    alice_wallet = UserWallet.from_secret_key(
+        alice_secret_key,
+        "password",
+        Randomness(
+            salt=bytes.fromhex("4903bd0e7880baa04fc4f886518ac5c672cdc745a6bd13dcec2b6c12e9bffe8d"),
+            iv=bytes.fromhex("033182afaa1ebaafcde9ccc68a5eac31"),
+            id="0dc10c02-b59b-4bac-9710-6b2cfa4284ba",
+        ),
+    )
 
     bob_secret_key = UserSecretKey.new_from_string("b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639")
-    bob_wallet = UserWallet.from_secret_key(bob_secret_key, "password", Randomness(
-        salt=bytes.fromhex("18304455ac2dbe2a2018bda162bd03ef95b81622e99d8275c34a6d5e6932a68b"),
-        iv=bytes.fromhex("18378411e31f6c4e99f1435d9ab82831"),
-        id="85fdc8a7-7119-479d-b7fb-ab4413ed038d"
-    ))
+    bob_wallet = UserWallet.from_secret_key(
+        bob_secret_key,
+        "password",
+        Randomness(
+            salt=bytes.fromhex("18304455ac2dbe2a2018bda162bd03ef95b81622e99d8275c34a6d5e6932a68b"),
+            iv=bytes.fromhex("18378411e31f6c4e99f1435d9ab82831"),
+            id="85fdc8a7-7119-479d-b7fb-ab4413ed038d",
+        ),
+    )
 
     carol_secret_key = UserSecretKey.new_from_string("e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436")
-    carol_wallet = UserWallet.from_secret_key(carol_secret_key, "password", Randomness(
-        salt=bytes.fromhex("4f2f5530ce28dc0210962589b908f52714f75c8fb79ff18bdd0024c43c7a220b"),
-        iv=bytes.fromhex("258ed2b4dc506b4dc9d274b0449b0eb0"),
-        id="65894f35-d142-41d2-9335-6ad02e0ed0be"
-    ))
+    carol_wallet = UserWallet.from_secret_key(
+        carol_secret_key,
+        "password",
+        Randomness(
+            salt=bytes.fromhex("4f2f5530ce28dc0210962589b908f52714f75c8fb79ff18bdd0024c43c7a220b"),
+            iv=bytes.fromhex("258ed2b4dc506b4dc9d274b0449b0eb0"),
+            id="65894f35-d142-41d2-9335-6ad02e0ed0be",
+        ),
+    )
 
     alice_saved_path = testwallets / "alice.saved.json"
     bob_saved_path = testwallets / "bob.saved.json"
@@ -126,27 +167,40 @@ def test_sign_transaction():
         gas_limit=50000,
         chain_id="local-testnet",
         version=1,
-        options=0
+        options=0,
     )
 
     signer = UserSigner.from_pem_file(testwallets / "alice.pem")
-    verifier = UserVerifier.from_address(Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+    verifier = UserVerifier.from_address(
+        Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+    )
     transaction_computer = TransactionComputer()
 
     tx.signature = signer.sign(transaction_computer.compute_bytes_for_signing(tx))
-    assert tx.signature.hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+    assert (
+        tx.signature.hex()
+        == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+    )
     assert verifier.verify(transaction_computer.compute_bytes_for_signing(tx), tx.signature)
 
 
 def test_sign_message():
-    message = Message("hello".encode(), address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+    message = Message(
+        "hello".encode(),
+        address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+    )
     message_computer = MessageComputer()
 
     signer = UserSigner.from_pem_file(testwallets / "alice.pem")
-    verifier = UserVerifier.from_address(Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"))
+    verifier = UserVerifier.from_address(
+        Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+    )
 
     message.signature = signer.sign(message_computer.compute_bytes_for_signing(message))
-    assert message.signature.hex() == "561bc58f1dc6b10de208b2d2c22c9a474ea5e8cabb59c3d3ce06bbda21cc46454aa71a85d5a60442bd7784effa2e062fcb8fb421c521f898abf7f5ec165e5d0f"
+    assert (
+        message.signature.hex()
+        == "561bc58f1dc6b10de208b2d2c22c9a474ea5e8cabb59c3d3ce06bbda21cc46454aa71a85d5a60442bd7784effa2e062fcb8fb421c521f898abf7f5ec165e5d0f"
+    )
     assert verifier.verify(message_computer.compute_bytes_for_signing(message), message.signature)
 
 
@@ -193,7 +247,7 @@ def test_create_keystore_with_mnemonic_with_randomness():
     randomness = Randomness(
         id="5b448dbc-5c72-4d83-8038-938b1f8dff19",
         iv=bytes.fromhex("2da5620906634972d9a623bc249d63d4"),
-        salt=bytes.fromhex("aa9e0ba6b188703071a582c10e5331f2756279feb0e2768f1ba0fd38ec77f035")
+        salt=bytes.fromhex("aa9e0ba6b188703071a582c10e5331f2756279feb0e2768f1ba0fd38ec77f035"),
     )
 
     wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "password", randomness)
@@ -205,9 +259,18 @@ def test_create_keystore_with_mnemonic_with_randomness():
 def test_load_secret_key_with_mnemonic():
     keystore_path = testwallets / "withDummyMnemonic.json"
 
-    assert UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
-    assert UserWallet.load_secret_key(keystore_path, "password", 2).generate_public_key().to_address("erd").to_bech32() == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
-    assert UserWallet.load_secret_key(keystore_path, "password", 0).generate_public_key().to_address("erd").to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    assert (
+        UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").to_bech32()
+        == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    )
+    assert (
+        UserWallet.load_secret_key(keystore_path, "password", 2).generate_public_key().to_address("erd").to_bech32()
+        == "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"
+    )
+    assert (
+        UserWallet.load_secret_key(keystore_path, "password", 0).generate_public_key().to_address("erd").to_bech32()
+        == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    )
 
 
 def test_decrypt_secret_key_with_keystore_mnemonic():

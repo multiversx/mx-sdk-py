@@ -18,11 +18,7 @@ def test_set_payload_and_get_payload():
 
     # From dictionary
     value = BytesValue()
-    value.set_payload(
-        {
-            "hex": "68656c6c6f"
-        }
-    )
+    value.set_payload({"hex": "68656c6c6f"})
     assert value.get_payload() == b"hello"
 
     # With errors

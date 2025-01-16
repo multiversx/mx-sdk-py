@@ -23,7 +23,7 @@ class TransactionMetadata:
             "value": self.value,
             "function_name": self.function_name if self.function_name else "",
             "function_args": self.function_args if self.function_args else [],
-            "transfers": self._transfers_to_dict()
+            "transfers": self._transfers_to_dict(),
         }
 
     def _transfers_to_dict(self) -> list[dict[str, Any]]:
@@ -34,11 +34,13 @@ class TransactionMetadata:
             transfers: list[dict[str, Any]] = []
 
             for transfer in self.transfers:
-                transfers.append({
-                    "value": transfer.amount,
-                    "token": transfer.token.identifier,
-                    "nonce": transfer.token.nonce
-                })
+                transfers.append(
+                    {
+                        "value": transfer.amount,
+                        "token": transfer.token.identifier,
+                        "nonce": transfer.token.nonce,
+                    }
+                )
 
             return transfers
 
@@ -78,7 +80,7 @@ class TransactionDecoder:
                 metadata.function_args = args
 
             if len(args) == 0 and not transaction.receiver.is_smart_contract():
-                metadata.function_name = 'transfer'
+                metadata.function_name = "transfer"
                 metadata.function_args = []
 
         return metadata

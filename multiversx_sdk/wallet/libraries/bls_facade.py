@@ -4,8 +4,7 @@ import platform
 from pathlib import Path
 from typing import Optional
 
-from multiversx_sdk.wallet.errors import (LibraryNotFoundError,
-                                          UnsupportedOSError)
+from multiversx_sdk.wallet.errors import LibraryNotFoundError, UnsupportedOSError
 
 
 class BLSFacade:
@@ -35,10 +34,7 @@ class BLSFacade:
     def compute_message_signature(self, message: bytes, private_key: bytes) -> bytes:
         compute_message_signature_function = self._get_library().computeMessageSignature
 
-        output = compute_message_signature_function(
-            message.hex().encode(),
-            private_key.hex().encode()
-        )
+        output = compute_message_signature_function(message.hex().encode(), private_key.hex().encode())
 
         output_bytes = ctypes.string_at(output)
         signature_hex = output_bytes.decode()
@@ -49,9 +45,7 @@ class BLSFacade:
         verify_message_signature_function = self._get_library().verifyMessageSignature
 
         output = verify_message_signature_function(
-            public_key.hex().encode(),
-            message.hex().encode(),
-            signature.hex().encode()
+            public_key.hex().encode(), message.hex().encode(), signature.hex().encode()
         )
 
         output_int = ctypes.c_int(output)
@@ -80,7 +74,11 @@ class BLSFacade:
         lib.computeMessageSignature.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
         lib.computeMessageSignature.restype = ctypes.c_char_p
 
-        lib.verifyMessageSignature.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+        lib.verifyMessageSignature.argtypes = [
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+        ]
         lib.verifyMessageSignature.restype = ctypes.c_int
 
         logging.info(f"Loaded library: {lib_path}")

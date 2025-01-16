@@ -3,9 +3,10 @@ from typing import Union
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.core.constants import (
-    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER, TOKEN_RANDOM_SEQUENCE_LENGTH)
-from multiversx_sdk.core.errors import (BadUsageError,
-                                        InvalidTokenIdentifierError)
+    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER,
+    TOKEN_RANDOM_SEQUENCE_LENGTH,
+)
+from multiversx_sdk.core.errors import BadUsageError, InvalidTokenIdentifierError
 
 
 class Token:
@@ -27,7 +28,13 @@ class TokenTransfer:
 
 
 class TokenIdentifierParts:
-    def __init__(self, ticker: str, random_sequence: str, nonce: int, prefix: Union[str, None] = None) -> None:
+    def __init__(
+        self,
+        ticker: str,
+        random_sequence: str,
+        nonce: int,
+        prefix: Union[str, None] = None,
+    ) -> None:
         self.ticker = ticker
         self.random_sequence = random_sequence
         self.nonce = nonce
@@ -67,7 +74,13 @@ class TokenComputer:
             return token_parts[0], token_parts[1], token_parts[2]
         return None, token_parts[0], token_parts[1]
 
-    def _validate_extended_identifier(self, prefix: Union[str, None], ticker: str, random_sequence: str, parts: list[str]) -> None:
+    def _validate_extended_identifier(
+        self,
+        prefix: Union[str, None],
+        ticker: str,
+        random_sequence: str,
+        parts: list[str],
+    ) -> None:
         self._check_if_extended_identifier_was_provided(prefix, parts)
         self._ensure_token_prefix_validity(prefix)
         self._ensure_token_ticker_validity(ticker)
@@ -140,7 +153,10 @@ class TokenComputer:
         # this is for the identifiers of nft, sft and meta-esdt
         MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT = 3 if not token_prefx else 4
 
-        if len(token_parts) < MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT or len(token_parts) > MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT:
+        if (
+            len(token_parts) < MIN_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT
+            or len(token_parts) > MAX_EXTENDED_IDENTIFIER_LENGTH_IF_SPLIT
+        ):
             raise InvalidTokenIdentifierError("Invalid extended token identifier provided")
 
     def _ensure_token_ticker_validity(self, ticker: str) -> None:
@@ -148,7 +164,9 @@ class TokenComputer:
         MAX_TICKER_LENGTH = 10
 
         if len(ticker) < MIN_TICKER_LENGTH or len(ticker) > MAX_TICKER_LENGTH:
-            raise InvalidTokenIdentifierError(f"The token ticker should be between {MIN_TICKER_LENGTH} and {MAX_TICKER_LENGTH} characters")
+            raise InvalidTokenIdentifierError(
+                f"The token ticker should be between {MIN_TICKER_LENGTH} and {MAX_TICKER_LENGTH} characters"
+            )
 
         if not ticker.isalnum():
             raise InvalidTokenIdentifierError("The token ticker should only contain alphanumeric characters")
@@ -159,7 +177,8 @@ class TokenComputer:
     def _check_length_of_random_sequence(self, random_sequence: str) -> None:
         if len(random_sequence) != TOKEN_RANDOM_SEQUENCE_LENGTH:
             raise InvalidTokenIdentifierError(
-                "The identifier is not valid. The random sequence does not have the right length")
+                "The identifier is not valid. The random sequence does not have the right length"
+            )
 
     def _ensure_token_prefix_validity(self, prefix: Union[str, None]) -> None:
         MIN_TOKEN_PREFIX_LENGTH = 1

@@ -1,12 +1,15 @@
 import base64
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
-                                                        TransactionEvent,
-                                                        TransactionLogs)
+from multiversx_sdk.core.transaction_on_network import (
+    SmartContractResult,
+    TransactionEvent,
+    TransactionLogs,
+)
 from multiversx_sdk.delegation import DelegationTransactionsOutcomeParser
-from multiversx_sdk.testutils.mock_transaction_on_network import \
-    get_empty_transaction_on_network
+from multiversx_sdk.testutils.mock_transaction_on_network import (
+    get_empty_transaction_on_network,
+)
 from multiversx_sdk.testutils.utils import base64_topics_to_bytes
 
 
@@ -30,7 +33,7 @@ class TestDelegationTransactionsOutcomeParser:
             identifier="delegate",
             topics=base64_topics_to_bytes(encodedTopics),
             data=b"",
-            additional_data=[]
+            additional_data=[],
         )
 
         encodedTopics = [
@@ -44,7 +47,7 @@ class TestDelegationTransactionsOutcomeParser:
             identifier="SCDeploy",
             topics=base64_topics_to_bytes(encodedTopics),
             data=b"",
-            additional_data=[]
+            additional_data=[],
         )
 
         logs = TransactionLogs(address=Address.empty(), events=[delegate_event, sc_deploy_event])
@@ -56,12 +59,12 @@ class TestDelegationTransactionsOutcomeParser:
             identifier="completedTxEvent",
             topics=base64_topics_to_bytes(encoded_topics),
             data=b"",
-            additional_data=[]
+            additional_data=[],
         )
 
         sc_result_log = TransactionLogs(
             address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
-            events=[sc_result_event]
+            events=[sc_result_event],
         )
 
         sc_result = SmartContractResult(
@@ -69,8 +72,9 @@ class TestDelegationTransactionsOutcomeParser:
             sender=Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"),
             receiver=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
             data=base64.b64decode(
-                "QDZmNmJAMDAwMDAwMDAwMDAwMDAwMDAwMDEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAxMGZmZmZmZg=="),
-            logs=sc_result_log
+                "QDZmNmJAMDAwMDAwMDAwMDAwMDAwMDAwMDEwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAxMGZmZmZmZg=="
+            ),
+            logs=sc_result_log,
         )
 
         tx = get_empty_transaction_on_network()

@@ -1,23 +1,25 @@
 import pytest
 import requests
 
-from multiversx_sdk.core import (Address, Token, Transaction,
-                                 TransactionComputer, TransactionOnNetwork,
-                                 TransactionStatus)
-from multiversx_sdk.network_providers.api_network_provider import \
-    ApiNetworkProvider
+from multiversx_sdk.core import (
+    Address,
+    Token,
+    Transaction,
+    TransactionComputer,
+    TransactionOnNetwork,
+    TransactionStatus,
+)
+from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.http_resources import \
-    account_from_api_response
+from multiversx_sdk.network_providers.http_resources import account_from_api_response
 from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
-from multiversx_sdk.smart_contracts.smart_contract_query import \
-    SmartContractQuery
+from multiversx_sdk.smart_contracts.smart_contract_query import SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
 @pytest.mark.networkInteraction
 class TestApi:
-    api = ApiNetworkProvider('https://devnet-api.multiversx.com')
+    api = ApiNetworkProvider("https://devnet-api.multiversx.com")
 
     def test_get_network_config(self):
         result = self.api.get_network_config()
@@ -53,24 +55,21 @@ class TestApi:
         assert result
 
     def test_get_account(self):
-        address = Address.new_from_bech32(
-            "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        )
+        address = Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl")
         result = self.api.get_account(address)
 
         assert result.address.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         assert not result.username
         assert result.contract_owner_address is None
 
-        address = Address.new_from_bech32(
-            "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
-        )
+        address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen")
         result = self.api.get_account(address)
 
         assert result.address.to_bech32() == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
         assert not result.username
         assert result.contract_owner_address == Address.new_from_bech32(
-            "erd1wzx0tak22f2me4g7wpxfae2w3htfue7khrg28fy6wu8x9hzq05vqm8qhnm")
+            "erd1wzx0tak22f2me4g7wpxfae2w3htfue7khrg28fy6wu8x9hzq05vqm8qhnm"
+        )
         assert result.is_contract_payable is False
         assert result.is_contract_readable
 
@@ -101,11 +100,9 @@ class TestApi:
             version=2,
             signature=bytes.fromhex(
                 "faf50b8368cb2c20597dad671a14aa76d4c65937d6e522c64946f16ad6a250262463e444596fa7ee2af1273f6ad0329d43af48d1ae5f3b295bc8f48fdba41a05"
-            )
+            ),
         )
-        expected_hash = (
-            bytes.fromhex("fc914860c1d137ed8baa602e561381f97c7bad80d150c5bf90760d3cfd3a4cea")
-        )
+        expected_hash = bytes.fromhex("fc914860c1d137ed8baa602e561381f97c7bad80d150c5bf90760d3cfd3a4cea")
 
         assert self.api.send_transaction(transaction) == expected_hash
 
@@ -121,7 +118,7 @@ class TestApi:
             data=b"foo",
             signature=bytes.fromhex(
                 "7a8bd08351bac6b1113545f5a896cb0b63806abd93d639bc4d16bfbc82c7b514f68ed7b36c743f4c3d2d1e1d3cb356824041d51dfe587a149f6fc9ab0dd9c408"
-            )
+            ),
         )
         expected_hash = "4dc7d4e18c0cf9ca7f17677ef0ac3d1363528e892996b518bee909bb17cf7929"
         assert self.api.send_transaction(transaction) == bytes.fromhex(expected_hash)
@@ -137,7 +134,7 @@ class TestApi:
             version=2,
             signature=bytes.fromhex(
                 "498d5abb9f8eb69cc75f24320e8929dadbfa855ffac220d5e92175a83be68e0437801af3a1411e3d839738230097a1c38da5c8c4df3f345defc5d40300675900"
-            )
+            ),
         )
 
         invalid_tx = Transaction(
@@ -145,7 +142,7 @@ class TestApi:
             receiver=Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"),
             gas_limit=50000,
             chain_id="D",
-            nonce=77
+            nonce=77,
         )
 
         last_tx = Transaction(
@@ -158,7 +155,7 @@ class TestApi:
             version=2,
             signature=bytes.fromhex(
                 "341a2f3b738fbd20692e3bbd1cb36cb5f4ce9c0a9acc0cf4322269c0fcf34fd6bb59cd94062a9a4730e47f41b1ef3e29b69c6ab2a2a4dca9c9a7724681bc1708"
-            )
+            ),
         )
 
         transactions = [first_tx, invalid_tx, last_tx]
@@ -182,7 +179,7 @@ class TestApi:
             receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id="D",
-            signature=bytes.fromhex("".join(["0"] * 128))
+            signature=bytes.fromhex("".join(["0"] * 128)),
         )
         nonce = self.api.get_account(Address.new_from_bech32(bob.label)).nonce
         transaction.nonce = nonce
@@ -202,14 +199,16 @@ class TestApi:
             chain_id="D",
             data=b"add@07",
             nonce=nonce,
-            signature=bytes.fromhex("".join(["0"] * 128))
+            signature=bytes.fromhex("".join(["0"] * 128)),
         )
         tx_on_network = self.api.simulate_transaction(transaction)
 
         assert tx_on_network.status == TransactionStatus("success")
         assert len(tx_on_network.smart_contract_results) == 1
-        assert tx_on_network.smart_contract_results[0].sender.to_bech32(
-        ) == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert (
+            tx_on_network.smart_contract_results[0].sender.to_bech32()
+            == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        )
         assert tx_on_network.smart_contract_results[0].receiver.to_bech32() == bob.label
         assert tx_on_network.smart_contract_results[0].data == b"@6f6b"
 
@@ -219,8 +218,10 @@ class TestApi:
 
         assert tx_on_network.status == TransactionStatus("success")
         assert len(tx_on_network.smart_contract_results) == 1
-        assert tx_on_network.smart_contract_results[0].sender.to_bech32(
-        ) == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        assert (
+            tx_on_network.smart_contract_results[0].sender.to_bech32()
+            == "erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"
+        )
         assert tx_on_network.smart_contract_results[0].receiver.to_bech32() == bob.label
         assert tx_on_network.smart_contract_results[0].data == b"@6f6b"
 
@@ -233,7 +234,7 @@ class TestApi:
             receiver=Address.new_from_bech32(bob.label),
             gas_limit=50000,
             chain_id="D",
-            data="test transaction".encode()
+            data="test transaction".encode(),
         )
         transaction.nonce = self.api.get_account(Address.new_from_bech32(bob.label)).nonce
         transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
@@ -243,13 +244,13 @@ class TestApi:
         assert result.gas_limit == 74_000
 
     def test_get_transaction(self):
-        result = self.api.get_transaction('9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c')
+        result = self.api.get_transaction("9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c")
 
-        assert result.hash.hex() == '9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c'
+        assert result.hash.hex() == "9d47c4b4669cbcaa26f5dec79902dd20e55a0aa5f4b92454a74e7dbd0183ad6c"
         assert result.nonce == 0
         assert result.status.is_completed
-        assert result.sender.to_bech32() == 'erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2'
-        assert result.receiver.to_bech32() == 'erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl'
+        assert result.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert result.receiver.to_bech32() == "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
         assert result.value == 5000000000000000000
         assert result.status.status == "success"
 
@@ -264,11 +265,14 @@ class TestApi:
         assert transaction.logs.events[0].topics[2].hex() == "63616e4368616e67654f776e6572"
 
     def test_get_sc_invoking_tx(self):
-        result = self.api.get_transaction('6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb')
+        result = self.api.get_transaction("6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb")
 
         assert result.status.is_completed
         assert len(result.smart_contract_results) > 0
-        assert result.data.decode() == 'issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565'
+        assert (
+            result.data.decode()
+            == "issue@54455354546f6b656e@54455354@016345785d8a0000@06@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565@63616e4164645370656369616c526f6c6573@74727565"
+        )
 
     def test_query_contract(self):
         query = SmartContractQuery(
@@ -304,16 +308,14 @@ class TestApi:
             receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094"),
             gas_limit=5000000,
             chain_id="D",
-            data="dummy@05".encode()
+            data="dummy@05".encode(),
         )
         transaction.nonce = nonce + 1
         transaction.signature = bob.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         hash = self.api.send_transaction(transaction)
 
-        tx_on_network = self.api.await_transaction_completed(
-            transaction_hash=hash
-        )
+        tx_on_network = self.api.await_transaction_completed(transaction_hash=hash)
         assert not tx_on_network.status.is_successful
 
     def test_send_and_await_transaction_on_condition(self):
@@ -342,7 +344,7 @@ class TestApi:
             receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhdqz9j3zgpl8fg2z0jzx9n605gwxx4djd8ssruw094"),
             gas_limit=5000000,
             chain_id="D",
-            data="dummy@05".encode()
+            data="dummy@05".encode(),
         )
         transaction.nonce = nonce + 1
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
@@ -352,33 +354,24 @@ class TestApi:
 
         hash = self.api.send_transaction(transaction)
 
-        tx_on_network = self.api.await_transaction_on_condition(
-            transaction_hash=hash,
-            condition=condition
-        )
+        tx_on_network = self.api.await_transaction_on_condition(transaction_hash=hash, condition=condition)
         assert tx_on_network.status.status == "fail"
 
     def test_get_token_of_account(self):
-        address = Address.new_from_bech32(
-            "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        )
+        address = Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl")
         result = self.api.get_token_of_account(address, Token("TEST-ff155e"))
 
         assert result.token.identifier == "TEST-ff155e"
         assert result.amount == 99999999999980000
 
-        result = self.api.get_token_of_account(
-            address, Token("NFTEST-ec88b8", 1)
-        )
+        result = self.api.get_token_of_account(address, Token("NFTEST-ec88b8", 1))
 
         assert result.amount == 1
         assert result.token.nonce == 1
         assert result.token.identifier == "NFTEST-ec88b8-01"
 
     def test_get_fungible_tokens_of_account(self):
-        address = Address.new_from_bech32(
-            "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        )
+        address = Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl")
         tokens = self.api.get_fungible_tokens_of_account(address)
         assert len(tokens)
 
@@ -388,9 +381,7 @@ class TestApi:
         assert filtered[0].amount == 99999999999980000
 
     def test_get_non_fungible_tokens_of_account(self):
-        address = Address.new_from_bech32(
-            "erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl"
-        )
+        address = Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl")
         tokens = self.api.get_non_fungible_tokens_of_account(address)
         assert len(tokens)
 
@@ -416,12 +407,11 @@ class TestApi:
         assert result.decimals == 0
 
     def test_do_get_generic(self):
-        query_params = {
-            "withGuardianInfo": "true"
-        }
+        query_params = {"withGuardianInfo": "true"}
 
         result = self.api.do_get_generic(
-            "accounts/erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl", query_params
+            "accounts/erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl",
+            query_params,
         )
         account = account_from_api_response(result)
         guarded = bool(account.raw["isGuarded"])
@@ -435,7 +425,7 @@ class TestApi:
 
         # using the new instantiated provider with user agent
         config = NetworkProviderConfig(client_name="test-client")
-        api = ApiNetworkProvider(url='https://devnet-api.multiversx.com', config=config)
+        api = ApiNetworkProvider(url="https://devnet-api.multiversx.com", config=config)
 
         response = requests.get(api.url + "/network/config", **api.config.requests_options)
         headers = response.request.headers

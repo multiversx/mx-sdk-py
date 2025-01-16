@@ -762,7 +762,9 @@ class TokenManagementController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_local_minting(
-            sender=sender.address, token_identifier=token_identifier, supply_to_mint=supply_to_mint
+            sender=sender.address,
+            token_identifier=token_identifier,
+            supply_to_mint=supply_to_mint,
         )
 
         transaction.guardian = guardian
@@ -791,7 +793,9 @@ class TokenManagementController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_local_burning(
-            sender=sender.address, token_identifier=token_identifier, supply_to_burn=supply_to_burn
+            sender=sender.address,
+            token_identifier=token_identifier,
+            supply_to_burn=supply_to_burn,
         )
 
         transaction.guardian = guardian
@@ -919,7 +923,9 @@ class TokenManagementController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_transferring_ownership(
-            sender=sender.address, token_identifier=token_identifier, new_owner=new_owner
+            sender=sender.address,
+            token_identifier=token_identifier,
+            new_owner=new_owner,
         )
 
         transaction.guardian = guardian

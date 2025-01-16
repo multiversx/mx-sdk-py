@@ -50,7 +50,9 @@ def set_fields_from_dictionary(fields: list[Field], dictionary: dict[str, Any]):
 
 def set_fields_from_list(fields: list[Field], items: list[Any]):
     if len(fields) != len(items):
-        raise ValueError(f"the number of fields ({len(fields)}) does not match the number of provided items ({len(items)})")
+        raise ValueError(
+            f"the number of fields ({len(fields)}) does not match the number of provided items ({len(items)})"
+        )
 
     for index, field in enumerate(fields):
         field_payload = items[index]

@@ -2,12 +2,17 @@ import io
 from types import SimpleNamespace
 from typing import Any
 
-from multiversx_sdk.abi.fields import (Field, decode_fields_nested,
-                                       encode_fields_nested,
-                                       set_fields_from_dictionary,
-                                       set_fields_from_list)
-from multiversx_sdk.abi.shared import (convert_native_value_to_dictionary,
-                                       convert_native_value_to_list)
+from multiversx_sdk.abi.fields import (
+    Field,
+    decode_fields_nested,
+    encode_fields_nested,
+    set_fields_from_dictionary,
+    set_fields_from_list,
+)
+from multiversx_sdk.abi.shared import (
+    convert_native_value_to_dictionary,
+    convert_native_value_to_list,
+)
 
 
 class StructValue:

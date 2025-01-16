@@ -4,10 +4,10 @@ from pathlib import Path
 import pytest
 
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
-from multiversx_sdk.network_providers.proxy_network_provider import \
-    ProxyNetworkProvider
-from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser import \
-    SmartContractTransactionsOutcomeParser
+from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
+from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser import (
+    SmartContractTransactionsOutcomeParser,
+)
 
 
 @pytest.mark.mainnet

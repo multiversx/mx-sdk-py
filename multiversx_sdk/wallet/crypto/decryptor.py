@@ -4,11 +4,15 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 from multiversx_sdk.wallet.crypto.constants import (
-    CIPHER_ALGORITHM_AES_128_CTR, KEY_DERIVATION_FUNCTION_SCRYPT)
+    CIPHER_ALGORITHM_AES_128_CTR,
+    KEY_DERIVATION_FUNCTION_SCRYPT,
+)
 from multiversx_sdk.wallet.crypto.encrypted_data import EncryptedData
-from multiversx_sdk.wallet.errors import (InvalidKeystoreFilePasswordError,
-                                          UnknownCipherError,
-                                          UnknownDerivationFunctionError)
+from multiversx_sdk.wallet.errors import (
+    InvalidKeystoreFilePasswordError,
+    UnknownCipherError,
+    UnknownDerivationFunctionError,
+)
 
 
 def decrypt(encrypted_data: EncryptedData, password: str) -> bytes:
@@ -33,7 +37,7 @@ def decrypt(encrypted_data: EncryptedData, password: str) -> bytes:
         n=encrypted_data.kdfparams.n,
         r=encrypted_data.kdfparams.r,
         p=encrypted_data.kdfparams.p,
-        backend=backend
+        backend=backend,
     )
 
     derived_key = kdf.derive(bytes(password.encode()))

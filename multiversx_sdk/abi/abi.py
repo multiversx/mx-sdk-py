@@ -3,12 +3,15 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, cast
 
-from multiversx_sdk.abi.abi_definition import (AbiDefinition,
-                                               EndpointDefinition,
-                                               EnumDefinition, EventDefinition,
-                                               EventTopicDefinition,
-                                               ParameterDefinition,
-                                               StructDefinition)
+from multiversx_sdk.abi.abi_definition import (
+    AbiDefinition,
+    EndpointDefinition,
+    EnumDefinition,
+    EventDefinition,
+    EventTopicDefinition,
+    ParameterDefinition,
+    StructDefinition,
+)
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.array_value import ArrayValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
@@ -21,14 +24,22 @@ from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.interface import IPayloadHolder
 from multiversx_sdk.abi.list_value import ListValue
+from multiversx_sdk.abi.managed_decimal_signed_value import ManagedDecimalSignedValue
 from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.serializer import Serializer
-from multiversx_sdk.abi.small_int_values import (I8Value, I16Value, I32Value,
-                                                 I64Value, U8Value, U16Value,
-                                                 U32Value, U64Value)
+from multiversx_sdk.abi.small_int_values import (
+    I8Value,
+    I16Value,
+    I32Value,
+    I64Value,
+    U8Value,
+    U16Value,
+    U32Value,
+    U64Value,
+)
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.token_identifier_value import TokenIdentifierValue
@@ -36,8 +47,6 @@ from multiversx_sdk.abi.tuple_value import TupleValue
 from multiversx_sdk.abi.type_formula import TypeFormula
 from multiversx_sdk.abi.type_formula_parser import TypeFormulaParser
 from multiversx_sdk.abi.variadic_values import VariadicValues
-
-from multiversx_sdk.abi.managed_decimal_signed_value import ManagedDecimalSignedValue
 
 
 class Abi:
@@ -58,31 +67,26 @@ class Abi:
 
         self.constructor_prototype = EndpointPrototype(
             input_parameters=self._create_endpoint_input_prototypes(definition.constructor),
-            output_parameters=self._create_endpoint_output_prototypes(definition.constructor)
+            output_parameters=self._create_endpoint_output_prototypes(definition.constructor),
         )
 
         self.upgrade_constructor_prototype = EndpointPrototype(
             input_parameters=self._create_endpoint_input_prototypes(definition.upgrade_constructor),
-            output_parameters=self._create_endpoint_output_prototypes(definition.upgrade_constructor)
+            output_parameters=self._create_endpoint_output_prototypes(definition.upgrade_constructor),
         )
 
         for endpoint in definition.endpoints:
             input_prototype = self._create_endpoint_input_prototypes(endpoint)
             output_prototype = self._create_endpoint_output_prototypes(endpoint)
 
-            endpoint_prototype = EndpointPrototype(
-                input_parameters=input_prototype,
-                output_parameters=output_prototype
-            )
+            endpoint_prototype = EndpointPrototype(input_parameters=input_prototype, output_parameters=output_prototype)
 
             self.endpoints_prototypes_by_name[endpoint.name] = endpoint_prototype
 
         for event in definition.events:
             prototype = self._create_event_input_prototypes(event)
 
-            event_prototype = EventPrototype(
-                fields=prototype
-            )
+            event_prototype = EventPrototype(fields=prototype)
 
             self.events_prototypes_by_name[event.identifier] = event_prototype
 
@@ -100,7 +104,9 @@ class Abi:
         raise ValueError(f"cannot create prototype for custom type {name}: definition not found")
 
     def _create_enum_prototype(self, enum_definition: EnumDefinition) -> Any:
-        return EnumValue(fields_provider=lambda discriminant: self._provide_fields_for_enum_prototype(discriminant, enum_definition))
+        return EnumValue(
+            fields_provider=lambda discriminant: self._provide_fields_for_enum_prototype(discriminant, enum_definition)
+        )
 
     def _create_explicit_enum_prototype(self) -> Any:
         return ExplicitEnumValue()
@@ -120,7 +126,9 @@ class Abi:
 
             return fields_prototypes
 
-        raise ValueError(f"cannot provide fields from enum {enum_definition.name}: variant with discriminant {discriminant} not found")
+        raise ValueError(
+            f"cannot provide fields from enum {enum_definition.name}: variant with discriminant {discriminant} not found"
+        )
 
     def _create_struct_prototype(self, struct_definition: StructDefinition) -> Any:
         fields_prototypes: list[Field] = []
@@ -178,9 +186,16 @@ class Abi:
         endpoint_prototype = self._get_endpoint_prototype(endpoint_name)
         return self._do_encode_endpoint_input_parameters(endpoint_name, endpoint_prototype, values)
 
-    def _do_encode_endpoint_input_parameters(self, endpoint_name: str, endpoint_prototype: 'EndpointPrototype', values: list[Any]):
+    def _do_encode_endpoint_input_parameters(
+        self,
+        endpoint_name: str,
+        endpoint_prototype: "EndpointPrototype",
+        values: list[Any],
+    ):
         if len(values) != len(endpoint_prototype.input_parameters):
-            raise ValueError(f"for {endpoint_name}, invalid value length: expected {len(endpoint_prototype.input_parameters)}, got {len(values)}")
+            raise ValueError(
+                f"for {endpoint_name}, invalid value length: expected {len(endpoint_prototype.input_parameters)}, got {len(values)}"
+            )
 
         input_values = deepcopy(endpoint_prototype.input_parameters)
         input_values_as_native_object_holders = cast(list[IPayloadHolder], input_values)
@@ -242,7 +257,7 @@ class Abi:
 
         return type_prototype
 
-    def _get_endpoint_prototype(self, endpoint_name: str) -> 'EndpointPrototype':
+    def _get_endpoint_prototype(self, endpoint_name: str) -> "EndpointPrototype":
         endpoint_prototype = self.endpoints_prototypes_by_name.get(endpoint_name)
 
         if not endpoint_prototype:
@@ -250,7 +265,7 @@ class Abi:
 
         return endpoint_prototype
 
-    def _get_event_prototype(self, event_name: str) -> 'EventPrototype':
+    def _get_event_prototype(self, event_name: str) -> "EventPrototype":
         event_prototype = self.events_prototypes_by_name.get(event_name)
 
         if not event_prototype:
@@ -296,7 +311,9 @@ class Abi:
         if name == "CodeMetadata":
             return CodeMetadataValue()
         if name == "tuple":
-            return TupleValue([self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
+            return TupleValue(
+                [self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters]
+            )
         if name == "Option":
             type_parameter = type_formula.type_parameters[0]
             return OptionValue(self._create_prototype(type_parameter))
@@ -306,7 +323,10 @@ class Abi:
         if name.startswith("array"):
             type_parameter = type_formula.type_parameters[0]
             length = int(name[5:])
-            return ArrayValue(length=length, item_creator=lambda: self._create_prototype(type_parameter))
+            return ArrayValue(
+                length=length,
+                item_creator=lambda: self._create_prototype(type_parameter),
+            )
         if name == "optional":
             # The prototype of an optional is provided a value (the placeholder).
             type_parameter = type_formula.type_parameters[0]
@@ -318,7 +338,9 @@ class Abi:
             type_parameter = type_formula.type_parameters[0]
             return CountedVariadicValues([], item_creator=lambda: self._create_prototype(type_parameter))
         if name == "multi":
-            return MultiValue([self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters])
+            return MultiValue(
+                [self._create_prototype(type_parameter) for type_parameter in type_formula.type_parameters]
+            )
         if name == "ManagedDecimal":
             scale = type_formula.type_parameters[0].name
 
@@ -339,7 +361,7 @@ class Abi:
         return deepcopy(type_prototype)
 
     @classmethod
-    def load(cls, path: Path) -> 'Abi':
+    def load(cls, path: Path) -> "Abi":
         definition = AbiDefinition.load(path)
         return cls(definition)
 

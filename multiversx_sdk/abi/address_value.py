@@ -10,8 +10,7 @@ class IAddress(Protocol):
     For internal use only.
     """
 
-    def get_public_key(self) -> bytes:
-        ...
+    def get_public_key(self) -> bytes: ...
 
 
 class AddressValue:

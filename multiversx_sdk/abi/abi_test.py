@@ -13,14 +13,13 @@ from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.list_value import ListValue
+from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
 from multiversx_sdk.core.address import Address
-
-from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 
 testdata = Path(__file__).parent.parent / "testutils" / "testdata"
 
@@ -95,10 +94,7 @@ def test_encode_endpoint_input_parameters_artificial_contract():
     abi = Abi.load(testdata / "artificial.abi.json")
 
     # All values untyped.
-    encoded_values = abi.encode_endpoint_input_parameters(
-        endpoint_name="yellow",
-        values=[[42, "hello", True]]
-    )
+    encoded_values = abi.encode_endpoint_input_parameters(endpoint_name="yellow", values=[[42, "hello", True]])
 
     assert len(encoded_values) == 3
     assert encoded_values[0].hex() == "2a"
@@ -111,7 +107,7 @@ def test_encode_endpoint_input_parameters_artificial_contract():
         values=[
             "hello",
             StringValue("world"),
-        ]
+        ],
     )
 
     assert encoded_values == [b"hello", b"world"]
@@ -122,7 +118,7 @@ def test_encode_endpoint_input_parameters_artificial_contract():
         values=[
             StringValue("hello"),
             StringValue("world"),
-        ]
+        ],
     )
 
     assert encoded_values == [b"hello", b"world"]
@@ -136,8 +132,8 @@ def test_decode_endpoint_output_parameters_artificial_contract():
         encoded_values=[
             "UTK-2f80e9".encode(),
             bytes([0x00]),
-            bytes.fromhex("0de0b6b3a7640000")
-        ]
+            bytes.fromhex("0de0b6b3a7640000"),
+        ],
     )
 
     assert decoded_values == [["UTK-2f80e9", 0, 1000000000000000000]]
@@ -146,7 +142,7 @@ def test_decode_endpoint_output_parameters_artificial_contract():
         endpoint_name="green",
         encoded_values=[
             "completed".encode(),
-        ]
+        ],
     )
 
     assert decoded_values == ["completed"]
@@ -157,7 +153,11 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
 
     alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     expected_encoded_values = [
-        bytes.fromhex("05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743".replace("|", ""))
+        bytes.fromhex(
+            "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743".replace(
+                "|", ""
+            )
+        )
     ]
 
     # All values untyped, structure as dictionary.
@@ -171,15 +171,12 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
                         "to": alice,
                         "egld_amount": 1000000000000000000,
                         "endpoint_name": "example",
-                        "arguments": [
-                            bytes([0x03, 0x42]),
-                            bytes([0x07, 0x43])
-                        ],
-                        "opt_gas_limit": 15_000_000
-                    }
+                        "arguments": [bytes([0x03, 0x42]), bytes([0x07, 0x43])],
+                        "opt_gas_limit": 15_000_000,
+                    },
                 }
             ]
-        ]
+        ],
     )
 
     assert encoded_values == expected_encoded_values
@@ -195,22 +192,26 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
                         to=alice,
                         egld_amount=1000000000000000000,
                         endpoint_name="example",
-                        arguments=[
-                            bytes([0x03, 0x42]),
-                            bytes([0x07, 0x43])
-                        ],
-                        opt_gas_limit=15_000_000
-                    )
+                        arguments=[bytes([0x03, 0x42]), bytes([0x07, 0x43])],
+                        opt_gas_limit=15_000_000,
+                    ),
                 }
             ]
-        ]
+        ],
     )
 
     assert encoded_values == expected_encoded_values
 
     # All values untyped, structure as simple object (custom class)
     class CallActionData:
-        def __init__(self, to: Address, egld_amount: int, endpoint_name: str, arguments: list[bytes], opt_gas_limit: Optional[int] = None):
+        def __init__(
+            self,
+            to: Address,
+            egld_amount: int,
+            endpoint_name: str,
+            arguments: list[bytes],
+            opt_gas_limit: Optional[int] = None,
+        ):
             self.to = to
             self.egld_amount = egld_amount
             self.endpoint_name = endpoint_name
@@ -227,15 +228,12 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
                         to=alice,
                         egld_amount=1000000000000000000,
                         endpoint_name="example",
-                        arguments=[
-                            bytes([0x03, 0x42]),
-                            bytes([0x07, 0x43])
-                        ],
-                        opt_gas_limit=15_000_000
-                    )
+                        arguments=[bytes([0x03, 0x42]), bytes([0x07, 0x43])],
+                        opt_gas_limit=15_000_000,
+                    ),
                 }
             ]
-        ]
+        ],
     )
 
     assert encoded_values == expected_encoded_values
@@ -251,15 +249,12 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
                         "to": AddressValue.new_from_address(alice),
                         "egld_amount": 1000000000000000000,
                         "endpoint_name": StringValue("example"),
-                        "arguments": [
-                            bytes([0x03, 0x42]),
-                            bytes([0x07, 0x43])
-                        ],
-                        "opt_gas_limit": U64Value(15_000_000)
-                    }
+                        "arguments": [bytes([0x03, 0x42]), bytes([0x07, 0x43])],
+                        "opt_gas_limit": U64Value(15_000_000),
+                    },
                 }
             ]
-        ]
+        ],
     )
 
     assert encoded_values == expected_encoded_values
@@ -273,21 +268,37 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
                     EnumValue(
                         discriminant=5,
                         fields=[
-                            Field("0", StructValue([
-                                Field("to", AddressValue.new_from_address(alice)),
-                                Field("egld_amount", BigUIntValue(1000000000000000000)),
-                                Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
-                                Field("endpoint_name", BytesValue(b"example")),
-                                Field("arguments", ListValue([
-                                    BytesValue(bytes([0x03, 0x42])),
-                                    BytesValue(bytes([0x07, 0x43])),
-                                ])),
-                            ])),
+                            Field(
+                                "0",
+                                StructValue(
+                                    [
+                                        Field("to", AddressValue.new_from_address(alice)),
+                                        Field(
+                                            "egld_amount",
+                                            BigUIntValue(1000000000000000000),
+                                        ),
+                                        Field(
+                                            "opt_gas_limit",
+                                            OptionValue(U64Value(15_000_000)),
+                                        ),
+                                        Field("endpoint_name", BytesValue(b"example")),
+                                        Field(
+                                            "arguments",
+                                            ListValue(
+                                                [
+                                                    BytesValue(bytes([0x03, 0x42])),
+                                                    BytesValue(bytes([0x07, 0x43])),
+                                                ]
+                                            ),
+                                        ),
+                                    ]
+                                ),
+                            ),
                         ],
                     )
                 ]
             )
-        ]
+        ],
     )
 
     assert encoded_values == expected_encoded_values
@@ -296,12 +307,14 @@ def test_encode_endpoint_input_parameters_multisig_propose_batch():
 def test_decode_endpoint_output_parameters_multisig_get_pending_action_full_info():
     abi = Abi.load(testdata / "multisig-full.abi.json")
 
-    data_hex = "".join([
-        "0000002A",
-        "0000002A",
-        "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
-        "00000002|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8",
-    ]).replace("|", "")
+    data_hex = "".join(
+        [
+            "0000002A",
+            "0000002A",
+            "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
+            "00000002|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8",
+        ]
+    ).replace("|", "")
 
     data = bytes.fromhex(data_hex)
     [[action_full_info]] = abi.decode_endpoint_output_parameters("getPendingActionFullInfo", [data])
@@ -311,7 +324,10 @@ def test_decode_endpoint_output_parameters_multisig_get_pending_action_full_info
     assert action_full_info.action_data.__discriminant__ == 5
 
     action_data_0 = getattr(action_full_info.action_data, "0")
-    assert action_data_0.to == Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key()
+    assert (
+        action_data_0.to
+        == Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key()
+    )
     assert action_data_0.egld_amount == 1000000000000000000
     assert action_data_0.opt_gas_limit == 15000000
     assert action_data_0.endpoint_name == b"example"
@@ -324,20 +340,20 @@ def test_decode_endpoint_output_parameters_multisig_get_pending_action_full_info
 
 
 def test_managed_decimals():
-    abi_definition = AbiDefinition.from_dict({
-        "endpoints": [{
-            "name": "foo",
-            "inputs": [
+    abi_definition = AbiDefinition.from_dict(
+        {
+            "endpoints": [
                 {
-                    "type": "ManagedDecimal<8>"
-                },
-                {
-                    "type": "ManagedDecimal<usize>"
+                    "name": "foo",
+                    "inputs": [
+                        {"type": "ManagedDecimal<8>"},
+                        {"type": "ManagedDecimal<usize>"},
+                    ],
+                    "outputs": [],
                 }
-            ],
-            "outputs": []
-        }]
-    })
+            ]
+        }
+    )
 
     abi = Abi(abi_definition)
     endpoint = abi.endpoints_prototypes_by_name["foo"]
@@ -358,26 +374,26 @@ def test_managed_decimals():
 
 def test_encode_decode_managed_decimals():
     abi_definition = AbiDefinition.from_dict(
-            {
-                "endpoints": [
-                    {
-                        "name": "dummy",
-                        "inputs": [{"type": "ManagedDecimal<18>"}],
-                        "outputs": [],
-                    },
-                    {
-                        "name": "foo",
-                        "inputs": [{"name": "x", "type": "ManagedDecimal<usize>"}],
-                        "outputs": [{"type": "ManagedDecimalSigned<9>"}],
-                    },
-                    {
-                        "name": "foobar",
-                        "inputs": [],
-                        "outputs": [{"type": "ManagedDecimal<usize>"}],
-                    },
-                ]
-            }
-        )
+        {
+            "endpoints": [
+                {
+                    "name": "dummy",
+                    "inputs": [{"type": "ManagedDecimal<18>"}],
+                    "outputs": [],
+                },
+                {
+                    "name": "foo",
+                    "inputs": [{"name": "x", "type": "ManagedDecimal<usize>"}],
+                    "outputs": [{"type": "ManagedDecimalSigned<9>"}],
+                },
+                {
+                    "name": "foobar",
+                    "inputs": [],
+                    "outputs": [{"type": "ManagedDecimal<usize>"}],
+                },
+            ]
+        }
+    )
 
     abi = Abi(abi_definition)
 

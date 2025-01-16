@@ -22,5 +22,8 @@ def test_set_payload_and_get_payload():
     assert values.get_payload() == [42, "hello"]
 
     # With errors
-    with pytest.raises(ValueError, match="placeholder value of optional should be set before calling set_payload"):
+    with pytest.raises(
+        ValueError,
+        match="placeholder value of optional should be set before calling set_payload",
+    ):
         OptionalValue().set_payload(42)

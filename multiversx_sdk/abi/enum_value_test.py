@@ -11,11 +11,19 @@ from multiversx_sdk.abi.small_int_values import U32Value
 
 def test_set_payload_and_get_payload():
     # With errors (missing fields provider)
-    with pytest.raises(ValueError, match="populating an enum from a native object requires the fields provider to be set"):
+    with pytest.raises(
+        ValueError,
+        match="populating an enum from a native object requires the fields provider to be set",
+    ):
         EnumValue().set_payload(42)
 
     # With errors (missing __discriminant__ field)
-    with pytest.raises(ValueError, match=re.escape("for enums, the native object (when it's a dictionary) must contain the special field '__discriminant__'")):
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "for enums, the native object (when it's a dictionary) must contain the special field '__discriminant__'"
+        ),
+    ):
         EnumValue(fields_provider=lambda discriminant: []).set_payload({})
 
     # Simple
@@ -27,28 +35,16 @@ def test_set_payload_and_get_payload():
     # With fields (from SimpleNamespace, object, dictionary or list)
     def provide_fields(discriminant: int) -> list[Field]:
         if discriminant == 41:
-            return [
-                Field("a", U32Value()),
-                Field("b", BigUIntValue())
-            ]
+            return [Field("a", U32Value()), Field("b", BigUIntValue())]
 
         if discriminant == 42:
-            return [
-                Field("c", U32Value()),
-                Field("d", BigUIntValue())
-            ]
+            return [Field("c", U32Value()), Field("d", BigUIntValue())]
 
         if discriminant == 43:
-            return [
-                Field("e", U32Value()),
-                Field("f", BigUIntValue())
-            ]
+            return [Field("e", U32Value()), Field("f", BigUIntValue())]
 
         if discriminant == 44:
-            return [
-                Field("g", U32Value()),
-                Field("h", BigUIntValue())
-            ]
+            return [Field("g", U32Value()), Field("h", BigUIntValue())]
 
         return []
 

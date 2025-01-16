@@ -10,7 +10,9 @@ def test_new_from_code_metadata():
     value = CodeMetadataValue.new_from_code_metadata(CodeMetadata())
     assert value.get_payload() == bytes([0x05, 0x00])
 
-    value = CodeMetadataValue.new_from_code_metadata(CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True))
+    value = CodeMetadataValue.new_from_code_metadata(
+        CodeMetadata(upgradeable=True, readable=True, payable=True, payable_by_contract=True)
+    )
     assert value.get_payload() == bytes([0x05, 0x06])
 
 
@@ -27,13 +29,16 @@ def test_set_payload_and_get_payload():
 
     # From dictionary
     value = CodeMetadataValue()
-    value.set_payload({
-        "hex": "0500"
-    })
+    value.set_payload({"hex": "0500"})
     assert value.get_payload() == bytes([0x05, 0x00])
 
     # With errors
-    with pytest.raises(ValueError, match=re.escape("cannot set payload for code metadata (should be either a CodeMetadata, bytes or dict, but got: <class 'int'>)")):
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "cannot set payload for code metadata (should be either a CodeMetadata, bytes or dict, but got: <class 'int'>)"
+        ),
+    ):
         CodeMetadataValue().set_payload(5)
 
     with pytest.raises(ValueError, match="code metadata buffer has length 4, expected 2"):

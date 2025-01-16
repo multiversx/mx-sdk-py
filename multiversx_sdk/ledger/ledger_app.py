@@ -35,9 +35,7 @@ class LedgerApp:
             raise LedgerError(CONNECTION_ERROR_MSG)
 
     def set_address(self, address_index: int = 0):
-        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(
-            4, byteorder="big"
-        )
+        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(4, byteorder="big")
         self.transport.send(cla=0xED, ins=0x05, p1=0x00, p2=0x00, cdata=data)
         sw, _ = self.transport.recv()
         err = get_error(sw)
@@ -45,9 +43,7 @@ class LedgerApp:
             raise LedgerError(err)
 
     def get_address(self, address_index: int = 0) -> str:
-        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(
-            4, byteorder="big"
-        )
+        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(4, byteorder="big")
 
         self.transport.send(cla=0xED, ins=0x03, p1=0x00, p2=0x00, cdata=data)
         sw, response = self.transport.recv()

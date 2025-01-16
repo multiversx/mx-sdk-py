@@ -18,7 +18,10 @@ from multiversx_sdk.network_providers.constants import (
     BASE_USER_AGENT,
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
 )
-from multiversx_sdk.network_providers.errors import GenericError, TransactionFetchingError
+from multiversx_sdk.network_providers.errors import (
+    GenericError,
+    TransactionFetchingError,
+)
 from multiversx_sdk.network_providers.http_resources import (
     account_from_proxy_response,
     account_storage_entry_from_response,
@@ -149,9 +152,7 @@ class ProxyNetworkProvider(INetworkProvider):
     ) -> AccountOnNetwork:
         """Waits until an account satisfies a given condition."""
         if options is None:
-            options = AwaitingOptions(
-                patience_in_milliseconds=DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS
-            )
+            options = AwaitingOptions(patience_in_milliseconds=DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS)
 
         awaiter = AccountAwaiter(
             fetcher=self,
@@ -167,9 +168,7 @@ class ProxyNetworkProvider(INetworkProvider):
         response = self.do_post_generic("transaction/send", transaction.to_dictionary())
         return bytes.fromhex(response.get("txHash", ""))
 
-    def simulate_transaction(
-        self, transaction: Transaction, check_signature: bool = False
-    ) -> TransactionOnNetwork:
+    def simulate_transaction(self, transaction: Transaction, check_signature: bool = False) -> TransactionOnNetwork:
         """Simulates a transaction."""
         url = "transaction/simulate?checkSignature=false"
 
@@ -177,9 +176,7 @@ class ProxyNetworkProvider(INetworkProvider):
             url = "transaction/simulate"
 
         response = self.do_post_generic(url, transaction.to_dictionary())
-        return transaction_from_simulate_response(
-            transaction, response.to_dictionary().get("result", {})
-        )
+        return transaction_from_simulate_response(transaction, response.to_dictionary().get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""
@@ -221,7 +218,9 @@ class ProxyNetworkProvider(INetworkProvider):
         return transaction_from_proxy_response(transaction_hash, tx, process_status)
 
     def await_transaction_completed(
-        self, transaction_hash: Union[bytes, str], options: Optional[AwaitingOptions] = None
+        self,
+        transaction_hash: Union[bytes, str],
+        options: Optional[AwaitingOptions] = None,
     ) -> TransactionOnNetwork:
         """Waits until the transaction is completely processed."""
         transaction_hash = convert_tx_hash_to_string(transaction_hash)
@@ -267,9 +266,7 @@ class ProxyNetworkProvider(INetworkProvider):
         if token.nonce == 0:
             response = self.do_get_generic(f"address/{address.to_bech32()}/esdt/{token.identifier}")
         else:
-            response = self.do_get_generic(
-                f"address/{address.to_bech32()}/nft/{token.identifier}/nonce/{token.nonce}"
-            )
+            response = self.do_get_generic(f"address/{address.to_bech32()}/nft/{token.identifier}/nonce/{token.nonce}")
 
         return token_amount_on_network_from_proxy_response(response.to_dictionary())
 
@@ -336,9 +333,7 @@ class ProxyNetworkProvider(INetworkProvider):
         response = self.do_get_generic(f"transaction/{transaction_hash}/process-status")
         return TransactionStatus(response.get("status", ""))
 
-    def do_get_generic(
-        self, url: str, url_parameters: Optional[dict[str, Any]] = None
-    ) -> GenericResponse:
+    def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]] = None) -> GenericResponse:
         """Does a generic GET request against the network (handles API enveloping)."""
         url = f"{self.url}/{url}"
 
@@ -349,9 +344,7 @@ class ProxyNetworkProvider(INetworkProvider):
         response = self._do_get(url)
         return response
 
-    def do_post_generic(
-        self, url: str, data: Any, url_parameters: Optional[dict[str, Any]] = None
-    ) -> GenericResponse:
+    def do_post_generic(self, url: str, data: Any, url_parameters: Optional[dict[str, Any]] = None) -> GenericResponse:
         """Does a generic GET request against the network (handles API enveloping)."""
         url = f"{self.url}/{url}"
 

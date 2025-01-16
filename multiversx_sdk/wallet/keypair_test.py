@@ -1,9 +1,8 @@
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.wallet.keypair import KeyPair
 from multiversx_sdk.wallet.user_keys import UserSecretKey
-
-from multiversx_sdk.core.transaction_computer import TransactionComputer
 
 
 def test_create_keypair():
@@ -43,7 +42,7 @@ def test_sign_and_verify_transaction():
         gas_limit=50000,
         chain_id="local-testnet",
         version=1,
-        options=0
+        options=0,
     )
 
     buffer_hex = "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
@@ -54,5 +53,8 @@ def test_sign_and_verify_transaction():
     serialized_tx = transaction_computer.compute_bytes_for_signing(tx)
 
     tx.signature = keypair.sign(serialized_tx)
-    assert tx.signature.hex() == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+    assert (
+        tx.signature.hex()
+        == "b56769014f2bdc5cf9fc4a05356807d71fcf8775c819b0f1b0964625b679c918ffa64862313bfef86f99b38cb84fcdb16fa33ad6eb565276616723405cd8f109"
+    )
     assert keypair.verify(serialized_tx, tx.signature)

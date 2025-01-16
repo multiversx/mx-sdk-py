@@ -1,8 +1,7 @@
 from pathlib import Path
 
 from multiversx_sdk.wallet.errors import CannotSignError
-from multiversx_sdk.wallet.validator_keys import (ValidatorPublicKey,
-                                                  ValidatorSecretKey)
+from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey, ValidatorSecretKey
 from multiversx_sdk.wallet.validator_pem import ValidatorPEM
 
 
@@ -15,7 +14,7 @@ class ValidatorSigner:
         self.secret_key = secret_key
 
     @classmethod
-    def from_pem_file(cls, path: Path, index: int = 0) -> 'ValidatorSigner':
+    def from_pem_file(cls, path: Path, index: int = 0) -> "ValidatorSigner":
         secret_key = ValidatorPEM.from_file(path, index).secret_key
         return ValidatorSigner(secret_key)
 

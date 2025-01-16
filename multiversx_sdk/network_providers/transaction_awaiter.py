@@ -6,9 +6,12 @@ from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.network_providers.constants import (
     DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
-    DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS)
+    DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS,
+)
 from multiversx_sdk.network_providers.errors import (
-    ExpectedTransactionStatusNotReachedError, TransactionFetchingError)
+    ExpectedTransactionStatusNotReachedError,
+    TransactionFetchingError,
+)
 
 ONE_SECOND_IN_MILLISECONDS = 1000
 
@@ -16,18 +19,19 @@ logger = logging.getLogger("transaction_awaiter")
 
 
 class ITransactionFetcher(Protocol):
-    def get_transaction(self, transaction_hash: Union[bytes, str]) -> TransactionOnNetwork:
-        ...
+    def get_transaction(self, transaction_hash: Union[bytes, str]) -> TransactionOnNetwork: ...
 
 
 class TransactionAwaiter:
     """TransactionAwaiter allows one to await until a specific event (such as transaction completion) occurs on a given transaction."""
 
-    def __init__(self,
-                 fetcher: ITransactionFetcher,
-                 polling_interval_in_milliseconds: Optional[int] = None,
-                 timeout_interval_in_milliseconds: Optional[int] = None,
-                 patience_time_in_milliseconds: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        fetcher: ITransactionFetcher,
+        polling_interval_in_milliseconds: Optional[int] = None,
+        timeout_interval_in_milliseconds: Optional[int] = None,
+        patience_time_in_milliseconds: Optional[int] = None,
+    ) -> None:
         """
         Args:
             fetcher (ITransactionFetcher): Used to fetch the transaction of the network.
@@ -54,6 +58,7 @@ class TransactionAwaiter:
 
     def await_completed(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
         """Waits until the transaction is completely processed."""
+
         def is_completed(tx: TransactionOnNetwork):
             return tx.status.is_completed
 
@@ -63,26 +68,31 @@ class TransactionAwaiter:
         return self._await_conditionally(
             is_satisfied=is_completed,
             do_fetch=do_fetch,
-            error=ExpectedTransactionStatusNotReachedError()
+            error=ExpectedTransactionStatusNotReachedError(),
         )
 
     def await_on_condition(
-            self, transaction_hash: Union[str, bytes], condition: Callable[[TransactionOnNetwork],
-                                                                           bool]) -> TransactionOnNetwork:
+        self,
+        transaction_hash: Union[str, bytes],
+        condition: Callable[[TransactionOnNetwork], bool],
+    ) -> TransactionOnNetwork:
         """Waits until the condition is satisfied."""
+
         def do_fetch():
             return self.fetcher.get_transaction(transaction_hash)
 
         return self._await_conditionally(
             is_satisfied=condition,
             do_fetch=do_fetch,
-            error=ExpectedTransactionStatusNotReachedError()
+            error=ExpectedTransactionStatusNotReachedError(),
         )
 
-    def _await_conditionally(self,
-                             is_satisfied: Callable[[TransactionOnNetwork], bool],
-                             do_fetch: Callable[[], TransactionOnNetwork],
-                             error: Exception) -> TransactionOnNetwork:
+    def _await_conditionally(
+        self,
+        is_satisfied: Callable[[TransactionOnNetwork], bool],
+        do_fetch: Callable[[], TransactionOnNetwork],
+        error: Exception,
+    ) -> TransactionOnNetwork:
         is_condition_satisfied = False
         fetched_data: Union[TransactionOnNetwork, None] = None
         max_number_of_retries = self.timeout_interval_in_milliseconds // self.polling_interval_in_milliseconds

@@ -4,11 +4,13 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.account_awaiter import AccountAwaiter
-from multiversx_sdk.network_providers.api_network_provider import \
-    ApiNetworkProvider
+from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
 from multiversx_sdk.network_providers.resources import AccountOnNetwork
 from multiversx_sdk.testutils.mock_network_provider import (
-    MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
+    MockNetworkProvider,
+    TimelinePointMarkCompleted,
+    TimelinePointWait,
+)
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 from multiversx_sdk.testutils.wallets import load_wallets
 
@@ -19,7 +21,7 @@ class TestAccountAwaiter:
         fetcher=provider,
         polling_interval_in_milliseconds=42,
         timeout_interval_in_milliseconds=42 * 42,
-        patience_time_in_milliseconds=0
+        patience_time_in_milliseconds=0,
     )
 
     def test_await_on_balance_increase(self):
@@ -30,7 +32,12 @@ class TestAccountAwaiter:
         # adds 7 EGLD to the account balance
         self.provider.mock_account_balance_timeline_by_address(
             alice,
-            [TimelinePointWait(40), TimelinePointWait(40), TimelinePointWait(45), TimelinePointMarkCompleted()]
+            [
+                TimelinePointWait(40),
+                TimelinePointWait(40),
+                TimelinePointWait(45),
+                TimelinePointMarkCompleted(),
+            ],
         )
 
         def condition(account: AccountOnNetwork):
@@ -55,7 +62,7 @@ class TestAccountAwaiter:
             receiver=frank,
             gas_limit=50000,
             chain_id="D",
-            value=value
+            value=value,
         )
         transaction.nonce = api.get_account(alice_address).nonce
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))

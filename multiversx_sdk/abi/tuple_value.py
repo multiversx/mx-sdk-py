@@ -34,7 +34,9 @@ class TupleValue:
         native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
         if ok:
             if len(self.fields) != len(native_list):
-                raise ValueError(f"the number of fields ({len(self.fields)}) does not match the number of provided native values ({len(native_list)})")
+                raise ValueError(
+                    f"the number of fields ({len(self.fields)}) does not match the number of provided native values ({len(native_list)})"
+                )
 
             for i, field in enumerate(self.fields):
                 field.set_payload(native_list[i])

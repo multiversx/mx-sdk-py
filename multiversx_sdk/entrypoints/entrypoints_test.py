@@ -148,7 +148,9 @@ class TestEntrypoint:
         account.nonce = self.entrypoint.recall_account_nonce(account.address)
 
         transaction = controller.create_transaction_for_saving_key_value(
-            sender=account, nonce=account.nonce, key_value_pairs={b"testKey": b"testValue"}
+            sender=account,
+            nonce=account.nonce,
+            key_value_pairs={b"testKey": b"testValue"},
         )
 
         assert transaction.version == 2

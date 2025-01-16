@@ -1,9 +1,7 @@
-
 import io
 from typing import Any
 
-from multiversx_sdk.abi.shared import (decode_length, encode_length,
-                                       read_bytes_exactly)
+from multiversx_sdk.abi.shared import decode_length, encode_length, read_bytes_exactly
 
 
 class BigIntValue:
@@ -31,7 +29,7 @@ class BigIntValue:
         value = self.value
 
         if value == 0:
-            return b''
+            return b""
 
         length = ((value + (value < 0)).bit_length() + 7 + 1) // 8
         data = value.to_bytes(length, byteorder="big", signed=True)

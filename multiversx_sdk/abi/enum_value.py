@@ -3,20 +3,27 @@ from types import SimpleNamespace
 from typing import Any, Callable, Optional
 
 from multiversx_sdk.abi.constants import ENUM_DISCRIMINANT_FIELD_NAME
-from multiversx_sdk.abi.fields import (Field, decode_fields_nested,
-                                       encode_fields_nested,
-                                       set_fields_from_dictionary,
-                                       set_fields_from_list)
-from multiversx_sdk.abi.shared import (convert_native_value_to_dictionary,
-                                       convert_native_value_to_list)
+from multiversx_sdk.abi.fields import (
+    Field,
+    decode_fields_nested,
+    encode_fields_nested,
+    set_fields_from_dictionary,
+    set_fields_from_list,
+)
+from multiversx_sdk.abi.shared import (
+    convert_native_value_to_dictionary,
+    convert_native_value_to_list,
+)
 from multiversx_sdk.abi.small_int_values import U8Value
 
 
 class EnumValue:
-    def __init__(self,
-                 discriminant: int = 0,
-                 fields: Optional[list[Field]] = None,
-                 fields_provider: Optional[Callable[[int], list[Field]]] = None) -> None:
+    def __init__(
+        self,
+        discriminant: int = 0,
+        fields: Optional[list[Field]] = None,
+        fields_provider: Optional[Callable[[int], list[Field]]] = None,
+    ) -> None:
         self.discriminant = discriminant
         self.fields = fields or []
         self.fields_provider = fields_provider
@@ -59,7 +66,9 @@ class EnumValue:
 
         if isinstance(value, int):
             if self.fields_provider(value):
-                raise ValueError("for enums, if the native object is a mere integer, it must be the discriminant, and the corresponding enum variant must have no fields")
+                raise ValueError(
+                    "for enums, if the native object is a mere integer, it must be the discriminant, and the corresponding enum variant must have no fields"
+                )
 
             self.discriminant = value
             return
@@ -67,7 +76,9 @@ class EnumValue:
         native_dictionary, ok = convert_native_value_to_dictionary(value, raise_on_failure=False)
         if ok:
             if ENUM_DISCRIMINANT_FIELD_NAME not in native_dictionary:
-                raise ValueError(f"for enums, the native object (when it's a dictionary) must contain the special field '{ENUM_DISCRIMINANT_FIELD_NAME}'")
+                raise ValueError(
+                    f"for enums, the native object (when it's a dictionary) must contain the special field '{ENUM_DISCRIMINANT_FIELD_NAME}'"
+                )
 
             self.discriminant = int(native_dictionary[ENUM_DISCRIMINANT_FIELD_NAME])
             self.fields = self.fields_provider(self.discriminant)
@@ -77,7 +88,9 @@ class EnumValue:
         native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
         if ok:
             if len(native_list) == 0 or not isinstance(native_list[0], int):
-                raise ValueError("for enums, the native object (when it's a list) must have the discriminant as the first element")
+                raise ValueError(
+                    "for enums, the native object (when it's a list) must have the discriminant as the first element"
+                )
 
             self.discriminant = int(native_list[0])
             self.fields = self.fields_provider(self.discriminant)
@@ -97,11 +110,7 @@ class EnumValue:
         return obj
 
     def __eq__(self, other: Any) -> bool:
-        return (
-            isinstance(other, EnumValue)
-            and self.discriminant == other.discriminant
-            and self.fields == other.fields
-        )
+        return isinstance(other, EnumValue) and self.discriminant == other.discriminant and self.fields == other.fields
 
     def __iter__(self):
         yield (ENUM_DISCRIMINANT_FIELD_NAME, self.discriminant)

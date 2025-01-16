@@ -6,9 +6,11 @@ from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class VariadicValues(IPayloadHolder):
-    def __init__(self,
-                 items: Optional[list[Union[ISingleValue, MultiValue]]] = None,
-                 item_creator: Optional[Callable[[], Union[ISingleValue, MultiValue]]] = None) -> None:
+    def __init__(
+        self,
+        items: Optional[list[Union[ISingleValue, MultiValue]]] = None,
+        item_creator: Optional[Callable[[], Union[ISingleValue, MultiValue]]] = None,
+    ) -> None:
         self.items = items or []
         self.item_creator = item_creator
 
@@ -30,9 +32,7 @@ class VariadicValues(IPayloadHolder):
 
     def __eq__(self, other: Any) -> bool:
         return (
-            isinstance(other, VariadicValues)
-            and self.items == other.items
-            and self.item_creator == other.item_creator
+            isinstance(other, VariadicValues) and self.items == other.items and self.item_creator == other.item_creator
         )
 
     def __iter__(self) -> Any:

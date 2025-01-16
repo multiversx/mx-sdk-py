@@ -44,7 +44,9 @@ class TransactionsFactoryConfig:
     gas_limit_stop_nft_create: int = 60_000_000
     gas_limit_wipe_single_nft: int = 60_000_000
     gas_limit_esdt_nft_add_uri: int = 10_000_000
-    esdt_contract_address: Address = field(default_factory=lambda: Address.new_from_hex(value=ESDT_CONTRACT_ADDRESS_HEX))
+    esdt_contract_address: Address = field(
+        default_factory=lambda: Address.new_from_hex(value=ESDT_CONTRACT_ADDRESS_HEX)
+    )
 
     # Configuration for delegation operations
     gas_limit_stake: int = 5_000_000

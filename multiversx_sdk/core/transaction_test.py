@@ -345,12 +345,14 @@ class TestTransaction:
 
         user_verifier = UserVerifier(self.alice.public_key)
         is_signed_by_alice = user_verifier.verify(
-            data=self.transaction_computer.compute_bytes_for_verifying(tx), signature=tx.signature
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature,
         )
 
         wrong_verifier = UserVerifier(self.bob.public_key)
         is_signed_by_bob = wrong_verifier.verify(
-            data=self.transaction_computer.compute_bytes_for_verifying(tx), signature=tx.signature
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature,
         )
 
         assert is_signed_by_alice
@@ -369,12 +371,14 @@ class TestTransaction:
 
         user_verifier = UserVerifier(self.alice.public_key)
         is_signed_by_alice = user_verifier.verify(
-            data=self.transaction_computer.compute_bytes_for_verifying(tx), signature=tx.signature
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature,
         )
 
         wrong_verifier = UserVerifier(self.bob.public_key)
         is_signed_by_bob = wrong_verifier.verify(
-            data=self.transaction_computer.compute_bytes_for_verifying(tx), signature=tx.signature
+            data=self.transaction_computer.compute_bytes_for_verifying(tx),
+            signature=tx.signature,
         )
 
         assert is_signed_by_alice

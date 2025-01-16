@@ -18,7 +18,7 @@ def decode_length(reader: io.BytesIO) -> int:
 
 def read_bytes_exactly(reader: io.BytesIO, num_bytes: int):
     if num_bytes == 0:
-        return b''
+        return b""
 
     data = reader.read(num_bytes)
     if len(data) != num_bytes:
@@ -39,7 +39,9 @@ def convert_native_value_to_dictionary(obj: Any, raise_on_failure: bool = True) 
         error_on_dict_attribute = error
 
     if raise_on_failure:
-        raise ValueError(f"cannot convert native value to dictionary, because of: {error_on_dict_constructor} and {error_on_dict_attribute}")
+        raise ValueError(
+            f"cannot convert native value to dictionary, because of: {error_on_dict_constructor} and {error_on_dict_attribute}"
+        )
 
     return {}, False
 

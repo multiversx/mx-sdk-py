@@ -1,5 +1,7 @@
-from multiversx_sdk.wallet.constants import (VALIDATOR_PUBKEY_LENGTH,
-                                             VALIDATOR_SECRETKEY_LENGTH)
+from multiversx_sdk.wallet.constants import (
+    VALIDATOR_PUBKEY_LENGTH,
+    VALIDATOR_SECRETKEY_LENGTH,
+)
 from multiversx_sdk.wallet.errors import InvalidSecretKeyLengthError
 from multiversx_sdk.wallet.libraries.bls_facade import BLSFacade
 
@@ -12,16 +14,16 @@ class ValidatorSecretKey:
         self.buffer = buffer
 
     @classmethod
-    def generate(cls) -> 'ValidatorSecretKey':
+    def generate(cls) -> "ValidatorSecretKey":
         secret_key_bytes = BLSFacade().generate_private_key()
         return ValidatorSecretKey(secret_key_bytes)
 
     @classmethod
-    def from_string(cls, buffer_hex: str) -> 'ValidatorSecretKey':
+    def from_string(cls, buffer_hex: str) -> "ValidatorSecretKey":
         buffer = bytes.fromhex(buffer_hex)
         return ValidatorSecretKey(buffer)
 
-    def generate_public_key(self) -> 'ValidatorPublicKey':
+    def generate_public_key(self) -> "ValidatorPublicKey":
         public_key_bytes = BLSFacade().generate_public_key(self.buffer)
         return ValidatorPublicKey(public_key_bytes)
 
@@ -47,7 +49,7 @@ class ValidatorPublicKey:
         self.buffer = buffer
 
     @classmethod
-    def from_string(cls, buffer_hex: str) -> 'ValidatorPublicKey':
+    def from_string(cls, buffer_hex: str) -> "ValidatorPublicKey":
         buffer = bytes.fromhex(buffer_hex)
         return ValidatorPublicKey(buffer)
 

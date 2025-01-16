@@ -1,8 +1,12 @@
 import pytest
 
 from multiversx_sdk.core.errors import BadUsageError
-from multiversx_sdk.core.tokens import (Token, TokenComputer,
-                                        TokenIdentifierParts, TokenTransfer)
+from multiversx_sdk.core.tokens import (
+    Token,
+    TokenComputer,
+    TokenIdentifierParts,
+    TokenTransfer,
+)
 
 
 class TestTokenComputer:
@@ -33,18 +37,27 @@ class TestTokenComputer:
         extended_fungible_identifier = "FNG-123456"
 
         assert self.token_computer.extract_identifier_from_extended_identifier(extended_nft_identifier) == "TEST-123456"
-        assert self.token_computer.extract_identifier_from_extended_identifier(
-            extended_fungible_identifier) == "FNG-123456"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(extended_fungible_identifier)
+            == "FNG-123456"
+        )
 
         extended_identifier_with_prefix = "test-TEST-123456-0a"
-        assert self.token_computer.extract_identifier_from_extended_identifier(
-            extended_identifier_with_prefix) == "test-TEST-123456"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(extended_identifier_with_prefix)
+            == "test-TEST-123456"
+        )
 
         fungible_identifier_with_prefix = "test-FNG-123456"
-        assert self.token_computer.extract_identifier_from_extended_identifier(
-            fungible_identifier_with_prefix) == "test-FNG-123456"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(fungible_identifier_with_prefix)
+            == "test-FNG-123456"
+        )
 
-        with pytest.raises(Exception, match="Token prefix is invalid, it does not have the right length"):
+        with pytest.raises(
+            Exception,
+            match="Token prefix is invalid, it does not have the right length",
+        ):
             self.token_computer.extract_identifier_from_extended_identifier("prefix-TEST-123456")
 
     def test_extract_ticker_from_identifier(self):
@@ -101,7 +114,10 @@ class TestTokenComputer:
 
         assert fungible_token_identifier == "FNG-123456"
         assert nft_identifier == "NFT-987654-0a"
-        assert self.token_computer.compute_extended_identifier_from_identifier_and_nonce("test-NFT-123456", 10) == "test-NFT-123456-0a"
+        assert (
+            self.token_computer.compute_extended_identifier_from_identifier_and_nonce("test-NFT-123456", 10)
+            == "test-NFT-123456-0a"
+        )
 
     def test_compute_extended_identifier_from_parts(self):
         fungible_parts = TokenIdentifierParts("FNG", "123456", 0)

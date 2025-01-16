@@ -43,7 +43,9 @@ class AccountController(BaseController):
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_guardian(
-            sender=sender.address, guardian_address=guardian_address, service_id=service_id
+            sender=sender.address,
+            guardian_address=guardian_address,
+            service_id=service_id,
         )
 
         transaction.relayer = relayer
@@ -68,7 +70,11 @@ class AccountController(BaseController):
         return transaction
 
     def create_transaction_for_unguarding_account(
-        self, sender: IAccount, nonce: int, guardian: Address, relayer: Optional[Address] = None
+        self,
+        sender: IAccount,
+        nonce: int,
+        guardian: Address,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unguarding_account(sender=sender.address, guardian=guardian)
 
