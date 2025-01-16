@@ -1,7 +1,5 @@
 from enum import Enum
 
-from ledgercomm import Transport
-
 from multiversx_sdk.ledger.config import LedgerAppConfiguration
 from multiversx_sdk.ledger.errors import LedgerError
 
@@ -30,14 +28,20 @@ class Apdu:
 class LedgerApp:
     def __init__(self) -> None:
         try:
+            from ledgercomm import Transport
+        except ImportError as e:
+            raise ImportError(
+                "The ledgercomm package is not installed. Please install it using "
+                "pip install multiversx_sdk[ledger]."
+            ) from e
+
+        try:
             self.transport = Transport(interface="hid", debug=False)  # Nano S/X using HID interface
         except Exception:
             raise LedgerError(CONNECTION_ERROR_MSG)
 
     def set_address(self, address_index: int = 0):
-        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(
-            4, byteorder="big"
-        )
+        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(4, byteorder="big")
         self.transport.send(cla=0xED, ins=0x05, p1=0x00, p2=0x00, cdata=data)
         sw, _ = self.transport.recv()
         err = get_error(sw)
@@ -45,9 +49,7 @@ class LedgerApp:
             raise LedgerError(err)
 
     def get_address(self, address_index: int = 0) -> str:
-        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(
-            4, byteorder="big"
-        )
+        data = DEFAULT_ACCOUNT_INDEX.to_bytes(4, byteorder="big") + address_index.to_bytes(4, byteorder="big")
 
         self.transport.send(cla=0xED, ins=0x03, p1=0x00, p2=0x00, cdata=data)
         sw, response = self.transport.recv()

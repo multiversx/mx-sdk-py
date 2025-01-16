@@ -50,7 +50,7 @@ jobs:
 
       - name: Store Pull Request comment to be posted
         if: matrix.os == 'ubuntu-latest' && steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'  # Run only on Ubuntu
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: python-coverage-comment-action
           path: python-coverage-comment-action.txt
