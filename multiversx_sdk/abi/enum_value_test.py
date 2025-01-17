@@ -25,12 +25,12 @@ def test_set_payload_and_get_payload():
         ),
     ):
         EnumValue(
-            fields_provider=lambda discriminant: [], names_to_discriminants={}
+            fields_provider=lambda discriminant: []
         ).set_payload({})
 
     # Simple
     value = EnumValue(
-        fields_provider=lambda discriminant: [], names_to_discriminants={}
+        fields_provider=lambda discriminant: []
     )
     value.set_payload(42)
     assert value.discriminant == 42
@@ -52,7 +52,7 @@ def test_set_payload_and_get_payload():
 
         return []
 
-    value = EnumValue(fields_provider=provide_fields, names_to_discriminants={})
+    value = EnumValue(fields_provider=provide_fields)
 
     # First, from SimpleNamespace
     value.set_payload(SimpleNamespace(__discriminant__=41, a=1, b=2))
