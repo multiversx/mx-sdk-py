@@ -93,9 +93,9 @@ def test_set_payload_and_get_payload_using_names():
     # With errors (missing names to discriminants dictionary)
     with pytest.raises(
         ValueError,
-        match="populating an enum from a native object requires the names to discriminants dict to be set",
+        match="converting a variant name to its discriminant requires the names to discriminants dict to be set",
     ):
-        EnumValue(fields_provider=lambda discriminant: []).set_payload(42)
+        EnumValue(fields_provider=lambda discriminant: []).set_payload("TypeA")
 
     # Simple
     value = EnumValue(
