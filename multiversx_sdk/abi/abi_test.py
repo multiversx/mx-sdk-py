@@ -6,6 +6,7 @@ from typing import Optional
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition, ParameterDefinition
 from multiversx_sdk.abi.address_value import AddressValue
+from multiversx_sdk.abi.bigint_value import BigIntValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
@@ -72,6 +73,9 @@ def test_abi_artificial():
 
     assert len(abi.definition.events) == 1
     assert abi.events_prototypes_by_name["firstEvent"].fields[0].value == BigUIntValue()
+
+    assert abi.endpoints_prototypes_by_name["black"].input_parameters == [BigIntValue()]
+    assert abi.endpoints_prototypes_by_name["black"].output_parameters == []
 
 
 def test_load_abi_with_counted_variadic():
