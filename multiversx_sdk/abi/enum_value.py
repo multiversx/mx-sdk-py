@@ -63,11 +63,14 @@ class EnumValue:
         reader = io.BytesIO(data)
         self.decode_nested(reader)
 
+    def convert_name_to_discriminant(self, variant_name: str) -> int:
+        if self.names_to_discriminants is None:
+            raise ValueError("converting a variant name to its discriminant requires the names to discriminants dict to be set")
+        return self.names_to_discriminants[variant_name]
+
     def set_payload(self, value: Any):
         if not self.fields_provider:
             raise ValueError("populating an enum from a native object requires the fields provider to be set")
-        if self.names_to_discriminants is None:
-            raise ValueError("populating an enum from a native object requires the names to discriminants dict to be set")
 
         if isinstance(value, int):
             if self.fields_provider(value):
@@ -77,7 +80,7 @@ class EnumValue:
             return
 
         if isinstance(value, str):
-            discriminant = self.names_to_discriminants[value]
+            discriminant = self.convert_name_to_discriminant(value)
             if self.fields_provider(discriminant):
                 raise ValueError("for enums, if the native object is a mere string, it must be the name of the variant, and the corresponding enum variant must have no fields")
 
@@ -90,7 +93,7 @@ class EnumValue:
                 self.discriminant = int(native_dictionary[ENUM_DISCRIMINANT_FIELD_NAME])
             elif ENUM_NAME_FIELD_NAME in native_dictionary:
                 name = native_dictionary[ENUM_NAME_FIELD_NAME]
-                self.discriminant = int(self.names_to_discriminants[name])
+                self.discriminant = self.convert_name_to_discriminant(name)
             else:
                 raise ValueError(
                     "for enums, the native object (when it's a dictionary) must contain the special field "
@@ -112,7 +115,7 @@ class EnumValue:
                 self.discriminant = int(native_list[0])
             elif isinstance(native_list[0], str):
                 name = native_list[0]
-                self.discriminant = self.names_to_discriminants[name]
+                self.discriminant = self.convert_name_to_discriminant(name)
             else:
                 raise ValueError(
                     "for enums, the native object (when it's a list) must have the discriminant (int) or the "
