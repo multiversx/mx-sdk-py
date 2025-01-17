@@ -105,7 +105,8 @@ class Abi:
 
     def _create_enum_prototype(self, enum_definition: EnumDefinition) -> Any:
         return EnumValue(
-            fields_provider=lambda discriminant: self._provide_fields_for_enum_prototype(discriminant, enum_definition)
+            fields_provider=lambda discriminant: self._provide_fields_for_enum_prototype(discriminant, enum_definition),
+            names_to_discriminants={v.name: v.discriminant for v in enum_definition.variants},
         )
 
     def _create_explicit_enum_prototype(self) -> Any:

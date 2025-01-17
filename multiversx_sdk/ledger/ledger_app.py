@@ -1,7 +1,5 @@
 from enum import Enum
 
-from ledgercomm import Transport
-
 from multiversx_sdk.ledger.config import LedgerAppConfiguration
 from multiversx_sdk.ledger.errors import LedgerError
 
@@ -29,6 +27,14 @@ class Apdu:
 
 class LedgerApp:
     def __init__(self) -> None:
+        try:
+            from ledgercomm import Transport
+        except ImportError as e:
+            raise ImportError(
+                "The ledgercomm package is not installed. Please install it using "
+                "pip install multiversx_sdk[ledger]."
+            ) from e
+
         try:
             self.transport = Transport(interface="hid", debug=False)  # Nano S/X using HID interface
         except Exception:
