@@ -460,7 +460,7 @@ def test_decode_custom_enum():
         expected_output,
         "0",
         SimpleNamespace(
-            {
+            **{
                 "to": bytes.fromhex("00000000000000000500d006f73c4221216fa679bc559005584c4f1160e569e1"),
                 "egld_amount": 42,
                 "opt_gas_limit": None,
