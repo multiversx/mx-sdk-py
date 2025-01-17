@@ -14,6 +14,7 @@ from multiversx_sdk.abi.abi_definition import (
 )
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.array_value import ArrayValue
+from multiversx_sdk.abi.bigint_value import BigIntValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bool_value import BoolValue
 from multiversx_sdk.abi.bytes_value import BytesValue
@@ -298,7 +299,7 @@ class Abi:
         if name == "BigUint":
             return BigUIntValue()
         if name == "BigInt":
-            return BigUIntValue()
+            return BigIntValue()
         if name == "bytes":
             return BytesValue()
         if name == "utf-8 string":
