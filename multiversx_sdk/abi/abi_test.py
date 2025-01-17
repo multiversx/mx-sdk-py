@@ -1,7 +1,10 @@
+import re
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional
+
+import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.abi_definition import AbiDefinition, ParameterDefinition
@@ -9,7 +12,7 @@ from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
-from multiversx_sdk.abi.enum_value import EnumValue
+from multiversx_sdk.abi.enum_value import EnumValue, _EnumPayload
 from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.list_value import ListValue
@@ -408,3 +411,73 @@ def test_encode_decode_managed_decimals():
 
     values = abi.decode_endpoint_output_parameters("foobar", [bytes.fromhex("0000000202bc00000002")])
     assert values[0] == Decimal("7")
+
+
+def test_decode_custom_struct():
+    abi_definition = AbiDefinition.from_dict(
+        {
+            "endpoints": [],
+            "events": [],
+            "types": {
+                "DepositEvent": {
+                    "type": "struct",
+                    "fields": [
+                        {"name": "tx_nonce", "type": "u64"},
+                        {"name": "opt_function", "type": "Option<bytes>"},
+                        {"name": "opt_arguments", "type": "Option<List<bytes>>"},
+                        {"name": "opt_gas_limit", "type": "Option<u64>"},
+                    ],
+                }
+            },
+        }
+    )
+    abi = Abi(abi_definition)
+
+    with pytest.raises(Exception, match=re.escape('Missing custom type! No custom type found for name: "customType"')):
+        abi.decode_custom_type("customType", b"")
+
+    decoded_type = abi.decode_custom_type(name="DepositEvent", data=bytes.fromhex("00000000000003db000000"))
+    assert decoded_type == SimpleNamespace(
+        tx_nonce=987,
+        opt_function=None,
+        opt_arguments=None,
+        opt_gas_limit=None,
+    )
+
+
+def test_decode_custom_enum():
+    abi = Abi.load(testdata / "multisig-full.abi.json")
+
+    decoded_type = abi.decode_custom_type(
+        name="Action",
+        data=bytes.fromhex(
+            "0500000000000000000500d006f73c4221216fa679bc559005584c4f1160e569e1000000012a0000000003616464000000010000000107"
+        ),
+    )
+
+    expected_output = _EnumPayload()
+    setattr(
+        expected_output,
+        "0",
+        SimpleNamespace(
+            {
+                "to": bytes.fromhex("00000000000000000500d006f73c4221216fa679bc559005584c4f1160e569e1"),
+                "egld_amount": 42,
+                "opt_gas_limit": None,
+                "endpoint_name": b"add",
+                "arguments": [bytes([0x07])],
+            },
+        ),
+    )
+    setattr(expected_output, "__discriminant__", 5)
+    assert decoded_type == expected_output
+
+
+def test_encode_custom_struct():
+    abi = Abi.load(testdata / "multisig-full.abi.json")
+
+    with pytest.raises(Exception, match=re.escape('Missing custom type! No custom type found for name: "customType"')):
+        abi.encode_custom_type("customType", [])
+
+    encoded = abi.encode_custom_type("EsdtTokenPayment", ["TEST-8b028f", 0, 10000])
+    assert encoded == "encode_custom_type"
