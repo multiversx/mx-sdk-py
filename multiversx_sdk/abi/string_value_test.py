@@ -23,5 +23,10 @@ def test_set_payload_and_get_payload():
     assert value.get_payload() == "hello"
 
     # With errors
-    with pytest.raises(ValueError, match=re.escape("cannot set payload for string (should be either a string or bytes, but got: <class 'types.SimpleNamespace'>)")):
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "cannot set payload for string (should be either a string or bytes, but got: <class 'types.SimpleNamespace'>)"
+        ),
+    ):
         StringValue().set_payload(SimpleNamespace(a=1, b=2, c=3))

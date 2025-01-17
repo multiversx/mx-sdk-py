@@ -5,16 +5,20 @@ import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
-                                                        TransactionEvent,
-                                                        TransactionLogs)
-from multiversx_sdk.network_providers.proxy_network_provider import \
-    ProxyNetworkProvider
-from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser import \
-    SmartContractTransactionsOutcomeParser
+from multiversx_sdk.core.transaction_on_network import (
+    SmartContractResult,
+    TransactionEvent,
+    TransactionLogs,
+)
+from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
+from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser import (
+    SmartContractTransactionsOutcomeParser,
+)
 from multiversx_sdk.testutils.mock_transaction_on_network import (
-    get_empty_smart_contract_result, get_empty_transaction_logs,
-    get_empty_transaction_on_network)
+    get_empty_smart_contract_result,
+    get_empty_transaction_logs,
+    get_empty_transaction_on_network,
+)
 
 
 class TestSmartContractTransactionsOutcomeParser:
@@ -31,7 +35,7 @@ class TestSmartContractTransactionsOutcomeParser:
             identifier="SCDeploy",
             topics=[contract.get_public_key(), deployer.get_public_key(), code_hash],
             data=b"",
-            additional_data=[]
+            additional_data=[],
         )
 
         transaction = get_empty_transaction_on_network()
@@ -52,13 +56,9 @@ class TestSmartContractTransactionsOutcomeParser:
             raw={},
             address=Address.empty(),
             identifier="SCDeploy",
-            topics=[
-                contract.get_public_key(),
-                deployer.get_public_key(),
-                code_hash
-            ],
+            topics=[contract.get_public_key(), deployer.get_public_key(), code_hash],
             data=b"",
-            additional_data=[]
+            additional_data=[],
         )
 
         logs = TransactionLogs(address=Address.empty(), events=[event])
@@ -67,7 +67,7 @@ class TestSmartContractTransactionsOutcomeParser:
             sender=Address.empty(),
             receiver=Address.empty(),
             data="@6f6b".encode(),
-            logs=get_empty_transaction_logs()
+            logs=get_empty_transaction_logs(),
         )
 
         tx_on_network = get_empty_transaction_on_network()
@@ -91,12 +91,9 @@ class TestSmartContractTransactionsOutcomeParser:
             raw={},
             address=Address.empty(),
             identifier="signalError",
-            topics=[
-                deployer.get_public_key(),
-                b"wrong number of arguments"
-            ],
+            topics=[deployer.get_public_key(), b"wrong number of arguments"],
             data="@75736572206572726f72".encode(),
-            additional_data=[]
+            additional_data=[],
         )
 
         logs = TransactionLogs(address=Address.empty(), events=[event])
@@ -139,7 +136,12 @@ class TestSmartContractTransactionsOutcomeParser:
         sc_result.data = "@6f6b@2a".encode()
         transaction.smart_contract_results = [sc_result]
 
-        with pytest.raises(Exception, match=re.escape('Function name is not available in the transaction, thus endpoint definition (ABI) cannot be picked (for parsing). Please provide the "function" parameter explicitly.')):
+        with pytest.raises(
+            Exception,
+            match=re.escape(
+                'Function name is not available in the transaction, thus endpoint definition (ABI) cannot be picked (for parsing). Please provide the "function" parameter explicitly.'
+            ),
+        ):
             parser.parse_execute(transaction)
 
     @pytest.mark.networkInteraction
@@ -150,10 +152,13 @@ class TestSmartContractTransactionsOutcomeParser:
         tx_on_network = proxy.get_transaction(successful_tx_hash)
 
         parsed = self.parser.parse_deploy(tx_on_network)
-        assert parsed.contracts[0].address.to_bech32(
-        ) == "erd1qqqqqqqqqqqqqpgq29deu3uhcvuk7jhxd5cxrvh23xulkcewd8ssyf38ec"
-        assert parsed.contracts[0].owner_address.to_bech32(
-        ) == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert (
+            parsed.contracts[0].address.to_bech32() == "erd1qqqqqqqqqqqqqpgq29deu3uhcvuk7jhxd5cxrvh23xulkcewd8ssyf38ec"
+        )
+        assert (
+            parsed.contracts[0].owner_address.to_bech32()
+            == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        )
 
     @pytest.mark.networkInteraction
     def test_parse_failed_deploy(self):

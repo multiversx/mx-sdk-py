@@ -24,14 +24,10 @@ def test_set_payload_and_get_payload():
             "for enums, the native object (when it's a dictionary) must contain the special field '__discriminant__' or '__name__'"
         ),
     ):
-        EnumValue(
-            fields_provider=lambda discriminant: []
-        ).set_payload({})
+        EnumValue(fields_provider=lambda discriminant: []).set_payload({})
 
     # Simple
-    value = EnumValue(
-        fields_provider=lambda discriminant: []
-    )
+    value = EnumValue(fields_provider=lambda discriminant: [])
     value.set_payload(42)
     assert value.discriminant == 42
     assert value.get_payload() == SimpleNamespace(__discriminant__=42)
@@ -98,9 +94,7 @@ def test_set_payload_and_get_payload_using_names():
         EnumValue(fields_provider=lambda discriminant: []).set_payload("TypeA")
 
     # Simple
-    value = EnumValue(
-        fields_provider=lambda discriminant: [], names_to_discriminants={"TypeB": 42}
-    )
+    value = EnumValue(fields_provider=lambda discriminant: [], names_to_discriminants={"TypeB": 42})
     value.set_payload("TypeB")
     assert value.discriminant == 42
     assert value.get_payload() == SimpleNamespace(__discriminant__=42)

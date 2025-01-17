@@ -3,7 +3,13 @@ from typing import Any, Callable, Optional, Union, cast
 
 import requests
 
-from multiversx_sdk.core import Address, Token, TokenComputer, Transaction, TransactionOnNetwork
+from multiversx_sdk.core import (
+    Address,
+    Token,
+    TokenComputer,
+    Transaction,
+    TransactionOnNetwork,
+)
 from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.constants import METACHAIN_ID
 from multiversx_sdk.network_providers.account_awaiter import AccountAwaiter
@@ -12,7 +18,10 @@ from multiversx_sdk.network_providers.constants import (
     BASE_USER_AGENT,
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
 )
-from multiversx_sdk.network_providers.errors import GenericError, TransactionFetchingError
+from multiversx_sdk.network_providers.errors import (
+    GenericError,
+    TransactionFetchingError,
+)
 from multiversx_sdk.network_providers.http_resources import (
     account_from_api_response,
     account_storage_entry_from_response,
@@ -104,9 +113,7 @@ class ApiNetworkProvider(INetworkProvider):
     def get_account_storage_entry(self, address: Address, entry_key: str) -> AccountStorageEntry:
         """Fetches a specific storage entry of an account."""
         key_as_hex = entry_key.encode().hex()
-        response: dict[str, Any] = self.do_get_generic(
-            f"address/{address.to_bech32()}/key/{key_as_hex}"
-        )
+        response: dict[str, Any] = self.do_get_generic(f"address/{address.to_bech32()}/key/{key_as_hex}")
         return account_storage_entry_from_response(response.get("data", {}), entry_key)
 
     def await_account_on_condition(
@@ -117,9 +124,7 @@ class ApiNetworkProvider(INetworkProvider):
     ) -> AccountOnNetwork:
         """Waits until an account satisfies a given condition."""
         if options is None:
-            options = AwaitingOptions(
-                patience_in_milliseconds=DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS
-            )
+            options = AwaitingOptions(patience_in_milliseconds=DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS)
 
         awaiter = AccountAwaiter(
             fetcher=self,
@@ -135,9 +140,7 @@ class ApiNetworkProvider(INetworkProvider):
         response = self.do_post_generic("transactions", transaction.to_dictionary())
         return bytes.fromhex(response.get("txHash", ""))
 
-    def simulate_transaction(
-        self, transaction: Transaction, check_signature: bool = False
-    ) -> TransactionOnNetwork:
+    def simulate_transaction(self, transaction: Transaction, check_signature: bool = False) -> TransactionOnNetwork:
         """Simulates a transaction."""
         url = "transaction/simulate?checkSignature=false"
 
@@ -145,15 +148,11 @@ class ApiNetworkProvider(INetworkProvider):
             url = "transaction/simulate"
 
         response: dict[str, Any] = self.do_post_generic(url, transaction.to_dictionary())
-        return transaction_from_simulate_response(
-            transaction, response.get("data", {}).get("result", {})
-        )
+        return transaction_from_simulate_response(transaction, response.get("data", {}).get("result", {}))
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""
-        response: dict[str, Any] = self.do_post_generic(
-            "transaction/cost", transaction.to_dictionary()
-        )
+        response: dict[str, Any] = self.do_post_generic("transaction/cost", transaction.to_dictionary())
         return transaction_cost_estimation_from_response(response.get("data", {}))
 
     def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
@@ -163,9 +162,7 @@ class ApiNetworkProvider(INetworkProvider):
         If a transaction is not accepted, its hash is empty in the returned list.
         """
         transactions_as_dictionaries = [transaction.to_dictionary() for transaction in transactions]
-        response: dict[str, Any] = self.do_post_generic(
-            "transaction/send-multiple", transactions_as_dictionaries
-        )
+        response: dict[str, Any] = self.do_post_generic("transaction/send-multiple", transactions_as_dictionaries)
         return transactions_from_send_multiple_response(response.get("data", {}), len(transactions))
 
     def get_transaction(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
@@ -178,7 +175,9 @@ class ApiNetworkProvider(INetworkProvider):
         return transaction_from_api_response(transaction_hash, response)
 
     def await_transaction_completed(
-        self, transaction_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> TransactionOnNetwork:
         """Waits until the transaction is completely processed."""
         transaction_hash = convert_tx_hash_to_string(transaction_hash)
@@ -225,9 +224,7 @@ class ApiNetworkProvider(INetworkProvider):
             identifier = TokenComputer().compute_extended_identifier(token)
             result = self.do_get_generic(f"accounts/{address.to_bech32()}/nfts/{identifier}")
         else:
-            result = self.do_get_generic(
-                f"accounts/{address.to_bech32()}/tokens/{token.identifier}"
-            )
+            result = self.do_get_generic(f"accounts/{address.to_bech32()}/tokens/{token.identifier}")
 
         return token_amount_from_api_response(result)
 
@@ -273,9 +270,7 @@ class ApiNetworkProvider(INetworkProvider):
         response = self._do_get(url)
         return response
 
-    def do_post_generic(
-        self, url: str, data: Any, url_parameters: Optional[dict[str, Any]] = None
-    ) -> Any:
+    def do_post_generic(self, url: str, data: Any, url_parameters: Optional[dict[str, Any]] = None) -> Any:
         """Does a generic GET request against the network(handles API enveloping)."""
         url = f"{self.url}/{url}"
 

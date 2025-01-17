@@ -1,5 +1,5 @@
 class TypeFormula:
-    def __init__(self, name: str, type_parameters: list['TypeFormula']) -> None:
+    def __init__(self, name: str, type_parameters: list["TypeFormula"]) -> None:
         self.name: str = name
         self.type_parameters: list[TypeFormula] = type_parameters
 

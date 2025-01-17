@@ -6,7 +6,7 @@ class ValidatorVerifier:
         self.public_key = public_key
 
     @classmethod
-    def from_string(cls, buffer_hex: str) -> 'ValidatorVerifier':
+    def from_string(cls, buffer_hex: str) -> "ValidatorVerifier":
         public_key = ValidatorPublicKey.from_string(buffer_hex)
         return ValidatorVerifier(public_key)
 

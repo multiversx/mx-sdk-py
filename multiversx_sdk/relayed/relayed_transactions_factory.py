@@ -5,8 +5,7 @@ from typing import Any
 from multiversx_sdk.abi import AddressValue, BigUIntValue, Serializer
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.core import Address, Transaction
-from multiversx_sdk.core.transactions_factory_config import \
-    TransactionsFactoryConfig
+from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.relayed.errors import InvalidInnerTransactionError
 
 
@@ -15,59 +14,56 @@ class RelayedTransactionsFactory:
     The Relayed Transactions V1 and V2 will soon be deprecated from the network. Please use Relayed Transactions V3 instead.
     The transactions are created from the perspective of the relayer. The 'sender' represents the relayer.
     """
-    
+
     def __init__(self, config: TransactionsFactoryConfig) -> None:
         self._config = config
 
-    def create_relayed_v1_transaction(self,
-                                      inner_transaction: Transaction,
-                                      relayer_address: Address) -> Transaction:
+    def create_relayed_v1_transaction(self, inner_transaction: Transaction, relayer_address: Address) -> Transaction:
         if not inner_transaction.gas_limit:
-            raise InvalidInnerTransactionError(
-                "The gas limit is not set for the inner transaction")
+            raise InvalidInnerTransactionError("The gas limit is not set for the inner transaction")
 
         if not inner_transaction.signature:
-            raise InvalidInnerTransactionError(
-                "The inner transaction is not signed")
+            raise InvalidInnerTransactionError("The inner transaction is not signed")
 
-        serialized_transaction = self._prepare_inner_transaction_for_relayed_v1(
-            inner_transaction)
+        serialized_transaction = self._prepare_inner_transaction_for_relayed_v1(inner_transaction)
         data = f"relayedTx@{serialized_transaction.encode().hex()}"
 
-        gas_limit = self._config.min_gas_limit + self._config.gas_limit_per_byte * \
-            len(data) + inner_transaction.gas_limit
+        gas_limit = (
+            self._config.min_gas_limit + self._config.gas_limit_per_byte * len(data) + inner_transaction.gas_limit
+        )
 
         return Transaction(
             chain_id=self._config.chain_id,
             sender=relayer_address,
             receiver=inner_transaction.sender,
             gas_limit=gas_limit,
-            data=data.encode()
+            data=data.encode(),
         )
 
-    def create_relayed_v2_transaction(self,
-                                      inner_transaction: Transaction,
-                                      inner_transaction_gas_limit: int,
-                                      relayer_address: Address) -> Transaction:
+    def create_relayed_v2_transaction(
+        self,
+        inner_transaction: Transaction,
+        inner_transaction_gas_limit: int,
+        relayer_address: Address,
+    ) -> Transaction:
         if inner_transaction.gas_limit:
-            raise InvalidInnerTransactionError(
-                "The gas limit should not be set for the inner transaction")
+            raise InvalidInnerTransactionError("The gas limit should not be set for the inner transaction")
 
         if not inner_transaction.signature:
-            raise InvalidInnerTransactionError(
-                "The inner transaction is not signed")
+            raise InvalidInnerTransactionError("The inner transaction is not signed")
 
         arguments: list[Any] = [
             AddressValue.new_from_address(inner_transaction.receiver),
             BigUIntValue(inner_transaction.nonce),
             BytesValue(inner_transaction.data),
-            BytesValue(inner_transaction.signature)
+            BytesValue(inner_transaction.signature),
         ]
 
         serializer = Serializer()
         data = f"relayedTxV2@{serializer.serialize(arguments)}"
-        gas_limit = inner_transaction_gas_limit + self._config.min_gas_limit + \
-            self._config.gas_limit_per_byte * len(data)
+        gas_limit = (
+            inner_transaction_gas_limit + self._config.min_gas_limit + self._config.gas_limit_per_byte * len(data)
+        )
 
         return Transaction(
             sender=relayer_address,
@@ -77,7 +73,7 @@ class RelayedTransactionsFactory:
             chain_id=self._config.chain_id,
             data=data.encode(),
             version=inner_transaction.version,
-            options=inner_transaction.options
+            options=inner_transaction.options,
         )
 
     def _prepare_inner_transaction_for_relayed_v1(self, inner_transaction: Transaction) -> str:

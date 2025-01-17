@@ -16,10 +16,9 @@ class TokenTransfersDataBuilder:
     def build_args_for_esdt_transfer(self, transfer: TokenTransfer) -> list[str]:
         args = ["ESDTTransfer"]
 
-        serialized_args = self.serializer.serialize_to_parts([
-            StringValue(transfer.token.identifier),
-            BigUIntValue(transfer.amount)
-        ])
+        serialized_args = self.serializer.serialize_to_parts(
+            [StringValue(transfer.token.identifier), BigUIntValue(transfer.amount)]
+        )
         args.extend([arg.hex() for arg in serialized_args])
 
         return args
@@ -29,11 +28,13 @@ class TokenTransfersDataBuilder:
         token = transfer.token
         identifier = self.token_computer.extract_identifier_from_extended_identifier(token.identifier)
 
-        serialized_args = self.serializer.serialize_to_parts([
-            StringValue(identifier),
-            BigUIntValue(token.nonce),
-            BigUIntValue(transfer.amount)
-        ])
+        serialized_args = self.serializer.serialize_to_parts(
+            [
+                StringValue(identifier),
+                BigUIntValue(token.nonce),
+                BigUIntValue(transfer.amount),
+            ]
+        )
         args.extend([arg.hex() for arg in serialized_args])
         args.append(receiver.to_hex())
 
@@ -45,11 +46,13 @@ class TokenTransfersDataBuilder:
 
         for transfer in transfers:
             identifier = self.token_computer.extract_identifier_from_extended_identifier(transfer.token.identifier)
-            serialized_args = self.serializer.serialize_to_parts([
-                StringValue(identifier),
-                BigUIntValue(transfer.token.nonce),
-                BigUIntValue(transfer.amount)
-            ])
+            serialized_args = self.serializer.serialize_to_parts(
+                [
+                    StringValue(identifier),
+                    BigUIntValue(transfer.token.nonce),
+                    BigUIntValue(transfer.amount),
+                ]
+            )
             args.extend([arg.hex() for arg in serialized_args])
 
         return args

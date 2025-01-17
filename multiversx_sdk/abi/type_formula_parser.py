@@ -1,4 +1,3 @@
-
 from typing import Any
 
 from multiversx_sdk.abi.type_formula import TypeFormula

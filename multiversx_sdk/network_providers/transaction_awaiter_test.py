@@ -5,14 +5,16 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.proxy_network_provider import \
-    ProxyNetworkProvider
-from multiversx_sdk.network_providers.transaction_awaiter import \
-    TransactionAwaiter
+from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
+from multiversx_sdk.network_providers.transaction_awaiter import TransactionAwaiter
 from multiversx_sdk.testutils.mock_network_provider import (
-    MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
-from multiversx_sdk.testutils.mock_transaction_on_network import \
-    get_empty_transaction_on_network
+    MockNetworkProvider,
+    TimelinePointMarkCompleted,
+    TimelinePointWait,
+)
+from multiversx_sdk.testutils.mock_transaction_on_network import (
+    get_empty_transaction_on_network,
+)
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
@@ -22,7 +24,7 @@ class TestTransactionAwaiter:
         fetcher=provider,
         polling_interval_in_milliseconds=42,
         timeout_interval_in_milliseconds=42 * 42,
-        patience_time_in_milliseconds=42
+        patience_time_in_milliseconds=42,
     )
 
     def test_await_status_executed(self):
@@ -33,8 +35,13 @@ class TestTransactionAwaiter:
 
         self.provider.mock_transaction_timeline_by_hash(
             tx_hash,
-            [TimelinePointWait(40), TransactionStatus("pending"), TimelinePointWait(
-                40), TransactionStatus("executed"), TimelinePointMarkCompleted()]
+            [
+                TimelinePointWait(40),
+                TransactionStatus("pending"),
+                TimelinePointWait(40),
+                TransactionStatus("executed"),
+                TimelinePointMarkCompleted(),
+            ],
         )
         tx_from_network = self.watcher.await_completed(tx_hash)
 
@@ -74,8 +81,9 @@ class TestTransactionAwaiter:
                 TimelinePointWait(40),
                 TransactionStatus("pending"),
                 TimelinePointWait(40),
-                TransactionStatus("failed")
-            ])
+                TransactionStatus("failed"),
+            ],
+        )
 
         def condition(tx: TransactionOnNetwork) -> bool:
             return tx.status.status == "failed"

@@ -2,8 +2,7 @@ from typing import Optional
 
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
-from multiversx_sdk.core.transactions_factory_config import \
-    TransactionsFactoryConfig
+from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 
 
 class TransactionBuilder:
@@ -12,14 +11,16 @@ class TransactionBuilder:
     Used for the transactions factories.
     """
 
-    def __init__(self,
-                 config: TransactionsFactoryConfig,
-                 sender: Address,
-                 receiver: Address,
-                 data_parts: list[str],
-                 gas_limit: int,
-                 add_data_movement_gas: bool,
-                 amount: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        sender: Address,
+        receiver: Address,
+        data_parts: list[str],
+        gas_limit: int,
+        add_data_movement_gas: bool,
+        amount: Optional[int] = None,
+    ) -> None:
         self.config = config
         self.sender = sender
         self.receiver = receiver
@@ -51,7 +52,7 @@ class TransactionBuilder:
             gas_limit=gas_limit,
             chain_id=self.config.chain_id,
             data=data,
-            value=self.amount
+            value=self.amount,
         )
 
         return transaction

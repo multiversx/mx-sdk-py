@@ -7,7 +7,7 @@ class UserVerifier:
         self.public_key = public_key
 
     @classmethod
-    def from_address(cls, address: Address) -> 'UserVerifier':
+    def from_address(cls, address: Address) -> "UserVerifier":
         buffer: bytes = address.get_public_key()
         public_key = UserPublicKey(buffer)
         return UserVerifier(public_key)

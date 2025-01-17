@@ -4,8 +4,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from multiversx_sdk.wallet.crypto import (EncryptedData, Randomness, decryptor,
-                                          encryptor)
+from multiversx_sdk.wallet.crypto import EncryptedData, Randomness, decryptor, encryptor
 from multiversx_sdk.wallet.interfaces import IRandomness
 from multiversx_sdk.wallet.mnemonic import Mnemonic
 from multiversx_sdk.wallet.user_keys import UserPublicKey, UserSecretKey
@@ -17,7 +16,12 @@ class UserWalletKind(str, Enum):
 
 
 class UserWallet:
-    def __init__(self, kind: str, encrypted_data: EncryptedData, public_key_when_kind_is_secret_key: Optional[UserPublicKey] = None) -> None:
+    def __init__(
+        self,
+        kind: str,
+        encrypted_data: EncryptedData,
+        public_key_when_kind_is_secret_key: Optional[UserPublicKey] = None,
+    ) -> None:
         """
         Do not use this constructor directly. Use the static methods from_secret_key() and from_mnemonic() instead.
         """
@@ -26,7 +30,12 @@ class UserWallet:
         self.public_key_when_kind_is_secret_key = public_key_when_kind_is_secret_key
 
     @classmethod
-    def from_secret_key(cls, secret_key: UserSecretKey, password: str, randomness: Union[IRandomness, None] = None) -> 'UserWallet':
+    def from_secret_key(
+        cls,
+        secret_key: UserSecretKey,
+        password: str,
+        randomness: Union[IRandomness, None] = None,
+    ) -> "UserWallet":
         randomness = randomness or Randomness()
 
         public_key = secret_key.generate_public_key()
@@ -36,21 +45,18 @@ class UserWallet:
         return cls(
             kind=UserWalletKind.SECRET_KEY.value,
             encrypted_data=encrypted_data,
-            public_key_when_kind_is_secret_key=public_key
+            public_key_when_kind_is_secret_key=public_key,
         )
 
     @classmethod
-    def from_mnemonic(cls, mnemonic: str, password: str, randomness: Union[IRandomness, None] = None) -> 'UserWallet':
+    def from_mnemonic(cls, mnemonic: str, password: str, randomness: Union[IRandomness, None] = None) -> "UserWallet":
         randomness = randomness or Randomness()
 
         Mnemonic.assert_text_is_valid(mnemonic)
         data = mnemonic.encode()
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
-        return cls(
-            kind=UserWalletKind.MNEMONIC.value,
-            encrypted_data=encrypted_data
-        )
+        return cls(kind=UserWalletKind.MNEMONIC.value, encrypted_data=encrypted_data)
 
     @classmethod
     def decrypt_secret_key(cls, keyfile_object: dict[str, Any], password: str) -> UserSecretKey:
@@ -61,13 +67,13 @@ class UserWallet:
 
         encrypted_data = EncryptedData.from_keyfile_object(keyfile_object)
         buffer = decryptor.decrypt(encrypted_data, password)
-        buffer = buffer.rjust(32, b'\x00')
+        buffer = buffer.rjust(32, b"\x00")
         seed = buffer[:32]
         return UserSecretKey(seed)
 
     @classmethod
     def decrypt_mnemonic(cls, keyfile_object: dict[str, Any], password: str) -> Mnemonic:
-        if keyfile_object['kind'] != UserWalletKind.MNEMONIC.value:
+        if keyfile_object["kind"] != UserWalletKind.MNEMONIC.value:
             raise Exception(f"Expected kind to be {UserWalletKind.MNEMONIC.value}, but it was {keyfile_object['kind']}")
 
         encrypted_data = EncryptedData.from_keyfile_object(keyfile_object)
@@ -76,7 +82,7 @@ class UserWallet:
         return mnemonic
 
     @classmethod
-    def load_secret_key(cls, path: Path, password: str, address_index: Optional[int] = None) -> 'UserSecretKey':
+    def load_secret_key(cls, path: Path, password: str, address_index: Optional[int] = None) -> "UserSecretKey":
         """
         Loads a secret key from a keystore file.
 
@@ -128,7 +134,7 @@ class UserWallet:
             "id": self.encrypted_data.id,
             "address": self.public_key_when_kind_is_secret_key.hex(),
             "bech32": self.public_key_when_kind_is_secret_key.to_address(address_hrp).to_bech32(),
-            "crypto": crypto_section
+            "crypto": crypto_section,
         }
 
         return envelope
@@ -140,7 +146,7 @@ class UserWallet:
             "version": self.encrypted_data.version,
             "kind": self.kind,
             "id": self.encrypted_data.id,
-            "crypto": crypto_section
+            "crypto": crypto_section,
         }
 
         return envelope
@@ -156,7 +162,7 @@ class UserWallet:
                 "salt": self.encrypted_data.salt,
                 "n": self.encrypted_data.kdfparams.n,
                 "r": self.encrypted_data.kdfparams.r,
-                "p": self.encrypted_data.kdfparams.p
+                "p": self.encrypted_data.kdfparams.p,
             },
-            "mac": self.encrypted_data.mac
+            "mac": self.encrypted_data.mac,
         }

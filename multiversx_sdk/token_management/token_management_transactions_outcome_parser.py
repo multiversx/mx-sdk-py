@@ -3,13 +3,29 @@ from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.errors import ParseTransactionOnNetworkError
 from multiversx_sdk.core.transaction_on_network import (
-    TransactionEvent, TransactionOnNetwork, find_events_by_identifier)
+    TransactionEvent,
+    TransactionOnNetwork,
+    find_events_by_identifier,
+)
 from multiversx_sdk.token_management.token_management_transactions_outcome_parser_types import (
-    AddQuantityOutcome, BurnOutcome, BurnQuantityOutcome, FreezeOutcome,
-    IssueFungibleOutcome, IssueNonFungibleOutcome, IssueSemiFungibleOutcome,
-    MintOutcome, NFTCreateOutcome, PauseOutcome, RegisterAndSetAllRolesOutcome,
-    RegisterMetaEsdtOutcome, SetSpecialRoleOutcome, UnFreezeOutcome,
-    UnPauseOutcome, UpdateAttributesOutcome, WipeOutcome)
+    AddQuantityOutcome,
+    BurnOutcome,
+    BurnQuantityOutcome,
+    FreezeOutcome,
+    IssueFungibleOutcome,
+    IssueNonFungibleOutcome,
+    IssueSemiFungibleOutcome,
+    MintOutcome,
+    NFTCreateOutcome,
+    PauseOutcome,
+    RegisterAndSetAllRolesOutcome,
+    RegisterMetaEsdtOutcome,
+    SetSpecialRoleOutcome,
+    UnFreezeOutcome,
+    UnPauseOutcome,
+    UpdateAttributesOutcome,
+    WipeOutcome,
+)
 
 
 class TokenManagementTransactionsOutcomeParser:
@@ -40,7 +56,9 @@ class TokenManagementTransactionsOutcomeParser:
         events = find_events_by_identifier(transaction, "registerMetaESDT")
         return [RegisterMetaEsdtOutcome(self._extract_token_identifier(event)) for event in events]
 
-    def parse_register_and_set_all_roles(self, transaction: TransactionOnNetwork) -> list[RegisterAndSetAllRolesOutcome]:
+    def parse_register_and_set_all_roles(
+        self, transaction: TransactionOnNetwork
+    ) -> list[RegisterAndSetAllRolesOutcome]:
         self._ensure_no_error(transaction.logs.events)
 
         register_events = find_events_by_identifier(transaction, "registerAndSetAllRoles")
@@ -48,7 +66,8 @@ class TokenManagementTransactionsOutcomeParser:
 
         if len(register_events) != len(set_role_events):
             raise ParseTransactionOnNetworkError(
-                "The number of `registerAndSetAllRoles` events and `ESDTSetRole` events do not match")
+                "The number of `registerAndSetAllRoles` events and `ESDTSetRole` events do not match"
+            )
 
         result: list[RegisterAndSetAllRolesOutcome] = []
         for register_event, set_role_event in zip(register_events, set_role_events):
@@ -72,7 +91,7 @@ class TokenManagementTransactionsOutcomeParser:
             SetSpecialRoleOutcome(
                 user_address=event.address,
                 token_identifier=self._extract_token_identifier(event),
-                roles=self._decode_roles(event)
+                roles=self._decode_roles(event),
             )
             for event in events
         ]
@@ -86,7 +105,7 @@ class TokenManagementTransactionsOutcomeParser:
             NFTCreateOutcome(
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                initial_quantity=self._extract_amount(event)
+                initial_quantity=self._extract_amount(event),
             )
             for event in events
         ]
@@ -100,7 +119,7 @@ class TokenManagementTransactionsOutcomeParser:
                 user_address=event.address,
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                minted_supply=self._extract_amount(event)
+                minted_supply=self._extract_amount(event),
             )
             for event in events
         ]
@@ -114,7 +133,7 @@ class TokenManagementTransactionsOutcomeParser:
                 user_address=event.address,
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                burnt_supply=self._extract_amount(event)
+                burnt_supply=self._extract_amount(event),
             )
             for event in events
         ]
@@ -140,7 +159,7 @@ class TokenManagementTransactionsOutcomeParser:
                 user_address=self._extract_address(event),
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                balance=self._extract_amount(event)
+                balance=self._extract_amount(event),
             )
             for event in events
         ]
@@ -154,7 +173,7 @@ class TokenManagementTransactionsOutcomeParser:
                 user_address=self._extract_address(event),
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                balance=self._extract_amount(event)
+                balance=self._extract_amount(event),
             )
             for event in events
         ]
@@ -168,7 +187,7 @@ class TokenManagementTransactionsOutcomeParser:
                 user_address=self._extract_address(event),
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                balance=self._extract_amount(event)
+                balance=self._extract_amount(event),
             )
             for event in events
         ]
@@ -181,7 +200,7 @@ class TokenManagementTransactionsOutcomeParser:
             UpdateAttributesOutcome(
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                attributes=event.topics[3] if event.topics[3] else b""
+                attributes=event.topics[3] if event.topics[3] else b"",
             )
             for event in events
         ]
@@ -194,7 +213,7 @@ class TokenManagementTransactionsOutcomeParser:
             AddQuantityOutcome(
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                added_quantity=self._extract_amount(event)
+                added_quantity=self._extract_amount(event),
             )
             for event in events
         ]
@@ -207,7 +226,7 @@ class TokenManagementTransactionsOutcomeParser:
             BurnQuantityOutcome(
                 token_identifier=self._extract_token_identifier(event),
                 nonce=self._extract_nonce(event),
-                burnt_quantity=self._extract_amount(event)
+                burnt_quantity=self._extract_amount(event),
             )
             for event in events
         ]
@@ -218,7 +237,9 @@ class TokenManagementTransactionsOutcomeParser:
                 data = event.additional_data[0].decode()[1:] if len(event.additional_data[0]) else ""
                 message = event.topics[1].decode()
 
-                raise ParseTransactionOnNetworkError(f"encountered signalError: {message} ({bytes.fromhex(data).decode()})")
+                raise ParseTransactionOnNetworkError(
+                    f"encountered signalError: {message} ({bytes.fromhex(data).decode()})"
+                )
 
     def _decode_roles(self, event: TransactionEvent) -> list[str]:
         encoded_roles = event.topics[3:]

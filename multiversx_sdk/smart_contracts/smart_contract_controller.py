@@ -44,7 +44,12 @@ class INetworkProvider(Protocol):
 
 
 class SmartContractController(BaseController):
-    def __init__(self, chain_id: str, network_provider: INetworkProvider, abi: Optional[Abi] = None) -> None:
+    def __init__(
+        self,
+        chain_id: str,
+        network_provider: INetworkProvider,
+        abi: Optional[Abi] = None,
+    ) -> None:
         self.abi = abi
         self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id), abi=self.abi)
         self.parser = SmartContractTransactionsOutcomeParser(abi=self.abi)
@@ -165,7 +170,9 @@ class SmartContractController(BaseController):
         return transaction
 
     def parse_execute(
-        self, transaction_on_network: TransactionOnNetwork, function: Optional[str] = None
+        self,
+        transaction_on_network: TransactionOnNetwork,
+        function: Optional[str] = None,
     ) -> ParsedSmartContractCallOutcome:
         return self.parser.parse_execute(transaction_on_network, function)
 
@@ -182,7 +189,13 @@ class SmartContractController(BaseController):
         value: Optional[int] = None,
     ) -> list[Any]:
         """It calls `create_query()`, `run_query()` and `parse_query_response()` in one go."""
-        query = self.create_query(contract=contract, function=function, arguments=arguments, caller=caller, value=value)
+        query = self.create_query(
+            contract=contract,
+            function=function,
+            arguments=arguments,
+            caller=caller,
+            value=value,
+        )
 
         query_response = self.run_query(query)
         self._raise_for_status(query_response)

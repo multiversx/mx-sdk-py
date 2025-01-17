@@ -9,12 +9,15 @@ class PemEntry:
         self.message: bytes = message
 
     @classmethod
-    def from_text_all(cls, pem_text: str) -> list['PemEntry']:
+    def from_text_all(cls, pem_text: str) -> list["PemEntry"]:
         lines = pem_text.splitlines()
         lines = _clean_lines(lines)
 
-        messages_lines = [list(message_lines) for is_next_entry, message_lines in itertools.groupby(lines, lambda line: "-----" in line)
-                          if not is_next_entry]
+        messages_lines = [
+            list(message_lines)
+            for is_next_entry, message_lines in itertools.groupby(lines, lambda line: "-----" in line)
+            if not is_next_entry
+        ]
         messages_base64 = ["".join(message_lines) for message_lines in messages_lines]
         labels = _parse_labels(lines)
 

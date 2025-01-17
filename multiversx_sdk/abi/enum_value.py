@@ -21,11 +21,13 @@ from multiversx_sdk.abi.small_int_values import U8Value
 
 
 class EnumValue:
-    def __init__(self,
-                 discriminant: int = 0,
-                 fields: Optional[list[Field]] = None,
-                 fields_provider: Optional[Callable[[int], list[Field]]] = None,
-                 names_to_discriminants: Optional[dict[str, int]] = None) -> None:
+    def __init__(
+        self,
+        discriminant: int = 0,
+        fields: Optional[list[Field]] = None,
+        fields_provider: Optional[Callable[[int], list[Field]]] = None,
+        names_to_discriminants: Optional[dict[str, int]] = None,
+    ) -> None:
         self.discriminant = discriminant
         self.fields = fields or []
         self.fields_provider = fields_provider
@@ -65,7 +67,9 @@ class EnumValue:
 
     def convert_name_to_discriminant(self, variant_name: str) -> int:
         if self.names_to_discriminants is None:
-            raise ValueError("converting a variant name to its discriminant requires the names to discriminants dict to be set")
+            raise ValueError(
+                "converting a variant name to its discriminant requires the names to discriminants dict to be set"
+            )
         return self.names_to_discriminants[variant_name]
 
     def set_payload(self, value: Any):
@@ -74,7 +78,9 @@ class EnumValue:
 
         if isinstance(value, int):
             if self.fields_provider(value):
-                raise ValueError("for enums, if the native object is a mere integer, it must be the discriminant, and the corresponding enum variant must have no fields")
+                raise ValueError(
+                    "for enums, if the native object is a mere integer, it must be the discriminant, and the corresponding enum variant must have no fields"
+                )
 
             self.discriminant = value
             return
@@ -82,7 +88,9 @@ class EnumValue:
         if isinstance(value, str):
             discriminant = self.convert_name_to_discriminant(value)
             if self.fields_provider(discriminant):
-                raise ValueError("for enums, if the native object is a mere string, it must be the name of the variant, and the corresponding enum variant must have no fields")
+                raise ValueError(
+                    "for enums, if the native object is a mere string, it must be the name of the variant, and the corresponding enum variant must have no fields"
+                )
 
             self.discriminant = discriminant
             return
@@ -139,11 +147,7 @@ class EnumValue:
         return obj
 
     def __eq__(self, other: Any) -> bool:
-        return (
-            isinstance(other, EnumValue)
-            and self.discriminant == other.discriminant
-            and self.fields == other.fields
-        )
+        return isinstance(other, EnumValue) and self.discriminant == other.discriminant and self.fields == other.fields
 
     def __iter__(self):
         yield (ENUM_DISCRIMINANT_FIELD_NAME, self.discriminant)

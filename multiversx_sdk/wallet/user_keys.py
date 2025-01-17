@@ -3,10 +3,11 @@ from typing import Optional
 import nacl.signing
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.wallet.constants import (USER_PUBKEY_LENGTH,
-                                             USER_SEED_LENGTH)
-from multiversx_sdk.wallet.errors import (InvalidPublicKeyLengthError,
-                                          InvalidSecretKeyLengthError)
+from multiversx_sdk.wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
+from multiversx_sdk.wallet.errors import (
+    InvalidPublicKeyLengthError,
+    InvalidSecretKeyLengthError,
+)
 
 
 class UserSecretKey:
@@ -17,17 +18,17 @@ class UserSecretKey:
         self.buffer = buffer
 
     @classmethod
-    def generate(cls) -> 'UserSecretKey':
+    def generate(cls) -> "UserSecretKey":
         signing_key = nacl.signing.SigningKey.generate()
         secret_key = bytes(signing_key)
         return UserSecretKey(secret_key)
 
     @classmethod
-    def new_from_string(cls, buffer_hex: str) -> 'UserSecretKey':
+    def new_from_string(cls, buffer_hex: str) -> "UserSecretKey":
         buffer = bytes.fromhex(buffer_hex)
         return UserSecretKey(buffer)
 
-    def generate_public_key(self) -> 'UserPublicKey':
+    def generate_public_key(self) -> "UserPublicKey":
         public_key = bytes(nacl.signing.SigningKey(self.buffer).verify_key)
         return UserPublicKey(public_key)
 

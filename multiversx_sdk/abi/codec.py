@@ -1,4 +1,3 @@
-
 import io
 
 from multiversx_sdk.abi.interface import ISingleValue

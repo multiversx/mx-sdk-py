@@ -21,14 +21,14 @@ def test_set_payload_and_get_payload():
     assert value.get_payload() is None
 
     # Nested
-    value = OptionValue(StructValue([
-        Field("a", U32Value()),
-        Field("b", BigUIntValue())
-    ]))
+    value = OptionValue(StructValue([Field("a", U32Value()), Field("b", BigUIntValue())]))
 
     value.set_payload({"a": 41, "b": 42})
     assert value.get_payload() == SimpleNamespace(a=41, b=42)
 
     # With errors
-    with pytest.raises(ValueError, match="placeholder value of option should be set before calling set_payload"):
+    with pytest.raises(
+        ValueError,
+        match="placeholder value of option should be set before calling set_payload",
+    ):
         OptionValue().set_payload(42)

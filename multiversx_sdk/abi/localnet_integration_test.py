@@ -7,7 +7,9 @@ from multiversx_sdk.abi.abi import Abi, AbiDefinition
 from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
-from multiversx_sdk.smart_contracts.smart_contract_controller import SmartContractController
+from multiversx_sdk.smart_contracts.smart_contract_controller import (
+    SmartContractController,
+)
 from multiversx_sdk.testutils.wallets import load_wallets
 
 
@@ -145,7 +147,10 @@ class TestLocalnetInteraction:
             contract=contract,
             gas_limit=50_000_000,
             function="managed_decimal_addition_var",
-            arguments=[ManagedDecimalValue("4", 2, True), ManagedDecimalValue("5", 2, True)],
+            arguments=[
+                ManagedDecimalValue("4", 2, True),
+                ManagedDecimalValue("5", 2, True),
+            ],
         )
 
         tx_hash = proxy.send_transaction(addition_var_transaction)

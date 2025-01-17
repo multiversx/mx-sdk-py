@@ -22,7 +22,7 @@ class Mnemonic:
         return mnemonic.Mnemonic(BIP39_LANGUAGE).check(text)
 
     @classmethod
-    def generate(cls) -> 'Mnemonic':
+    def generate(cls) -> "Mnemonic":
         text = mnemonic.Mnemonic(BIP39_LANGUAGE).generate(strength=BIP39_STRENGTH)
         return Mnemonic(text)
 

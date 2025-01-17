@@ -6,9 +6,11 @@ from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class CountedVariadicValues(IPayloadHolder):
-    def __init__(self,
-                 items: Optional[list[Union[ISingleValue, MultiValue]]] = None,
-                 item_creator: Optional[Callable[[], Union[ISingleValue, MultiValue]]] = None) -> None:
+    def __init__(
+        self,
+        items: Optional[list[Union[ISingleValue, MultiValue]]] = None,
+        item_creator: Optional[Callable[[], Union[ISingleValue, MultiValue]]] = None,
+    ) -> None:
         self.items = items or []
         self.length = len(self.items)
 

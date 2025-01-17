@@ -6,10 +6,12 @@ from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class ArrayValue:
-    def __init__(self,
-                 length: int,
-                 items: Optional[list[ISingleValue]] = None,
-                 item_creator: Optional[Callable[[], ISingleValue]] = None) -> None:
+    def __init__(
+        self,
+        length: int,
+        items: Optional[list[ISingleValue]] = None,
+        item_creator: Optional[Callable[[], ISingleValue]] = None,
+    ) -> None:
         self.length = length
         self.items = items or []
 
