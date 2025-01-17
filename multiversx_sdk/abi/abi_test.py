@@ -480,4 +480,4 @@ def test_encode_custom_struct():
         abi.encode_custom_type("customType", [])
 
     encoded = abi.encode_custom_type("EsdtTokenPayment", ["TEST-8b028f", 0, 10000])
-    assert encoded == "encode_custom_type"
+    assert encoded == "0000000b544553542d3862303238660000000000000000000000022710"
