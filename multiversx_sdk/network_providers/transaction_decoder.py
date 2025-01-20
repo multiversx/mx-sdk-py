@@ -159,8 +159,11 @@ class TransactionDecoder:
         result.transfers = []
 
         if len(args) > 4:
-            result.function_name = self.hex_to_string(args[4])
-            result.function_args = args[5:]
+            if receiver.is_smart_contract():
+                result.function_name = self.hex_to_string(args[4])
+                result.function_args = args[5:]
+            else:
+                result.transfer_messages = [arg.encode() for arg in args[4:]]
 
         token = Token(collection_identifier, self.hex_to_number(nonce))
         transfer = TokenTransfer(token, value)
@@ -216,10 +219,13 @@ class TransactionDecoder:
         result.receiver = receiver.to_bech32()
 
         if len(args) > index:
-            result.function_name = self.hex_to_string(args[index])
-            index += 1
-            result.function_args = args[index:]
-            index += 1
+            if receiver.is_smart_contract():
+                result.function_name = self.hex_to_string(args[index])
+                index += 1
+                result.function_args = args[index:]
+                index += 1
+            else:
+                result.transfer_messages = [arg.encode() for arg in args[index:]]
 
         return result
 

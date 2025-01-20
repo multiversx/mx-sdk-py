@@ -233,3 +233,41 @@ class TestTransactionDecoder:
         assert metadata.transfers[0].amount == 44239040000000000000
         assert metadata.transfers[0].token.identifier == "LAND-40f26f"
         assert metadata.transfer_messages == ["aaaaaa".encode(), "bb".encode()]
+
+    def test_esdtnft_transfer_separated_messages(self):
+        tx_to_decode = get_empty_transaction_on_network()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        tx_to_decode.receiver = Address.new_from_bech32(
+            "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        )
+        tx_to_decode.data = "ESDTNFTTransfer@4d4e592d336131636566@01@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@aaaaaaaaaaaaaaaaaaaaaa@aa".encode()
+
+        transaction_decoder = TransactionDecoder()
+        metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
+        assert metadata.function_name is None
+        assert metadata.function_args is None
+        assert metadata.transfers
+        assert metadata.transfers[0].amount == 1
+        assert metadata.transfers[0].token.identifier == "MNY-3a1cef"
+        assert metadata.transfers[0].token.nonce == 1
+        assert metadata.transfer_messages == ["aaaaaaaaaaaaaaaaaaaaaa".encode(), "aa".encode()]
+
+    def test_multi_esdtnft_transfer_separated_messages(self):
+        tx_to_decode = get_empty_transaction_on_network()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        tx_to_decode.receiver = Address.new_from_bech32(
+            "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        )
+        tx_to_decode.data = "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@01@4d4e592d336131636566@02@01@aaaaaaaa@aa".encode()
+
+        transaction_decoder = TransactionDecoder()
+        metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
+        assert metadata.function_name is None
+        assert metadata.function_args is None
+        assert metadata.transfers
+        assert metadata.transfers[0].amount == 1
+        assert metadata.transfers[0].token.identifier == "MNY-3a1cef"
+        assert metadata.transfers[0].token.nonce == 2
+        assert metadata.transfer_messages == ["aaaaaaaa".encode(), "aa".encode()]
