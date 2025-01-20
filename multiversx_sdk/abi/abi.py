@@ -23,7 +23,7 @@ from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
 from multiversx_sdk.abi.explicit_enum_value import ExplicitEnumValue
 from multiversx_sdk.abi.fields import Field
-from multiversx_sdk.abi.interface import IPayloadHolder
+from multiversx_sdk.abi.interface import IPayloadHolder, ISingleValue
 from multiversx_sdk.abi.list_value import ListValue
 from multiversx_sdk.abi.managed_decimal_signed_value import ManagedDecimalSignedValue
 from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
@@ -250,6 +250,24 @@ class Abi:
             setattr(result, non_indexed_inputs[i].name, output_native_values[i])
 
         return result
+
+    def encode_custom_type(self, name: str, values: list[Any]):
+        try:
+            custom_type: IPayloadHolder = self.custom_types_prototypes_by_name[name]
+        except KeyError:
+            raise Exception(f'Missing custom type! No custom type found for name: "{name}"')
+
+        custom_type.set_payload(values)
+        return self._serializer.serialize([custom_type])
+
+    def decode_custom_type(self, name: str, data: bytes) -> Any:
+        try:
+            custom_type: ISingleValue = self.custom_types_prototypes_by_name[name]
+        except KeyError:
+            raise Exception(f'Missing custom type! No custom type found for name: "{name}"')
+
+        custom_type.decode_top_level(data)
+        return custom_type.get_payload()
 
     def _get_custom_type_prototype(self, type_name: str) -> Any:
         type_prototype = self.custom_types_prototypes_by_name.get(type_name)
