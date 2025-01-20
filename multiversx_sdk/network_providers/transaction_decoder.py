@@ -15,6 +15,10 @@ class TransactionMetadata:
         self.function_name: Optional[str] = None
         self.function_args: Optional[list[str]] = None
         self.transfers: Optional[list[TokenTransfer]] = None
+        self.message: Optional[list[str]] = None
+        """
+        This property is set to the extra arguments passed to ESDTTransfer when transferring tokens to non-smart contract accounts.
+        """
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -24,6 +28,7 @@ class TransactionMetadata:
             "function_name": self.function_name if self.function_name else "",
             "function_args": self.function_args if self.function_args else [],
             "transfers": self._transfers_to_dict(),
+            "message": self.message if self.message else "",
         }
 
     def _transfers_to_dict(self) -> list[dict[str, Any]]:
@@ -48,6 +53,8 @@ class TransactionMetadata:
 
 
 class TransactionDecoder:
+    """Can be used for decoding custom token transfers transactions (ESDTTransfer, NFTTransfer, MultiESDTNFTTransfer)."""
+
     def get_transaction_metadata(self, transaction: TransactionOnNetwork) -> TransactionMetadata:
         metadata = self.get_normal_transaction_metadata(transaction)
 
@@ -82,6 +89,7 @@ class TransactionDecoder:
             if len(args) == 0 and not transaction.receiver.is_smart_contract():
                 metadata.function_name = "transfer"
                 metadata.function_args = []
+                metadata.message = data_components
 
         return metadata
 
@@ -106,9 +114,15 @@ class TransactionDecoder:
         result.value = value
         result.transfers = []
 
+        receiver = Address.new_from_bech32(result.receiver)
+        is_receiver_sc = receiver.is_smart_contract()
+
         if len(args) > 2:
-            result.function_name = self.hex_to_string(args[2])
-            result.function_args = args[3:]
+            if is_receiver_sc:
+                result.function_name = self.hex_to_string(args[2])
+                result.function_args = args[3:]
+            else:
+                result.message = args[2:]
 
         token = Token(identifier)
         transfer = TokenTransfer(token, value)
