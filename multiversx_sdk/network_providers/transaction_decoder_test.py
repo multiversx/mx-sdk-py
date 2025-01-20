@@ -192,7 +192,9 @@ class TestTransactionDecoder:
         assert metadata.transfers
         assert metadata.transfers[0].amount == 44239040000000000000
         assert metadata.transfers[0].token.identifier == "LAND-40f26f"
-        assert metadata.message == ["eaeee8fbf3755756fba62ae862feb7627a4881217dabf6990053985afe7a6733"]
+        assert metadata.transfer_messages == [
+            "eaeee8fbf3755756fba62ae862feb7627a4881217dabf6990053985afe7a6733".encode()
+        ]
 
     def test_native_transfer(self):
         tx_to_decode = get_empty_transaction_on_network()
@@ -212,7 +214,7 @@ class TestTransactionDecoder:
         assert metadata.value == 100000000
         assert metadata.function_name == "transfer"
         assert metadata.function_args == []
-        assert metadata.message == ["hello"]
+        assert metadata.transfer_messages == ["hello".encode()]
 
     def test_esdt_transfer_separated_messages(self):
         tx_to_decode = get_empty_transaction_on_network()
@@ -230,4 +232,4 @@ class TestTransactionDecoder:
         assert metadata.transfers
         assert metadata.transfers[0].amount == 44239040000000000000
         assert metadata.transfers[0].token.identifier == "LAND-40f26f"
-        assert metadata.message == ["aaaaaa", "bb"]
+        assert metadata.transfer_messages == ["aaaaaa".encode(), "bb".encode()]

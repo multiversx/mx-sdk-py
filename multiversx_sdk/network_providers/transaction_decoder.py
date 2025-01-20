@@ -15,7 +15,7 @@ class TransactionMetadata:
         self.function_name: Optional[str] = None
         self.function_args: Optional[list[str]] = None
         self.transfers: Optional[list[TokenTransfer]] = None
-        self.message: Optional[list[str]] = None
+        self.transfer_messages: list[bytes] = []
         """
         This property is set to the extra arguments passed to ESDTTransfer when transferring tokens to non-smart contract accounts.
         """
@@ -28,7 +28,7 @@ class TransactionMetadata:
             "function_name": self.function_name if self.function_name else "",
             "function_args": self.function_args if self.function_args else [],
             "transfers": self._transfers_to_dict(),
-            "message": self.message if self.message else "",
+            "transfer_messages": [message.decode() for message in self.transfer_messages],
         }
 
     def _transfers_to_dict(self) -> list[dict[str, Any]]:
@@ -89,7 +89,7 @@ class TransactionDecoder:
             if len(args) == 0 and not transaction.receiver.is_smart_contract():
                 metadata.function_name = "transfer"
                 metadata.function_args = []
-                metadata.message = data_components
+                metadata.transfer_messages = [data.encode() for data in data_components]
 
         return metadata
 
@@ -122,7 +122,7 @@ class TransactionDecoder:
                 result.function_name = self.hex_to_string(args[2])
                 result.function_args = args[3:]
             else:
-                result.message = args[2:]
+                result.transfer_messages = [arg.encode() for arg in args[2:]]
 
         token = Token(identifier)
         transfer = TokenTransfer(token, value)
