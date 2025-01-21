@@ -193,7 +193,7 @@ class TestTransactionDecoder:
         assert metadata.transfers[0].amount == 44239040000000000000
         assert metadata.transfers[0].token.identifier == "LAND-40f26f"
         assert metadata.transfer_messages == [
-            "eaeee8fbf3755756fba62ae862feb7627a4881217dabf6990053985afe7a6733".encode()
+            bytes.fromhex("eaeee8fbf3755756fba62ae862feb7627a4881217dabf6990053985afe7a6733")
         ]
 
     def test_native_transfer(self):
@@ -204,7 +204,7 @@ class TestTransactionDecoder:
             "erd1lkrrrn3ws9sp854kdpzer9f77eglqpeet3e3k3uxvqxw9p3eq6xqxj43r9"
         )
         tx_to_decode.value = 100000000
-        tx_to_decode.data = "hello".encode()
+        tx_to_decode.data = "abba".encode()
 
         transaction_decoder = TransactionDecoder()
         metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
@@ -214,7 +214,7 @@ class TestTransactionDecoder:
         assert metadata.value == 100000000
         assert metadata.function_name == "transfer"
         assert metadata.function_args == []
-        assert metadata.transfer_messages == ["hello".encode()]
+        assert metadata.transfer_messages == [bytes.fromhex("abba")]
 
     def test_esdt_transfer_separated_messages(self):
         tx_to_decode = get_empty_transaction_on_network()
@@ -232,7 +232,7 @@ class TestTransactionDecoder:
         assert metadata.transfers
         assert metadata.transfers[0].amount == 44239040000000000000
         assert metadata.transfers[0].token.identifier == "LAND-40f26f"
-        assert metadata.transfer_messages == ["aaaaaa".encode(), "bb".encode()]
+        assert metadata.transfer_messages == [bytes.fromhex("aaaaaa"), bytes.fromhex("bb")]
 
     def test_esdtnft_transfer_separated_messages(self):
         tx_to_decode = get_empty_transaction_on_network()
@@ -251,7 +251,7 @@ class TestTransactionDecoder:
         assert metadata.transfers[0].amount == 1
         assert metadata.transfers[0].token.identifier == "MNY-3a1cef"
         assert metadata.transfers[0].token.nonce == 1
-        assert metadata.transfer_messages == ["aaaaaaaaaaaaaaaaaaaaaa".encode(), "aa".encode()]
+        assert metadata.transfer_messages == [bytes.fromhex("aaaaaaaaaaaaaaaaaaaaaa"), bytes.fromhex("aa")]
 
     def test_multi_esdtnft_transfer_separated_messages(self):
         tx_to_decode = get_empty_transaction_on_network()
@@ -270,4 +270,4 @@ class TestTransactionDecoder:
         assert metadata.transfers[0].amount == 1
         assert metadata.transfers[0].token.identifier == "MNY-3a1cef"
         assert metadata.transfers[0].token.nonce == 2
-        assert metadata.transfer_messages == ["aaaaaaaa".encode(), "aa".encode()]
+        assert metadata.transfer_messages == [bytes.fromhex("aaaaaaaa"), bytes.fromhex("aa")]

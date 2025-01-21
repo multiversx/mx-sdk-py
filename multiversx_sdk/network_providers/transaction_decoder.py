@@ -89,7 +89,7 @@ class TransactionDecoder:
             if len(args) == 0 and not transaction.receiver.is_smart_contract():
                 metadata.function_name = "transfer"
                 metadata.function_args = []
-                metadata.transfer_messages = [data.encode() for data in data_components]
+                metadata.transfer_messages = [bytes.fromhex(data) for data in data_components]
 
         return metadata
 
@@ -122,7 +122,7 @@ class TransactionDecoder:
                 result.function_name = self.hex_to_string(args[2])
                 result.function_args = args[3:]
             else:
-                result.transfer_messages = [arg.encode() for arg in args[2:]]
+                result.transfer_messages = [bytes.fromhex(arg) for arg in args[2:]]
 
         token = Token(identifier)
         transfer = TokenTransfer(token, value)
@@ -163,7 +163,7 @@ class TransactionDecoder:
                 result.function_name = self.hex_to_string(args[4])
                 result.function_args = args[5:]
             else:
-                result.transfer_messages = [arg.encode() for arg in args[4:]]
+                result.transfer_messages = [bytes.fromhex(arg) for arg in args[4:]]
 
         token = Token(collection_identifier, self.hex_to_number(nonce))
         transfer = TokenTransfer(token, value)
@@ -225,7 +225,7 @@ class TransactionDecoder:
                 result.function_args = args[index:]
                 index += 1
             else:
-                result.transfer_messages = [arg.encode() for arg in args[index:]]
+                result.transfer_messages = [bytes.fromhex(arg) for arg in args[index:]]
 
         return result
 
