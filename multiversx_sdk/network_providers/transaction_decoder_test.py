@@ -173,3 +173,101 @@ class TestTransactionDecoder:
         assert metadata.value == 0
         assert metadata.function_name == "myEndpoint"
         assert metadata.function_args == []
+
+    def test_esdt_transfer_with_receiver_in_data_field(self):
+        tx_to_decode = get_empty_transaction_on_network()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd1pv3020g75r033shtfzkf9yaf8xx7d76qan94wkraxm4vvqankrtsam2hz7")
+        tx_to_decode.receiver = Address.new_from_bech32(
+            "erd1athw37lnw4t4d7ax9t5x9l4hvfay3qfp0k4ldxgq2wv94ln6vuesqd5mjg"
+        )
+        tx_to_decode.data = base64.b64decode(
+            "RVNEVFRyYW5zZmVyQDRjNDE0ZTQ0MmQzNDMwNjYzMjM2NjZAMDI2NWYwYTQ3ZGQ0NGMwMDAwQGVhZWVlOGZiZjM3NTU3NTZmYmE2MmFlODYyZmViNzYyN2E0ODgxMjE3ZGFiZjY5OTAwNTM5ODVhZmU3YTY3MzM="
+        )
+
+        transaction_decoder = TransactionDecoder()
+        metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
+        assert metadata.function_name is None
+        assert metadata.function_args is None
+        assert metadata.transfers
+        assert metadata.transfers[0].amount == 44239040000000000000
+        assert metadata.transfers[0].token.identifier == "LAND-40f26f"
+        assert metadata.transfer_messages == [
+            bytes.fromhex("eaeee8fbf3755756fba62ae862feb7627a4881217dabf6990053985afe7a6733")
+        ]
+
+    def test_native_transfer(self):
+        tx_to_decode = get_empty_transaction_on_network()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd18w6yj09l9jwlpj5cjqq9eccfgulkympv7d4rj6vq4u49j8fpwzwsvx7e85")
+        tx_to_decode.receiver = Address.new_from_bech32(
+            "erd1lkrrrn3ws9sp854kdpzer9f77eglqpeet3e3k3uxvqxw9p3eq6xqxj43r9"
+        )
+        tx_to_decode.value = 100000000
+        tx_to_decode.data = "abba".encode()
+
+        transaction_decoder = TransactionDecoder()
+        metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
+
+        assert metadata.sender == "erd18w6yj09l9jwlpj5cjqq9eccfgulkympv7d4rj6vq4u49j8fpwzwsvx7e85"
+        assert metadata.receiver == "erd1lkrrrn3ws9sp854kdpzer9f77eglqpeet3e3k3uxvqxw9p3eq6xqxj43r9"
+        assert metadata.value == 100000000
+        assert metadata.function_name == "transfer"
+        assert metadata.function_args == []
+        assert metadata.transfer_messages == [bytes.fromhex("abba")]
+
+    def test_esdt_transfer_separated_messages(self):
+        tx_to_decode = get_empty_transaction_on_network()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd1pv3020g75r033shtfzkf9yaf8xx7d76qan94wkraxm4vvqankrtsam2hz7")
+        tx_to_decode.receiver = Address.new_from_bech32(
+            "erd1athw37lnw4t4d7ax9t5x9l4hvfay3qfp0k4ldxgq2wv94ln6vuesqd5mjg"
+        )
+        tx_to_decode.data = "ESDTTransfer@4c414e442d343066323666@0265f0a47dd44c0000@aaaaaa@bb".encode()
+
+        transaction_decoder = TransactionDecoder()
+        metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
+        assert metadata.function_name is None
+        assert metadata.function_args is None
+        assert metadata.transfers
+        assert metadata.transfers[0].amount == 44239040000000000000
+        assert metadata.transfers[0].token.identifier == "LAND-40f26f"
+        assert metadata.transfer_messages == [bytes.fromhex("aaaaaa"), bytes.fromhex("bb")]
+
+    def test_esdtnft_transfer_separated_messages(self):
+        tx_to_decode = get_empty_transaction_on_network()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        tx_to_decode.receiver = Address.new_from_bech32(
+            "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        )
+        tx_to_decode.data = "ESDTNFTTransfer@4d4e592d336131636566@01@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@aaaaaaaaaaaaaaaaaaaaaa@aa".encode()
+
+        transaction_decoder = TransactionDecoder()
+        metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
+        assert metadata.function_name is None
+        assert metadata.function_args is None
+        assert metadata.transfers
+        assert metadata.transfers[0].amount == 1
+        assert metadata.transfers[0].token.identifier == "MNY-3a1cef"
+        assert metadata.transfers[0].token.nonce == 1
+        assert metadata.transfer_messages == [bytes.fromhex("aaaaaaaaaaaaaaaaaaaaaa"), bytes.fromhex("aa")]
+
+    def test_multi_esdtnft_transfer_separated_messages(self):
+        tx_to_decode = get_empty_transaction_on_network()
+
+        tx_to_decode.sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        tx_to_decode.receiver = Address.new_from_bech32(
+            "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        )
+        tx_to_decode.data = "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@01@4d4e592d336131636566@02@01@aaaaaaaa@aa".encode()
+
+        transaction_decoder = TransactionDecoder()
+        metadata = transaction_decoder.get_transaction_metadata(tx_to_decode)
+        assert metadata.function_name is None
+        assert metadata.function_args is None
+        assert metadata.transfers
+        assert metadata.transfers[0].amount == 1
+        assert metadata.transfers[0].token.identifier == "MNY-3a1cef"
+        assert metadata.transfers[0].token.nonce == 2
+        assert metadata.transfer_messages == [bytes.fromhex("aaaaaaaa"), bytes.fromhex("aa")]
