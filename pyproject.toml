@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "multiversx-sdk"
-version = "1.0.0b2"
+version = "1.0.0b3"
 authors = [
   { name="MultiversX" },
 ]
@@ -42,5 +42,5 @@ exclude = [
   ".vscode",
   "./multiversx_sdk/testutils/",
   "./docs",
-  "./multiversx_sdk/**/*_test.py"
+  "*_test.py"
 ]
