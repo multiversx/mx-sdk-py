@@ -913,6 +913,249 @@ class TokenManagementController(BaseController):
         transaction = self.network_provider.await_transaction_completed(transaction_hash)
         return self.parse_burn_quantity(transaction)
 
+    def create_transaction_for_modifying_royalties(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_identifier: str,
+        token_nonce: int,
+        new_royalties: int,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_modifying_royalties(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            new_royalties=new_royalties,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_setting_new_uris(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_identifier: str,
+        token_nonce: int,
+        new_uris: list[str],
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_setting_new_uris(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            new_uris=new_uris,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_modifying_creator(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_identifier: str,
+        token_nonce: int,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_modifying_creator(
+            sender=sender.address, token_identifier=token_identifier, token_nonce=token_nonce
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_updating_metadata(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_identifier: str,
+        token_nonce: int,
+        new_token_name: str,
+        new_royalties: int,
+        new_hash: str,
+        new_attributes: bytes,
+        new_uris: list[str],
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_updating_metadata(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            new_token_name=new_token_name,
+            new_royalties=new_royalties,
+            new_hash=new_hash,
+            new_attributes=new_attributes,
+            new_uris=new_uris,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_nft_metadata_recreate(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_identifier: str,
+        token_nonce: int,
+        new_token_name: str,
+        new_royalties: int,
+        new_hash: str,
+        new_attributes: bytes,
+        new_uris: list[str],
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_nft_metadata_recreate(
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            new_token_name=new_token_name,
+            new_royalties=new_royalties,
+            new_hash=new_hash,
+            new_attributes=new_attributes,
+            new_uris=new_uris,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_changing_token_to_dynamic(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_identifier: str,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        """The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2"""
+        transaction = self.factory.create_transaction_for_changing_token_to_dynamic(
+            sender=sender.address,
+            token_identifier=token_identifier,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_updating_token_id(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_identifier: str,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_updating_token_id(
+            sender=sender.address,
+            token_identifier=token_identifier,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_registering_dynamic_token(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_name: str,
+        token_ticker: str,
+        token_type: TokenType,
+        denominator: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_registering_dynamic_token(
+            sender=sender.address,
+            token_name=token_name,
+            token_ticker=token_ticker,
+            token_type=token_type,
+            denominator=denominator,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_registering_dynamic_and_setting_roles(
+        self,
+        sender: IAccount,
+        nonce: int,
+        token_name: str,
+        token_ticker: str,
+        token_type: TokenType,
+        denominator: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_registering_dynamic_and_setting_roles(
+            sender=sender.address,
+            token_name=token_name,
+            token_ticker=token_ticker,
+            token_type=token_type,
+            denominator=denominator,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
     def create_transaction_for_transferring_ownership(
         self,
         sender: IAccount,
