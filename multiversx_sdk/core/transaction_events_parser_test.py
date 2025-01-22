@@ -135,6 +135,7 @@ def test_parse_multisig_start_perform_action():
                     arguments=[bytes.fromhex("07")],
                 ),
                 "__discriminant__": 5,
+                "__name__": "SendTransferExecuteEgld",
             }
         ),
         signers=[
@@ -284,6 +285,7 @@ def test_multisig_start_perform_action():
                     }
                 ),
                 "__discriminant__": 5,
+                "__name__": "SendTransferExecuteEgld",
             },
         ),
         signers=[

@@ -474,6 +474,7 @@ def test_decode_custom_enum():
         ),
     )
     setattr(expected_output, "__discriminant__", 5)
+    setattr(expected_output, "__name__", "SendTransferExecuteEgld")
     assert decoded_type == expected_output
 
 
