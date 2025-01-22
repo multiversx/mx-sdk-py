@@ -111,6 +111,7 @@ class TokenAmountOnNetwork:
     raw: dict[str, Any]
     token: Token
     amount: int
+    attributes: bytes
     block_coordinates: Optional[BlockCoordinates] = None
 
 
