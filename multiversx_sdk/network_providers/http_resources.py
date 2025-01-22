@@ -497,11 +497,13 @@ def token_amount_on_network_from_proxy_response(raw_response: dict[str, Any]) ->
     balance = int(token_data.get("balance", "0"))
     nonce = token_data.get("nonce", 0)
     token = Token(identifier, nonce)
+    attributes = base64.b64decode(token_data.get("attributes", ""))
 
     return TokenAmountOnNetwork(
         raw=raw_response,
         token=token,
         amount=balance,
+        attributes=attributes,
         block_coordinates=block_coordinates,
     )
 
@@ -509,11 +511,10 @@ def token_amount_on_network_from_proxy_response(raw_response: dict[str, Any]) ->
 def token_amount_from_api_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
     identifier = raw_response.get("identifier", "")
     nonce = raw_response.get("nonce", 0)
+    amount = int(raw_response.get("balance", 0))
+    attributes = base64.b64decode(raw_response.get("attributes", ""))
 
-    # nfts don't have the balance field, thus in case it's nft we set the balance to 1
-    amount = int(raw_response.get("balance", 1))
-
-    return TokenAmountOnNetwork(raw=raw_response, token=Token(identifier, nonce), amount=amount)
+    return TokenAmountOnNetwork(raw=raw_response, token=Token(identifier, nonce), amount=amount, attributes=attributes)
 
 
 def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
@@ -527,12 +528,14 @@ def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[Toke
         balance = int(token_data.get("balance", "0"))
         nonce = token_data.get("nonce", 0)
         token = Token(identifier, nonce)
+        attributes = base64.b64decode(token_data.get("attributes", ""))
 
         result.append(
             TokenAmountOnNetwork(
                 raw={item: token_data},
                 token=token,
                 amount=balance,
+                attributes=attributes,
                 block_coordinates=block_coordinates,
             )
         )

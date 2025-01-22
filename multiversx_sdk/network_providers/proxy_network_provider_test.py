@@ -116,6 +116,7 @@ class TestProxy:
         assert len(filtered) == 1
         assert filtered[0].token.identifier == "TEST-ff155e"
         assert filtered[0].amount == 99999999999980000
+        assert not filtered[0].attributes
 
     def test_get_non_fungible_tokens_of_account(self):
         address = Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl")
@@ -127,6 +128,7 @@ class TestProxy:
         assert filtered[0].token.identifier == "NFTEST-ec88b8-01"
         assert filtered[0].token.nonce == 1
         assert filtered[0].amount == 1
+        assert filtered[0].attributes
 
     def test_get_transaction_status(self):
         result = self.proxy.get_transaction_status(
