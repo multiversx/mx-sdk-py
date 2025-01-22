@@ -528,7 +528,7 @@ def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[Toke
         balance = int(token_data.get("balance", "0"))
         nonce = token_data.get("nonce", 0)
         token = Token(identifier, nonce)
-        attributes = base64.b64decode(raw_response.get("attributes", ""))
+        attributes = base64.b64decode(token_data.get("attributes", ""))
 
         result.append(
             TokenAmountOnNetwork(
