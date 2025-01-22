@@ -144,6 +144,11 @@ class EnumValue:
 
         setattr(obj, ENUM_DISCRIMINANT_FIELD_NAME, self.discriminant)
 
+        if self.names_to_discriminants is not None:
+            for name, discriminant in self.names_to_discriminants.items():
+                if discriminant == self.discriminant:
+                    setattr(obj, ENUM_NAME_FIELD_NAME, name)
+
         return obj
 
     def __eq__(self, other: Any) -> bool:
