@@ -116,7 +116,7 @@ class SmartContractTransactionsOutcomeParser:
 
         if len(eligible_results) > 1:
             raise Exception(
-                f"More than one smart contract result (holding the return data) found for transaction: {transaction.hash}"
+                f"More than one smart contract result (holding the return data) found for transaction: {transaction.hash.hex()}"
             )
 
         result = eligible_results[0]
@@ -152,7 +152,7 @@ class SmartContractTransactionsOutcomeParser:
             return None
 
         if len(eligible_events) > 1:
-            raise Exception(f'More than one "{event_identifier}" event found for transaction: {transaction.hash}')
+            raise Exception(f'More than one "{event_identifier}" event found for transaction: {transaction.hash.hex()}')
 
         event = eligible_events[0]
         data = event.data.decode()
@@ -185,7 +185,7 @@ class SmartContractTransactionsOutcomeParser:
 
         # then, we search in the logs of contract_results
         for restult in transaction.smart_contract_results:
-            if restult.raw.get("prevTxHash", "") != transaction.hash:
+            if restult.raw.get("prevTxHash", "") != transaction.hash.hex():
                 continue
 
             for event in restult.logs.events:
@@ -196,7 +196,7 @@ class SmartContractTransactionsOutcomeParser:
             return None
 
         if len(eligible_events) > 1:
-            raise Exception(f'More than one "{event_identifier}" event found for transaction: {transaction.hash}')
+            raise Exception(f'More than one "{event_identifier}" event found for transaction: {transaction.hash.hex()}')
 
         event = eligible_events[0]
         data = event.data.decode()
