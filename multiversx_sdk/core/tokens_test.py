@@ -167,3 +167,13 @@ def test_token_transfer_equality():
     assert TokenTransfer.new_from_native_amount(123456) == TokenTransfer.new_from_native_amount(123456)
     assert TokenTransfer(Token("WEGLD-abcdef"), 123456) == TokenTransfer(Token("WEGLD-abcdef"), 123456)
     assert TokenTransfer(Token("NFT-abcdef", 8), 123456) == TokenTransfer(Token("NFT-abcdef", 8), 123456)
+
+
+def test_token_str():
+    assert str(Token("NFT-123456", 777)) == "NFT-123456-0309"
+    assert str(Token("test-NFT-123456", 123)) == "test-NFT-123456-7b"
+
+
+def test_token_transfer_str():
+    assert str(TokenTransfer(Token("WEGLD-abcdef"), 123456)) == "123456 WEGLD-abcdef"
+    assert str(TokenTransfer(Token("NFT-abcdef", 8), 123456)) == "123456 NFT-abcdef-08"

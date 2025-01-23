@@ -19,6 +19,9 @@ class Token:
             return False
         return self.identifier == other.identifier and self.nonce == other.nonce
 
+    def __str__(self) -> str:
+        return TokenComputer().compute_extended_identifier(self)
+
 
 class TokenTransfer:
     def __init__(self, token: Token, amount: int) -> None:
@@ -35,6 +38,9 @@ class TokenTransfer:
         if not isinstance(other, TokenTransfer):
             return False
         return self.token == other.token and self.amount == other.amount
+
+    def __str__(self) -> str:
+        return f"{self.amount} {self.token}"
 
 
 class TokenIdentifierParts:
