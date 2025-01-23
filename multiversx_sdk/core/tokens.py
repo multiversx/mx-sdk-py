@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Any, Union
 
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.serializer import Serializer
@@ -14,6 +14,11 @@ class Token:
         self.identifier = identifier
         self.nonce = nonce
 
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, Token):
+            return False
+        return self.identifier == other.identifier and self.nonce == other.nonce
+
 
 class TokenTransfer:
     def __init__(self, token: Token, amount: int) -> None:
@@ -25,6 +30,11 @@ class TokenTransfer:
     def new_from_native_amount(amount: int) -> "TokenTransfer":
         native_token = Token(EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER)
         return TokenTransfer(native_token, amount)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, TokenTransfer):
+            return False
+        return self.token == other.token and self.amount == other.amount
 
 
 class TokenIdentifierParts:

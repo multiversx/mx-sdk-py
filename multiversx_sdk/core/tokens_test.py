@@ -156,3 +156,14 @@ def test_token_transfer_from_native_amount():
     assert transfer.token.identifier == "EGLD-000000"
     assert transfer.token.nonce == 0
     assert transfer.amount == 1000000000000000000
+
+
+def test_token_equality():
+    assert Token("NFT-123456", 777) == Token("NFT-123456", 777)
+    assert Token("test-NFT-123456", 777) == Token("test-NFT-123456", 777)
+
+
+def test_token_transfer_equality():
+    assert TokenTransfer.new_from_native_amount(123456) == TokenTransfer.new_from_native_amount(123456)
+    assert TokenTransfer(Token("WEGLD-abcdef"), 123456) == TokenTransfer(Token("WEGLD-abcdef"), 123456)
+    assert TokenTransfer(Token("NFT-abcdef", 8), 123456) == TokenTransfer(Token("NFT-abcdef", 8), 123456)
