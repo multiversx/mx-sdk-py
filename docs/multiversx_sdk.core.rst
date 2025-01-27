@@ -20,6 +20,14 @@ multiversx\_sdk.core.address module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.core.base\_controller module
+--------------------------------------------
+
+.. automodule:: multiversx_sdk.core.base_controller
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.core.bech32 module
 ----------------------------------
 

@@ -51,6 +51,11 @@ If you want to skip network interaction tests run:
 pytest -m "not networkInteraction"
 ```
 
+We have some tests fetching mainnet transactions that are quite time consuming. To skip those, run this command:
+```
+pytest -m "not mainnet"
+```
+
 ### Generate test coverage report
 
 First, we run the tests using coverage:
