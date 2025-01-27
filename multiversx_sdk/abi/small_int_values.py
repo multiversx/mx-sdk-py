@@ -35,7 +35,9 @@ class SmallUIntValue:
         try:
             self.value.to_bytes(self._num_bytes, byteorder="big", signed=False)
         except OverflowError:
-            raise ValueError(f"decoded value is too large or invalid (does not fit into {self._num_bytes} byte(s)): {self.value}")
+            raise ValueError(
+                f"decoded value is too large or invalid (does not fit into {self._num_bytes} byte(s)): {self.value}"
+            )
 
     def set_payload(self, value: Any):
         self.value = int(value)
@@ -77,7 +79,9 @@ class SmallIntValue:
         try:
             self.value.to_bytes(self._num_bytes, byteorder="big", signed=True)
         except OverflowError:
-            raise ValueError(f"decoded value is too large or invalid (does not fit into {self._num_bytes} byte(s)): {self.value}")
+            raise ValueError(
+                f"decoded value is too large or invalid (does not fit into {self._num_bytes} byte(s)): {self.value}"
+            )
 
     def set_payload(self, value: Any):
         self.value = int(value)

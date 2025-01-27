@@ -1,39 +1,78 @@
-from typing import Any, Dict, Optional, Protocol, Sequence
+from typing import Any, Callable, Optional, Protocol, Union
+
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.tokens import Token
+from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
+from multiversx_sdk.network_providers.resources import (
+    AccountOnNetwork,
+    AccountStorage,
+    AccountStorageEntry,
+    AwaitingOptions,
+    FungibleTokenMetadata,
+    NetworkConfig,
+    NetworkStatus,
+    TokenAmountOnNetwork,
+    TokensCollectionMetadata,
+    TransactionCostResponse,
+)
+from multiversx_sdk.smart_contracts.smart_contract_query import (
+    SmartContractQuery,
+    SmartContractQueryResponse,
+)
 
 
-class ISerializable(Protocol):
-    def to_dictionary(self) -> Dict[str, Any]:
-        ...
+class INetworkProvider(Protocol):
+    def get_network_config(self) -> NetworkConfig: ...
 
+    def get_network_status(self, shard: int) -> NetworkStatus: ...
 
-class IAddress(Protocol):
-    def to_bech32(self) -> str:
-        ...
+    def get_account(self, address: Address) -> AccountOnNetwork: ...
 
-    def to_hex(self) -> str:
-        ...
+    def get_account_storage(self, address: Address) -> AccountStorage: ...
 
+    def get_account_storage_entry(self, address: Address, entry_key: str) -> AccountStorageEntry: ...
 
-class IPagination(Protocol):
-    def get_start(self) -> int:
-        ...
+    def await_account_on_condition(
+        self,
+        address: Address,
+        condition: Callable[[AccountOnNetwork], bool],
+        options: Optional[AwaitingOptions],
+    ) -> AccountOnNetwork: ...
 
-    def get_size(self) -> int:
-        ...
+    def send_transaction(self, transaction: Transaction) -> bytes: ...
 
+    def simulate_transaction(self, transaction: Transaction) -> TransactionOnNetwork: ...
 
-class IContractQuery(Protocol):
-    def get_contract(self) -> IAddress:
-        ...
+    def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse: ...
 
-    def get_function(self) -> str:
-        ...
+    def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]: ...
 
-    def get_encoded_arguments(self) -> Sequence[str]:
-        ...
+    def get_transaction(self, transaction_hash: Union[bytes, str]) -> TransactionOnNetwork: ...
 
-    def get_caller(self) -> Optional[IAddress]:
-        ...
+    def await_transaction_completed(
+        self, transaction_hash: Union[bytes, str], options: Optional[AwaitingOptions]
+    ) -> TransactionOnNetwork: ...
 
-    def get_value(self) -> int:
-        ...
+    def await_transaction_on_condition(
+        self,
+        transaction_hash: Union[bytes, str],
+        condition: Callable[[TransactionOnNetwork], bool],
+        options: Optional[AwaitingOptions],
+    ) -> TransactionOnNetwork: ...
+
+    def get_token_of_account(self, address: Address, token: Token) -> TokenAmountOnNetwork: ...
+
+    def get_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]: ...
+
+    def get_non_fungible_tokens_of_account(self, address: Address) -> list[TokenAmountOnNetwork]: ...
+
+    def get_definition_of_fungible_token(self, token_identifier: str) -> FungibleTokenMetadata: ...
+
+    def get_definition_of_tokens_collection(self, collection_name: str) -> TokensCollectionMetadata: ...
+
+    def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse: ...
+
+    def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]]) -> Any: ...
+
+    def do_post_generic(self, url: str, data: Any, url_parameters: Optional[dict[str, Any]]) -> Any: ...

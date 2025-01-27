@@ -1,15 +1,17 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 
 class AbiDefinition:
-    def __init__(self,
-                 constructor: "EndpointDefinition",
-                 upgrade_constructor: "EndpointDefinition",
-                 endpoints: List["EndpointDefinition"],
-                 types: "TypesDefinitions",
-                 events: List["EventDefinition"]) -> None:
+    def __init__(
+        self,
+        constructor: "EndpointDefinition",
+        upgrade_constructor: "EndpointDefinition",
+        endpoints: list["EndpointDefinition"],
+        types: "TypesDefinitions",
+        events: list["EventDefinition"],
+    ) -> None:
         self.constructor = constructor
         self.upgrade_constructor = upgrade_constructor
         self.endpoints = endpoints
@@ -17,7 +19,7 @@ class AbiDefinition:
         self.events = events
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "AbiDefinition":
+    def from_dict(cls, data: dict[str, Any]) -> "AbiDefinition":
         constructor = cls._get_definition_for_constructor(data)
         constructor.name = "constructor"
 
@@ -34,18 +36,18 @@ class AbiDefinition:
             upgrade_constructor=upgrade_constructor,
             endpoints=endpoints,
             types=types,
-            events=events
+            events=events,
         )
 
     @classmethod
-    def _get_definition_for_constructor(cls, data: Dict[str, Any]):
+    def _get_definition_for_constructor(cls, data: dict[str, Any]):
         if "constructor" in data:
             return EndpointDefinition.from_dict(data["constructor"])
 
         return NullEndpointDefinition()
 
     @classmethod
-    def _get_definition_for_upgrade(cls, data: Dict[str, Any]) -> "EndpointDefinition":
+    def _get_definition_for_upgrade(cls, data: dict[str, Any]) -> "EndpointDefinition":
         if "upgradeConstructor" in data:
             return EndpointDefinition.from_dict(data["upgradeConstructor"])
 
@@ -79,15 +81,17 @@ class AbiDefinition:
 
 
 class EndpointDefinition:
-    def __init__(self,
-                 name: str,
-                 docs: str,
-                 mutability: str,
-                 inputs: List["ParameterDefinition"],
-                 outputs: List["ParameterDefinition"],
-                 payable_in_tokens: List[str],
-                 only_owner: bool,
-                 title: str = "") -> None:
+    def __init__(
+        self,
+        name: str,
+        docs: str,
+        mutability: str,
+        inputs: list["ParameterDefinition"],
+        outputs: list["ParameterDefinition"],
+        payable_in_tokens: list[str],
+        only_owner: bool,
+        title: str = "",
+    ) -> None:
         self.name = name
         self.docs = docs
         self.mutability = mutability
@@ -98,7 +102,7 @@ class EndpointDefinition:
         self.title = title
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "EndpointDefinition":
+    def from_dict(cls, data: dict[str, Any]) -> "EndpointDefinition":
         inputs = [ParameterDefinition.from_dict(item) for item in data["inputs"]]
         outputs = [ParameterDefinition.from_dict(item) for item in data["outputs"]]
 
@@ -110,7 +114,7 @@ class EndpointDefinition:
             outputs=outputs,
             payable_in_tokens=data.get("payableInTokens", []),
             only_owner=data.get("onlyOwner", False),
-            title=data.get("title", "")
+            title=data.get("title", ""),
         )
 
     def __repr__(self):
@@ -127,7 +131,7 @@ class NullEndpointDefinition(EndpointDefinition):
             outputs=[],
             payable_in_tokens=[],
             only_owner=False,
-            title=""
+            title="",
         )
 
     def __repr__(self):
@@ -140,7 +144,7 @@ class ParameterDefinition:
         self.type = type
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ParameterDefinition":
+    def from_dict(cls, data: dict[str, Any]) -> "ParameterDefinition":
         return cls(
             name=data.get("name", ""),
             type=data.get("type", ""),
@@ -150,27 +154,25 @@ class ParameterDefinition:
         return f"ParameterDefinition(name={self.name}, type={self.type})"
 
     def __eq__(self, value: object) -> bool:
-        return (
-            isinstance(value, ParameterDefinition)
-            and self.name == value.name
-            and self.type == value.type
-        )
+        return isinstance(value, ParameterDefinition) and self.name == value.name and self.type == value.type
 
 
 class TypesDefinitions:
-    def __init__(self,
-                 enums: List["EnumDefinition"],
-                 explicit_enums: List["ExplicitEnumDefinition"],
-                 structs: List["StructDefinition"]) -> None:
-        self.enums: Dict[str, EnumDefinition] = {enum.name: enum for enum in enums}
-        self.explicit_enums: Dict[str, ExplicitEnumDefinition] = {enum.name: enum for enum in explicit_enums}
-        self.structs: Dict[str, StructDefinition] = {struct.name: struct for struct in structs}
+    def __init__(
+        self,
+        enums: list["EnumDefinition"],
+        explicit_enums: list["ExplicitEnumDefinition"],
+        structs: list["StructDefinition"],
+    ) -> None:
+        self.enums: dict[str, EnumDefinition] = {enum.name: enum for enum in enums}
+        self.explicit_enums: dict[str, ExplicitEnumDefinition] = {enum.name: enum for enum in explicit_enums}
+        self.structs: dict[str, StructDefinition] = {struct.name: struct for struct in structs}
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "TypesDefinitions":
-        enums: List[EnumDefinition] = []
-        explicit_enums: List[ExplicitEnumDefinition] = []
-        structs: List[StructDefinition] = []
+    def from_dict(cls, data: dict[str, Any]) -> "TypesDefinitions":
+        enums: list[EnumDefinition] = []
+        explicit_enums: list[ExplicitEnumDefinition] = []
+        structs: list[StructDefinition] = []
 
         for name, definition in data.items():
             kind = definition["type"]
@@ -184,50 +186,38 @@ class TypesDefinitions:
             else:
                 raise ValueError(f"Unsupported kind of custom type: {kind}")
 
-        return cls(
-            enums=enums,
-            explicit_enums=explicit_enums,
-            structs=structs
-        )
+        return cls(enums=enums, explicit_enums=explicit_enums, structs=structs)
 
 
 class EnumDefinition:
-    def __init__(self,
-                 name: str,
-                 variants: List["EnumVariantDefinition"]) -> None:
+    def __init__(self, name: str, variants: list["EnumVariantDefinition"]) -> None:
         self.name = name
         self.variants = variants
 
     @classmethod
-    def from_dict(cls, name: str, data: Dict[str, Any]) -> "EnumDefinition":
+    def from_dict(cls, name: str, data: dict[str, Any]) -> "EnumDefinition":
         variants = [EnumVariantDefinition.from_dict(item) for item in data["variants"]]
 
-        return cls(
-            name=name,
-            variants=variants
-        )
+        return cls(name=name, variants=variants)
 
     def __repr__(self):
         return f"EnumDefinition(name={self.name})"
 
 
 class EnumVariantDefinition:
-    def __init__(self,
-                 name: str,
-                 discriminant: int,
-                 fields: List["FieldDefinition"]) -> None:
+    def __init__(self, name: str, discriminant: int, fields: list["FieldDefinition"]) -> None:
         self.name = name
         self.discriminant = discriminant
         self.fields = fields
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "EnumVariantDefinition":
+    def from_dict(cls, data: dict[str, Any]) -> "EnumVariantDefinition":
         fields = [FieldDefinition.from_dict(item) for item in data.get("fields", [])]
 
         return cls(
             name=data.get("name", ""),
             discriminant=data.get("discriminant", 0),
-            fields=fields
+            fields=fields,
         )
 
     def __repr__(self):
@@ -235,20 +225,15 @@ class EnumVariantDefinition:
 
 
 class ExplicitEnumDefinition:
-    def __init__(self,
-                 name: str,
-                 variants: List["ExplicitEnumVariantDefinition"]) -> None:
+    def __init__(self, name: str, variants: list["ExplicitEnumVariantDefinition"]) -> None:
         self.name = name
         self.variants = variants
 
     @classmethod
-    def from_dict(cls, name: str, data: Dict[str, Any]) -> "ExplicitEnumDefinition":
+    def from_dict(cls, name: str, data: dict[str, Any]) -> "ExplicitEnumDefinition":
         variants = [ExplicitEnumVariantDefinition.from_dict(item) for item in data["variants"]]
 
-        return cls(
-            name=name,
-            variants=variants
-        )
+        return cls(name=name, variants=variants)
 
     def __repr__(self):
         return f"ExplicitEnumDefinition(name={self.name})"
@@ -259,52 +244,40 @@ class ExplicitEnumVariantDefinition:
         self.name = name
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ExplicitEnumVariantDefinition":
-        fields = [FieldDefinition.from_dict(item) for item in data.get("fields", [])]
-
-        return cls(
-            name=data.get("name", "")
-        )
+    def from_dict(cls, data: dict[str, Any]) -> "ExplicitEnumVariantDefinition":
+        return cls(name=data.get("name", ""))
 
     def __repr__(self):
         return f"ExplicitEnumVariantDefinition(name={self.name})"
 
 
 class StructDefinition:
-    def __init__(self,
-                 name: str,
-                 fields: List["FieldDefinition"]) -> None:
+    def __init__(self, name: str, fields: list["FieldDefinition"]) -> None:
         self.name = name
         self.fields = fields
 
     @classmethod
-    def from_dict(cls, name: str, data: Dict[str, Any]) -> "StructDefinition":
+    def from_dict(cls, name: str, data: dict[str, Any]) -> "StructDefinition":
         fields = [FieldDefinition.from_dict(item) for item in data["fields"]]
 
-        return cls(
-            name=name,
-            fields=fields
-        )
+        return cls(name=name, fields=fields)
 
     def __repr__(self):
         return f"StructDefinition(name={self.name})"
 
 
 class FieldDefinition:
-    def __init__(self,
-                 name: str,
-                 description: str,
-                 type: str) -> None:
+    def __init__(self, name: str, description: str, type: str) -> None:
         self.name = name
         self.description = description
         self.type = type
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "FieldDefinition":
+    def from_dict(cls, data: dict[str, Any]) -> "FieldDefinition":
         return cls(
             name=data.get("name", ""),
             description=data.get("description", ""),
-            type=data.get("type", "")
+            type=data.get("type", ""),
         )
 
     def __repr__(self):
@@ -312,41 +285,29 @@ class FieldDefinition:
 
 
 class EventDefinition:
-    def __init__(self,
-                 identifier: str,
-                 inputs: List["EventTopicDefinition"]) -> None:
+    def __init__(self, identifier: str, inputs: list["EventTopicDefinition"]) -> None:
         self.identifier = identifier
         self.inputs = inputs
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "EventDefinition":
+    def from_dict(cls, data: dict[str, Any]) -> "EventDefinition":
         inputs = [EventTopicDefinition.from_dict(item) for item in data["inputs"]]
 
-        return cls(
-            identifier=data["identifier"],
-            inputs=inputs
-        )
+        return cls(identifier=data["identifier"], inputs=inputs)
 
     def __repr__(self):
         return f"EventDefinition(identifier={self.identifier})"
 
 
 class EventTopicDefinition:
-    def __init__(self,
-                 name: str,
-                 type: str,
-                 indexed: bool) -> None:
+    def __init__(self, name: str, type: str, indexed: bool) -> None:
         self.name = name
         self.type = type
         self.indexed = indexed
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "EventTopicDefinition":
-        return cls(
-            name=data["name"],
-            type=data["type"],
-            indexed=data.get("indexed", False)
-        )
+    def from_dict(cls, data: dict[str, Any]) -> "EventTopicDefinition":
+        return cls(name=data["name"], type=data["type"], indexed=data.get("indexed", False))
 
     def __repr__(self):
         return f"EventTopicDefinition(name={self.name})"

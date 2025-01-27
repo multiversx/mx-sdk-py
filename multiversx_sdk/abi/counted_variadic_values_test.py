@@ -24,13 +24,16 @@ def test_set_payload_and_get_payload():
     assert values.length == 2
     assert values.items == [
         MultiValue([U32Value(42), StringValue("hello")]),
-        MultiValue([U32Value(43), StringValue("world")])
+        MultiValue([U32Value(43), StringValue("world")]),
     ]
 
     assert values.get_payload() == [[42, "hello"], [43, "world"]]
 
     # With errors
-    with pytest.raises(ValueError, match="populating variadic values from a native object requires the item creator to be set"):
+    with pytest.raises(
+        ValueError,
+        match="populating variadic values from a native object requires the item creator to be set",
+    ):
         CountedVariadicValues().set_payload([1, 2, 3])
 
     # With errors

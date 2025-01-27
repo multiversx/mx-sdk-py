@@ -74,6 +74,17 @@
                 }
             ],
             "outputs": []
+        },
+        {
+            "name": "black",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "a",
+                    "type": "BigInt"
+                }
+            ],
+            "outputs": []
         }
     ],
     "types": {
@@ -81,7 +92,9 @@
             "type": "explicit-enum",
             "variants": [
                 {
-                    "docs": ["indicates that operation was completed"],
+                    "docs": [
+                        "indicates that operation was completed"
+                    ],
                     "name": "completed"
                 },
                 {

@@ -3,36 +3,36 @@ from typing import Optional
 import nacl.signing
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.wallet.constants import (USER_PUBKEY_LENGTH,
-                                             USER_SEED_LENGTH)
-from multiversx_sdk.wallet.errors import (ErrBadPublicKeyLength,
-                                          ErrBadSecretKeyLength)
-from multiversx_sdk.wallet.interfaces import ISignature
+from multiversx_sdk.wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
+from multiversx_sdk.wallet.errors import (
+    InvalidPublicKeyLengthError,
+    InvalidSecretKeyLengthError,
+)
 
 
 class UserSecretKey:
     def __init__(self, buffer: bytes) -> None:
         if len(buffer) != USER_SEED_LENGTH:
-            raise ErrBadSecretKeyLength()
+            raise InvalidSecretKeyLengthError()
 
         self.buffer = buffer
 
     @classmethod
-    def generate(cls) -> 'UserSecretKey':
+    def generate(cls) -> "UserSecretKey":
         signing_key = nacl.signing.SigningKey.generate()
         secret_key = bytes(signing_key)
         return UserSecretKey(secret_key)
 
     @classmethod
-    def from_string(cls, buffer_hex: str) -> 'UserSecretKey':
+    def new_from_string(cls, buffer_hex: str) -> "UserSecretKey":
         buffer = bytes.fromhex(buffer_hex)
         return UserSecretKey(buffer)
 
-    def generate_public_key(self) -> 'UserPublicKey':
+    def generate_public_key(self) -> "UserPublicKey":
         public_key = bytes(nacl.signing.SigningKey(self.buffer).verify_key)
         return UserPublicKey(public_key)
 
-    def sign(self, data: bytes) -> ISignature:
+    def sign(self, data: bytes) -> bytes:
         signing_key = nacl.signing.SigningKey(self.buffer)
         signed = signing_key.sign(data)
         signature = signed.signature
@@ -41,21 +41,30 @@ class UserSecretKey:
     def hex(self) -> str:
         return self.buffer.hex()
 
+    def get_bytes(self) -> bytes:
+        return self.buffer
+
     def __str__(self) -> str:
         return UserSecretKey.__name__
 
     def __repr__(self) -> str:
         return UserSecretKey.__name__
 
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, UserSecretKey):
+            return False
+
+        return self.buffer == value.buffer
+
 
 class UserPublicKey:
     def __init__(self, buffer: bytes) -> None:
         if len(buffer) != USER_PUBKEY_LENGTH:
-            raise ErrBadPublicKeyLength()
+            raise InvalidPublicKeyLengthError()
 
         self.buffer = bytes(buffer)
 
-    def verify(self, data: bytes, signature: ISignature) -> bool:
+    def verify(self, data: bytes, signature: bytes) -> bool:
         verify_key = nacl.signing.VerifyKey(self.buffer)
 
         try:
@@ -67,6 +76,9 @@ class UserPublicKey:
     def to_address(self, hrp: Optional[str] = None) -> Address:
         return Address(self.buffer, hrp)
 
+    def get_bytes(self) -> bytes:
+        return self.buffer
+
     def hex(self) -> str:
         return self.buffer.hex()
 
@@ -75,3 +87,9 @@ class UserPublicKey:
 
     def __repr__(self) -> str:
         return self.hex()
+
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, UserPublicKey):
+            return False
+
+        return self.buffer == value.buffer

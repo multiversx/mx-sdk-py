@@ -1,27 +1,17 @@
 import logging
-from typing import Optional, Protocol, Tuple
+from typing import Optional
 
 from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core import bech32
 from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.constants import METACHAIN_ID
-from multiversx_sdk.core.errors import ErrBadAddress, ErrBadPubkeyLength
+from multiversx_sdk.core.errors import BadAddressError, BadPubkeyLengthError
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 PUBKEY_LENGTH = 32
-PUBKEY_STRING_LENGTH = PUBKEY_LENGTH * 2  # hex-encoded
-BECH32_LENGTH = 62
 
 logger = logging.getLogger("address")
-
-
-class IAddress(Protocol):
-    def get_public_key(self) -> bytes:
-        ...
-
-    def get_hrp(self) -> str:
-        ...
 
 
 class Address:
@@ -33,14 +23,32 @@ class Address:
         Args:
             pubkey (bytes): the sequence of bytes\n
             hrp (str): the human readable part"""
+
+        # used for creating an empty address
+        if not len(pubkey):
+            self.pubkey = bytes()
+            self.hrp = LibraryConfig.default_address_hrp
+            return
+
         if len(pubkey) != PUBKEY_LENGTH:
-            raise ErrBadPubkeyLength(len(pubkey), PUBKEY_LENGTH)
+            raise BadPubkeyLengthError(len(pubkey), PUBKEY_LENGTH)
 
         self.pubkey = bytes(pubkey)
         self.hrp = hrp if hrp else LibraryConfig.default_address_hrp
 
     @classmethod
-    def new_from_bech32(cls, value: str) -> 'Address':
+    def empty(cls) -> "Address":
+        """
+        Creates an empty address object.
+        Generally speaking, this should not be used by client code **(internal use only)**.
+        """
+        return Address(b"", "")
+
+    def is_empty(self) -> bool:
+        return len(self.pubkey) == 0
+
+    @classmethod
+    def new_from_bech32(cls, value: str) -> "Address":
         """Creates an address object from the bech32 representation of an address.
 
         Args:
@@ -49,12 +57,12 @@ class Address:
         return cls(pubkey, hrp)
 
     @classmethod
-    def from_bech32(cls, value: str) -> 'Address':
+    def from_bech32(cls, value: str) -> "Address":
         """The `from_bech32()` method is deprecated. Please use `new_from_bech32()` instead"""
         return Address.new_from_bech32(value)
 
     @classmethod
-    def new_from_hex(cls, value: str, hrp: Optional[str] = None) -> 'Address':
+    def new_from_hex(cls, value: str, hrp: Optional[str] = None) -> "Address":
         """Creates an address object from the hexed sequence of bytes and the human readable part(hrp).
 
         Args:
@@ -64,7 +72,7 @@ class Address:
         return cls(pubkey, hrp)
 
     @classmethod
-    def from_hex(cls, value: str, hrp: str) -> 'Address':
+    def from_hex(cls, value: str, hrp: str) -> "Address":
         """The `from_hex()` method is deprecated. Please use `new_from_hex()` instead"""
         return Address.new_from_hex(value, hrp)
 
@@ -99,13 +107,17 @@ class Address:
         """Returns whether the address is a smart contract address"""
         return self.to_hex().startswith(SC_HEX_PUBKEY_PREFIX)
 
-    # this will be removed in v1.0.0; it's here for compatibility reasons with the deprecated transaction builders
-    # the transaction builders will also be removed in v1.0.0
-    def serialize(self) -> bytes:
-        return self.get_public_key()
-
     def __bytes__(self) -> bytes:
         return self.get_public_key()
+
+    def __str__(self) -> str:
+        return self.to_bech32()
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Address):
+            return False
+
+        return self.pubkey == other.pubkey and self.hrp == other.hrp
 
 
 class AddressFactory:
@@ -122,7 +134,7 @@ class AddressFactory:
         """Creates an address object from the bech32 representation of an address"""
         hrp, pubkey = _decode_bech32(value)
         if hrp != self.hrp:
-            raise ErrBadAddress(value)
+            raise BadAddressError(value)
 
         return Address(pubkey, hrp)
 
@@ -145,17 +157,18 @@ class AddressComputer:
             number_of_shards (int): The number of shards in the network (default: 3)."""
         self.number_of_shards = number_of_shards
 
-    def compute_contract_address(self, deployer: IAddress, deployment_nonce: int) -> Address:
+    def compute_contract_address(self, deployer: Address, deployment_nonce: int) -> Address:
         """Computes the contract address based on the deployer's address and deployment nonce.
 
         Args:
-            deployer (IAddress): The address of the deployer\n
+            deployer (Address): The address of the deployer\n
             deployment_nonce (int): The nonce of the deployment
 
         Returns:
             Address: The computed contract address as below:
 
-            8 bytes of zero + 2 bytes for VM type + 20 bytes of hash(owner) + 2 bytes of shard(owner)"""
+            8 bytes of zero + 2 bytes for VM type + 20 bytes of hash(owner) + 2 bytes of shard(owner)
+        """
         deployer_pubkey = deployer.get_public_key()
         nonce_bytes = deployment_nonce.to_bytes(8, byteorder="little")
         bytes_to_hash = deployer_pubkey + nonce_bytes
@@ -163,11 +176,11 @@ class AddressComputer:
         contract_pubkey = bytes([0] * 8) + bytes([5, 0]) + contract_pubkey[10:30] + deployer_pubkey[30:]
         return Address(contract_pubkey, deployer.get_hrp())
 
-    def get_shard_of_address(self, address: IAddress) -> int:
+    def get_shard_of_address(self, address: Address) -> int:
         """Returns the shard number of a given address.
 
         Args:
-            address (IAddress): The address for which to determine the shard.
+            address (Address): The address for which to determine the shard.
 
         Returns:
             int: The shard number."""
@@ -179,14 +192,14 @@ def is_valid_bech32(value: str, expected_hrp: str) -> bool:
     return hrp == expected_hrp and value_bytes is not None
 
 
-def _decode_bech32(value: str) -> Tuple[str, bytes]:
+def _decode_bech32(value: str) -> tuple[str, bytes]:
     hrp, value_bytes = bech32.bech32_decode(value)
     if hrp is None or value_bytes is None:
-        raise ErrBadAddress(value)
+        raise BadAddressError(value)
 
     decoded_bytes = bech32.convertbits(value_bytes, 5, 8, False)
     if decoded_bytes is None:
-        raise ErrBadAddress(value)
+        raise BadAddressError(value)
 
     return hrp, bytes(bytearray(decoded_bytes))
 
@@ -209,7 +222,7 @@ def get_shard_of_pubkey(pubkey: bytes, number_of_shards: int) -> int:
 
 def _is_pubkey_of_metachain(pubkey: bytes) -> bool:
     metachain_prefix = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-    pubkey_prefix = pubkey[0:len(metachain_prefix)]
+    pubkey_prefix = pubkey[0 : len(metachain_prefix)]
     if pubkey_prefix == bytes(metachain_prefix):
         return True
 

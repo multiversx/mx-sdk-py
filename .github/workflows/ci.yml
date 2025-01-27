@@ -2,12 +2,18 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches: [main, feat/*]
+  workflow_dispatch:
 
 jobs:
   coverage:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: [3.11]
+      max-parallel: 1  # This ensures jobs run sequentially, not concurrently
+
     name: Check coverage
     permissions:
       # Gives the action the necessary permissions for publishing new
@@ -17,6 +23,7 @@ jobs:
       # python-coverage-comment-action branch, and for editing existing
       # comments (to avoid publishing multiple comments in the same PR)
       contents: write
+
     steps:
       - uses: actions/checkout@v3
 
@@ -24,7 +31,7 @@ jobs:
         id: setup-python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: ${{ matrix.python-version }}
 
       - name: Install deps
         run: |
@@ -32,19 +39,18 @@ jobs:
             pip install -r requirements-dev.txt
 
       - name: Launch tests & generate report
-        run: coverage run -m pytest .
+        run: coverage run -m pytest -m "not mainnet"
 
       - name: Coverage comment
         id: coverage_comment
+        if: matrix.os == 'ubuntu-latest'  # Run only on Ubuntu
         uses: py-cov-action/python-coverage-comment-action@v3
         with:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Store Pull Request comment to be posted
-        uses: actions/upload-artifact@v3
-        if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
+        if: matrix.os == 'ubuntu-latest' && steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'  # Run only on Ubuntu
+        uses: actions/upload-artifact@v4
         with:
-          # If you use a different name, update COMMENT_ARTIFACT_NAME accordingly
           name: python-coverage-comment-action
-          # If you use a different name, update COMMENT_FILENAME accordingly
           path: python-coverage-comment-action.txt

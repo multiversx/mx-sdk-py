@@ -25,6 +25,11 @@ Install development dependencies, as well:
 pip install -r ./requirements-dev.txt --upgrade
 ```
 
+Allow `pre-commit` to automatically run on `git commit`:
+```
+pre-commit install
+```
+
 Above, `requirements.txt` should mirror the **dependencies** section of `pyproject.toml`.
 
 If using VSCode, restart it or follow these steps:
@@ -44,6 +49,11 @@ pytest .
 If you want to skip network interaction tests run:
 ```
 pytest -m "not networkInteraction"
+```
+
+We have some tests fetching mainnet transactions that are quite time consuming. To skip those, run this command:
+```
+pytest -m "not mainnet"
 ```
 
 ### Generate test coverage report
@@ -67,7 +77,7 @@ coverage html
 
 Each time a new module/submodule is added it needs to be added to the docs, as well. To do so `cd` in the root directory then run the following command:
 ```bash
-sphinx-apidoc -f -o docs/ multiversx_sdk/ *_test.py *constants.py
+sphinx-apidoc -f -o docs/ multiversx_sdk/ '*_test.py' '*constants.py'
 ```
 
 This command will regenerate the `.rst` files for each module, excluding the tests and the `constants.py` files.

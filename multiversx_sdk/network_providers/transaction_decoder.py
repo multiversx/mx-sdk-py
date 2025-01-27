@@ -1,19 +1,10 @@
 import binascii
-from typing import Any, Dict, List, Optional, Protocol
+from typing import Any, Optional
 
 from multiversx_sdk.core import TokenTransfer
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token
-from multiversx_sdk.network_providers.interface import IAddress
-
-DEFAULT_HRP = "erd"
-
-
-class ITransactionToDecode(Protocol):
-    sender: IAddress
-    receiver: IAddress
-    data: str
-    value: int
+from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 
 
 class TransactionMetadata:
@@ -22,32 +13,39 @@ class TransactionMetadata:
         self.receiver: str = ""
         self.value: int = 0
         self.function_name: Optional[str] = None
-        self.function_args: Optional[List[str]] = None
-        self.transfers: Optional[List[TokenTransfer]] = None
+        self.function_args: Optional[list[str]] = None
+        self.transfers: Optional[list[TokenTransfer]] = None
+        self.transfer_messages: list[bytes] = []
+        """
+        This property is set to the extra arguments passed to ESDTTransfer when transferring tokens to non-smart contract accounts.
+        """
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "sender": self.sender,
             "receiver": self.receiver,
             "value": self.value,
             "function_name": self.function_name if self.function_name else "",
             "function_args": self.function_args if self.function_args else [],
-            "transfers": self._transfers_to_dict()
+            "transfers": self._transfers_to_dict(),
+            "transfer_messages": [message.decode() for message in self.transfer_messages],
         }
 
-    def _transfers_to_dict(self) -> List[Dict[str, Any]]:
+    def _transfers_to_dict(self) -> list[dict[str, Any]]:
         if self.transfers:
             if not len(self.transfers):
                 return []
 
-            transfers: List[Dict[str, Any]] = []
+            transfers: list[dict[str, Any]] = []
 
             for transfer in self.transfers:
-                transfers.append({
-                    "value": transfer.amount,
-                    "token": transfer.token.identifier,
-                    "nonce": transfer.token.nonce
-                })
+                transfers.append(
+                    {
+                        "value": transfer.amount,
+                        "token": transfer.token.identifier,
+                        "nonce": transfer.token.nonce,
+                    }
+                )
 
             return transfers
 
@@ -55,7 +53,9 @@ class TransactionMetadata:
 
 
 class TransactionDecoder:
-    def get_transaction_metadata(self, transaction: ITransactionToDecode) -> TransactionMetadata:
+    """Can be used for decoding custom token transfers transactions (ESDTTransfer, NFTTransfer, MultiESDTNFTTransfer)."""
+
+    def get_transaction_metadata(self, transaction: TransactionOnNetwork) -> TransactionMetadata:
         metadata = self.get_normal_transaction_metadata(transaction)
 
         esdt_metadata = self.get_esdt_transaction_metadata(metadata)
@@ -72,19 +72,24 @@ class TransactionDecoder:
 
         return metadata
 
-    def get_normal_transaction_metadata(self, transaction: ITransactionToDecode) -> TransactionMetadata:
+    def get_normal_transaction_metadata(self, transaction: TransactionOnNetwork) -> TransactionMetadata:
         metadata = TransactionMetadata()
         metadata.sender = transaction.sender.to_bech32()
         metadata.receiver = transaction.receiver.to_bech32()
         metadata.value = transaction.value
 
         if transaction.data:
-            data_components = transaction.data.split("@")
+            data_components = transaction.data.decode().split("@")
 
             args = data_components[1:]
             if all(self.is_smart_contract_call_argument(x) for x in args):
                 metadata.function_name = data_components[0]
                 metadata.function_args = args
+
+            if len(args) == 0 and not transaction.receiver.is_smart_contract():
+                metadata.function_name = "transfer"
+                metadata.function_args = []
+                metadata.transfer_messages = [bytes.fromhex(data) for data in data_components]
 
         return metadata
 
@@ -109,9 +114,15 @@ class TransactionDecoder:
         result.value = value
         result.transfers = []
 
+        receiver = Address.new_from_bech32(result.receiver)
+        is_receiver_sc = receiver.is_smart_contract()
+
         if len(args) > 2:
-            result.function_name = self.hex_to_string(args[2])
-            result.function_args = args[3:]
+            if is_receiver_sc:
+                result.function_name = self.hex_to_string(args[2])
+                result.function_args = args[3:]
+            else:
+                result.transfer_messages = [bytes.fromhex(arg) for arg in args[2:]]
 
         token = Token(identifier)
         transfer = TokenTransfer(token, value)
@@ -139,7 +150,7 @@ class TransactionDecoder:
         collection_identifier = self.hex_to_string(args[0])
         nonce = args[1]
         value = self.hex_to_number(args[2])
-        receiver = Address.new_from_hex(args[3], DEFAULT_HRP)
+        receiver = Address.new_from_hex(args[3])
 
         result = TransactionMetadata()
         result.sender = metadata.sender
@@ -148,8 +159,11 @@ class TransactionDecoder:
         result.transfers = []
 
         if len(args) > 4:
-            result.function_name = self.hex_to_string(args[4])
-            result.function_args = args[5:]
+            if receiver.is_smart_contract():
+                result.function_name = self.hex_to_string(args[4])
+                result.function_args = args[5:]
+            else:
+                result.transfer_messages = [bytes.fromhex(arg) for arg in args[4:]]
 
         token = Token(collection_identifier, self.hex_to_number(nonce))
         transfer = TokenTransfer(token, value)
@@ -174,7 +188,7 @@ class TransactionDecoder:
         if not self.is_address_valid(args[0]):
             return None
 
-        receiver = Address.new_from_hex(args[0], DEFAULT_HRP)
+        receiver = Address.new_from_hex(args[0])
         transfer_count = self.hex_to_number(args[1])
 
         result = TransactionMetadata()
@@ -205,10 +219,13 @@ class TransactionDecoder:
         result.receiver = receiver.to_bech32()
 
         if len(args) > index:
-            result.function_name = self.hex_to_string(args[index])
-            index += 1
-            result.function_args = args[index:]
-            index += 1
+            if receiver.is_smart_contract():
+                result.function_name = self.hex_to_string(args[index])
+                index += 1
+                result.function_args = args[index:]
+                index += 1
+            else:
+                result.transfer_messages = [bytes.fromhex(arg) for arg in args[index:]]
 
         return result
 

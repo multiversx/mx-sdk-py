@@ -4,11 +4,15 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 from multiversx_sdk.wallet.crypto.constants import (
-    CIPHER_ALGORITHM_AES_128_CTR, KEY_DERIVATION_FUNCTION_SCRYPT)
+    CIPHER_ALGORITHM_AES_128_CTR,
+    KEY_DERIVATION_FUNCTION_SCRYPT,
+)
 from multiversx_sdk.wallet.crypto.encrypted_data import EncryptedData
-from multiversx_sdk.wallet.errors import (ErrInvalidKeystoreFilePassword,
-                                          ErrUnknownCipher,
-                                          ErrUnknownDerivationFunction)
+from multiversx_sdk.wallet.errors import (
+    InvalidKeystoreFilePasswordError,
+    UnknownCipherError,
+    UnknownDerivationFunctionError,
+)
 
 
 def decrypt(encrypted_data: EncryptedData, password: str) -> bytes:
@@ -18,10 +22,10 @@ def decrypt(encrypted_data: EncryptedData, password: str) -> bytes:
     backend = default_backend()
 
     if encrypted_data.kdf != KEY_DERIVATION_FUNCTION_SCRYPT:
-        raise ErrUnknownDerivationFunction()
+        raise UnknownDerivationFunctionError()
 
     if encrypted_data.cipher != CIPHER_ALGORITHM_AES_128_CTR:
-        raise ErrUnknownCipher(name=encrypted_data.cipher)
+        raise UnknownCipherError(name=encrypted_data.cipher)
 
     salt = bytes.fromhex(encrypted_data.salt)
     iv = bytes.fromhex(encrypted_data.iv)
@@ -33,7 +37,7 @@ def decrypt(encrypted_data: EncryptedData, password: str) -> bytes:
         n=encrypted_data.kdfparams.n,
         r=encrypted_data.kdfparams.r,
         p=encrypted_data.kdfparams.p,
-        backend=backend
+        backend=backend,
     )
 
     derived_key = kdf.derive(bytes(password.encode()))
@@ -46,7 +50,7 @@ def decrypt(encrypted_data: EncryptedData, password: str) -> bytes:
     actual_mac = bytes.fromhex(encrypted_data.mac)
 
     if computed_mac != actual_mac:
-        raise ErrInvalidKeystoreFilePassword()
+        raise InvalidKeystoreFilePasswordError()
 
     cipher = Cipher(algorithms.AES(derived_key_first_half), modes.CTR(iv), backend=backend)
     decryptor = cipher.decryptor()

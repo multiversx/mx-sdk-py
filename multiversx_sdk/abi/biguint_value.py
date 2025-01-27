@@ -1,9 +1,7 @@
-
 import io
 from typing import Any
 
-from multiversx_sdk.abi.shared import (decode_length, encode_length,
-                                       read_bytes_exactly)
+from multiversx_sdk.abi.shared import decode_length, encode_length, read_bytes_exactly
 from multiversx_sdk.core.constants import INTEGER_MAX_NUM_BYTES
 
 
@@ -32,7 +30,7 @@ class BigUIntValue:
         value = self.value
 
         if value == 0:
-            return b''
+            return b""
 
         data = value.to_bytes(INTEGER_MAX_NUM_BYTES, byteorder="big", signed=False)
         data = data.lstrip(bytes([0]))

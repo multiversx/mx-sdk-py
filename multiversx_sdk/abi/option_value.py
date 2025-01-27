@@ -1,8 +1,10 @@
 import io
 from typing import Any, Optional
 
-from multiversx_sdk.abi.constants import (OPTION_MARKER_FOR_ABSENT_VALUE,
-                                          OPTION_MARKER_FOR_PRESENT_VALUE)
+from multiversx_sdk.abi.constants import (
+    OPTION_MARKER_FOR_ABSENT_VALUE,
+    OPTION_MARKER_FOR_PRESENT_VALUE,
+)
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.shared import read_bytes_exactly
 

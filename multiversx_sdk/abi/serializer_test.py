@@ -7,13 +7,13 @@ from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.counted_variadic_values import CountedVariadicValues
 from multiversx_sdk.abi.enum_value import EnumValue
-from multiversx_sdk.abi.fields import *
+from multiversx_sdk.abi.fields import Field
 from multiversx_sdk.abi.list_value import ListValue
-from multiversx_sdk.abi.multi_value import *
+from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.optional_value import OptionalValue
 from multiversx_sdk.abi.serializer import Serializer
-from multiversx_sdk.abi.small_int_values import *
+from multiversx_sdk.abi.small_int_values import U8Value, U16Value, U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
@@ -24,99 +24,123 @@ one_quintillion = 1_000_000_000_000_000_000
 
 
 def test_serialize():
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
     # u8
-    data = serializer.serialize([
-        U8Value(0x42)
-    ])
+    data = serializer.serialize([U8Value(0x42)])
 
     assert data == "42"
 
     # u16
-    data = serializer.serialize([
-        U16Value(0x4243)
-    ])
+    data = serializer.serialize([U16Value(0x4243)])
 
     assert data == "4243"
 
     # u8, u16
-    data = serializer.serialize([
-        U8Value(0x42),
-        U16Value(0x4243),
-    ])
+    data = serializer.serialize(
+        [
+            U8Value(0x42),
+            U16Value(0x4243),
+        ]
+    )
 
     assert data == "42@4243"
 
     # optional (missing)
-    data = serializer.serialize([
-        U8Value(0x42),
-        OptionalValue(),
-    ])
+    data = serializer.serialize(
+        [
+            U8Value(0x42),
+            OptionalValue(),
+        ]
+    )
 
     assert data == "42"
 
     # optional (provided)
-    data = serializer.serialize([
-        U8Value(0x42),
-        OptionalValue(U8Value(0x43)),
-    ])
+    data = serializer.serialize(
+        [
+            U8Value(0x42),
+            OptionalValue(U8Value(0x43)),
+        ]
+    )
 
     assert data == "42@43"
 
     # optional: should err because optional must be last
     with pytest.raises(ValueError, match="^an optional value must be last among input values$"):
-        serializer.serialize([
-            OptionalValue(U8Value(0x43)),
-            U8Value(0x42),
-        ])
+        serializer.serialize(
+            [
+                OptionalValue(U8Value(0x43)),
+                U8Value(0x42),
+            ]
+        )
 
     # multi<u8, u16, u32>
-    data = serializer.serialize([
-        MultiValue([
-            U8Value(0x42),
-            U16Value(0x4243),
-            U32Value(0x42434445),
-        ]),
-    ])
+    data = serializer.serialize(
+        [
+            MultiValue(
+                [
+                    U8Value(0x42),
+                    U16Value(0x4243),
+                    U32Value(0x42434445),
+                ]
+            ),
+        ]
+    )
 
     assert data == "42@4243@42434445"
 
     # u8, multi<u8, u16, u32>
-    data = serializer.serialize([
-        U8Value(0x42),
-        MultiValue([
+    data = serializer.serialize(
+        [
             U8Value(0x42),
-            U16Value(0x4243),
-            U32Value(0x42434445),
-        ]),
-    ])
+            MultiValue(
+                [
+                    U8Value(0x42),
+                    U16Value(0x4243),
+                    U32Value(0x42434445),
+                ]
+            ),
+        ]
+    )
 
     assert data == "42@42@4243@42434445"
 
     # multi<multi<u8, u16>, multi<u8, u16>>
-    data = serializer.serialize([
-        MultiValue([
-            MultiValue([
-                U8Value(0x42),
-                U16Value(0x4243),
-            ]),
-            MultiValue([
-                U8Value(0x44),
-                U16Value(0x4445),
-            ]),
-        ]),
-    ])
+    data = serializer.serialize(
+        [
+            MultiValue(
+                [
+                    MultiValue(
+                        [
+                            U8Value(0x42),
+                            U16Value(0x4243),
+                        ]
+                    ),
+                    MultiValue(
+                        [
+                            U8Value(0x44),
+                            U16Value(0x4445),
+                        ]
+                    ),
+                ]
+            ),
+        ]
+    )
 
     assert data == "42@4243@44@4445"
 
     # variadic, of different types
-    data = serializer.serialize([
-        VariadicValues([
-            U8Value(0x42),
-            U16Value(0x4243),
-        ]),
-    ])
+    data = serializer.serialize(
+        [
+            VariadicValues(
+                [
+                    U8Value(0x42),
+                    U16Value(0x4243),
+                ]
+            ),
+        ]
+    )
 
     # For now, the serializer does not perform such a strict type check.
     # Although doable, it would be slightly complex and, if done, might be even dropped in the future
@@ -125,49 +149,63 @@ def test_serialize():
 
     # variadic<u8>, u8: should err because variadic must be last
     with pytest.raises(ValueError, match="^variadic values must be last among input values$"):
-        serializer.serialize([
-            VariadicValues([
-                U8Value(0x42),
-                U8Value(0x43),
-            ]),
-            U8Value(0x44),
-        ])
+        serializer.serialize(
+            [
+                VariadicValues(
+                    [
+                        U8Value(0x42),
+                        U8Value(0x43),
+                    ]
+                ),
+                U8Value(0x44),
+            ]
+        )
 
     # u8, variadic<u8>
-    data = serializer.serialize([
-        U8Value(0x41),
-        VariadicValues([
-            U8Value(0x42),
-            U8Value(0x43),
-        ]),
-    ])
+    data = serializer.serialize(
+        [
+            U8Value(0x41),
+            VariadicValues(
+                [
+                    U8Value(0x42),
+                    U8Value(0x43),
+                ]
+            ),
+        ]
+    )
 
     assert data == "41@42@43"
 
     # counted-variadic, of different types
-    data = serializer.serialize([
-        CountedVariadicValues(
-            items=[
-                U8Value(0x42),
-                U16Value(0x4243),
-            ]),
-    ])
+    data = serializer.serialize(
+        [
+            CountedVariadicValues(
+                items=[
+                    U8Value(0x42),
+                    U16Value(0x4243),
+                ]
+            ),
+        ]
+    )
     assert data == "02@42@4243"
 
     # variadic<u8>
-    data = serializer.serialize([
-        CountedVariadicValues(
-            items=[
-                U8Value(0x42),
-                U8Value(0x43),
-            ]),
-        U8Value(0x44),
-    ])
+    data = serializer.serialize(
+        [
+            CountedVariadicValues(
+                items=[
+                    U8Value(0x42),
+                    U8Value(0x43),
+                ]
+            ),
+            U8Value(0x44),
+        ]
+    )
     assert data == "02@42@43@44"
 
 
 def test_deserialize():
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
     # nil destination
     with pytest.raises(ValueError, match="^cannot deserialize into null value$"):
@@ -254,57 +292,61 @@ def test_deserialize():
 
     # multi<u8, u16, u32>
     output_values = [
-        MultiValue([
-            U8Value(),
-            U16Value(),
-            U32Value(),
-        ]),
+        MultiValue(
+            [
+                U8Value(),
+                U16Value(),
+                U32Value(),
+            ]
+        ),
     ]
 
     serializer.deserialize("42@4243@42434445", output_values)
 
     assert output_values == [
-        MultiValue([
-            U8Value(0x42),
-            U16Value(0x4243),
-            U32Value(0x42434445),
-        ]),
+        MultiValue(
+            [
+                U8Value(0x42),
+                U16Value(0x4243),
+                U32Value(0x42434445),
+            ]
+        ),
     ]
 
     # u8, multi<u8, u16, u32>
     output_values = [
         U8Value(),
-        MultiValue([
-            U8Value(),
-            U16Value(),
-            U32Value(),
-        ]),
+        MultiValue(
+            [
+                U8Value(),
+                U16Value(),
+                U32Value(),
+            ]
+        ),
     ]
 
     serializer.deserialize("42@42@4243@42434445", output_values)
 
     assert output_values == [
         U8Value(0x42),
-        MultiValue([
-            U8Value(0x42),
-            U16Value(0x4243),
-            U32Value(0x42434445),
-        ]),
+        MultiValue(
+            [
+                U8Value(0x42),
+                U16Value(0x4243),
+                U32Value(0x42434445),
+            ]
+        ),
     ]
 
     # empty: u8
-    destination = VariadicValues(
-        item_creator=lambda: U8Value()
-    )
+    destination = VariadicValues(item_creator=lambda: U8Value())
 
     serializer.deserialize("", [destination])
 
     assert destination.items == [U8Value(0)]
 
     # variadic<u8>
-    destination = VariadicValues(
-        item_creator=lambda: U8Value()
-    )
+    destination = VariadicValues(item_creator=lambda: U8Value())
 
     serializer.deserialize("2A@2B@2C", [destination])
 
@@ -315,9 +357,7 @@ def test_deserialize():
     ]
 
     # variadic<u8>, with empty items
-    destination = VariadicValues(
-        item_creator=lambda: U8Value()
-    )
+    destination = VariadicValues(item_creator=lambda: U8Value())
 
     serializer.deserialize("@01@00@", [destination])
 
@@ -329,9 +369,7 @@ def test_deserialize():
     ]
 
     # variadic<u32>
-    destination = VariadicValues(
-        item_creator=lambda: U32Value()
-    )
+    destination = VariadicValues(item_creator=lambda: U32Value())
 
     serializer.deserialize("AABBCCDD@DDCCBBAA", [destination])
 
@@ -341,15 +379,19 @@ def test_deserialize():
     ]
 
     # variadic<u8>, u8: should err because decoded value is too large
-    with pytest.raises(ValueError, match="^cannot decode \\(top-level\\) U8Value, because of: decoded value is too large or invalid \\(does not fit into 1 byte\\(s\\)\\): 256$"):
-        destination = VariadicValues(
-            item_creator=lambda: U8Value()
-        )
+    with pytest.raises(
+        ValueError,
+        match="^cannot decode \\(top-level\\) U8Value, because of: decoded value is too large or invalid \\(does not fit into 1 byte\\(s\\)\\): 256$",
+    ):
+        destination = VariadicValues(item_creator=lambda: U8Value())
 
         serializer.deserialize("0100", [destination])
 
     # # counted-variadic<u32>, variadic<u32>
-    destination = [CountedVariadicValues(item_creator=lambda: U32Value()), VariadicValues(item_creator=lambda: U32Value())]
+    destination = [
+        CountedVariadicValues(item_creator=lambda: U32Value()),
+        VariadicValues(item_creator=lambda: U32Value()),
+    ]
 
     serializer.deserialize("03@41@42@43@44@45", destination)
     assert len(destination) == 2
@@ -363,15 +405,10 @@ def test_deserialize():
     ]
 
     assert isinstance(destination[1], VariadicValues)
-    assert destination[1].items == [
-        U32Value(0x44),
-        U32Value(0x45)
-    ]
+    assert destination[1].items == [U32Value(0x44), U32Value(0x45)]
 
     # counted-variadic<u8>
-    destination = CountedVariadicValues(
-        item_creator=lambda: U8Value()
-    )
+    destination = CountedVariadicValues(item_creator=lambda: U8Value())
 
     serializer.deserialize("03@2A@2B@2C", [destination])
     assert destination.length == 3
@@ -382,9 +419,7 @@ def test_deserialize():
     ]
 
     # counted-variadic<u8>, with empty items
-    destination = CountedVariadicValues(
-        item_creator=lambda: U8Value()
-    )
+    destination = CountedVariadicValues(item_creator=lambda: U8Value())
 
     serializer.deserialize("04@@01@00@", [destination])
 
@@ -397,9 +432,7 @@ def test_deserialize():
     ]
 
     # variadic<u32>
-    destination = CountedVariadicValues(
-        item_creator=lambda: U32Value()
-    )
+    destination = CountedVariadicValues(item_creator=lambda: U32Value())
 
     serializer.deserialize("02@AABBCCDD@DDCCBBAA", [destination])
 
@@ -415,14 +448,16 @@ def test_real_world_multisig_propose_batch():
     serialize input of multisig.proposeBatch(variadic<Action>
     """
 
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
     def create_esdt_token_payment(token_identifier: str, token_nonce: int, amount: int) -> StructValue:
-        return StructValue([
-            Field("token_identifier", StringValue(token_identifier)),
-            Field("token_nonce", U64Value(token_nonce)),
-            Field("amount", BigUIntValue(amount)),
-        ])
+        return StructValue(
+            [
+                Field("token_identifier", StringValue(token_identifier)),
+                Field("token_nonce", U64Value(token_nonce)),
+                Field("amount", BigUIntValue(amount)),
+            ]
+        )
 
     # First action: SendTransferExecuteEgld
     first_action = EnumValue(
@@ -432,10 +467,15 @@ def test_real_world_multisig_propose_batch():
             Field("egld_amount", BigUIntValue(one_quintillion)),
             Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
             Field("endpoint_name", BytesValue(b"example")),
-            Field("arguments", ListValue([
-                BytesValue(bytes([0x03, 0x42])),
-                BytesValue(bytes([0x07, 0x43])),
-            ])),
+            Field(
+                "arguments",
+                ListValue(
+                    [
+                        BytesValue(bytes([0x03, 0x42])),
+                        BytesValue(bytes([0x07, 0x43])),
+                    ]
+                ),
+            ),
         ],
     )
 
@@ -444,28 +484,42 @@ def test_real_world_multisig_propose_batch():
         discriminant=6,
         fields=[
             Field("to", AddressValue(alice_pub_key)),
-            Field("tokens", ListValue([
-                create_esdt_token_payment("beer", 0, one_quintillion),
-                create_esdt_token_payment("chocolate", 0, one_quintillion),
-            ])),
+            Field(
+                "tokens",
+                ListValue(
+                    [
+                        create_esdt_token_payment("beer", 0, one_quintillion),
+                        create_esdt_token_payment("chocolate", 0, one_quintillion),
+                    ]
+                ),
+            ),
             Field("opt_gas_limit", OptionValue(U64Value(15_000_000))),
             Field("endpoint_name", BytesValue(b"example")),
-            Field("arguments", ListValue([
-                BytesValue(bytes([0x03, 0x42])),
-                BytesValue(bytes([0x07, 0x43])),
-            ])),
+            Field(
+                "arguments",
+                ListValue(
+                    [
+                        BytesValue(bytes([0x03, 0x42])),
+                        BytesValue(bytes([0x07, 0x43])),
+                    ]
+                ),
+            ),
         ],
     )
 
-    data = serializer.serialize([
-        first_action,
-        second_action,
-    ])
+    data = serializer.serialize(
+        [
+            first_action,
+            second_action,
+        ]
+    )
 
-    data_expected = "@".join([
-        "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
-        "06|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|00000002|0000000462656572|0000000000000000|000000080de0b6b3a7640000|0000000963686f636f6c617465|0000000000000000|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
-    ])
+    data_expected = "@".join(
+        [
+            "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
+            "06|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|00000002|0000000462656572|0000000000000000|000000080de0b6b3a7640000|0000000963686f636f6c617465|0000000000000000|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
+        ]
+    )
 
     # Drop the delimiters (were added for readability)
     data_expected = data_expected.replace("|", "")
@@ -478,14 +532,16 @@ def test_real_world_multisig_get_pending_action_full_info():
     deserialize output of multisig.getPendingActionFullInfo() -> variadic<ActionFullInfo>
     """
 
-    serializer = Serializer(parts_separator="@")
+    serializer = Serializer()
 
-    data_hex = "".join([
-        "0000002A",
-        "0000002A",
-        "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
-        "00000002|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8",
-    ])
+    data_hex = "".join(
+        [
+            "0000002A",
+            "0000002A",
+            "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743",
+            "00000002|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8",
+        ]
+    )
 
     # Drop the delimiters (were added for readability)
     data = data_hex.replace("|", "")
@@ -497,11 +553,9 @@ def test_real_world_multisig_get_pending_action_full_info():
     action_egld_amount = BigUIntValue()
     action_gas_limit = U64Value()
     action_endpoint_name = BytesValue()
-    action_arguments = ListValue(
-        item_creator=lambda: BytesValue()
-    )
+    action_arguments = ListValue(item_creator=lambda: BytesValue())
 
-    def action_fields_provider(discriminant: int) -> List[Field]:
+    def action_fields_provider(discriminant: int) -> list[Field]:
         if discriminant == 5:
             return [
                 Field("to", action_to),
@@ -513,21 +567,19 @@ def test_real_world_multisig_get_pending_action_full_info():
 
         return []
 
-    action = EnumValue(
-        fields_provider=action_fields_provider
-    )
+    action = EnumValue(fields_provider=action_fields_provider)
 
-    signers = ListValue(
-        item_creator=lambda: AddressValue()
-    )
+    signers = ListValue(item_creator=lambda: AddressValue())
 
     destination = VariadicValues(
-        item_creator=lambda: StructValue([
-            Field("action_id", action_id),
-            Field("group_id", group_id),
-            Field("action_data", action),
-            Field("signers", signers),
-        ]),
+        item_creator=lambda: StructValue(
+            [
+                Field("action_id", action_id),
+                Field("group_id", group_id),
+                Field("action_data", action),
+                Field("signers", signers),
+            ]
+        ),
     )
 
     serializer.deserialize(data, [destination])

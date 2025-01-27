@@ -1,4 +1,4 @@
-from typing import List, Sequence
+from typing import Sequence
 
 
 class PartsHolder:
@@ -18,7 +18,7 @@ class PartsHolder:
         self.parts = list(parts)
         self.focused_part_index = 0
 
-    def get_parts(self) -> List[bytes]:
+    def get_parts(self) -> list[bytes]:
         return self.parts
 
     def get_num_parts(self) -> int:
@@ -55,7 +55,9 @@ class PartsHolder:
         """
 
         if self.is_focused_beyond_last_part():
-            raise ValueError(f"cannot focus on next part, since the focus is already beyond the last part; focused part index is {self.focused_part_index}")
+            raise ValueError(
+                f"cannot focus on next part, since the focus is already beyond the last part; focused part index is {self.focused_part_index}"
+            )
         self.focused_part_index += 1
 
     def is_focused_beyond_last_part(self):

@@ -1,15 +1,17 @@
 import io
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, Optional
 
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class ArrayValue:
-    def __init__(self,
-                 length: int,
-                 items: Optional[List[ISingleValue]] = None,
-                 item_creator: Optional[Callable[[], ISingleValue]] = None) -> None:
+    def __init__(
+        self,
+        length: int,
+        items: Optional[list[ISingleValue]] = None,
+        item_creator: Optional[Callable[[], ISingleValue]] = None,
+    ) -> None:
         self.length = length
         self.items = items or []
 
@@ -65,7 +67,7 @@ class ArrayValue:
     def get_payload(self) -> Any:
         return [item.get_payload() for item in self.items]
 
-    def guard_length(self, items: List[ISingleValue]):
+    def guard_length(self, items: list[ISingleValue]):
         if len(items) != self.length:
             raise ValueError(f"wrong length, expected: {self.length}, actual: {len(items)}")
 

@@ -1,2 +1,3 @@
 [flake8]
-ignore = E501, E722
+extend-ignore = E501, E722, E203
+exclude = transaction_pb2*

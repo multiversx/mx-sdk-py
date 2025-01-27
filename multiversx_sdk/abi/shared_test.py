@@ -2,8 +2,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from multiversx_sdk.abi.shared import (convert_native_value_to_dictionary,
-                                       convert_native_value_to_list)
+from multiversx_sdk.abi.shared import (
+    convert_native_value_to_dictionary,
+    convert_native_value_to_list,
+)
 
 
 def test_convert_native_value_to_dictionary():
@@ -43,13 +45,7 @@ def test_convert_native_value_to_list():
 
     # With errors (raise on failure)
     with pytest.raises(ValueError, match="cannot properly convert dictionary to list"):
-        items, ok = convert_native_value_to_list(
-            {
-                "a": 1,
-                "b": 2,
-                "c": 3
-            }
-        )
+        items, ok = convert_native_value_to_list({"a": 1, "b": 2, "c": 3})
 
     with pytest.raises(ValueError, match="cannot convert native value to list"):
         items, ok = convert_native_value_to_list(42)

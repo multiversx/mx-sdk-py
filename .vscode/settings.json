@@ -6,13 +6,13 @@
     "python.testing.pytestEnabled": true,
     "editor.formatOnSave": true,
     "[python]": {
-      "editor.defaultFormatter": "ms-python.autopep8"
+      "editor.defaultFormatter": "ms-python.black-formatter"
     },
-    "editor.defaultFormatter": "ms-python.autopep8",
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     },
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
-    "python.languageServer": "Pylance"
+    "python.languageServer": "Pylance",
+    "black-formatter.args": ["--line-length=120"]
   }

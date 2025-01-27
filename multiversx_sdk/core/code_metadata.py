@@ -16,7 +16,13 @@ class ByteOne(Enum):
 
 
 class CodeMetadata:
-    def __init__(self, upgradeable: bool = True, readable: bool = True, payable: bool = False, payable_by_contract: bool = False):
+    def __init__(
+        self,
+        upgradeable: bool = True,
+        readable: bool = True,
+        payable: bool = False,
+        payable_by_contract: bool = False,
+    ):
         self.upgradeable = upgradeable
         self.readable = readable
         self.payable = payable

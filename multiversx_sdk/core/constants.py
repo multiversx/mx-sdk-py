@@ -11,15 +11,6 @@ INTEGER_MAX_NUM_BYTES = 64
 EGLD_TOKEN_IDENTIFIER = "EGLD"
 EGLD_NUM_DECIMALS = 18
 
-# left it for compatibility reasons, will be deleted in the future
-DELEGATION_MANAGER_SC_ADDRESS = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"
-
-# left it for compatibility reasons, will be deleted in the future
-DEFAULT_HRP = "erd"
-
-# left it for compatibility reasons, will be deleted in the future
-CONTRACT_DEPLOY_ADDRESS = "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
-
 DELEGATION_MANAGER_SC_ADDRESS_HEX = "000000000000000000010000000000000000000000000000000000000004ffff"
 CONTRACT_DEPLOY_ADDRESS_HEX = "0000000000000000000000000000000000000000000000000000000000000000"
 ESDT_CONTRACT_ADDRESS_HEX = "000000000000000000010000000000000000000000000000000000000002ffff"

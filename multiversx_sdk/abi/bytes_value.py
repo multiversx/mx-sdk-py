@@ -1,8 +1,7 @@
 import io
-from typing import Any, Dict, cast
+from typing import Any, cast
 
-from multiversx_sdk.abi.shared import (decode_length, encode_length,
-                                       read_bytes_exactly)
+from multiversx_sdk.abi.shared import decode_length, encode_length, read_bytes_exactly
 
 
 class BytesValue:
@@ -28,12 +27,12 @@ class BytesValue:
         if isinstance(value, str):
             self.value = bytes(value, "utf-8")
         elif isinstance(value, dict):
-            value = cast(Dict[str, str], value)
+            value = cast(dict[str, str], value)
             self.value = self._extract_value_from_dict(value)
         else:
             self.value = bytes(value)
 
-    def _extract_value_from_dict(self, value: Dict[str, str]) -> bytes:
+    def _extract_value_from_dict(self, value: dict[str, str]) -> bytes:
         hex_value = value.get("hex", None)
 
         if not hex_value:

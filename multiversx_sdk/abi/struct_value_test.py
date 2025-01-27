@@ -11,13 +11,13 @@ from multiversx_sdk.abi.struct_value import StructValue
 
 def test_set_payload_and_get_payload():
     # With errors
-    with pytest.raises(ValueError, match=re.escape("cannot set payload for struct (should be either a dictionary or a list)")):
+    with pytest.raises(
+        ValueError,
+        match=re.escape("cannot set payload for struct (should be either a dictionary or a list)"),
+    ):
         StructValue([]).set_payload(42)
 
-    value = StructValue([
-        Field("a", U32Value()),
-        Field("b", BigUIntValue())
-    ])
+    value = StructValue([Field("a", U32Value()), Field("b", BigUIntValue())])
 
     # From list
     value.set_payload([39, 40])

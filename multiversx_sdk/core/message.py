@@ -3,18 +3,22 @@ from typing import Any, Dict, Optional
 from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.constants import (DEFAULT_MESSAGE_VERSION,
-                                           SDK_PY_SIGNER, UNKNOWN_SIGNER)
-from multiversx_sdk.core.interfaces import IAddress, IMessage
+from multiversx_sdk.core.constants import (
+    DEFAULT_MESSAGE_VERSION,
+    SDK_PY_SIGNER,
+    UNKNOWN_SIGNER,
+)
 
 
 class Message:
-    def __init__(self,
-                 data: bytes,
-                 signature: bytes = b"",
-                 address: Optional[IAddress] = None,
-                 version: int = DEFAULT_MESSAGE_VERSION,
-                 signer: str = SDK_PY_SIGNER) -> None:
+    def __init__(
+        self,
+        data: bytes,
+        signature: bytes = b"",
+        address: Optional[Address] = None,
+        version: int = DEFAULT_MESSAGE_VERSION,
+        signer: str = SDK_PY_SIGNER,
+    ) -> None:
         self.data = data
         self.signature = signature
         self.address = address
@@ -32,7 +36,7 @@ class MessageComputer:
     def __init__(self) -> None:
         pass
 
-    def compute_bytes_for_signing(self, message: IMessage) -> bytes:
+    def compute_bytes_for_signing(self, message: Message) -> bytes:
         PREFIX = bytes.fromhex("17456c726f6e64205369676e6564204d6573736167653a0a")
         size = str(len(message.data)).encode()
         content = PREFIX + size + message.data
@@ -40,16 +44,16 @@ class MessageComputer:
 
         return content_hash
 
-    def compute_bytes_for_verifying(self, message: IMessage) -> bytes:
+    def compute_bytes_for_verifying(self, message: Message) -> bytes:
         return self.compute_bytes_for_signing(message)
 
-    def pack_message(self, message: IMessage) -> Dict[str, Any]:
+    def pack_message(self, message: Message) -> Dict[str, Any]:
         return {
             "address": message.address.to_bech32() if message.address else "",
             "message": message.data.hex(),
             "signature": message.signature.hex(),
             "version": message.version,
-            "signer": message.signer
+            "signer": message.signer,
         }
 
     def unpack_message(self, packed_message: Dict[str, Any]) -> Message:
@@ -70,7 +74,7 @@ class MessageComputer:
             address=address,
             signature=bytes.fromhex(signature),
             version=version,
-            signer=signer
+            signer=signer,
         )
 
     def _trim_hex_prefix(self, data: str) -> str:
