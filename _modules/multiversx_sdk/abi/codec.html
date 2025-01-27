@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.abi.codec &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.abi.codec &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,21 +69,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.abi.codec</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">io</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.interface</span> <span class="kn">import</span> <span class="n">ISingleValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ISingleValue</span>
 
 
 <div class="viewcode-block" id="Codec">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec">[docs]</a>
-<span class="k">class</span> <span class="nc">Codec</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Codec</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="Codec.encode_nested">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.encode_nested">[docs]</a>
-    <span class="k">def</span> <span class="nf">encode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
         <span class="n">value</span><span class="o">.</span><span class="n">encode_nested</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
@@ -91,7 +90,7 @@
 
 <div class="viewcode-block" id="Codec.encode_top_level">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.encode_top_level">[docs]</a>
-    <span class="k">def</span> <span class="nf">encode_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">encode_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
         <span class="n">value</span><span class="o">.</span><span class="n">encode_top_level</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">buffer</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
@@ -99,7 +98,7 @@
 
 <div class="viewcode-block" id="Codec.decode_nested">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.decode_nested">[docs]</a>
-    <span class="k">def</span> <span class="nf">decode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">reader</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -110,7 +109,7 @@
 
 <div class="viewcode-block" id="Codec.decode_top_level">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.codec.Codec.decode_top_level">[docs]</a>
-    <span class="k">def</span> <span class="nf">decode_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">ISingleValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">value</span><span class="o">.</span><span class="n">decode_top_level</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>

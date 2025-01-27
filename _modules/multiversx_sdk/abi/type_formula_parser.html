@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.abi.type_formula_parser &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.abi.type_formula_parser &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,15 +69,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.abi.type_formula_parser</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.type_formula</span> <span class="kn">import</span> <span class="n">TypeFormula</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.type_formula</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeFormula</span>
 
 
 <div class="viewcode-block" id="TypeFormulaParser">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser">[docs]</a>
-<span class="k">class</span> <span class="nc">TypeFormulaParser</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TypeFormulaParser</span><span class="p">:</span>
     <span class="n">BEGIN_TYPE_PARAMETERS</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
     <span class="n">END_TYPE_PARAMETERS</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
     <span class="n">COMMA</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span>
@@ -85,7 +84,7 @@
 
 <div class="viewcode-block" id="TypeFormulaParser.parse_expression">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.parse_expression">[docs]</a>
-    <span class="k">def</span> <span class="nf">parse_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeFormula</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeFormula</span><span class="p">:</span>
         <span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenize_expression</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span> <span class="k">if</span> <span class="n">token</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">COMMA</span><span class="p">]</span>
         <span class="n">stack</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -122,7 +121,7 @@
 
 <div class="viewcode-block" id="TypeFormulaParser.tokenize_expression">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.tokenize_expression">[docs]</a>
-    <span class="k">def</span> <span class="nf">tokenize_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tokenize_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">current_token</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
@@ -147,7 +146,7 @@
 
 <div class="viewcode-block" id="TypeFormulaParser.acquire_type_with_parameters">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.acquire_type_with_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">acquire_type_with_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TypeFormula</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">acquire_type_with_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TypeFormula</span><span class="p">:</span>
         <span class="n">type_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquire_type_parameters</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span>
         <span class="n">type_name</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="n">type_formula</span> <span class="o">=</span> <span class="n">TypeFormula</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="n">type_parameters</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -156,7 +155,7 @@
 
 <div class="viewcode-block" id="TypeFormulaParser.acquire_type_parameters">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.acquire_type_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">acquire_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TypeFormula</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">acquire_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stack</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TypeFormula</span><span class="p">]:</span>
         <span class="n">type_parameters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TypeFormula</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
@@ -183,19 +182,19 @@
 
 <div class="viewcode-block" id="TypeFormulaParser.is_punctuation">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.is_punctuation">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_punctuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_punctuation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PUNCTUATION</span></div>
 
 
 <div class="viewcode-block" id="TypeFormulaParser.is_end_of_type_parameters">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.is_end_of_type_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_end_of_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_end_of_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">token</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">END_TYPE_PARAMETERS</span></div>
 
 
 <div class="viewcode-block" id="TypeFormulaParser.is_beginning_of_type_parameters">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.is_beginning_of_type_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_beginning_of_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_beginning_of_type_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">token</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">BEGIN_TYPE_PARAMETERS</span></div>
 </div>
 

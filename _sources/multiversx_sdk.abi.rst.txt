@@ -132,6 +132,22 @@ multiversx\_sdk.abi.list\_value module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.abi.managed\_decimal\_signed\_value module
+----------------------------------------------------------
+
+.. automodule:: multiversx_sdk.abi.managed_decimal_signed_value
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+multiversx\_sdk.abi.managed\_decimal\_value module
+--------------------------------------------------
+
+.. automodule:: multiversx_sdk.abi.managed_decimal_value
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 multiversx\_sdk.abi.multi\_value module
 ---------------------------------------
 

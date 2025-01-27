@@ -14,6 +14,7 @@ Subpackages
    multiversx_sdk.core
    multiversx_sdk.delegation
    multiversx_sdk.entrypoints
+   multiversx_sdk.ledger
    multiversx_sdk.network_providers
    multiversx_sdk.relayed
    multiversx_sdk.smart_contracts

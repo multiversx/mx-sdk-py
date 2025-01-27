@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.entrypoints.entrypoints &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.entrypoints.entrypoints &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,52 +69,63 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.entrypoints.entrypoints</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.abi</span> <span class="kn">import</span> <span class="n">Abi</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.account_management</span> <span class="kn">import</span> <span class="n">AccountController</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.account_management.account_transactions_factory</span> <span class="kn">import</span> \
-    <span class="n">AccountTransactionsFactory</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.accounts.account</span> <span class="kn">import</span> <span class="n">Account</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Address</span><span class="p">,</span> <span class="n">Message</span><span class="p">,</span> <span class="n">MessageComputer</span><span class="p">,</span>
-                                 <span class="n">Transaction</span><span class="p">,</span> <span class="n">TransactionComputer</span><span class="p">,</span>
-                                 <span class="n">TransactionOnNetwork</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_factory_config</span> <span class="kn">import</span> \
-    <span class="n">TransactionsFactoryConfig</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.delegation</span> <span class="kn">import</span> <span class="n">DelegationController</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.delegation.delegation_transactions_factory</span> <span class="kn">import</span> \
-    <span class="n">DelegationTransactionsFactory</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.entrypoints.config</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DevnetEntrypointConfig</span><span class="p">,</span>
-                                               <span class="n">MainnetEntrypointConfig</span><span class="p">,</span>
-                                               <span class="n">TestnetEntrypointConfig</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.entrypoints.errors</span> <span class="kn">import</span> <span class="n">InvalidNetworkProviderKindError</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ApiNetworkProvider</span><span class="p">,</span>
-                                              <span class="n">ProxyNetworkProvider</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.relayed.relayed_controller</span> <span class="kn">import</span> <span class="n">RelayedController</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.relayed.relayed_transactions_factory</span> <span class="kn">import</span> \
-    <span class="n">RelayedTransactionsFactory</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.smart_contracts.smart_contract_controller</span> <span class="kn">import</span> \
-    <span class="n">SmartContractController</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.smart_contracts.smart_contract_transactions_factory</span> <span class="kn">import</span> \
-    <span class="n">SmartContractTransactionsFactory</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.token_management.token_management_controller</span> <span class="kn">import</span> \
-    <span class="n">TokenManagementController</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.token_management.token_management_transactions_factory</span> <span class="kn">import</span> \
-    <span class="n">TokenManagementTransactionsFactory</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.transfers.transfer_transactions_factory</span> <span class="kn">import</span> \
-    <span class="n">TransferTransactionsFactory</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.transfers.transfers_controller</span> <span class="kn">import</span> <span class="n">TransfersController</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.user_keys</span> <span class="kn">import</span> <span class="n">UserSecretKey</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.user_verifer</span> <span class="kn">import</span> <span class="n">UserVerifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.abi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Abi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.account_management</span><span class="w"> </span><span class="kn">import</span> <span class="n">AccountController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.account_management.account_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AccountTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.accounts.account</span><span class="w"> </span><span class="kn">import</span> <span class="n">Account</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Address</span><span class="p">,</span>
+    <span class="n">Message</span><span class="p">,</span>
+    <span class="n">MessageComputer</span><span class="p">,</span>
+    <span class="n">Transaction</span><span class="p">,</span>
+    <span class="n">TransactionComputer</span><span class="p">,</span>
+    <span class="n">TransactionOnNetwork</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.delegation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DelegationController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.delegation.delegation_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DelegationTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.entrypoints.config</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DevnetEntrypointConfig</span><span class="p">,</span>
+    <span class="n">LocalnetEntrypointConfig</span><span class="p">,</span>
+    <span class="n">MainnetEntrypointConfig</span><span class="p">,</span>
+    <span class="n">TestnetEntrypointConfig</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.entrypoints.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidNetworkProviderKindError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.network_providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiNetworkProvider</span><span class="p">,</span> <span class="n">ProxyNetworkProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.relayed.relayed_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">RelayedController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.relayed.relayed_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RelayedTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.smart_contracts.smart_contract_controller</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SmartContractController</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.smart_contracts.smart_contract_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SmartContractTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.token_management.token_management_controller</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TokenManagementController</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.token_management.token_management_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TokenManagementTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.transfers.transfer_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TransferTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.transfers.transfers_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransfersController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.user_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserSecretKey</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.user_verifer</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserVerifier</span>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint">[docs]</a>
-<span class="k">class</span> <span class="nc">NetworkEntrypoint</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">network_provider_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">network_provider_kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NetworkEntrypoint</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_provider_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">network_provider_kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">network_provider_kind</span> <span class="o">==</span> <span class="s2">&quot;proxy&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span> <span class="o">=</span> <span class="n">ProxyNetworkProvider</span><span class="p">(</span><span class="n">network_provider_url</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">network_provider_kind</span> <span class="o">==</span> <span class="s2">&quot;api&quot;</span><span class="p">:</span>
@@ -126,7 +137,7 @@
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_account">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_account">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_account</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Account</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_account</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Account</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a new secret key and instantiates an account.&quot;&quot;&quot;</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserSecretKey</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">Account</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
@@ -134,26 +145,26 @@
 
 <div class="viewcode-block" id="NetworkEntrypoint.get_airdrop">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.get_airdrop">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_airdrop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_airdrop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get xEGLD tokens on Devnet or Testnet.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The faucet is unavailable at the moment.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.verify_transaction_signature">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.verify_transaction_signature">[docs]</a>
-    <span class="k">def</span> <span class="nf">verify_transaction_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_transaction_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="n">verifier</span> <span class="o">=</span> <span class="n">UserVerifier</span><span class="o">.</span><span class="n">from_address</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="p">)</span>
         <span class="n">tx_computer</span> <span class="o">=</span> <span class="n">TransactionComputer</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">verifier</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span>
             <span class="n">data</span><span class="o">=</span><span class="n">tx_computer</span><span class="o">.</span><span class="n">compute_bytes_for_verifying</span><span class="p">(</span><span class="n">transaction</span><span class="p">),</span>
-            <span class="n">signature</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">signature</span>
+            <span class="n">signature</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.verify_message_signature">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.verify_message_signature">[docs]</a>
-    <span class="k">def</span> <span class="nf">verify_message_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_message_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">address</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;`address` property of Message is not set&quot;</span><span class="p">)</span>
 
@@ -162,19 +173,19 @@
 
         <span class="k">return</span> <span class="n">verifier</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span>
             <span class="n">data</span><span class="o">=</span><span class="n">message_computer</span><span class="o">.</span><span class="n">compute_bytes_for_verifying</span><span class="p">(</span><span class="n">message</span><span class="p">),</span>
-            <span class="n">signature</span><span class="o">=</span><span class="n">message</span><span class="o">.</span><span class="n">signature</span>
+            <span class="n">signature</span><span class="o">=</span><span class="n">message</span><span class="o">.</span><span class="n">signature</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.recall_account_nonce">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.recall_account_nonce">[docs]</a>
-    <span class="k">def</span> <span class="nf">recall_account_nonce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">recall_account_nonce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">get_account</span><span class="p">(</span><span class="n">address</span><span class="p">)</span><span class="o">.</span><span class="n">nonce</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.send_transactions">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.send_transactions">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Transaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Transaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends multiple transactions.</span>
 
@@ -189,97 +200,101 @@
 
 <div class="viewcode-block" id="NetworkEntrypoint.send_transaction">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.send_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.await_transaction_completed">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.await_transaction_completed">[docs]</a>
-    <span class="k">def</span> <span class="nf">await_transaction_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_transaction_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.get_transaction">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.get_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_network_provider">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_network_provider">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_network_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ApiNetworkProvider</span><span class="p">,</span> <span class="n">ProxyNetworkProvider</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_network_provider</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ApiNetworkProvider</span><span class="p">,</span> <span class="n">ProxyNetworkProvider</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_delegation_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_delegation_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_delegation_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DelegationController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_delegation_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DelegationController</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">DelegationController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_delegation_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_delegation_transactions_factory">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_delegation_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DelegationTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_delegation_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DelegationTransactionsFactory</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">DelegationTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_account_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_account_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_account_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_account_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountController</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">AccountController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_account_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_account_transactions_factory">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_account_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_account_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountTransactionsFactory</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">AccountTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_relayed_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_relayed_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_relayed_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelayedController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_relayed_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelayedController</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelayedController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_relayed_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_relayed_transactions_factory">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_relayed_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelayedTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_relayed_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelayedTransactionsFactory</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelayedTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_smart_contract_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_smart_contract_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_smart_contract_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_smart_contract_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractController</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SmartContractController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">abi</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_smart_contract_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_smart_contract_transactions_factory">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_smart_contract_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_smart_contract_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractTransactionsFactory</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SmartContractTransactionsFactory</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">),</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_token_management_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_token_management_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_token_management_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenManagementController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_token_management_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenManagementController</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TokenManagementController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_token_management_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_token_management_transactions_factory">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_token_management_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_token_management_transactions_factory</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_transfers_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_transfers_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_transfers_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransfersController</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transfers_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransfersController</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TransfersController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_transfers_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_transfers_transactions_factory">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_transfers_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransferTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transfers_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransferTransactionsFactory</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TransferTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span><span class="p">))</span></div>
 </div>
 
@@ -287,8 +302,8 @@
 
 <div class="viewcode-block" id="TestnetEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.TestnetEntrypoint">[docs]</a>
-<span class="k">class</span> <span class="nc">TestnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">TestnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
 
         <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">TestnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
@@ -299,8 +314,8 @@
 
 <div class="viewcode-block" id="DevnetEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.DevnetEntrypoint">[docs]</a>
-<span class="k">class</span> <span class="nc">DevnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DevnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">DevnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
 
         <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">DevnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
@@ -311,13 +326,25 @@
 
 <div class="viewcode-block" id="MainnetEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.MainnetEntrypoint">[docs]</a>
-<span class="k">class</span> <span class="nc">MainnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MainnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">MainnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
 
         <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">MainnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">MainnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LocalnetEntrypoint">
+<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.LocalnetEntrypoint">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LocalnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">LocalnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
+
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">LocalnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">LocalnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
 
 </pre></div>
 

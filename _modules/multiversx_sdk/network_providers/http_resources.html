@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.network_providers.http_resources &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.network_providers.http_resources &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,34 +69,49 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.network_providers.http_resources</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.code_metadata</span> <span class="kn">import</span> <span class="n">CodeMetadata</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.tokens</span> <span class="kn">import</span> <span class="n">Token</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction_on_network</span> <span class="kn">import</span> <span class="p">(</span><span class="n">SmartContractResult</span><span class="p">,</span>
-                                                        <span class="n">TransactionEvent</span><span class="p">,</span>
-                                                        <span class="n">TransactionLogs</span><span class="p">,</span>
-                                                        <span class="n">TransactionOnNetwork</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction_status</span> <span class="kn">import</span> <span class="n">TransactionStatus</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.network_providers.resources</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">AccountOnNetwork</span><span class="p">,</span> <span class="n">AccountStorage</span><span class="p">,</span> <span class="n">AccountStorageEntry</span><span class="p">,</span> <span class="n">BlockCoordinates</span><span class="p">,</span>
-    <span class="n">BlockOnNetwork</span><span class="p">,</span> <span class="n">FungibleTokenMetadata</span><span class="p">,</span> <span class="n">NetworkConfig</span><span class="p">,</span> <span class="n">NetworkStatus</span><span class="p">,</span>
-    <span class="n">TokenAmountOnNetwork</span><span class="p">,</span> <span class="n">TokensCollectionMetadata</span><span class="p">,</span> <span class="n">TransactionCostResponse</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.smart_contracts.smart_contract_query</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">SmartContractQuery</span><span class="p">,</span> <span class="n">SmartContractQueryResponse</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.code_metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">CodeMetadata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.tokens</span><span class="w"> </span><span class="kn">import</span> <span class="n">Token</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction_on_network</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SmartContractResult</span><span class="p">,</span>
+    <span class="n">TransactionEvent</span><span class="p">,</span>
+    <span class="n">TransactionLogs</span><span class="p">,</span>
+    <span class="n">TransactionOnNetwork</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction_status</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionStatus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.network_providers.resources</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AccountOnNetwork</span><span class="p">,</span>
+    <span class="n">AccountStorage</span><span class="p">,</span>
+    <span class="n">AccountStorageEntry</span><span class="p">,</span>
+    <span class="n">BlockCoordinates</span><span class="p">,</span>
+    <span class="n">BlockOnNetwork</span><span class="p">,</span>
+    <span class="n">FungibleTokenMetadata</span><span class="p">,</span>
+    <span class="n">NetworkConfig</span><span class="p">,</span>
+    <span class="n">NetworkStatus</span><span class="p">,</span>
+    <span class="n">TokenAmountOnNetwork</span><span class="p">,</span>
+    <span class="n">TokensCollectionMetadata</span><span class="p">,</span>
+    <span class="n">TransactionCostResponse</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.smart_contracts.smart_contract_query</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SmartContractQuery</span><span class="p">,</span>
+    <span class="n">SmartContractQueryResponse</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="smart_contract_query_to_vm_query_request">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.smart_contract_query_to_vm_query_request">[docs]</a>
-<span class="k">def</span> <span class="nf">smart_contract_query_to_vm_query_request</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">smart_contract_query_to_vm_query_request</span><span class="p">(</span>
+    <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;scAddress&quot;</span><span class="p">:</span> <span class="n">query</span><span class="o">.</span><span class="n">contract</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span>
         <span class="s2">&quot;funcName&quot;</span><span class="p">:</span> <span class="n">query</span><span class="o">.</span><span class="n">function</span><span class="p">,</span>
         <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">value</span> <span class="k">else</span> <span class="mi">0</span><span class="p">),</span>
-        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">arguments</span><span class="p">]</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">arguments</span><span class="p">],</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">query</span><span class="o">.</span><span class="n">caller</span><span class="p">:</span>
@@ -108,9 +123,9 @@
 
 <div class="viewcode-block" id="vm_query_response_to_smart_contract_query_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.vm_query_response_to_smart_contract_query_response">[docs]</a>
-<span class="k">def</span> <span class="nf">vm_query_response_to_smart_contract_query_response</span><span class="p">(</span>
-        <span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vm_query_response_to_smart_contract_query_response</span><span class="p">(</span>
+    <span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">function</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
     <span class="n">return_data</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;returnData&quot;</span><span class="p">,</span> <span class="p">[])</span> <span class="ow">or</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ReturnData&quot;</span><span class="p">,</span> <span class="p">[])</span>
     <span class="n">return_code</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;returnCode&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ReturnCode&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">return_message</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;returnMessage&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ReturnMessage&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -119,14 +134,14 @@
         <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
         <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
         <span class="n">return_message</span><span class="o">=</span><span class="n">return_message</span><span class="p">,</span>
-        <span class="n">return_data_parts</span><span class="o">=</span><span class="p">[</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">return_data</span><span class="p">]</span>
+        <span class="n">return_data_parts</span><span class="o">=</span><span class="p">[</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">return_data</span><span class="p">],</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="transaction_from_api_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.transaction_from_api_response">[docs]</a>
-<span class="k">def</span> <span class="nf">transaction_from_api_response</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transaction_from_api_response</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
     <span class="n">sender</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sender&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">receiver</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;receiver&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="nb">hash</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
@@ -175,15 +190,17 @@
         <span class="n">signature</span><span class="o">=</span><span class="n">signature</span><span class="p">,</span>
         <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
         <span class="n">smart_contract_results</span><span class="o">=</span><span class="n">smart_contract_results</span><span class="p">,</span>
-        <span class="n">logs</span><span class="o">=</span><span class="n">logs</span>
+        <span class="n">logs</span><span class="o">=</span><span class="n">logs</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="transaction_from_proxy_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.transaction_from_proxy_response">[docs]</a>
-<span class="k">def</span> <span class="nf">transaction_from_proxy_response</span><span class="p">(</span>
-    <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">process_status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionStatus</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transaction_from_proxy_response</span><span class="p">(</span>
+    <span class="n">tx_hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">process_status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionStatus</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TransactionOnNetwork&quot;</span><span class="p">:</span>
     <span class="n">sender</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sender&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">receiver</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;receiver&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
@@ -236,27 +253,24 @@
         <span class="n">signature</span><span class="o">=</span><span class="n">signature</span><span class="p">,</span>
         <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
         <span class="n">smart_contract_results</span><span class="o">=</span><span class="n">smart_contract_results</span><span class="p">,</span>
-        <span class="n">logs</span><span class="o">=</span><span class="n">logs</span>
+        <span class="n">logs</span><span class="o">=</span><span class="n">logs</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="transaction_logs_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.transaction_logs_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">transaction_logs_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionLogs</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transaction_logs_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionLogs</span><span class="p">:</span>
     <span class="n">address</span> <span class="o">=</span> <span class="n">_convert_bech32_to_address</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
     <span class="n">events</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="p">[])</span>
     <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">transaction_events_from_response</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">TransactionLogs</span><span class="p">(</span>
-        <span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">,</span>
-        <span class="n">events</span><span class="o">=</span><span class="n">events</span>
-    <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">TransactionLogs</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">address</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">events</span><span class="p">)</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_convert_bech32_to_address</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_convert_bech32_to_address</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">address</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Address</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
@@ -264,7 +278,7 @@
 
 <div class="viewcode-block" id="transaction_events_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.transaction_events_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">transaction_events_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionEvent</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transaction_events_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionEvent</span><span class="p">:</span>
     <span class="n">address</span> <span class="o">=</span> <span class="n">_convert_bech32_to_address</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
     <span class="n">identifier</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identifier&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -284,8 +298,9 @@
         <span class="n">data</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
 
     <span class="n">additional_data</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;additionalData&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">additional_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
-                       <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">additional_data</span><span class="p">]</span> <span class="k">if</span> <span class="n">additional_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">additional_data</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">additional_data</span><span class="p">]</span> <span class="k">if</span> <span class="n">additional_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">additional_data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">raw_data</span><span class="p">:</span>
@@ -297,14 +312,14 @@
         <span class="n">identifier</span><span class="o">=</span><span class="n">identifier</span><span class="p">,</span>
         <span class="n">topics</span><span class="o">=</span><span class="n">topics</span><span class="p">,</span>
         <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">additional_data</span><span class="o">=</span><span class="n">additional_data</span>
+        <span class="n">additional_data</span><span class="o">=</span><span class="n">additional_data</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="transaction_from_simulate_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.transaction_from_simulate_response">[docs]</a>
-<span class="k">def</span> <span class="nf">transaction_from_simulate_response</span><span class="p">(</span><span class="n">original_tx</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transaction_from_simulate_response</span><span class="p">(</span><span class="n">original_tx</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
     <span class="n">status</span> <span class="o">=</span> <span class="n">TransactionStatus</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">tx_hash</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hash&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
@@ -337,14 +352,14 @@
         <span class="n">signature</span><span class="o">=</span><span class="n">original_tx</span><span class="o">.</span><span class="n">signature</span><span class="p">,</span>
         <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
         <span class="n">smart_contract_results</span><span class="o">=</span><span class="n">sc_results</span><span class="p">,</span>
-        <span class="n">logs</span><span class="o">=</span><span class="n">TransactionLogs</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">empty</span><span class="p">(),</span> <span class="n">events</span><span class="o">=</span><span class="p">[])</span>
+        <span class="n">logs</span><span class="o">=</span><span class="n">TransactionLogs</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">empty</span><span class="p">(),</span> <span class="n">events</span><span class="o">=</span><span class="p">[]),</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="smart_contract_result_from_api_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.smart_contract_result_from_api_response">[docs]</a>
-<span class="k">def</span> <span class="nf">smart_contract_result_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartContractResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">smart_contract_result_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartContractResult</span><span class="p">:</span>
     <span class="n">sender</span> <span class="o">=</span> <span class="n">_convert_bech32_to_address</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sender&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">receiver</span> <span class="o">=</span> <span class="n">_convert_bech32_to_address</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;receiver&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">logs</span> <span class="o">=</span> <span class="n">transaction_logs_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="p">{}))</span>
@@ -352,37 +367,25 @@
     <span class="n">data</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
 
-    <span class="k">return</span> <span class="n">SmartContractResult</span><span class="p">(</span>
-        <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
-        <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-        <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">logs</span><span class="o">=</span><span class="n">logs</span>
-    <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">SmartContractResult</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="n">logs</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="smart_contract_result_from_proxy_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.smart_contract_result_from_proxy_response">[docs]</a>
-<span class="k">def</span> <span class="nf">smart_contract_result_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartContractResult</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">smart_contract_result_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartContractResult</span><span class="p">:</span>
     <span class="n">sender</span> <span class="o">=</span> <span class="n">_convert_bech32_to_address</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sender&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">receiver</span> <span class="o">=</span> <span class="n">_convert_bech32_to_address</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;receiver&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">logs</span> <span class="o">=</span> <span class="n">transaction_logs_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="p">{}))</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">SmartContractResult</span><span class="p">(</span>
-        <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
-        <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-        <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-        <span class="n">logs</span><span class="o">=</span><span class="n">logs</span>
-    <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">SmartContractResult</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span> <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="n">logs</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="network_config_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.network_config_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">network_config_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NetworkConfig</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">network_config_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NetworkConfig</span><span class="p">:</span>
     <span class="n">chain_id</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_chain_id&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">gas_per_data_byte</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_gas_per_data_byte&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">gas_price_modifier</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_gas_price_modifier&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -405,14 +408,14 @@
         <span class="n">num_shards</span><span class="o">=</span><span class="n">num_shards</span><span class="p">,</span>
         <span class="n">round_duration</span><span class="o">=</span><span class="n">round_duration</span><span class="p">,</span>
         <span class="n">num_rounds_per_epoch</span><span class="o">=</span><span class="n">rounds_per_epoch</span><span class="p">,</span>
-        <span class="n">genesis_timestamp</span><span class="o">=</span><span class="n">genesis_timestamp</span>
+        <span class="n">genesis_timestamp</span><span class="o">=</span><span class="n">genesis_timestamp</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="network_status_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.network_status_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">network_status_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">network_status_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span>
     <span class="n">block_timestamp</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_block_timestamp&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">block_nonce</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">highest_final_nonce</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_highest_final_nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -425,14 +428,14 @@
         <span class="n">block_nonce</span><span class="o">=</span><span class="n">block_nonce</span><span class="p">,</span>
         <span class="n">highest_final_block_nonce</span><span class="o">=</span><span class="n">highest_final_nonce</span><span class="p">,</span>
         <span class="n">current_round</span><span class="o">=</span><span class="n">current_round</span><span class="p">,</span>
-        <span class="n">current_epoch</span><span class="o">=</span><span class="n">currernt_epoch</span>
+        <span class="n">current_epoch</span><span class="o">=</span><span class="n">currernt_epoch</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="block_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.block_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">block_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">BlockOnNetwork</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">block_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">BlockOnNetwork</span><span class="p">:</span>
     <span class="n">shard</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;shard&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">nonce</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="nb">hash</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hash&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -449,14 +452,14 @@
         <span class="n">previous_hash</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">previous_hash</span><span class="p">),</span>
         <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span>
         <span class="nb">round</span><span class="o">=</span><span class="nb">round</span><span class="p">,</span>
-        <span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span>
+        <span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="account_from_proxy_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.account_from_proxy_response">[docs]</a>
-<span class="k">def</span> <span class="nf">account_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">account_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
     <span class="n">account</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;account&quot;</span><span class="p">,</span> <span class="p">{})</span>
     <span class="n">block_coordinates</span> <span class="o">=</span> <span class="n">_get_block_coordinates_from_raw_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">)</span>
 
@@ -504,12 +507,12 @@
         <span class="n">is_contract_readable</span><span class="o">=</span><span class="n">is_readable</span><span class="p">,</span>
         <span class="n">is_contract_payable</span><span class="o">=</span><span class="n">is_payable</span><span class="p">,</span>
         <span class="n">is_contract_payable_by_contract</span><span class="o">=</span><span class="n">is_payable_by_sc</span><span class="p">,</span>
-        <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span>
+        <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_get_address_or_none</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Address</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_address_or_none</span><span class="p">(</span><span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Address</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
     <span class="k">if</span> <span class="n">address</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span>
@@ -517,7 +520,7 @@
 
 <div class="viewcode-block" id="account_from_api_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.account_from_api_response">[docs]</a>
-<span class="k">def</span> <span class="nf">account_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">account_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
     <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
     <span class="n">owner_address</span> <span class="o">=</span> <span class="n">_get_address_or_none</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ownerAddress&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
@@ -557,7 +560,7 @@
 
 <div class="viewcode-block" id="account_storage_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.account_storage_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">account_storage_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AccountStorage</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">account_storage_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AccountStorage</span><span class="p">:</span>
     <span class="n">pairs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="p">{})</span>
     <span class="n">block_coordinates</span> <span class="o">=</span> <span class="n">_get_block_coordinates_from_raw_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">)</span>
 
@@ -570,46 +573,35 @@
             <span class="n">AccountStorageEntry</span><span class="p">(</span>
                 <span class="n">raw</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">},</span>
                 <span class="n">key</span><span class="o">=</span><span class="n">decoded_key</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">),</span>
-                <span class="n">value</span><span class="o">=</span><span class="n">decoded_value</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">decoded_value</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">AccountStorage</span><span class="p">(</span>
-        <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
-        <span class="n">entries</span><span class="o">=</span><span class="n">entries</span><span class="p">,</span>
-        <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span>
-    <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">AccountStorage</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span> <span class="n">entries</span><span class="o">=</span><span class="n">entries</span><span class="p">,</span> <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="account_storage_entry_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.account_storage_entry_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">account_storage_entry_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountStorageEntry</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">account_storage_entry_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountStorageEntry</span><span class="p">:</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">AccountStorageEntry</span><span class="p">(</span>
-        <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
-        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
-        <span class="n">value</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">AccountStorageEntry</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="transaction_cost_estimation_from_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.transaction_cost_estimation_from_response">[docs]</a>
-<span class="k">def</span> <span class="nf">transaction_cost_estimation_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionCostResponse</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transaction_cost_estimation_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionCostResponse</span><span class="p">:</span>
     <span class="n">cost</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;txGasUnits&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">TransactionCostResponse</span><span class="p">(</span>
-        <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span>
-        <span class="n">status</span><span class="o">=</span><span class="n">TransactionStatus</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">TransactionCostResponse</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span> <span class="n">gas_limit</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">TransactionStatus</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span></div>
 
 
 
 <div class="viewcode-block" id="transactions_from_send_multiple_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.transactions_from_send_multiple_response">[docs]</a>
-<span class="k">def</span> <span class="nf">transactions_from_send_multiple_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-                                             <span class="n">initial_txs_sent</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transactions_from_send_multiple_response</span><span class="p">(</span>
+    <span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">initial_txs_sent</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]:</span>
     <span class="n">num_sent</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numOfSentTxs&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">tx_hashes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;txsHashes&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
@@ -624,7 +616,7 @@
 
 <div class="viewcode-block" id="token_amount_on_network_from_proxy_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.token_amount_on_network_from_proxy_response">[docs]</a>
-<span class="k">def</span> <span class="nf">token_amount_on_network_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TokenAmountOnNetwork</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">token_amount_on_network_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TokenAmountOnNetwork</span><span class="p">:</span>
     <span class="n">token_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokenData&quot;</span><span class="p">,</span> <span class="p">{})</span>
     <span class="n">block_coordinates</span> <span class="o">=</span> <span class="n">_get_block_coordinates_from_raw_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">)</span>
 
@@ -632,36 +624,33 @@
     <span class="n">balance</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">token_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">))</span>
     <span class="n">nonce</span> <span class="o">=</span> <span class="n">token_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">token</span> <span class="o">=</span> <span class="n">Token</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">)</span>
+    <span class="n">attributes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">token_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attributes&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">TokenAmountOnNetwork</span><span class="p">(</span>
         <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
         <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span>
         <span class="n">amount</span><span class="o">=</span><span class="n">balance</span><span class="p">,</span>
-        <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span>
+        <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span>
+        <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="token_amount_from_api_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.token_amount_from_api_response">[docs]</a>
-<span class="k">def</span> <span class="nf">token_amount_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TokenAmountOnNetwork</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">token_amount_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TokenAmountOnNetwork</span><span class="p">:</span>
     <span class="n">identifier</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identifier&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">nonce</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">amount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">attributes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attributes&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
-    <span class="c1"># nfts don&#39;t have the balance field, thus in case it&#39;s nft we set the balance to 1</span>
-    <span class="n">amount</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">TokenAmountOnNetwork</span><span class="p">(</span>
-        <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
-        <span class="n">token</span><span class="o">=</span><span class="n">Token</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">),</span>
-        <span class="n">amount</span><span class="o">=</span><span class="n">amount</span>
-    <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">TokenAmountOnNetwork</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="n">Token</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">),</span> <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="token_amounts_from_proxy_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.token_amounts_from_proxy_response">[docs]</a>
-<span class="k">def</span> <span class="nf">token_amounts_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenAmountOnNetwork</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">token_amounts_from_proxy_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenAmountOnNetwork</span><span class="p">]:</span>
     <span class="n">tokens</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;esdts&quot;</span><span class="p">,</span> <span class="p">{})</span>
     <span class="n">block_coordinates</span> <span class="o">=</span> <span class="n">_get_block_coordinates_from_raw_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">)</span>
 
@@ -672,13 +661,15 @@
         <span class="n">balance</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">token_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">))</span>
         <span class="n">nonce</span> <span class="o">=</span> <span class="n">token_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">token</span> <span class="o">=</span> <span class="n">Token</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">nonce</span><span class="p">)</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">token_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attributes&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="n">TokenAmountOnNetwork</span><span class="p">(</span>
                 <span class="n">raw</span><span class="o">=</span><span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="n">token_data</span><span class="p">},</span>
                 <span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span>
                 <span class="n">amount</span><span class="o">=</span><span class="n">balance</span><span class="p">,</span>
-                <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span>
+                <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span>
+                <span class="n">block_coordinates</span><span class="o">=</span><span class="n">block_coordinates</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
@@ -688,10 +679,9 @@
 
 <div class="viewcode-block" id="definition_of_fungible_token_from_query_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.definition_of_fungible_token_from_query_response">[docs]</a>
-<span class="k">def</span> <span class="nf">definition_of_fungible_token_from_query_response</span><span class="p">(</span>
-        <span class="n">raw_response</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
-        <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FungibleTokenMetadata</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">definition_of_fungible_token_from_query_response</span><span class="p">(</span>
+    <span class="n">raw_response</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FungibleTokenMetadata</span><span class="p">:</span>
     <span class="n">token_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">properties_buffers</span> <span class="o">=</span> <span class="n">raw_response</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">_parse_token_properties</span><span class="p">(</span><span class="n">properties_buffers</span><span class="p">)</span>
 
@@ -706,14 +696,14 @@
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
         <span class="n">ticker</span><span class="o">=</span><span class="n">ticker</span><span class="p">,</span>
         <span class="n">owner</span><span class="o">=</span><span class="n">owner</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span>
-        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span>
+        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="definition_of_fungible_token_from_api_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.definition_of_fungible_token_from_api_response">[docs]</a>
-<span class="k">def</span> <span class="nf">definition_of_fungible_token_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">FungibleTokenMetadata</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">definition_of_fungible_token_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">FungibleTokenMetadata</span><span class="p">:</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">ticker</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ticker&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">owner</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -726,17 +716,16 @@
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
         <span class="n">ticker</span><span class="o">=</span><span class="n">ticker</span><span class="p">,</span>
         <span class="n">owner</span><span class="o">=</span><span class="n">owner</span><span class="p">,</span>
-        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span>
+        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="definition_of_tokens_collection_from_query_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.definition_of_tokens_collection_from_query_response">[docs]</a>
-<span class="k">def</span> <span class="nf">definition_of_tokens_collection_from_query_response</span><span class="p">(</span>
-        <span class="n">raw_response</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
-        <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokensCollectionMetadata</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">definition_of_tokens_collection_from_query_response</span><span class="p">(</span>
+    <span class="n">raw_response</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokensCollectionMetadata</span><span class="p">:</span>
     <span class="n">token_name</span><span class="p">,</span> <span class="n">token_type</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="o">*</span><span class="n">properties_buffers</span> <span class="o">=</span> <span class="n">raw_response</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">_parse_token_properties</span><span class="p">(</span><span class="n">properties_buffers</span><span class="p">)</span>
 
@@ -754,14 +743,14 @@
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
         <span class="n">ticker</span><span class="o">=</span><span class="n">ticker</span><span class="p">,</span>
         <span class="n">owner</span><span class="o">=</span><span class="n">owner</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span>
-        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span>
+        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="definition_of_tokens_collection_from_api_response">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.definition_of_tokens_collection_from_api_response">[docs]</a>
-<span class="k">def</span> <span class="nf">definition_of_tokens_collection_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TokensCollectionMetadata</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">definition_of_tokens_collection_from_api_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TokensCollectionMetadata</span><span class="p">:</span>
     <span class="n">collection</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;collection&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -776,7 +765,7 @@
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
         <span class="n">ticker</span><span class="o">=</span><span class="n">ticker</span><span class="p">,</span>
         <span class="n">owner</span><span class="o">=</span><span class="n">owner</span><span class="p">,</span>
-        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span>
+        <span class="n">decimals</span><span class="o">=</span><span class="n">decimals</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -784,7 +773,7 @@
 <span class="c1"># the token properties have this format:</span>
 <span class="c1"># e.g.1. &quot;4e756d446563696d616c732d36&quot;, which decodes to: &quot;NumDecimals-6&quot;</span>
 <span class="c1"># e.g.2. &quot;49735061757365642d66616c7365&quot;, which decodes to: &quot;IsPaused-false&quot;</span>
-<span class="k">def</span> <span class="nf">_parse_token_properties</span><span class="p">(</span><span class="n">properties_buffer</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_token_properties</span><span class="p">(</span><span class="n">properties_buffer</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">buffer</span> <span class="ow">in</span> <span class="n">properties_buffer</span><span class="p">:</span>
@@ -794,7 +783,7 @@
     <span class="k">return</span> <span class="n">properties</span>
 
 
-<span class="k">def</span> <span class="nf">_parse_value_of_token_property</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_value_of_token_property</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">elif</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
@@ -803,7 +792,7 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_get_block_coordinates_from_raw_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">BlockCoordinates</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_block_coordinates_from_raw_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">BlockCoordinates</span><span class="p">:</span>
     <span class="n">block_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;blockInfo&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
     <span class="n">block_nonce</span> <span class="o">=</span> <span class="n">block_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -813,7 +802,7 @@
     <span class="k">return</span> <span class="n">BlockCoordinates</span><span class="p">(</span>
         <span class="n">nonce</span><span class="o">=</span><span class="n">block_nonce</span><span class="p">,</span>
         <span class="nb">hash</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">block_hash</span><span class="p">),</span>
-        <span class="n">root_hash</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">block_root_hash</span><span class="p">)</span>
+        <span class="n">root_hash</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">block_root_hash</span><span class="p">),</span>
     <span class="p">)</span>
 </pre></div>
 

@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.wallet.keypair &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.wallet.keypair &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,20 +69,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.wallet.keypair</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.user_keys</span> <span class="kn">import</span> <span class="n">UserPublicKey</span><span class="p">,</span> <span class="n">UserSecretKey</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.user_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserPublicKey</span><span class="p">,</span> <span class="n">UserSecretKey</span>
 
 
 <div class="viewcode-block" id="KeyPair">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair">[docs]</a>
-<span class="k">class</span> <span class="nc">KeyPair</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="n">UserSecretKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">KeyPair</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="n">UserSecretKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="n">secret_key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">generate_public_key</span><span class="p">()</span>
 
 <div class="viewcode-block" id="KeyPair.generate">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.generate">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">generate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;KeyPair&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;KeyPair&quot;</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserSecretKey</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">KeyPair</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 
@@ -90,34 +90,34 @@
 <div class="viewcode-block" id="KeyPair.new_from_bytes">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.new_from_bytes">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new_from_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;KeyPair&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;KeyPair&quot;</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserSecretKey</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">KeyPair</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="KeyPair.sign">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.sign">[docs]</a>
-    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Signs using the secret key of the keypair.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="KeyPair.verify">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.verify">[docs]</a>
-    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Verifies using the public key of the keypair.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="KeyPair.get_secret_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.get_secret_key">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserSecretKey</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_secret_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserSecretKey</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span></div>
 
 
 <div class="viewcode-block" id="KeyPair.get_public_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.get_public_key">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserPublicKey</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserPublicKey</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span></div>
 </div>
 

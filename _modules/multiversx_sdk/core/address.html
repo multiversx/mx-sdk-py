@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.address &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.core.address &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,15 +69,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.address</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">Cryptodome.Hash</span> <span class="kn">import</span> <span class="n">keccak</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Cryptodome.Hash</span><span class="w"> </span><span class="kn">import</span> <span class="n">keccak</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core</span> <span class="kn">import</span> <span class="n">bech32</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.config</span> <span class="kn">import</span> <span class="n">LibraryConfig</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">METACHAIN_ID</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.errors</span> <span class="kn">import</span> <span class="n">BadAddressError</span><span class="p">,</span> <span class="n">BadPubkeyLengthError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">bech32</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">LibraryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">METACHAIN_ID</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">BadAddressError</span><span class="p">,</span> <span class="n">BadPubkeyLengthError</span>
 
 <span class="n">SC_HEX_PUBKEY_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span> <span class="o">*</span> <span class="mi">16</span>
 <span class="n">PUBKEY_LENGTH</span> <span class="o">=</span> <span class="mi">32</span>
@@ -87,10 +87,10 @@
 
 <div class="viewcode-block" id="Address">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address">[docs]</a>
-<span class="k">class</span> <span class="nc">Address</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An Address, as an immutable object.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object, given a sequence of bytes and the human readable part(hrp).</span>
 
 <span class="sd">        Args:</span>
@@ -112,7 +112,7 @@
 <div class="viewcode-block" id="Address.empty">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.empty">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">empty</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an empty address object.</span>
 <span class="sd">        Generally speaking, this should not be used by client code **(internal use only)**.</span>
@@ -122,14 +122,14 @@
 
 <div class="viewcode-block" id="Address.is_empty">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.is_empty">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
 
 
 <div class="viewcode-block" id="Address.new_from_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.new_from_bech32">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">new_from_bech32</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_bech32</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object from the bech32 representation of an address.</span>
 
 <span class="sd">        Args:</span>
@@ -141,7 +141,7 @@
 <div class="viewcode-block" id="Address.from_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.from_bech32">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_bech32</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_bech32</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The `from_bech32()` method is deprecated. Please use `new_from_bech32()` instead&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
@@ -149,7 +149,7 @@
 <div class="viewcode-block" id="Address.new_from_hex">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.new_from_hex">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">new_from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object from the hexed sequence of bytes and the human readable part(hrp).</span>
 
 <span class="sd">        Args:</span>
@@ -162,28 +162,28 @@
 <div class="viewcode-block" id="Address.from_hex">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.from_hex">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The `from_hex()` method is deprecated. Please use `new_from_hex()` instead&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">hrp</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Address.to_hex">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.to_hex">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the hex representation of the address (pubkey)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Address.hex">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.hex">[docs]</a>
-    <span class="k">def</span> <span class="nf">hex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The `hex()` method is deprecated. Please use `to_hex()` instead&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Address.to_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.to_bech32">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the bech32 representation of the address&quot;&quot;&quot;</span>
         <span class="n">converted</span> <span class="o">=</span> <span class="n">bech32</span><span class="o">.</span><span class="n">convertbits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">converted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -193,39 +193,39 @@
 
 <div class="viewcode-block" id="Address.bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.bech32">[docs]</a>
-    <span class="k">def</span> <span class="nf">bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The `bech32()` method is deprecated. Please us `to_bech32()` instead&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Address.get_public_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.get_public_key">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the pubkey as bytes&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span></div>
 
 
 <div class="viewcode-block" id="Address.get_hrp">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.get_hrp">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_hrp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hrp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the human-readable-part of the bech32 address&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span></div>
 
 
 <div class="viewcode-block" id="Address.is_smart_contract">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.is_smart_contract">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_smart_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_smart_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether the address is a smart contract address&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">SC_HEX_PUBKEY_PREFIX</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__bytes__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__bytes__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Address</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
 
@@ -235,10 +235,10 @@
 
 <div class="viewcode-block" id="AddressFactory">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressFactory">[docs]</a>
-<span class="k">class</span> <span class="nc">AddressFactory</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddressFactory</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A factory used to create address objects.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;All the addresses created with the factory have the same human readable part</span>
 
 <span class="sd">        Args:</span>
@@ -247,7 +247,7 @@
 
 <div class="viewcode-block" id="AddressFactory.create_from_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressFactory.create_from_bech32">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_from_bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_from_bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object from the bech32 representation of an address&quot;&quot;&quot;</span>
         <span class="n">hrp</span><span class="p">,</span> <span class="n">pubkey</span> <span class="o">=</span> <span class="n">_decode_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">hrp</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span><span class="p">:</span>
@@ -258,14 +258,14 @@
 
 <div class="viewcode-block" id="AddressFactory.create_from_public_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressFactory.create_from_public_key">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_from_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_from_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object from the sequence of bytes&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Address</span><span class="p">(</span><span class="n">pubkey</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AddressFactory.create_from_hex">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressFactory.create_from_hex">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_from_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_from_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates an address object from the hexed sequence of bytes&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span><span class="p">)</span></div>
 </div>
@@ -274,10 +274,10 @@
 
 <div class="viewcode-block" id="AddressComputer">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressComputer">[docs]</a>
-<span class="k">class</span> <span class="nc">AddressComputer</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddressComputer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for computing contract addresses and getting shard numbers.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_shards</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number_of_shards</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the AddressComputer with the number of shards.</span>
 
 <span class="sd">        Args:</span>
@@ -286,7 +286,7 @@
 
 <div class="viewcode-block" id="AddressComputer.compute_contract_address">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressComputer.compute_contract_address">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_contract_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployer</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">deployment_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_contract_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deployer</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">deployment_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the contract address based on the deployer&#39;s address and deployment nonce.</span>
 
 <span class="sd">        Args:</span>
@@ -302,15 +302,13 @@
         <span class="n">nonce_bytes</span> <span class="o">=</span> <span class="n">deployment_nonce</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;little&quot;</span><span class="p">)</span>
         <span class="n">bytes_to_hash</span> <span class="o">=</span> <span class="n">deployer_pubkey</span> <span class="o">+</span> <span class="n">nonce_bytes</span>
         <span class="n">contract_pubkey</span> <span class="o">=</span> <span class="n">keccak</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">digest_bits</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bytes_to_hash</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
-        <span class="n">contract_pubkey</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">contract_pubkey</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span> <span class="o">+</span> <span class="n">deployer_pubkey</span><span class="p">[</span><span class="mi">30</span><span class="p">:]</span>
-        <span class="p">)</span>
+        <span class="n">contract_pubkey</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">contract_pubkey</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span> <span class="o">+</span> <span class="n">deployer_pubkey</span><span class="p">[</span><span class="mi">30</span><span class="p">:]</span>
         <span class="k">return</span> <span class="n">Address</span><span class="p">(</span><span class="n">contract_pubkey</span><span class="p">,</span> <span class="n">deployer</span><span class="o">.</span><span class="n">get_hrp</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="AddressComputer.get_shard_of_address">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressComputer.get_shard_of_address">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_shard_of_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_shard_of_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the shard number of a given address.</span>
 
 <span class="sd">        Args:</span>
@@ -325,13 +323,13 @@
 
 <div class="viewcode-block" id="is_valid_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.is_valid_bech32">[docs]</a>
-<span class="k">def</span> <span class="nf">is_valid_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expected_hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_valid_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expected_hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">hrp</span><span class="p">,</span> <span class="n">value_bytes</span> <span class="o">=</span> <span class="n">bech32</span><span class="o">.</span><span class="n">bech32_decode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">hrp</span> <span class="o">==</span> <span class="n">expected_hrp</span> <span class="ow">and</span> <span class="n">value_bytes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_decode_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_decode_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]:</span>
     <span class="n">hrp</span><span class="p">,</span> <span class="n">value_bytes</span> <span class="o">=</span> <span class="n">bech32</span><span class="o">.</span><span class="n">bech32_decode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">hrp</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value_bytes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">BadAddressError</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -345,7 +343,7 @@
 
 <div class="viewcode-block" id="get_shard_of_pubkey">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.get_shard_of_pubkey">[docs]</a>
-<span class="k">def</span> <span class="nf">get_shard_of_pubkey</span><span class="p">(</span><span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">number_of_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_shard_of_pubkey</span><span class="p">(</span><span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">number_of_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">mask_high</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s2">&quot;11&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">mask_low</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s2">&quot;01&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
@@ -362,10 +360,8 @@
 
 
 
-<span class="k">def</span> <span class="nf">_is_pubkey_of_metachain</span><span class="p">(</span><span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="n">metachain_prefix</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span>
-        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_pubkey_of_metachain</span><span class="p">(</span><span class="n">pubkey</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">metachain_prefix</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
     <span class="n">pubkey_prefix</span> <span class="o">=</span> <span class="n">pubkey</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">metachain_prefix</span><span class="p">)]</span>
     <span class="k">if</span> <span class="n">pubkey_prefix</span> <span class="o">==</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">metachain_prefix</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>

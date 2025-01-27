@@ -6,20 +6,20 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.entrypoints package &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.entrypoints package &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="_static/documentation_options.js?v=8d563738"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="multiversx_sdk.network_providers package" href="multiversx_sdk.network_providers.html" />
+    <link rel="next" title="multiversx_sdk.ledger package" href="multiversx_sdk.ledger.html" />
     <link rel="prev" title="multiversx_sdk.delegation package" href="multiversx_sdk.delegation.html" /> 
 </head>
 
@@ -54,6 +54,7 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html">multiversx_sdk.delegation package</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">multiversx_sdk.entrypoints package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.ledger.html">multiversx_sdk.ledger package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html">multiversx_sdk.network_providers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html">multiversx_sdk.relayed package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.smart_contracts.html">multiversx_sdk.smart_contracts package</a></li>
@@ -124,6 +125,27 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.entrypoints.config.</span></span><span class="sig-name descname"><span class="pre">LocalnetEntrypointConfig</span></span><a class="reference internal" href="_modules/multiversx_sdk/entrypoints/config.html#LocalnetEntrypointConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig.chain_id">
+<span class="sig-name descname"><span class="pre">chain_id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'localnet'</span></em><a class="headerlink" href="#multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig.chain_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig.network_provider_kind">
+<span class="sig-name descname"><span class="pre">network_provider_kind</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'proxy'</span></em><a class="headerlink" href="#multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig.network_provider_kind" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig.network_provider_url">
+<span class="sig-name descname"><span class="pre">network_provider_url</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://localhost:7950'</span></em><a class="headerlink" href="#multiversx_sdk.entrypoints.config.LocalnetEntrypointConfig.network_provider_url" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.entrypoints.config.MainnetEntrypointConfig">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.entrypoints.config.</span></span><span class="sig-name descname"><span class="pre">MainnetEntrypointConfig</span></span><a class="reference internal" href="_modules/multiversx_sdk/entrypoints/config.html#MainnetEntrypointConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.entrypoints.config.MainnetEntrypointConfig" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -171,6 +193,12 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.entrypoints.entrypoints.DevnetEntrypoint">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.entrypoints.entrypoints.</span></span><span class="sig-name descname"><span class="pre">DevnetEntrypoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/entrypoints/entrypoints.html#DevnetEntrypoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.entrypoints.entrypoints.DevnetEntrypoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint" title="multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetworkEntrypoint</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.entrypoints.entrypoints.LocalnetEntrypoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.entrypoints.entrypoints.</span></span><span class="sig-name descname"><span class="pre">LocalnetEntrypoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/entrypoints/entrypoints.html#LocalnetEntrypoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.entrypoints.entrypoints.LocalnetEntrypoint" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint" title="multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetworkEntrypoint</span></code></a></p>
 </dd></dl>
 
@@ -330,6 +358,12 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.entrypoints.LocalnetEntrypoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.entrypoints.</span></span><span class="sig-name descname"><span class="pre">LocalnetEntrypoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/entrypoints/entrypoints.html#LocalnetEntrypoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.entrypoints.LocalnetEntrypoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint" title="multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetworkEntrypoint</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.entrypoints.MainnetEntrypoint">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.entrypoints.</span></span><span class="sig-name descname"><span class="pre">MainnetEntrypoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/entrypoints/entrypoints.html#MainnetEntrypoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.entrypoints.MainnetEntrypoint" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint" title="multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">NetworkEntrypoint</span></code></a></p>
@@ -474,7 +508,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="multiversx_sdk.delegation.html" class="btn btn-neutral float-left" title="multiversx_sdk.delegation package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="multiversx_sdk.network_providers.html" class="btn btn-neutral float-right" title="multiversx_sdk.network_providers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="multiversx_sdk.ledger.html" class="btn btn-neutral float-right" title="multiversx_sdk.ledger package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

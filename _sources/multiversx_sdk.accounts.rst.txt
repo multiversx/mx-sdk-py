@@ -12,6 +12,14 @@ multiversx\_sdk.accounts.account module
    :undoc-members:
    :show-inheritance:
 
+multiversx\_sdk.accounts.ledger\_account module
+-----------------------------------------------
+
+.. automodule:: multiversx_sdk.accounts.ledger_account
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

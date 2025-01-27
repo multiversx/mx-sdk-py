@@ -1,0 +1,317 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.ledger.ledger_app &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.ledger.ledger_app</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.ledger.ledger_app</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.ledger.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">LedgerAppConfiguration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.ledger.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LedgerError</span>
+
+<span class="n">CLA</span> <span class="o">=</span> <span class="mh">0xED</span>
+<span class="n">CONNECTION_ERROR_MSG</span> <span class="o">=</span> <span class="s2">&quot;check if device is plugged in, unlocked and on MultiversX app&quot;</span>
+
+<span class="c1"># account index is always 0 for MultiversX</span>
+<span class="n">DEFAULT_ACCOUNT_INDEX</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<div class="viewcode-block" id="Instructions">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.Instructions">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Instructions</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">SIGN_HASH_TX_INS</span> <span class="o">=</span> <span class="mh">0x07</span>
+    <span class="n">SIGN_MESSAGE_INS</span> <span class="o">=</span> <span class="mh">0x06</span>
+    <span class="n">PROVIDE_ESDT_INFO_INS</span> <span class="o">=</span> <span class="mh">0x08</span>
+    <span class="n">GET_ADDRESS_AUTH_TOKEN_INS</span> <span class="o">=</span> <span class="mh">0x09</span></div>
+
+
+
+<div class="viewcode-block" id="Apdu">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.Apdu">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Apdu</span><span class="p">:</span>
+    <span class="n">cla</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">ins</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">p1</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">p2</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span></div>
+
+
+
+<div class="viewcode-block" id="LedgerApp">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LedgerApp</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">ledgercomm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transport</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;The ledgercomm package is not installed. Please install it using &quot;</span>
+                <span class="s2">&quot;pip install multiversx_sdk[ledger].&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">Transport</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="s2">&quot;hid&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Nano S/X using HID interface</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LedgerApp.set_address">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.set_address">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">DEFAULT_ACCOUNT_INDEX</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">address_index</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xED</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x05</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">sw</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LedgerApp.get_address">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.get_address">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">DEFAULT_ACCOUNT_INDEX</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">address_index</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xED</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x03</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">sw</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
+
+        <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">err</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+
+        <span class="n">response_body</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="n">response_body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">address</span></div>
+
+
+<div class="viewcode-block" id="LedgerApp.get_app_configuration">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.get_app_configuration">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_app_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LedgerAppConfiguration</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xED</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x02</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">sw</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">err</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_ledger_config_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LedgerApp.get_version">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.get_version">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_app_configuration</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">version</span></div>
+
+
+<div class="viewcode-block" id="LedgerApp.sign_transaction">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.sign_transaction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sign_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_sign</span><span class="p">(</span><span class="n">tx_bytes</span><span class="p">,</span> <span class="n">Instructions</span><span class="o">.</span><span class="n">SIGN_HASH_TX_INS</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LedgerApp.sign_message">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.sign_message">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sign_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_sign</span><span class="p">(</span><span class="n">message_bytes</span><span class="p">,</span> <span class="n">Instructions</span><span class="o">.</span><span class="n">SIGN_MESSAGE_INS</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">ins_signing_method</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">total_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">max_chunk_size</span> <span class="o">=</span> <span class="mi">150</span>
+
+        <span class="n">apdus</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Apdu</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">offset</span> <span class="o">!=</span> <span class="n">total_size</span><span class="p">:</span>
+            <span class="n">is_first</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">==</span> <span class="mi">0</span>
+
+            <span class="n">apdu</span> <span class="o">=</span> <span class="n">Apdu</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">is_first</span><span class="p">:</span>
+                <span class="n">apdu</span><span class="o">.</span><span class="n">p1</span> <span class="o">=</span> <span class="mh">0x00</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">apdu</span><span class="o">.</span><span class="n">p1</span> <span class="o">=</span> <span class="mh">0x80</span>
+
+            <span class="n">has_more</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">max_chunk_size</span> <span class="o">&lt;</span> <span class="n">total_size</span>
+            <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">total_size</span> <span class="o">-</span> <span class="n">offset</span>
+            <span class="k">if</span> <span class="n">has_more</span><span class="p">:</span>
+                <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">max_chunk_size</span>
+
+            <span class="n">apdu</span><span class="o">.</span><span class="n">ins</span> <span class="o">=</span> <span class="n">ins_signing_method</span>
+            <span class="n">apdu</span><span class="o">.</span><span class="n">p2</span> <span class="o">=</span> <span class="mh">0x00</span>
+            <span class="n">apdu</span><span class="o">.</span><span class="n">cla</span> <span class="o">=</span> <span class="n">CLA</span>
+            <span class="n">apdu</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">]</span>
+
+            <span class="n">apdus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span>
+
+            <span class="n">offset</span> <span class="o">+=</span> <span class="n">chunk_size</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_signature_from_apdus</span><span class="p">(</span><span class="n">apdus</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LedgerApp.get_signature_from_apdus">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.get_signature_from_apdus">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_signature_from_apdus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apdus</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Apdu</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">sw</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">apdu</span> <span class="ow">in</span> <span class="n">apdus</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">cla</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">ins</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">p2</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">sw</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">65</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">64</span> <span class="ow">or</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">err_message</span> <span class="o">=</span> <span class="s2">&quot;signature failed&quot;</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">err_message</span> <span class="o">+=</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">err</span>
+            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">err_message</span><span class="p">)</span>
+
+        <span class="n">response_body</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">response_body</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">signature</span></div>
+
+
+<div class="viewcode-block" id="LedgerApp.close">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_ledger_config_from_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LedgerAppConfiguration</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">LedgerAppConfiguration</span><span class="p">()</span>
+
+        <span class="n">config</span><span class="o">.</span><span class="n">data_activated</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mh">0x01</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">data_activated</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">config</span><span class="o">.</span><span class="n">account_index</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">address_index</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">version</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
+
+        <span class="k">return</span> <span class="n">config</span></div>
+
+
+
+<div class="viewcode-block" id="get_error">
+<a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.get_error">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mh">0x9000</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="mh">0x6985</span><span class="p">:</span> <span class="s2">&quot;user denied&quot;</span><span class="p">,</span>
+        <span class="mh">0x6D00</span><span class="p">:</span> <span class="s2">&quot;unknown instruction&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E00</span><span class="p">:</span> <span class="s2">&quot;wrong cla&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E10</span><span class="p">:</span> <span class="s2">&quot;signature failed&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E01</span><span class="p">:</span> <span class="s2">&quot;invalid arguments&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E02</span><span class="p">:</span> <span class="s2">&quot;invalid message&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E03</span><span class="p">:</span> <span class="s2">&quot;invalid p1&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E04</span><span class="p">:</span> <span class="s2">&quot;message too long&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E05</span><span class="p">:</span> <span class="s2">&quot;receiver too long&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E06</span><span class="p">:</span> <span class="s2">&quot;amount too long&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E07</span><span class="p">:</span> <span class="s2">&quot;contract data disabled&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E08</span><span class="p">:</span> <span class="s2">&quot;message incomplete&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E09</span><span class="p">:</span> <span class="s2">&quot;wrong tx version&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E0A</span><span class="p">:</span> <span class="s2">&quot;nonce too long&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E0B</span><span class="p">:</span> <span class="s2">&quot;invalid amount&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E0C</span><span class="p">:</span> <span class="s2">&quot;invalid fee&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E0D</span><span class="p">:</span> <span class="s2">&quot;pretty failed&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E0E</span><span class="p">:</span> <span class="s2">&quot;data too long&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E0F</span><span class="p">:</span> <span class="s2">&quot;wrong tx options&quot;</span><span class="p">,</span>
+        <span class="mh">0x6E11</span><span class="p">:</span> <span class="s2">&quot;regular signing is deprecated&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">errors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="s2">&quot;unknown error code: &quot;</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">code</span><span class="p">))</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

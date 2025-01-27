@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.wallet.crypto.encryptor &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.wallet.crypto.encryptor &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -69,33 +69,48 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.wallet.crypto.encryptor</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">cryptography.hazmat.backends</span> <span class="kn">import</span> <span class="n">default_backend</span>
-<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives</span> <span class="kn">import</span> <span class="n">hashes</span><span class="p">,</span> <span class="n">hmac</span>
-<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.ciphers</span> <span class="kn">import</span> <span class="n">Cipher</span><span class="p">,</span> <span class="n">algorithms</span><span class="p">,</span> <span class="n">modes</span>
-<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.kdf.scrypt</span> <span class="kn">import</span> <span class="n">Scrypt</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.backends</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_backend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">hashes</span><span class="p">,</span> <span class="n">hmac</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.ciphers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cipher</span><span class="p">,</span> <span class="n">algorithms</span><span class="p">,</span> <span class="n">modes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.kdf.scrypt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scrypt</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.crypto.constants</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">CIPHER_ALGORITHM_AES_128_CTR</span><span class="p">,</span> <span class="n">ENCRYPTOR_VERSION</span><span class="p">,</span>
-    <span class="n">KEY_DERIVATION_FUNCTION_SCRYPT</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.crypto.encrypted_data</span> <span class="kn">import</span> <span class="p">(</span><span class="n">EncryptedData</span><span class="p">,</span>
-                                                         <span class="n">KeyDerivationParams</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.wallet.interfaces</span> <span class="kn">import</span> <span class="n">IRandomness</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.crypto.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CIPHER_ALGORITHM_AES_128_CTR</span><span class="p">,</span>
+    <span class="n">ENCRYPTOR_VERSION</span><span class="p">,</span>
+    <span class="n">KEY_DERIVATION_FUNCTION_SCRYPT</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.crypto.encrypted_data</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EncryptedData</span><span class="p">,</span>
+    <span class="n">KeyDerivationParams</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IRandomness</span>
 
 
 <div class="viewcode-block" id="encrypt">
 <a class="viewcode-back" href="../../../../multiversx_sdk.wallet.crypto.html#multiversx_sdk.wallet.crypto.encryptor.encrypt">[docs]</a>
-<span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">randomness</span><span class="p">:</span> <span class="n">IRandomness</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EncryptedData</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">randomness</span><span class="p">:</span> <span class="n">IRandomness</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EncryptedData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Also see: https://github.com/multiversx/mx-sdk-js-wallet/blob/main/src/crypto/encryptor.ts</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">default_backend</span><span class="p">()</span>
 
     <span class="n">kdParams</span> <span class="o">=</span> <span class="n">KeyDerivationParams</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dklen</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
-    <span class="n">kdf</span> <span class="o">=</span> <span class="n">Scrypt</span><span class="p">(</span><span class="n">salt</span><span class="o">=</span><span class="n">randomness</span><span class="o">.</span><span class="n">salt</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">dklen</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+    <span class="n">kdf</span> <span class="o">=</span> <span class="n">Scrypt</span><span class="p">(</span>
+        <span class="n">salt</span><span class="o">=</span><span class="n">randomness</span><span class="o">.</span><span class="n">salt</span><span class="p">,</span>
+        <span class="n">length</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">dklen</span><span class="p">,</span>
+        <span class="n">n</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">n</span><span class="p">,</span>
+        <span class="n">r</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">r</span><span class="p">,</span>
+        <span class="n">p</span><span class="o">=</span><span class="n">kdParams</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+        <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">derived_key</span> <span class="o">=</span> <span class="n">kdf</span><span class="o">.</span><span class="n">derive</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">()))</span>
     <span class="n">derived_key_first_half</span> <span class="o">=</span> <span class="n">derived_key</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">]</span>
     <span class="n">derived_key_second_half</span> <span class="o">=</span> <span class="n">derived_key</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span>
-    <span class="n">cipher</span> <span class="o">=</span> <span class="n">Cipher</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">AES</span><span class="p">(</span><span class="n">derived_key_first_half</span><span class="p">),</span> <span class="n">modes</span><span class="o">.</span><span class="n">CTR</span><span class="p">(</span><span class="n">randomness</span><span class="o">.</span><span class="n">iv</span><span class="p">),</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">Cipher</span><span class="p">(</span>
+        <span class="n">algorithms</span><span class="o">.</span><span class="n">AES</span><span class="p">(</span><span class="n">derived_key_first_half</span><span class="p">),</span>
+        <span class="n">modes</span><span class="o">.</span><span class="n">CTR</span><span class="p">(</span><span class="n">randomness</span><span class="o">.</span><span class="n">iv</span><span class="p">),</span>
+        <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">encryptor</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">encryptor</span><span class="p">()</span>
     <span class="n">ciphertext</span> <span class="o">=</span> <span class="n">encryptor</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="n">encryptor</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
@@ -113,7 +128,7 @@
         <span class="n">kdf</span><span class="o">=</span><span class="n">KEY_DERIVATION_FUNCTION_SCRYPT</span><span class="p">,</span>
         <span class="n">kdfparams</span><span class="o">=</span><span class="n">kdParams</span><span class="p">,</span>
         <span class="n">salt</span><span class="o">=</span><span class="n">randomness</span><span class="o">.</span><span class="n">salt</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>
-        <span class="n">mac</span><span class="o">=</span><span class="n">mac</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+        <span class="n">mac</span><span class="o">=</span><span class="n">mac</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">encrypted_data</span></div>

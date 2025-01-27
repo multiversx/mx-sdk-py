@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.builders.transaction_builder &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.builders.transaction_builder &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,30 +69,31 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.builders.transaction_builder</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core</span> <span class="kn">import</span> <span class="n">Address</span><span class="p">,</span> <span class="n">Transaction</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.constants</span> <span class="kn">import</span> <span class="n">ARGS_SEPARATOR</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transactions_factory_config</span> <span class="kn">import</span> \
-    <span class="n">TransactionsFactoryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span><span class="p">,</span> <span class="n">Transaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">ARGS_SEPARATOR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
 
 
 <div class="viewcode-block" id="TransactionBuilder">
 <a class="viewcode-back" href="../../../multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder">[docs]</a>
-<span class="k">class</span> <span class="nc">TransactionBuilder</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransactionBuilder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    **FOR INTERNAL USE ONLY.**</span>
 <span class="sd">    Used for the transactions factories.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">,</span>
-                 <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-                 <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-                 <span class="n">data_parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                 <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">add_data_movement_gas</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-                 <span class="n">amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">data_parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">add_data_movement_gas</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">amount</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">sender</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span> <span class="o">=</span> <span class="n">receiver</span>
@@ -103,7 +104,7 @@
 
 <div class="viewcode-block" id="TransactionBuilder.compute_gas_limit">
 <a class="viewcode-back" href="../../../multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder.compute_gas_limit">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_gas_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_gas_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_data_movement_gas</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">provided_gas_limit</span>
 
@@ -115,14 +116,14 @@
 
 <div class="viewcode-block" id="TransactionBuilder.build_transaction_payload">
 <a class="viewcode-back" href="../../../multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder.build_transaction_payload">[docs]</a>
-    <span class="k">def</span> <span class="nf">build_transaction_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_transaction_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">ARGS_SEPARATOR</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TransactionBuilder.build">
 <a class="viewcode-back" href="../../../multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder.build">[docs]</a>
-    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_transaction_payload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_parts</span><span class="p">)</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_gas_limit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
@@ -132,7 +133,7 @@
             <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
             <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>

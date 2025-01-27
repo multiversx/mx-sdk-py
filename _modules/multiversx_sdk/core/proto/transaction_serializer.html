@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.proto.transaction_serializer &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.core.proto.transaction_serializer &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -69,28 +69,28 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.core.proto.transaction_serializer</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">multiversx_sdk.core.proto.transaction_pb2</span> <span class="k">as</span> <span class="nn">ProtoTransaction</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.biguint_value</span> <span class="kn">import</span> <span class="n">BigUIntValue</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.abi.serializer</span> <span class="kn">import</span> <span class="n">Serializer</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction</span> <span class="kn">import</span> <span class="n">Transaction</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">multiversx_sdk.core.proto.transaction_pb2</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ProtoTransaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.biguint_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">BigUIntValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.serializer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Serializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
 
 
 <div class="viewcode-block" id="ProtoSerializer">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer">[docs]</a>
-<span class="k">class</span> <span class="nc">ProtoSerializer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProtoSerializer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
 <div class="viewcode-block" id="ProtoSerializer.serialize_transaction">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer.serialize_transaction">[docs]</a>
-    <span class="k">def</span> <span class="nf">serialize_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">proto_transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_proto_message</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">proto_transaction</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ProtoSerializer.serialize_transaction_value">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer.serialize_transaction_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">serialize_transaction_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize_transaction_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">tx_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
@@ -103,7 +103,7 @@
 
 <div class="viewcode-block" id="ProtoSerializer.convert_to_proto_message">
 <a class="viewcode-back" href="../../../../multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer.convert_to_proto_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">convert_to_proto_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProtoTransaction</span><span class="o">.</span><span class="n">Transaction</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_proto_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProtoTransaction</span><span class="o">.</span><span class="n">Transaction</span><span class="p">:</span>
         <span class="n">receiver_pubkey</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
         <span class="n">sender_pubkey</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
 

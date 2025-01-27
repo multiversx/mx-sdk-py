@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_types &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_types &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,21 +69,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_types</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core</span> <span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
 
 
 <div class="viewcode-block" id="DeployedSmartContract">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.DeployedSmartContract">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">DeployedSmartContract</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeployedSmartContract</span><span class="p">:</span>
     <span class="n">address</span><span class="p">:</span> <span class="n">Address</span>
     <span class="n">owner_address</span><span class="p">:</span> <span class="n">Address</span>
     <span class="n">code_hash</span><span class="p">:</span> <span class="nb">bytes</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;DeployedSmartContract(address=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">, owner_address=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">owner_address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}</span><span class="s2">, code_hash=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">code_hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
@@ -91,7 +91,7 @@
 <div class="viewcode-block" id="SmartContractDeployOutcome">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractDeployOutcome">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">SmartContractDeployOutcome</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SmartContractDeployOutcome</span><span class="p">:</span>
     <span class="n">return_code</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">return_message</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">contracts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DeployedSmartContract</span><span class="p">]</span></div>
@@ -101,7 +101,7 @@
 <div class="viewcode-block" id="ParsedSmartContractCallOutcome">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.ParsedSmartContractCallOutcome">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ParsedSmartContractCallOutcome</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParsedSmartContractCallOutcome</span><span class="p">:</span>
     <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
     <span class="n">return_code</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">return_message</span><span class="p">:</span> <span class="nb">str</span></div>

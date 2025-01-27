@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.network_providers.transaction_decoder &mdash; multiversx-sdk 0.19.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+  <title>multiversx_sdk.network_providers.transaction_decoder &mdash; multiversx-sdk 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=cbfb3150"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -69,40 +69,45 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.network_providers.transaction_decoder</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">binascii</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">binascii</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core</span> <span class="kn">import</span> <span class="n">TokenTransfer</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.address</span> <span class="kn">import</span> <span class="n">Address</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.tokens</span> <span class="kn">import</span> <span class="n">Token</span>
-<span class="kn">from</span> <span class="nn">multiversx_sdk.core.transaction_on_network</span> <span class="kn">import</span> <span class="n">TransactionOnNetwork</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenTransfer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.tokens</span><span class="w"> </span><span class="kn">import</span> <span class="n">Token</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction_on_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionOnNetwork</span>
 
 
 <div class="viewcode-block" id="TransactionMetadata">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionMetadata">[docs]</a>
-<span class="k">class</span> <span class="nc">TransactionMetadata</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransactionMetadata</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">function_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">function_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transfers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transfer_messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This property is set to the extra arguments passed to ESDTTransfer when transferring tokens to non-smart contract accounts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TransactionMetadata.to_dict">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionMetadata.to_dict">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;sender&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span>
             <span class="s2">&quot;receiver&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span><span class="p">,</span>
             <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
             <span class="s2">&quot;function_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
             <span class="s2">&quot;function_args&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_args</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function_args</span> <span class="k">else</span> <span class="p">[],</span>
-            <span class="s2">&quot;transfers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transfers_to_dict</span><span class="p">()</span>
+            <span class="s2">&quot;transfers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transfers_to_dict</span><span class="p">(),</span>
+            <span class="s2">&quot;transfer_messages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">message</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfer_messages</span><span class="p">],</span>
         <span class="p">}</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_transfers_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_transfers_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfers</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transfers</span><span class="p">):</span>
                 <span class="k">return</span> <span class="p">[]</span>
@@ -110,11 +115,13 @@
             <span class="n">transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="k">for</span> <span class="n">transfer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transfers</span><span class="p">:</span>
-                <span class="n">transfers</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">transfer</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
-                    <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="n">transfer</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
-                    <span class="s2">&quot;nonce&quot;</span><span class="p">:</span> <span class="n">transfer</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">nonce</span>
-                <span class="p">})</span>
+                <span class="n">transfers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">transfer</span><span class="o">.</span><span class="n">amount</span><span class="p">,</span>
+                        <span class="s2">&quot;token&quot;</span><span class="p">:</span> <span class="n">transfer</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+                        <span class="s2">&quot;nonce&quot;</span><span class="p">:</span> <span class="n">transfer</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">nonce</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
 
             <span class="k">return</span> <span class="n">transfers</span>
 
@@ -124,10 +131,12 @@
 
 <div class="viewcode-block" id="TransactionDecoder">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder">[docs]</a>
-<span class="k">class</span> <span class="nc">TransactionDecoder</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransactionDecoder</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Can be used for decoding custom token transfers transactions (ESDTTransfer, NFTTransfer, MultiESDTNFTTransfer).&quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="TransactionDecoder.get_transaction_metadata">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.get_transaction_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_transaction_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionMetadata</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_transaction_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionMetadata</span><span class="p">:</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_normal_transaction_metadata</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="n">esdt_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_esdt_transaction_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
@@ -147,7 +156,7 @@
 
 <div class="viewcode-block" id="TransactionDecoder.get_normal_transaction_metadata">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.get_normal_transaction_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_normal_transaction_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionMetadata</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_normal_transaction_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionMetadata</span><span class="p">:</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="n">TransactionMetadata</span><span class="p">()</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
         <span class="n">metadata</span><span class="o">.</span><span class="n">receiver</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
@@ -162,15 +171,16 @@
                 <span class="n">metadata</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="n">args</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">is_smart_contract</span><span class="p">():</span>
-                <span class="n">metadata</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="s1">&#39;transfer&#39;</span>
+                <span class="n">metadata</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;transfer&quot;</span>
                 <span class="n">metadata</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">metadata</span><span class="o">.</span><span class="n">transfer_messages</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">data_components</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">metadata</span></div>
 
 
 <div class="viewcode-block" id="TransactionDecoder.get_esdt_transaction_metadata">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.get_esdt_transaction_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_esdt_transaction_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">TransactionMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionMetadata</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_esdt_transaction_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">TransactionMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionMetadata</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">function_name</span> <span class="o">!=</span> <span class="s2">&quot;ESDTTransfer&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -191,9 +201,15 @@
         <span class="n">result</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
         <span class="n">result</span><span class="o">.</span><span class="n">transfers</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="n">receiver</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">receiver</span><span class="p">)</span>
+        <span class="n">is_receiver_sc</span> <span class="o">=</span> <span class="n">receiver</span><span class="o">.</span><span class="n">is_smart_contract</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_string</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="n">is_receiver_sc</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_string</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">transfer_messages</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">:]]</span>
 
         <span class="n">token</span> <span class="o">=</span> <span class="n">Token</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
         <span class="n">transfer</span> <span class="o">=</span> <span class="n">TokenTransfer</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -204,7 +220,7 @@
 
 <div class="viewcode-block" id="TransactionDecoder.get_nft_transfer_metadata">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.get_nft_transfer_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_nft_transfer_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">TransactionMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionMetadata</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nft_transfer_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">TransactionMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionMetadata</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">sender</span> <span class="o">!=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">receiver</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -233,8 +249,11 @@
         <span class="n">result</span><span class="o">.</span><span class="n">transfers</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_string</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="n">receiver</span><span class="o">.</span><span class="n">is_smart_contract</span><span class="p">():</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_string</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">transfer_messages</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="mi">4</span><span class="p">:]]</span>
 
         <span class="n">token</span> <span class="o">=</span> <span class="n">Token</span><span class="p">(</span><span class="n">collection_identifier</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_number</span><span class="p">(</span><span class="n">nonce</span><span class="p">))</span>
         <span class="n">transfer</span> <span class="o">=</span> <span class="n">TokenTransfer</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -245,7 +264,7 @@
 
 <div class="viewcode-block" id="TransactionDecoder.get_multi_transfer_metadata">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.get_multi_transfer_metadata">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_multi_transfer_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">TransactionMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionMetadata</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_multi_transfer_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">TransactionMetadata</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TransactionMetadata</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">metadata</span><span class="o">.</span><span class="n">sender</span> <span class="o">!=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">receiver</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
@@ -293,23 +312,26 @@
         <span class="n">result</span><span class="o">.</span><span class="n">receiver</span> <span class="o">=</span> <span class="n">receiver</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">index</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_string</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
-            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">:]</span>
-            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">receiver</span><span class="o">.</span><span class="n">is_smart_contract</span><span class="p">():</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hex_to_string</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">function_args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">:]</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">transfer_messages</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="n">index</span><span class="p">:]]</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="TransactionDecoder.is_address_valid">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.is_address_valid">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_address_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_address_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">binascii</span><span class="o">.</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">address</span><span class="p">))</span> <span class="o">==</span> <span class="mi">32</span></div>
 
 
 <div class="viewcode-block" id="TransactionDecoder.is_smart_contract_call_argument">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.is_smart_contract_call_argument">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_smart_contract_call_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_smart_contract_call_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_hex</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -319,7 +341,7 @@
 
 <div class="viewcode-block" id="TransactionDecoder.is_hex">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.is_hex">[docs]</a>
-    <span class="k">def</span> <span class="nf">is_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_hex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -329,13 +351,13 @@
 
 <div class="viewcode-block" id="TransactionDecoder.hex_to_string">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.hex_to_string">[docs]</a>
-    <span class="k">def</span> <span class="nf">hex_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hex_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="nb">hex</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TransactionDecoder.hex_to_number">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionDecoder.hex_to_number">[docs]</a>
-    <span class="k">def</span> <span class="nf">hex_to_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hex_to_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">hex</span> <span class="ow">or</span> <span class="s2">&quot;00&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span></div>
 </div>
 
