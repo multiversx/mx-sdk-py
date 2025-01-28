@@ -622,3 +622,278 @@ class TestTokenManagementTransactionsOutcomeParser:
         assert outcome[0].token_identifier == identifier
         assert outcome[0].nonce == nonce
         assert outcome[0].burnt_quantity == burnt_quantity
+
+    def test_parse_modify_royalties(self):
+        identifier = "TEST-e2b0f9"
+        nonce = 1
+        royalties = 20
+
+        encoded_topics = [base64.b64encode(identifier.encode()), "AQ==", "", "FA=="]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="ESDTModifyRoyalties",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_modify_royalties(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].nonce == nonce
+        assert outcome[0].royalties == royalties
+
+    def test_parse_set_new_uris(self):
+        identifier = "TEST-e2b0f9"
+        nonce = 1
+        uri = "thisianuri.com"
+
+        encoded_topics = [base64.b64encode(identifier.encode()), "AQ==", "", "dGhpc2lhbnVyaS5jb20="]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="ESDTSetNewURIs",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_set_new_uris(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].nonce == nonce
+
+        assert len(outcome[0].uris) == 1
+        assert outcome[0].uris[0] == uri
+
+    def test_parse_modify_creator(self):
+        identifier = "TEST-e2b0f9"
+        nonce = 1
+
+        encoded_topics = [base64.b64encode(identifier.encode()), "AQ=="]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="ESDTModifyCreator",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_modify_creator(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].nonce == nonce
+
+    def test_parse_update_metadata(self):
+        identifier = "TEST-e2b0f9"
+        nonce = 1
+        metadata = base64.b64decode(
+            "CAUSAgABIlQIARIHVEVTVE5GVBogATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeEgHioIbmV3X2hhc2gyDnRoaXNpYW51cmkuY29tOgkAAAAAAAAAAwUqHgjH9a4DEMf1rgMYx/WuAyDH9a4DKMb1rgMwx/WuAw=="
+        )
+
+        encoded_topics = [
+            base64.b64encode(identifier.encode()),
+            "AQ==",
+            "",
+            "CAUSAgABIlQIARIHVEVTVE5GVBogATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeEgHioIbmV3X2hhc2gyDnRoaXNpYW51cmkuY29tOgkAAAAAAAAAAwUqHgjH9a4DEMf1rgMYx/WuAyDH9a4DKMb1rgMwx/WuAw==",
+        ]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="ESDTMetaDataUpdate",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_update_metadata(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].nonce == nonce
+        assert outcome[0].metadata == metadata
+
+    def test_parse_recreate_metadata(self):
+        identifier = "TEST-e2b0f9"
+        nonce = 1
+        metadata = base64.b64decode(
+            "CAUSAgABIlAIARIHVEVTVE5GVBogATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeEgHioSbmV3X2hhc2hfcmVjcmVhdGVkMgA6CQAAAAAAAABkASoeCMj1rgMQyPWuAxjI9a4DIMj1rgMoyPWuAzDI9a4D"
+        )
+
+        encoded_topics = [
+            base64.b64encode(identifier.encode()),
+            "AQ==",
+            "",
+            "CAUSAgABIlAIARIHVEVTVE5GVBogATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeEgHioSbmV3X2hhc2hfcmVjcmVhdGVkMgA6CQAAAAAAAABkASoeCMj1rgMQyPWuAxjI9a4DIMj1rgMoyPWuAzDI9a4D",
+        ]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="ESDTMetaDataRecreate",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_metadata_recreate(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].nonce == nonce
+        assert outcome[0].metadata == metadata
+
+    def test_parse_change_to_dynamic(self):
+        identifier = "LKXOXNO-503365"
+        token_name = "LKXOXNO"
+        ticker = "LKXOXNO"
+        token_type = "DynamicMetaESDT"
+
+        encoded_topics = [
+            base64.b64encode(identifier.encode()),
+            "TEtYT1hOTw==",
+            "TEtYT1hOTw==",
+            "RHluYW1pY01ldGFFU0RU",
+        ]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="changeToDynamic",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_change_token_to_dynamic(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].token_name == token_name
+        assert outcome[0].ticker == ticker
+        assert outcome[0].token_type == token_type
+
+    def test_parse_register_dynamic(self):
+        identifier = "TEST-9bbb21"
+        token_name = "TESTNFT"
+        ticker = "TEST"
+        token_type = "DynamicNonFungibleESDT"
+
+        encoded_topics = [
+            base64.b64encode(identifier.encode()),
+            "VEVTVE5GVA==",
+            "VEVTVA==",
+            "RHluYW1pY05vbkZ1bmdpYmxlRVNEVA==",
+        ]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="registerDynamic",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_register_dynamic_token(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].token_name == token_name
+        assert outcome[0].ticker == ticker
+        assert outcome[0].token_type == token_type
+
+    def test_parse_register_dynamic_and_set_all_roles(self):
+        identifier = "TEST-9bbb21"
+        token_name = "TESTNFT"
+        ticker = "TEST"
+        token_type = "DynamicNonFungibleESDT"
+
+        encoded_topics = [
+            base64.b64encode(identifier.encode()),
+            "VEVTVE5GVA==",
+            "VEVTVA==",
+            "RHluYW1pY05vbkZ1bmdpYmxlRVNEVA==",
+        ]
+
+        event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="registerAndSetAllRolesDynamic",
+            topics=base64_topics_to_bytes(encoded_topics),
+            data=b"",
+            additional_data=[],
+        )
+
+        logs = TransactionLogs(
+            address=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+            events=[event],
+        )
+
+        transaction = get_empty_transaction_on_network()
+        transaction.logs = logs
+
+        outcome = self.parser.parse_register_dynamic_and_setting_roles(transaction)
+        assert len(outcome) == 1
+        assert outcome[0].token_identifier == identifier
+        assert outcome[0].token_name == token_name
+        assert outcome[0].ticker == ticker
+        assert outcome[0].token_type == token_type
