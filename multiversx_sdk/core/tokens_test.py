@@ -156,3 +156,47 @@ def test_token_transfer_from_native_amount():
     assert transfer.token.identifier == "EGLD-000000"
     assert transfer.token.nonce == 0
     assert transfer.amount == 1000000000000000000
+
+
+def test_token_equality():
+    assert Token("WEGLD-abcdef") == Token("WEGLD-abcdef")
+    assert Token("NFT-123456", 777) == Token("NFT-123456", 777)
+    assert Token("test-NFT-123456", 777) == Token("test-NFT-123456", 777)
+
+
+def test_token_inequality():
+    assert Token("WEGLD-abcdeh") != Token("WEGLD-abcdef")
+    assert Token("WEGLD-abcdef", 778) != Token("WEGLD-abcdef", 777)
+    assert Token("WEGLD-abcdeg", 777) != Token("WEGLD-abcdef", 777)
+    assert Token("test-NFT-123456", 775) != Token("test-NFT-123456", 777)
+    assert Token("test-NFT-123457", 777) != Token("test-NFT-123456", 777)
+    assert Token("test-NFZ-123456", 777) != Token("test-NFT-123456", 777)
+    assert Token("tesp-NFT-123456", 777) != Token("test-NFT-123456", 777)
+    assert Token("WEGLD-abcdef") != TokenTransfer(Token("WEGLD-abcdef"), 0)  # test with object of diff types
+
+
+def test_token_transfer_equality():
+    assert TokenTransfer.new_from_native_amount(123456) == TokenTransfer.new_from_native_amount(123456)
+    assert TokenTransfer(Token("WEGLD-abcdef"), 123456) == TokenTransfer(Token("WEGLD-abcdef"), 123456)
+    assert TokenTransfer(Token("NFT-abcdef", 8), 123456) == TokenTransfer(Token("NFT-abcdef", 8), 123456)
+
+
+def test_token_transfer_inequality():
+    assert TokenTransfer.new_from_native_amount(123457) != TokenTransfer.new_from_native_amount(123456)
+    assert TokenTransfer(Token("WEGLD-abcdef"), 123457) != TokenTransfer(Token("WEGLD-abcdef"), 123456)
+    assert TokenTransfer(Token("WEGLD-abcdeg"), 123456) != TokenTransfer(Token("WEGLD-abcdef"), 123456)
+    assert TokenTransfer(Token("NFT-abcdef", 8), 123457) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("NFT-abcdef", 7), 123456) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("NFT-abcdeg", 8), 123456) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("NFT-abcdeh", 7), 123457) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("WEGLD-abcdef"), 0) != Token("WEGLD-abcdef")  # test with object of diff types
+
+
+def test_token_str():
+    assert str(Token("NFT-123456", 777)) == "NFT-123456-0309"
+    assert str(Token("test-NFT-123456", 123)) == "test-NFT-123456-7b"
+
+
+def test_token_transfer_str():
+    assert str(TokenTransfer(Token("WEGLD-abcdef"), 123456)) == "123456 WEGLD-abcdef"
+    assert str(TokenTransfer(Token("NFT-abcdef", 8), 123456)) == "123456 NFT-abcdef-08"
