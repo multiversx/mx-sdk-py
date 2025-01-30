@@ -16,19 +16,26 @@ from multiversx_sdk.token_management.token_management_transactions_outcome_parse
     AddQuantityOutcome,
     BurnOutcome,
     BurnQuantityOutcome,
+    ChangeTokenToDynamicOutcome,
     FreezeOutcome,
     IssueFungibleOutcome,
     IssueNonFungibleOutcome,
     IssueSemiFungibleOutcome,
+    MetadataRecreateOutcome,
     MintOutcome,
+    ModifyCreatorOutcome,
+    ModifyRoyaltiesOutcome,
     NFTCreateOutcome,
     PauseOutcome,
     RegisterAndSetAllRolesOutcome,
+    RegisterDynamicOutcome,
     RegisterMetaEsdtOutcome,
+    SetNewUrisOutcome,
     SetSpecialRoleOutcome,
     UnFreezeOutcome,
     UnPauseOutcome,
     UpdateAttributesOutcome,
+    UpdateMetadataOutcome,
     WipeOutcome,
 )
 
@@ -939,6 +946,13 @@ class TokenManagementController(BaseController):
 
         return transaction
 
+    def parse_modify_royalties(self, transaction_on_network: TransactionOnNetwork) -> list[ModifyRoyaltiesOutcome]:
+        return self.parser.parse_modify_royalties(transaction_on_network)
+
+    def await_completed_modify_royalties(self, transaction_hash: Union[str, bytes]) -> list[ModifyRoyaltiesOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_modify_royalties(transaction)
+
     def create_transaction_for_setting_new_uris(
         self,
         sender: IAccount,
@@ -965,6 +979,13 @@ class TokenManagementController(BaseController):
 
         return transaction
 
+    def parse_set_new_uris(self, transaction_on_network: TransactionOnNetwork) -> list[SetNewUrisOutcome]:
+        return self.parser.parse_set_new_uris(transaction_on_network)
+
+    def await_completed_set_new_uris(self, transaction_hash: Union[str, bytes]) -> list[SetNewUrisOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_set_new_uris(transaction)
+
     def create_transaction_for_modifying_creator(
         self,
         sender: IAccount,
@@ -986,6 +1007,13 @@ class TokenManagementController(BaseController):
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
+
+    def parse_modify_creator(self, transaction_on_network: TransactionOnNetwork) -> list[ModifyCreatorOutcome]:
+        return self.parser.parse_modify_creator(transaction_on_network)
+
+    def await_completed_modify_creator(self, transaction_hash: Union[str, bytes]) -> list[ModifyCreatorOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_modify_creator(transaction)
 
     def create_transaction_for_updating_metadata(
         self,
@@ -1021,6 +1049,13 @@ class TokenManagementController(BaseController):
 
         return transaction
 
+    def parse_update_metadata(self, transaction_on_network: TransactionOnNetwork) -> list[UpdateMetadataOutcome]:
+        return self.parser.parse_update_metadata(transaction_on_network)
+
+    def await_completed_update_metadata(self, transaction_hash: Union[str, bytes]) -> list[UpdateMetadataOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_update_metadata(transaction)
+
     def create_transaction_for_nft_metadata_recreate(
         self,
         sender: IAccount,
@@ -1055,6 +1090,13 @@ class TokenManagementController(BaseController):
 
         return transaction
 
+    def parse_metadata_recreate(self, transaction_on_network: TransactionOnNetwork) -> list[MetadataRecreateOutcome]:
+        return self.parser.parse_metadata_recreate(transaction_on_network)
+
+    def await_completed_metadata_recreate(self, transaction_hash: Union[str, bytes]) -> list[MetadataRecreateOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_metadata_recreate(transaction)
+
     def create_transaction_for_changing_token_to_dynamic(
         self,
         sender: IAccount,
@@ -1078,6 +1120,17 @@ class TokenManagementController(BaseController):
 
         return transaction
 
+    def parse_change_token_to_dynamic(
+        self, transaction_on_network: TransactionOnNetwork
+    ) -> list[ChangeTokenToDynamicOutcome]:
+        return self.parser.parse_change_token_to_dynamic(transaction_on_network)
+
+    def await_completed_change_token_to_dynamic(
+        self, transaction_hash: Union[str, bytes]
+    ) -> list[ChangeTokenToDynamicOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_change_token_to_dynamic(transaction)
+
     def create_transaction_for_updating_token_id(
         self,
         sender: IAccount,
@@ -1099,6 +1152,9 @@ class TokenManagementController(BaseController):
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
+
+    def await_completed_update_token_id(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
+        return self.network_provider.await_transaction_completed(transaction_hash)
 
     def create_transaction_for_registering_dynamic_token(
         self,
@@ -1128,6 +1184,17 @@ class TokenManagementController(BaseController):
 
         return transaction
 
+    def parse_register_dynamic_token(
+        self, transaction_on_network: TransactionOnNetwork
+    ) -> list[RegisterDynamicOutcome]:
+        return self.parser.parse_register_dynamic_token(transaction_on_network)
+
+    def await_completed_register_dynamic_token(
+        self, transaction_hash: Union[str, bytes]
+    ) -> list[RegisterDynamicOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_register_dynamic_token(transaction)
+
     def create_transaction_for_registering_dynamic_and_setting_roles(
         self,
         sender: IAccount,
@@ -1155,6 +1222,17 @@ class TokenManagementController(BaseController):
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
+
+    def parse_register_dynamic_token_and_setting_roles(
+        self, transaction_on_network: TransactionOnNetwork
+    ) -> list[RegisterDynamicOutcome]:
+        return self.parser.parse_register_dynamic_and_setting_roles(transaction_on_network)
+
+    def await_completed_register_dynamic_token_and_setting_roles(
+        self, transaction_hash: Union[str, bytes]
+    ) -> list[RegisterDynamicOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_register_dynamic_token_and_setting_roles(transaction)
 
     def create_transaction_for_transferring_ownership(
         self,

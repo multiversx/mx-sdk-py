@@ -35,10 +35,10 @@ from multiversx_sdk.delegation import (
 )
 from multiversx_sdk.entrypoints import (
     DevnetEntrypoint,
+    LocalnetEntrypoint,
     MainnetEntrypoint,
     NetworkEntrypoint,
     TestnetEntrypoint,
-    LocalnetEntrypoint,
 )
 from multiversx_sdk.ledger.ledger_app import LedgerApp
 from multiversx_sdk.network_providers import (
@@ -79,15 +79,21 @@ from multiversx_sdk.token_management import (
     AddQuantityOutcome,
     BurnOutcome,
     BurnQuantityOutcome,
+    ChangeTokenToDynamicOutcome,
     FreezeOutcome,
     IssueFungibleOutcome,
     IssueNonFungibleOutcome,
     IssueSemiFungibleOutcome,
+    MetadataRecreateOutcome,
     MintOutcome,
+    ModifyCreatorOutcome,
+    ModifyRoyaltiesOutcome,
     NFTCreateOutcome,
     PauseOutcome,
     RegisterAndSetAllRolesOutcome,
+    RegisterDynamicOutcome,
     RegisterMetaEsdtOutcome,
+    SetNewUrisOutcome,
     SetSpecialRoleOutcome,
     TokenManagementController,
     TokenManagementTransactionsFactory,
@@ -96,6 +102,7 @@ from multiversx_sdk.token_management import (
     UnFreezeOutcome,
     UnPauseOutcome,
     UpdateAttributesOutcome,
+    UpdateMetadataOutcome,
     WipeOutcome,
 )
 from multiversx_sdk.transfers import TransfersController, TransferTransactionsFactory
@@ -219,4 +226,11 @@ __all__ = [
     "LedgerApp",
     "LedgerAccount",
     "LocalnetEntrypoint",
+    "ModifyRoyaltiesOutcome",
+    "SetNewUrisOutcome",
+    "ModifyCreatorOutcome",
+    "UpdateMetadataOutcome",
+    "MetadataRecreateOutcome",
+    "ChangeTokenToDynamicOutcome",
+    "RegisterDynamicOutcome",
 ]

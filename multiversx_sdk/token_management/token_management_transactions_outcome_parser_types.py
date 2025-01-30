@@ -112,3 +112,54 @@ class BurnQuantityOutcome:
     token_identifier: str
     nonce: int
     burnt_quantity: int
+
+
+@dataclass
+class ModifyRoyaltiesOutcome:
+    token_identifier: str
+    nonce: int
+    royalties: int
+
+
+@dataclass
+class SetNewUrisOutcome:
+    token_identifier: str
+    nonce: int
+    uris: list[str]
+
+
+@dataclass
+class ModifyCreatorOutcome:
+    token_identifier: str
+    nonce: int
+
+
+@dataclass
+class UpdateMetadataOutcome:
+    token_identifier: str
+    nonce: int
+    metadata: bytes
+
+
+@dataclass
+class MetadataRecreateOutcome:
+    token_identifier: str
+    nonce: int
+    metadata: bytes
+
+
+@dataclass
+class ChangeTokenToDynamicOutcome:
+    token_identifier: str
+    token_name: str
+    ticker: str
+    token_type: str
+
+
+@dataclass
+class RegisterDynamicOutcome:
+    token_identifier: str
+    token_name: str
+    ticker: str
+    token_type: str
+    num_of_decimals: int
