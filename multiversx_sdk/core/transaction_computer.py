@@ -53,12 +53,13 @@ class TransactionComputer:
         if ignore_options:
             return serialized
 
-        if self.has_options_set_for_hash_signing(transaction):
-            if not transaction.version >= MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
-                raise Exception("The transaction version you have set does not allow `options`.")
-            return self.compute_hash_for_signing(transaction)
+        if not self.has_options_set_for_hash_signing(transaction):
+            return serialized
 
-        return serialized
+        if not transaction.version >= MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
+            raise Exception("The transaction version you have set does not allow `options`.")
+
+        return keccak.new(digest_bits=256).update(serialized).digest()
 
     def compute_bytes_for_verifying(self, transaction: Transaction) -> bytes:
         is_signed_by_hash = self.has_options_set_for_hash_signing(transaction)
