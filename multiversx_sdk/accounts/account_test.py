@@ -92,3 +92,25 @@ def test_sign_message():
         message.signature.hex()
         == "561bc58f1dc6b10de208b2d2c22c9a474ea5e8cabb59c3d3ce06bbda21cc46454aa71a85d5a60442bd7784effa2e062fcb8fb421c521f898abf7f5ec165e5d0f"
     )
+
+
+def test_sign_tx_by_hash():
+    account = Account.new_from_pem(alice)
+
+    tx = Transaction(
+        sender=Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+        receiver=Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
+        value=0,
+        gas_limit=50000,
+        version=2,
+        options=1,
+        chain_id="integration tests chain ID",
+        nonce=89,
+    )
+
+    tx.signature = account.sign_transaction(tx)
+
+    assert (
+        tx.signature.hex()
+        == "f0c81f2393b1ec5972c813f817bae8daa00ade91c6f75ea604ab6a4d2797aca4378d783023ff98f1a02717fe4f24240cdfba0b674ee9abb18042203d713bc70a"
+    )
