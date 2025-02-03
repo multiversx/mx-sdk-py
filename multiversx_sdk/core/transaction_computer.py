@@ -47,13 +47,17 @@ class TransactionComputer:
         If `ignore_options == True`, the transaction is simply serialized."""
         self._ensure_fields(transaction)
 
+        dictionary = self._to_dictionary(transaction)
+        serialized = self._dict_to_json(dictionary)
+
+        if ignore_options:
+            return serialized
+
         if self.has_options_set_for_hash_signing(transaction):
             if not transaction.version >= MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
                 raise Exception("The transaction version you have set does not allow `options`.")
             return self.compute_hash_for_signing(transaction)
 
-        dictionary = self._to_dictionary(transaction)
-        serialized = self._dict_to_json(dictionary)
         return serialized
 
     def compute_bytes_for_verifying(self, transaction: Transaction) -> bytes:
