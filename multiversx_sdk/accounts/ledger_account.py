@@ -34,7 +34,10 @@ class LedgerAccount:
                 "Invalid transaction options. Set the least significant bit of the `options` property to `1`."
             )
 
-        serialized_transaction = transaction_computer.compute_bytes_for_ledger_signing(transaction)
+        serialized_transaction = transaction_computer.compute_bytes_for_signing(
+            transaction=transaction,
+            ignore_options=True,
+        )
 
         app = LedgerApp()
         app.set_address(self.address_index)

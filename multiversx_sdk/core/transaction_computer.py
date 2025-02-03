@@ -40,21 +40,16 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: Transaction) -> bytes:
-        """Computes the bytes for signing based on the `version` and `options` of the transaction.
-        If the least significant bit of the `options` is set, will serialize transaction for hash signing."""
+    def compute_bytes_for_signing(self, transaction: Transaction, ignore_options=False) -> bytes:
+        """If `ignore_options == False`, the method computes the bytes for signing based on the `version` and `options` of the transaction.
+        If the least significant bit of the `options` is set, will serialize transaction for hash signing.
+
+        If `ignore_options == True`, the transaction is simply serialized."""
         self._ensure_fields(transaction)
 
         if transaction.version >= MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
             if self.has_options_set_for_hash_signing(transaction):
                 return self.compute_hash_for_signing(transaction)
-
-        dictionary = self._to_dictionary(transaction)
-        serialized = self._dict_to_json(dictionary)
-        return serialized
-
-    def compute_bytes_for_ledger_signing(self, transaction: Transaction) -> bytes:
-        self._ensure_fields(transaction)
 
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
