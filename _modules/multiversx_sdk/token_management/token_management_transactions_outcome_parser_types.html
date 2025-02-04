@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.token_management.token_management_transactions_outcome_parser_types &mdash; multiversx-sdk 1.0.0 documentation</title>
+  <title>multiversx_sdk.token_management.token_management_transactions_outcome_parser_types &mdash; multiversx-sdk 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -233,6 +233,78 @@
     <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">burnt_quantity</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="ModifyRoyaltiesOutcome">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.ModifyRoyaltiesOutcome">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModifyRoyaltiesOutcome</span><span class="p">:</span>
+    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">royalties</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="SetNewUrisOutcome">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.SetNewUrisOutcome">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SetNewUrisOutcome</span><span class="p">:</span>
+    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="ModifyCreatorOutcome">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.ModifyCreatorOutcome">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModifyCreatorOutcome</span><span class="p">:</span>
+    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<div class="viewcode-block" id="UpdateMetadataOutcome">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.UpdateMetadataOutcome">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UpdateMetadataOutcome</span><span class="p">:</span>
+    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="nb">bytes</span></div>
+
+
+
+<div class="viewcode-block" id="MetadataRecreateOutcome">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.MetadataRecreateOutcome">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetadataRecreateOutcome</span><span class="p">:</span>
+    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="nb">bytes</span></div>
+
+
+
+<div class="viewcode-block" id="ChangeTokenToDynamicOutcome">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.ChangeTokenToDynamicOutcome">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ChangeTokenToDynamicOutcome</span><span class="p">:</span>
+    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">token_type</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="RegisterDynamicOutcome">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.RegisterDynamicOutcome">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RegisterDynamicOutcome</span><span class="p">:</span>
+    <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">token_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">ticker</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">token_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">num_of_decimals</span><span class="p">:</span> <span class="nb">int</span></div>
 
 </pre></div>
 

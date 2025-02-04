@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.token_management.token_management_transactions_outcome_parser &mdash; multiversx-sdk 1.0.0 documentation</title>
+  <title>multiversx_sdk.token_management.token_management_transactions_outcome_parser &mdash; multiversx-sdk 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -82,19 +82,26 @@
     <span class="n">AddQuantityOutcome</span><span class="p">,</span>
     <span class="n">BurnOutcome</span><span class="p">,</span>
     <span class="n">BurnQuantityOutcome</span><span class="p">,</span>
+    <span class="n">ChangeTokenToDynamicOutcome</span><span class="p">,</span>
     <span class="n">FreezeOutcome</span><span class="p">,</span>
     <span class="n">IssueFungibleOutcome</span><span class="p">,</span>
     <span class="n">IssueNonFungibleOutcome</span><span class="p">,</span>
     <span class="n">IssueSemiFungibleOutcome</span><span class="p">,</span>
+    <span class="n">MetadataRecreateOutcome</span><span class="p">,</span>
     <span class="n">MintOutcome</span><span class="p">,</span>
+    <span class="n">ModifyCreatorOutcome</span><span class="p">,</span>
+    <span class="n">ModifyRoyaltiesOutcome</span><span class="p">,</span>
     <span class="n">NFTCreateOutcome</span><span class="p">,</span>
     <span class="n">PauseOutcome</span><span class="p">,</span>
     <span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">,</span>
+    <span class="n">RegisterDynamicOutcome</span><span class="p">,</span>
     <span class="n">RegisterMetaEsdtOutcome</span><span class="p">,</span>
+    <span class="n">SetNewUrisOutcome</span><span class="p">,</span>
     <span class="n">SetSpecialRoleOutcome</span><span class="p">,</span>
     <span class="n">UnFreezeOutcome</span><span class="p">,</span>
     <span class="n">UnPauseOutcome</span><span class="p">,</span>
     <span class="n">UpdateAttributesOutcome</span><span class="p">,</span>
+    <span class="n">UpdateMetadataOutcome</span><span class="p">,</span>
     <span class="n">WipeOutcome</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -356,6 +363,157 @@
                 <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
                 <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
                 <span class="n">burnt_quantity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_amount</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_modify_royalties">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_modify_royalties">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_modify_royalties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModifyRoyaltiesOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;ESDTModifyRoyalties&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ModifyRoyaltiesOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">royalties</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_royalties</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_royalties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_set_new_uris">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_set_new_uris">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_set_new_uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetNewUrisOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;ESDTSetNewURIs&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">SetNewUrisOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">uris</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_uris</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topics</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">topic</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">:]]</span>
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_modify_creator">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_modify_creator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_modify_creator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModifyCreatorOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;ESDTModifyCreator&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ModifyCreatorOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span> <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_update_metadata">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_update_metadata">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_update_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UpdateMetadataOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;ESDTMetaDataUpdate&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">UpdateMetadataOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">metadata</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_metadata_recreate">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_metadata_recreate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_metadata_recreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MetadataRecreateOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;ESDTMetaDataRecreate&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">MetadataRecreateOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">nonce</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_nonce</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">metadata</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_change_token_to_dynamic">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_change_token_to_dynamic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_change_token_to_dynamic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ChangeTokenToDynamicOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;changeToDynamic&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ChangeTokenToDynamicOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">token_name</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">ticker</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">token_type</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_register_dynamic_token">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_dynamic_token">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_register_dynamic_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterDynamicOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;registerDynamic&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">RegisterDynamicOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">token_name</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">ticker</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">token_type</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">num_of_decimals</span><span class="o">=</span><span class="p">(</span>
+                    <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="k">else</span> <span class="mi">0</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementTransactionsOutcomeParser.parse_register_dynamic_and_setting_roles">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsOutcomeParser.parse_register_dynamic_and_setting_roles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_register_dynamic_and_setting_roles</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterDynamicOutcome</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_no_error</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="n">find_events_by_identifier</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="s2">&quot;registerAndSetAllRolesDynamic&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">RegisterDynamicOutcome</span><span class="p">(</span>
+                <span class="n">token_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_token_identifier</span><span class="p">(</span><span class="n">event</span><span class="p">),</span>
+                <span class="n">token_name</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">ticker</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">token_type</span><span class="o">=</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">num_of_decimals</span><span class="o">=</span><span class="p">(</span>
+                    <span class="nb">int</span><span class="o">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()),</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">,</span> <span class="n">signed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="k">else</span> <span class="mi">0</span>
+                <span class="p">),</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span>
         <span class="p">]</span></div>
