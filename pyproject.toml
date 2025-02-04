@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "multiversx-sdk"
-version = "1.0.0"
+version = "1.1.0"
 authors = [
   { name="MultiversX" },
 ]
@@ -36,6 +36,11 @@ ledger = ["ledgercomm[hid]"]
 "Homepage" = "https://github.com/multiversx/mx-sdk-py"
 
 [tool.hatch.build]
+include = [
+  "multiversx_sdk/**",
+  "multiversx_sdk/py.typed"
+]
+
 exclude = [
   ".github",
   "./examples",
