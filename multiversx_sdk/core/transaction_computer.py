@@ -40,12 +40,26 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: Transaction) -> bytes:
+    def compute_bytes_for_signing(self, transaction: Transaction, ignore_options=False) -> bytes:
+        """If `ignore_options == False`, the method computes the bytes for signing based on the `version` and `options` of the transaction.
+        If the least significant bit of the `options` is set, will serialize transaction for hash signing.
+
+        If `ignore_options == True`, the transaction is simply serialized."""
         self._ensure_fields(transaction)
 
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
-        return serialized
+
+        if ignore_options:
+            return serialized
+
+        if not self.has_options_set_for_hash_signing(transaction):
+            return serialized
+
+        if not transaction.version >= MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
+            raise Exception("The transaction version you have set does not allow `options`.")
+
+        return keccak.new(digest_bits=256).update(serialized).digest()
 
     def compute_bytes_for_verifying(self, transaction: Transaction) -> bytes:
         is_signed_by_hash = self.has_options_set_for_hash_signing(transaction)
