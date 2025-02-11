@@ -1,11 +1,8 @@
-from pathlib import Path
 from typing import Any
 
 import pytest
 
-from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.message import Message
 from multiversx_sdk.native_auth.config import NativeAuthClientConfig
 from multiversx_sdk.native_auth.native_auth_client import NativeAuthClient
 
@@ -151,21 +148,3 @@ class TestNativeAuthWithGateway:
         access_token = client.get_token(address=self.ADDRESS, token=self.TOKEN, signature=self.SIGNATURE)
 
         assert access_token == self.ACCESS_TOKEN
-
-
-@pytest.mark.only
-def test_token():
-    config = NativeAuthClientConfig(
-        origin="https://devnet-wallet.multiversx.com", api_url="https://devnet-api.multiversx.com"
-    )
-    client = NativeAuthClient(config)
-
-    account = Account.new_from_pem(Path("multiversx_sdk/testutils/testwallets/alice.pem"))
-
-    init_token = client.initialize()
-    token_for_sign = client.get_token_for_signing(account.address, init_token)
-
-    signature = account.sign_message(Message(token_for_sign))
-
-    access_token = client.get_token(address=account.address, token=init_token, signature=signature.hex())
-    print(access_token)
