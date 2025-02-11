@@ -41,6 +41,8 @@ from multiversx_sdk.entrypoints import (
     TestnetEntrypoint,
 )
 from multiversx_sdk.ledger.ledger_app import LedgerApp
+from multiversx_sdk.native_auth.config import NativeAuthClientConfig
+from multiversx_sdk.native_auth.native_auth_client import NativeAuthClient
 from multiversx_sdk.network_providers import (
     AccountAwaiter,
     AccountOnNetwork,
@@ -233,4 +235,6 @@ __all__ = [
     "MetadataRecreateOutcome",
     "ChangeTokenToDynamicOutcome",
     "RegisterDynamicOutcome",
+    "NativeAuthClientConfig",
+    "NativeAuthClient",
 ]
