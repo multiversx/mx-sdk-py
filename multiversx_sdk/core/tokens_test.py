@@ -60,6 +60,27 @@ class TestTokenComputer:
         ):
             self.token_computer.extract_identifier_from_extended_identifier("prefix-TEST-123456")
 
+        numeric_token_ticker = "2065-65td7s"
+        assert self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker) == "2065-65td7s"
+
+        numeric_token_ticker_with_nonce = "2065-65td7s-01"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker_with_nonce)
+            == "2065-65td7s"
+        )
+
+        numeric_token_ticker_with_prefix = "t0-2065-65td7s"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker_with_prefix)
+            == "t0-2065-65td7s"
+        )
+
+        numeric_token_ticker_with_prefix_and_nonce = "t0-2065-65td7s-01"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker_with_prefix_and_nonce)
+            == "t0-2065-65td7s"
+        )
+
     def test_extract_ticker_from_identifier(self):
         fungible_identifier = "FNG-123456"
         non_fungible_identifier = "NFT-987654-0a"

@@ -84,9 +84,8 @@ class TokenComputer:
         The second element is the ticker.
         The third element is the random sequence.
         """
-        has_prefix = token_parts[0].isalnum() and token_parts[0].islower()
 
-        if has_prefix:
+        if len(token_parts) >= 3 and len(token_parts[2]) == TOKEN_RANDOM_SEQUENCE_LENGTH:
             return token_parts[0], token_parts[1], token_parts[2]
         return None, token_parts[0], token_parts[1]
 
@@ -186,9 +185,6 @@ class TokenComputer:
 
         if not ticker.isalnum():
             raise InvalidTokenIdentifierError("The token ticker should only contain alphanumeric characters")
-
-        if not ticker.isupper():
-            raise InvalidTokenIdentifierError("The token ticker should be upper case")
 
     def _check_length_of_random_sequence(self, random_sequence: str) -> None:
         if len(random_sequence) != TOKEN_RANDOM_SEQUENCE_LENGTH:
