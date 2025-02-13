@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.tokens &mdash; multiversx-sdk 1.1.0 documentation</title>
+  <title>multiversx_sdk.core.tokens &mdash; multiversx-sdk 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../../_static/documentation_options.js?v=58fbf978"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -175,9 +175,8 @@
 <span class="sd">        The second element is the ticker.</span>
 <span class="sd">        The third element is the random sequence.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">has_prefix</span> <span class="o">=</span> <span class="n">token_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalnum</span><span class="p">()</span> <span class="ow">and</span> <span class="n">token_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">islower</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">has_prefix</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">TOKEN_RANDOM_SEQUENCE_LENGTH</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">token_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">token_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">token_parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">token_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">token_parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
@@ -295,9 +294,6 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ticker</span><span class="o">.</span><span class="n">isalnum</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">InvalidTokenIdentifierError</span><span class="p">(</span><span class="s2">&quot;The token ticker should only contain alphanumeric characters&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ticker</span><span class="o">.</span><span class="n">isupper</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="n">InvalidTokenIdentifierError</span><span class="p">(</span><span class="s2">&quot;The token ticker should be upper case&quot;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_length_of_random_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">random_sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">random_sequence</span><span class="p">)</span> <span class="o">!=</span> <span class="n">TOKEN_RANDOM_SEQUENCE_LENGTH</span><span class="p">:</span>
