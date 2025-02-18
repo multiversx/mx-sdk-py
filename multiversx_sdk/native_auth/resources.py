@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from multiversx_sdk.core.address import Address
@@ -14,7 +14,7 @@ class WildcardOrigin:
 class NativeAuthDecoded:
     ttl: int = 0
     origin: str = ""
-    address: Address = Address.empty()
+    address: Address = field(default_factory=Address.empty)
     signature: bytes = b""
     black_hash: str = ""
     body: str = ""
@@ -25,7 +25,7 @@ class NativeAuthDecoded:
 class NativeAuthValidateResult:
     issued: int = 0
     expires: int = 0
-    address: Address = Address.empty()
-    signer_address: Address = Address.empty()
+    address: Address = field(default_factory=Address.empty)
+    signer_address: Address = field(default_factory=Address.empty)
     origin: str = ""
-    extra_info: dict[str, str] = {}
+    extra_info: dict[str, str] = field(default_factory=dict)

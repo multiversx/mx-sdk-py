@@ -56,6 +56,7 @@ class NativeAuthServerConfig:
     validate_impersonate_callback: Optional[Callable[[str, str], bool]] = None
     is_origin_accepted: Optional[Callable[[str], bool]] = None
     max_expiry_seconds: int = 86400
+    skip_legacy_validation: bool = False
     cache: Optional["NativeAuthCacheInterface"] = None
     extra_request_headers: Optional[dict[str, str]] = None
     verify_signature: Optional[Callable[[str, str, bytes], bool]] = None

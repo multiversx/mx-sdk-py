@@ -32,7 +32,7 @@ ONE_HOUR_IN_SECONDS = 3600
 
 class NativeAuthServer:
     def __init__(self, config: NativeAuthServerConfig) -> None:
-        if not (config.max_expiry_seconds > 0 and config.max_expiry_seconds <= MAX_EXPIRY_SECONDS):
+        if not (0 < config.max_expiry_seconds <= MAX_EXPIRY_SECONDS):
             raise NativeAuthInvalidConfigError(
                 f"Invalid `max_expiry_seconds`. Must be greater than 0 and less than or equal to {MAX_EXPIRY_SECONDS}."
             )
@@ -73,7 +73,7 @@ class NativeAuthServer:
             ttl=int(ttl),
             origin=parsed_origin,
             address=parsed_address,
-            signature=bytes.fromhex(self._decode_value(signature)),
+            signature=bytes.fromhex(signature),
             black_hash=block_hash,
             body=parsed_body,
             extra_info=parsed_extra_info if parsed_extra_info != "e30" else {},
@@ -100,6 +100,10 @@ class NativeAuthServer:
 
         signed_message = f"{decoded.address.to_bech32()}{decoded.body}"
         valid = self._verify_signature(decoded.address, signed_message, decoded.signature)
+
+        if not valid and not self.config.skip_legacy_validation:
+            signed_message = f"{decoded.address.to_bech32()}{decoded.body}{{}}"
+            valid = self._verify_signature(decoded.address, signed_message, decoded.signature)
 
         if not valid:
             raise NativeAuthInvalidSignatureError()
@@ -129,7 +133,9 @@ class NativeAuthServer:
                 return impersonate_address
 
         if self.config.validate_impersonate_url:
-            is_valid = ...
+            is_valid = self._validate_impersonate_address_from_url(decoded.address.to_bech32(), impersonate_address)
+            if is_valid:
+                return impersonate_address
 
     def _validate_impersonate_address_from_url(self, address: str, impersonate_address: str) -> str:
         cache_key = f"impersonate:{address}:{impersonate_address}"
@@ -241,10 +247,13 @@ class NativeAuthServer:
         return True
 
     def _decode_value(self, value: str) -> str:
-        return base64.b64decode(self._unescape(value)).decode("utf-8")
+        return base64.urlsafe_b64decode(self._ensure_correct_base64_padding(value)).decode("utf-8")
 
-    def _unescape(self, value: str) -> str:
-        return value.replace("-", "+").replace("_", "/")
+    def _ensure_correct_base64_padding(self, value: str) -> str:
+        missing_padding = len(value) % 4
+        if missing_padding:
+            value += "=" * (4 - missing_padding)
+        return value
 
     def _get_wildcard_origins(self) -> list[WildcardOrigin]:
         origins_with_wildcard = [origin for origin in self.config.accepted_origins if origin.find("*") != -1]
