@@ -722,3 +722,44 @@ class TestNativeAuthServer:
         assert result.issued == self.BLOCK_TIMESTAMP
         assert result.expires == self.BLOCK_TIMESTAMP + self.TTL
         assert result.extra_info == {"impersonate": self.MULTISIG_ADDRESS}
+
+    def test_is_valid(self, mocker: Any):
+        responses = [
+            {
+                "code": 200,
+                "response": self.BLOCK_TIMESTAMP,
+                "text": str(self.BLOCK_TIMESTAMP),
+            },
+            {
+                "code": 200,
+                "response": [{"timestamp": self.BLOCK_TIMESTAMP + self.TTL}],
+                "text": f'[{{"timestamp": {self.BLOCK_TIMESTAMP + self.TTL}}}]',
+            },
+        ]
+        mock_side_effect(mocker, responses)
+
+        server = NativeAuthServer(self.default_config)
+        is_valid = server.is_valid(self.ACCESS_TOKEN)
+        assert is_valid
+
+    def test_is_not_valid(self, mocker: Any):
+        responses = [
+            {
+                "code": 200,
+                "response": self.BLOCK_TIMESTAMP,
+                "text": str(self.BLOCK_TIMESTAMP),
+            },
+            {
+                "code": 200,
+                "response": [{"timestamp": self.BLOCK_TIMESTAMP}],
+                "text": f'[{{"timestamp": {self.BLOCK_TIMESTAMP}}}]',
+            },
+        ]
+        mock_side_effect(mocker, responses)
+
+        config = deepcopy(self.default_config)
+        config.accepted_origins = ["http://*.multiversx.com"]
+
+        server = NativeAuthServer(config)
+        is_valid = server.is_valid(self.ACCESS_TOKEN)
+        assert not is_valid

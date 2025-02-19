@@ -79,6 +79,13 @@ class NativeAuthServer:
             extra_info=parsed_extra_info if parsed_extra_info != "e30" else {},
         )
 
+    def is_valid(self, access_token: str) -> bool:
+        try:
+            self.validate(access_token)
+            return True
+        except Exception:
+            return False
+
     def validate(self, access_token: str) -> NativeAuthValidateResult:
         decoded = self.decode(access_token)
 
