@@ -432,18 +432,3 @@ class TestApi:
         response = requests.get(api.url + "/network/config", **api.config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"
-
-    @pytest.mark.only
-    def test_inv(self):
-
-        try:
-            req = requests.get(
-                "https://devnet-api.multiversx.com/blocks/f389359f3c916d77e8a10412162f9447741ebcb6deb79255c0118c07999723d6?extract=timestamp"
-            )
-
-            if req.status_code == 404:
-                raise Exception("Block not found")
-
-            print(req.json())
-        except Exception as ex:
-            print(ex)
