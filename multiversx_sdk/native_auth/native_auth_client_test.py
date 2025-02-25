@@ -25,7 +25,7 @@ def mock_side_effect(mocker: Any, responses: list[Any]):
     mocker.patch("requests.get", side_effect=side_effect)
 
 
-class TestNativeAuth:
+class TestNativeAuthClient:
     ADDRESS = Address.new_from_bech32("erd1qnk2vmuqywfqtdnkmauvpm8ls0xh00k8xeupuaf6cm6cd4rx89qqz0ppgl")
     SIGNATURE = "906e79d54e69e688680abee54ec0c49ce2561eb5abfd01865b31cb3ed738272c7cfc4fc8cc1c3590dd5757e622639b01a510945d7f7c9d1ceda20a50a817080d"
     BLOCK_HASH = "ab459013b27fdc6fe98eed567bd0c1754e0628a4cc16883bf0170a29da37ad46"
@@ -75,7 +75,7 @@ class TestNativeAuth:
         assert access_token == self.ACCESS_TOKEN
 
 
-class TestNativeAuthWithGateway:
+class TestNativeAuthClientWithGateway:
     ADDRESS = Address.new_from_bech32("erd1qnk2vmuqywfqtdnkmauvpm8ls0xh00k8xeupuaf6cm6cd4rx89qqz0ppgl")
     SIGNATURE = "906e79d54e69e688680abee54ec0c49ce2561eb5abfd01865b31cb3ed738272c7cfc4fc8cc1c3590dd5757e622639b01a510945d7f7c9d1ceda20a50a817080d"
     BLOCK_HASH = "ab459013b27fdc6fe98eed567bd0c1754e0628a4cc16883bf0170a29da37ad46"
