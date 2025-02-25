@@ -16,7 +16,7 @@ class NativeAuthDecoded:
     origin: str = ""
     address: Address = field(default_factory=Address.empty)
     signature: bytes = b""
-    black_hash: str = ""
+    block_hash: str = ""
     body: str = ""
     extra_info: Any = None
 

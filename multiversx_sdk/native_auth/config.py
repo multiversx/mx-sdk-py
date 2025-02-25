@@ -1,8 +1,10 @@
 from dataclasses import dataclass, field
 from typing import Callable, Optional, Protocol
 
-DEFAULT_EXPIRY_TIME_IN_SECONDS = 60 * 60 * 2
-DEFAULT_API_URL = "https://api.multiversx.com"
+from multiversx_sdk.native_auth.constants import (
+    DEFAULT_API_URL,
+    DEFAULT_EXPIRY_TIME_IN_SECONDS,
+)
 
 
 class NativeAuthClientConfig:
@@ -45,7 +47,7 @@ class NativeAuthServerConfig:
         validate_impersonate_callback: Optional callback function to validate impersonation.
         is_origin_accepted: Optional callback to validate an origin dynamically.
         max_expiry_seconds: Maximum allowed TTL (default: 86400 seconds, one day).
-        cache: Optional cache interface implementation.
+        skip_legacy_validation: Determines whether legacy signature validation should be skipped.
         extra_request_headers: Optional extra request headers.
         verify_signature: Optional function to verify signatures.
     """
@@ -57,6 +59,5 @@ class NativeAuthServerConfig:
     is_origin_accepted: Optional[Callable[[str], bool]] = None
     max_expiry_seconds: int = 86400
     skip_legacy_validation: bool = False
-    cache: Optional["NativeAuthCacheInterface"] = None
     extra_request_headers: Optional[dict[str, str]] = None
     verify_signature: Optional[Callable[[str, str, bytes], bool]] = None

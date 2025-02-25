@@ -1,13 +1,25 @@
 import base64
 import json
-from http.client import FORBIDDEN
-from typing import Union
+from http.client import NOT_FOUND, OK
+from typing import Optional, Union
 
 import requests
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.message import Message, MessageComputer
-from multiversx_sdk.native_auth.config import NativeAuthServerConfig
+from multiversx_sdk.native_auth.config import (
+    NativeAuthCacheInterface,
+    NativeAuthServerConfig,
+)
+from multiversx_sdk.native_auth.constants import (
+    ACCESS_TOKEN_COMPONENTS_SEPARATOR,
+    CACHE_VALUE_IMPERSONATED,
+    CACHE_VALUE_NOT_IMPERSONATED,
+    MAX_ACCEPTED_WILDCARD_ORIGINS,
+    MAX_EXPIRY_SECONDS,
+    ONE_HOUR_IN_SECONDS,
+    ONE_ROUND_IN_SECONDS,
+)
 from multiversx_sdk.native_auth.errors import (
     NativeAuthInvalidBlockHashError,
     NativeAuthInvalidConfigError,
@@ -26,12 +38,9 @@ from multiversx_sdk.native_auth.resources import (
 )
 from multiversx_sdk.wallet.user_keys import UserPublicKey
 
-MAX_EXPIRY_SECONDS = 86400
-ONE_HOUR_IN_SECONDS = 3600
-
 
 class NativeAuthServer:
-    def __init__(self, config: NativeAuthServerConfig) -> None:
+    def __init__(self, config: NativeAuthServerConfig, cache: Optional[NativeAuthCacheInterface] = None) -> None:
         if not (0 < config.max_expiry_seconds <= MAX_EXPIRY_SECONDS):
             raise NativeAuthInvalidConfigError(
                 f"Invalid `max_expiry_seconds`. Must be greater than 0 and less than or equal to {MAX_EXPIRY_SECONDS}."
@@ -42,10 +51,11 @@ class NativeAuthServer:
 
         self.accepted_wildcard_origins: list[str] = []
         self.config = config
+        self.cache = cache
         self.wildcard_origins = self._get_wildcard_origins()
 
     def decode(self, access_token: str) -> NativeAuthDecoded:
-        token_components = access_token.split(".")
+        token_components = access_token.split(ACCESS_TOKEN_COMPONENTS_SEPARATOR)
         if len(token_components) != 3:
             raise NativeAuthInvalidTokenError()
 
@@ -61,9 +71,6 @@ class NativeAuthServer:
 
         parsed_origin = self._decode_value(origin)
 
-        # if empty object, extraInfo ('e30' = encoded '{}')
-        parsed_extra_info = "e30"
-
         try:
             parsed_extra_info = json.loads(self._decode_value(extra_info))
         except Exception:
@@ -74,9 +81,9 @@ class NativeAuthServer:
             origin=parsed_origin,
             address=parsed_address,
             signature=bytes.fromhex(signature),
-            black_hash=block_hash,
+            block_hash=block_hash,
             body=parsed_body,
-            extra_info=parsed_extra_info if parsed_extra_info != "e30" else {},
+            extra_info=parsed_extra_info if parsed_extra_info != "e30" else {},  # empty object ('e30' = encoded '{}')
         )
 
     def is_valid(self, access_token: str) -> bool:
@@ -95,15 +102,7 @@ class NativeAuthServer:
         if not self._is_origin_accepted(decoded.origin):
             raise NativeAuthOriginNotAcceptedError(decoded.origin)
 
-        block_timestamp = self._get_block_timestamp(decoded.black_hash)
-        if not block_timestamp:
-            raise NativeAuthInvalidBlockHashError(decoded.black_hash)
-
-        current_block_timestamp = self._get_current_block_timestamp()
-        expires = block_timestamp + decoded.ttl
-
-        if expires < current_block_timestamp:
-            raise NativeAuthTokenExpiredError()
+        block_timestamp, expires = self._verify_token_age_and_get_issue_and_expiry(decoded_token=decoded)
 
         signed_message = f"{decoded.address.to_bech32()}{decoded.body}"
         valid = self._verify_signature(decoded.address, signed_message, decoded.signature)
@@ -127,6 +126,19 @@ class NativeAuthServer:
             signer_address=decoded.address,
         )
 
+    def _verify_token_age_and_get_issue_and_expiry(self, decoded_token: NativeAuthDecoded) -> tuple[int, int]:
+        block_timestamp = self._get_block_timestamp(decoded_token.block_hash)
+        if not block_timestamp:
+            raise NativeAuthInvalidBlockHashError(decoded_token.block_hash)
+
+        current_block_timestamp = self._get_current_block_timestamp()
+        expires = block_timestamp + decoded_token.ttl
+
+        if expires < current_block_timestamp:
+            raise NativeAuthTokenExpiredError()
+
+        return block_timestamp, expires
+
     def _validate_impersonate_address(self, decoded: NativeAuthDecoded) -> Union[str, None]:
         impersonate_address: str = decoded.extra_info.get("multisig", None) or decoded.extra_info.get(
             "impersonate", None
@@ -144,12 +156,14 @@ class NativeAuthServer:
             if is_valid:
                 return impersonate_address
 
+        return None
+
     def _validate_impersonate_address_from_url(self, address: str, impersonate_address: str) -> str:
         cache_key = f"impersonate:{address}:{impersonate_address}"
 
-        if self.config.cache:
-            cached_value = self.config.cache.get(cache_key)
-            if cached_value == 1:
+        if self.cache:
+            cached_value = self.cache.get(cache_key)
+            if cached_value == CACHE_VALUE_IMPERSONATED:
                 return impersonate_address
 
         url = f"{self.config.validate_impersonate_url}/{address}/{impersonate_address}"
@@ -157,14 +171,14 @@ class NativeAuthServer:
         try:
             requests.get(url)
 
-            if self.config.cache:
-                self.config.cache.set(cache_key, 1, ONE_HOUR_IN_SECONDS)
+            if self.cache:
+                self.cache.set(cache_key, CACHE_VALUE_IMPERSONATED, ONE_HOUR_IN_SECONDS)
 
             return impersonate_address
         except requests.exceptions.RequestException as ex:
-            if ex.response and ex.response.status_code == FORBIDDEN:
-                if self.config.cache:
-                    self.config.cache.set(cache_key, 0, ONE_HOUR_IN_SECONDS)
+            if ex.response and ex.response.status_code != OK:
+                if self.cache:
+                    self.cache.set(cache_key, CACHE_VALUE_NOT_IMPERSONATED, ONE_HOUR_IN_SECONDS)
 
             raise NativeAuthInvalidImpersonateError()
         except Exception as ex:
@@ -178,38 +192,38 @@ class NativeAuthServer:
         message_computer = MessageComputer()
         serialized_message = message_computer.compute_bytes_for_verifying(signed_message)
 
-        user_verifier = UserPublicKey(address.get_public_key())
-        return user_verifier.verify(serialized_message, signature)
+        user_pubkey = UserPublicKey(address.get_public_key())
+        return user_pubkey.verify(serialized_message, signature)
 
     def _get_current_block_timestamp(self) -> int:
-        if self.config.cache:
-            timestamp = self.config.cache.get("block:timestamp:latest")
+        if self.cache:
+            timestamp = self.cache.get("block:timestamp:latest")
             if timestamp:
                 return int(timestamp)
 
         response = requests.get(f"{self.config.api_url}/blocks?size=1&fields=timestamp")
         timestamp = int(response.json()[0]["timestamp"])
 
-        if self.config.cache:
-            self.config.cache.set("block:timestamp:latest", timestamp, 6)
+        if self.cache:
+            self.cache.set("block:timestamp:latest", timestamp, ONE_ROUND_IN_SECONDS)
 
         return timestamp
 
     def _get_block_timestamp(self, hash: str) -> Union[int, None]:
-        if self.config.cache:
-            timestamp = self.config.cache.get(f"block:timestamp:{hash}")
+        if self.cache:
+            timestamp = self.cache.get(f"block:timestamp:{hash}")
             if timestamp:
                 return int(timestamp)
 
         try:
             timestamp = requests.get(f"{self.config.api_url}/blocks/{hash}?extract=timestamp")
 
-            if timestamp.status_code == 404:
+            if timestamp.status_code == NOT_FOUND:
                 return None
 
             timestamp = timestamp.text
-            if self.config.cache:
-                self.config.cache.set(f"block:timestamp:{hash}", int(timestamp), self.config.max_expiry_seconds)
+            if self.cache:
+                self.cache.set(f"block:timestamp:{hash}", int(timestamp), self.config.max_expiry_seconds)
 
             return int(timestamp)
         except Exception as ex:
@@ -247,7 +261,7 @@ class NativeAuthServer:
         # append new origin to the end of the list
         self.accepted_wildcard_origins.append(origin)
 
-        if len(self.accepted_wildcard_origins) > 1000:
+        if len(self.accepted_wildcard_origins) > MAX_ACCEPTED_WILDCARD_ORIGINS:
             # remove the first element of the list which is the oldest
             self.accepted_wildcard_origins.pop(0)
 
@@ -266,7 +280,6 @@ class NativeAuthServer:
         origins_with_wildcard = [origin for origin in self.config.accepted_origins if origin.find("*") != -1]
         if len(origins_with_wildcard) == 0:
             return []
-
         # protocol is what comes before the first '*'
         # domain is what comes after the first '*' and before the first slash
         wildcard_origins: list[WildcardOrigin] = []

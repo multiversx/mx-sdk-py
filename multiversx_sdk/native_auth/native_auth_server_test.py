@@ -75,7 +75,7 @@ class TestNativeAuthServer:
         assert result.address.to_bech32() == self.ADDRESS
         assert result.origin == self.ORIGIN
         assert result.ttl == self.TTL
-        assert result.black_hash == self.BLOCK_HASH
+        assert result.block_hash == self.BLOCK_HASH
         assert result.signature == bytes.fromhex(self.SIGNATURE)
         assert result.body == self.TOKEN
 
@@ -308,9 +308,7 @@ class TestNativeAuthServer:
             def set(self, key: str, value: int, ttl: int) -> None:
                 pass
 
-        config = deepcopy(self.default_config)
-        config.cache = NativeAuthCache()
-        server = NativeAuthServer(config)
+        server = NativeAuthServer(self.default_config, NativeAuthCache())
         result = server.validate(self.ACCESS_TOKEN)
 
         assert result.address.to_bech32() == self.ADDRESS
@@ -341,9 +339,7 @@ class TestNativeAuthServer:
         ]
         mock_side_effect(mocker, responses)
 
-        config = deepcopy(self.default_config)
-        config.cache = NativeAuthCache()
-        server = NativeAuthServer(config)
+        server = NativeAuthServer(self.default_config, NativeAuthCache())
         result = server.validate(self.ACCESS_TOKEN)
 
         assert result.address.to_bech32() == self.ADDRESS
@@ -678,9 +674,7 @@ class TestNativeAuthServer:
             def set(self, key: str, value: int, ttl: int) -> None:
                 pass
 
-        config = deepcopy(self.default_config)
-        config.cache = NativeAuthCache()
-        server = NativeAuthServer(config)
+        server = NativeAuthServer(self.default_config, NativeAuthCache())
         result = server.validate(self.IMPERSONATE_ACCESS_TOKEN)
 
         assert result.address.to_bech32() == self.MULTISIG_ADDRESS
@@ -711,9 +705,7 @@ class TestNativeAuthServer:
 
         mock(mocker, 200, True)
 
-        config = deepcopy(self.default_config)
-        config.cache = NativeAuthCache()
-        server = NativeAuthServer(config)
+        server = NativeAuthServer(self.default_config, NativeAuthCache())
         result = server.validate(self.IMPERSONATE_ACCESS_TOKEN)
 
         assert result.address.to_bech32() == self.MULTISIG_ADDRESS
