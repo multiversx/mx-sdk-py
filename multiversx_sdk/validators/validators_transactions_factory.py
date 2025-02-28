@@ -29,7 +29,7 @@ class ValidatorsTransactionsFactory:
         rewards_address: Optional[Address] = None,
     ) -> Transaction:
         if isinstance(validators_file, Path):
-            validators_file = ValidatorsFile(validators_file)
+            validators_file = ValidatorsFile.new_from_validators_file(validators_file)
 
         data_parts = self._prepare_data_parts_for_staking(
             node_operator=sender,
@@ -62,7 +62,7 @@ class ValidatorsTransactionsFactory:
         call_arguments: list[ISingleValue] = []
         call_arguments.append(U32Value(num_of_nodes))
 
-        validator_signers = validators_file.load_signers()
+        validator_signers = validators_file.get_signers()
 
         for validator in validator_signers:
             signed_message = validator.sign(node_operator.get_public_key())

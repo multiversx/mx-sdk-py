@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any
 
 from multiversx_sdk.validators.errors import (
     CannotReadValidatorsDataError,
@@ -11,52 +12,57 @@ from multiversx_sdk.wallet.validator_signer import ValidatorSigner
 
 
 class ValidatorsFile:
-    def __init__(self, validators_file_path: Path):
-        self.validators_file_path = validators_file_path
-        self._validators_data = self._read_json_file_validators()
+    def __init__(self, validator_signers: list[ValidatorSigner]):
+        self.signers = validator_signers
+
+    @staticmethod
+    def new_from_validators_file(path: Path):
+        validators_data = _read_json_file_validators(path)
+        validators_list: Any = validators_data.get("validators", [])
+        signers = _load_signers(validators_list)
+        return ValidatorsFile(signers)
+
+    @staticmethod
+    def new_from_pem(file: Path) -> "ValidatorsFile":
+        validator_pem_files = ValidatorPEM.from_file_all(file)
+        signers = [ValidatorSigner(pem.secret_key) for pem in validator_pem_files]
+        return ValidatorsFile(signers)
 
     def get_num_of_nodes(self) -> int:
-        return len(self._validators_data.get("validators", []))
+        return len(self.signers)
 
-    def get_validators_list(self):
-        return self._validators_data.get("validators", [])
+    def get_signers(self) -> list[ValidatorSigner]:
+        return self.signers
 
-    def load_signers(self) -> list[ValidatorSigner]:
-        signers: list[ValidatorSigner] = []
-        for validator in self.get_validators_list():
-            pem_file = self._load_validator_pem(validator)
-            validator_signer = ValidatorSigner(pem_file.secret_key)
-            signers.append(validator_signer)
+    def get_public_keys(self) -> list[ValidatorPublicKey]:
+        return [signer.get_pubkey() for signer in self.signers]
 
-        return signers
 
-    def load_public_keys(self) -> list[ValidatorPublicKey]:
-        public_keys: list[ValidatorPublicKey] = []
+def _load_signers(validators: list[dict[str, str]]) -> list[ValidatorSigner]:
+    signers: list[ValidatorSigner] = []
+    for validator in validators:
+        pem_file = _load_validator_pem(validator)
+        validator_signer = ValidatorSigner(pem_file.secret_key)
+        signers.append(validator_signer)
 
-        for validator in self.get_validators_list():
-            pem_file = self._load_validator_pem(validator)
-            public_keys.append(pem_file.secret_key.generate_public_key())
+    return signers
 
-        return public_keys
 
-    def _load_validator_pem(self, validator: dict[str, str]) -> ValidatorPEM:
-        # Get path of "pemFile", make it absolute
-        validator_pem = Path(validator.get("pemFile", "")).expanduser()
-        validator_pem = (
-            validator_pem if validator_pem.is_absolute() else self.validators_file_path.parent / validator_pem
-        )
+def _load_validator_pem(validator: dict[str, str]) -> ValidatorPEM:
+    # Get path of "pemFile", make it absolute
+    validator_pem = Path(validator.get("pemFile", "")).expanduser().resolve()
+    return ValidatorPEM.from_file(validator_pem)
 
-        return ValidatorPEM.from_file(validator_pem)
 
-    def _read_json_file_validators(self):
-        val_file = self.validators_file_path.expanduser()
+def _read_json_file_validators(validators_file: Path) -> dict[str, str]:
+    val_file = validators_file.expanduser()
 
-        if not val_file.is_file():
-            raise ValidatorsFileNotFoundError(str(val_file))
+    if not val_file.is_file():
+        raise ValidatorsFileNotFoundError(str(val_file))
 
-        with open(val_file, "r") as json_file:
-            try:
-                data = json.load(json_file)
-            except Exception:
-                raise CannotReadValidatorsDataError(str(val_file))
-            return data
+    with open(val_file, "r") as json_file:
+        try:
+            data = json.load(json_file)
+        except Exception:
+            raise CannotReadValidatorsDataError(str(val_file))
+        return data
