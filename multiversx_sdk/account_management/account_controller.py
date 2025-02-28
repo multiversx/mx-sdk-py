@@ -30,6 +30,7 @@ class AccountController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -52,6 +53,7 @@ class AccountController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -65,6 +67,7 @@ class AccountController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -82,6 +85,7 @@ class AccountController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
