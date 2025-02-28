@@ -2,7 +2,7 @@ from pathlib import Path
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
-from multiversx_sdk.validators.validators_file import ValidatorsFile
+from multiversx_sdk.validators.validators_signers import ValidatorsSigners
 from multiversx_sdk.validators.validators_transactions_factory import (
     ValidatorsTransactionsFactory,
 )
@@ -12,7 +12,7 @@ from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 class TestValidatorsTransactionsFactory:
     testdata = Path(__file__).parent.parent / "testutils" / "testdata"
     testwallets = Path(__file__).parent.parent / "testutils" / "testwallets"
-    validators_file = testwallets / "validators.json"
+    validators_file = testwallets / "validators.pem"
 
     alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     reward_address = Address.new_from_bech32("erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8")
@@ -45,7 +45,7 @@ class TestValidatorsTransactionsFactory:
         )
 
     def test_create_transaction_for_staking_using_validators_file(self):
-        validators_file = ValidatorsFile.new_from_validators_file(self.validators_file)
+        validators_file = ValidatorsSigners.new_from_pem(self.validators_file)
 
         transaction = self.factory.create_transaction_for_staking(
             sender=self.alice,
