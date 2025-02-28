@@ -1,0 +1,10 @@
+{
+  "validators": [
+    {
+      "pemFile": "multiversx_sdk/testutils/testwallets/validatorKey01.pem"
+    },
+    {
+      "pemFile": "multiversx_sdk/testutils/testwallets/validatorKey02.pem"
+    }
+  ]
+}
