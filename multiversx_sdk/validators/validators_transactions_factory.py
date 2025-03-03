@@ -12,7 +12,7 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import STAKING_SMART_CONTRACT_ADDRESS_HEX
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
-from multiversx_sdk.validators.validators_file import ValidatorsFile
+from multiversx_sdk.validators.validators_signers import ValidatorsSigners
 from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
@@ -24,12 +24,12 @@ class ValidatorsTransactionsFactory:
     def create_transaction_for_staking(
         self,
         sender: Address,
-        validators_file: Union[Path, ValidatorsFile],
+        validators_file: Union[Path, ValidatorsSigners],
         amount: int,
         rewards_address: Optional[Address] = None,
     ) -> Transaction:
         if isinstance(validators_file, Path):
-            validators_file = ValidatorsFile.new_from_validators_file(validators_file)
+            validators_file = ValidatorsSigners.new_from_pem(validators_file)
 
         data_parts = self._prepare_data_parts_for_staking(
             node_operator=sender,
@@ -52,7 +52,7 @@ class ValidatorsTransactionsFactory:
     def _prepare_data_parts_for_staking(
         self,
         node_operator: Address,
-        validators_file: ValidatorsFile,
+        validators_file: ValidatorsSigners,
         rewards_address: Optional[Address] = None,
     ) -> list[str]:
         data_parts = ["stake"]

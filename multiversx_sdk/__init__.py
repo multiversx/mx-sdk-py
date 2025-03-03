@@ -112,7 +112,8 @@ from multiversx_sdk.token_management import (
     WipeOutcome,
 )
 from multiversx_sdk.transfers import TransfersController, TransferTransactionsFactory
-from multiversx_sdk.validators.validators_transactions_factory import (
+from multiversx_sdk.validators import (
+    ValidatorsController,
     ValidatorsTransactionsFactory,
 )
 from multiversx_sdk.wallet import (
@@ -247,4 +248,5 @@ __all__ = [
     "NativeAuthServerConfig",
     "NativeAuthServer",
     "ValidatorsTransactionsFactory",
+    "ValidatorsController",
 ]
