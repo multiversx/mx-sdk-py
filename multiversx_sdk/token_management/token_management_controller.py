@@ -467,11 +467,6 @@ class TokenManagementController(BaseController):
         remove_role_nft_burn: bool = False,
         remove_role_nft_add_quantity: bool = False,
         remove_role_esdt_transfer_role: bool = False,
-        remove_role_nft_update: bool = False,
-        remove_role_esdt_modify_royalties: bool = False,
-        remove_role_esdt_set_new_uri: bool = False,
-        remove_role_esdt_modify_creator: bool = False,
-        remove_role_nft_recreate: bool = False,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -482,11 +477,6 @@ class TokenManagementController(BaseController):
             remove_role_nft_burn=remove_role_nft_burn,
             remove_role_nft_add_quantity=remove_role_nft_add_quantity,
             remove_role_esdt_transfer_role=remove_role_esdt_transfer_role,
-            remove_role_nft_update=remove_role_nft_update,
-            remove_role_esdt_modify_royalties=remove_role_esdt_modify_royalties,
-            remove_role_esdt_set_new_uri=remove_role_esdt_set_new_uri,
-            remove_role_esdt_modify_creator=remove_role_esdt_modify_creator,
-            remove_role_nft_recreate=remove_role_nft_recreate,
         )
 
         transaction.guardian = guardian
@@ -1446,12 +1436,16 @@ class TokenManagementController(BaseController):
         sender: IAccount,
         nonce: int,
         token_identifier: str,
+        token_nonce: int,
         uris: list[str],
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transction_for_adding_uris(
-            sender=sender.address, token_identifier=token_identifier, uris=uris
+            sender=sender.address,
+            token_identifier=token_identifier,
+            token_nonce=token_nonce,
+            uris=uris,
         )
 
         transaction.guardian = guardian

@@ -784,11 +784,11 @@ def test_create_transaction_for_wiping_single_nft():
 
 def test_create_transaction_for_adding_uris():
     transaction = factory.create_transction_for_adding_uris(
-        sender=alice, token_identifier="SFT-123456", uris=["firstURI", "secondURI"]
+        sender=alice, token_identifier="SFT-123456", token_nonce=10, uris=["firstURI", "secondURI"]
     )
 
-    assert transaction.data.decode() == "ESDTNFTAddURI@5346542d313233343536@6669727374555249@7365636f6e64555249"
+    assert transaction.data.decode() == "ESDTNFTAddURI@5346542d313233343536@0a@6669727374555249@7365636f6e64555249"
     assert transaction.sender == alice
     assert transaction.receiver == alice
     assert transaction.value == 0
-    assert transaction.gas_limit == 10_155_000
+    assert transaction.gas_limit == 10_159_500
