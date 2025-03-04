@@ -23,9 +23,9 @@ class TransactionsFactoryConfig:
     gas_limit_freezing: int = 60_000_000
     gas_limit_wiping: int = 60_000_000
     gas_limit_esdt_nft_create: int = 3_000_000
-    gas_limit_esdt_nft_update_attributes: int = 1_000_000
-    gas_limit_esdt_nft_add_quantity: int = 1_000_000
-    gas_limit_esdt_nft_burn: int = 1_000_000
+    gas_limit_esdt_nft_update_attributes: int = 50_000
+    gas_limit_esdt_nft_add_quantity: int = 50_000
+    gas_limit_esdt_nft_burn: int = 50_000
     gas_limit_store_per_byte: int = 10_000
     gas_limit_esdt_modify_royalties: int = 60_000_000
     gas_limit_set_new_uris: int = 60_000_000

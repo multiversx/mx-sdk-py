@@ -628,7 +628,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         nonce = 1
         royalties = 20
 
-        encoded_topics = [base64.b64encode(identifier.encode()), "AQ==", "", "FA=="]
+        encoded_topics = [base64.b64encode(identifier.encode()).decode(), "AQ==", "", "FA=="]
 
         event = TransactionEvent(
             raw={},
@@ -658,7 +658,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         nonce = 1
         uri = "thisianuri.com"
 
-        encoded_topics = [base64.b64encode(identifier.encode()), "AQ==", "", "dGhpc2lhbnVyaS5jb20="]
+        encoded_topics = [base64.b64encode(identifier.encode()).decode(), "AQ==", "", "dGhpc2lhbnVyaS5jb20="]
 
         event = TransactionEvent(
             raw={},
@@ -689,7 +689,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         identifier = "TEST-e2b0f9"
         nonce = 1
 
-        encoded_topics = [base64.b64encode(identifier.encode()), "AQ=="]
+        encoded_topics = [base64.b64encode(identifier.encode()).decode(), "AQ=="]
 
         event = TransactionEvent(
             raw={},
@@ -721,7 +721,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
 
         encoded_topics = [
-            base64.b64encode(identifier.encode()),
+            base64.b64encode(identifier.encode()).decode(),
             "AQ==",
             "",
             "CAUSAgABIlQIARIHVEVTVE5GVBogATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeEgHioIbmV3X2hhc2gyDnRoaXNpYW51cmkuY29tOgkAAAAAAAAAAwUqHgjH9a4DEMf1rgMYx/WuAyDH9a4DKMb1rgMwx/WuAw==",
@@ -758,7 +758,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         )
 
         encoded_topics = [
-            base64.b64encode(identifier.encode()),
+            base64.b64encode(identifier.encode()).decode(),
             "AQ==",
             "",
             "CAUSAgABIlAIARIHVEVTVE5GVBogATlHLv9ohncamC8wg9pdQh8kwpGB5jiIIo3IHKYNaeEgHioSbmV3X2hhc2hfcmVjcmVhdGVkMgA6CQAAAAAAAABkASoeCMj1rgMQyPWuAxjI9a4DIMj1rgMoyPWuAzDI9a4D",
@@ -794,7 +794,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         token_type = "DynamicMetaESDT"
 
         encoded_topics = [
-            base64.b64encode(identifier.encode()),
+            base64.b64encode(identifier.encode()).decode(),
             "TEtYT1hOTw==",
             "TEtYT1hOTw==",
             "RHluYW1pY01ldGFFU0RU",
@@ -831,7 +831,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         token_type = "DynamicNonFungibleESDT"
 
         encoded_topics = [
-            base64.b64encode(identifier.encode()),
+            base64.b64encode(identifier.encode()).decode(),
             "VEVTVE5GVA==",
             "VEVTVA==",
             "RHluYW1pY05vbkZ1bmdpYmxlRVNEVA==",
@@ -868,7 +868,7 @@ class TestTokenManagementTransactionsOutcomeParser:
         token_type = "DynamicNonFungibleESDT"
 
         encoded_topics = [
-            base64.b64encode(identifier.encode()),
+            base64.b64encode(identifier.encode()).decode(),
             "VEVTVE5GVA==",
             "VEVTVA==",
             "RHluYW1pY05vbkZ1bmdpYmxlRVNEVA==",
