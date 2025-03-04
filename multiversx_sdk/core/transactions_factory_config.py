@@ -23,9 +23,9 @@ class TransactionsFactoryConfig:
     gas_limit_freezing: int = 60_000_000
     gas_limit_wiping: int = 60_000_000
     gas_limit_esdt_nft_create: int = 3_000_000
-    gas_limit_esdt_nft_update_attributes: int = 1_000_000
-    gas_limit_esdt_nft_add_quantity: int = 1_000_000
-    gas_limit_esdt_nft_burn: int = 1_000_000
+    gas_limit_esdt_nft_update_attributes: int = 50_000
+    gas_limit_esdt_nft_add_quantity: int = 50_000
+    gas_limit_esdt_nft_burn: int = 50_000
     gas_limit_store_per_byte: int = 10_000
     gas_limit_esdt_modify_royalties: int = 60_000_000
     gas_limit_set_new_uris: int = 60_000_000
@@ -72,3 +72,18 @@ class TransactionsFactoryConfig:
     # Configuration for smart contract operations
     gas_limit_claim_developer_rewards: int = 6_000_000
     gas_limit_change_owner_address: int = 6_000_000
+
+    # Configuration for staking
+    gas_limit_for_staking: int = 5_000_000
+    gas_limit_for_topping_up: int = 5_000_000
+    gas_limit_for_unstaking: int = 5_000_000
+    gas_limit_for_unjailing: int = 5_000_000
+    gas_limit_for_unbonding: int = 5_000_000
+    gas_limit_for_changing_rewards_address: int = 5_000_000
+    gas_limit_for_claiming: int = 5_000_000
+    gas_limit_for_unstaking_nodes: int = 5_000_000
+    gas_limit_for_unstaking_tokens: int = 5_000_000
+    gas_limit_for_unbonding_nodes: int = 5_000_000
+    gas_limit_for_unbonding_tokens: int = 5_000_000
+    gas_limit_for_cleaning_registered_data: int = 5_000_000
+    gas_limit_for_restaking_unstaked_tokens: int = 5_000_000

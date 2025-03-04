@@ -41,8 +41,12 @@ from multiversx_sdk.entrypoints import (
     TestnetEntrypoint,
 )
 from multiversx_sdk.ledger.ledger_app import LedgerApp
-from multiversx_sdk.native_auth.config import NativeAuthClientConfig
+from multiversx_sdk.native_auth.config import (
+    NativeAuthClientConfig,
+    NativeAuthServerConfig,
+)
 from multiversx_sdk.native_auth.native_auth_client import NativeAuthClient
+from multiversx_sdk.native_auth.native_auth_server import NativeAuthServer
 from multiversx_sdk.network_providers import (
     AccountAwaiter,
     AccountOnNetwork,
@@ -108,6 +112,10 @@ from multiversx_sdk.token_management import (
     WipeOutcome,
 )
 from multiversx_sdk.transfers import TransfersController, TransferTransactionsFactory
+from multiversx_sdk.validators import (
+    ValidatorsController,
+    ValidatorsTransactionsFactory,
+)
 from multiversx_sdk.wallet import (
     KeyPair,
     Mnemonic,
@@ -237,4 +245,8 @@ __all__ = [
     "RegisterDynamicOutcome",
     "NativeAuthClientConfig",
     "NativeAuthClient",
+    "NativeAuthServerConfig",
+    "NativeAuthServer",
+    "ValidatorsTransactionsFactory",
+    "ValidatorsController",
 ]
