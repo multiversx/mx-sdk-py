@@ -18,7 +18,7 @@ class RelayedController(BaseController):
     """
 
     def __init__(self, chain_id: str) -> None:
-        logger.warning("RelayedController is deprecated. Please use Relayed Transactions FactoryV3 instead.")
+        logger.warning("RelayedController is deprecated. Please use Relayed Transactions V3 instead.")
         self.factory = RelayedTransactionsFactory(TransactionsFactoryConfig(chain_id))
 
     def create_relayed_v1_transaction(
