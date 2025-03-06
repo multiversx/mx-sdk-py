@@ -489,6 +489,80 @@ class TokenManagementController(BaseController):
 
         return transaction
 
+    def create_transaction_for_setting_special_role_on_meta_esdt(
+        self,
+        sender: IAccount,
+        nonce: int,
+        user: Address,
+        token_identifier: str,
+        add_role_nft_create: bool = False,
+        add_role_nft_burn: bool = False,
+        add_role_nft_add_quantity: bool = False,
+        add_role_esdt_transfer_role: bool = False,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_setting_special_role_on_meta_esdt(
+            sender=sender.address,
+            user=user,
+            token_identifier=token_identifier,
+            add_role_nft_create=add_role_nft_create,
+            add_role_nft_burn=add_role_nft_burn,
+            add_role_nft_add_quantity=add_role_nft_add_quantity,
+            add_role_esdt_transfer_role=add_role_esdt_transfer_role,
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def parse_set_special_role_on_meta_esdt(
+        self, transaction_on_network: TransactionOnNetwork
+    ) -> list[SetSpecialRoleOutcome]:
+        return self.parser.parse_set_special_role(transaction_on_network)
+
+    def await_completed_set_special_role_on_meta_esdt(
+        self, transaction_hash: Union[str, bytes]
+    ) -> list[SetSpecialRoleOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_set_special_role_on_meta_esdt(transaction)
+
+    def create_transaction_for_unsetting_special_role_on_meta_esdt(
+        self,
+        sender: IAccount,
+        user: Address,
+        nonce: int,
+        token_identifier: str,
+        remove_role_nft_burn: bool = False,
+        remove_role_nft_add_quantity: bool = False,
+        remove_role_esdt_transfer_role: bool = False,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_unsetting_special_role_on_meta_esdt(
+            sender=sender.address,
+            user=user,
+            token_identifier=token_identifier,
+            remove_role_nft_burn=remove_role_nft_burn,
+            remove_role_nft_add_quantity=remove_role_nft_add_quantity,
+            remove_role_esdt_transfer_role=remove_role_esdt_transfer_role,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
     def create_transaction_for_setting_special_role_on_non_fungible_token(
         self,
         sender: IAccount,
