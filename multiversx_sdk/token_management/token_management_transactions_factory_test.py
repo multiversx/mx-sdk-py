@@ -337,6 +337,45 @@ def test_create_transaction_for_unsetting_special_role_on_semi_fungible_token():
     assert transaction.value == 0
 
 
+def test_create_transaction_for_setting_special_role_on_meta_esdt():
+    transaction = factory.create_transaction_for_setting_special_role_on_meta_esdt(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+        add_role_nft_create=True,
+        add_role_nft_burn=True,
+        add_role_nft_add_quantity=True,
+        add_role_esdt_transfer_role=True,
+    )
+
+    assert transaction.data
+    assert (
+        transaction.data.decode()
+        == "setSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e4654437265617465@45534454526f6c654e46544275726e@45534454526f6c654e46544164645175616e74697479@455344545472616e73666572526f6c65"
+    )
+    assert transaction.sender == frank
+    assert transaction.value == 0
+
+
+def test_create_transaction_for_unsetting_special_role_on_meta_esdt():
+    transaction = factory.create_transaction_for_unsetting_special_role_on_meta_esdt(
+        sender=frank,
+        user=grace,
+        token_identifier="FRANK-11ce3e",
+        remove_role_nft_burn=True,
+        remove_role_nft_add_quantity=True,
+        remove_role_esdt_transfer_role=True,
+    )
+
+    assert transaction.data
+    assert (
+        transaction.data.decode()
+        == "unSetSpecialRole@4652414e4b2d313163653365@1e8a8b6b49de5b7be10aaa158a5a6a4abb4b56cc08f524bb5e6cd5f211ad3e13@45534454526f6c654e46544275726e@45534454526f6c654e46544164645175616e74697479@455344545472616e73666572526f6c65"
+    )
+    assert transaction.sender == frank
+    assert transaction.value == 0
+
+
 def test_create_transaction_for_pausing():
     transaction = factory.create_transaction_for_pausing(
         sender=frank,
