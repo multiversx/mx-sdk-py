@@ -24,6 +24,8 @@ class ValidatorsController(BaseController):
         validators_file: Union[Path, ValidatorsSigners],
         amount: int,
         rewards_address: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -39,7 +41,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -49,6 +51,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         amount: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -62,7 +66,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -72,6 +76,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -85,7 +91,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -96,6 +102,8 @@ class ValidatorsController(BaseController):
         nonce: int,
         public_keys: list[ValidatorPublicKey],
         amount: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -110,7 +118,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -120,6 +128,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -133,7 +143,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -143,6 +153,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         rewards_address: Address,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -156,7 +168,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -165,6 +177,8 @@ class ValidatorsController(BaseController):
         self,
         sender: IAccount,
         nonce: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -177,7 +191,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -187,6 +201,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -200,7 +216,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -210,6 +226,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         amount: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -223,7 +241,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -233,6 +251,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -246,7 +266,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -256,6 +276,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         amount: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -269,7 +291,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -278,6 +300,8 @@ class ValidatorsController(BaseController):
         self,
         sender: IAccount,
         nonce: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -290,7 +314,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -300,6 +324,8 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -313,7 +339,7 @@ class ValidatorsController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

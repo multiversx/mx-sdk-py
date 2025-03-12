@@ -20,6 +20,8 @@ class TransfersController(BaseController):
         receiver: Address,
         native_transfer_amount: int = 0,
         data: Optional[bytes] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -35,7 +37,7 @@ class TransfersController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -46,6 +48,8 @@ class TransfersController(BaseController):
         nonce: int,
         receiver: Address,
         token_transfers: list[TokenTransfer],
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -58,7 +62,7 @@ class TransfersController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -71,6 +75,8 @@ class TransfersController(BaseController):
         native_transfer_amount: Optional[int] = None,
         token_transfers: Optional[list[TokenTransfer]] = None,
         data: Optional[bytes] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -87,7 +93,7 @@ class TransfersController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
