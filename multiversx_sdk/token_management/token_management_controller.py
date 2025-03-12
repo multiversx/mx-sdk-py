@@ -67,10 +67,10 @@ class TokenManagementController(BaseController):
         can_change_owner: bool,
         can_upgrade: bool,
         can_add_special_roles: bool,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_issuing_fungible(
             sender=sender.address,
@@ -116,10 +116,10 @@ class TokenManagementController(BaseController):
         can_change_owner: bool,
         can_upgrade: bool,
         can_add_special_roles: bool,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_issuing_semi_fungible(
             sender=sender.address,
@@ -166,10 +166,10 @@ class TokenManagementController(BaseController):
         can_change_owner: bool,
         can_upgrade: bool,
         can_add_special_roles: bool,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_issuing_non_fungible(
             sender=sender.address,
@@ -215,10 +215,10 @@ class TokenManagementController(BaseController):
         can_change_owner: bool,
         can_upgrade: bool,
         can_add_special_roles: bool,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_registering_meta_esdt(
             sender=sender.address,
@@ -259,10 +259,10 @@ class TokenManagementController(BaseController):
         token_ticker: str,
         token_type: TokenType,
         num_decimals: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_registering_and_setting_roles(
             sender=sender.address,
@@ -298,10 +298,10 @@ class TokenManagementController(BaseController):
         sender: IAccount,
         nonce: int,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_burn_role_globally(
             sender=sender.address, token_identifier=token_identifier
@@ -329,10 +329,10 @@ class TokenManagementController(BaseController):
         sender: IAccount,
         nonce: int,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_burn_role_globally(
             sender=sender.address, token_identifier=token_identifier
@@ -364,10 +364,10 @@ class TokenManagementController(BaseController):
         add_role_local_mint: bool = False,
         add_role_local_burn: bool = False,
         add_role_esdt_transfer_role: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_fungible_token(
             sender=sender.address,
@@ -408,10 +408,10 @@ class TokenManagementController(BaseController):
         remove_role_local_mint: bool = False,
         remove_role_local_burn: bool = False,
         remove_role_esdt_transfer_role: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_special_role_on_fungible_token(
             sender=sender.address,
@@ -442,10 +442,10 @@ class TokenManagementController(BaseController):
         add_role_nft_burn: bool = False,
         add_role_nft_add_quantity: bool = False,
         add_role_esdt_transfer_role: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_semi_fungible_token(
             sender=sender.address,
@@ -487,10 +487,10 @@ class TokenManagementController(BaseController):
         remove_role_nft_burn: bool = False,
         remove_role_nft_add_quantity: bool = False,
         remove_role_esdt_transfer_role: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_special_role_on_semi_fungible_token(
             sender=sender.address,
@@ -521,10 +521,10 @@ class TokenManagementController(BaseController):
         add_role_nft_burn: bool = False,
         add_role_nft_add_quantity: bool = False,
         add_role_esdt_transfer_role: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_meta_esdt(
             sender=sender.address,
@@ -565,10 +565,10 @@ class TokenManagementController(BaseController):
         remove_role_nft_burn: bool = False,
         remove_role_nft_add_quantity: bool = False,
         remove_role_esdt_transfer_role: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_special_role_on_meta_esdt(
             sender=sender.address,
@@ -600,10 +600,10 @@ class TokenManagementController(BaseController):
         add_role_nft_update_attributes: bool = False,
         add_role_nft_add_uri: bool = False,
         add_role_esdt_transfer_role: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_special_role_on_non_fungible_token(
             sender=sender.address,
@@ -652,10 +652,10 @@ class TokenManagementController(BaseController):
         remove_role_esdt_set_new_uri: bool = False,
         remove_role_esdt_modify_creator: bool = False,
         remove_role_nft_recreate: bool = False,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_special_role_on_non_fungible_token(
             sender=sender.address,
@@ -693,10 +693,10 @@ class TokenManagementController(BaseController):
         hash: str,
         attributes: bytes,
         uris: list[str],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_creating_nft(
             sender=sender.address,
@@ -731,10 +731,10 @@ class TokenManagementController(BaseController):
         sender: IAccount,
         nonce: int,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_pausing(
             sender=sender.address, token_identifier=token_identifier
@@ -762,10 +762,10 @@ class TokenManagementController(BaseController):
         sender: IAccount,
         nonce: int,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unpausing(
             sender=sender.address, token_identifier=token_identifier
@@ -794,10 +794,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         user: Address,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_freezing(
             sender=sender.address, user=user, token_identifier=token_identifier
@@ -826,10 +826,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         user: Address,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unfreezing(
             sender=sender.address, user=user, token_identifier=token_identifier
@@ -858,10 +858,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         user: Address,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_wiping(
             sender=sender.address, user=user, token_identifier=token_identifier
@@ -890,10 +890,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         token_identifier: str,
         supply_to_mint: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_local_minting(
             sender=sender.address,
@@ -924,10 +924,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         token_identifier: str,
         supply_to_burn: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_local_burning(
             sender=sender.address,
@@ -959,10 +959,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         attributes: bytes,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_updating_attributes(
             sender=sender.address,
@@ -995,10 +995,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         quantity_to_add: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_adding_quantity(
             sender=sender.address,
@@ -1031,10 +1031,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         quantity_to_burn: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_burning_quantity(
             sender=sender.address,
@@ -1067,10 +1067,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         new_royalties: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_modifying_royalties(
             sender=sender.address,
@@ -1103,10 +1103,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         new_uris: list[str],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_new_uris(
             sender=sender.address,
@@ -1138,10 +1138,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         token_identifier: str,
         token_nonce: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_modifying_creator(
             sender=sender.address, token_identifier=token_identifier, token_nonce=token_nonce
@@ -1175,10 +1175,10 @@ class TokenManagementController(BaseController):
         new_hash: str,
         new_attributes: bytes,
         new_uris: list[str],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_updating_metadata(
             sender=sender.address,
@@ -1219,10 +1219,10 @@ class TokenManagementController(BaseController):
         new_hash: str,
         new_attributes: bytes,
         new_uris: list[str],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_nft_metadata_recreate(
             sender=sender.address,
@@ -1257,10 +1257,10 @@ class TokenManagementController(BaseController):
         sender: IAccount,
         nonce: int,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         """The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2"""
         transaction = self.factory.create_transaction_for_changing_token_to_dynamic(
@@ -1294,10 +1294,10 @@ class TokenManagementController(BaseController):
         sender: IAccount,
         nonce: int,
         token_identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_updating_token_id(
             sender=sender.address,
@@ -1325,10 +1325,10 @@ class TokenManagementController(BaseController):
         token_ticker: str,
         token_type: TokenType,
         denominator: Optional[int] = None,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_registering_dynamic_token(
             sender=sender.address,
@@ -1367,10 +1367,10 @@ class TokenManagementController(BaseController):
         token_ticker: str,
         token_type: TokenType,
         denominator: Optional[int] = None,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_registering_dynamic_and_setting_roles(
             sender=sender.address,
@@ -1407,10 +1407,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         token_identifier: str,
         new_owner: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_transferring_ownership(
             sender=sender.address,
@@ -1435,10 +1435,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         user: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_freezing_single_nft(
             sender=sender.address,
@@ -1464,10 +1464,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         user: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unfreezing_single_nft(
             sender=sender.address,
@@ -1492,10 +1492,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         collection: str,
         num_decimals: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_changing_sft_to_meta_esdt(
             sender=sender.address, collection=collection, num_decimals=num_decimals
@@ -1517,10 +1517,10 @@ class TokenManagementController(BaseController):
         nonce: int,
         token_identifier: str,
         user: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_transferring_nft_create_role(
             sender=sender.address, token_identifier=token_identifier, user=user
@@ -1543,6 +1543,8 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_stopping_nft_creation(
             sender=sender.address, token_identifier=token_identifier
@@ -1553,7 +1555,7 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._add_extra_gas_limit_if_required(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1565,10 +1567,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         user: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_wiping_single_nft(
             sender=sender.address,
@@ -1594,10 +1596,10 @@ class TokenManagementController(BaseController):
         token_identifier: str,
         token_nonce: int,
         uris: list[str],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transction_for_adding_uris(
             sender=sender.address,

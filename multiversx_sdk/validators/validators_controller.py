@@ -24,10 +24,10 @@ class ValidatorsController(BaseController):
         validators_file: Union[Path, ValidatorsSigners],
         amount: int,
         rewards_address: Optional[Address] = None,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_staking(
             sender=sender.address,
@@ -51,10 +51,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_topping_up(
             sender=sender.address,
@@ -76,10 +76,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unstaking(
             sender=sender.address,
@@ -102,10 +102,10 @@ class ValidatorsController(BaseController):
         nonce: int,
         public_keys: list[ValidatorPublicKey],
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unjailing(
             sender=sender.address,
@@ -128,10 +128,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unbonding(
             sender=sender.address,
@@ -153,10 +153,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         rewards_address: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_changing_rewards_address(
             sender=sender.address,
@@ -177,10 +177,10 @@ class ValidatorsController(BaseController):
         self,
         sender: IAccount,
         nonce: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_claiming(
             sender=sender.address,
@@ -201,10 +201,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unstaking_nodes(
             sender=sender.address,
@@ -226,10 +226,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unstaking_tokens(
             sender=sender.address,
@@ -251,10 +251,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unbonding_nodes(
             sender=sender.address,
@@ -276,10 +276,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unbonding_tokens(
             sender=sender.address,
@@ -300,10 +300,10 @@ class ValidatorsController(BaseController):
         self,
         sender: IAccount,
         nonce: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_cleaning_registered_data(
             sender=sender.address,
@@ -324,10 +324,10 @@ class ValidatorsController(BaseController):
         sender: IAccount,
         nonce: int,
         public_keys: list[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_restaking_unstaked_nodes(
             sender=sender.address,

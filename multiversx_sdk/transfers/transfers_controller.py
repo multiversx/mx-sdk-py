@@ -20,10 +20,10 @@ class TransfersController(BaseController):
         receiver: Address,
         native_transfer_amount: int = 0,
         data: Optional[bytes] = None,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_native_token_transfer(
             sender=sender.address,
@@ -48,10 +48,10 @@ class TransfersController(BaseController):
         nonce: int,
         receiver: Address,
         token_transfers: list[TokenTransfer],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_esdt_token_transfer(
             sender=sender.address, receiver=receiver, token_transfers=token_transfers
@@ -75,10 +75,10 @@ class TransfersController(BaseController):
         native_transfer_amount: Optional[int] = None,
         token_transfers: Optional[list[TokenTransfer]] = None,
         data: Optional[bytes] = None,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_transfer(
             sender=sender.address,

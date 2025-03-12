@@ -41,10 +41,10 @@ class DelegationController(BaseController):
         total_delegation_cap: int,
         service_fee: int,
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_new_delegation_contract(
             sender=sender.address,
@@ -81,10 +81,10 @@ class DelegationController(BaseController):
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
         signed_messages: Sequence[bytes],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_adding_nodes(
             sender=sender.address,
@@ -109,10 +109,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_removing_nodes(
             sender=sender.address,
@@ -136,10 +136,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_staking_nodes(
             sender=sender.address,
@@ -163,10 +163,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unbonding_nodes(
             sender=sender.address,
@@ -190,10 +190,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unstaking_nodes(
             sender=sender.address,
@@ -218,10 +218,10 @@ class DelegationController(BaseController):
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unjailing_nodes(
             sender=sender.address,
@@ -246,10 +246,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         service_fee: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_changing_service_fee(
             sender=sender.address,
@@ -273,10 +273,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         delegation_cap: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_modifying_delegation_cap(
             sender=sender.address,
@@ -299,10 +299,10 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_automatic_activation(
             sender=sender.address, delegation_contract=delegation_contract
@@ -323,10 +323,10 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_automatic_activation(
             sender=sender.address, delegation_contract=delegation_contract
@@ -347,10 +347,10 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_cap_check_on_redelegate_rewards(
             sender=sender.address, delegation_contract=delegation_contract
@@ -371,10 +371,10 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unsetting_cap_check_on_redelegate_rewards(
             sender=sender.address, delegation_contract=delegation_contract
@@ -398,10 +398,10 @@ class DelegationController(BaseController):
         name: str,
         website: str,
         identifier: str,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_metadata(
             sender=sender.address,
@@ -427,10 +427,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_delegating(
             sender=sender.address,
@@ -453,10 +453,10 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_claiming_rewards(
             sender=sender.address, delegation_contract=delegation_contract
@@ -477,10 +477,10 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_redelegating_rewards(
             sender=sender.address, delegation_contract=delegation_contract
@@ -502,10 +502,10 @@ class DelegationController(BaseController):
         nonce: int,
         delegation_contract: Address,
         amount: int,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_undelegating(
             sender=sender.address,
@@ -528,10 +528,11 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
+        amount: int,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_withdrawing(
             sender=sender.address, delegation_contract=delegation_contract

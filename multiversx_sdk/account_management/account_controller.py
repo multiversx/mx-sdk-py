@@ -18,10 +18,10 @@ class AccountController(BaseController):
         sender: IAccount,
         nonce: int,
         key_value_pairs: dict[bytes, bytes],
-        gas_limit: Optional[int] = None,
-        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_saving_key_value(
             sender=sender.address, key_value_pairs=key_value_pairs
@@ -43,9 +43,9 @@ class AccountController(BaseController):
         nonce: int,
         guardian_address: Address,
         service_id: str,
+        relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
         gas_price: Optional[int] = None,
-        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_setting_guardian(
             sender=sender.address,
@@ -66,9 +66,9 @@ class AccountController(BaseController):
         self,
         sender: IAccount,
         nonce: int,
+        relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
         gas_price: Optional[int] = None,
-        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_guarding_account(sender=sender.address)
 
@@ -86,9 +86,9 @@ class AccountController(BaseController):
         sender: IAccount,
         nonce: int,
         guardian: Address,
+        relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
         gas_price: Optional[int] = None,
-        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_unguarding_account(sender=sender.address, guardian=guardian)
 
