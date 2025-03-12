@@ -1,3 +1,5 @@
+from typing import Optional
+
 from multiversx_sdk.core.constants import (
     EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTIONS,
     EXTRA_GAS_LIMIT_FOR_RELAYED_TRANSACTIONS,
@@ -23,3 +25,17 @@ class BaseController:
 
         if transaction.relayer:
             transaction.gas_limit += EXTRA_GAS_LIMIT_FOR_RELAYED_TRANSACTIONS
+
+    def _set_transaction_gas_options(
+        self,
+        transaction: Transaction,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+    ):
+        if gas_price:
+            transaction.gas_price = gas_price
+
+        if gas_limit:
+            transaction.gas_limit = gas_limit
+        else:
+            self._add_extra_gas_limit_if_required(transaction)
