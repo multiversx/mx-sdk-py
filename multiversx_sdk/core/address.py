@@ -86,6 +86,9 @@ class Address:
 
     def to_bech32(self) -> str:
         """Returns the bech32 representation of the address"""
+        if self.is_empty():
+            return ""
+
         converted = bech32.convertbits(self.pubkey, 8, 5)
         assert converted is not None
         encoded = bech32.bech32_encode(self.hrp, converted)
