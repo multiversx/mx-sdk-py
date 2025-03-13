@@ -15,11 +15,13 @@ Subpackages
    multiversx_sdk.delegation
    multiversx_sdk.entrypoints
    multiversx_sdk.ledger
+   multiversx_sdk.native_auth
    multiversx_sdk.network_providers
    multiversx_sdk.relayed
    multiversx_sdk.smart_contracts
    multiversx_sdk.token_management
    multiversx_sdk.transfers
+   multiversx_sdk.validators
    multiversx_sdk.wallet
 
 Module contents
