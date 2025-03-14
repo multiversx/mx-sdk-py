@@ -8,8 +8,8 @@ from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (
-    BECH32_ADDRESS_LENGTH,
     DIGEST_SIZE,
+    HEX_ADDRESS_LENGTH,
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS,
     TRANSACTION_OPTIONS_TX_GUARDED,
     TRANSACTION_OPTIONS_TX_HASH_SIGN,
@@ -40,7 +40,7 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: Transaction, ignore_options=False) -> bytes:
+    def compute_bytes_for_signing(self, transaction: Transaction, ignore_options: bool = False) -> bytes:
         """If `ignore_options == False`, the method computes the bytes for signing based on the `version` and `options` of the transaction.
         If the least significant bit of the `options` is set, will serialize transaction for hash signing.
 
@@ -112,10 +112,10 @@ class TransactionComputer:
         return False
 
     def _ensure_fields(self, transaction: Transaction) -> None:
-        if len(transaction.sender.to_bech32()) != BECH32_ADDRESS_LENGTH:
+        if len(transaction.sender.to_hex()) != HEX_ADDRESS_LENGTH:
             raise BadUsageError("Invalid `sender` field. Should be the bech32 address of the sender.")
 
-        if len(transaction.receiver.to_bech32()) != BECH32_ADDRESS_LENGTH:
+        if len(transaction.receiver.to_hex()) != HEX_ADDRESS_LENGTH:
             raise BadUsageError("Invalid `receiver` field. Should be the bech32 address of the receiver.")
 
         if not len(transaction.chain_id):
