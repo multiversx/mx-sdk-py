@@ -79,8 +79,8 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BECH32_ADDRESS_LENGTH</span><span class="p">,</span>
     <span class="n">DIGEST_SIZE</span><span class="p">,</span>
+    <span class="n">HEX_ADDRESS_LENGTH</span><span class="p">,</span>
     <span class="n">MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS</span><span class="p">,</span>
     <span class="n">TRANSACTION_OPTIONS_TX_GUARDED</span><span class="p">,</span>
     <span class="n">TRANSACTION_OPTIONS_TX_HASH_SIGN</span><span class="p">,</span>
@@ -118,7 +118,7 @@
 
 <div class="viewcode-block" id="TransactionComputer.compute_bytes_for_signing">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_bytes_for_signing">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_bytes_for_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">ignore_options</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_bytes_for_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">ignore_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;If `ignore_options == False`, the method computes the bytes for signing based on the `version` and `options` of the transaction.</span>
 <span class="sd">        If the least significant bit of the `options` is set, will serialize transaction for hash signing.</span>
 
@@ -215,10 +215,10 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">())</span> <span class="o">!=</span> <span class="n">BECH32_ADDRESS_LENGTH</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">to_hex</span><span class="p">())</span> <span class="o">!=</span> <span class="n">HEX_ADDRESS_LENGTH</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;Invalid `sender` field. Should be the bech32 address of the sender.&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">())</span> <span class="o">!=</span> <span class="n">BECH32_ADDRESS_LENGTH</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">to_hex</span><span class="p">())</span> <span class="o">!=</span> <span class="n">HEX_ADDRESS_LENGTH</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;Invalid `receiver` field. Should be the bech32 address of the receiver.&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span><span class="p">):</span>
