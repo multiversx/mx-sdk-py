@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.native_auth.native_auth_server &mdash; multiversx-sdk 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.native_auth.native_auth_server</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.native_auth.native_auth_server</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">http.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">NOT_FOUND</span><span class="p">,</span> <span class="n">OK</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">MessageComputer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.native_auth.config</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NativeAuthCacheInterface</span><span class="p">,</span>
+    <span class="n">NativeAuthServerConfig</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.native_auth.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ACCESS_TOKEN_COMPONENTS_SEPARATOR</span><span class="p">,</span>
+    <span class="n">CACHE_VALUE_IMPERSONATED</span><span class="p">,</span>
+    <span class="n">CACHE_VALUE_NOT_IMPERSONATED</span><span class="p">,</span>
+    <span class="n">MAX_ACCEPTED_WILDCARD_ORIGINS</span><span class="p">,</span>
+    <span class="n">MAX_EXPIRY_SECONDS</span><span class="p">,</span>
+    <span class="n">ONE_HOUR_IN_SECONDS</span><span class="p">,</span>
+    <span class="n">ONE_ROUND_IN_SECONDS</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.native_auth.errors</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NativeAuthInvalidBlockHashError</span><span class="p">,</span>
+    <span class="n">NativeAuthInvalidConfigError</span><span class="p">,</span>
+    <span class="n">NativeAuthInvalidImpersonateError</span><span class="p">,</span>
+    <span class="n">NativeAuthInvalidSignatureError</span><span class="p">,</span>
+    <span class="n">NativeAuthInvalidTokenError</span><span class="p">,</span>
+    <span class="n">NativeAuthInvalidTokenTtlError</span><span class="p">,</span>
+    <span class="n">NativeAuthInvalidWildcardOriginError</span><span class="p">,</span>
+    <span class="n">NativeAuthOriginNotAcceptedError</span><span class="p">,</span>
+    <span class="n">NativeAuthTokenExpiredError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.native_auth.resources</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NativeAuthDecoded</span><span class="p">,</span>
+    <span class="n">NativeAuthValidateResult</span><span class="p">,</span>
+    <span class="n">WildcardOrigin</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.user_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserPublicKey</span>
+
+
+<div class="viewcode-block" id="NativeAuthServer">
+<a class="viewcode-back" href="../../../multiversx_sdk.native_auth.html#multiversx_sdk.NativeAuthServer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NativeAuthServer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">NativeAuthServerConfig</span><span class="p">,</span> <span class="n">cache</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NativeAuthCacheInterface</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">config</span><span class="o">.</span><span class="n">max_expiry_seconds</span> <span class="o">&lt;=</span> <span class="n">MAX_EXPIRY_SECONDS</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidConfigError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid `max_expiry_seconds`. Must be greater than 0 and less than or equal to </span><span class="si">{</span><span class="n">MAX_EXPIRY_SECONDS</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">accepted_origins</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">accepted_origins</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidConfigError</span><span class="p">(</span><span class="s2">&quot;`accepted_origins` must be a non-empty list of strings.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">accepted_wildcard_origins</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">cache</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wildcard_origins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_wildcard_origins</span><span class="p">()</span>
+
+<div class="viewcode-block" id="NativeAuthServer.decode">
+<a class="viewcode-back" href="../../../multiversx_sdk.native_auth.html#multiversx_sdk.NativeAuthServer.decode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NativeAuthDecoded</span><span class="p">:</span>
+        <span class="n">token_components</span> <span class="o">=</span> <span class="n">access_token</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ACCESS_TOKEN_COMPONENTS_SEPARATOR</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">token_components</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidTokenError</span><span class="p">()</span>
+
+        <span class="n">address</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">signature</span> <span class="o">=</span> <span class="n">token_components</span>
+        <span class="n">parsed_address</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_decode_value</span><span class="p">(</span><span class="n">address</span><span class="p">))</span>
+        <span class="n">parsed_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_value</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">body_components</span> <span class="o">=</span> <span class="n">parsed_body</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">body_components</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidTokenError</span><span class="p">()</span>
+
+        <span class="n">origin</span><span class="p">,</span> <span class="n">block_hash</span><span class="p">,</span> <span class="n">ttl</span><span class="p">,</span> <span class="n">extra_info</span> <span class="o">=</span> <span class="n">body_components</span>
+
+        <span class="n">parsed_origin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decode_value</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed_extra_info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_decode_value</span><span class="p">(</span><span class="n">extra_info</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidTokenError</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">NativeAuthDecoded</span><span class="p">(</span>
+            <span class="n">ttl</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">ttl</span><span class="p">),</span>
+            <span class="n">origin</span><span class="o">=</span><span class="n">parsed_origin</span><span class="p">,</span>
+            <span class="n">address</span><span class="o">=</span><span class="n">parsed_address</span><span class="p">,</span>
+            <span class="n">signature</span><span class="o">=</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">signature</span><span class="p">),</span>
+            <span class="n">block_hash</span><span class="o">=</span><span class="n">block_hash</span><span class="p">,</span>
+            <span class="n">body</span><span class="o">=</span><span class="n">parsed_body</span><span class="p">,</span>
+            <span class="n">extra_info</span><span class="o">=</span><span class="n">parsed_extra_info</span> <span class="k">if</span> <span class="n">parsed_extra_info</span> <span class="o">!=</span> <span class="s2">&quot;e30&quot;</span> <span class="k">else</span> <span class="p">{},</span>  <span class="c1"># empty object (&#39;e30&#39; = encoded &#39;{}&#39;)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NativeAuthServer.is_valid">
+<a class="viewcode-back" href="../../../multiversx_sdk.native_auth.html#multiversx_sdk.NativeAuthServer.is_valid">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="NativeAuthServer.validate">
+<a class="viewcode-back" href="../../../multiversx_sdk.native_auth.html#multiversx_sdk.NativeAuthServer.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_token</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NativeAuthValidateResult</span><span class="p">:</span>
+        <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">decoded</span><span class="o">.</span><span class="n">ttl</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_expiry_seconds</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidTokenTtlError</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">ttl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_expiry_seconds</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_origin_accepted</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">origin</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NativeAuthOriginNotAcceptedError</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+
+        <span class="n">block_timestamp</span><span class="p">,</span> <span class="n">expires</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verify_token_age_and_get_issue_and_expiry</span><span class="p">(</span><span class="n">decoded_token</span><span class="o">=</span><span class="n">decoded</span><span class="p">)</span>
+
+        <span class="n">signed_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}{</span><span class="n">decoded</span><span class="o">.</span><span class="n">body</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verify_signature</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">signed_message</span><span class="p">,</span> <span class="n">decoded</span><span class="o">.</span><span class="n">signature</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">skip_legacy_validation</span><span class="p">:</span>
+            <span class="n">signed_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span><span class="si">}{</span><span class="n">decoded</span><span class="o">.</span><span class="n">body</span><span class="si">}</span><span class="se">{{}}</span><span class="s2">&quot;</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verify_signature</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">signed_message</span><span class="p">,</span> <span class="n">decoded</span><span class="o">.</span><span class="n">signature</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidSignatureError</span><span class="p">()</span>
+
+        <span class="n">impersonate_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_impersonate_address</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+        <span class="n">impersonate_address</span> <span class="o">=</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">impersonate_address</span><span class="p">)</span> <span class="k">if</span> <span class="n">impersonate_address</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">NativeAuthValidateResult</span><span class="p">(</span>
+            <span class="n">issued</span><span class="o">=</span><span class="n">block_timestamp</span><span class="p">,</span>
+            <span class="n">expires</span><span class="o">=</span><span class="n">expires</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span><span class="n">decoded</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span>
+            <span class="n">address</span><span class="o">=</span><span class="n">impersonate_address</span> <span class="ow">or</span> <span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">extra_info</span><span class="o">=</span><span class="n">decoded</span><span class="o">.</span><span class="n">extra_info</span><span class="p">,</span>
+            <span class="n">signer_address</span><span class="o">=</span><span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_token_age_and_get_issue_and_expiry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoded_token</span><span class="p">:</span> <span class="n">NativeAuthDecoded</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">block_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_block_timestamp</span><span class="p">(</span><span class="n">decoded_token</span><span class="o">.</span><span class="n">block_hash</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">block_timestamp</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidBlockHashError</span><span class="p">(</span><span class="n">decoded_token</span><span class="o">.</span><span class="n">block_hash</span><span class="p">)</span>
+
+        <span class="n">current_block_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_current_block_timestamp</span><span class="p">()</span>
+        <span class="n">expires</span> <span class="o">=</span> <span class="n">block_timestamp</span> <span class="o">+</span> <span class="n">decoded_token</span><span class="o">.</span><span class="n">ttl</span>
+
+        <span class="k">if</span> <span class="n">expires</span> <span class="o">&lt;</span> <span class="n">current_block_timestamp</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthTokenExpiredError</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">block_timestamp</span><span class="p">,</span> <span class="n">expires</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_impersonate_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decoded</span><span class="p">:</span> <span class="n">NativeAuthDecoded</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">impersonate_address</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">decoded</span><span class="o">.</span><span class="n">extra_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multisig&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">decoded</span><span class="o">.</span><span class="n">extra_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;impersonate&quot;</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">impersonate_address</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">validate_impersonate_callback</span><span class="p">:</span>
+            <span class="n">is_valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">validate_impersonate_callback</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span> <span class="n">impersonate_address</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">impersonate_address</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">validate_impersonate_url</span><span class="p">:</span>
+            <span class="n">is_valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_impersonate_address_from_url</span><span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span> <span class="n">impersonate_address</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">impersonate_address</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_impersonate_address_from_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">impersonate_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">cache_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;impersonate:</span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">impersonate_address</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="n">cached_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cached_value</span> <span class="o">==</span> <span class="n">CACHE_VALUE_IMPERSONATED</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">impersonate_address</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">validate_impersonate_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">impersonate_address</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">CACHE_VALUE_IMPERSONATED</span><span class="p">,</span> <span class="n">ONE_HOUR_IN_SECONDS</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">impersonate_address</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">CACHE_VALUE_NOT_IMPERSONATED</span><span class="p">,</span> <span class="n">ONE_HOUR_IN_SECONDS</span><span class="p">)</span>
+
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidImpersonateError</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ex</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verify_signature</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verify_signature</span><span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">(),</span> <span class="n">message</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span>
+
+        <span class="n">signed_message</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="n">message_computer</span> <span class="o">=</span> <span class="n">MessageComputer</span><span class="p">()</span>
+        <span class="n">serialized_message</span> <span class="o">=</span> <span class="n">message_computer</span><span class="o">.</span><span class="n">compute_bytes_for_verifying</span><span class="p">(</span><span class="n">signed_message</span><span class="p">)</span>
+
+        <span class="n">user_pubkey</span> <span class="o">=</span> <span class="n">UserPublicKey</span><span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">user_pubkey</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">serialized_message</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_current_block_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block:timestamp:latest&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">timestamp</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">api_url</span><span class="si">}</span><span class="s2">/blocks?size=1&amp;fields=timestamp&quot;</span><span class="p">)</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;timestamp&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;block:timestamp:latest&quot;</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">ONE_ROUND_IN_SECONDS</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">timestamp</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_block_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">hash</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;block:timestamp:</span><span class="si">{</span><span class="nb">hash</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">timestamp</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">api_url</span><span class="si">}</span><span class="s2">/blocks/</span><span class="si">{</span><span class="nb">hash</span><span class="si">}</span><span class="s2">?extract=timestamp&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">NOT_FOUND</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">text</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;block:timestamp:</span><span class="si">{</span><span class="nb">hash</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestamp</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">max_expiry_seconds</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ex</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_origin_accepted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_wildcard_origin_accepted</span><span class="p">(</span><span class="n">origin</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">is_accepted</span> <span class="o">=</span> <span class="n">origin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">accepted_origins</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">origin</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">accepted_origins</span>
+        <span class="k">if</span> <span class="n">is_accepted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">is_origin_accepted</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">is_origin_accepted</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_wildcard_origin_accepted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">accepted_wildcard_origins</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wildcard_origins</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">wildcard_origin</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">wildcard</span>
+            <span class="k">for</span> <span class="n">wildcard</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wildcard_origins</span>
+            <span class="k">if</span> <span class="n">origin</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">wildcard</span><span class="o">.</span><span class="n">protocol</span><span class="p">)</span> <span class="ow">and</span> <span class="n">origin</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">wildcard</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">wildcard_origin</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># append new origin to the end of the list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accepted_wildcard_origins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accepted_wildcard_origins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_ACCEPTED_WILDCARD_ORIGINS</span><span class="p">:</span>
+            <span class="c1"># remove the first element of the list which is the oldest</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accepted_wildcard_origins</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_decode_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ensure_correct_base64_padding</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_correct_base64_padding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">missing_padding</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span>
+        <span class="k">if</span> <span class="n">missing_padding</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">+=</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="n">missing_padding</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_wildcard_origins</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">WildcardOrigin</span><span class="p">]:</span>
+        <span class="n">origins_with_wildcard</span> <span class="o">=</span> <span class="p">[</span><span class="n">origin</span> <span class="k">for</span> <span class="n">origin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">accepted_origins</span> <span class="k">if</span> <span class="n">origin</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">origins_with_wildcard</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="c1"># protocol is what comes before the first &#39;*&#39;</span>
+        <span class="c1"># domain is what comes after the first &#39;*&#39; and before the first slash</span>
+        <span class="n">wildcard_origins</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WildcardOrigin</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">origin</span> <span class="ow">in</span> <span class="n">origins_with_wildcard</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">NativeAuthInvalidWildcardOriginError</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
+
+            <span class="n">protocol</span><span class="p">,</span> <span class="n">domain</span> <span class="o">=</span> <span class="n">components</span>
+            <span class="k">if</span> <span class="n">protocol</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">protocol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;http://&quot;</span><span class="p">,</span> <span class="s2">&quot;https://&quot;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">NativeAuthInvalidWildcardOriginError</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
+
+            <span class="n">wildcard_origins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WildcardOrigin</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">wildcard_origins</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

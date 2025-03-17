@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.transactions_factory_config &mdash; multiversx-sdk 1.1.1 documentation</title>
+  <title>multiversx_sdk.core.transactions_factory_config &mdash; multiversx-sdk 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=58fbf978"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -96,9 +96,9 @@
     <span class="n">gas_limit_freezing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
     <span class="n">gas_limit_wiping</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
     <span class="n">gas_limit_esdt_nft_create</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3_000_000</span>
-    <span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
-    <span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
-    <span class="n">gas_limit_esdt_nft_burn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span>
+    <span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50_000</span>
+    <span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50_000</span>
+    <span class="n">gas_limit_esdt_nft_burn</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50_000</span>
     <span class="n">gas_limit_store_per_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10_000</span>
     <span class="n">gas_limit_esdt_modify_royalties</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
     <span class="n">gas_limit_set_new_uris</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60_000_000</span>
@@ -144,7 +144,22 @@
 
     <span class="c1"># Configuration for smart contract operations</span>
     <span class="n">gas_limit_claim_developer_rewards</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6_000_000</span>
-    <span class="n">gas_limit_change_owner_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6_000_000</span></div>
+    <span class="n">gas_limit_change_owner_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6_000_000</span>
+
+    <span class="c1"># Configuration for staking</span>
+    <span class="n">gas_limit_for_staking</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_topping_up</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_unstaking</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_unjailing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_unbonding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_changing_rewards_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_claiming</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_unstaking_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_unstaking_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_unbonding_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_unbonding_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_cleaning_registered_data</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span>
+    <span class="n">gas_limit_for_restaking_unstaked_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5_000_000</span></div>
 
 </pre></div>
 

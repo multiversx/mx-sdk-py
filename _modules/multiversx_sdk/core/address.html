@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core.address &mdash; multiversx-sdk 1.1.1 documentation</title>
+  <title>multiversx_sdk.core.address &mdash; multiversx-sdk 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=58fbf978"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -185,6 +185,9 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.to_bech32">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_bech32</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the bech32 representation of the address&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_empty</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
         <span class="n">converted</span> <span class="o">=</span> <span class="n">bech32</span><span class="o">.</span><span class="n">convertbits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">converted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="n">encoded</span> <span class="o">=</span> <span class="n">bech32</span><span class="o">.</span><span class="n">bech32_encode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hrp</span><span class="p">,</span> <span class="n">converted</span><span class="p">)</span>

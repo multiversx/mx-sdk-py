@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.token_management.token_management_controller &mdash; multiversx-sdk 1.1.1 documentation</title>
+  <title>multiversx_sdk.token_management.token_management_controller &mdash; multiversx-sdk 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=58fbf978"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -150,6 +150,8 @@
         <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_issuing_fungible</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -170,6 +172,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -205,6 +208,8 @@
         <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_issuing_semi_fungible</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -224,6 +229,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -261,6 +267,8 @@
         <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_issuing_non_fungible</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -280,6 +288,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -316,6 +325,8 @@
         <span class="n">can_add_special_roles</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_registering_meta_esdt</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -336,6 +347,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -366,6 +378,8 @@
         <span class="n">num_decimals</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_registering_and_setting_roles</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -380,6 +394,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -411,6 +426,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_burn_role_globally</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -421,6 +438,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -448,6 +466,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unsetting_burn_role_globally</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -458,6 +478,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -489,6 +510,8 @@
         <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_special_role_on_fungible_token</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -504,6 +527,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -539,6 +563,8 @@
         <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unsetting_special_role_on_fungible_token</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -554,6 +580,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -573,6 +600,8 @@
         <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_special_role_on_semi_fungible_token</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -589,6 +618,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -622,13 +652,10 @@
         <span class="n">remove_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">remove_role_nft_add_quantity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">remove_role_nft_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">remove_role_esdt_modify_royalties</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">remove_role_esdt_set_new_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">remove_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">remove_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unsetting_special_role_on_semi_fungible_token</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -637,11 +664,6 @@
             <span class="n">remove_role_nft_burn</span><span class="o">=</span><span class="n">remove_role_nft_burn</span><span class="p">,</span>
             <span class="n">remove_role_nft_add_quantity</span><span class="o">=</span><span class="n">remove_role_nft_add_quantity</span><span class="p">,</span>
             <span class="n">remove_role_esdt_transfer_role</span><span class="o">=</span><span class="n">remove_role_esdt_transfer_role</span><span class="p">,</span>
-            <span class="n">remove_role_nft_update</span><span class="o">=</span><span class="n">remove_role_nft_update</span><span class="p">,</span>
-            <span class="n">remove_role_esdt_modify_royalties</span><span class="o">=</span><span class="n">remove_role_esdt_modify_royalties</span><span class="p">,</span>
-            <span class="n">remove_role_esdt_set_new_uri</span><span class="o">=</span><span class="n">remove_role_esdt_set_new_uri</span><span class="p">,</span>
-            <span class="n">remove_role_esdt_modify_creator</span><span class="o">=</span><span class="n">remove_role_esdt_modify_creator</span><span class="p">,</span>
-            <span class="n">remove_role_nft_recreate</span><span class="o">=</span><span class="n">remove_role_nft_recreate</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
@@ -649,6 +671,97 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementController.create_transaction_for_setting_special_role_on_meta_esdt">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.create_transaction_for_setting_special_role_on_meta_esdt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_setting_special_role_on_meta_esdt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">add_role_nft_create</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_nft_add_quantity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_special_role_on_meta_esdt</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+            <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span><span class="p">,</span>
+            <span class="n">add_role_nft_create</span><span class="o">=</span><span class="n">add_role_nft_create</span><span class="p">,</span>
+            <span class="n">add_role_nft_burn</span><span class="o">=</span><span class="n">add_role_nft_burn</span><span class="p">,</span>
+            <span class="n">add_role_nft_add_quantity</span><span class="o">=</span><span class="n">add_role_nft_add_quantity</span><span class="p">,</span>
+            <span class="n">add_role_esdt_transfer_role</span><span class="o">=</span><span class="n">add_role_esdt_transfer_role</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementController.parse_set_special_role_on_meta_esdt">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.parse_set_special_role_on_meta_esdt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_set_special_role_on_meta_esdt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_on_network</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_set_special_role</span><span class="p">(</span><span class="n">transaction_on_network</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementController.await_completed_set_special_role_on_meta_esdt">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_set_special_role_on_meta_esdt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_special_role_on_meta_esdt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_set_special_role_on_meta_esdt</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TokenManagementController.create_transaction_for_unsetting_special_role_on_meta_esdt">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.create_transaction_for_unsetting_special_role_on_meta_esdt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unsetting_special_role_on_meta_esdt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">remove_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_add_quantity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unsetting_special_role_on_meta_esdt</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+            <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span><span class="p">,</span>
+            <span class="n">remove_role_nft_burn</span><span class="o">=</span><span class="n">remove_role_nft_burn</span><span class="p">,</span>
+            <span class="n">remove_role_nft_add_quantity</span><span class="o">=</span><span class="n">remove_role_nft_add_quantity</span><span class="p">,</span>
+            <span class="n">remove_role_esdt_transfer_role</span><span class="o">=</span><span class="n">remove_role_esdt_transfer_role</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -669,6 +782,8 @@
         <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_special_role_on_non_fungible_token</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -686,6 +801,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -727,6 +843,8 @@
         <span class="n">remove_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unsetting_special_role_on_non_fungible_token</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -748,6 +866,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -768,6 +887,8 @@
         <span class="n">uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_creating_nft</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -785,6 +906,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -812,6 +934,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_pausing</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -822,6 +946,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -849,6 +974,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unpausing</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -859,6 +986,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -887,6 +1015,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_freezing</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -897,6 +1027,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -925,6 +1056,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unfreezing</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -935,6 +1068,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -963,6 +1097,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_wiping</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -973,6 +1109,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1001,6 +1138,8 @@
         <span class="n">supply_to_mint</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_local_minting</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1013,6 +1152,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1041,6 +1181,8 @@
         <span class="n">supply_to_burn</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_local_burning</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1053,6 +1195,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1082,6 +1225,8 @@
         <span class="n">attributes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_updating_attributes</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1095,6 +1240,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1124,6 +1270,8 @@
         <span class="n">quantity_to_add</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_adding_quantity</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1137,6 +1285,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1166,6 +1315,8 @@
         <span class="n">quantity_to_burn</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_burning_quantity</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1179,6 +1330,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1208,6 +1360,8 @@
         <span class="n">new_royalties</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_modifying_royalties</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1221,6 +1375,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1250,6 +1405,8 @@
         <span class="n">new_uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_setting_new_uris</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1263,6 +1420,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1291,6 +1449,8 @@
         <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_modifying_creator</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">token_nonce</span><span class="o">=</span><span class="n">token_nonce</span>
@@ -1301,6 +1461,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1334,6 +1495,8 @@
         <span class="n">new_uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_updating_metadata</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1351,6 +1514,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1384,6 +1548,8 @@
         <span class="n">new_uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_nft_metadata_recreate</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1401,6 +1567,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1428,6 +1595,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2&quot;&quot;&quot;</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_changing_token_to_dynamic</span><span class="p">(</span>
@@ -1440,6 +1609,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1471,6 +1641,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_updating_token_id</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1482,6 +1654,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1505,6 +1678,8 @@
         <span class="n">denominator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_registering_dynamic_token</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1519,6 +1694,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1553,6 +1729,8 @@
         <span class="n">denominator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_registering_dynamic_and_setting_roles</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1567,6 +1745,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1599,6 +1778,8 @@
         <span class="n">new_owner</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_transferring_ownership</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1611,6 +1792,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1627,6 +1809,8 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_freezing_single_nft</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1640,6 +1824,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1656,6 +1841,8 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_unfreezing_single_nft</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1669,6 +1856,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1684,6 +1872,8 @@
         <span class="n">num_decimals</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_changing_sft_to_meta_esdt</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">collection</span><span class="o">=</span><span class="n">collection</span><span class="p">,</span> <span class="n">num_decimals</span><span class="o">=</span><span class="n">num_decimals</span>
@@ -1694,6 +1884,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1709,6 +1900,8 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_transferring_nft_create_role</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span>
@@ -1719,6 +1912,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1733,6 +1927,8 @@
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_stopping_nft_creation</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span>
@@ -1743,6 +1939,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1759,6 +1956,8 @@
         <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_wiping_single_nft</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
@@ -1772,6 +1971,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
@@ -1784,12 +1984,18 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">uris</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transction_for_adding_uris</span><span class="p">(</span>
-            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">uris</span><span class="o">=</span><span class="n">uris</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span><span class="p">,</span>
+            <span class="n">token_nonce</span><span class="o">=</span><span class="n">token_nonce</span><span class="p">,</span>
+            <span class="n">uris</span><span class="o">=</span><span class="n">uris</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
@@ -1797,6 +2003,7 @@
         <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>

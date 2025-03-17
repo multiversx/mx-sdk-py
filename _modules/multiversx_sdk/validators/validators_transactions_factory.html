@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.validators.validators_transactions_factory &mdash; multiversx-sdk 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.validators.validators_transactions_factory</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.validators.validators_transactions_factory</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.address_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddressValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.biguint_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">BigUIntValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.bytes_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ISingleValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.serializer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Serializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.small_int_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">U32Value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.builders.transaction_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.validators.validators_signers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidatorsSigners</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.validator_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidatorPublicKey</span>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ValidatorsTransactionsFactory</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_staking">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_staking">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_staking</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">validators_file</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">ValidatorsSigners</span><span class="p">],</span>
+        <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">rewards_address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">validators_file</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">validators_file</span> <span class="o">=</span> <span class="n">ValidatorsSigners</span><span class="o">.</span><span class="n">new_from_pem</span><span class="p">(</span><span class="n">validators_file</span><span class="p">)</span>
+
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_data_parts_for_staking</span><span class="p">(</span>
+            <span class="n">node_operator</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">validators_file</span><span class="o">=</span><span class="n">validators_file</span><span class="p">,</span>
+            <span class="n">rewards_address</span><span class="o">=</span><span class="n">rewards_address</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_staking</span> <span class="o">*</span> <span class="n">validators_file</span><span class="o">.</span><span class="n">get_num_of_nodes</span><span class="p">(),</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_data_parts_for_staking</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">node_operator</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">validators_file</span><span class="p">:</span> <span class="n">ValidatorsSigners</span><span class="p">,</span>
+        <span class="n">rewards_address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stake&quot;</span><span class="p">]</span>
+
+        <span class="n">num_of_nodes</span> <span class="o">=</span> <span class="n">validators_file</span><span class="o">.</span><span class="n">get_num_of_nodes</span><span class="p">()</span>
+
+        <span class="n">call_arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ISingleValue</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">call_arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">U32Value</span><span class="p">(</span><span class="n">num_of_nodes</span><span class="p">))</span>
+
+        <span class="n">validator_signers</span> <span class="o">=</span> <span class="n">validators_file</span><span class="o">.</span><span class="n">get_signers</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">validator</span> <span class="ow">in</span> <span class="n">validator_signers</span><span class="p">:</span>
+            <span class="n">signed_message</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">node_operator</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">())</span>
+
+            <span class="n">call_arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BytesValue</span><span class="p">(</span><span class="n">validator</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">generate_public_key</span><span class="p">()</span><span class="o">.</span><span class="n">buffer</span><span class="p">))</span>
+            <span class="n">call_arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BytesValue</span><span class="p">(</span><span class="n">signed_message</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">rewards_address</span><span class="p">:</span>
+            <span class="n">call_arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AddressValue</span><span class="o">.</span><span class="n">new_from_address</span><span class="p">(</span><span class="n">rewards_address</span><span class="p">))</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">(</span><span class="n">call_arguments</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data_parts</span> <span class="o">+</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_topping_up">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_topping_up">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_topping_up</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stake&quot;</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_topping_up</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unstaking">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unstaking">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unstaking</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStake&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unjailing">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unjailing">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unjailing</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
+        <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unJail&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unjailing</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unbonding">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unbonding">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unbonding</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBond&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_changing_rewards_address">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_changing_rewards_address">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_changing_rewards_address</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">rewards_address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;changeRewardAddress&quot;</span><span class="p">,</span> <span class="n">rewards_address</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_changing_rewards_address</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_claiming">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_claiming">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_claiming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;claim&quot;</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_claiming</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unstaking_nodes">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unstaking_nodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unstaking_nodes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStakeNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking_nodes</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unstaking_tokens">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unstaking_tokens">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unstaking_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStakeTokens&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking_tokens</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unbonding_nodes">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unbonding_nodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unbonding_nodes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBondNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding_nodes</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unbonding_tokens">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unbonding_tokens">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unbonding_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBondTokens&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding_tokens</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_cleaning_registered_data">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_cleaning_registered_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_cleaning_registered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cleanRegisteredData&quot;</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_cleaning_registered_data</span><span class="p">,</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_restaking_unstaked_nodes">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_restaking_unstaked_nodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_restaking_unstaked_nodes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reStakeUnStakedNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_restaking_unstaked_tokens</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

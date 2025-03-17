@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.native_auth package &mdash; multiversx-sdk 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=6efca38a"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="multiversx_sdk.network_providers package" href="multiversx_sdk.network_providers.html" />
+    <link rel="prev" title="multiversx_sdk.ledger package" href="multiversx_sdk.ledger.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">multiversx_sdk</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="multiversx_sdk.html">multiversx_sdk package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="multiversx_sdk.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.abi.html">multiversx_sdk.abi package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.account_management.html">multiversx_sdk.account_management package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.accounts.html">multiversx_sdk.accounts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.builders.html">multiversx_sdk.builders package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html">multiversx_sdk.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html">multiversx_sdk.delegation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.entrypoints.html">multiversx_sdk.entrypoints package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.ledger.html">multiversx_sdk.ledger package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">multiversx_sdk.native_auth package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html">multiversx_sdk.network_providers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html">multiversx_sdk.relayed package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.smart_contracts.html">multiversx_sdk.smart_contracts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.token_management.html">multiversx_sdk.token_management package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.transfers.html">multiversx_sdk.transfers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.validators.html">multiversx_sdk.validators package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.html">multiversx_sdk.wallet package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#module-multiversx_sdk">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">multiversx_sdk</a></li>
+          <li class="breadcrumb-item"><a href="multiversx_sdk.html">multiversx_sdk package</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.native_auth package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/multiversx_sdk.native_auth.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="multiversx-sdk-native-auth-package">
+<h1>multiversx_sdk.native_auth package<a class="headerlink" href="#multiversx-sdk-native-auth-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-multiversx_sdk.native_auth.config">
+<span id="multiversx-sdk-native-auth-config-module"></span><h2>multiversx_sdk.native_auth.config module<a class="headerlink" href="#module-multiversx_sdk.native_auth.config" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthCacheInterface">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.config.</span></span><span class="sig-name descname"><span class="pre">NativeAuthCacheInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/config.html#NativeAuthCacheInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthCacheInterface" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthCacheInterface.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/config.html#NativeAuthCacheInterface.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthCacheInterface.get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthCacheInterface.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ttl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/config.html#NativeAuthCacheInterface.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthCacheInterface.set" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthClientConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.config.</span></span><span class="sig-name descname"><span class="pre">NativeAuthClientConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'https://api.multiversx.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiry_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_hash_shard</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gateway_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_request_headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/config.html#NativeAuthClientConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthClientConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.config.</span></span><span class="sig-name descname"><span class="pre">NativeAuthServerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">api_url:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'https://api.multiversx.com',</span> <span class="pre">accepted_origins:</span> <span class="pre">list[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">validate_impersonate_url:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">validate_impersonate_callback:</span> <span class="pre">~typing.Callable[[str,</span> <span class="pre">str],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">is_origin_accepted:</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">max_expiry_seconds:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">86400,</span> <span class="pre">skip_legacy_validation:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">extra_request_headers:</span> <span class="pre">dict[str,</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">verify_signature:</span> <span class="pre">~typing.Callable[[str,</span> <span class="pre">str,</span> <span class="pre">bytes],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/config.html#NativeAuthServerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for Native Authentication.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>api_url: Optional API URL (default: <a class="reference external" href="https://api.multiversx.com">https://api.multiversx.com</a>).
+accepted_origins: Mandatory list of accepted origins (must have at least one value).
+validate_impersonate_url: Optional endpoint for validating impersonation.
+validate_impersonate_callback: Optional callback function to validate impersonation.
+is_origin_accepted: Optional callback to validate an origin dynamically.
+max_expiry_seconds: Maximum allowed TTL (default: 86400 seconds, one day).
+skip_legacy_validation: Determines whether legacy signature validation should be skipped.
+extra_request_headers: Optional extra request headers.
+verify_signature: Optional function to verify signatures.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.accepted_origins">
+<span class="sig-name descname"><span class="pre">accepted_origins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.accepted_origins" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.api_url">
+<span class="sig-name descname"><span class="pre">api_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://api.multiversx.com'</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.api_url" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.extra_request_headers">
+<span class="sig-name descname"><span class="pre">extra_request_headers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.extra_request_headers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.is_origin_accepted">
+<span class="sig-name descname"><span class="pre">is_origin_accepted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.is_origin_accepted" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.max_expiry_seconds">
+<span class="sig-name descname"><span class="pre">max_expiry_seconds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">86400</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.max_expiry_seconds" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.skip_legacy_validation">
+<span class="sig-name descname"><span class="pre">skip_legacy_validation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.skip_legacy_validation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.validate_impersonate_callback">
+<span class="sig-name descname"><span class="pre">validate_impersonate_callback</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.validate_impersonate_callback" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.validate_impersonate_url">
+<span class="sig-name descname"><span class="pre">validate_impersonate_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.validate_impersonate_url" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.config.NativeAuthServerConfig.verify_signature">
+<span class="sig-name descname"><span class="pre">verify_signature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig.verify_signature" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.native_auth.errors">
+<span id="multiversx-sdk-native-auth-errors-module"></span><h2>multiversx_sdk.native_auth.errors module<a class="headerlink" href="#module-multiversx_sdk.native_auth.errors" title="Link to this heading"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthClientError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthClientError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthClientError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthClientError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthInvalidBlockHashError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthInvalidBlockHashError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthInvalidBlockHashError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthInvalidBlockHashError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthInvalidConfigError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthInvalidConfigError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthInvalidConfigError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthInvalidConfigError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthInvalidImpersonateError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthInvalidImpersonateError</span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthInvalidImpersonateError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthInvalidImpersonateError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthInvalidSignatureError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthInvalidSignatureError</span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthInvalidSignatureError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthInvalidSignatureError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthInvalidTokenError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthInvalidTokenError</span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthInvalidTokenError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthInvalidTokenError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthInvalidTokenTtlError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthInvalidTokenTtlError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_ttl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_ttl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthInvalidTokenTtlError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthInvalidTokenTtlError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthInvalidWildcardOriginError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthInvalidWildcardOriginError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthInvalidWildcardOriginError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthInvalidWildcardOriginError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthOriginNotAcceptedError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthOriginNotAcceptedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthOriginNotAcceptedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthOriginNotAcceptedError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.errors.NativeAuthTokenExpiredError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.errors.</span></span><span class="sig-name descname"><span class="pre">NativeAuthTokenExpiredError</span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/errors.html#NativeAuthTokenExpiredError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.errors.NativeAuthTokenExpiredError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.native_auth.native_auth_client">
+<span id="multiversx-sdk-native-auth-native-auth-client-module"></span><h2>multiversx_sdk.native_auth.native_auth_client module<a class="headerlink" href="#module-multiversx_sdk.native_auth.native_auth_client" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_client.NativeAuthClient">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.native_auth_client.</span></span><span class="sig-name descname"><span class="pre">NativeAuthClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.native_auth.config.NativeAuthClientConfig" title="multiversx_sdk.native_auth.config.NativeAuthClientConfig"><span class="pre">NativeAuthClientConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_client.NativeAuthClient" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.get_current_block_hash">
+<span class="sig-name descname"><span class="pre">get_current_block_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.get_current_block_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.get_current_block_hash" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.get_token">
+<span class="sig-name descname"><span class="pre">get_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.get_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.get_token" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.get_token_for_signing">
+<span class="sig-name descname"><span class="pre">get_token_for_signing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.get_token_for_signing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.get_token_for_signing" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_client.NativeAuthClient.initialize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.native_auth.native_auth_server">
+<span id="multiversx-sdk-native-auth-native-auth-server-module"></span><h2>multiversx_sdk.native_auth.native_auth_server module<a class="headerlink" href="#module-multiversx_sdk.native_auth.native_auth_server" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_server.NativeAuthServer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.native_auth_server.</span></span><span class="sig-name descname"><span class="pre">NativeAuthServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig" title="multiversx_sdk.native_auth.config.NativeAuthServerConfig"><span class="pre">NativeAuthServerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.native_auth.config.NativeAuthCacheInterface" title="multiversx_sdk.native_auth.config.NativeAuthCacheInterface"><span class="pre">NativeAuthCacheInterface</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_server.NativeAuthServer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_server.NativeAuthServer.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded" title="multiversx_sdk.native_auth.resources.NativeAuthDecoded"><span class="pre">NativeAuthDecoded</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_server.NativeAuthServer.decode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_server.NativeAuthServer.is_valid">
+<span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_server.NativeAuthServer.is_valid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.native_auth_server.NativeAuthServer.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult" title="multiversx_sdk.native_auth.resources.NativeAuthValidateResult"><span class="pre">NativeAuthValidateResult</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.native_auth_server.NativeAuthServer.validate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.native_auth.resources">
+<span id="multiversx-sdk-native-auth-resources-module"></span><h2>multiversx_sdk.native_auth.resources module<a class="headerlink" href="#module-multiversx_sdk.native_auth.resources" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.resources.</span></span><span class="sig-name descname"><span class="pre">NativeAuthDecoded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ttl:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address:</span> <span class="pre">multiversx_sdk.core.address.Address</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature:</span> <span class="pre">bytes</span> <span class="pre">=</span> <span class="pre">b''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_hash:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_info:</span> <span class="pre">Any</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/resources.html#NativeAuthDecoded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded.address">
+<span class="sig-name descname"><span class="pre">address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded.address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded.block_hash">
+<span class="sig-name descname"><span class="pre">block_hash</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded.block_hash" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded.body">
+<span class="sig-name descname"><span class="pre">body</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded.body" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded.extra_info">
+<span class="sig-name descname"><span class="pre">extra_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded.extra_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded.origin">
+<span class="sig-name descname"><span class="pre">origin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded.origin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded.signature">
+<span class="sig-name descname"><span class="pre">signature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">b''</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded.signature" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthDecoded.ttl">
+<span class="sig-name descname"><span class="pre">ttl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded.ttl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthValidateResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.resources.</span></span><span class="sig-name descname"><span class="pre">NativeAuthValidateResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issued:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address:</span> <span class="pre">multiversx_sdk.core.address.Address</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signer_address:</span> <span class="pre">multiversx_sdk.core.address.Address</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_info:</span> <span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/resources.html#NativeAuthValidateResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthValidateResult.address">
+<span class="sig-name descname"><span class="pre">address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult.address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthValidateResult.expires">
+<span class="sig-name descname"><span class="pre">expires</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult.expires" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthValidateResult.extra_info">
+<span class="sig-name descname"><span class="pre">extra_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult.extra_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthValidateResult.issued">
+<span class="sig-name descname"><span class="pre">issued</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult.issued" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthValidateResult.origin">
+<span class="sig-name descname"><span class="pre">origin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult.origin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.NativeAuthValidateResult.signer_address">
+<span class="sig-name descname"><span class="pre">signer_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult.signer_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.WildcardOrigin">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.resources.</span></span><span class="sig-name descname"><span class="pre">WildcardOrigin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protocol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/resources.html#WildcardOrigin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.resources.WildcardOrigin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.WildcardOrigin.domain">
+<span class="sig-name descname"><span class="pre">domain</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.WildcardOrigin.domain" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.resources.WildcardOrigin.protocol">
+<span class="sig-name descname"><span class="pre">protocol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.resources.WildcardOrigin.protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.native_auth">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-multiversx_sdk.native_auth" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthClient">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.</span></span><span class="sig-name descname"><span class="pre">NativeAuthClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.native_auth.config.NativeAuthClientConfig" title="multiversx_sdk.native_auth.config.NativeAuthClientConfig"><span class="pre">NativeAuthClientConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthClient" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthClient.get_current_block_hash">
+<span class="sig-name descname"><span class="pre">get_current_block_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.get_current_block_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthClient.get_current_block_hash" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthClient.get_token">
+<span class="sig-name descname"><span class="pre">get_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.get_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthClient.get_token" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthClient.get_token_for_signing">
+<span class="sig-name descname"><span class="pre">get_token_for_signing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.get_token_for_signing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthClient.get_token_for_signing" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthClient.initialize">
+<span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extra_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_client.html#NativeAuthClient.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthClient.initialize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthClientConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.</span></span><span class="sig-name descname"><span class="pre">NativeAuthClientConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'https://api.multiversx.com'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiry_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_hash_shard</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gateway_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_request_headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/config.html#NativeAuthClientConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthClientConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.</span></span><span class="sig-name descname"><span class="pre">NativeAuthServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.native_auth.config.NativeAuthServerConfig" title="multiversx_sdk.native_auth.config.NativeAuthServerConfig"><span class="pre">NativeAuthServerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.native_auth.config.NativeAuthCacheInterface" title="multiversx_sdk.native_auth.config.NativeAuthCacheInterface"><span class="pre">NativeAuthCacheInterface</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServer.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.native_auth.resources.NativeAuthDecoded" title="multiversx_sdk.native_auth.resources.NativeAuthDecoded"><span class="pre">NativeAuthDecoded</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServer.decode" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServer.is_valid">
+<span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServer.is_valid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServer.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">access_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.native_auth.resources.NativeAuthValidateResult" title="multiversx_sdk.native_auth.resources.NativeAuthValidateResult"><span class="pre">NativeAuthValidateResult</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/native_auth_server.html#NativeAuthServer.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServer.validate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.native_auth.</span></span><span class="sig-name descname"><span class="pre">NativeAuthServerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">api_url:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'https://api.multiversx.com',</span> <span class="pre">accepted_origins:</span> <span class="pre">list[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">validate_impersonate_url:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">validate_impersonate_callback:</span> <span class="pre">~typing.Callable[[str,</span> <span class="pre">str],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">is_origin_accepted:</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">max_expiry_seconds:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">86400,</span> <span class="pre">skip_legacy_validation:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">extra_request_headers:</span> <span class="pre">dict[str,</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">verify_signature:</span> <span class="pre">~typing.Callable[[str,</span> <span class="pre">str,</span> <span class="pre">bytes],</span> <span class="pre">bool]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/native_auth/config.html#NativeAuthServerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for Native Authentication.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>api_url: Optional API URL (default: <a class="reference external" href="https://api.multiversx.com">https://api.multiversx.com</a>).
+accepted_origins: Mandatory list of accepted origins (must have at least one value).
+validate_impersonate_url: Optional endpoint for validating impersonation.
+validate_impersonate_callback: Optional callback function to validate impersonation.
+is_origin_accepted: Optional callback to validate an origin dynamically.
+max_expiry_seconds: Maximum allowed TTL (default: 86400 seconds, one day).
+skip_legacy_validation: Determines whether legacy signature validation should be skipped.
+extra_request_headers: Optional extra request headers.
+verify_signature: Optional function to verify signatures.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.accepted_origins">
+<span class="sig-name descname"><span class="pre">accepted_origins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.accepted_origins" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.api_url">
+<span class="sig-name descname"><span class="pre">api_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://api.multiversx.com'</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.api_url" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.extra_request_headers">
+<span class="sig-name descname"><span class="pre">extra_request_headers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.extra_request_headers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.is_origin_accepted">
+<span class="sig-name descname"><span class="pre">is_origin_accepted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.is_origin_accepted" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.max_expiry_seconds">
+<span class="sig-name descname"><span class="pre">max_expiry_seconds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">86400</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.max_expiry_seconds" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.skip_legacy_validation">
+<span class="sig-name descname"><span class="pre">skip_legacy_validation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.skip_legacy_validation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.validate_impersonate_callback">
+<span class="sig-name descname"><span class="pre">validate_impersonate_callback</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.validate_impersonate_callback" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.validate_impersonate_url">
+<span class="sig-name descname"><span class="pre">validate_impersonate_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.validate_impersonate_url" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.native_auth.NativeAuthServerConfig.verify_signature">
+<span class="sig-name descname"><span class="pre">verify_signature</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#multiversx_sdk.native_auth.NativeAuthServerConfig.verify_signature" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="multiversx_sdk.ledger.html" class="btn btn-neutral float-left" title="multiversx_sdk.ledger package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="multiversx_sdk.network_providers.html" class="btn btn-neutral float-right" title="multiversx_sdk.network_providers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
