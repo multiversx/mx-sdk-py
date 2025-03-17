@@ -1,3 +1,5 @@
+import logging
+
 from multiversx_sdk.core import Transaction
 from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.interfaces import IAccount
@@ -5,6 +7,8 @@ from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryC
 from multiversx_sdk.relayed.relayed_transactions_factory import (
     RelayedTransactionsFactory,
 )
+
+logger = logging.getLogger("relayed_controller")
 
 
 class RelayedController(BaseController):
@@ -14,6 +18,7 @@ class RelayedController(BaseController):
     """
 
     def __init__(self, chain_id: str) -> None:
+        logger.warning("RelayedController is deprecated. Please use Relayed Transactions V3 instead.")
         self.factory = RelayedTransactionsFactory(TransactionsFactoryConfig(chain_id))
 
     def create_relayed_v1_transaction(
@@ -26,6 +31,7 @@ class RelayedController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -46,6 +52,7 @@ class RelayedController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._add_extra_gas_limit_if_required(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

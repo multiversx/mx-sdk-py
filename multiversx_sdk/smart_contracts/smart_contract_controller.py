@@ -68,6 +68,7 @@ class SmartContractController(BaseController):
         is_readable: bool = True,
         is_payable: bool = False,
         is_payable_by_sc: bool = True,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -88,6 +89,7 @@ class SmartContractController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -112,6 +114,7 @@ class SmartContractController(BaseController):
         is_readable: bool = True,
         is_payable: bool = False,
         is_payable_by_sc: bool = True,
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -133,6 +136,7 @@ class SmartContractController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -147,6 +151,7 @@ class SmartContractController(BaseController):
         arguments: Sequence[Any] = [],
         native_transfer_amount: int = 0,
         token_transfers: list[TokenTransfer] = [],
+        gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
@@ -165,6 +170,7 @@ class SmartContractController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

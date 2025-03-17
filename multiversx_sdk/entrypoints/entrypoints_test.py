@@ -155,3 +155,21 @@ class TestEntrypoint:
 
         assert transaction.version == 2
         assert transaction.options == 1
+
+    def test_create_transfer_transaction_with_custom_gas_limit_and_gas_price(self):
+        controller = self.entrypoint.create_transfers_controller()
+        sender = Account.new_from_pem(self.alice_pem)
+        sender.nonce = 77777
+
+        transaction = controller.create_transaction_for_transfer(
+            sender=sender,
+            nonce=sender.get_nonce_then_increment(),
+            receiver=sender.address,
+            native_transfer_amount=0,
+            data="hello".encode(),
+            gas_limit=10_000_000,
+            gas_price=10_000_000_000_000,
+        )
+
+        assert transaction.gas_limit == 10_000_000
+        assert transaction.gas_price == 10_000_000_000_000

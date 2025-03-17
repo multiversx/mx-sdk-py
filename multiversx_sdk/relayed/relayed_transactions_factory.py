@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 from typing import Any
 
 from multiversx_sdk.abi import AddressValue, BigUIntValue, Serializer
@@ -7,6 +8,8 @@ from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.relayed.errors import InvalidInnerTransactionError
+
+logger = logging.getLogger("relayed_transactions_factory")
 
 
 class RelayedTransactionsFactory:
@@ -16,6 +19,7 @@ class RelayedTransactionsFactory:
     """
 
     def __init__(self, config: TransactionsFactoryConfig) -> None:
+        logger.warning("RelayedTransactionsFactory is deprecated. Please use Relayed Transactions V3 instead.")
         self._config = config
 
     def create_relayed_v1_transaction(self, inner_transaction: Transaction, relayer_address: Address) -> Transaction:
