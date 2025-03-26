@@ -27,6 +27,7 @@ from multiversx_sdk.entrypoints.config import (
 )
 from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
 from multiversx_sdk.network_providers import ApiNetworkProvider, ProxyNetworkProvider
+from multiversx_sdk.network_providers.interface import INetworkProvider
 from multiversx_sdk.relayed.relayed_controller import RelayedController
 from multiversx_sdk.relayed.relayed_transactions_factory import (
     RelayedTransactionsFactory,
@@ -52,7 +53,22 @@ from multiversx_sdk.wallet.user_verifer import UserVerifier
 
 
 class NetworkEntrypoint:
-    def __init__(self, network_provider_url: str, network_provider_kind: str, chain_id: str) -> None:
+    def __init__(
+        self,
+        network_provider_url: Optional[str] = None,
+        network_provider_kind: Optional[str] = None,
+        chain_id: Optional[str] = None,
+        network_provider: Optional[INetworkProvider] = None,
+    ) -> None:
+        self.chain_id = chain_id
+
+        if network_provider:
+            self.network_provider = network_provider
+            return
+
+        if not network_provider_url:
+            raise Exception("network provider url not provided")
+
         if network_provider_kind == "proxy":
             self.network_provider = ProxyNetworkProvider(network_provider_url)
         elif network_provider_kind == "api":
@@ -60,7 +76,14 @@ class NetworkEntrypoint:
         else:
             raise InvalidNetworkProviderKindError()
 
-        self.chain_id = chain_id
+    @classmethod
+    def new_from_network_provider(
+        cls, network_provider: INetworkProvider, chain_id: Optional[str] = None
+    ) -> "NetworkEntrypoint":
+        if chain_id is None:
+            chain_id = network_provider.get_network_config().chain_id
+
+        return cls(chain_id=chain_id, network_provider=network_provider)
 
     def create_account(self) -> Account:
         """Generates a new secret key and instantiates an account."""
@@ -118,45 +141,81 @@ class NetworkEntrypoint:
 
     def create_network_provider(
         self,
-    ) -> Union[ApiNetworkProvider, ProxyNetworkProvider]:
+    ) -> INetworkProvider:
         return self.network_provider
 
     def create_delegation_controller(self) -> DelegationController:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return DelegationController(self.chain_id, self.network_provider)
 
     def create_delegation_transactions_factory(self) -> DelegationTransactionsFactory:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return DelegationTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_account_controller(self) -> AccountController:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return AccountController(self.chain_id)
 
     def create_account_transactions_factory(self) -> AccountTransactionsFactory:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return AccountTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_relayed_controller(self) -> RelayedController:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return RelayedController(self.chain_id)
 
     def create_relayed_transactions_factory(self) -> RelayedTransactionsFactory:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return RelayedTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return SmartContractController(self.chain_id, self.network_provider, abi)
 
     def create_smart_contract_transactions_factory(self, abi: Optional[Abi] = None) -> SmartContractTransactionsFactory:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return SmartContractTransactionsFactory(config=TransactionsFactoryConfig(self.chain_id), abi=abi)
 
     def create_token_management_controller(self) -> TokenManagementController:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return TokenManagementController(self.chain_id, self.network_provider)
 
     def create_token_management_transactions_factory(
         self,
     ) -> TokenManagementTransactionsFactory:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return TokenManagementTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
     def create_transfers_controller(self) -> TransfersController:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return TransfersController(self.chain_id)
 
     def create_transfers_transactions_factory(self) -> TransferTransactionsFactory:
+        if not self.chain_id:
+            self.chain_id = self.network_provider.get_network_config().chain_id
+
         return TransferTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
 
 

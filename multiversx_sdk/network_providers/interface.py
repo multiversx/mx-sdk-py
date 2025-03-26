@@ -51,7 +51,7 @@ class INetworkProvider(Protocol):
     def get_transaction(self, transaction_hash: Union[bytes, str]) -> TransactionOnNetwork: ...
 
     def await_transaction_completed(
-        self, transaction_hash: Union[bytes, str], options: Optional[AwaitingOptions]
+        self, transaction_hash: Union[bytes, str], options: Optional[AwaitingOptions] = None
     ) -> TransactionOnNetwork: ...
 
     def await_transaction_on_condition(
