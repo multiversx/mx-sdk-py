@@ -52,7 +52,10 @@ from multiversx_sdk.network_providers.resources import (
     TokensCollectionMetadata,
     TransactionCostResponse,
 )
-from multiversx_sdk.network_providers.shared import convert_tx_hash_to_string
+from multiversx_sdk.network_providers.shared import (
+    convert_boolean_query_params_to_lowercase,
+    convert_tx_hash_to_string,
+)
 from multiversx_sdk.network_providers.transaction_awaiter import TransactionAwaiter
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.smart_contracts.smart_contract_query import (
@@ -264,6 +267,7 @@ class ApiNetworkProvider(INetworkProvider):
         url = f"{self.url}/{url}"
 
         if url_parameters is not None:
+            url_parameters = convert_boolean_query_params_to_lowercase(url_parameters)
             params = urllib.parse.urlencode(url_parameters)
             url = f"{url}?{params}"
 
@@ -275,6 +279,7 @@ class ApiNetworkProvider(INetworkProvider):
         url = f"{self.url}/{url}"
 
         if url_parameters is not None:
+            url_parameters = convert_boolean_query_params_to_lowercase(url_parameters)
             params = urllib.parse.urlencode(url_parameters)
             url = f"{url}?{params}"
 
