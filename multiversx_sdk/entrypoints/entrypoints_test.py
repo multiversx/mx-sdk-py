@@ -225,3 +225,10 @@ class TestEntrypoint:
         assert entrypoint.chain_id == "D"
         assert isinstance(entrypoint.network_provider, ApiNetworkProvider)
         assert entrypoint.network_provider.url == "https://devnet-api.multiversx.com"
+
+    def test_ensure_chain_id_is_correctly_fetched(self):
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        entrypoint = NetworkEntrypoint.new_from_network_provider(api)
+
+        delegation_controller = entrypoint.create_delegation_controller()
+        assert delegation_controller.factory.config.chain_id == "D"
