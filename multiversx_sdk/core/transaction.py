@@ -86,9 +86,12 @@ class Transaction:
         if relayer:
             relayer = Address.new_from_bech32(relayer)
 
+        value = dictionary.get("value", None)
+        value = int(value) if value is not None else None
+
         return Transaction(
             nonce=dictionary.get("nonce", None),
-            value=int(dictionary.get("value", None)),
+            value=value,
             receiver=Address.new_from_bech32(dictionary["receiver"]),
             receiver_username=_bytes_from_b64(dictionary.get("receiverUsername", "")).decode(),
             sender=Address.new_from_bech32(dictionary["sender"]),
