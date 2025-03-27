@@ -19,7 +19,7 @@ from multiversx_sdk.network_providers.constants import (
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
 )
 from multiversx_sdk.network_providers.errors import (
-    GenericError,
+    NetworkProviderError,
     TransactionFetchingError,
 )
 from multiversx_sdk.network_providers.http_resources import (
@@ -215,7 +215,7 @@ class ProxyNetworkProvider(INetworkProvider):
 
             except TimeoutError:
                 raise TimeoutError("Fetching transaction or process status timed out")
-            except GenericError as ge:
+            except NetworkProviderError as ge:
                 raise TransactionFetchingError(ge.url, ge.data)
 
         return transaction_from_proxy_response(transaction_hash, tx, process_status)
@@ -368,11 +368,11 @@ class ProxyNetworkProvider(INetworkProvider):
             return self._get_data(parsed, url)
         except requests.HTTPError as err:
             error_data = self._extract_error_from_response(err.response)
-            raise GenericError(url, error_data)
+            raise NetworkProviderError(url, error_data)
         except requests.ConnectionError as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
         except Exception as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
 
     def _do_post(self, url: str, payload: Any) -> GenericResponse:
         try:
@@ -382,18 +382,18 @@ class ProxyNetworkProvider(INetworkProvider):
             return self._get_data(parsed, url)
         except requests.HTTPError as err:
             error_data = self._extract_error_from_response(err.response)
-            raise GenericError(url, error_data)
+            raise NetworkProviderError(url, error_data)
         except requests.ConnectionError as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
         except Exception as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
 
     def _get_data(self, parsed: dict[str, Any], url: str) -> GenericResponse:
         err = parsed.get("error")
         code = parsed.get("code")
 
         if err:
-            raise GenericError(url, f"code:{code}, error: {err}")
+            raise NetworkProviderError(url, f"code:{code}, error: {err}")
 
         data: dict[str, Any] = parsed.get("data", dict())
         return GenericResponse(data)

@@ -19,7 +19,7 @@ from multiversx_sdk.network_providers.constants import (
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
 )
 from multiversx_sdk.network_providers.errors import (
-    GenericError,
+    NetworkProviderError,
     TransactionFetchingError,
 )
 from multiversx_sdk.network_providers.http_resources import (
@@ -173,7 +173,7 @@ class ApiNetworkProvider(INetworkProvider):
         transaction_hash = convert_tx_hash_to_string(transaction_hash)
         try:
             response = self.do_get_generic(f"transactions/{transaction_hash}")
-        except GenericError as ge:
+        except NetworkProviderError as ge:
             raise TransactionFetchingError(ge.url, ge.data)
         return transaction_from_api_response(transaction_hash, response)
 
@@ -294,11 +294,11 @@ class ApiNetworkProvider(INetworkProvider):
             return self._get_data(parsed, url)
         except requests.HTTPError as err:
             error_data = self._extract_error_from_response(err.response)
-            raise GenericError(url, error_data)
+            raise NetworkProviderError(url, error_data)
         except requests.ConnectionError as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
         except Exception as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
 
     def _do_post(self, url: str, payload: Any) -> dict[str, Any]:
         try:
@@ -308,11 +308,11 @@ class ApiNetworkProvider(INetworkProvider):
             return cast(dict[str, Any], self._get_data(parsed, url))
         except requests.HTTPError as err:
             error_data = self._extract_error_from_response(err.response)
-            raise GenericError(url, error_data)
+            raise NetworkProviderError(url, error_data)
         except requests.ConnectionError as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
         except Exception as err:
-            raise GenericError(url, err)
+            raise NetworkProviderError(url, err)
 
     def _get_data(self, parsed: Any, url: str) -> Any:
         if isinstance(parsed, list):
@@ -321,7 +321,7 @@ class ApiNetworkProvider(INetworkProvider):
             err = parsed.get("error", None)
             if err:
                 code = parsed.get("statusCode")
-                raise GenericError(url, f"code:{code}, error: {err}")
+                raise NetworkProviderError(url, f"code:{code}, error: {err}")
             else:
                 return parsed
 
