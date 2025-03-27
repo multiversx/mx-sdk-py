@@ -420,11 +420,11 @@ class TestApi:
         assert guarded is False
 
     def test_do_get_generic_with_bool_value(self):
-        query_params = {"withScResults": True}
-        result = self.api.do_get_generic("transactions", query_params)
+        query_params = {"isSmartContract": True}
+        accounts = self.api.do_get_generic("accounts", query_params)
 
-        sc_results = result[0]["results"]
-        assert len(sc_results)
+        owner = accounts[0]["ownerAddress"]
+        assert owner
 
     def test_user_agent(self):
         # using the previoulsy instantiated provider without user agent
