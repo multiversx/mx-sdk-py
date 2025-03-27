@@ -419,6 +419,13 @@ class TestApi:
         guarded = bool(account.raw["isGuarded"])
         assert guarded is False
 
+    def test_do_get_generic_with_bool_value(self):
+        query_params = {"isSmartContract": True}
+        accounts = self.api.do_get_generic("accounts", query_params)
+
+        owner = accounts[0]["ownerAddress"]
+        assert owner
+
     def test_user_agent(self):
         # using the previoulsy instantiated provider without user agent
         response = requests.get(self.api.url + "/network/config", **self.api.config.requests_options)

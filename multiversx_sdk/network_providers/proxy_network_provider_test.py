@@ -397,6 +397,13 @@ class TestProxy:
         assert len(miniblocks)
         assert len(miniblocks[0].get("transactions", []))
 
+    def test_do_get_generic_with_bool_value(self):
+        query_params = {"withTxs": True}
+        block = self.proxy.do_get_generic("block/1/by-nonce/8106727", query_params).to_dictionary().get("block", {})
+
+        miniblocks = block.get("miniBlocks", [])
+        assert miniblocks[0]["transactions"]
+
     def test_user_agent(self):
         # using the previoulsy instantiated provider without user agent
         response = requests.get(self.proxy.url + "/network/config", **self.proxy.config.requests_options)
