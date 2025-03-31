@@ -230,5 +230,5 @@ class TestEntrypoint:
         api = ApiNetworkProvider("https://devnet-api.multiversx.com")
         entrypoint = NetworkEntrypoint.new_from_network_provider(api)
 
-        delegation_controller = entrypoint.create_delegation_controller()
-        assert delegation_controller.factory.config.chain_id == "D"
+        _ = entrypoint.create_delegation_controller()
+        assert entrypoint.chain_id == "D"
