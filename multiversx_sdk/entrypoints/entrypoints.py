@@ -142,60 +142,49 @@ class NetworkEntrypoint:
         return self.network_provider
 
     def create_delegation_controller(self) -> DelegationController:
-        self.chain_id = self._get_chain_id()
-        return DelegationController(self.chain_id, self.network_provider)
+        return DelegationController(self._get_chain_id(), self.network_provider)
 
     def create_delegation_transactions_factory(self) -> DelegationTransactionsFactory:
-        self.chain_id = self._get_chain_id()
-        return DelegationTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+        return DelegationTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
     def create_account_controller(self) -> AccountController:
-        self.chain_id = self._get_chain_id()
-        return AccountController(self.chain_id)
+        return AccountController(self._get_chain_id())
 
     def create_account_transactions_factory(self) -> AccountTransactionsFactory:
-        self.chain_id = self._get_chain_id()
-        return AccountTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+        return AccountTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
     def create_relayed_controller(self) -> RelayedController:
-        self.chain_id = self._get_chain_id()
-        return RelayedController(self.chain_id)
+        return RelayedController(self._get_chain_id())
 
     def create_relayed_transactions_factory(self) -> RelayedTransactionsFactory:
-        self.chain_id = self._get_chain_id()
-        return RelayedTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+        return RelayedTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
     def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
-        self.chain_id = self._get_chain_id()
-        return SmartContractController(self.chain_id, self.network_provider, abi)
+        return SmartContractController(self._get_chain_id(), self.network_provider, abi)
 
     def create_smart_contract_transactions_factory(self, abi: Optional[Abi] = None) -> SmartContractTransactionsFactory:
-        self.chain_id = self._get_chain_id()
-        return SmartContractTransactionsFactory(config=TransactionsFactoryConfig(self.chain_id), abi=abi)
+        return SmartContractTransactionsFactory(config=TransactionsFactoryConfig(self._get_chain_id()), abi=abi)
 
     def create_token_management_controller(self) -> TokenManagementController:
-        self.chain_id = self._get_chain_id()
-        return TokenManagementController(self.chain_id, self.network_provider)
+        return TokenManagementController(self._get_chain_id(), self.network_provider)
 
     def create_token_management_transactions_factory(
         self,
     ) -> TokenManagementTransactionsFactory:
-        self.chain_id = self._get_chain_id()
-        return TokenManagementTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+        return TokenManagementTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
     def create_transfers_controller(self) -> TransfersController:
-        self.chain_id = self._get_chain_id()
-        return TransfersController(self.chain_id)
+        return TransfersController(self._get_chain_id())
 
     def create_transfers_transactions_factory(self) -> TransferTransactionsFactory:
-        self.chain_id = self._get_chain_id()
-        return TransferTransactionsFactory(TransactionsFactoryConfig(self.chain_id))
+        return TransferTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
     def _get_chain_id(self) -> str:
         if self.chain_id:
             return self.chain_id
 
-        return self.network_provider.get_network_config().chain_id
+        self.chain_id = self.network_provider.get_network_config().chain_id
+        return self.chain_id
 
 
 class TestnetEntrypoint(NetworkEntrypoint):
