@@ -216,7 +216,7 @@ class TestEntrypoint:
 
         api = ApiNetworkProvider("https://devnet-api.multiversx.com")
         entrypoint = NetworkEntrypoint.new_from_network_provider(api)
-        assert entrypoint.chain_id == "D"
+        assert entrypoint.chain_id is None
         assert isinstance(entrypoint.network_provider, ApiNetworkProvider)
         assert entrypoint.network_provider.url == "https://devnet-api.multiversx.com"
 
