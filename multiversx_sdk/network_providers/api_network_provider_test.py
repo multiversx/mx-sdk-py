@@ -427,8 +427,15 @@ class TestApi:
         assert owner
 
     def test_user_agent(self):
-        # using the previoulsy instantiated provider without user agent
-        response = requests.get(self.api.url + "/network/config", **self.api.config.requests_options)
+        # using config without user agent
+        config = NetworkProviderConfig()
+
+        # remove unwanted keys, similar to the ApiNetworkProvider
+        config.requests_options.pop("retries")
+        config.requests_options.pop("backoff_factor")
+        config.requests_options.pop("status_forcelist")
+
+        response = requests.get(self.api.url + "/network/config", **config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/api/unknown"
 
@@ -436,6 +443,11 @@ class TestApi:
         config = NetworkProviderConfig(client_name="test-client")
         api = ApiNetworkProvider(url="https://devnet-api.multiversx.com", config=config)
 
-        response = requests.get(api.url + "/network/config", **api.config.requests_options)
+        # remove unwanted keys, similar to the ApiNetworkProvider
+        config.requests_options.pop("retries")
+        config.requests_options.pop("backoff_factor")
+        config.requests_options.pop("status_forcelist")
+
+        response = requests.get(api.url + "/network/config", **config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"

@@ -1,9 +1,12 @@
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from copy import deepcopy
 from threading import Thread
 from typing import Any, Callable, Optional, Union
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.config import LibraryConfig
@@ -362,7 +365,19 @@ class ProxyNetworkProvider(INetworkProvider):
 
     def _do_get(self, url: str) -> GenericResponse:
         try:
-            response = requests.get(url, **self.config.requests_options)
+            retry_strategy = Retry(
+                total=self.config.requests_options.get("retries"),
+                backoff_factor=self.config.requests_options.get("backoff_factor", 0),
+                status_forcelist=self.config.requests_options.get("status_forcelist"),
+            )
+
+            adapter = HTTPAdapter(max_retries=retry_strategy)
+
+            with requests.Session() as session:
+                session.mount("https://", adapter)
+                request_options = self._remove_unneeded_options_for_request()
+                response = session.get(url, **request_options)
+
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
@@ -374,9 +389,17 @@ class ProxyNetworkProvider(INetworkProvider):
         except Exception as err:
             raise NetworkProviderError(url, err)
 
+    def _remove_unneeded_options_for_request(self) -> dict[str, Any]:
+        config = deepcopy(self.config.requests_options)
+        config.pop("retries")
+        config.pop("backoff_factor")
+        config.pop("status_forcelist")
+        return config
+
     def _do_post(self, url: str, payload: Any) -> GenericResponse:
         try:
-            response = requests.post(url, json=payload, **self.config.requests_options)
+            request_options = self._remove_unneeded_options_for_request()
+            response = requests.post(url, json=payload, **request_options)
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
