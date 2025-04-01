@@ -1,5 +1,4 @@
 import urllib.parse
-from copy import deepcopy
 from typing import Any, Callable, Optional, Union, cast
 
 import requests
@@ -292,17 +291,17 @@ class ApiNetworkProvider(INetworkProvider):
     def _do_get(self, url: str) -> Any:
         try:
             retry_strategy = Retry(
-                total=self.config.requests_options.get("retries"),
-                backoff_factor=self.config.requests_options.get("backoff_factor", 0),
-                status_forcelist=self.config.requests_options.get("status_forcelist"),
+                total=self.config.requests_retry_options.retries,
+                backoff_factor=self.config.requests_retry_options.backoff_factor,
+                status_forcelist=self.config.requests_retry_options.status_forecelist,
             )
 
             adapter = HTTPAdapter(max_retries=retry_strategy)
 
             with requests.Session() as session:
                 session.mount("https://", adapter)
-                request_options = self._remove_unneeded_options_for_request()
-                response = session.get(url, **request_options)
+                session.mount("http://", adapter)
+                response = session.get(url, **self.config.requests_options)
 
             response.raise_for_status()
             parsed = response.json()
@@ -315,17 +314,9 @@ class ApiNetworkProvider(INetworkProvider):
         except Exception as err:
             raise NetworkProviderError(url, err)
 
-    def _remove_unneeded_options_for_request(self) -> dict[str, Any]:
-        config = deepcopy(self.config.requests_options)
-        config.pop("retries")
-        config.pop("backoff_factor")
-        config.pop("status_forcelist")
-        return config
-
     def _do_post(self, url: str, payload: Any) -> dict[str, Any]:
         try:
-            request_options = self._remove_unneeded_options_for_request()
-            response = requests.post(url, json=payload, **request_options)
+            response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()
             parsed = response.json()
             return cast(dict[str, Any], self._get_data(parsed, url))

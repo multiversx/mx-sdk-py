@@ -409,10 +409,6 @@ class TestProxy:
     def test_user_agent(self):
         # using config without user agent
         config = NetworkProviderConfig()
-        # remove unwanted keys, similar to the ProxyNetworkProvider
-        config.requests_options.pop("retries")
-        config.requests_options.pop("backoff_factor")
-        config.requests_options.pop("status_forcelist")
 
         # create the user agent (mimic ProxyNetworkProvider's constructor)
         extend_user_agent(f"{BASE_USER_AGENT}/proxy", config)
@@ -424,11 +420,6 @@ class TestProxy:
         # using the new instantiated provider with user agent
         config = NetworkProviderConfig(client_name="test-client")
         proxy = ProxyNetworkProvider(url="https://devnet-gateway.multiversx.com", config=config)
-
-        # remove unwanted keys, similar to the ProxyNetworkProvider
-        config.requests_options.pop("retries")
-        config.requests_options.pop("backoff_factor")
-        config.requests_options.pop("status_forcelist")
 
         response = requests.get(proxy.url + "/network/config", **config.requests_options)
         headers = response.request.headers

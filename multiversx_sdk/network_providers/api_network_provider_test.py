@@ -431,10 +431,6 @@ class TestApi:
     def test_user_agent(self):
         # using config without user agent
         config = NetworkProviderConfig()
-        # remove unwanted keys, similar to the ApiNetworkProvider
-        config.requests_options.pop("retries")
-        config.requests_options.pop("backoff_factor")
-        config.requests_options.pop("status_forcelist")
 
         # create the user agent (mimic ApiNetworkProvider's constructor)
         extend_user_agent(f"{BASE_USER_AGENT}/api", config)
@@ -446,11 +442,6 @@ class TestApi:
         # using the new instantiated provider with user agent
         config = NetworkProviderConfig(client_name="test-client")
         api = ApiNetworkProvider(url="https://devnet-api.multiversx.com", config=config)
-
-        # remove unwanted keys, similar to the ApiNetworkProvider
-        config.requests_options.pop("retries")
-        config.requests_options.pop("backoff_factor")
-        config.requests_options.pop("status_forcelist")
 
         response = requests.get(api.url + "/network/config", **config.requests_options)
         headers = response.request.headers
