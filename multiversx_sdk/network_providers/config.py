@@ -1,4 +1,10 @@
 from dataclasses import dataclass, field
+from http.client import (
+    BAD_GATEWAY,
+    GATEWAY_TIMEOUT,
+    INTERNAL_SERVER_ERROR,
+    SERVICE_UNAVAILABLE,
+)
 from typing import Any, Optional
 
 
@@ -6,7 +12,14 @@ from typing import Any, Optional
 class RequestsRetryOptions:
     retries: int = 3
     backoff_factor: float = 0.05
-    status_forecelist: list[int] = field(default_factory=lambda: [500, 502, 503, 504])
+    status_forecelist: list[int] = field(
+        default_factory=lambda: [
+            INTERNAL_SERVER_ERROR,
+            BAD_GATEWAY,
+            SERVICE_UNAVAILABLE,
+            GATEWAY_TIMEOUT,
+        ]
+    )
 
 
 class NetworkProviderConfig:
