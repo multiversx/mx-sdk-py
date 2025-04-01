@@ -6,7 +6,10 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.accounts import Account
 from multiversx_sdk.accounts.ledger_account import LedgerAccount
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.entrypoints.entrypoints import DevnetEntrypoint
+from multiversx_sdk.entrypoints.entrypoints import DevnetEntrypoint, NetworkEntrypoint
+from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
+from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
+from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
 
 testutils = Path(__file__).parent.parent / "testutils"
 
@@ -173,3 +176,59 @@ class TestEntrypoint:
 
         assert transaction.gas_limit == 10_000_000
         assert transaction.gas_price == 10_000_000_000_000
+
+    def test_initialize_entrypoint(self):
+        entrypoint = NetworkEntrypoint(
+            network_provider_url="https://devnet-api.multiversx.com",
+            network_provider_kind="api",
+            chain_id="D",
+        )
+        assert entrypoint.chain_id == "D"
+        assert isinstance(entrypoint.network_provider, ApiNetworkProvider)
+        assert entrypoint.network_provider.url == "https://devnet-api.multiversx.com"
+
+        entrypoint = NetworkEntrypoint(
+            network_provider_url="https://devnet-gateway.multiversx.com",
+            network_provider_kind="proxy",
+            chain_id="D",
+        )
+        assert entrypoint.chain_id == "D"
+        assert isinstance(entrypoint.network_provider, ProxyNetworkProvider)
+        assert entrypoint.network_provider.url == "https://devnet-gateway.multiversx.com"
+
+        with pytest.raises(InvalidNetworkProviderKindError):
+            entrypoint = NetworkEntrypoint(
+                network_provider_url="https://devnet-gateway.multiversx.com",
+                network_provider_kind="test",
+            )
+
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        entrypoint = NetworkEntrypoint(network_provider=api)
+        assert entrypoint.chain_id is None
+        assert isinstance(entrypoint.network_provider, ApiNetworkProvider)
+        assert entrypoint.network_provider.url == "https://devnet-api.multiversx.com"
+
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        entrypoint = NetworkEntrypoint(network_provider=api, chain_id="D")
+        assert entrypoint.chain_id == "D"
+        assert isinstance(entrypoint.network_provider, ApiNetworkProvider)
+        assert entrypoint.network_provider.url == "https://devnet-api.multiversx.com"
+
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        entrypoint = NetworkEntrypoint.new_from_network_provider(api)
+        assert entrypoint.chain_id is None
+        assert isinstance(entrypoint.network_provider, ApiNetworkProvider)
+        assert entrypoint.network_provider.url == "https://devnet-api.multiversx.com"
+
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        entrypoint = NetworkEntrypoint.new_from_network_provider(network_provider=api, chain_id="D")
+        assert entrypoint.chain_id == "D"
+        assert isinstance(entrypoint.network_provider, ApiNetworkProvider)
+        assert entrypoint.network_provider.url == "https://devnet-api.multiversx.com"
+
+    def test_ensure_chain_id_is_correctly_fetched(self):
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        entrypoint = NetworkEntrypoint.new_from_network_provider(api)
+
+        _ = entrypoint.create_delegation_controller()
+        assert entrypoint.chain_id == "D"
