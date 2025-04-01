@@ -11,8 +11,10 @@ from multiversx_sdk.core import (
 )
 from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.http_resources import account_from_api_response
 from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
+from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.smart_contracts.smart_contract_query import SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
 
@@ -429,11 +431,13 @@ class TestApi:
     def test_user_agent(self):
         # using config without user agent
         config = NetworkProviderConfig()
-
         # remove unwanted keys, similar to the ApiNetworkProvider
         config.requests_options.pop("retries")
         config.requests_options.pop("backoff_factor")
         config.requests_options.pop("status_forcelist")
+
+        # create the user agent (mimic ApiNetworkProvider's constructor)
+        extend_user_agent(f"{BASE_USER_AGENT}/api", config)
 
         response = requests.get(self.api.url + "/network/config", **config.requests_options)
         headers = response.request.headers

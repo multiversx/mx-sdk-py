@@ -10,9 +10,11 @@ from multiversx_sdk.core import (
     TransactionStatus,
 )
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.http_resources import block_from_response
 from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
 from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
+from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.smart_contracts.smart_contract_query import SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
 
@@ -407,11 +409,13 @@ class TestProxy:
     def test_user_agent(self):
         # using config without user agent
         config = NetworkProviderConfig()
-
         # remove unwanted keys, similar to the ProxyNetworkProvider
         config.requests_options.pop("retries")
         config.requests_options.pop("backoff_factor")
         config.requests_options.pop("status_forcelist")
+
+        # create the user agent (mimic ProxyNetworkProvider's constructor)
+        extend_user_agent(f"{BASE_USER_AGENT}/proxy", config)
 
         response = requests.get(self.proxy.url + "/network/config", **config.requests_options)
         headers = response.request.headers
