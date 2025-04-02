@@ -63,6 +63,7 @@ from multiversx_sdk.network_providers import (
     NetworkProviderError,
     NetworkStatus,
     ProxyNetworkProvider,
+    RequestsRetryOptions,
     TokenAmountOnNetwork,
     TokensCollectionMetadata,
     TransactionAwaiter,
@@ -251,4 +252,5 @@ __all__ = [
     "ValidatorsTransactionsFactory",
     "ValidatorsController",
     "ValidatorsSigners",
+    "RequestsRetryOptions",
 ]

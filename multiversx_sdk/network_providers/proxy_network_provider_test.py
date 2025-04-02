@@ -10,9 +10,11 @@ from multiversx_sdk.core import (
     TransactionStatus,
 )
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
+from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.http_resources import block_from_response
 from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
 from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
+from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.smart_contracts.smart_contract_query import SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
 
@@ -405,8 +407,13 @@ class TestProxy:
         assert miniblocks[0]["transactions"]
 
     def test_user_agent(self):
-        # using the previoulsy instantiated provider without user agent
-        response = requests.get(self.proxy.url + "/network/config", **self.proxy.config.requests_options)
+        # using config without user agent
+        config = NetworkProviderConfig()
+
+        # create the user agent (mimic ProxyNetworkProvider's constructor)
+        extend_user_agent(f"{BASE_USER_AGENT}/proxy", config)
+
+        response = requests.get(self.proxy.url + "/network/config", **config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/unknown"
 
@@ -414,6 +421,6 @@ class TestProxy:
         config = NetworkProviderConfig(client_name="test-client")
         proxy = ProxyNetworkProvider(url="https://devnet-gateway.multiversx.com", config=config)
 
-        response = requests.get(proxy.url + "/network/config", **proxy.config.requests_options)
+        response = requests.get(proxy.url + "/network/config", **config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/test-client"

@@ -4,6 +4,8 @@ from threading import Thread
 from typing import Any, Callable, Optional, Union
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.config import LibraryConfig
@@ -362,7 +364,19 @@ class ProxyNetworkProvider(INetworkProvider):
 
     def _do_get(self, url: str) -> GenericResponse:
         try:
-            response = requests.get(url, **self.config.requests_options)
+            retry_strategy = Retry(
+                total=self.config.requests_retry_options.retries,
+                backoff_factor=self.config.requests_retry_options.backoff_factor,
+                status_forcelist=self.config.requests_retry_options.status_forecelist,
+            )
+
+            adapter = HTTPAdapter(max_retries=retry_strategy)
+
+            with requests.Session() as session:
+                session.mount("https://", adapter)
+                session.mount("http://", adapter)
+                response = session.get(url, **self.config.requests_options)
+
             response.raise_for_status()
             parsed = response.json()
             return self._get_data(parsed, url)
