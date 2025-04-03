@@ -10,8 +10,8 @@ from multiversx_sdk.delegation.delegation_transactions_outcome_parser_types impo
     ClaimRewardsOutcome,
     CreateNewDelegationContractOutcome,
     DelegateOutcome,
-    ReDelegateRewardsOutcome,
-    UnDelegateOutcome,
+    RedelegateRewardsOutcome,
+    UndelegateOutcome,
 )
 
 
@@ -39,15 +39,15 @@ class DelegationTransactionsOutcomeParser:
         events = find_events_by_identifier(transaction, "delegate")
         return [DelegateOutcome(self._extract_amount(event)) for event in events]
 
-    def parse_undelegate(self, transaction: TransactionOnNetwork) -> list[UnDelegateOutcome]:
+    def parse_undelegate(self, transaction: TransactionOnNetwork) -> list[UndelegateOutcome]:
         self._ensure_no_error(transaction.logs.events)
 
         events = find_events_by_identifier(transaction, "unDelegate")
-        return [UnDelegateOutcome(self._extract_amount(event)) for event in events]
+        return [UndelegateOutcome(self._extract_amount(event)) for event in events]
 
-    def parse_redelegate_rewards(self, transaction: TransactionOnNetwork) -> list[ReDelegateRewardsOutcome]:
+    def parse_redelegate_rewards(self, transaction: TransactionOnNetwork) -> list[RedelegateRewardsOutcome]:
         outcome = self.parse_delegate(transaction)
-        return [ReDelegateRewardsOutcome(item.amount) for item in outcome]
+        return [RedelegateRewardsOutcome(item.amount) for item in outcome]
 
     def _ensure_no_error(self, transaction_events: list[TransactionEvent]) -> None:
         for event in transaction_events:

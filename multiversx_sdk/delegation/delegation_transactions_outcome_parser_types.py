@@ -19,10 +19,10 @@ class DelegateOutcome:
 
 
 @dataclass
-class ReDelegateRewardsOutcome:
+class RedelegateRewardsOutcome:
     amount: int
 
 
 @dataclass
-class UnDelegateOutcome:
+class UndelegateOutcome:
     amount: int
