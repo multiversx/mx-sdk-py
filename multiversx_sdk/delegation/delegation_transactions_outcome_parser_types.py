@@ -6,3 +6,23 @@ from multiversx_sdk.core.address import Address
 @dataclass
 class CreateNewDelegationContractOutcome:
     contract_address: Address
+
+
+@dataclass
+class ClaimRewardsOutcome:
+    amount: int
+
+
+@dataclass
+class DelegateOutcome:
+    amount: int
+
+
+@dataclass
+class ReDelegateRewardsOutcome:
+    amount: int
+
+
+@dataclass
+class UnDelegateOutcome:
+    amount: int
