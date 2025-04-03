@@ -32,7 +32,7 @@ class UserPEM:
 
         for entry in entries:
             secret_key = UserSecretKey(entry.message[0:USER_SEED_LENGTH])
-            item = UserPEM(entry.label, secret_key)
+            item = cls(entry.label, secret_key)
             result_items.append(item)
 
         return result_items

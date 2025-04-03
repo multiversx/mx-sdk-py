@@ -28,7 +28,7 @@ class PemEntry:
             message_bytes = bytes.fromhex(message_hex)
             label = labels[index]
 
-            result.append(PemEntry(label, message_bytes))
+            result.append(cls(label, message_bytes))
 
         return result
 

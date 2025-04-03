@@ -42,7 +42,7 @@ class Address:
         Creates an empty address object.
         Generally speaking, this should not be used by client code **(internal use only)**.
         """
-        return Address(b"", "")
+        return cls(b"", "")
 
     def is_empty(self) -> bool:
         return len(self.pubkey) == 0
@@ -59,7 +59,7 @@ class Address:
     @classmethod
     def from_bech32(cls, value: str) -> "Address":
         """The `from_bech32()` method is deprecated. Please use `new_from_bech32()` instead"""
-        return Address.new_from_bech32(value)
+        return cls.new_from_bech32(value)
 
     @classmethod
     def new_from_hex(cls, value: str, hrp: Optional[str] = None) -> "Address":
@@ -74,7 +74,7 @@ class Address:
     @classmethod
     def from_hex(cls, value: str, hrp: str) -> "Address":
         """The `from_hex()` method is deprecated. Please use `new_from_hex()` instead"""
-        return Address.new_from_hex(value, hrp)
+        return cls.new_from_hex(value, hrp)
 
     def to_hex(self) -> str:
         """Returns the hex representation of the address (pubkey)"""
