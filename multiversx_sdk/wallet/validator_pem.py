@@ -30,7 +30,7 @@ class ValidatorPEM:
 
         for entry in entries:
             secret_key = ValidatorSecretKey(entry.message)
-            item = ValidatorPEM(entry.label, secret_key)
+            item = cls(entry.label, secret_key)
             result_items.append(item)
 
         return result_items

@@ -21,12 +21,12 @@ class UserSecretKey:
     def generate(cls) -> "UserSecretKey":
         signing_key = nacl.signing.SigningKey.generate()
         secret_key = bytes(signing_key)
-        return UserSecretKey(secret_key)
+        return cls(secret_key)
 
     @classmethod
     def new_from_string(cls, buffer_hex: str) -> "UserSecretKey":
         buffer = bytes.fromhex(buffer_hex)
-        return UserSecretKey(buffer)
+        return cls(buffer)
 
     def generate_public_key(self) -> "UserPublicKey":
         public_key = bytes(nacl.signing.SigningKey(self.buffer).verify_key)

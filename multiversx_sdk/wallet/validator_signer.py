@@ -16,7 +16,7 @@ class ValidatorSigner:
     @classmethod
     def from_pem_file(cls, path: Path, index: int = 0) -> "ValidatorSigner":
         secret_key = ValidatorPEM.from_file(path, index).secret_key
-        return ValidatorSigner(secret_key)
+        return cls(secret_key)
 
     def sign(self, data: bytes) -> bytes:
         try:
