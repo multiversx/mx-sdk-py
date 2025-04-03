@@ -1,11 +1,12 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from multiversx_sdk.core import Address, Token, TransactionStatus
 from multiversx_sdk.network_providers.constants import (
     DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
-    DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS)
+    DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS,
+)
 
 
 class GenericResponse:
@@ -15,7 +16,7 @@ class GenericResponse:
     def get(self, key: str, default: Any = None) -> Any:
         return self.__dict__.get(key, default)
 
-    def to_dictionary(self) -> Dict[str, Any]:
+    def to_dictionary(self) -> dict[str, Any]:
         return self.__dict__
 
 
@@ -110,6 +111,7 @@ class TokenAmountOnNetwork:
     raw: dict[str, Any]
     token: Token
     amount: int
+    attributes: bytes
     block_coordinates: Optional[BlockCoordinates] = None
 
 
@@ -139,10 +141,3 @@ class AwaitingOptions:
     polling_interval_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS
     timeout_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS
     patience_in_milliseconds: int = DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS
-
-
-@dataclass
-class GetBlockArguments:
-    shard: Optional[int] = None
-    block_nonce: Optional[int] = None
-    block_hash: Optional[bytes] = None

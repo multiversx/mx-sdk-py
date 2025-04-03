@@ -5,25 +5,40 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction import Transaction
-from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
-                                                        TransactionEvent,
-                                                        TransactionLogs,
-                                                        TransactionOnNetwork)
+from multiversx_sdk.core.transaction_on_network import (
+    SmartContractResult,
+    TransactionEvent,
+    TransactionLogs,
+    TransactionOnNetwork,
+)
 from multiversx_sdk.core.transaction_status import TransactionStatus
 from multiversx_sdk.network_providers.resources import (
-    AccountOnNetwork, AccountStorage, AccountStorageEntry, BlockCoordinates,
-    BlockOnNetwork, FungibleTokenMetadata, NetworkConfig, NetworkStatus,
-    TokenAmountOnNetwork, TokensCollectionMetadata, TransactionCostResponse)
+    AccountOnNetwork,
+    AccountStorage,
+    AccountStorageEntry,
+    BlockCoordinates,
+    BlockOnNetwork,
+    FungibleTokenMetadata,
+    NetworkConfig,
+    NetworkStatus,
+    TokenAmountOnNetwork,
+    TokensCollectionMetadata,
+    TransactionCostResponse,
+)
 from multiversx_sdk.smart_contracts.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
+    SmartContractQuery,
+    SmartContractQueryResponse,
+)
 
 
-def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[str, Any]:
+def smart_contract_query_to_vm_query_request(
+    query: SmartContractQuery,
+) -> dict[str, Any]:
     request: dict[str, Any] = {
         "scAddress": query.contract.to_bech32(),
         "funcName": query.function,
         "value": str(query.value if query.value else 0),
-        "args": [arg.hex() for arg in query.arguments]
+        "args": [arg.hex() for arg in query.arguments],
     }
 
     if query.caller:
@@ -33,8 +48,8 @@ def smart_contract_query_to_vm_query_request(query: SmartContractQuery) -> dict[
 
 
 def vm_query_response_to_smart_contract_query_response(
-        raw_response: dict[str, Any],
-        function: str) -> SmartContractQueryResponse:
+    raw_response: dict[str, Any], function: str
+) -> SmartContractQueryResponse:
     return_data = raw_response.get("returnData", []) or raw_response.get("ReturnData", [])
     return_code = raw_response.get("returnCode", "") or raw_response.get("ReturnCode", "")
     return_message = raw_response.get("returnMessage", "") or raw_response.get("ReturnMessage", "")
@@ -43,7 +58,7 @@ def vm_query_response_to_smart_contract_query_response(
         function=function,
         return_code=return_code,
         return_message=return_message,
-        return_data_parts=[base64.b64decode(item) for item in return_data]
+        return_data_parts=[base64.b64decode(item) for item in return_data],
     )
 
 
@@ -96,12 +111,14 @@ def transaction_from_api_response(tx_hash: str, response: dict[str, Any]) -> Tra
         signature=signature,
         status=status,
         smart_contract_results=smart_contract_results,
-        logs=logs
+        logs=logs,
     )
 
 
 def transaction_from_proxy_response(
-    tx_hash: str, response: dict[str, Any], process_status: Optional[TransactionStatus] = None
+    tx_hash: str,
+    response: dict[str, Any],
+    process_status: Optional[TransactionStatus] = None,
 ) -> "TransactionOnNetwork":
     sender = Address.new_from_bech32(response.get("sender", ""))
     receiver = Address.new_from_bech32(response.get("receiver", ""))
@@ -154,7 +171,7 @@ def transaction_from_proxy_response(
         signature=signature,
         status=status,
         smart_contract_results=smart_contract_results,
-        logs=logs
+        logs=logs,
     )
 
 
@@ -164,10 +181,7 @@ def transaction_logs_from_response(raw_response: dict[str, Any]) -> TransactionL
     events = raw_response.get("events", [])
     events = [transaction_events_from_response(event) for event in events]
 
-    return TransactionLogs(
-        address=address,
-        events=events
-    )
+    return TransactionLogs(address=address, events=events)
 
 
 def _convert_bech32_to_address(address: str) -> Address:
@@ -196,8 +210,9 @@ def transaction_events_from_response(raw_response: dict[str, Any]) -> Transactio
         data = b""
 
     additional_data = raw_response.get("additionalData", None)
-    additional_data = [base64.b64decode(data.encode())
-                       for data in additional_data] if additional_data is not None else []
+    additional_data = (
+        [base64.b64decode(data.encode()) for data in additional_data] if additional_data is not None else []
+    )
 
     if len(additional_data) == 0:
         if raw_data:
@@ -209,7 +224,7 @@ def transaction_events_from_response(raw_response: dict[str, Any]) -> Transactio
         identifier=identifier,
         topics=topics,
         data=data,
-        additional_data=additional_data
+        additional_data=additional_data,
     )
 
 
@@ -246,7 +261,7 @@ def transaction_from_simulate_response(original_tx: Transaction, raw_response: d
         signature=original_tx.signature,
         status=status,
         smart_contract_results=sc_results,
-        logs=TransactionLogs(address=Address.empty(), events=[])
+        logs=TransactionLogs(address=Address.empty(), events=[]),
     )
 
 
@@ -258,13 +273,7 @@ def smart_contract_result_from_api_response(raw_response: dict[str, Any]) -> Sma
     data = raw_response.get("data", "")
     data = base64.b64decode(data.encode())
 
-    return SmartContractResult(
-        raw=raw_response,
-        sender=sender,
-        receiver=receiver,
-        data=data,
-        logs=logs
-    )
+    return SmartContractResult(raw=raw_response, sender=sender, receiver=receiver, data=data, logs=logs)
 
 
 def smart_contract_result_from_proxy_response(raw_response: dict[str, Any]) -> SmartContractResult:
@@ -273,13 +282,7 @@ def smart_contract_result_from_proxy_response(raw_response: dict[str, Any]) -> S
     logs = transaction_logs_from_response(raw_response.get("logs", {}))
     data = raw_response.get("data", "").encode()
 
-    return SmartContractResult(
-        raw=raw_response,
-        sender=sender,
-        receiver=receiver,
-        data=data,
-        logs=logs
-    )
+    return SmartContractResult(raw=raw_response, sender=sender, receiver=receiver, data=data, logs=logs)
 
 
 def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
@@ -305,7 +308,7 @@ def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
         num_shards=num_shards,
         round_duration=round_duration,
         num_rounds_per_epoch=rounds_per_epoch,
-        genesis_timestamp=genesis_timestamp
+        genesis_timestamp=genesis_timestamp,
     )
 
 
@@ -322,7 +325,7 @@ def network_status_from_response(raw_response: dict[str, Any]) -> NetworkStatus:
         block_nonce=block_nonce,
         highest_final_block_nonce=highest_final_nonce,
         current_round=current_round,
-        current_epoch=currernt_epoch
+        current_epoch=currernt_epoch,
     )
 
 
@@ -343,7 +346,7 @@ def block_from_response(raw_response: dict[str, Any]) -> BlockOnNetwork:
         previous_hash=bytes.fromhex(previous_hash),
         timestamp=timestamp,
         round=round,
-        epoch=epoch
+        epoch=epoch,
     )
 
 
@@ -395,7 +398,7 @@ def account_from_proxy_response(raw_response: dict[str, Any]) -> AccountOnNetwor
         is_contract_readable=is_readable,
         is_contract_payable=is_payable,
         is_contract_payable_by_contract=is_payable_by_sc,
-        block_coordinates=block_coordinates
+        block_coordinates=block_coordinates,
     )
 
 
@@ -454,38 +457,27 @@ def account_storage_from_response(raw_response: dict[str, Any]) -> AccountStorag
         entries.append(
             AccountStorageEntry(
                 raw={key: value},
-                key=decoded_key.decode(),
-                value=decoded_value
+                key=decoded_key.decode(errors="ignore"),
+                value=decoded_value,
             )
         )
 
-    return AccountStorage(
-        raw=raw_response,
-        entries=entries,
-        block_coordinates=block_coordinates
-    )
+    return AccountStorage(raw=raw_response, entries=entries, block_coordinates=block_coordinates)
 
 
 def account_storage_entry_from_response(raw_response: dict[str, Any], key: str) -> AccountStorageEntry:
     value = raw_response.get("value", "")
-    return AccountStorageEntry(
-        raw=raw_response,
-        key=key,
-        value=bytes.fromhex(value)
-    )
+    return AccountStorageEntry(raw=raw_response, key=key, value=bytes.fromhex(value))
 
 
 def transaction_cost_estimation_from_response(raw_response: dict[str, Any]) -> TransactionCostResponse:
     cost = raw_response.get("txGasUnits", 0)
-    return TransactionCostResponse(
-        raw=raw_response,
-        gas_limit=cost,
-        status=TransactionStatus("")
-    )
+    return TransactionCostResponse(raw=raw_response, gas_limit=cost, status=TransactionStatus(""))
 
 
-def transactions_from_send_multiple_response(raw_response: dict[str, Any],
-                                             initial_txs_sent: int) -> tuple[int, list[bytes]]:
+def transactions_from_send_multiple_response(
+    raw_response: dict[str, Any], initial_txs_sent: int
+) -> tuple[int, list[bytes]]:
     num_sent = raw_response.get("numOfSentTxs", 0)
     tx_hashes: dict[str, Any] = raw_response.get("txsHashes", {})
 
@@ -505,27 +497,24 @@ def token_amount_on_network_from_proxy_response(raw_response: dict[str, Any]) ->
     balance = int(token_data.get("balance", "0"))
     nonce = token_data.get("nonce", 0)
     token = Token(identifier, nonce)
+    attributes = base64.b64decode(token_data.get("attributes", ""))
 
     return TokenAmountOnNetwork(
         raw=raw_response,
         token=token,
         amount=balance,
-        block_coordinates=block_coordinates
+        attributes=attributes,
+        block_coordinates=block_coordinates,
     )
 
 
 def token_amount_from_api_response(raw_response: dict[str, Any]) -> TokenAmountOnNetwork:
     identifier = raw_response.get("identifier", "")
     nonce = raw_response.get("nonce", 0)
+    amount = int(raw_response.get("balance", 0))
+    attributes = base64.b64decode(raw_response.get("attributes", ""))
 
-    # nfts don't have the balance field, thus in case it's nft we set the balance to 1
-    amount = int(raw_response.get("balance", 1))
-
-    return TokenAmountOnNetwork(
-        raw=raw_response,
-        token=Token(identifier, nonce),
-        amount=amount
-    )
+    return TokenAmountOnNetwork(raw=raw_response, token=Token(identifier, nonce), amount=amount, attributes=attributes)
 
 
 def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[TokenAmountOnNetwork]:
@@ -539,13 +528,15 @@ def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[Toke
         balance = int(token_data.get("balance", "0"))
         nonce = token_data.get("nonce", 0)
         token = Token(identifier, nonce)
+        attributes = base64.b64decode(token_data.get("attributes", ""))
 
         result.append(
             TokenAmountOnNetwork(
                 raw={item: token_data},
                 token=token,
                 amount=balance,
-                block_coordinates=block_coordinates
+                attributes=attributes,
+                block_coordinates=block_coordinates,
             )
         )
 
@@ -553,9 +544,8 @@ def token_amounts_from_proxy_response(raw_response: dict[str, Any]) -> list[Toke
 
 
 def definition_of_fungible_token_from_query_response(
-        raw_response: list[bytes],
-        identifier: str,
-        address_hrp: str) -> FungibleTokenMetadata:
+    raw_response: list[bytes], identifier: str, address_hrp: str
+) -> FungibleTokenMetadata:
     token_name, _, owner, _, _, *properties_buffers = raw_response
     properties = _parse_token_properties(properties_buffers)
 
@@ -570,7 +560,7 @@ def definition_of_fungible_token_from_query_response(
         name=name,
         ticker=ticker,
         owner=owner.to_bech32(),
-        decimals=decimals
+        decimals=decimals,
     )
 
 
@@ -587,14 +577,13 @@ def definition_of_fungible_token_from_api_response(raw_response: dict[str, Any])
         name=name,
         ticker=ticker,
         owner=owner,
-        decimals=decimals
+        decimals=decimals,
     )
 
 
 def definition_of_tokens_collection_from_query_response(
-        raw_response: list[bytes],
-        identifier: str,
-        address_hrp: str) -> TokensCollectionMetadata:
+    raw_response: list[bytes], identifier: str, address_hrp: str
+) -> TokensCollectionMetadata:
     token_name, token_type, owner, _, _, *properties_buffers = raw_response
     properties = _parse_token_properties(properties_buffers)
 
@@ -612,7 +601,7 @@ def definition_of_tokens_collection_from_query_response(
         name=name,
         ticker=ticker,
         owner=owner.to_bech32(),
-        decimals=decimals
+        decimals=decimals,
     )
 
 
@@ -631,7 +620,7 @@ def definition_of_tokens_collection_from_api_response(raw_response: dict[str, An
         name=name,
         ticker=ticker,
         owner=owner,
-        decimals=decimals
+        decimals=decimals,
     )
 
 
@@ -667,5 +656,5 @@ def _get_block_coordinates_from_raw_response(raw_response: dict[str, Any]) -> Bl
     return BlockCoordinates(
         nonce=block_nonce,
         hash=bytes.fromhex(block_hash),
-        root_hash=bytes.fromhex(block_root_hash)
+        root_hash=bytes.fromhex(block_root_hash),
     )

@@ -76,8 +76,7 @@ def find_events_by_first_topic(transaction: TransactionOnNetwork, topic: str) ->
 
 
 def find_events_by_predicate(
-        transaction: TransactionOnNetwork,
-        predicate: Callable[[TransactionEvent], bool]
+    transaction: TransactionOnNetwork, predicate: Callable[[TransactionEvent], bool]
 ) -> list[TransactionEvent]:
     events = gather_all_events(transaction)
     return list(filter(predicate, events))

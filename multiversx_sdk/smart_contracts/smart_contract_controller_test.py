@@ -9,12 +9,14 @@ from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS_HEX
-from multiversx_sdk.network_providers.api_network_provider import \
-    ApiNetworkProvider
-from multiversx_sdk.smart_contracts.smart_contract_controller import \
-    SmartContractController
+from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
+from multiversx_sdk.smart_contracts.smart_contract_controller import (
+    SmartContractController,
+)
 from multiversx_sdk.smart_contracts.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
+    SmartContractQuery,
+    SmartContractQueryResponse,
+)
 from multiversx_sdk.testutils.mock_network_provider import MockNetworkProvider
 
 
@@ -34,7 +36,7 @@ class TestSmartContractQueriesController:
             nonce=self.alice.get_nonce_then_increment(),
             bytecode=self.bytecode,
             gas_limit=gas_limit,
-            arguments=[BigUIntValue(1)]
+            arguments=[BigUIntValue(1)],
         )
 
         assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
@@ -55,7 +57,7 @@ class TestSmartContractQueriesController:
             contract=contract,
             function=function,
             gas_limit=gas_limit,
-            arguments=[U32Value(7)]
+            arguments=[U32Value(7)],
         )
 
         assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
@@ -75,7 +77,7 @@ class TestSmartContractQueriesController:
             contract=contract_address,
             bytecode=self.bytecode,
             gas_limit=gas_limit,
-            arguments=[BigUIntValue(0)]
+            arguments=[BigUIntValue(0)],
         )
 
         assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
@@ -89,11 +91,7 @@ class TestSmartContractQueriesController:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getSum"
 
-        query = controller.create_query(
-            contract=contract,
-            function=function,
-            arguments=[]
-        )
+        query = controller.create_query(contract=contract, function=function, arguments=[])
 
         assert query.contract == contract
         assert query.function == function
@@ -109,12 +107,12 @@ class TestSmartContractQueriesController:
         query = controller.create_query(
             contract=contract,
             function=function,
-            arguments=[U64Value(7), StringValue("abba")]
+            arguments=[U64Value(7), StringValue("abba")],
         )
 
         assert query.contract == contract
         assert query.function == function
-        assert query.arguments == [b'\x07', b"abba"]
+        assert query.arguments == [b"\x07", b"abba"]
         assert query.caller is None
         assert query.value is None
 
@@ -124,16 +122,10 @@ class TestSmartContractQueriesController:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getLotteryInfo"
 
-        query = controller.create_query(
-            contract=contract,
-            function=function,
-            arguments=["myLottery"]
-        )
+        query = controller.create_query(contract=contract, function=function, arguments=["myLottery"])
 
         query_with_typed = controller.create_query(
-            contract=contract,
-            function=function,
-            arguments=[StringValue("myLottery")]
+            contract=contract, function=function, arguments=[StringValue("myLottery")]
         )
 
         assert query.contract == contract
@@ -152,7 +144,7 @@ class TestSmartContractQueriesController:
             function="bar",
             return_code="ok",
             return_message="",
-            return_data_parts=["abba".encode()]
+            return_data_parts=["abba".encode()],
         )
 
         network_provider.mock_query_contract_on_function("bar", contract_query_response)
@@ -160,7 +152,7 @@ class TestSmartContractQueriesController:
         query = SmartContractQuery(
             contract=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqvc7gdl0p4s97guh498wgz75k8sav6sjfjlwqh679jy"),
             function="bar",
-            arguments=[]
+            arguments=[],
         )
 
         response = controller.run_query(query)
@@ -174,7 +166,7 @@ class TestSmartContractQueriesController:
             function="bar",
             return_code="ok",
             return_message="ok",
-            return_data_parts=["abba".encode()]
+            return_data_parts=["abba".encode()],
         )
 
         parsed = controller.parse_query_response(response)
@@ -188,16 +180,19 @@ class TestSmartContractQueriesController:
             function="getLotteryInfo",
             return_code="ok",
             return_message="ok",
-            return_data_parts=[bytes.fromhex(
-                "0000000b6c75636b792d746f6b656e000000010100000000000000005fc2b9dbffffffff00000001640000000a140ec80fa7ee88000000")]
+            return_data_parts=[
+                bytes.fromhex(
+                    "0000000b6c75636b792d746f6b656e000000010100000000000000005fc2b9dbffffffff00000001640000000a140ec80fa7ee88000000"
+                )
+            ],
         )
 
         [lottery_info] = controller.parse_query_response(response)
         assert lottery_info.token_identifier == "lucky-token"
         assert lottery_info.ticket_price == 1
         assert lottery_info.tickets_left == 0
-        assert lottery_info.deadline == 0x000000005fc2b9db
-        assert lottery_info.max_entries_per_user == 0xffffffff
+        assert lottery_info.deadline == 0x000000005FC2B9DB
+        assert lottery_info.max_entries_per_user == 0xFFFFFFFF
         assert lottery_info.prize_distribution == bytes([0x64])
         assert lottery_info.prize_pool == 94720000000000000000000
 
@@ -208,16 +203,12 @@ class TestSmartContractQueriesController:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getSum"
 
-        query = controller.create_query(
-            contract=contract,
-            function=function,
-            arguments=[]
-        )
+        query = controller.create_query(contract=contract, function=function, arguments=[])
 
         query_response = controller.run_query(query)
         assert query_response.return_code == "ok"
         assert query_response.return_message == ""
-        assert query_response.return_data_parts == [b'\x05']
+        assert query_response.return_data_parts == [b"\x05"]
 
     @pytest.mark.networkInteraction
     def test_query_on_network(self):
@@ -226,10 +217,6 @@ class TestSmartContractQueriesController:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsnwuj85zv7t0wnxfetyqqyjvvg444lpk7uasxv8ktx")
         function = "getSum"
 
-        return_data_parts = controller.query(
-            contract=contract,
-            function=function,
-            arguments=[]
-        )
+        return_data_parts = controller.query(contract=contract, function=function, arguments=[])
 
-        assert return_data_parts == [b'\x05']
+        assert return_data_parts == [b"\x05"]

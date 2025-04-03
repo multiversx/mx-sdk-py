@@ -1,7 +1,9 @@
 from multiversx_sdk.core.address import Address
-from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
-                                                        TransactionLogs,
-                                                        TransactionOnNetwork)
+from multiversx_sdk.core.transaction_on_network import (
+    SmartContractResult,
+    TransactionLogs,
+    TransactionOnNetwork,
+)
 from multiversx_sdk.core.transaction_status import TransactionStatus
 
 
@@ -33,7 +35,7 @@ def get_empty_transaction_on_network() -> TransactionOnNetwork:
         signature=b"",
         status=TransactionStatus(""),
         smart_contract_results=[get_empty_smart_contract_result()],
-        logs=get_empty_transaction_logs()
+        logs=get_empty_transaction_logs(),
     )
 
 
@@ -47,7 +49,7 @@ def get_empty_smart_contract_result() -> SmartContractResult:
         sender=Address.empty(),
         receiver=Address.empty(),
         data=b"",
-        logs=get_empty_transaction_logs()
+        logs=get_empty_transaction_logs(),
     )
 
 

@@ -6,29 +6,31 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.network_providers.constants import (
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_ACCOUNT_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
-    DEFAULT_ACCOUNT_AWAITING_TIMEOUT_IN_MILLISECONDS)
-from multiversx_sdk.network_providers.errors import \
-    ExpectedAccountConditionNotReachedError
+    DEFAULT_ACCOUNT_AWAITING_TIMEOUT_IN_MILLISECONDS,
+    ONE_SECOND_IN_MILLISECONDS,
+)
+from multiversx_sdk.network_providers.errors import (
+    ExpectedAccountConditionNotReachedError,
+)
 from multiversx_sdk.network_providers.resources import AccountOnNetwork
-
-ONE_SECOND_IN_MILLISECONDS = 1000
 
 logger = logging.getLogger("account_awaiter")
 
 
 class IAccountFetcher(Protocol):
-    def get_account(self, address: Address) -> AccountOnNetwork:
-        ...
+    def get_account(self, address: Address) -> AccountOnNetwork: ...
 
 
 class AccountAwaiter:
     """AccountAwaiter allows one to await until a specific event occurs on a given address."""
 
-    def __init__(self,
-                 fetcher: IAccountFetcher,
-                 polling_interval_in_milliseconds: Optional[int] = None,
-                 timeout_interval_in_milliseconds: Optional[int] = None,
-                 patience_time_in_milliseconds: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        fetcher: IAccountFetcher,
+        polling_interval_in_milliseconds: Optional[int] = None,
+        timeout_interval_in_milliseconds: Optional[int] = None,
+        patience_time_in_milliseconds: Optional[int] = None,
+    ) -> None:
         """
         Args:
             fetcher (IAccountFetcher): Used to fetch the account of the network.
@@ -55,19 +57,22 @@ class AccountAwaiter:
 
     def await_on_condition(self, address: Address, condition: Callable[[AccountOnNetwork], bool]) -> AccountOnNetwork:
         """Waits until the condition is satisfied."""
+
         def do_fetch():
             return self.fetcher.get_account(address)
 
         return self._await_conditionally(
             is_satisfied=condition,
             do_fetch=do_fetch,
-            error=ExpectedAccountConditionNotReachedError()
+            error=ExpectedAccountConditionNotReachedError(),
         )
 
-    def _await_conditionally(self,
-                             is_satisfied: Callable[[AccountOnNetwork], bool],
-                             do_fetch: Callable[[], AccountOnNetwork],
-                             error: Exception) -> AccountOnNetwork:
+    def _await_conditionally(
+        self,
+        is_satisfied: Callable[[AccountOnNetwork], bool],
+        do_fetch: Callable[[], AccountOnNetwork],
+        error: Exception,
+    ) -> AccountOnNetwork:
         is_condition_satisfied = False
         fetched_data: Union[AccountOnNetwork, None] = None
         max_number_of_retries = self.timeout_interval_in_milliseconds // self.polling_interval_in_milliseconds

@@ -2,15 +2,18 @@ import json
 from base64 import b64encode
 from collections import OrderedDict
 from hashlib import blake2b
-from typing import Any, Dict
+from typing import Any
 
 from Cryptodome.Hash import keccak
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import (
-    BECH32_ADDRESS_LENGTH, DIGEST_SIZE,
+    DIGEST_SIZE,
+    HEX_ADDRESS_LENGTH,
     MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS,
-    TRANSACTION_OPTIONS_TX_GUARDED, TRANSACTION_OPTIONS_TX_HASH_SIGN)
+    TRANSACTION_OPTIONS_TX_GUARDED,
+    TRANSACTION_OPTIONS_TX_HASH_SIGN,
+)
 from multiversx_sdk.core.errors import BadUsageError, NotEnoughGasError
 from multiversx_sdk.core.interfaces import INetworkConfig
 from multiversx_sdk.core.proto.transaction_serializer import ProtoSerializer
@@ -22,6 +25,7 @@ class TransactionComputer:
         pass
 
     def compute_transaction_fee(self, transaction: Transaction, network_config: INetworkConfig) -> int:
+        """`TransactionsFactoryConfig` can be used here as the `network_config`."""
         move_balance_gas = network_config.min_gas_limit + len(transaction.data) * network_config.gas_per_data_byte
         if move_balance_gas > transaction.gas_limit:
             raise NotEnoughGasError(transaction.gas_limit)
@@ -36,12 +40,26 @@ class TransactionComputer:
 
         return int(fee_for_move + processing_fee)
 
-    def compute_bytes_for_signing(self, transaction: Transaction) -> bytes:
+    def compute_bytes_for_signing(self, transaction: Transaction, ignore_options: bool = False) -> bytes:
+        """If `ignore_options == False`, the method computes the bytes for signing based on the `version` and `options` of the transaction.
+        If the least significant bit of the `options` is set, will serialize transaction for hash signing.
+
+        If `ignore_options == True`, the transaction is simply serialized."""
         self._ensure_fields(transaction)
 
         dictionary = self._to_dictionary(transaction)
         serialized = self._dict_to_json(dictionary)
-        return serialized
+
+        if ignore_options:
+            return serialized
+
+        if not self.has_options_set_for_hash_signing(transaction):
+            return serialized
+
+        if not transaction.version >= MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
+            raise Exception("The transaction version you have set does not allow `options`.")
+
+        return keccak.new(digest_bits=256).update(serialized).digest()
 
     def compute_bytes_for_verifying(self, transaction: Transaction) -> bytes:
         is_signed_by_hash = self.has_options_set_for_hash_signing(transaction)
@@ -52,7 +70,16 @@ class TransactionComputer:
         return self.compute_bytes_for_signing(transaction)
 
     def compute_hash_for_signing(self, transaction: Transaction) -> bytes:
-        return keccak.new(digest_bits=256).update(self.compute_bytes_for_signing(transaction)).digest()
+        self._ensure_fields(transaction)
+
+        if not self.has_options_set_for_hash_signing(transaction):
+            raise Exception(
+                "`options` property is not set for hash signing. Please set the least signinficant bit of the `options` property to `1`."
+            )
+
+        dictionary = self._to_dictionary(transaction)
+        serialized = self._dict_to_json(dictionary)
+        return keccak.new(digest_bits=256).update(serialized).digest()
 
     def compute_transaction_hash(self, transaction: Transaction) -> bytes:
         proto = ProtoSerializer()
@@ -80,27 +107,31 @@ class TransactionComputer:
         transaction.options = transaction.options | TRANSACTION_OPTIONS_TX_HASH_SIGN
 
     def is_relayed_v3_transaction(self, transaction: Transaction) -> bool:
-        if transaction.relayer:
+        if transaction.relayer and not transaction.relayer.is_empty():
             return True
         return False
 
     def _ensure_fields(self, transaction: Transaction) -> None:
-        if len(transaction.sender.to_bech32()) != BECH32_ADDRESS_LENGTH:
+        if len(transaction.sender.to_hex()) != HEX_ADDRESS_LENGTH:
             raise BadUsageError("Invalid `sender` field. Should be the bech32 address of the sender.")
 
-        if len(transaction.receiver.to_bech32()) != BECH32_ADDRESS_LENGTH:
+        if len(transaction.receiver.to_hex()) != HEX_ADDRESS_LENGTH:
             raise BadUsageError("Invalid `receiver` field. Should be the bech32 address of the receiver.")
 
         if not len(transaction.chain_id):
             raise BadUsageError("The `chainID` field is not set")
 
         if transaction.version < MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS:
-            if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(transaction):
-                raise BadUsageError(f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}")
+            if self.has_options_set_for_guarded_transaction(transaction) or self.has_options_set_for_hash_signing(
+                transaction
+            ):
+                raise BadUsageError(
+                    f"Non-empty transaction options requires transaction version >= {MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS}"
+                )
 
-    def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> Dict[str, Any]:
+    def _to_dictionary(self, transaction: Transaction, with_signature: bool = False) -> dict[str, Any]:
         """Only used when serializing transaction for signing. Internal use only."""
-        dictionary: Dict[str, Any] = OrderedDict()
+        dictionary: dict[str, Any] = OrderedDict()
         dictionary["nonce"] = transaction.nonce
         dictionary["value"] = str(transaction.value)
 
@@ -139,5 +170,5 @@ class TransactionComputer:
 
         return dictionary
 
-    def _dict_to_json(self, dictionary: Dict[str, Any]) -> bytes:
-        return json.dumps(dictionary, separators=(',', ':')).encode("utf-8")
+    def _dict_to_json(self, dictionary: dict[str, Any]) -> bytes:
+        return json.dumps(dictionary, separators=(",", ":")).encode("utf-8")

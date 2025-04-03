@@ -1,8 +1,15 @@
-from multiversx_sdk.entrypoints.entrypoints import (DevnetEntrypoint,
-                                                    MainnetEntrypoint,
-                                                    NetworkEntrypoint,
-                                                    TestnetEntrypoint)
+from multiversx_sdk.entrypoints.entrypoints import (
+    DevnetEntrypoint,
+    LocalnetEntrypoint,
+    MainnetEntrypoint,
+    NetworkEntrypoint,
+    TestnetEntrypoint,
+)
 
 __all__ = [
-    "DevnetEntrypoint", "MainnetEntrypoint", "NetworkEntrypoint", "TestnetEntrypoint"
+    "DevnetEntrypoint",
+    "MainnetEntrypoint",
+    "NetworkEntrypoint",
+    "TestnetEntrypoint",
+    "LocalnetEntrypoint",
 ]

@@ -1,12 +1,12 @@
 import io
-from typing import Any, List
+from typing import Any
 
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.shared import convert_native_value_to_list
 
 
 class TupleValue:
-    def __init__(self, fields: List[ISingleValue]) -> None:
+    def __init__(self, fields: list[ISingleValue]) -> None:
         self.fields = fields
 
     def encode_nested(self, writer: io.BytesIO):
@@ -34,7 +34,9 @@ class TupleValue:
         native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
         if ok:
             if len(self.fields) != len(native_list):
-                raise ValueError(f"the number of fields ({len(self.fields)}) does not match the number of provided native values ({len(native_list)})")
+                raise ValueError(
+                    f"the number of fields ({len(self.fields)}) does not match the number of provided native values ({len(native_list)})"
+                )
 
             for i, field in enumerate(self.fields):
                 field.set_payload(native_list[i])

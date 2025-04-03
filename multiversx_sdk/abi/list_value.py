@@ -1,15 +1,20 @@
 import io
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, Optional
 
 from multiversx_sdk.abi.interface import ISingleValue
-from multiversx_sdk.abi.shared import (convert_native_value_to_list,
-                                       decode_length, encode_length)
+from multiversx_sdk.abi.shared import (
+    convert_native_value_to_list,
+    decode_length,
+    encode_length,
+)
 
 
 class ListValue:
-    def __init__(self,
-                 items: Optional[List[ISingleValue]] = None,
-                 item_creator: Optional[Callable[[], ISingleValue]] = None) -> None:
+    def __init__(
+        self,
+        items: Optional[list[ISingleValue]] = None,
+        item_creator: Optional[Callable[[], ISingleValue]] = None,
+    ) -> None:
         self.items = items or []
         self.item_creator = item_creator
 
@@ -63,11 +68,7 @@ class ListValue:
         return [item.get_payload() for item in self.items]
 
     def __eq__(self, other: Any) -> bool:
-        return (
-            isinstance(other, ListValue)
-            and self.items == other.items
-            and self.item_creator == other.item_creator
-        )
+        return isinstance(other, ListValue) and self.items == other.items and self.item_creator == other.item_creator
 
     def __iter__(self) -> Any:
         return iter(self.items)

@@ -1,12 +1,8 @@
-from typing import Any, Dict
+from typing import Any
 
 
 class KeyDerivationParams:
-    def __init__(self,
-                 n: int,
-                 r: int,
-                 p: int,
-                 dklen: int):
+    def __init__(self, n: int, r: int, p: int, dklen: int):
         # numIterations
         self.n = n
         # memFactor
@@ -17,16 +13,18 @@ class KeyDerivationParams:
 
 
 class EncryptedData:
-    def __init__(self,
-                 id: str,
-                 version: int,
-                 cipher: str,
-                 ciphertext: str,
-                 iv: str,
-                 kdf: str,
-                 kdfparams: KeyDerivationParams,
-                 salt: str,
-                 mac: str):
+    def __init__(
+        self,
+        id: str,
+        version: int,
+        cipher: str,
+        ciphertext: str,
+        iv: str,
+        kdf: str,
+        kdfparams: KeyDerivationParams,
+        salt: str,
+        mac: str,
+    ):
         self.id = id
         self.version = version
         self.cipher = cipher
@@ -38,7 +36,7 @@ class EncryptedData:
         self.mac = mac
 
     @classmethod
-    def from_keyfile_object(cls, keyfile_object: Dict[str, Any]) -> "EncryptedData":
+    def from_keyfile_object(cls, keyfile_object: dict[str, Any]) -> "EncryptedData":
         return cls(
             id=keyfile_object["id"],
             version=keyfile_object["version"],

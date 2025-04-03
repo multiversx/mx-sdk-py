@@ -1,10 +1,7 @@
-from typing import List
-
-
 class TypeFormula:
-    def __init__(self, name: str, type_parameters: List['TypeFormula']) -> None:
+    def __init__(self, name: str, type_parameters: list["TypeFormula"]) -> None:
         self.name: str = name
-        self.type_parameters: List[TypeFormula] = type_parameters
+        self.type_parameters: list[TypeFormula] = type_parameters
 
     def __str__(self) -> str:
         if self.type_parameters:

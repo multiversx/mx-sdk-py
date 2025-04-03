@@ -1,9 +1,11 @@
 pytest
 pytest-cov
+pytest-mock
 flake8
-autopep8
+black
 pre-commit
 ipykernel
 sphinx
 sphinx-rtd-theme
 coverage
+pyright

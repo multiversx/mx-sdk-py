@@ -19,5 +19,5 @@ jobs:
         pip install -r requirements-dev.txt
     - name: Lint with flake8
       run: |
-        flake8 multiversx_sdk
+        flake8 multiversx_sdk --exclude=transaction_pb2*
       continue-on-error: true

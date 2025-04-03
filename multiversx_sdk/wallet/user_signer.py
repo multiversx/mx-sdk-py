@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import List
 
 from multiversx_sdk.wallet.errors import CannotSignError
 from multiversx_sdk.wallet.user_keys import UserPublicKey, UserSecretKey
@@ -16,19 +15,19 @@ class UserSigner:
         self.secret_key = secret_key
 
     @classmethod
-    def from_pem_file(cls, path: Path, index: int = 0) -> 'UserSigner':
+    def from_pem_file(cls, path: Path, index: int = 0) -> "UserSigner":
         secret_key = UserPEM.from_file(path, index).secret_key
-        return UserSigner(secret_key)
+        return cls(secret_key)
 
     @classmethod
-    def from_pem_file_all(cls, path: Path) -> List['UserSigner']:
+    def from_pem_file_all(cls, path: Path) -> list["UserSigner"]:
         users = UserPEM.from_file_all(path)
-        return [UserSigner(user.secret_key) for user in users]
+        return [cls(user.secret_key) for user in users]
 
     @classmethod
-    def from_wallet(cls, path: Path, password: str) -> 'UserSigner':
+    def from_wallet(cls, path: Path, password: str) -> "UserSigner":
         secret_key = UserWallet.load_secret_key(path, password)
-        return UserSigner(secret_key)
+        return cls(secret_key)
 
     def sign(self, data: bytes) -> bytes:
         try:

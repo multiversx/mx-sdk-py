@@ -1,9 +1,8 @@
 import io
-from typing import Any
+from typing import Any, cast
 
 from multiversx_sdk.abi.shared import read_bytes_exactly
-from multiversx_sdk.core.code_metadata import (CODE_METADATA_LENGTH,
-                                               CodeMetadata)
+from multiversx_sdk.core.code_metadata import CODE_METADATA_LENGTH, CodeMetadata
 
 
 class CodeMetadataValue:
@@ -34,9 +33,12 @@ class CodeMetadataValue:
         elif isinstance(value, CodeMetadata):
             self.value = value.serialize()
         elif isinstance(value, dict):
+            value = cast(dict[str, str], value)
             self.value = self._extract_value_from_dict(value)
         else:
-            raise ValueError(f"cannot set payload for code metadata (should be either a CodeMetadata, bytes or dict, but got: {type(value)})")
+            raise ValueError(
+                f"cannot set payload for code metadata (should be either a CodeMetadata, bytes or dict, but got: {type(value)})"
+            )
 
     def _extract_value_from_dict(self, value: dict[str, str]) -> bytes:
         hex_value = value.get("hex", None)

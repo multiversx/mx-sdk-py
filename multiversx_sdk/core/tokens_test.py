@@ -1,8 +1,12 @@
 import pytest
 
 from multiversx_sdk.core.errors import BadUsageError
-from multiversx_sdk.core.tokens import (Token, TokenComputer,
-                                        TokenIdentifierParts, TokenTransfer)
+from multiversx_sdk.core.tokens import (
+    Token,
+    TokenComputer,
+    TokenIdentifierParts,
+    TokenTransfer,
+)
 
 
 class TestTokenComputer:
@@ -33,19 +37,49 @@ class TestTokenComputer:
         extended_fungible_identifier = "FNG-123456"
 
         assert self.token_computer.extract_identifier_from_extended_identifier(extended_nft_identifier) == "TEST-123456"
-        assert self.token_computer.extract_identifier_from_extended_identifier(
-            extended_fungible_identifier) == "FNG-123456"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(extended_fungible_identifier)
+            == "FNG-123456"
+        )
 
         extended_identifier_with_prefix = "test-TEST-123456-0a"
-        assert self.token_computer.extract_identifier_from_extended_identifier(
-            extended_identifier_with_prefix) == "test-TEST-123456"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(extended_identifier_with_prefix)
+            == "test-TEST-123456"
+        )
 
         fungible_identifier_with_prefix = "test-FNG-123456"
-        assert self.token_computer.extract_identifier_from_extended_identifier(
-            fungible_identifier_with_prefix) == "test-FNG-123456"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(fungible_identifier_with_prefix)
+            == "test-FNG-123456"
+        )
 
-        with pytest.raises(Exception, match="Token prefix is invalid, it does not have the right length"):
+        with pytest.raises(
+            Exception,
+            match="Token prefix is invalid, it does not have the right length",
+        ):
             self.token_computer.extract_identifier_from_extended_identifier("prefix-TEST-123456")
+
+        numeric_token_ticker = "2065-65td7s"
+        assert self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker) == "2065-65td7s"
+
+        numeric_token_ticker_with_nonce = "2065-65td7s-01"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker_with_nonce)
+            == "2065-65td7s"
+        )
+
+        numeric_token_ticker_with_prefix = "t0-2065-65td7s"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker_with_prefix)
+            == "t0-2065-65td7s"
+        )
+
+        numeric_token_ticker_with_prefix_and_nonce = "t0-2065-65td7s-01"
+        assert (
+            self.token_computer.extract_identifier_from_extended_identifier(numeric_token_ticker_with_prefix_and_nonce)
+            == "t0-2065-65td7s"
+        )
 
     def test_extract_ticker_from_identifier(self):
         fungible_identifier = "FNG-123456"
@@ -101,7 +135,10 @@ class TestTokenComputer:
 
         assert fungible_token_identifier == "FNG-123456"
         assert nft_identifier == "NFT-987654-0a"
-        assert self.token_computer.compute_extended_identifier_from_identifier_and_nonce("test-NFT-123456", 10) == "test-NFT-123456-0a"
+        assert (
+            self.token_computer.compute_extended_identifier_from_identifier_and_nonce("test-NFT-123456", 10)
+            == "test-NFT-123456-0a"
+        )
 
     def test_compute_extended_identifier_from_parts(self):
         fungible_parts = TokenIdentifierParts("FNG", "123456", 0)
@@ -140,3 +177,47 @@ def test_token_transfer_from_native_amount():
     assert transfer.token.identifier == "EGLD-000000"
     assert transfer.token.nonce == 0
     assert transfer.amount == 1000000000000000000
+
+
+def test_token_equality():
+    assert Token("WEGLD-abcdef") == Token("WEGLD-abcdef")
+    assert Token("NFT-123456", 777) == Token("NFT-123456", 777)
+    assert Token("test-NFT-123456", 777) == Token("test-NFT-123456", 777)
+
+
+def test_token_inequality():
+    assert Token("WEGLD-abcdeh") != Token("WEGLD-abcdef")
+    assert Token("WEGLD-abcdef", 778) != Token("WEGLD-abcdef", 777)
+    assert Token("WEGLD-abcdeg", 777) != Token("WEGLD-abcdef", 777)
+    assert Token("test-NFT-123456", 775) != Token("test-NFT-123456", 777)
+    assert Token("test-NFT-123457", 777) != Token("test-NFT-123456", 777)
+    assert Token("test-NFZ-123456", 777) != Token("test-NFT-123456", 777)
+    assert Token("tesp-NFT-123456", 777) != Token("test-NFT-123456", 777)
+    assert Token("WEGLD-abcdef") != TokenTransfer(Token("WEGLD-abcdef"), 0)  # test with object of diff types
+
+
+def test_token_transfer_equality():
+    assert TokenTransfer.new_from_native_amount(123456) == TokenTransfer.new_from_native_amount(123456)
+    assert TokenTransfer(Token("WEGLD-abcdef"), 123456) == TokenTransfer(Token("WEGLD-abcdef"), 123456)
+    assert TokenTransfer(Token("NFT-abcdef", 8), 123456) == TokenTransfer(Token("NFT-abcdef", 8), 123456)
+
+
+def test_token_transfer_inequality():
+    assert TokenTransfer.new_from_native_amount(123457) != TokenTransfer.new_from_native_amount(123456)
+    assert TokenTransfer(Token("WEGLD-abcdef"), 123457) != TokenTransfer(Token("WEGLD-abcdef"), 123456)
+    assert TokenTransfer(Token("WEGLD-abcdeg"), 123456) != TokenTransfer(Token("WEGLD-abcdef"), 123456)
+    assert TokenTransfer(Token("NFT-abcdef", 8), 123457) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("NFT-abcdef", 7), 123456) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("NFT-abcdeg", 8), 123456) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("NFT-abcdeh", 7), 123457) != TokenTransfer(Token("NFT-abcdef", 8), 123456)
+    assert TokenTransfer(Token("WEGLD-abcdef"), 0) != Token("WEGLD-abcdef")  # test with object of diff types
+
+
+def test_token_str():
+    assert str(Token("NFT-123456", 777)) == "NFT-123456-0309"
+    assert str(Token("test-NFT-123456", 123)) == "test-NFT-123456-7b"
+
+
+def test_token_transfer_str():
+    assert str(TokenTransfer(Token("WEGLD-abcdef"), 123456)) == "123456 WEGLD-abcdef"
+    assert str(TokenTransfer(Token("NFT-abcdef", 8), 123456)) == "123456 NFT-abcdef-08"

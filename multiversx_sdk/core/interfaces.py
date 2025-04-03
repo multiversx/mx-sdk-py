@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.transaction import Transaction
 
 
 class INetworkConfig(Protocol):
@@ -9,15 +10,16 @@ class INetworkConfig(Protocol):
     gas_price_modifier: float
 
 
-class IValidatorPublicKey(Protocol):
-    def hex(self) -> str:
+# fmt: off
+class IAccount(Protocol):
+    @property
+    def use_hash_signing(self) -> bool:
         ...
 
-
-class IAccount(Protocol):
     @property
     def address(self) -> Address:
         ...
 
-    def sign(self, data: bytes) -> bytes:
+    def sign_transaction(self, transaction: Transaction) -> bytes:
         ...
+# fmt: on

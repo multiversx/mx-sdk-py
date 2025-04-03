@@ -1,8 +1,11 @@
-
 import pytest
 
-from multiversx_sdk.core.address import (Address, AddressComputer,
-                                         AddressFactory, is_valid_bech32)
+from multiversx_sdk.core.address import (
+    Address,
+    AddressComputer,
+    AddressFactory,
+    is_valid_bech32,
+)
 from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.errors import BadAddressError, BadPubkeyLengthError
 
@@ -11,7 +14,10 @@ def test_address():
     address = Address.new_from_bech32("erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz")
     assert str(address) == "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz"
     assert address == Address.new_from_bech32("erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz")
-    assert not address == Address(bytes.fromhex("fd691bb5e85d102687d81079dffce842d4dc328276d2d4c60d8fd1c3433c3293"), "test")
+    assert not address == Address(
+        bytes.fromhex("fd691bb5e85d102687d81079dffce842d4dc328276d2d4c60d8fd1c3433c3293"),
+        "test",
+    )
     assert "fd691bb5e85d102687d81079dffce842d4dc328276d2d4c60d8fd1c3433c3293" == address.to_hex()
     assert "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz" == address.to_bech32()
 
@@ -45,8 +51,14 @@ def test_address_factory():
     factory_erd = AddressFactory("erd")
     pubkey = bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1")
 
-    assert factory_foo.create_from_public_key(pubkey).to_bech32() == "foo1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssunhpj4"
-    assert factory_erd.create_from_public_key(pubkey).to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    assert (
+        factory_foo.create_from_public_key(pubkey).to_bech32()
+        == "foo1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssunhpj4"
+    )
+    assert (
+        factory_erd.create_from_public_key(pubkey).to_bech32()
+        == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    )
 
 
 def test_is_valid_bech32():

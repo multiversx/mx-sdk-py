@@ -1,5 +1,3 @@
-from typing import List
-
 import mnemonic
 
 from multiversx_sdk.wallet import core
@@ -24,14 +22,14 @@ class Mnemonic:
         return mnemonic.Mnemonic(BIP39_LANGUAGE).check(text)
 
     @classmethod
-    def generate(cls) -> 'Mnemonic':
+    def generate(cls) -> "Mnemonic":
         text = mnemonic.Mnemonic(BIP39_LANGUAGE).generate(strength=BIP39_STRENGTH)
-        return Mnemonic(text)
+        return cls(text)
 
     @classmethod
     def from_entropy(cls, entropy: bytes) -> "Mnemonic":
         text = mnemonic.Mnemonic(BIP39_LANGUAGE).to_mnemonic(entropy)
-        return Mnemonic(text)
+        return cls(text)
 
     def derive_key(self, address_index: int = 0) -> UserSecretKey:
         secret_key = core.derive_keys(self.text, address_index)
@@ -40,7 +38,7 @@ class Mnemonic:
     def get_text(self) -> str:
         return self.text
 
-    def get_words(self) -> List[str]:
+    def get_words(self) -> list[str]:
         return self.text.split()
 
     def get_entropy(self) -> bytes:

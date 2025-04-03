@@ -5,16 +5,20 @@ from typing import Any, Callable, Optional, Union
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
-from multiversx_sdk.core.transaction_on_network import (SmartContractResult,
-                                                        TransactionLogs,
-                                                        TransactionOnNetwork)
+from multiversx_sdk.core.transaction_on_network import (
+    SmartContractResult,
+    TransactionLogs,
+    TransactionOnNetwork,
+)
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.resources import (AccountOnNetwork,
-                                                        AwaitingOptions)
+from multiversx_sdk.network_providers.resources import AccountOnNetwork, AwaitingOptions
 from multiversx_sdk.smart_contracts.smart_contract_query import (
-    SmartContractQuery, SmartContractQueryResponse)
-from multiversx_sdk.testutils.mock_transaction_on_network import \
-    get_empty_transaction_on_network
+    SmartContractQuery,
+    SmartContractQueryResponse,
+)
+from multiversx_sdk.testutils.mock_transaction_on_network import (
+    get_empty_transaction_on_network,
+)
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 
 
@@ -31,7 +35,7 @@ class MockNetworkProvider:
             address=MockNetworkProvider.alice,
             nonce=0,
             balance=create_account_egld_balance(1000),
-            is_guarded=False
+            is_guarded=False,
         )
 
         bob_account = AccountOnNetwork(
@@ -39,7 +43,7 @@ class MockNetworkProvider:
             address=MockNetworkProvider.bob,
             nonce=5,
             balance=create_account_egld_balance(500),
-            is_guarded=False
+            is_guarded=False,
         )
 
         carol_account = AccountOnNetwork(
@@ -47,13 +51,13 @@ class MockNetworkProvider:
             address=MockNetworkProvider.carol,
             nonce=42,
             balance=create_account_egld_balance(300),
-            is_guarded=False
+            is_guarded=False,
         )
 
         self.accounts: dict[str, AccountOnNetwork] = {
             MockNetworkProvider.alice.to_bech32(): alice_account,
             MockNetworkProvider.bob.to_bech32(): bob_account,
-            MockNetworkProvider.carol.to_bech32(): carol_account
+            MockNetworkProvider.carol.to_bech32(): carol_account,
         }
         self.query_contract_responders: list[QueryContractResponder] = []
         self.get_transaction_responders: list[GetTransactionResponder] = []
@@ -92,7 +96,7 @@ class MockNetworkProvider:
                 sender=Address.empty(),
                 receiver=Address.empty(),
                 data=return_code_and_data.encode(),
-                logs=TransactionLogs(address=Address.empty(), events=[])
+                logs=TransactionLogs(address=Address.empty(), events=[]),
             )
         ]
 
@@ -107,12 +111,14 @@ class MockNetworkProvider:
         def fn():
             for point in timeline_points:
                 if isinstance(point, TransactionStatus):
+
                     def set_tx_status(transaction: TransactionOnNetwork):
                         transaction.status = point
 
                     self.mock_update_transaction(hash, set_tx_status)
 
                 elif isinstance(point, TimelinePointMarkCompleted):
+
                     def mark_tx_as_completed(transaction: TransactionOnNetwork):
                         transaction.status.is_completed = True
 
@@ -128,6 +134,7 @@ class MockNetworkProvider:
         def fn():
             for point in timeline_points:
                 if isinstance(point, TimelinePointMarkCompleted):
+
                     def mark_account_condition_reached(account: AccountOnNetwork):
                         account.balance = account.balance + create_account_egld_balance(7)
 
@@ -161,8 +168,8 @@ class MockNetworkProvider:
 
         raise Exception("Transaction not found")
 
-    def get_transaction_status(self, tx_hash: str) -> TransactionStatus:
-        transaction = self.get_transaction(tx_hash)
+    def get_transaction_status(self, transaction_hash: Union[str, bytes]) -> TransactionStatus:
+        transaction = self.get_transaction(transaction_hash)
         return transaction.status
 
     def query_contract(self, query: SmartContractQuery) -> SmartContractQueryResponse:
@@ -172,12 +179,19 @@ class MockNetworkProvider:
 
         raise Exception("No query response to return")
 
-    def await_transaction_completed(self, transaction_hash: Union[str, bytes], options: Optional[AwaitingOptions] = None) -> TransactionOnNetwork:
-        ...
+    def await_transaction_completed(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> TransactionOnNetwork: ...
 
 
 class QueryContractResponder:
-    def __init__(self, matches: Callable[[SmartContractQuery], bool], response: SmartContractQueryResponse) -> None:
+    def __init__(
+        self,
+        matches: Callable[[SmartContractQuery], bool],
+        response: SmartContractQueryResponse,
+    ) -> None:
         self.matches = matches
         self.response = response
 

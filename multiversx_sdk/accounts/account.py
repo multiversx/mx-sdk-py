@@ -18,33 +18,33 @@ class Account:
         self.public_key = self.secret_key.generate_public_key()
         self.address = self.public_key.to_address(hrp)
         self.nonce = 0
+        self.use_hash_signing = False
 
     @classmethod
     def new_from_pem(cls, file_path: Path, index: int = 0, hrp: Optional[str] = None) -> "Account":
         signer = UserSigner.from_pem_file(file_path, index)
-        return Account(signer.secret_key, hrp)
+        return cls(signer.secret_key, hrp)
 
     @classmethod
-    def new_from_keystore(cls,
-                          file_path: Path,
-                          password: str,
-                          address_index: int = 0,
-                          hrp: Optional[str] = None) -> "Account":
+    def new_from_keystore(
+        cls,
+        file_path: Path,
+        password: str,
+        address_index: Optional[int] = None,
+        hrp: Optional[str] = None,
+    ) -> "Account":
         secret_key = UserWallet.load_secret_key(file_path, password, address_index)
-        return Account(secret_key, hrp)
+        return cls(secret_key, hrp)
 
     @classmethod
-    def new_from_mnemonic(cls,
-                          mnemonic: str,
-                          address_index: int = 0,
-                          hrp: Optional[str] = None) -> "Account":
+    def new_from_mnemonic(cls, mnemonic: str, address_index: int = 0, hrp: Optional[str] = None) -> "Account":
         mnemonic_handler = Mnemonic(mnemonic)
         secret_key = mnemonic_handler.derive_key(address_index)
-        return Account(secret_key, hrp)
+        return cls(secret_key, hrp)
 
     @classmethod
     def new_from_keypair(cls, keypair: KeyPair) -> "Account":
-        return Account(keypair.get_secret_key())
+        return cls(keypair.get_secret_key())
 
     def sign(self, data: bytes) -> bytes:
         """Signs using the account's secret key."""
@@ -74,6 +74,6 @@ class Account:
         pem.save(path)
 
     def save_to_keystore(self, path: Path, password: str = ""):
-        """Saves the secret key to a keystore file."""
+        """Saves the secret key to a keystore file with `kind=secretKey`."""
         wallet = UserWallet.from_secret_key(self.secret_key, password)
         wallet.save(path, self.address.get_hrp())

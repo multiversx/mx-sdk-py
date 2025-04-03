@@ -4,11 +4,16 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.network_providers.account_awaiter import AccountAwaiter
-from multiversx_sdk.network_providers.api_network_provider import \
-    ApiNetworkProvider
+from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
+from multiversx_sdk.network_providers.errors import (
+    ExpectedAccountConditionNotReachedError,
+)
 from multiversx_sdk.network_providers.resources import AccountOnNetwork
 from multiversx_sdk.testutils.mock_network_provider import (
-    MockNetworkProvider, TimelinePointMarkCompleted, TimelinePointWait)
+    MockNetworkProvider,
+    TimelinePointMarkCompleted,
+    TimelinePointWait,
+)
 from multiversx_sdk.testutils.utils import create_account_egld_balance
 from multiversx_sdk.testutils.wallets import load_wallets
 
@@ -19,7 +24,7 @@ class TestAccountAwaiter:
         fetcher=provider,
         polling_interval_in_milliseconds=42,
         timeout_interval_in_milliseconds=42 * 42,
-        patience_time_in_milliseconds=0
+        patience_time_in_milliseconds=0,
     )
 
     def test_await_on_balance_increase(self):
@@ -30,7 +35,12 @@ class TestAccountAwaiter:
         # adds 7 EGLD to the account balance
         self.provider.mock_account_balance_timeline_by_address(
             alice,
-            [TimelinePointWait(40), TimelinePointWait(40), TimelinePointWait(45), TimelinePointMarkCompleted()]
+            [
+                TimelinePointWait(40),
+                TimelinePointWait(40),
+                TimelinePointWait(45),
+                TimelinePointMarkCompleted(),
+            ],
         )
 
         def condition(account: AccountOnNetwork):
@@ -55,7 +65,7 @@ class TestAccountAwaiter:
             receiver=frank,
             gas_limit=50000,
             chain_id="D",
-            value=value
+            value=value,
         )
         transaction.nonce = api.get_account(alice_address).nonce
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
@@ -69,3 +79,39 @@ class TestAccountAwaiter:
 
         account_on_network = watcher.await_on_condition(frank, condition)
         assert account_on_network.balance == initial_balance + value
+
+    @pytest.mark.networkInteraction
+    def test_ensure_error_if_timeout(self):
+        alice = load_wallets()["alice"]
+        alice_address = Address.new_from_bech32(alice.label)
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        watcher = AccountAwaiter(
+            fetcher=api,
+            polling_interval_in_milliseconds=1000,
+            timeout_interval_in_milliseconds=10000,
+        )
+
+        value = 100_000
+        transaction = Transaction(
+            sender=alice_address,
+            receiver=bob,
+            gas_limit=50000,
+            chain_id="D",
+            value=value,
+        )
+        transaction.nonce = api.get_account(alice_address).nonce
+
+        tx_computer = TransactionComputer()
+        transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        initial_balance = api.get_account(bob).balance
+
+        def condition(account: AccountOnNetwork):
+            return account.balance == initial_balance + value
+
+        api.send_transaction(transaction)
+
+        with pytest.raises(ExpectedAccountConditionNotReachedError):
+            watcher.await_on_condition(bob, condition)
