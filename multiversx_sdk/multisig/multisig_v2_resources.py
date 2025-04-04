@@ -1,24 +1,29 @@
-
 from enum import Enum
 from typing import Any, Optional
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.tokens import TokenTransfer
-from multiversx_sdk.core.transactions_factory_config import \
-    TransactionsFactoryConfig
-from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import \
-    SmartContractTransactionsFactory
+from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
+from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import (
+    SmartContractTransactionsFactory,
+)
+from multiversx_sdk.transfers.transfer_transactions_factory import (
+    TransferTransactionsFactory,
+)
 
 
 class ProposeTransferExecuteInput:
-    def __init__(self,
-                 to: Address,
-                 native_transfer_amount: int,
-                 function_call: list[bytes],
-                 opt_gas_limit: Optional[int] = None,) -> None:
+    def __init__(
+        self,
+        to: Address,
+        native_transfer_amount: int,
+        function_call: list[bytes],
+        opt_gas_limit: Optional[int] = None,
+    ) -> None:
 
         self.to = to
         self.egld_amount = native_transfer_amount
@@ -26,66 +31,73 @@ class ProposeTransferExecuteInput:
         self.opt_gas_limit = opt_gas_limit
 
     @classmethod
-    def new_for_native_transfer(cls,
-                                to: Address,
-                                native_transfer_amount: int,
-                                gas_limit: Optional[int] = None):
+    def new_for_native_transfer(cls, to: Address, native_transfer_amount: int, gas_limit: Optional[int] = None):
         return cls(to, native_transfer_amount, [], gas_limit)
 
     @classmethod
-    def new_for_transfer_execute(cls,
-                                 to: Address,
-                                 native_transfer_amount: int,
-                                 function: str,
-                                 arguments: list[Any],
-                                 gas_limit: Optional[int] = None,
-                                 abi: Optional[Abi] = None):
+    def new_for_transfer_execute(
+        cls,
+        to: Address,
+        native_transfer_amount: int,
+        function: str,
+        arguments: list[Any],
+        gas_limit: Optional[int] = None,
+        abi: Optional[Abi] = None,
+    ):
         arguments = abi.encode_endpoint_input_parameters(function, arguments) if abi else arguments
         function_call = [function, *arguments]
-        return cls(to, native_transfer_amount, function_call, gas_limit)
+        return cls(to, native_transfer_amount, function_call, gas_limit)  # type: ignore
 
 
 class ProposeTransferExecuteEsdtInput:
-    def __init__(self,
-                 to: Address,
-                 tokens: list['EsdtTokenPayment'],
-                 function_call: list[bytes],
-                 opt_gas_limit: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        to: Address,
+        tokens: list["EsdtTokenPayment"],
+        function_call: list[bytes],
+        opt_gas_limit: Optional[int] = None,
+    ) -> None:
         self.to = to
         self.tokens = tokens
         self.function_call = function_call
         self.opt_gas_limit = opt_gas_limit
 
     @classmethod
-    def new_for_transfer(cls,
-                         to: Address,
-                         token_transfers: list[TokenTransfer],
-                         gas_limit: Optional[int] = None):
-        tokens = [EsdtTokenPayment(token.token.identifier, token.token.nonce,
-                                   token.amount) for token in token_transfers]
+    def new_for_transfer(
+        cls,
+        to: Address,
+        token_transfers: list[TokenTransfer],
+        gas_limit: Optional[int] = None,
+    ):
+        tokens = [
+            EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers
+        ]
         return cls(to, tokens, [], gas_limit)
 
     @classmethod
-    def new_for_transfer_execute(cls,
-                                 to: Address,
-                                 token_transfers: list[TokenTransfer],
-                                 function: str,
-                                 arguments: list[Any],
-                                 gas_limit: Optional[int] = None,
-                                 abi: Optional[Abi] = None):
+    def new_for_transfer_execute(
+        cls,
+        to: Address,
+        token_transfers: list[TokenTransfer],
+        function: str,
+        arguments: list[Any],
+        gas_limit: Optional[int] = None,
+        abi: Optional[Abi] = None,
+    ):
         # Since multisig requires the execution (but not the transfers) to be encoded as variadic<bytes> in "function_call",
         # we leverage the transactions factory to achieve this (followed by splitting the data).
-        transactions_factory = SmartContractTransactionsFactory(
-            TransactionsFactoryConfig(""), abi=abi)
+        transactions_factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(""), abi=abi)
         transaction = transactions_factory.create_transaction_for_execute(
             sender=Address.empty(),
             contract=Address.empty(),
             function=function,
             gas_limit=0,
-            arguments=arguments)
+            arguments=arguments,
+        )
 
-        tokens = [EsdtTokenPayment(token.token.identifier, token.token.nonce,
-                                   token.amount) for token in token_transfers]
+        tokens = [
+            EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers
+        ]
         function_call_parts = transaction.data.split(ARGS_SEPARATOR.encode())
         function_name = function_call_parts[0]
         function_arguments = [bytes.fromhex(item.decode()) for item in function_call_parts[1:]]
@@ -94,21 +106,25 @@ class ProposeTransferExecuteEsdtInput:
 
 
 class ProposeAsyncCallInput:
-    def __init__(self,
-                 to: Address,
-                 egld_amount: int,
-                 function_call: list[bytes],
-                 opt_gas_limit: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        to: Address,
+        egld_amount: int,
+        function_call: list[bytes],
+        opt_gas_limit: Optional[int] = None,
+    ) -> None:
         self.to = to
         self.egld_amount = egld_amount
         self.function_call = function_call
         self.opt_gas_limit = opt_gas_limit
 
     @classmethod
-    def new_for_transfer(cls,
-                         to: Address,
-                         token_transfers: list[TokenTransfer],
-                         gas_limit: Optional[int] = None):
+    def new_for_transfer(
+        cls,
+        to: Address,
+        token_transfers: list[TokenTransfer],
+        gas_limit: Optional[int] = None,
+    ):
         # Since multisig requires the transfer to be encoded as variadic<bytes> in "function_call",
         # we leverage the transactions factory to achieve this (followed by splitting the data).
         transactions_factory = TransferTransactionsFactory(TransactionsFactoryConfig(""))
@@ -117,7 +133,8 @@ class ProposeAsyncCallInput:
             receiver=Address.empty(),
             # Multisig wasn't designed to work with EGLD within MultiESDTNFT.
             native_amount=0,
-            token_transfers=token_transfers)
+            token_transfers=token_transfers,
+        )
 
         function_call_parts = transaction.data.split(ARGS_SEPARATOR.encode())
         function_name = function_call_parts[0]
@@ -126,18 +143,19 @@ class ProposeAsyncCallInput:
         return cls(to, 0, function_call, gas_limit)
 
     @classmethod
-    def new_for_transfer_execute(cls,
-                                 to: Address,
-                                 native_transfer_amount: int,
-                                 token_transfers: list[TokenTransfer],
-                                 function: str,
-                                 arguments: list[Any],
-                                 gas_limit: Optional[int] = None,
-                                 abi: Optional[Abi] = None):
+    def new_for_transfer_execute(
+        cls,
+        to: Address,
+        native_transfer_amount: int,
+        token_transfers: list[TokenTransfer],
+        function: str,
+        arguments: list[Any],
+        gas_limit: Optional[int] = None,
+        abi: Optional[Abi] = None,
+    ):
         # Since multisig requires the transfer & execute to be encoded as variadic<bytes> in "function_call",
         # we leverage the transactions factory to achieve this (followed by splitting the data).
-        transactions_factory = SmartContractTransactionsFactory(
-            TransactionsFactoryConfig(""), abi=abi)
+        transactions_factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(""), abi=abi)
         transaction = transactions_factory.create_transaction_for_execute(
             sender=Address.empty(),
             contract=Address.empty(),
@@ -146,7 +164,8 @@ class ProposeAsyncCallInput:
             arguments=arguments,
             # Multisig wasn't designed to work with EGLD within MultiESDTNFT.
             native_transfer_amount=0,
-            token_transfers=token_transfers)
+            token_transfers=token_transfers,
+        )
 
         function_call_parts = transaction.data.split(ARGS_SEPARATOR.encode())
         function_name = function_call_parts[0]
@@ -167,12 +186,14 @@ class EsdtTokenPayment:
 
 
 class ProposeSCDeployFromSourceInput:
-    def __init__(self,
-                 native_transfer_amount: int,
-                 contract_to_copy: Address,
-                 code_metadata: CodeMetadata,
-                 arguments: list[Any],
-                 abi: Optional[Abi] = None) -> None:
+    def __init__(
+        self,
+        native_transfer_amount: int,
+        contract_to_copy: Address,
+        code_metadata: CodeMetadata,
+        arguments: list[Any],
+        abi: Optional[Abi] = None,
+    ) -> None:
         self.amount = native_transfer_amount
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
@@ -180,19 +201,20 @@ class ProposeSCDeployFromSourceInput:
 
 
 class ProposeSCUpgradeFromSourceInput:
-    def __init__(self,
-                 contract_to_upgrade: Address,
-                 native_transfer_amount: int,
-                 contract_to_copy: Address,
-                 code_metadata: CodeMetadata,
-                 arguments: list[Any],
-                 abi: Optional[Abi] = None) -> None:
+    def __init__(
+        self,
+        contract_to_upgrade: Address,
+        native_transfer_amount: int,
+        contract_to_copy: Address,
+        code_metadata: CodeMetadata,
+        arguments: list[Any],
+        abi: Optional[Abi] = None,
+    ) -> None:
         self.sc_address = contract_to_upgrade
         self.amount = native_transfer_amount
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
-        self.arguments = abi.encode_upgrade_constructor_input_parameters(
-            arguments) if abi else arguments
+        self.arguments = abi.encode_upgrade_constructor_input_parameters(arguments) if abi else arguments
 
 
 class UserRole(Enum):
@@ -202,19 +224,15 @@ class UserRole(Enum):
 
 
 class ActionFullInfo:
-    def __init__(self,
-                 action_id: int,
-                 group_id: int,
-                 action_data: 'Action',
-                 signers: list[Address]) -> None:
+    def __init__(self, action_id: int, group_id: int, action_data: "Action", signers: list[Address]) -> None:
         self.action_id = action_id
         self.group_id = group_id
         self.action_data = action_data
         self.signers = signers
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'ActionFullInfo':
-        signers = [Address(value, DEFAULT_ADDRESS_HRP) for value in object.signers]
+    def new_from_object(cls, object: Any) -> "ActionFullInfo":
+        signers = [Address(value, LibraryConfig.default_address_hrp) for value in object.signers]
         action_data = create_action_from_object(object.action_data)
         return cls(object.action_id, object.group_id, action_data, signers)
 
@@ -222,7 +240,7 @@ class ActionFullInfo:
         return f"ActionFullInfo(action_id={self.action_id}, group_id={self.group_id}, action_data={self.action_data}, signers={self.signers})"
 
 
-def create_action_from_object(object: Any) -> 'Action':
+def create_action_from_object(object: Any) -> "Action":
     discriminant = int(object)
 
     if discriminant == AddBoardMember.discriminant:
@@ -264,10 +282,10 @@ class AddBoardMember(Action):
         self.address = address
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'AddBoardMember':
+    def new_from_object(cls, object: Any) -> "AddBoardMember":
         field_0 = getattr(object, "0")
         public_key = field_0
-        address = Address(public_key, DEFAULT_ADDRESS_HRP)
+        address = Address(public_key, LibraryConfig.default_address_hrp)
         return cls(address)
 
 
@@ -278,10 +296,10 @@ class AddProposer(Action):
         self.address = address
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'AddProposer':
+    def new_from_object(cls, object: Any) -> "AddProposer":
         field_0 = getattr(object, "0")
         public_key = field_0
-        address = Address(public_key, DEFAULT_ADDRESS_HRP)
+        address = Address(public_key, LibraryConfig.default_address_hrp)
         return cls(address)
 
 
@@ -292,10 +310,10 @@ class RemoveUser(Action):
         self.address = address
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'RemoveUser':
+    def new_from_object(cls, object: Any) -> "RemoveUser":
         field_0 = getattr(object, "0")
         public_key = field_0
-        address = Address(public_key, DEFAULT_ADDRESS_HRP)
+        address = Address(public_key, LibraryConfig.default_address_hrp)
         return cls(address)
 
 
@@ -306,7 +324,7 @@ class ChangeQuorum(Action):
         self.quorum = quorum
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'ChangeQuorum':
+    def new_from_object(cls, object: Any) -> "ChangeQuorum":
         field_0 = getattr(object, "0")
         quorum = field_0
         return cls(quorum)
@@ -315,23 +333,25 @@ class ChangeQuorum(Action):
 class SendTransferExecuteEgld(Action):
     discriminant = 5
 
-    def __init__(self, data: 'CallActionData') -> None:
+    def __init__(self, data: "CallActionData") -> None:
         self.data = data
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'SendTransferExecuteEgld':
+    def new_from_object(cls, object: Any) -> "SendTransferExecuteEgld":
         field_0 = getattr(object, "0")
         data = CallActionData.new_from_object(field_0)
         return cls(data)
 
 
 class CallActionData:
-    def __init__(self,
-                 to: Address,
-                 egld_amount: int,
-                 endpoint_name: str,
-                 arguments: list[bytes],
-                 opt_gas_limit: Optional[int] = None):
+    def __init__(
+        self,
+        to: Address,
+        egld_amount: int,
+        endpoint_name: str,
+        arguments: list[bytes],
+        opt_gas_limit: Optional[int] = None,
+    ):
         self.to = to
         self.egld_amount = egld_amount
         self.endpoint_name = endpoint_name
@@ -339,8 +359,8 @@ class CallActionData:
         self.opt_gas_limit = opt_gas_limit
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'CallActionData':
-        to = Address(object.to, DEFAULT_ADDRESS_HRP)
+    def new_from_object(cls, object: Any) -> "CallActionData":
+        to = Address(object.to, LibraryConfig.default_address_hrp)
         egld_amount = object.egld_amount
         endpoint_name = object.endpoint_name
         arguments = object.arguments
@@ -351,23 +371,25 @@ class CallActionData:
 class SendTransferExecuteEsdt(Action):
     discriminant = 6
 
-    def __init__(self, data: 'EsdtTransferExecuteData') -> None:
+    def __init__(self, data: "EsdtTransferExecuteData") -> None:
         self.data = data
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'SendTransferExecuteEsdt':
+    def new_from_object(cls, object: Any) -> "SendTransferExecuteEsdt":
         field_0 = getattr(object, "0")
         data = EsdtTransferExecuteData.new_from_object(field_0)
         return cls(data)
 
 
 class EsdtTransferExecuteData:
-    def __init__(self,
-                 to: Address,
-                 tokens: list[EsdtTokenPayment],
-                 opt_gas_limit: Optional[int],
-                 endpoint_name: bytes,
-                 arguments: list[bytes]) -> None:
+    def __init__(
+        self,
+        to: Address,
+        tokens: list[EsdtTokenPayment],
+        opt_gas_limit: Optional[int],
+        endpoint_name: bytes,
+        arguments: list[bytes],
+    ) -> None:
         self.to = to
         self.tokens = tokens
         self.opt_gas_limit = opt_gas_limit
@@ -375,10 +397,9 @@ class EsdtTransferExecuteData:
         self.arguments = arguments
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'EsdtTransferExecuteData':
-        to = Address(object.to, DEFAULT_ADDRESS_HRP)
-        tokens = [EsdtTokenPayment(token.token_identifier, token.token_nonce,
-                                   token.amount) for token in object.tokens]
+    def new_from_object(cls, object: Any) -> "EsdtTransferExecuteData":
+        to = Address(object.to, LibraryConfig.default_address_hrp)
+        tokens = [EsdtTokenPayment(token.token_identifier, token.token_nonce, token.amount) for token in object.tokens]
         opt_gas_limit = object.opt_gas_limit
         endpoint_name = object.endpoint_name
         arguments = object.arguments
@@ -388,11 +409,11 @@ class EsdtTransferExecuteData:
 class SendAsyncCall(Action):
     discriminant = 7
 
-    def __init__(self, data: 'CallActionData') -> None:
+    def __init__(self, data: "CallActionData") -> None:
         self.data = data
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'SendAsyncCall':
+    def new_from_object(cls, object: Any) -> "SendAsyncCall":
         field_0 = getattr(object, "0")
         data = CallActionData.new_from_object(field_0)
         return cls(data)
@@ -408,9 +429,9 @@ class SCDeployFromSource(Action):
         self.arguments = arguments
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'SCDeployFromSource':
+    def new_from_object(cls, object: Any) -> "SCDeployFromSource":
         amount = object.amount
-        source = Address(object.source, DEFAULT_ADDRESS_HRP)
+        source = Address(object.source, LibraryConfig.default_address_hrp)
         code_metadata = object.code_metadata
         arguments = object.arguments
         return cls(amount, source, code_metadata, arguments)
@@ -419,7 +440,9 @@ class SCDeployFromSource(Action):
 class SCUpgradeFromSource(Action):
     discriminant = 9
 
-    def __init__(self, sc_address: Address, amount: int, source: Address, code_metadata: bytes, arguments: list[bytes]) -> None:
+    def __init__(
+        self, sc_address: Address, amount: int, source: Address, code_metadata: bytes, arguments: list[bytes]
+    ) -> None:
         self.sc_address = sc_address
         self.amount = amount
         self.source = source
@@ -427,10 +450,10 @@ class SCUpgradeFromSource(Action):
         self.arguments = arguments
 
     @classmethod
-    def new_from_object(cls, object: Any) -> 'SCUpgradeFromSource':
-        sc_address = Address(object.sc_address, DEFAULT_ADDRESS_HRP)
+    def new_from_object(cls, object: Any) -> "SCUpgradeFromSource":
+        sc_address = Address(object.sc_address, LibraryConfig.default_address_hrp)
         amount = object.amount
-        source = Address(object.source, DEFAULT_ADDRESS_HRP)
+        source = Address(object.source, LibraryConfig.default_address_hrp)
         code_metadata = object.code_metadata
         arguments = object.arguments
         return cls(sc_address, amount, source, code_metadata, arguments)
