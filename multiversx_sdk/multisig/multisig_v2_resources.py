@@ -24,7 +24,6 @@ class ProposeTransferExecuteInput:
         function_call: list[bytes],
         opt_gas_limit: Optional[int] = None,
     ) -> None:
-
         self.to = to
         self.egld_amount = native_transfer_amount
         self.function_call = function_call

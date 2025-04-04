@@ -1,16 +1,20 @@
-import time
 from pathlib import Path
 
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
-from multiversx_sdk.controllers.multisig_v2_resources import (
-    ProposeAsyncCallInput, ProposeSCDeployFromSourceInput,
-    ProposeTransferExecuteInput, SCDeployFromSource, SendAsyncCall, UserRole)
+from multiversx_sdk.accounts import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
-from multiversx_sdk.facades.account import Account
-from multiversx_sdk.facades.entrypoints import DevnetEntrypoint
+from multiversx_sdk.entrypoints import DevnetEntrypoint
+from multiversx_sdk.multisig.multisig_v2_resources import (
+    ProposeAsyncCallInput,
+    ProposeSCDeployFromSourceInput,
+    ProposeTransferExecuteInput,
+    SCDeployFromSource,
+    SendAsyncCall,
+    UserRole,
+)
 
 testutils = Path(__file__).parent.parent / "testutils"
 
@@ -25,7 +29,9 @@ class TestEntrypoint:
         abi_multisig = Abi.load(testutils / "testdata" / "multisig-full.abi.json")
         abi_adder = Abi.load(testutils / "testdata" / "adder.abi.json")
         bytecode_path_multisig = testutils / "testdata" / "multisig-full.wasm"
-        contract_to_copy_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
+        contract_to_copy_address = Address.new_from_bech32(
+            "erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6"
+        )
         controller_multisig = self.entrypoint.create_multisig_v2_controller(abi_multisig)
         controller_adder = self.entrypoint.create_smart_contract_controller(abi_adder)
 
@@ -42,7 +48,7 @@ class TestEntrypoint:
             bytecode=bytecode_path_multisig,
             gas_limit=100_000_000,
             quorum=2,
-            board=[alice.address, grace.address]
+            board=[alice.address, grace.address],
         )
 
         alice.nonce += 1
@@ -70,8 +76,8 @@ class TestEntrypoint:
                 contract_to_copy=contract_to_copy_address,
                 code_metadata=CodeMetadata(),
                 arguments=[7],
-                abi=abi_adder
-            )
+                abi=abi_adder,
+            ),
         )
 
         alice.nonce += 1
@@ -82,17 +88,13 @@ class TestEntrypoint:
 
         # Grace signs the action.
         transaction = controller_multisig.create_transaction_for_sign(
-            sender=grace,
-            nonce=grace.nonce,
-            contract=multisig_address,
-            gas_limit=30_000_000,
-            action_id=action_id
+            sender=grace, nonce=grace.nonce, contract=multisig_address, gas_limit=30_000_000, action_id=action_id
         )
 
         grace.nonce += 1
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
-        self.entrypoint.await_completed_transaction(transaction_hash)
+        self.entrypoint.await_transaction_completed(transaction_hash)
 
         # Query information about the action.
         signer_count = controller_multisig.get_action_signer_count(multisig_address, action_id)
@@ -117,11 +119,7 @@ class TestEntrypoint:
 
         # Alice performs the action.
         transaction = controller_multisig.create_transaction_for_perform_action(
-            sender=alice,
-            nonce=alice.nonce,
-            contract=multisig_address,
-            gas_limit=30_000_000,
-            action_id=action_id
+            sender=alice, nonce=alice.nonce, contract=multisig_address, gas_limit=30_000_000, action_id=action_id
         )
 
         alice.nonce += 1
@@ -132,11 +130,7 @@ class TestEntrypoint:
         assert adder_address is not None
 
         # Query the adder contract.
-        [value] = controller_adder.query_contract(
-            contract=adder_address,
-            function="getSum",
-            arguments=[]
-        )
+        [value] = controller_adder.query(contract=adder_address, function="getSum", arguments=[])
 
         print("Value of adder::getSum():", value)
         assert value == 7
@@ -154,7 +148,7 @@ class TestEntrypoint:
                 function="add",
                 arguments=[7],
                 abi=abi_adder,
-            )
+            ),
         )
 
         alice.nonce += 1
@@ -165,17 +159,13 @@ class TestEntrypoint:
 
         # Grace signs the action.
         transaction = controller_multisig.create_transaction_for_sign(
-            sender=grace,
-            nonce=grace.nonce,
-            contract=multisig_address,
-            gas_limit=30_000_000,
-            action_id=action_id
+            sender=grace, nonce=grace.nonce, contract=multisig_address, gas_limit=30_000_000, action_id=action_id
         )
 
         grace.nonce += 1
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
-        self.entrypoint.await_completed_transaction(transaction_hash)
+        self.entrypoint.await_transaction_completed(transaction_hash)
 
         [action_full_info] = controller_multisig.get_pending_actions_full_info(multisig_address)
         print("Action full info:", action_full_info)
@@ -192,11 +182,7 @@ class TestEntrypoint:
 
         # Alice performs the action.
         transaction = controller_multisig.create_transaction_for_perform_action(
-            sender=alice,
-            nonce=alice.nonce,
-            contract=multisig_address,
-            gas_limit=30_000_000,
-            action_id=action_id
+            sender=alice, nonce=alice.nonce, contract=multisig_address, gas_limit=30_000_000, action_id=action_id
         )
 
         alice.nonce += 1
@@ -205,11 +191,7 @@ class TestEntrypoint:
         _ = controller_multisig.await_completed_execute_perform(transaction_hash)
 
         # Query the adder contract.
-        [value] = controller_adder.query_contract(
-            contract=adder_address,
-            function="getSum",
-            arguments=[]
-        )
+        [value] = controller_adder.query(contract=adder_address, function="getSum", arguments=[])
 
         print("Value of adder::getSum():", value)
         assert value == 14
@@ -226,7 +208,7 @@ class TestEntrypoint:
                 function="add",
                 arguments=[7],
                 abi=abi_adder,
-            )
+            ),
         )
 
         alice.nonce += 1
@@ -237,25 +219,17 @@ class TestEntrypoint:
 
         # Grace signs the action.
         transaction = controller_multisig.create_transaction_for_sign(
-            sender=grace,
-            nonce=grace.nonce,
-            contract=multisig_address,
-            gas_limit=30_000_000,
-            action_id=action_id
+            sender=grace, nonce=grace.nonce, contract=multisig_address, gas_limit=30_000_000, action_id=action_id
         )
 
         grace.nonce += 1
 
         transaction_hash = self.entrypoint.send_transaction(transaction)
-        self.entrypoint.await_completed_transaction(transaction_hash)
+        self.entrypoint.await_transaction_completed(transaction_hash)
 
         # Alice performs the action.
         transaction = controller_multisig.create_transaction_for_perform_action(
-            sender=alice,
-            nonce=alice.nonce,
-            contract=multisig_address,
-            gas_limit=30_000_000,
-            action_id=action_id
+            sender=alice, nonce=alice.nonce, contract=multisig_address, gas_limit=30_000_000, action_id=action_id
         )
 
         alice.nonce += 1
@@ -263,12 +237,8 @@ class TestEntrypoint:
         transaction_hash = self.entrypoint.send_transaction(transaction)
         _ = controller_multisig.await_completed_execute_perform(transaction_hash)
 
-       # Query the adder contract.
-        [value] = controller_adder.query_contract(
-            contract=adder_address,
-            function="getSum",
-            arguments=[]
-        )
+        # Query the adder contract.
+        [value] = controller_adder.query(contract=adder_address, function="getSum", arguments=[])
 
         print("Value of adder::getSum():", value)
         assert value == 21

@@ -1,8 +1,9 @@
 from pathlib import Path
-from typing import Any, List, Optional, Protocol, Union
+from typing import Any, Optional, Protocol, Union
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.core.tokens import TokenTransfer
@@ -42,7 +43,7 @@ class INetworkProvider(Protocol):
 # fmt: on
 
 
-class MultisigV2Controller:
+class MultisigV2Controller(BaseController):
     def __init__(
         self,
         chain_id: str,
@@ -70,6 +71,9 @@ class MultisigV2Controller:
         is_readable: bool = True,
         is_payable: bool = False,
         is_payable_by_contract: bool = True,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_deploy(
             sender=sender.address,
@@ -81,8 +85,12 @@ class MultisigV2Controller:
             is_payable=is_payable,
             is_payable_by_sc=is_payable_by_contract,
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -91,7 +99,7 @@ class MultisigV2Controller:
         outcome = self.parser.parse_deploy(transaction_on_network)
         return outcome.contracts[0].address
 
-    def await_completed_deploy(self, tx_hash: str) -> Address:
+    def await_completed_deploy(self, tx_hash: Union[str, bytes]) -> Address:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_deploy(transaction)
 
@@ -102,7 +110,10 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         native_transfer_amount: int = 0,
-        token_transfers: Optional[List[TokenTransfer]] = None,
+        token_transfers: Optional[list[TokenTransfer]] = None,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -113,8 +124,12 @@ class MultisigV2Controller:
             native_transfer_amount=native_transfer_amount,
             token_transfers=token_transfers or [],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -126,6 +141,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         action_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -134,8 +152,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[action_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -147,6 +169,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         actions_ids: list[int],
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -155,8 +180,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[actions_ids],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -231,6 +260,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         board_member: Address,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -239,8 +271,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[board_member],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -252,6 +288,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         proposer: Address,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -260,8 +299,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[proposer],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -273,6 +316,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         user: Address,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -281,8 +327,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[user],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -294,6 +344,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         new_quorum: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -302,8 +355,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[new_quorum],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -315,7 +372,14 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         input: ProposeTransferExecuteInput,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
+        """Propose a transaction in which the contract will perform a transfer-execute call.
+        Can send EGLD without calling anything.
+        Can call smart contract endpoints directly.
+        Doesn't really work with builtin functions."""
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
@@ -323,8 +387,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -336,6 +404,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         input: ProposeTransferExecuteEsdtInput,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -344,8 +415,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[input.to, input.tokens, input.opt_gas_limit, input.function_call],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -357,6 +432,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         input: ProposeAsyncCallInput,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -365,8 +443,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -378,6 +460,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         input: ProposeSyncCallInput,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -386,8 +471,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[input.to, input.egld_amount, input.opt_gas_limit, input.function_call],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -399,6 +488,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         input: ProposeSCDeployFromSourceInput,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -407,8 +499,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[input.amount, input.source, input.code_metadata, input.arguments],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -420,6 +516,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         input: ProposeSCUpgradeFromSourceInput,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -428,8 +527,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[input.sc_address, input.amount, input.source, input.code_metadata, input.arguments],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -441,6 +544,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         actions: list[Any],
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         raise NotImplementedError("Not implemented yet")
 
@@ -451,6 +557,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         action_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -459,8 +568,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[action_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -472,6 +585,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         group_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -480,8 +596,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[group_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -493,6 +613,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         action_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -501,8 +624,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[action_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -514,6 +641,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         group_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -522,8 +652,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[group_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -535,6 +669,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         action_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -543,8 +680,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[action_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -556,6 +697,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         group_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -564,8 +708,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[group_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -592,6 +740,9 @@ class MultisigV2Controller:
         gas_limit: int,
         action_id: int,
         outdated_board_members: list[int],
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -600,8 +751,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[action_id, outdated_board_members],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -622,6 +777,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         action_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -630,8 +788,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[action_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -643,6 +805,9 @@ class MultisigV2Controller:
         contract: Address,
         gas_limit: int,
         group_id: int,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
     ) -> Transaction:
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
@@ -651,8 +816,12 @@ class MultisigV2Controller:
             gas_limit=gas_limit,
             arguments=[group_id],
         )
-
+        transaction.guardian = guardian
+        transaction.relayer = relayer
         transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -737,7 +906,7 @@ class MultisigV2Controller:
         [value] = outcome.values
         return value
 
-    def await_completed_execute_propose_any(self, tx_hash: str) -> int:
+    def await_completed_execute_propose_any(self, tx_hash: Union[str, bytes]) -> int:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_execute_propose_any(transaction)
 
@@ -747,7 +916,7 @@ class MultisigV2Controller:
         [value] = outcome.values
         return Address(value, self.address_hrp) if value else None
 
-    def await_completed_execute_perform(self, tx_hash: str) -> Optional[Address]:
+    def await_completed_execute_perform(self, tx_hash: Union[str, bytes]) -> Optional[Address]:
         transaction = self.network_provider.await_transaction_completed(tx_hash)
         return self.parse_execute_perform(transaction)
 
