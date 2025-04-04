@@ -560,7 +560,6 @@ class DelegationController(BaseController):
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        amount: int,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,

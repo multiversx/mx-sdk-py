@@ -1,6 +1,7 @@
 from typing import Any, Callable, Optional, Protocol, Union
 
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.constants import METACHAIN_ID
 from multiversx_sdk.core.tokens import Token
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
@@ -25,7 +26,7 @@ from multiversx_sdk.smart_contracts.smart_contract_query import (
 class INetworkProvider(Protocol):
     def get_network_config(self) -> NetworkConfig: ...
 
-    def get_network_status(self, shard: int) -> NetworkStatus: ...
+    def get_network_status(self, shard: int = METACHAIN_ID) -> NetworkStatus: ...
 
     def get_account(self, address: Address) -> AccountOnNetwork: ...
 
@@ -37,7 +38,7 @@ class INetworkProvider(Protocol):
         self,
         address: Address,
         condition: Callable[[AccountOnNetwork], bool],
-        options: Optional[AwaitingOptions],
+        options: Optional[AwaitingOptions] = None,
     ) -> AccountOnNetwork: ...
 
     def send_transaction(self, transaction: Transaction) -> bytes: ...
@@ -58,7 +59,7 @@ class INetworkProvider(Protocol):
         self,
         transaction_hash: Union[bytes, str],
         condition: Callable[[TransactionOnNetwork], bool],
-        options: Optional[AwaitingOptions],
+        options: Optional[AwaitingOptions] = None,
     ) -> TransactionOnNetwork: ...
 
     def get_token_of_account(self, address: Address, token: Token) -> TokenAmountOnNetwork: ...
