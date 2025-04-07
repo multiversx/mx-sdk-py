@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.network_providers.interface &mdash; multiversx-sdk 1.2.0 documentation</title>
+  <title>multiversx_sdk.network_providers.interface &mdash; multiversx-sdk 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6efca38a"></script>
+      <script src="../../../_static/documentation_options.js?v=1f29e9d3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -72,6 +72,7 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">METACHAIN_ID</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.tokens</span><span class="w"> </span><span class="kn">import</span> <span class="n">Token</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction_on_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionOnNetwork</span>
@@ -103,7 +104,7 @@
 
 <div class="viewcode-block" id="INetworkProvider.get_network_status">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.interface.INetworkProvider.get_network_status">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_network_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shard</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span> <span class="o">...</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_network_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shard</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">METACHAIN_ID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span> <span class="o">...</span></div>
 
 
 <div class="viewcode-block" id="INetworkProvider.get_account">
@@ -128,7 +129,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AccountOnNetwork</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
-        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span> <span class="o">...</span>
 
 <div class="viewcode-block" id="INetworkProvider.send_transaction">
@@ -160,7 +161,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.interface.INetworkProvider.await_transaction_completed">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_transaction_completed</span><span class="p">(</span></div>
 
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span> <span class="o">...</span>
 
 <div class="viewcode-block" id="INetworkProvider.await_transaction_on_condition">
@@ -170,7 +171,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
         <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">TransactionOnNetwork</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span>
-        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span> <span class="o">...</span>
 
 <div class="viewcode-block" id="INetworkProvider.get_token_of_account">

@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk &mdash; multiversx-sdk 1.2.0 documentation</title>
+  <title>multiversx_sdk &mdash; multiversx-sdk 1.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=6efca38a"></script>
+      <script src="_static/documentation_options.js?v=1f29e9d3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -455,7 +455,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController"><code class="docutils literal notranslate"><span class="pre">DelegationController</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.await_completed_claim_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationController.await_completed_claim_rewards()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.await_completed_create_new_delegation_contract"><code class="docutils literal notranslate"><span class="pre">DelegationController.await_completed_create_new_delegation_contract()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.await_completed_delegate"><code class="docutils literal notranslate"><span class="pre">DelegationController.await_completed_delegate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.await_completed_redelegate_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationController.await_completed_redelegate_rewards()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.await_completed_undelegate"><code class="docutils literal notranslate"><span class="pre">DelegationController.await_completed_undelegate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.create_transaction_for_adding_nodes"><code class="docutils literal notranslate"><span class="pre">DelegationController.create_transaction_for_adding_nodes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.create_transaction_for_changing_service_fee"><code class="docutils literal notranslate"><span class="pre">DelegationController.create_transaction_for_changing_service_fee()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.create_transaction_for_claiming_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationController.create_transaction_for_claiming_rewards()</span></code></a></li>
@@ -475,7 +479,11 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.create_transaction_for_unsetting_cap_check_on_redelegate_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationController.create_transaction_for_unsetting_cap_check_on_redelegate_rewards()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.create_transaction_for_unstaking_nodes"><code class="docutils literal notranslate"><span class="pre">DelegationController.create_transaction_for_unstaking_nodes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.create_transaction_for_withdrawing"><code class="docutils literal notranslate"><span class="pre">DelegationController.create_transaction_for_withdrawing()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.parse_claim_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationController.parse_claim_rewards()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.parse_create_new_delegation_contract"><code class="docutils literal notranslate"><span class="pre">DelegationController.parse_create_new_delegation_contract()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.parse_delegate"><code class="docutils literal notranslate"><span class="pre">DelegationController.parse_delegate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.parse_redelegate_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationController.parse_redelegate_rewards()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationController.parse_undelegate"><code class="docutils literal notranslate"><span class="pre">DelegationController.parse_undelegate()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationTransactionsFactory"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsFactory</span></code></a><ul>
@@ -501,7 +509,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationTransactionsOutcomeParser"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationTransactionsOutcomeParser.parse_claim_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_claim_rewards()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationTransactionsOutcomeParser.parse_create_new_delegation_contract"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_create_new_delegation_contract()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationTransactionsOutcomeParser.parse_delegate"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_delegate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationTransactionsOutcomeParser.parse_redelegate_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_redelegate_rewards()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegationTransactionsOutcomeParser.parse_undelegate"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_undelegate()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DeployedSmartContract"><code class="docutils literal notranslate"><span class="pre">DeployedSmartContract</span></code></a><ul>
@@ -527,7 +539,6 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.FungibleTokenMetadata.ticker"><code class="docutils literal notranslate"><span class="pre">FungibleTokenMetadata.ticker</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.GenericError"><code class="docutils literal notranslate"><span class="pre">GenericError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.GenericResponse"><code class="docutils literal notranslate"><span class="pre">GenericResponse</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.GenericResponse.get"><code class="docutils literal notranslate"><span class="pre">GenericResponse.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.GenericResponse.to_dictionary"><code class="docutils literal notranslate"><span class="pre">GenericResponse.to_dictionary()</span></code></a></li>
@@ -685,6 +696,7 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_transfers_transactions_factory"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_transfers_transactions_factory()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.get_airdrop"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.get_airdrop()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.get_transaction"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.get_transaction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.new_from_network_provider"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.new_from_network_provider()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.recall_account_nonce"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.recall_account_nonce()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.send_transaction"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.send_transaction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.send_transactions"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.send_transactions()</span></code></a></li>
@@ -693,6 +705,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkProviderConfig"><code class="docutils literal notranslate"><span class="pre">NetworkProviderConfig</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkProviderError"><code class="docutils literal notranslate"><span class="pre">NetworkProviderError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkStatus"><code class="docutils literal notranslate"><span class="pre">NetworkStatus</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkStatus.block_nonce"><code class="docutils literal notranslate"><span class="pre">NetworkStatus.block_nonce</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkStatus.block_timestamp"><code class="docutils literal notranslate"><span class="pre">NetworkStatus.block_timestamp</span></code></a></li>
@@ -764,6 +777,12 @@
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory"><code class="docutils literal notranslate"><span class="pre">RelayedTransactionsFactory</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v1_transaction"><code class="docutils literal notranslate"><span class="pre">RelayedTransactionsFactory.create_relayed_v1_transaction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v2_transaction"><code class="docutils literal notranslate"><span class="pre">RelayedTransactionsFactory.create_relayed_v2_transaction()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RequestsRetryOptions"><code class="docutils literal notranslate"><span class="pre">RequestsRetryOptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RequestsRetryOptions.backoff_factor"><code class="docutils literal notranslate"><span class="pre">RequestsRetryOptions.backoff_factor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RequestsRetryOptions.retries"><code class="docutils literal notranslate"><span class="pre">RequestsRetryOptions.retries</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RequestsRetryOptions.status_forecelist"><code class="docutils literal notranslate"><span class="pre">RequestsRetryOptions.status_forecelist</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.SetNewUrisOutcome"><code class="docutils literal notranslate"><span class="pre">SetNewUrisOutcome</span></code></a><ul>
