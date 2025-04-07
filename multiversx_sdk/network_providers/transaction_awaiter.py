@@ -7,13 +7,12 @@ from multiversx_sdk.network_providers.constants import (
     DEFAULT_TRANSACTION_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
     DEFAULT_TRANSACTION_AWAITING_TIMEOUT_IN_MILLISECONDS,
+    ONE_SECOND_IN_MILLISECONDS,
 )
 from multiversx_sdk.network_providers.errors import (
     ExpectedTransactionStatusNotReachedError,
     TransactionFetchingError,
 )
-
-ONE_SECOND_IN_MILLISECONDS = 1000
 
 logger = logging.getLogger("transaction_awaiter")
 

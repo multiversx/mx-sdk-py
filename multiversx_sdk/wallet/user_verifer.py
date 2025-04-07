@@ -10,7 +10,7 @@ class UserVerifier:
     def from_address(cls, address: Address) -> "UserVerifier":
         buffer: bytes = address.get_public_key()
         public_key = UserPublicKey(buffer)
-        return UserVerifier(public_key)
+        return cls(public_key)
 
     def verify(self, data: bytes, signature: bytes) -> bool:
         return self.public_key.verify(data, signature)

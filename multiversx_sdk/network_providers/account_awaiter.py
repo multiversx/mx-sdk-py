@@ -7,13 +7,12 @@ from multiversx_sdk.network_providers.constants import (
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
     DEFAULT_ACCOUNT_AWAITING_POLLING_TIMEOUT_IN_MILLISECONDS,
     DEFAULT_ACCOUNT_AWAITING_TIMEOUT_IN_MILLISECONDS,
+    ONE_SECOND_IN_MILLISECONDS,
 )
 from multiversx_sdk.network_providers.errors import (
     ExpectedAccountConditionNotReachedError,
 )
 from multiversx_sdk.network_providers.resources import AccountOnNetwork
-
-ONE_SECOND_IN_MILLISECONDS = 1000
 
 logger = logging.getLogger("account_awaiter")
 

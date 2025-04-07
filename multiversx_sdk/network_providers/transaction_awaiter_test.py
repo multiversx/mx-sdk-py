@@ -5,6 +5,10 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_status import TransactionStatus
+from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
+from multiversx_sdk.network_providers.errors import (
+    ExpectedTransactionStatusNotReachedError,
+)
 from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
 from multiversx_sdk.network_providers.transaction_awaiter import TransactionAwaiter
 from multiversx_sdk.testutils.mock_network_provider import (
@@ -90,3 +94,35 @@ class TestTransactionAwaiter:
 
         tx_from_network = self.watcher.await_on_condition(tx_hash, condition)
         assert tx_from_network.status.status == "failed"
+
+    @pytest.mark.networkInteraction
+    def test_ensure_error_if_timeout(self):
+        alice = load_wallets()["alice"]
+        alice_address = Address.new_from_bech32(alice.label)
+        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+
+        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        watcher = TransactionAwaiter(
+            fetcher=api,
+            polling_interval_in_milliseconds=1000,
+            timeout_interval_in_milliseconds=10000,
+        )
+
+        transaction = Transaction(
+            sender=alice_address,
+            receiver=bob,
+            gas_limit=50000,
+            chain_id="D",
+        )
+        transaction.nonce = api.get_account(alice_address).nonce
+
+        tx_computer = TransactionComputer()
+        transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+
+        def condition(transaction: TransactionOnNetwork) -> bool:
+            return transaction.status.status == "failed"
+
+        tx_hash = api.send_transaction(transaction)
+
+        with pytest.raises(ExpectedTransactionStatusNotReachedError):
+            watcher.await_on_condition(tx_hash, condition)

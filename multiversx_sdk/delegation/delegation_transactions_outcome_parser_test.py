@@ -85,3 +85,105 @@ class TestDelegationTransactionsOutcomeParser:
 
         assert len(outcome) == 1
         assert outcome[0].contract_address == contract_address
+
+    def test_parse_claim_rewards(self):
+        encodedTopics = [
+            "AvYUMPsrWw==",
+            "ZmFsc2U=",
+            "AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAABD///8=",
+        ]
+
+        claim_rewards_event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="claimRewards",
+            topics=base64_topics_to_bytes(encodedTopics),
+            data=b"",
+            additional_data=[],
+        )
+        logs = TransactionLogs(address=Address.empty(), events=[claim_rewards_event])
+
+        tx = get_empty_transaction_on_network()
+        tx.logs = logs
+
+        outcome = self.parser.parse_claim_rewards(tx)
+        assert len(outcome) == 1
+        assert outcome[0].amount == 833516534967131
+
+    def test_parse_delegate(self):
+        encodedTopics = [
+            "DeC2s6dkAAA=",
+            "DeC2s6dkAAA=",
+            "pg==",
+            "Gasl6c5mNE7QJw==",
+            "AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAABn///8=",
+        ]
+
+        delegate_event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="delegate",
+            topics=base64_topics_to_bytes(encodedTopics),
+            data=b"",
+            additional_data=[],
+        )
+        logs = TransactionLogs(address=Address.empty(), events=[delegate_event])
+
+        tx = get_empty_transaction_on_network()
+        tx.logs = logs
+
+        outcome = self.parser.parse_delegate(tx)
+        assert len(outcome) == 1
+        assert outcome[0].amount == 1000000000000000000
+
+    def test_parse_undelegate(self):
+        encodedTopics = [
+            "DeC2s6dkAAA=",
+            "DeC2s6dkAAA=",
+            "",
+            "irzOS6k1Z2fS",
+            "ZnVuZA4=",
+        ]
+
+        delegate_event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="unDelegate",
+            topics=base64_topics_to_bytes(encodedTopics),
+            data=b"",
+            additional_data=[],
+        )
+        logs = TransactionLogs(address=Address.empty(), events=[delegate_event])
+
+        tx = get_empty_transaction_on_network()
+        tx.logs = logs
+
+        outcome = self.parser.parse_undelegate(tx)
+        assert len(outcome) == 1
+        assert outcome[0].amount == 1000000000000000000
+
+    def test_parse_redelegate_rewards(self):
+        encodedTopics = [
+            "BM+vfE0H7g==",
+            "EVkZ9Arz3e4=",
+            "Aw==",
+            "iluVsi0Qb93u",
+            "AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAC3///8=",
+        ]
+
+        delegate_event = TransactionEvent(
+            raw={},
+            address=Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"),
+            identifier="delegate",
+            topics=base64_topics_to_bytes(encodedTopics),
+            data=b"",
+            additional_data=[],
+        )
+        logs = TransactionLogs(address=Address.empty(), events=[delegate_event])
+
+        tx = get_empty_transaction_on_network()
+        tx.logs = logs
+
+        outcome = self.parser.parse_delegate(tx)
+        assert len(outcome) == 1
+        assert outcome[0].amount == 1354252518492142

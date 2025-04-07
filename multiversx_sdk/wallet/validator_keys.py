@@ -16,12 +16,12 @@ class ValidatorSecretKey:
     @classmethod
     def generate(cls) -> "ValidatorSecretKey":
         secret_key_bytes = BLSFacade().generate_private_key()
-        return ValidatorSecretKey(secret_key_bytes)
+        return cls(secret_key_bytes)
 
     @classmethod
     def from_string(cls, buffer_hex: str) -> "ValidatorSecretKey":
         buffer = bytes.fromhex(buffer_hex)
-        return ValidatorSecretKey(buffer)
+        return cls(buffer)
 
     def generate_public_key(self) -> "ValidatorPublicKey":
         public_key_bytes = BLSFacade().generate_public_key(self.buffer)

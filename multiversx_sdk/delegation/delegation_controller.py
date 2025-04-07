@@ -15,7 +15,11 @@ from multiversx_sdk.delegation.delegation_transactions_outcome_parser import (
     DelegationTransactionsOutcomeParser,
 )
 from multiversx_sdk.delegation.delegation_transactions_outcome_parser_types import (
+    ClaimRewardsOutcome,
     CreateNewDelegationContractOutcome,
+    DelegateOutcome,
+    RedelegateRewardsOutcome,
+    UndelegateOutcome,
 )
 from multiversx_sdk.network_providers.resources import AwaitingOptions
 from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
@@ -448,6 +452,13 @@ class DelegationController(BaseController):
 
         return transaction
 
+    def parse_delegate(self, transaction_on_network: TransactionOnNetwork) -> list[DelegateOutcome]:
+        return self.parser.parse_delegate(transaction_on_network)
+
+    def await_completed_delegate(self, transaction_hash: Union[str, bytes]) -> list[DelegateOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_delegate(transaction)
+
     def create_transaction_for_claiming_rewards(
         self,
         sender: IAccount,
@@ -472,6 +483,13 @@ class DelegationController(BaseController):
 
         return transaction
 
+    def parse_claim_rewards(self, transaction_on_network: TransactionOnNetwork) -> list[ClaimRewardsOutcome]:
+        return self.parser.parse_claim_rewards(transaction_on_network)
+
+    def await_completed_claim_rewards(self, transaction_hash: Union[str, bytes]) -> list[ClaimRewardsOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_claim_rewards(transaction)
+
     def create_transaction_for_redelegating_rewards(
         self,
         sender: IAccount,
@@ -495,6 +513,13 @@ class DelegationController(BaseController):
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
+
+    def parse_redelegate_rewards(self, transaction_on_network: TransactionOnNetwork) -> list[RedelegateRewardsOutcome]:
+        return self.parser.parse_redelegate_rewards(transaction_on_network)
+
+    def await_completed_redelegate_rewards(self, transaction_hash: Union[str, bytes]) -> list[RedelegateRewardsOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_redelegate_rewards(transaction)
 
     def create_transaction_for_undelegating(
         self,
@@ -523,12 +548,18 @@ class DelegationController(BaseController):
 
         return transaction
 
+    def parse_undelegate(self, transaction_on_network: TransactionOnNetwork) -> list[UndelegateOutcome]:
+        return self.parser.parse_undelegate(transaction_on_network)
+
+    def await_completed_undelegate(self, transaction_hash: Union[str, bytes]) -> list[UndelegateOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        return self.parse_undelegate(transaction)
+
     def create_transaction_for_withdrawing(
         self,
         sender: IAccount,
         nonce: int,
         delegation_contract: Address,
-        amount: int,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
