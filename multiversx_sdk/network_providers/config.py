@@ -12,7 +12,7 @@ from typing import Any, Optional
 class RequestsRetryOptions:
     retries: int = 3
     backoff_factor: float = 0.05
-    status_forecelist: list[int] = field(
+    status_forcelist: list[int] = field(
         default_factory=lambda: [
             INTERNAL_SERVER_ERROR,
             BAD_GATEWAY,
