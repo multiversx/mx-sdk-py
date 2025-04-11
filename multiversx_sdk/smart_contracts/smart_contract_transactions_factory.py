@@ -195,6 +195,9 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
+        if all(isinstance(arg, bytes) for arg in args):
+            return args
+
         raise ArgumentSerializationError()
 
     def _encode_execute_arguments(self, function_name: str, args: list[Any]) -> list[bytes]:
@@ -204,6 +207,9 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
+        if all(isinstance(arg, bytes) for arg in args):
+            return args
+
         raise ArgumentSerializationError()
 
     def _encode_upgrade_arguments(self, args: list[Any]) -> list[bytes]:
@@ -212,5 +218,8 @@ class SmartContractTransactionsFactory:
 
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
+
+        if all(isinstance(arg, bytes) for arg in args):
+            return args
 
         raise ArgumentSerializationError()

@@ -26,6 +26,7 @@ from multiversx_sdk.entrypoints.config import (
     TestnetEntrypointConfig,
 )
 from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
+from multiversx_sdk.multisig.multisig_v2_controller import MultisigV2Controller
 from multiversx_sdk.network_providers import ApiNetworkProvider, ProxyNetworkProvider
 from multiversx_sdk.network_providers.interface import INetworkProvider
 from multiversx_sdk.relayed.relayed_controller import RelayedController
@@ -179,6 +180,14 @@ class NetworkEntrypoint:
     def create_transfers_transactions_factory(self) -> TransferTransactionsFactory:
         return TransferTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
+    def create_multisig_v2_controller(self, abi: Abi, address_hrp: Optional[str] = None) -> MultisigV2Controller:
+        return MultisigV2Controller(
+            chain_id=self._get_chain_id(),
+            network_provider=self.network_provider,
+            abi=abi,
+            address_hrp=address_hrp,
+        )
+
     def _get_chain_id(self) -> str:
         if self.chain_id:
             return self.chain_id
@@ -187,37 +196,29 @@ class NetworkEntrypoint:
         return self.chain_id
 
 
+class LocalnetEntrypoint(NetworkEntrypoint):
+    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
+        url = url or LocalnetEntrypointConfig.network_provider_url
+        kind = kind or LocalnetEntrypointConfig.network_provider_kind
+        super().__init__(url, kind, LocalnetEntrypointConfig.chain_id)
+
+
 class TestnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         url = url or TestnetEntrypointConfig.network_provider_url
-
         kind = kind or TestnetEntrypointConfig.network_provider_kind
-
         super().__init__(url, kind, TestnetEntrypointConfig.chain_id)
 
 
 class DevnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         url = url or DevnetEntrypointConfig.network_provider_url
-
         kind = kind or DevnetEntrypointConfig.network_provider_kind
-
         super().__init__(url, kind, DevnetEntrypointConfig.chain_id)
 
 
 class MainnetEntrypoint(NetworkEntrypoint):
     def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
         url = url or MainnetEntrypointConfig.network_provider_url
-
         kind = kind or MainnetEntrypointConfig.network_provider_kind
-
         super().__init__(url, kind, MainnetEntrypointConfig.chain_id)
-
-
-class LocalnetEntrypoint(NetworkEntrypoint):
-    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
-        url = url or LocalnetEntrypointConfig.network_provider_url
-
-        kind = kind or LocalnetEntrypointConfig.network_provider_kind
-
-        super().__init__(url, kind, LocalnetEntrypointConfig.chain_id)
