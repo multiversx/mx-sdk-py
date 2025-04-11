@@ -1,7 +1,14 @@
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.fields import Field
+from multiversx_sdk.abi.interface import ISingleValue
+from multiversx_sdk.abi.multi_value import MultiValue
+from multiversx_sdk.abi.small_int_values import U64Value
+from multiversx_sdk.abi.string_value import StringValue
+from multiversx_sdk.abi.struct_value import StructValue
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.config import LibraryConfig
@@ -21,7 +28,7 @@ class ProposeTransferExecuteInput:
         self,
         to: Address,
         native_transfer_amount: int,
-        function_call: list[bytes],
+        function_call: Union[list[bytes], list[Union[ISingleValue, MultiValue]]],
         opt_gas_limit: Optional[int] = None,
     ) -> None:
         self.to = to
@@ -44,8 +51,8 @@ class ProposeTransferExecuteInput:
         abi: Optional[Abi] = None,
     ):
         arguments = abi.encode_endpoint_input_parameters(function, arguments) if abi else arguments
-        function_call = [function, *arguments]
-        return cls(to, native_transfer_amount, function_call, gas_limit)  # type: ignore
+        function_call: list[Any] = [StringValue(function), *arguments]
+        return cls(to, native_transfer_amount, function_call, gas_limit)
 
 
 class ProposeTransferExecuteEsdtInput:
@@ -108,12 +115,10 @@ class ProposeAsyncCallInput:
     def __init__(
         self,
         to: Address,
-        egld_amount: int,
         function_call: list[bytes],
         opt_gas_limit: Optional[int] = None,
     ) -> None:
         self.to = to
-        self.egld_amount = egld_amount
         self.function_call = function_call
         self.opt_gas_limit = opt_gas_limit
 
@@ -139,13 +144,12 @@ class ProposeAsyncCallInput:
         function_name = function_call_parts[0]
         function_arguments = [bytes.fromhex(item.decode()) for item in function_call_parts[1:]]
         function_call = [function_name, *function_arguments]
-        return cls(to, 0, function_call, gas_limit)
+        return cls(to, function_call, gas_limit)
 
     @classmethod
     def new_for_transfer_execute(
         cls,
         to: Address,
-        native_transfer_amount: int,
         token_transfers: list[TokenTransfer],
         function: str,
         arguments: list[Any],
@@ -161,7 +165,6 @@ class ProposeAsyncCallInput:
             function=function,
             gas_limit=0,
             arguments=arguments,
-            # Multisig wasn't designed to work with EGLD within MultiESDTNFT.
             native_transfer_amount=0,
             token_transfers=token_transfers,
         )
@@ -170,18 +173,22 @@ class ProposeAsyncCallInput:
         function_name = function_call_parts[0]
         function_arguments = [bytes.fromhex(item.decode()) for item in function_call_parts[1:]]
         function_call = [function_name, *function_arguments]
-        return cls(to, native_transfer_amount, function_call, gas_limit)
+        return cls(to, function_call, gas_limit)
 
 
 class ProposeSyncCallInput(ProposeAsyncCallInput):
     pass
 
 
-class EsdtTokenPayment:
+class EsdtTokenPayment(StructValue):
     def __init__(self, token_identifier: str, token_nonce: int, amount: int) -> None:
-        self.token_identifier = token_identifier
-        self.token_nonce = token_nonce
-        self.amount = amount
+        super().__init__(
+            [
+                Field("token_identifier", StringValue(token_identifier)),
+                Field("token_nonce", U64Value(token_nonce)),
+                Field("amount", BigUIntValue(amount)),
+            ],
+        )
 
 
 class ProposeSCDeployFromSourceInput:

@@ -10,7 +10,7 @@ from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
-from multiversx_sdk.multisig.multisig_v2_resources import (
+from multiversx_sdk.multisig.resources import (
     ActionFullInfo,
     ProposeAsyncCallInput,
     ProposeSCDeployFromSourceInput,

@@ -7,7 +7,7 @@ from multiversx_sdk.accounts import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.entrypoints import DevnetEntrypoint
-from multiversx_sdk.multisig.multisig_v2_resources import (
+from multiversx_sdk.multisig.resources import (
     ProposeAsyncCallInput,
     ProposeSCDeployFromSourceInput,
     ProposeTransferExecuteInput,

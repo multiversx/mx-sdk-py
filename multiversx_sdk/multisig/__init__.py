@@ -1,5 +1,5 @@
 from multiversx_sdk.multisig.multisig_v2_controller import MultisigV2Controller
-from multiversx_sdk.multisig.multisig_v2_resources import (
+from multiversx_sdk.multisig.resources import (
     Action,
     ActionFullInfo,
     AddBoardMember,
