@@ -358,7 +358,6 @@ class TestMultisigTransactionsFactory:
         )
         assert abi_transaction == transaction
 
-    @pytest.mark.only
     def test_propose_async_call(self):
         alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
@@ -394,4 +393,372 @@ class TestMultisigTransactionsFactory:
             abi_transaction.data.decode()
             == "proposeAsyncCall@0000000000000000050078d29632acb15998003f615d0a51261353d8041d3e13@@0100000000004c4b40@616464@07"
         )
+        assert abi_transaction == transaction
+
+    def test_propose_sc_deploy_from_source(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
+        adder = Abi.load(self.testdata / "adder.abi.json")
+
+        abi_transaction = self.abi_factory.create_transaction_for_contract_deploy_from_source(
+            sender=sender,
+            contract=multisig,
+            gas_limit=60_000_000,
+            contract_to_copy=contract,
+            arguments=[0],
+            native_token_amount=50000000000000000,
+            abi=adder,
+            is_readable=True,
+            is_upgradeable=True,
+            is_payable=False,
+            is_payable_by_sc=False,
+        )
+
+        transaction = self.factory.create_transaction_for_contract_deploy_from_source(
+            sender=sender,
+            contract=multisig,
+            gas_limit=60_000_000,
+            contract_to_copy=contract,
+            arguments=[BigUIntValue()],
+            native_token_amount=50000000000000000,
+            abi=adder,
+            is_readable=True,
+            is_upgradeable=True,
+            is_payable=False,
+            is_payable_by_sc=False,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 60_000_000
+        assert abi_transaction.chain_id == "D"
+        assert (
+            abi_transaction.data.decode()
+            == "proposeSCDeployFromSource@b1a2bc2ec50000@00000000000000000500870d0412cede871853a1c2d48a7543c073eb39f969e1@0500@"
+        )
+        assert abi_transaction == transaction
+
+    def test_propose_sc_upgrade_from_source(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+        contract_to_upgrade = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqd273cw3hjndqzcpts4dvq0ncy8nx8rkgzeusnefvaq")
+        contract_to_copy = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
+        adder = Abi.load(self.testdata / "adder.abi.json")
+
+        abi_transaction = self.abi_factory.create_transaction_for_contract_upgrade_from_source(
+            sender=sender,
+            contract=multisig,
+            contract_to_upgrade=contract_to_upgrade,
+            gas_limit=60_000_000,
+            contract_to_copy=contract_to_copy,
+            arguments=[0],
+            native_token_amount=50000000000000000,
+            abi=adder,
+            is_readable=True,
+            is_upgradeable=True,
+            is_payable=False,
+            is_payable_by_sc=False,
+        )
+
+        transaction = self.factory.create_transaction_for_contract_upgrade_from_source(
+            sender=sender,
+            contract=multisig,
+            contract_to_upgrade=contract_to_upgrade,
+            gas_limit=60_000_000,
+            contract_to_copy=contract_to_copy,
+            arguments=[BigUIntValue()],
+            native_token_amount=50000000000000000,
+            abi=adder,
+            is_readable=True,
+            is_upgradeable=True,
+            is_payable=False,
+            is_payable_by_sc=False,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 60_000_000
+        assert abi_transaction.chain_id == "D"
+        assert (
+            abi_transaction.data.decode()
+            == "proposeSCUpgradeFromSource@000000000000000005006abd1c3a3794da01602b855ac03e7821e6638ec81679@b1a2bc2ec50000@00000000000000000500870d0412cede871853a1c2d48a7543c073eb39f969e1@0500@"
+        )
+        assert abi_transaction == transaction
+
+    def test_sign_action(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_sign_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_sign_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "sign@07"
+        assert abi_transaction == transaction
+
+    def test_sign_batch(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_sign_batch(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_sign_batch(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "signBatch@07"
+        assert abi_transaction == transaction
+
+    def test_sign_and_perform(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_sign_and_perform(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_sign_and_perform(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "signAndPerform@07"
+        assert abi_transaction == transaction
+
+    def test_sign_batch_and_perform(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_sign_batch_and_perform(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_sign_batch_and_perform(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "signBatchAndPerform@07"
+        assert abi_transaction == transaction
+
+    def test_unsign_action(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_unsign_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_unsign_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "unsign@07"
+        assert abi_transaction == transaction
+
+    def test_unsign_batch(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_unsign_batch(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_unsign_batch(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "unsignBatch@07"
+        assert abi_transaction == transaction
+
+    def test_unsign_for_outdated_board_members(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_unsign_for_outdated_board_members(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            outdated_board_members=[1, 2],
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_unsign_for_outdated_board_members(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            outdated_board_members=[1, 2],
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "unsignForOutdatedBoardMembers@07@01@02"
+        assert abi_transaction == transaction
+
+    def test_perform_action(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_perform_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_perform_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "performAction@07"
+        assert abi_transaction == transaction
+
+    def test_perform_batch(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_perform_batch(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_perform_batch(
+            sender=sender,
+            contract=multisig,
+            batch_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "performBatch@07"
+        assert abi_transaction == transaction
+
+    def test_discard_action(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_discard_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_discard_action(
+            sender=sender,
+            contract=multisig,
+            action_id=7,
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "discardAction@07"
+        assert abi_transaction == transaction
+
+    def test_discard_batch(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        abi_transaction = self.abi_factory.create_transaction_for_discard_batch(
+            sender=sender,
+            contract=multisig,
+            action_ids=[7, 8],
+            gas_limit=1_000_000,
+        )
+
+        transaction = self.factory.create_transaction_for_discard_batch(
+            sender=sender,
+            contract=multisig,
+            action_ids=[7, 8],
+            gas_limit=1_000_000,
+        )
+        assert abi_transaction.sender == sender
+        assert abi_transaction.receiver == multisig
+        assert abi_transaction.value == 0
+        assert abi_transaction.gas_limit == 1_000_000
+        assert abi_transaction.chain_id == "D"
+        assert abi_transaction.data.decode() == "discardBatch@07@08"
         assert abi_transaction == transaction

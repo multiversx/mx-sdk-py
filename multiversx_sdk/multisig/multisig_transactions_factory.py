@@ -5,6 +5,7 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
+from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.list_value import ListValue
 from multiversx_sdk.abi.multi_value import MultiValue
@@ -31,7 +32,7 @@ from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import (
 
 class MultisigTransactionsFactory:
     def __init__(self, config: TransactionsFactoryConfig, abi: Optional[Abi] = None) -> None:
-        self.sc_factory = SmartContractTransactionsFactory(config, abi)
+        self._sc_factory = SmartContractTransactionsFactory(config, abi)
 
     def create_transaction_for_deploy(
         self,
@@ -47,10 +48,9 @@ class MultisigTransactionsFactory:
         is_payable_by_sc: bool = True,
     ) -> Transaction:
         board_members = [AddressValue.new_from_address(address) for address in board]
-
         args = [U32Value(quorum), VariadicValues(items=board_members)]
 
-        return self.sc_factory.create_transaction_for_deploy(
+        return self._sc_factory.create_transaction_for_deploy(
             sender=sender,
             bytecode=bytecode,
             arguments=args,
@@ -62,6 +62,57 @@ class MultisigTransactionsFactory:
             is_payable_by_sc=is_payable_by_sc,
         )
 
+    def create_transaction_for_deposit(
+        self,
+        sender: Address,
+        contract: Address,
+        gas_limit: int,
+        native_token_amount: Optional[int] = None,
+        token_transfers: Optional[list[TokenTransfer]] = None,
+    ) -> Transaction:
+        if not native_token_amount and not token_transfers:
+            raise Exception("No native token amount or token transfers provided")
+
+        return self._sc_factory.create_transaction_for_execute(
+            sender=sender,
+            contract=contract,
+            function="deposit",
+            gas_limit=gas_limit,
+            arguments=[],
+            native_transfer_amount=native_token_amount if native_token_amount else 0,
+            token_transfers=token_transfers if token_transfers else [],
+        )
+
+    def create_transaction_for_discard_action(
+        self,
+        sender: Address,
+        contract: Address,
+        action_id: int,
+        gas_limit: int,
+    ) -> Transaction:
+        return self._sc_factory.create_transaction_for_execute(
+            sender=sender,
+            contract=contract,
+            function="discardAction",
+            gas_limit=gas_limit,
+            arguments=[U32Value(action_id)],
+        )
+
+    def create_transaction_for_discard_batch(
+        self,
+        sender: Address,
+        contract: Address,
+        action_ids: list[int],
+        gas_limit: int,
+    ) -> Transaction:
+        return self._sc_factory.create_transaction_for_execute(
+            sender=sender,
+            contract=contract,
+            function="discardBatch",
+            gas_limit=gas_limit,
+            arguments=[VariadicValues(items=[U32Value(id) for id in action_ids])],
+        )
+
     def create_transaction_for_propose_add_board_member(
         self,
         sender: Address,
@@ -69,7 +120,7 @@ class MultisigTransactionsFactory:
         board_member: Address,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeAddBoardMember",
@@ -84,7 +135,7 @@ class MultisigTransactionsFactory:
         proposer: Address,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeAddProposer",
@@ -99,7 +150,7 @@ class MultisigTransactionsFactory:
         user: Address,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeRemoveUser",
@@ -114,33 +165,12 @@ class MultisigTransactionsFactory:
         quorum: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeChangeQuorum",
             gas_limit=gas_limit,
             arguments=[U32Value(quorum)],
-        )
-
-    def create_transaction_for_deposit(
-        self,
-        sender: Address,
-        contract: Address,
-        gas_limit: int,
-        native_token_amount: Optional[int] = None,
-        token_transfers: Optional[list[TokenTransfer]] = None,
-    ) -> Transaction:
-        if not native_token_amount and not token_transfers:
-            raise Exception("No native token amount or token transfers provided")
-
-        return self.sc_factory.create_transaction_for_execute(
-            sender=sender,
-            contract=contract,
-            function="deposit",
-            gas_limit=gas_limit,
-            arguments=[],
-            native_transfer_amount=native_token_amount if native_token_amount else 0,
-            token_transfers=token_transfers if token_transfers else [],
         )
 
     def create_transaction_for_propose_transfer_execute(
@@ -180,7 +210,7 @@ class MultisigTransactionsFactory:
 
         function_call = cast(list[Union[ISingleValue, MultiValue]], function_call)
 
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeTransferExecute",
@@ -221,14 +251,15 @@ class MultisigTransactionsFactory:
                 abi=abi,
             )
 
-        return self.sc_factory.create_transaction_for_execute(
+        tokens = cast(list[ISingleValue], input.tokens)
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeTransferExecuteEsdt",
             gas_limit=gas_limit,
             arguments=[
                 AddressValue.new_from_address(input.to),
-                ListValue(items=input.tokens),
+                ListValue(items=tokens),
                 OptionValue(U64Value(input.opt_gas_limit or 0)),
                 VariadicValues([StringValue(arg.hex()) for arg in input.function_call]),
             ],
@@ -263,7 +294,7 @@ class MultisigTransactionsFactory:
                 abi=abi,
             )
 
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeAsyncCall",
@@ -304,12 +335,17 @@ class MultisigTransactionsFactory:
             abi=abi,
         )
 
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="proposeSCDeployFromSource",
             gas_limit=gas_limit,
-            arguments=[input.amount, input.source, input.code_metadata, input.arguments],
+            arguments=[
+                BigUIntValue(input.amount),
+                AddressValue.new_from_address(input.source),
+                CodeMetadataValue(input.code_metadata),
+                VariadicValues(items=[BytesValue(value) for value in input.arguments]),
+            ],
         )
 
     def create_transaction_for_contract_upgrade_from_source(
@@ -342,12 +378,33 @@ class MultisigTransactionsFactory:
             abi=abi,
         )
 
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
-            function="proposeSCDeployFromSource",
+            function="proposeSCUpgradeFromSource",
             gas_limit=gas_limit,
-            arguments=[input.amount, input.source, input.code_metadata, input.arguments],
+            arguments=[
+                AddressValue.new_from_address(contract_to_upgrade),
+                BigUIntValue(input.amount),
+                AddressValue.new_from_address(input.source),
+                CodeMetadataValue(input.code_metadata),
+                VariadicValues(items=[BytesValue(value) for value in input.arguments]),
+            ],
+        )
+
+    def create_transaction_for_propose_batch(
+        self,
+        sender: Address,
+        contract: Address,
+        action_id: int,
+        gas_limit: int,
+    ) -> Transaction:
+        return self._sc_factory.create_transaction_for_execute(
+            sender=sender,
+            contract=contract,
+            function="sign",
+            gas_limit=gas_limit,
+            arguments=[U32Value(action_id)],
         )
 
     def create_transaction_for_sign_action(
@@ -357,7 +414,7 @@ class MultisigTransactionsFactory:
         action_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="sign",
@@ -372,10 +429,10 @@ class MultisigTransactionsFactory:
         batch_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
-            function="sign",
+            function="signBatch",
             gas_limit=gas_limit,
             arguments=[U32Value(batch_id)],
         )
@@ -387,7 +444,7 @@ class MultisigTransactionsFactory:
         action_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="signAndPerform",
@@ -402,7 +459,7 @@ class MultisigTransactionsFactory:
         batch_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="signBatchAndPerform",
@@ -417,7 +474,7 @@ class MultisigTransactionsFactory:
         action_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="unsign",
@@ -432,7 +489,7 @@ class MultisigTransactionsFactory:
         batch_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="unsignBatch",
@@ -448,12 +505,15 @@ class MultisigTransactionsFactory:
         outdated_board_members: list[int],
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
-            function="unsignBatch",
+            function="unsignForOutdatedBoardMembers",
             gas_limit=gas_limit,
-            arguments=[U32Value(action_id), *[U32Value(member) for member in outdated_board_members]],
+            arguments=[
+                U32Value(action_id),
+                VariadicValues(items=[U32Value(member) for member in outdated_board_members]),
+            ],
         )
 
     def create_transaction_for_perform_action(
@@ -463,7 +523,7 @@ class MultisigTransactionsFactory:
         action_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="performAction",
@@ -478,35 +538,10 @@ class MultisigTransactionsFactory:
         batch_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self.sc_factory.create_transaction_for_execute(
+        return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
             function="performBatch",
             gas_limit=gas_limit,
             arguments=[U32Value(batch_id)],
         )
-
-    # def _encode_execute_args(
-    #     self,
-    #     abi: Optional[Abi] = None,
-    #     function: Optional[str] = None,
-    #     arguments: Optional[list[Any]] = None,
-    # ) -> list[str]:
-    #     if not function:
-    #         return []
-
-    #     if not arguments:
-    #         return [self.serializer.serialize([StringValue(function)])]
-
-    #     if abi:
-    #         args = abi.encode_endpoint_input_parameters(function, arguments)
-    #         return [arg.hex() for arg in args]
-
-    #     if is_list_of_typed_values(arguments):
-    #         args = self.serializer.serialize_to_parts(arguments)
-    #         return [arg.hex() for arg in args]
-
-    #     if all(isinstance(arg, bytes) for arg in arguments):
-    #         return [arg.hex() for arg in arguments]
-
-    #     return []
