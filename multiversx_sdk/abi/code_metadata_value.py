@@ -35,6 +35,8 @@ class CodeMetadataValue:
         elif isinstance(value, dict):
             value = cast(dict[str, str], value)
             self.value = self._extract_value_from_dict(value)
+        elif isinstance(value, CodeMetadataValue):
+            self.value = value.get_payload()
         else:
             raise ValueError(
                 f"cannot set payload for code metadata (should be either a CodeMetadata, bytes or dict, but got: {type(value)})"
