@@ -399,13 +399,7 @@ class MultisigTransactionsFactory:
         action_id: int,
         gas_limit: int,
     ) -> Transaction:
-        return self._sc_factory.create_transaction_for_execute(
-            sender=sender,
-            contract=contract,
-            function="sign",
-            gas_limit=gas_limit,
-            arguments=[U32Value(action_id)],
-        )
+        raise NotImplementedError("proposeBatch was not implemented")
 
     def create_transaction_for_sign_action(
         self,
