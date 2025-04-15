@@ -272,6 +272,7 @@ class MultisigTransactionsFactory:
         contract: Address,
         receiver: Address,
         gas_limit: int,
+        native_token_amount: Optional[int] = None,
         token_transfers: Optional[list[TokenTransfer]] = None,
         opt_gas_limit: Optional[int] = None,
         abi: Optional[Abi] = None,
@@ -302,7 +303,7 @@ class MultisigTransactionsFactory:
             gas_limit=gas_limit,
             arguments=[
                 AddressValue.new_from_address(input.to),
-                BigUIntValue(),
+                BigUIntValue(native_token_amount or 0),
                 OptionValue(U64Value(input.opt_gas_limit or 0)),
                 VariadicValues([StringValue(arg.decode()) for arg in input.function_call]),
             ],
