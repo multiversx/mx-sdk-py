@@ -19,6 +19,7 @@ from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.multisig.resources import (
+    Action,
     ProposeAsyncCallInput,
     ProposeSCDeployFromSourceInput,
     ProposeSCUpgradeFromSourceInput,
@@ -396,7 +397,7 @@ class MultisigTransactionsFactory:
         self,
         sender: Address,
         contract: Address,
-        action_id: int,
+        actions: list[Action],
         gas_limit: int,
     ) -> Transaction:
         raise NotImplementedError("proposeBatch was not implemented")
