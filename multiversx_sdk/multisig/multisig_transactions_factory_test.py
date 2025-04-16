@@ -30,7 +30,6 @@ class TestMultisigTransactionsFactory:
             quorum=2,
             board=[alice, bob],
             gas_limit=100_000_000,
-            native_transfer_amount=1000000000000000000,  # 1 EGLD
         )
         transaction = self.factory.create_transaction_for_deploy(
             sender=alice,
@@ -38,7 +37,6 @@ class TestMultisigTransactionsFactory:
             quorum=2,
             board=[alice, bob],
             gas_limit=100_000_000,
-            native_transfer_amount=1000000000000000000,  # 1 EGLD
         )
         assert transaction.sender == alice
         assert transaction.receiver == Address.new_from_bech32(
@@ -406,8 +404,8 @@ class TestMultisigTransactionsFactory:
             contract=multisig,
             gas_limit=60_000_000,
             contract_to_copy=contract,
-            arguments=[0],
             native_token_amount=50000000000000000,
+            arguments=[0],
             abi=adder,
             is_readable=True,
             is_upgradeable=True,
@@ -420,8 +418,8 @@ class TestMultisigTransactionsFactory:
             contract=multisig,
             gas_limit=60_000_000,
             contract_to_copy=contract,
-            arguments=[BigUIntValue()],
             native_token_amount=50000000000000000,
+            arguments=[BigUIntValue()],
             abi=adder,
             is_readable=True,
             is_upgradeable=True,
@@ -450,8 +448,8 @@ class TestMultisigTransactionsFactory:
             sender=sender,
             contract=multisig,
             contract_to_upgrade=contract_to_upgrade,
-            gas_limit=60_000_000,
             contract_to_copy=contract_to_copy,
+            gas_limit=60_000_000,
             arguments=[0],
             native_token_amount=50000000000000000,
             abi=adder,

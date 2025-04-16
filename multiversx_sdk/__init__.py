@@ -45,6 +45,7 @@ from multiversx_sdk.multisig import (
     Action,
     EsdtTokenPayment,
     MultisigTransactionsFactory,
+    MultisigTransactionsOutcomeParser,
     ProposeAsyncCallInput,
     ProposeSCDeployFromSourceInput,
     ProposeSCUpgradeFromSourceInput,
@@ -273,4 +274,5 @@ __all__ = [
     "ProposeSyncCallInput",
     "ProposeTransferExecuteEsdtInput",
     "ProposeTransferExecuteInput",
+    "MultisigTransactionsOutcomeParser",
 ]
