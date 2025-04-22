@@ -10,7 +10,7 @@ from multiversx_sdk.core.transaction_computer import TransactionComputer
 
 
 class BaseController:
-    """This is the base class for all controllers. **Internal use only**."""
+    """This is the base class for all controllers. **Internal use only.**"""
 
     def _set_version_and_options_for_hash_signing(self, sender: IAccount, transaction: Transaction):
         """If the Account has the `use_hash_signing` flag set to `True`, this method will set the correct `version` and `options` properties of `Transaction`."""
@@ -39,3 +39,8 @@ class BaseController:
             transaction.gas_limit = gas_limit
         else:
             self._add_extra_gas_limit_if_required(transaction)
+
+    def _set_version_and_options_for_guardian(self, transaction: Transaction):
+        if transaction.guardian:
+            transaction_computer = TransactionComputer()
+            transaction_computer.apply_guardian(transaction, transaction.guardian)

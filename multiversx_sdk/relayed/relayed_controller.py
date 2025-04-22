@@ -32,6 +32,7 @@ class RelayedController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._add_extra_gas_limit_if_required(transaction)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -53,6 +54,7 @@ class RelayedController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._add_extra_gas_limit_if_required(transaction)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
