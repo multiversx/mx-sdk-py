@@ -42,7 +42,7 @@ class TestMultisigTransactionsFactory:
         assert transaction.receiver == Address.new_from_bech32(
             "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
         )
-        assert transaction.value == 1000000000000000000
+        assert transaction.value == 0
         assert transaction.gas_limit == 100_000_000
         assert transaction.chain_id == "D"
         assert (
