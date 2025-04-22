@@ -99,7 +99,7 @@ class TestValidatorsController:
         assert transaction.gas_limit == 11129500
         assert transaction.chain_id == "localnet"
         assert transaction.version == 2
-        assert transaction.options == 0
+        assert transaction.options == 2
         assert transaction.guardian == Address.new_from_bech32(
             "erd1cqqxak4wun7508e0yj9ng843r6hv4mzd0hhpjpsejkpn9wa9yq8sj7u2u5"
         )
