@@ -293,7 +293,7 @@ class ApiNetworkProvider(INetworkProvider):
             retry_strategy = Retry(
                 total=self.config.requests_retry_options.retries,
                 backoff_factor=self.config.requests_retry_options.backoff_factor,
-                status_forcelist=self.config.requests_retry_options.status_forecelist,
+                status_forcelist=self.config.requests_retry_options.status_forcelist,
             )
 
             adapter = HTTPAdapter(max_retries=retry_strategy)
