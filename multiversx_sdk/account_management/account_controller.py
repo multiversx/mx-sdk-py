@@ -43,6 +43,7 @@ class AccountController(BaseController):
         nonce: int,
         guardian_address: Address,
         service_id: str,
+        guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
         gas_price: Optional[int] = None,
@@ -52,12 +53,13 @@ class AccountController(BaseController):
             guardian_address=guardian_address,
             service_id=service_id,
         )
-
+        transaction.guardian = guardian
         transaction.relayer = relayer
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -77,6 +79,7 @@ class AccountController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -97,6 +100,7 @@ class AccountController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

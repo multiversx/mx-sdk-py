@@ -38,6 +38,7 @@ class TransfersController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -63,6 +64,7 @@ class TransfersController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -94,6 +96,7 @@ class TransfersController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
