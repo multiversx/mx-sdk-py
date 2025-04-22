@@ -108,7 +108,7 @@ class TestValidatorsController:
         )
         assert (
             transaction.signature.hex()
-            == "b12d607a8c52c2cdfc8f239274a45ead211fb12e79fb6c36866d9bae74c6a50b52ebf1c2eb57e2a89dc29fd8da8f6d7ff70c96a0267dd7e2f050d5b61f439100"
+            == "0fd033bb889ea539f66e2e7e194cead88c76c98638c7734ea2d63d30ac9889b90bd248b9266f98f256992ffed48fbd80b0dc5196287f671898f18159bdbb2505"
         )
         assert (
             transaction.data.decode()
