@@ -11,7 +11,7 @@ from typing import Any, Optional
 @dataclass
 class RequestsRetryOptions:
     retries: int = 3
-    backoff_factor: float = 0.05
+    backoff_factor: float = 1
     status_forcelist: list[int] = field(
         default_factory=lambda: [
             INTERNAL_SERVER_ERROR,
