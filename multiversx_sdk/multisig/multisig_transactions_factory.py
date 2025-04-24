@@ -1,39 +1,41 @@
 from pathlib import Path
-from typing import Any, Optional, Union, cast
+from typing import Any, Optional, Union
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
-from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.list_value import ListValue
-from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
+from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
+from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.multisig.resources import (
     Action,
+    EsdtTokenPayment,
     ProposeAsyncCallInput,
-    ProposeSCDeployFromSourceInput,
-    ProposeSCUpgradeFromSourceInput,
     ProposeTransferExecuteEsdtInput,
-    ProposeTransferExecuteInput,
 )
 from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import (
     SmartContractTransactionsFactory,
+)
+from multiversx_sdk.transfers.transfer_transactions_factory import (
+    TransferTransactionsFactory,
 )
 
 
 class MultisigTransactionsFactory:
     def __init__(self, config: TransactionsFactoryConfig, abi: Optional[Abi] = None) -> None:
         self._sc_factory = SmartContractTransactionsFactory(config, abi)
+        self._serializer = Serializer()
 
     def create_transaction_for_deploy(
         self,
@@ -186,30 +188,15 @@ class MultisigTransactionsFactory:
         function: Optional[str] = None,
         arguments: Optional[list[Any]] = None,
     ) -> Transaction:
-        if not function:
-            input = ProposeTransferExecuteInput.new_for_native_transfer(
-                to=receiver,
-                native_transfer_amount=native_token_amount,
-                gas_limit=opt_gas_limit,
-            )
-        else:
-            input = ProposeTransferExecuteInput.new_for_transfer_execute(
-                to=receiver,
-                native_transfer_amount=native_token_amount,
-                function=function,
-                arguments=arguments if arguments else [],
-                gas_limit=opt_gas_limit,
-                abi=abi,
-            )
+        function_call: list[bytes] = []
+        if function:
+            arguments = arguments or []
 
-        function_call = input.function_call
-        if all(isinstance(arg, bytes) for arg in input.function_call[1:]):
-            function_call = [input.function_call[0]]
-            for arg in input.function_call[1:]:
-                arg = cast(bytes, arg)
-                function_call.append(BytesValue(arg))
-
-        function_call = cast(list[Union[ISingleValue, MultiValue]], function_call)
+            if abi:
+                arguments = abi.encode_endpoint_input_parameters(function, arguments)
+                function_call: list[bytes] = self._serializer.serialize_to_parts([StringValue(function)]) + arguments
+            else:
+                function_call: list[bytes] = self._serializer.serialize_to_parts([StringValue(function), *arguments])
 
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -217,10 +204,10 @@ class MultisigTransactionsFactory:
             function="proposeTransferExecute",
             gas_limit=gas_limit,
             arguments=[
-                AddressValue.new_from_address(input.to),
-                BigUIntValue(input.egld_amount),
-                OptionValue(U64Value(input.opt_gas_limit or 0)),
-                VariadicValues(items=function_call),
+                AddressValue.new_from_address(receiver),
+                BigUIntValue(native_token_amount),
+                OptionValue(U64Value(opt_gas_limit) if opt_gas_limit else None),
+                VariadicValues(items=[BytesValue(item) for item in function_call]),
             ],
         )
 
@@ -236,23 +223,15 @@ class MultisigTransactionsFactory:
         function: Optional[str] = None,
         arguments: Optional[list[Any]] = None,
     ) -> Transaction:
-        if not function:
-            input = ProposeTransferExecuteEsdtInput.new_for_transfer(
-                to=receiver,
-                token_transfers=token_transfers,
-                gas_limit=opt_gas_limit,
-            )
-        else:
-            input = ProposeTransferExecuteEsdtInput.new_for_transfer_execute(
-                to=receiver,
-                token_transfers=token_transfers,
-                function=function,
-                arguments=arguments if arguments else [],
-                gas_limit=opt_gas_limit,
-                abi=abi,
-            )
+        input = self._prepare_transfer_execute_esdt_input(
+            to=receiver,
+            token_transfers=token_transfers,
+            function=function,
+            arguments=arguments,
+            gas_limit=opt_gas_limit,
+            abi=abi,
+        )
 
-        tokens = cast(list[ISingleValue], input.tokens)
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
@@ -260,10 +239,48 @@ class MultisigTransactionsFactory:
             gas_limit=gas_limit,
             arguments=[
                 AddressValue.new_from_address(input.to),
-                ListValue(items=tokens),
+                ListValue(items=input.tokens),
                 OptionValue(U64Value(input.opt_gas_limit or 0)),
                 VariadicValues([StringValue(arg.hex()) for arg in input.function_call]),
             ],
+        )
+
+    def _prepare_transfer_execute_esdt_input(
+        self,
+        to: Address,
+        token_transfers: list[TokenTransfer],
+        function: Optional[str] = None,
+        arguments: Optional[list[Any]] = None,
+        gas_limit: Optional[int] = None,
+        abi: Optional[Abi] = None,
+    ) -> ProposeTransferExecuteEsdtInput:
+        tokens = [
+            EsdtTokenPayment(token.token.identifier, token.token.nonce, token.amount) for token in token_transfers
+        ]
+
+        if not function:
+            return ProposeTransferExecuteEsdtInput(
+                to=to,
+                tokens=tokens,
+                function_call=[],
+                opt_gas_limit=gas_limit,
+            )
+
+        serialized_args: list[bytes] = []
+        arguments = arguments or []
+
+        if abi:
+            serialized_args = abi.encode_endpoint_input_parameters(function, arguments)
+        else:
+            serialized_args = self._serializer.serialize_to_parts(arguments)
+
+        function_call = [*self._serializer.serialize_to_parts([StringValue(function)]), *serialized_args]
+
+        return ProposeTransferExecuteEsdtInput(
+            to=to,
+            tokens=tokens,
+            function_call=function_call,
+            opt_gas_limit=gas_limit,
         )
 
     def create_transaction_for_propose_async_call(
@@ -281,13 +298,13 @@ class MultisigTransactionsFactory:
     ) -> Transaction:
         token_transfers = token_transfers or []
         if not function:
-            input = ProposeAsyncCallInput.new_for_transfer(
+            input = self._prepare_async_call_input_for_transfer(
                 to=receiver,
                 token_transfers=token_transfers,
                 gas_limit=opt_gas_limit,
             )
         else:
-            input = ProposeAsyncCallInput.new_for_transfer_execute(
+            input = self._prepare_async_call_input_for_transfer_execute(
                 to=receiver,
                 token_transfers=token_transfers,
                 function=function,
@@ -304,10 +321,61 @@ class MultisigTransactionsFactory:
             arguments=[
                 AddressValue.new_from_address(input.to),
                 BigUIntValue(native_token_amount or 0),
-                OptionValue(U64Value(input.opt_gas_limit or 0)),
+                OptionValue(U64Value(input.opt_gas_limit)),
                 VariadicValues([StringValue(arg.decode()) for arg in input.function_call]),
             ],
         )
+
+    def _prepare_async_call_input_for_transfer(
+        self,
+        to: Address,
+        token_transfers: list[TokenTransfer],
+        gas_limit: Optional[int] = None,
+    ) -> ProposeAsyncCallInput:
+        # Since multisig requires the transfer to be encoded as variadic<bytes> in "function_call",
+        # we leverage the transactions factory to achieve this (followed by splitting the data).
+        transactions_factory = TransferTransactionsFactory(TransactionsFactoryConfig(""))
+        transaction = transactions_factory.create_transaction_for_transfer(
+            sender=Address.empty(),
+            receiver=Address.empty(),
+            # Multisig wasn't designed to work with EGLD within MultiESDTNFT.
+            native_amount=0,
+            token_transfers=token_transfers,
+        )
+
+        function_call_parts = transaction.data.split(ARGS_SEPARATOR.encode())
+        function_name = function_call_parts[0]
+        function_arguments = [bytes.fromhex(item.decode()) for item in function_call_parts[1:]]
+        function_call = [function_name, *function_arguments]
+        return ProposeAsyncCallInput(to, function_call, gas_limit)
+
+    def _prepare_async_call_input_for_transfer_execute(
+        self,
+        to: Address,
+        token_transfers: list[TokenTransfer],
+        function: str,
+        arguments: list[Any],
+        gas_limit: Optional[int] = None,
+        abi: Optional[Abi] = None,
+    ) -> ProposeAsyncCallInput:
+        # Since multisig requires the transfer & execute to be encoded as variadic<bytes> in "function_call",
+        # we leverage the transactions factory to achieve this (followed by splitting the data).
+        transactions_factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(""), abi=abi)
+        transaction = transactions_factory.create_transaction_for_execute(
+            sender=Address.empty(),
+            contract=Address.empty(),
+            function=function,
+            gas_limit=0,
+            arguments=arguments,
+            native_transfer_amount=0,
+            token_transfers=token_transfers,
+        )
+
+        function_call_parts = transaction.data.split(ARGS_SEPARATOR.encode())
+        function_name = function_call_parts[0]
+        function_arguments = [bytes.fromhex(item.decode()) for item in function_call_parts[1:]]
+        function_call = [function_name, *function_arguments]
+        return ProposeAsyncCallInput(to, function_call, gas_limit)
 
     def create_transaction_for_contract_deploy_from_source(
         self,
@@ -329,13 +397,11 @@ class MultisigTransactionsFactory:
             payable=is_payable,
             payable_by_contract=is_payable_by_sc,
         )
-        input = ProposeSCDeployFromSourceInput(
-            native_transfer_amount=native_token_amount,
-            contract_to_copy=contract_to_copy,
-            code_metadata=code_metadata,
-            arguments=arguments,
-            abi=abi,
-        )
+
+        if abi:
+            arguments = abi.encode_constructor_input_parameters(arguments)
+        else:
+            arguments = self._serializer.serialize_to_parts(arguments)
 
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -343,10 +409,10 @@ class MultisigTransactionsFactory:
             function="proposeSCDeployFromSource",
             gas_limit=gas_limit,
             arguments=[
-                BigUIntValue(input.amount),
-                AddressValue.new_from_address(input.source),
-                CodeMetadataValue(input.code_metadata),
-                VariadicValues(items=[BytesValue(value) for value in input.arguments]),
+                BigUIntValue(native_token_amount),
+                AddressValue.new_from_address(contract_to_copy),
+                CodeMetadataValue(code_metadata.serialize()),
+                VariadicValues(items=[BytesValue(value) for value in arguments]),
             ],
         )
 
@@ -371,14 +437,11 @@ class MultisigTransactionsFactory:
             payable=is_payable,
             payable_by_contract=is_payable_by_sc,
         )
-        input = ProposeSCUpgradeFromSourceInput(
-            contract_to_upgrade=contract_to_upgrade,
-            native_transfer_amount=native_token_amount,
-            contract_to_copy=contract_to_copy,
-            code_metadata=code_metadata,
-            arguments=arguments,
-            abi=abi,
-        )
+
+        if abi:
+            arguments = abi.encode_upgrade_constructor_input_parameters(arguments)
+        else:
+            arguments = self._serializer.serialize_to_parts(arguments)
 
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -387,10 +450,10 @@ class MultisigTransactionsFactory:
             gas_limit=gas_limit,
             arguments=[
                 AddressValue.new_from_address(contract_to_upgrade),
-                BigUIntValue(input.amount),
-                AddressValue.new_from_address(input.source),
-                CodeMetadataValue(input.code_metadata),
-                VariadicValues(items=[BytesValue(value) for value in input.arguments]),
+                BigUIntValue(native_token_amount),
+                AddressValue.new_from_address(contract_to_copy),
+                CodeMetadataValue(code_metadata.serialize()),
+                VariadicValues(items=[BytesValue(value) for value in arguments]),
             ],
         )
 
@@ -540,4 +603,24 @@ class MultisigTransactionsFactory:
             function="performBatch",
             gas_limit=gas_limit,
             arguments=[U32Value(batch_id)],
+        )
+
+    def create_transaction_for_execute(
+        self,
+        sender: Address,
+        contract: Address,
+        function: str,
+        gas_limit: int,
+        arguments: list[Any] = [],
+        native_transfer_amount: int = 0,
+        token_transfers: list[TokenTransfer] = [],
+    ) -> Transaction:
+        return self._sc_factory.create_transaction_for_execute(
+            sender=sender,
+            contract=contract,
+            function=function,
+            gas_limit=gas_limit,
+            arguments=arguments,
+            native_transfer_amount=native_transfer_amount,
+            token_transfers=token_transfers,
         )
