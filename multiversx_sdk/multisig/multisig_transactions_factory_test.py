@@ -324,7 +324,7 @@ class TestMultisigTransactionsFactory:
         multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqfxlljcaalgl2qfcnxcsftheju0ts36kvl3ts3qkewe")
 
-        abi_transaction = self.abi_factory.create_transaction_for_propose_transfer_esdt_execute(
+        abi_transaction = self.abi_factory.create_transaction_for_propose_transfer_execute_esdt(
             sender=alice,
             contract=multisig,
             receiver=contract,
@@ -335,7 +335,7 @@ class TestMultisigTransactionsFactory:
             arguments=[],
         )
 
-        transaction = self.factory.create_transaction_for_propose_transfer_esdt_execute(
+        transaction = self.factory.create_transaction_for_propose_transfer_execute_esdt(
             sender=alice,
             contract=multisig,
             receiver=contract,
@@ -399,7 +399,7 @@ class TestMultisigTransactionsFactory:
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
         adder = Abi.load(self.testdata / "adder.abi.json")
 
-        abi_transaction = self.abi_factory.create_transaction_for_contract_deploy_from_source(
+        abi_transaction = self.abi_factory.create_transaction_for_propose_contract_deploy_from_source(
             sender=sender,
             contract=multisig,
             gas_limit=60_000_000,
@@ -413,7 +413,7 @@ class TestMultisigTransactionsFactory:
             is_payable_by_sc=False,
         )
 
-        transaction = self.factory.create_transaction_for_contract_deploy_from_source(
+        transaction = self.factory.create_transaction_for_propose_contract_deploy_from_source(
             sender=sender,
             contract=multisig,
             gas_limit=60_000_000,
@@ -444,7 +444,7 @@ class TestMultisigTransactionsFactory:
         contract_to_copy = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
         adder = Abi.load(self.testdata / "adder.abi.json")
 
-        abi_transaction = self.abi_factory.create_transaction_for_contract_upgrade_from_source(
+        abi_transaction = self.abi_factory.create_transaction_for_propose_contract_upgrade_from_source(
             sender=sender,
             contract=multisig,
             contract_to_upgrade=contract_to_upgrade,
@@ -459,7 +459,7 @@ class TestMultisigTransactionsFactory:
             is_payable_by_sc=False,
         )
 
-        transaction = self.factory.create_transaction_for_contract_upgrade_from_source(
+        transaction = self.factory.create_transaction_for_propose_contract_upgrade_from_source(
             sender=sender,
             contract=multisig,
             contract_to_upgrade=contract_to_upgrade,

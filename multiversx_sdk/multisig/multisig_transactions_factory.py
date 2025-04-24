@@ -8,7 +8,6 @@ from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.list_value import ListValue
-from multiversx_sdk.abi.multi_value import MultiValue
 from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
@@ -200,15 +199,6 @@ class MultisigTransactionsFactory:
                 abi=abi,
             )
 
-        function_call = input.function_call
-        if all(isinstance(arg, bytes) for arg in input.function_call[1:]):
-            function_call = [input.function_call[0]]
-            for arg in input.function_call[1:]:
-                arg = cast(bytes, arg)
-                function_call.append(BytesValue(arg))
-
-        function_call = cast(list[Union[ISingleValue, MultiValue]], function_call)
-
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
             contract=contract,
@@ -217,12 +207,12 @@ class MultisigTransactionsFactory:
             arguments=[
                 AddressValue.new_from_address(input.to),
                 BigUIntValue(input.egld_amount),
-                OptionValue(U64Value(input.opt_gas_limit or 0)),
-                VariadicValues(items=function_call),
+                OptionValue(U64Value(input.opt_gas_limit) if input.opt_gas_limit else None),
+                VariadicValues(items=[BytesValue(item) for item in input.function_call]),
             ],
         )
 
-    def create_transaction_for_propose_transfer_esdt_execute(
+    def create_transaction_for_propose_transfer_execute_esdt(
         self,
         sender: Address,
         contract: Address,
@@ -307,7 +297,7 @@ class MultisigTransactionsFactory:
             ],
         )
 
-    def create_transaction_for_contract_deploy_from_source(
+    def create_transaction_for_propose_contract_deploy_from_source(
         self,
         sender: Address,
         contract: Address,
@@ -348,7 +338,7 @@ class MultisigTransactionsFactory:
             ],
         )
 
-    def create_transaction_for_contract_upgrade_from_source(
+    def create_transaction_for_propose_contract_upgrade_from_source(
         self,
         sender: Address,
         contract: Address,

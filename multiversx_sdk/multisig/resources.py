@@ -1,11 +1,10 @@
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.fields import Field
-from multiversx_sdk.abi.interface import ISingleValue
-from multiversx_sdk.abi.multi_value import MultiValue
+from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import U64Value
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
@@ -28,7 +27,7 @@ class ProposeTransferExecuteInput:
         self,
         to: Address,
         native_transfer_amount: int,
-        function_call: Union[list[bytes], list[Union[ISingleValue, MultiValue]]],
+        function_call: list[bytes],
         opt_gas_limit: Optional[int] = None,
     ) -> None:
         self.to = to
@@ -50,8 +49,14 @@ class ProposeTransferExecuteInput:
         gas_limit: Optional[int] = None,
         abi: Optional[Abi] = None,
     ):
-        arguments = abi.encode_endpoint_input_parameters(function, arguments) if abi else arguments
-        function_call: list[Any] = [StringValue(function), *arguments]
+        serializer = Serializer()
+
+        if abi:
+            arguments = abi.encode_endpoint_input_parameters(function, arguments)
+            function_call: list[bytes] = serializer.serialize_to_parts([StringValue(function)]) + arguments
+        else:
+            function_call: list[bytes] = serializer.serialize_to_parts([StringValue(function), *arguments])
+
         return cls(to, native_transfer_amount, function_call, gas_limit)
 
 
@@ -197,13 +202,17 @@ class ProposeSCDeployFromSourceInput:
         native_transfer_amount: int,
         contract_to_copy: Address,
         code_metadata: CodeMetadata,
-        arguments: list[Any],
+        arguments: list[bytes],
         abi: Optional[Abi] = None,
     ) -> None:
         self.amount = native_transfer_amount
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
-        self.arguments = abi.encode_constructor_input_parameters(arguments) if abi else arguments
+        if abi:
+            self.arguments = abi.encode_constructor_input_parameters(arguments)
+        else:
+            serializer = Serializer()
+            self.arguments = serializer.serialize_to_parts(arguments)
 
 
 class ProposeSCUpgradeFromSourceInput:
@@ -220,7 +229,11 @@ class ProposeSCUpgradeFromSourceInput:
         self.amount = native_transfer_amount
         self.source = contract_to_copy
         self.code_metadata = code_metadata.serialize()
-        self.arguments = abi.encode_upgrade_constructor_input_parameters(arguments) if abi else arguments
+        if abi:
+            self.arguments = abi.encode_upgrade_constructor_input_parameters(arguments)
+        else:
+            serializer = Serializer()
+            self.arguments = serializer.serialize_to_parts(arguments)
 
 
 class UserRole(Enum):
@@ -371,7 +384,7 @@ class CallActionData:
     def new_from_object(cls, object: Any) -> "CallActionData":
         to = Address(object.to, LibraryConfig.default_address_hrp)
         egld_amount = object.egld_amount
-        endpoint_name = object.endpoint_name
+        endpoint_name = object.endpoint_name.decode()
         arguments = object.arguments
         opt_gas_limit = object.opt_gas_limit
         return cls(to, egld_amount, endpoint_name, arguments, opt_gas_limit)
@@ -396,7 +409,7 @@ class EsdtTransferExecuteData:
         to: Address,
         tokens: list[EsdtTokenPayment],
         opt_gas_limit: Optional[int],
-        endpoint_name: bytes,
+        endpoint_name: str,
         arguments: list[bytes],
     ) -> None:
         self.to = to
@@ -410,7 +423,7 @@ class EsdtTransferExecuteData:
         to = Address(object.to, LibraryConfig.default_address_hrp)
         tokens = [EsdtTokenPayment(token.token_identifier, token.token_nonce, token.amount) for token in object.tokens]
         opt_gas_limit = object.opt_gas_limit
-        endpoint_name = object.endpoint_name
+        endpoint_name = bytes.fromhex(object.endpoint_name.decode()).decode()
         arguments = object.arguments
         return cls(to, tokens, opt_gas_limit, endpoint_name, arguments)
 

@@ -16,7 +16,12 @@ from multiversx_sdk.multisig.multisig_transactions_factory import (
 from multiversx_sdk.multisig.multisig_transactions_outcome_parser import (
     MultisigTransactionsOutcomeParser,
 )
-from multiversx_sdk.multisig.resources import Action, ActionFullInfo, UserRole
+from multiversx_sdk.multisig.resources import (
+    Action,
+    ActionFullInfo,
+    UserRole,
+    create_action_from_object,
+)
 from multiversx_sdk.network_providers.resources import AwaitingOptions
 from multiversx_sdk.smart_contracts import (
     SmartContractController,
@@ -89,6 +94,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -125,6 +131,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -152,6 +159,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -179,6 +187,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -220,7 +229,7 @@ class MultisigController(BaseController):
         return value
 
     def get_action_group(self, contract: Address, group_id: int) -> list[int]:
-        values = self._smart_contract_controller.query(
+        [values] = self._smart_contract_controller.query(
             contract=contract,
             function="getActionGroup",
             arguments=[group_id],
@@ -269,6 +278,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -296,6 +306,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -323,6 +334,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -350,6 +362,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -391,6 +404,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -411,7 +425,7 @@ class MultisigController(BaseController):
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
-        transaction = self._factory.create_transaction_for_propose_transfer_esdt_execute(
+        transaction = self._factory.create_transaction_for_propose_transfer_execute_esdt(
             sender=sender.address,
             contract=contract,
             receiver=receiver,
@@ -428,6 +442,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -467,6 +482,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -489,7 +505,7 @@ class MultisigController(BaseController):
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
-        transaction = self._factory.create_transaction_for_contract_deploy_from_source(
+        transaction = self._factory.create_transaction_for_propose_contract_deploy_from_source(
             sender=sender.address,
             contract=contract,
             gas_limit=gas_limit,
@@ -508,6 +524,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -531,7 +548,7 @@ class MultisigController(BaseController):
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
-        transaction = self._factory.create_transaction_for_contract_upgrade_from_source(
+        transaction = self._factory.create_transaction_for_propose_contract_upgrade_from_source(
             sender=sender.address,
             contract=contract,
             contract_to_upgrade=contract_to_upgrade,
@@ -551,6 +568,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -596,6 +614,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -623,6 +642,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -650,6 +670,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -677,6 +698,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -704,6 +726,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -731,6 +754,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -774,6 +798,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -810,6 +835,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -837,6 +863,7 @@ class MultisigController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -879,14 +906,14 @@ class MultisigController(BaseController):
 
         return [Address(value, self._address_hrp) for value in public_keys]
 
-    def get_action_data(self, contract: Address, action_id: int) -> list[Address]:
+    def get_action_data(self, contract: Address, action_id: int) -> Action:
         [value] = self._smart_contract_controller.query(
             contract=contract,
             function="getActionData",
             arguments=[action_id],
         )
 
-        return value
+        return create_action_from_object(value)
 
     def get_action_signers(self, contract: Address, action_id: int) -> list[Address]:
         [public_keys] = self._smart_contract_controller.query(
@@ -900,7 +927,7 @@ class MultisigController(BaseController):
     def get_action_signer_count(self, contract: Address, action_id: int) -> int:
         [value] = self._smart_contract_controller.query(
             contract=contract,
-            function="getActionValidSignerCount",
+            function="getActionSignerCount",
             arguments=[action_id],
         )
 
@@ -909,7 +936,7 @@ class MultisigController(BaseController):
     def get_action_valid_signer_count(self, contract: Address, action_id: int) -> int:
         [value] = self._smart_contract_controller.query(
             contract=contract,
-            function="getActionSignerCount",
+            function="getActionValidSignerCount",
             arguments=[action_id],
         )
 
