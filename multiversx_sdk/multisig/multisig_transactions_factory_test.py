@@ -396,6 +396,17 @@ class TestMultisigTransactionsFactory:
         )
         assert abi_transaction == transaction
 
+        transaction_with_bytes_args = self.factory.create_transaction_for_propose_async_call(
+            sender=alice,
+            contract=multisig,
+            receiver=contract,
+            gas_limit=60_000_000,
+            opt_gas_limit=5_000_000,
+            function="add",
+            arguments=[b"\x07"],
+        )
+        assert transaction_with_bytes_args == abi_transaction
+
     def test_propose_sc_deploy_from_source(self):
         sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
         multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")

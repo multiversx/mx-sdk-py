@@ -11,6 +11,7 @@ from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
+from multiversx_sdk.abi.typesystem import is_list_of_typed_values
 from multiversx_sdk.abi.variadic_values import VariadicValues
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.code_metadata import CodeMetadata
@@ -24,6 +25,7 @@ from multiversx_sdk.multisig.resources import (
     ProposeAsyncCallInput,
     ProposeTransferExecuteEsdtInput,
 )
+from multiversx_sdk.smart_contracts.errors import ArgumentSerializationError
 from multiversx_sdk.smart_contracts.smart_contract_transactions_factory import (
     SmartContractTransactionsFactory,
 )
@@ -192,11 +194,13 @@ class MultisigTransactionsFactory:
         if function:
             arguments = arguments or []
 
+            function_call: list[bytes] = self._serializer.serialize_to_parts([StringValue(function)])
             if abi:
                 arguments = abi.encode_endpoint_input_parameters(function, arguments)
-                function_call: list[bytes] = self._serializer.serialize_to_parts([StringValue(function)]) + arguments
             else:
-                function_call: list[bytes] = self._serializer.serialize_to_parts([StringValue(function), *arguments])
+                arguments = self._serialize_arguments(arguments)
+
+            function_call.extend(self._serialize_arguments(arguments))
 
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -210,6 +214,15 @@ class MultisigTransactionsFactory:
                 VariadicValues(items=[BytesValue(item) for item in function_call]),
             ],
         )
+
+    def _serialize_arguments(self, arguments: list[Any]) -> list[bytes]:
+        if is_list_of_typed_values(arguments):
+            return self._serializer.serialize_to_parts(arguments)
+
+        if all(isinstance(arg, bytes) for arg in arguments):
+            return arguments
+
+        raise ArgumentSerializationError()
 
     def create_transaction_for_propose_transfer_esdt_execute(
         self,
@@ -266,15 +279,15 @@ class MultisigTransactionsFactory:
                 opt_gas_limit=gas_limit,
             )
 
-        serialized_args: list[bytes] = []
         arguments = arguments or []
+        function_call: list[bytes] = self._serializer.serialize_to_parts([StringValue(function)])
 
         if abi:
-            serialized_args = abi.encode_endpoint_input_parameters(function, arguments)
+            arguments = abi.encode_endpoint_input_parameters(function, arguments)
         else:
-            serialized_args = self._serializer.serialize_to_parts(arguments)
+            arguments = self._serialize_arguments(arguments)
 
-        function_call = [*self._serializer.serialize_to_parts([StringValue(function)]), *serialized_args]
+        function_call.extend(self._serialize_arguments(arguments))
 
         return ProposeTransferExecuteEsdtInput(
             to=to,
@@ -401,7 +414,7 @@ class MultisigTransactionsFactory:
         if abi:
             arguments = abi.encode_constructor_input_parameters(arguments)
         else:
-            arguments = self._serializer.serialize_to_parts(arguments)
+            arguments = self._serialize_arguments(arguments)
 
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -441,7 +454,7 @@ class MultisigTransactionsFactory:
         if abi:
             arguments = abi.encode_upgrade_constructor_input_parameters(arguments)
         else:
-            arguments = self._serializer.serialize_to_parts(arguments)
+            arguments = self._serialize_arguments(arguments)
 
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
