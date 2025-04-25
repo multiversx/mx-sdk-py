@@ -425,7 +425,7 @@ class MultisigController(BaseController):
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
-        transaction = self._factory.create_transaction_for_propose_transfer_execute_esdt(
+        transaction = self._factory.create_transaction_for_propose_transfer_esdt_execute(
             sender=sender.address,
             contract=contract,
             receiver=receiver,

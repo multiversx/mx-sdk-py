@@ -4,6 +4,7 @@ import pytest
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token, TokenTransfer
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
@@ -324,7 +325,7 @@ class TestMultisigTransactionsFactory:
         multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqfxlljcaalgl2qfcnxcsftheju0ts36kvl3ts3qkewe")
 
-        abi_transaction = self.abi_factory.create_transaction_for_propose_transfer_execute_esdt(
+        abi_transaction = self.abi_factory.create_transaction_for_propose_transfer_esdt_execute(
             sender=alice,
             contract=multisig,
             receiver=contract,
@@ -335,7 +336,7 @@ class TestMultisigTransactionsFactory:
             arguments=[],
         )
 
-        transaction = self.factory.create_transaction_for_propose_transfer_execute_esdt(
+        transaction = self.factory.create_transaction_for_propose_transfer_esdt_execute(
             sender=alice,
             contract=multisig,
             receiver=contract,
@@ -392,6 +393,17 @@ class TestMultisigTransactionsFactory:
             == "proposeAsyncCall@0000000000000000050078d29632acb15998003f615d0a51261353d8041d3e13@@0100000000004c4b40@616464@07"
         )
         assert abi_transaction == transaction
+
+        transaction_with_bytes_args = self.factory.create_transaction_for_propose_async_call(
+            sender=alice,
+            contract=multisig,
+            receiver=contract,
+            gas_limit=60_000_000,
+            opt_gas_limit=5_000_000,
+            function="add",
+            arguments=[b"\x07"],
+        )
+        assert transaction_with_bytes_args == abi_transaction
 
     def test_propose_sc_deploy_from_source(self):
         sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
@@ -760,3 +772,21 @@ class TestMultisigTransactionsFactory:
         assert abi_transaction.chain_id == "D"
         assert abi_transaction.data.decode() == "discardBatch@07@08"
         assert abi_transaction == transaction
+
+    def test_create_transaction_for_execute(self):
+        sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+
+        transaction = self.factory.create_transaction_for_execute(
+            sender=sender,
+            contract=multisig,
+            function="discardAction",
+            arguments=[U32Value(7)],
+            gas_limit=1_000_000,
+        )
+        assert transaction.sender == sender
+        assert transaction.receiver == multisig
+        assert transaction.value == 0
+        assert transaction.gas_limit == 1_000_000
+        assert transaction.chain_id == "D"
+        assert transaction.data.decode() == "discardAction@07"

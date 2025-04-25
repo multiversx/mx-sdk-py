@@ -45,13 +45,6 @@ from multiversx_sdk.multisig import (
     Action,
     EsdtTokenPayment,
     MultisigTransactionsFactory,
-    MultisigTransactionsOutcomeParser,
-    ProposeAsyncCallInput,
-    ProposeSCDeployFromSourceInput,
-    ProposeSCUpgradeFromSourceInput,
-    ProposeSyncCallInput,
-    ProposeTransferExecuteEsdtInput,
-    ProposeTransferExecuteInput,
 )
 from multiversx_sdk.native_auth.config import (
     NativeAuthClientConfig,
@@ -268,11 +261,4 @@ __all__ = [
     "MultisigTransactionsFactory",
     "Action",
     "EsdtTokenPayment",
-    "ProposeAsyncCallInput",
-    "ProposeSCDeployFromSourceInput",
-    "ProposeSCUpgradeFromSourceInput",
-    "ProposeSyncCallInput",
-    "ProposeTransferExecuteEsdtInput",
-    "ProposeTransferExecuteInput",
-    "MultisigTransactionsOutcomeParser",
 ]
