@@ -7,7 +7,7 @@ from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token, TokenTransfer
-from multiversx_sdk.multisig.multisig_transactions_controller import MultisigController
+from multiversx_sdk.multisig.multisig_controller import MultisigController
 from multiversx_sdk.multisig.resources import (
     AddBoardMember,
     AddProposer,

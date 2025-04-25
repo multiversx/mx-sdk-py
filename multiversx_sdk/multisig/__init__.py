@@ -1,4 +1,4 @@
-from multiversx_sdk.multisig.multisig_transactions_controller import MultisigController
+from multiversx_sdk.multisig.multisig_controller import MultisigController
 from multiversx_sdk.multisig.multisig_transactions_factory import (
     MultisigTransactionsFactory,
 )
