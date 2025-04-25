@@ -753,6 +753,20 @@ class TestMultisigController:
             == "proposeTransferExecute@0000000000000000050078d29632acb15998003f615d0a51261353d8041d3e13@0de0b6b3a7640000@0100000000000f4240@616464@07"
         )
 
+        abi_agnostic_controller = MultisigController(chain_id="D", network_provider=self.network_provider)
+        abi_agnostic_transaction = abi_agnostic_controller.create_transaction_for_propose_transfer_execute(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            contract=self.contract,
+            receiver=contract,
+            native_token_amount=amount,
+            gas_limit=60_000_000,
+            opt_gas_limit=1_000_000,
+            function="add",
+            arguments=[BigUIntValue(7)],
+        )
+        assert abi_agnostic_transaction.data == transaction.data
+
     def test_propose_transfer_egld_without_execute(self):
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq0rffvv4vk9vesqplv9ws55fxzdfaspqa8cfszy2hms")
         amount = 1000000000000000000
@@ -774,6 +788,17 @@ class TestMultisigController:
             transaction.data.decode()
             == "proposeTransferExecute@0000000000000000050078d29632acb15998003f615d0a51261353d8041d3e13@0de0b6b3a7640000@"
         )
+
+        abi_agnostic_controller = MultisigController(chain_id="D", network_provider=self.network_provider)
+        abi_agnostic_transaction = abi_agnostic_controller.create_transaction_for_propose_transfer_execute(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            contract=self.contract,
+            receiver=contract,
+            native_token_amount=amount,
+            gas_limit=60_000_000,
+        )
+        assert abi_agnostic_transaction.data == transaction.data
 
     def test_propose_transfer_execute_esdt(self):
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqfxlljcaalgl2qfcnxcsftheju0ts36kvl3ts3qkewe")
@@ -799,6 +824,20 @@ class TestMultisigController:
             == "proposeTransferExecuteEsdt@0000000000000000050049bff963bdfa3ea02713362095df32e3d708eaccfc57@0000000c414c4943452d3536323766310000000000000000000000010a@0100000000004c4b40@3634363937333734373236393632373537343635"
         )
 
+        abi_agnostic_controller = MultisigController(chain_id="D", network_provider=self.network_provider)
+        abi_agnostic_transaction = abi_agnostic_controller.create_transaction_for_propose_transfer_execute_esdt(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            contract=self.contract,
+            receiver=contract,
+            token_transfers=[TokenTransfer(Token("ALICE-5627f1"), 10)],
+            gas_limit=60_000_000,
+            opt_gas_limit=5_000_000,
+            function="distribute",
+            arguments=[],
+        )
+        assert abi_agnostic_transaction.data == transaction.data
+
     def test_propose_async_call(self):
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqdvmhpxxmwv2vfz3sfpggzfyl5qznuz5x05vq5y37ql")
 
@@ -822,7 +861,21 @@ class TestMultisigController:
             == "proposeAsyncCall@000000000000000005006b377098db7314c48a30485081249fa0053e0a867d18@@0100000000004c4b40@616464@07"
         )
 
+        abi_agnostic_controller = MultisigController(chain_id="D", network_provider=self.network_provider)
+        abi_agnostic_transaction = abi_agnostic_controller.create_transaction_for_propose_async_call(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            contract=self.contract,
+            receiver=contract,
+            gas_limit=60_000_000,
+            opt_gas_limit=5_000_000,
+            function="add",
+            arguments=[BigUIntValue(7)],
+        )
+        assert abi_agnostic_transaction.data == transaction.data
+
     def test_propose_sc_deploy_from_source(self):
+        adder_abi = Abi.load(self.testdata / "adder.abi.json")
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
 
         transaction = self.controller.create_transaction_for_propose_contract_deploy_from_source(
@@ -832,7 +885,8 @@ class TestMultisigController:
             gas_limit=60_000_000,
             contract_to_copy=contract,
             native_token_amount=50000000000000000,
-            arguments=[BigUIntValue(0)],
+            abi=adder_abi,
+            arguments=[0],
             is_readable=True,
             is_upgradeable=True,
             is_payable=False,
@@ -847,6 +901,22 @@ class TestMultisigController:
             transaction.data.decode()
             == "proposeSCDeployFromSource@b1a2bc2ec50000@00000000000000000500870d0412cede871853a1c2d48a7543c073eb39f969e1@0500@"
         )
+
+        abi_agnostic_controller = MultisigController(chain_id="D", network_provider=self.network_provider)
+        abi_agnostic_transaction = abi_agnostic_controller.create_transaction_for_propose_contract_deploy_from_source(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            contract=self.contract,
+            gas_limit=60_000_000,
+            contract_to_copy=contract,
+            native_token_amount=50000000000000000,
+            arguments=[BigUIntValue(0)],
+            is_readable=True,
+            is_upgradeable=True,
+            is_payable=False,
+            is_payable_by_sc=False,
+        )
+        assert abi_agnostic_transaction.data == transaction.data
 
     def test_propose_sc_upgrade_from_source(self):
         contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqsuxsgykwm6r3s5apct2g5a2rcpe7kw0ed8ssf6h9f6")
@@ -875,6 +945,23 @@ class TestMultisigController:
             transaction.data.decode()
             == "proposeSCUpgradeFromSource@00000000000000000500870d0412cede871853a1c2d48a7543c073eb39f969e1@b1a2bc2ec50000@00000000000000000500870d0412cede871853a1c2d48a7543c073eb39f969e1@0500@"
         )
+
+        abi_agnostic_controller = MultisigController(chain_id="D", network_provider=self.network_provider)
+        abi_agnostic_transaction = abi_agnostic_controller.create_transaction_for_propose_contract_upgrade_from_source(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            contract=self.contract,
+            contract_to_upgrade=contract,
+            gas_limit=60_000_000,
+            contract_to_copy=contract_to_copy,
+            arguments=[BigUIntValue()],
+            native_token_amount=50000000000000000,
+            is_readable=True,
+            is_upgradeable=True,
+            is_payable=False,
+            is_payable_by_sc=False,
+        )
+        assert abi_agnostic_transaction.data == transaction.data
 
     def test_sign_action(self):
         transaction = self.controller.create_transaction_for_sign_action(
