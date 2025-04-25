@@ -955,3 +955,53 @@ class MultisigController(BaseController):
     def await_completed_execute_perform(self, tx_hash: Union[str, bytes]) -> Optional[Address]:
         transaction = self._network_provider.await_transaction_completed(tx_hash)
         return self.parse_execute_perform(transaction)
+
+    def create_transaction_for_execute(
+        self,
+        sender: IAccount,
+        nonce: int,
+        contract: Address,
+        function: str,
+        gas_limit: int,
+        arguments: list[Any] = [],
+        native_transfer_amount: int = 0,
+        token_transfers: list[TokenTransfer] = [],
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self._factory.create_transaction_for_execute(
+            sender=sender.address,
+            contract=contract,
+            function=function,
+            gas_limit=gas_limit,
+            arguments=arguments,
+            native_transfer_amount=native_transfer_amount,
+            token_transfers=token_transfers,
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def query(
+        self,
+        contract: Address,
+        function: str,
+        arguments: list[Any],
+        caller: Optional[Address] = None,
+        value: Optional[int] = None,
+    ) -> list[Any]:
+        return self._smart_contract_controller.query(
+            contract=contract,
+            function=function,
+            arguments=arguments,
+            caller=caller,
+            value=value,
+        )

@@ -3,6 +3,7 @@ from pathlib import Path
 
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token, TokenTransfer
@@ -1010,3 +1011,38 @@ class TestMultisigController:
         assert transaction.gas_limit == 1_000_000
         assert transaction.chain_id == "D"
         assert transaction.data.decode() == "performBatch@07"
+
+    def test_create_transaction_for_execute(self):
+        transaction = self.controller.create_transaction_for_execute(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            contract=self.contract,
+            function="discardAction",
+            arguments=[U32Value(7)],
+            gas_limit=1_000_000,
+        )
+        assert transaction.sender == self.john.address
+        assert transaction.receiver == self.contract
+        assert transaction.value == 0
+        assert transaction.gas_limit == 1_000_000
+        assert transaction.chain_id == "D"
+        assert transaction.data.decode() == "discardAction@07"
+
+    def test_get_action_valid_signers_count_query(self):
+        network_provider = MockNetworkProvider()
+        controller = MultisigController(chain_id="D", network_provider=network_provider, abi=self.multisig_abi)
+
+        contract_query_response = SmartContractQueryResponse(
+            function="getActionValidSignerCount",
+            return_code="ok",
+            return_message="",
+            return_data_parts=[bytes.fromhex("04")],
+        )
+        network_provider.mock_query_contract_on_function("getActionValidSignerCount", contract_query_response)
+
+        [response] = controller.query(
+            contract=self.contract,
+            function="getActionValidSignerCount",
+            arguments=[U32Value(42)],
+        )
+        assert response == 4
