@@ -446,3 +446,12 @@ class TestApi:
         response = requests.get(api.url + "/network/config", **config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"
+
+    def test_get_transactions(self):
+        address = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        transactions = self.api.get_transactions(address)
+        assert len(transactions) == 25
+
+        transactions = self.api.get_transactions(address, {"size": 1, "isRelayed": True})
+        assert len(transactions) == 1
+        assert transactions[0].raw.get("isRelayed")
