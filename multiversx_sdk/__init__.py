@@ -41,6 +41,11 @@ from multiversx_sdk.entrypoints import (
     TestnetEntrypoint,
 )
 from multiversx_sdk.ledger.ledger_app import LedgerApp
+from multiversx_sdk.multisig import (
+    Action,
+    EsdtTokenPayment,
+    MultisigTransactionsFactory,
+)
 from multiversx_sdk.native_auth.config import (
     NativeAuthClientConfig,
     NativeAuthServerConfig,
@@ -253,4 +258,7 @@ __all__ = [
     "ValidatorsController",
     "ValidatorsSigners",
     "RequestsRetryOptions",
+    "MultisigTransactionsFactory",
+    "Action",
+    "EsdtTokenPayment",
 ]
