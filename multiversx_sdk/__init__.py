@@ -40,6 +40,10 @@ from multiversx_sdk.entrypoints import (
     NetworkEntrypoint,
     TestnetEntrypoint,
 )
+from multiversx_sdk.governance.governance_transactions_factory import (
+    GovernanceTransactionsFactory,
+)
+from multiversx_sdk.governance.resources import VoteType
 from multiversx_sdk.ledger.ledger_app import LedgerApp
 from multiversx_sdk.multisig import (
     Action,
@@ -261,4 +265,6 @@ __all__ = [
     "MultisigTransactionsFactory",
     "Action",
     "EsdtTokenPayment",
+    "VoteType",
+    "GovernanceTransactionsFactory",
 ]
