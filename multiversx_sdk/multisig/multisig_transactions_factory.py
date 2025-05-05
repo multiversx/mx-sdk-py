@@ -35,7 +35,7 @@ from multiversx_sdk.transfers.transfer_transactions_factory import (
 
 
 class MultisigTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig, abi: Optional[Abi] = None) -> None:
+    def __init__(self, config: TransactionsFactoryConfig, abi: Abi) -> None:
         self._sc_factory = SmartContractTransactionsFactory(config, abi)
         self._serializer = Serializer()
 

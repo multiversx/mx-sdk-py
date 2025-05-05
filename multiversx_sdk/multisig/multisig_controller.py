@@ -19,8 +19,19 @@ from multiversx_sdk.multisig.multisig_transactions_outcome_parser import (
 from multiversx_sdk.multisig.resources import (
     Action,
     ActionFullInfo,
+    AddBoardMember,
+    AddProposer,
+    CallActionData,
+    ChangeQuorum,
+    EsdtTokenPayment,
+    EsdtTransferExecuteData,
+    RemoveUser,
+    SCDeployFromSource,
+    SCUpgradeFromSource,
+    SendAsyncCall,
+    SendTransferExecuteEgld,
+    SendTransferExecuteEsdt,
     UserRole,
-    create_action_from_object,
 )
 from multiversx_sdk.network_providers.resources import AwaitingOptions
 from multiversx_sdk.smart_contracts import (
@@ -50,7 +61,7 @@ class MultisigController(BaseController):
         self,
         chain_id: str,
         network_provider: INetworkProvider,
-        abi: Optional[Abi] = None,
+        abi: Abi,
         address_hrp: Optional[str] = None,
     ) -> None:
         self._network_provider = network_provider
@@ -876,8 +887,13 @@ class MultisigController(BaseController):
             arguments=[None],
         )
 
-        actions = [ActionFullInfo.new_from_object(value) for value in values]
+        actions = [self._create_new_action_full_info_from_object(value) for value in values]
         return actions
+
+    def _create_new_action_full_info_from_object(self, object: Any) -> ActionFullInfo:
+        signers = [Address(value, self._address_hrp) for value in object.signers]
+        action_data = self._create_action_from_object(object.action_data)
+        return ActionFullInfo(object.action_id, object.group_id, action_data, signers)
 
     def get_user_role(self, contract: Address, user: Address) -> UserRole:
         [value] = self._smart_contract_controller.query(
@@ -913,7 +929,7 @@ class MultisigController(BaseController):
             arguments=[action_id],
         )
 
-        return create_action_from_object(value)
+        return self._create_action_from_object(value)
 
     def get_action_signers(self, contract: Address, action_id: int) -> list[Address]:
         [public_keys] = self._smart_contract_controller.query(
@@ -1005,3 +1021,97 @@ class MultisigController(BaseController):
             caller=caller,
             value=value,
         )
+
+    def _create_add_board_member_from_object(self, object: Any) -> AddBoardMember:
+        field_0 = getattr(object, "0")
+        public_key = field_0
+        address = Address(public_key, self._address_hrp)
+        return AddBoardMember(address)
+
+    def _create_add_proposer_from_object(self, object: Any) -> AddProposer:
+        field_0 = getattr(object, "0")
+        public_key = field_0
+        address = Address(public_key, self._address_hrp)
+        return AddProposer(address)
+
+    def _create_remove_user_from_object(self, object: Any) -> RemoveUser:
+        field_0 = getattr(object, "0")
+        public_key = field_0
+        address = Address(public_key, self._address_hrp)
+        return RemoveUser(address)
+
+    def _create_change_quorum_from_object(self, object: Any) -> ChangeQuorum:
+        field_0 = getattr(object, "0")
+        quorum = field_0
+        return ChangeQuorum(quorum)
+
+    def _create_send_transfer_execute_egld_from_object(self, object: Any) -> SendTransferExecuteEgld:
+        field_0 = getattr(object, "0")
+        data = self._create_call_action_data_from_object(field_0)
+        return SendTransferExecuteEgld(data)
+
+    def _create_send_transfer_execute_esdt_from_object(self, object: Any) -> SendTransferExecuteEsdt:
+        field_0 = getattr(object, "0")
+        data = self._create_esdt_transfer_execute_data_from_object(field_0)
+        return SendTransferExecuteEsdt(data)
+
+    def _create_send_async_call_from_object(self, object: Any) -> SendAsyncCall:
+        field_0 = getattr(object, "0")
+        data = self._create_call_action_data_from_object(field_0)
+        return SendAsyncCall(data)
+
+    def _create_sc_deploy_from_source_from_object(self, object: Any) -> SCDeployFromSource:
+        amount = object.amount
+        source = Address(object.source, self._address_hrp)
+        code_metadata = object.code_metadata
+        arguments = object.arguments
+        return SCDeployFromSource(amount, source, code_metadata, arguments)
+
+    def _create_sc_upgrade_from_source_from_object(self, object: Any) -> SCUpgradeFromSource:
+        sc_address = Address(object.sc_address, self._address_hrp)
+        amount = object.amount
+        source = Address(object.source, self._address_hrp)
+        code_metadata = object.code_metadata
+        arguments = object.arguments
+        return SCUpgradeFromSource(sc_address, amount, source, code_metadata, arguments)
+
+    def _create_call_action_data_from_object(self, object: Any) -> CallActionData:
+        to = Address(object.to, self._address_hrp)
+        egld_amount = object.egld_amount
+        endpoint_name = object.endpoint_name.decode()
+        arguments = object.arguments
+        opt_gas_limit = object.opt_gas_limit
+        return CallActionData(to, egld_amount, endpoint_name, arguments, opt_gas_limit)
+
+    def _create_esdt_transfer_execute_data_from_object(self, object: Any) -> EsdtTransferExecuteData:
+        to = Address(object.to, self._address_hrp)
+        tokens = [EsdtTokenPayment(token.token_identifier, token.token_nonce, token.amount) for token in object.tokens]
+        opt_gas_limit = object.opt_gas_limit
+        endpoint_name = bytes.fromhex(object.endpoint_name.decode()).decode()
+        arguments = object.arguments
+        return EsdtTransferExecuteData(to, tokens, opt_gas_limit, endpoint_name, arguments)
+
+    def _create_action_from_object(self, object: Any) -> "Action":
+        # The object is of type _EnumPayload, and its integer conversion is overridden to return the value of the __discriminant__ field.
+        discriminant = int(object)
+
+        if discriminant == AddBoardMember.discriminant:
+            return self._create_add_board_member_from_object(object)
+        elif discriminant == AddProposer.discriminant:
+            return self._create_add_proposer_from_object(object)
+        elif discriminant == RemoveUser.discriminant:
+            return self._create_remove_user_from_object(object)
+        elif discriminant == ChangeQuorum.discriminant:
+            return self._create_change_quorum_from_object(object)
+        elif discriminant == SendTransferExecuteEgld.discriminant:
+            return self._create_send_transfer_execute_egld_from_object(object)
+        elif discriminant == SendTransferExecuteEsdt.discriminant:
+            return self._create_send_transfer_execute_esdt_from_object(object)
+        elif discriminant == SendAsyncCall.discriminant:
+            return self._create_send_async_call_from_object(object)
+        elif discriminant == SCDeployFromSource.discriminant:
+            return self._create_sc_deploy_from_source_from_object(object)
+        elif discriminant == SCUpgradeFromSource.discriminant:
+            return self._create_sc_upgrade_from_source_from_object(object)
+        else:
+            raise ValueError(f"Unknown action discriminant: {discriminant}")

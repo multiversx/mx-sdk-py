@@ -14,7 +14,7 @@ from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_t
 
 
 class MultisigTransactionsOutcomeParser:
-    def __init__(self, abi: Optional[Abi] = None) -> None:
+    def __init__(self, abi: Abi) -> None:
         self._parser = SmartContractTransactionsOutcomeParser(abi)
 
     def parse_deploy(self, transaction_on_network: TransactionOnNetwork) -> SmartContractDeployOutcome:
