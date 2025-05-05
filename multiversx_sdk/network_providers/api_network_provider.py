@@ -180,6 +180,22 @@ class ApiNetworkProvider(INetworkProvider):
             raise TransactionFetchingError(ge.url, ge.data)
         return transaction_from_api_response(transaction_hash, response)
 
+    def get_transactions(
+        self, address: Address, url_parameters: Optional[dict[str, Any]] = None
+    ) -> list[TransactionOnNetwork]:
+        """Fetches the transactions of an account"""
+        try:
+            response = self.do_get_generic(f"accounts/{address.to_bech32()}/transactions", url_parameters)
+        except NetworkProviderError as ge:
+            raise TransactionFetchingError(ge.url, ge.data)
+
+        transactions: list[TransactionOnNetwork] = []
+        for tx in response:
+            hash = tx.get("txHash")
+            transactions.append(transaction_from_api_response(hash, tx))
+
+        return transactions
+
     def await_transaction_completed(
         self,
         transaction_hash: Union[str, bytes],
