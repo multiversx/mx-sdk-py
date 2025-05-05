@@ -443,7 +443,7 @@ class TestApi:
         config = NetworkProviderConfig(client_name="test-client")
         api = ApiNetworkProvider(url="https://devnet-api.multiversx.com", config=config)
 
-        response = requests.get(api.url + "/network/config", **config.requests_options)
+        response = requests.get(api.url + "/network/config", **api.config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/api/test-client"
 

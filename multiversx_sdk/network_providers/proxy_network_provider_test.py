@@ -430,7 +430,7 @@ class TestProxy:
         config = NetworkProviderConfig(client_name="test-client")
         proxy = ProxyNetworkProvider(url="https://devnet-gateway.multiversx.com", config=config)
 
-        response = requests.get(proxy.url + "/network/config", **config.requests_options)
+        response = requests.get(proxy.url + "/network/config", **proxy.config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/test-client"
 
