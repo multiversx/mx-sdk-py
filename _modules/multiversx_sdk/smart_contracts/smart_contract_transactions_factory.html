@@ -77,7 +77,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.code_metadata_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">CodeMetadataValue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.serializer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Serializer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.string_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringValue</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.typesystem</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_list_of_typed_values</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.typesystem</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_list_of_bytes</span><span class="p">,</span> <span class="n">is_list_of_typed_values</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.builders.token_transfers_data_builder</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TokenTransfersDataBuilder</span><span class="p">,</span>
 <span class="p">)</span>
@@ -283,6 +283,9 @@
         <span class="k">if</span> <span class="n">is_list_of_typed_values</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">is_list_of_bytes</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">args</span>
+
         <span class="k">raise</span> <span class="n">ArgumentSerializationError</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_encode_execute_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
@@ -292,6 +295,9 @@
         <span class="k">if</span> <span class="n">is_list_of_typed_values</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">is_list_of_bytes</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">args</span>
+
         <span class="k">raise</span> <span class="n">ArgumentSerializationError</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_encode_upgrade_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
@@ -300,6 +306,9 @@
 
         <span class="k">if</span> <span class="n">is_list_of_typed_values</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_list_of_bytes</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">args</span>
 
         <span class="k">raise</span> <span class="n">ArgumentSerializationError</span><span class="p">()</span></div>
 
