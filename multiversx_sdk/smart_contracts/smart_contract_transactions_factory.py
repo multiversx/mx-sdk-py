@@ -6,7 +6,7 @@ from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.code_metadata_value import CodeMetadataValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.string_value import StringValue
-from multiversx_sdk.abi.typesystem import is_list_of_typed_values
+from multiversx_sdk.abi.typesystem import is_list_of_bytes, is_list_of_typed_values
 from multiversx_sdk.builders.token_transfers_data_builder import (
     TokenTransfersDataBuilder,
 )
@@ -195,6 +195,9 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
+        if is_list_of_bytes(args):
+            return args
+
         raise ArgumentSerializationError()
 
     def _encode_execute_arguments(self, function_name: str, args: list[Any]) -> list[bytes]:
@@ -204,6 +207,9 @@ class SmartContractTransactionsFactory:
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
 
+        if is_list_of_bytes(args):
+            return args
+
         raise ArgumentSerializationError()
 
     def _encode_upgrade_arguments(self, args: list[Any]) -> list[bytes]:
@@ -212,5 +218,8 @@ class SmartContractTransactionsFactory:
 
         if is_list_of_typed_values(args):
             return self.serializer.serialize_to_parts(args)
+
+        if is_list_of_bytes(args):
+            return args
 
         raise ArgumentSerializationError()
