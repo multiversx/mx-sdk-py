@@ -406,6 +406,15 @@ class TestProxy:
         miniblocks = block.get("miniBlocks", [])
         assert miniblocks[0]["transactions"]
 
+    def test_query_contract_without_return_data(self):
+        query = SmartContractQuery(
+            contract=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqf738mcf8f08kuwhn8dvtka5veyad2fqwu00sqnjgln"),
+            function="getAllProposers",
+            arguments=[],
+        )
+        response = self.proxy.query_contract(query)
+        assert response.return_data_parts == []
+
     def test_user_agent(self):
         # using config without user agent
         config = NetworkProviderConfig()
@@ -424,3 +433,17 @@ class TestProxy:
         response = requests.get(proxy.url + "/network/config", **config.requests_options)
         headers = response.request.headers
         assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/test-client"
+
+    def test_same_config_with_multiple_network_providers(self):
+        config = NetworkProviderConfig(client_name="test-client")
+        proxy = ProxyNetworkProvider(url="https://devnet-gateway.multiversx.com", config=config)
+
+        response = requests.get(proxy.url + "/network/config", **proxy.config.requests_options)
+        headers = response.request.headers
+        assert headers.get("User-Agent") == "multiversx-sdk-py/proxy/test-client"
+
+        # create new network provider with old config, we don't alter the config anymore
+        proxy = ProxyNetworkProvider(url="https://devnet-gateway.multiversx.com", config=config)
+        assert (
+            proxy.config.requests_options.get("headers", {}).get("User-Agent") == "multiversx-sdk-py/proxy/test-client"
+        )

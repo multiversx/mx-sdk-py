@@ -1,4 +1,5 @@
 import urllib.parse
+from copy import deepcopy
 from typing import Any, Callable, Optional, Union, cast
 
 import requests
@@ -76,7 +77,7 @@ class ApiNetworkProvider(INetworkProvider):
         self.url = url
         self.address_hrp = address_hrp or LibraryConfig.default_address_hrp
         self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
-        self.config = config if config is not None else NetworkProviderConfig()
+        self.config = deepcopy(config) if config is not None else NetworkProviderConfig()
 
         self.user_agent_prefix = f"{BASE_USER_AGENT}/api"
         extend_user_agent(self.user_agent_prefix, self.config)
