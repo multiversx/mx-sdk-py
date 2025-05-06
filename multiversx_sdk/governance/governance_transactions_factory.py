@@ -8,6 +8,9 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.governance.resources import VoteType
 
+# will be changed in the future when a formula on how gas is computed will be available
+EXTRA_GAS_LIMIT_FOR_VOTING_PROPOSAL = 100_000
+
 
 class GovernanceTransactionsFactory:
     def __init__(self, config: TransactionsFactoryConfig) -> None:
@@ -52,7 +55,7 @@ class GovernanceTransactionsFactory:
             sender=sender,
             receiver=self.governance_contract,
             data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_vote,
+            gas_limit=self.config.gas_limit_for_vote + EXTRA_GAS_LIMIT_FOR_VOTING_PROPOSAL,
             add_data_movement_gas=True,
         ).build()
 
@@ -122,20 +125,20 @@ class GovernanceTransactionsFactory:
     def create_transaction_for_changing_config(
         self,
         sender: Address,
+        proposal_fee: str,
+        lost_proposal_fee: str,
         min_quorum: int,
-        min_pass_threshold: int,
         min_veto_threshold: int,
-        max_duration: int,
-        proposal_fee: int,
+        min_pass_threshold: int,
     ) -> Transaction:
         data_parts = ["changeConfig"]
         args = self.serializer.serialize_to_parts(
             [
+                StringValue(proposal_fee),
+                StringValue(lost_proposal_fee),
                 BigUIntValue(min_quorum),
-                BigUIntValue(min_pass_threshold),
                 BigUIntValue(min_veto_threshold),
-                BigUIntValue(max_duration),
-                BigUIntValue(proposal_fee),
+                BigUIntValue(min_pass_threshold),
             ]
         )
 
