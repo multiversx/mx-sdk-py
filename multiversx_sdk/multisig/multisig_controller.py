@@ -958,19 +958,19 @@ class MultisigController(BaseController):
 
         return value
 
-    def parse_execute_propose_any(self, transaction_on_network: TransactionOnNetwork) -> int:
-        return self._parser.parse_execute_propose_any(transaction_on_network)
+    def parse_propose_action(self, transaction_on_network: TransactionOnNetwork) -> int:
+        return self._parser.parse_propose_action(transaction_on_network)
 
     def await_completed_execute_propose_any(self, tx_hash: Union[str, bytes]) -> int:
         transaction = self._network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_propose_any(transaction)
+        return self.parse_propose_action(transaction)
 
-    def parse_execute_perform(self, transaction_on_network: TransactionOnNetwork) -> Optional[Address]:
-        return self._parser.parse_execute_perform(transaction_on_network)
+    def parse_perform_action(self, transaction_on_network: TransactionOnNetwork) -> Optional[Address]:
+        return self._parser.parse_perform_action(transaction_on_network)
 
-    def await_completed_execute_perform(self, tx_hash: Union[str, bytes]) -> Optional[Address]:
+    def await_completed_perform_action(self, tx_hash: Union[str, bytes]) -> Optional[Address]:
         transaction = self._network_provider.await_transaction_completed(tx_hash)
-        return self.parse_execute_perform(transaction)
+        return self.parse_perform_action(transaction)
 
     def create_transaction_for_execute(
         self,
