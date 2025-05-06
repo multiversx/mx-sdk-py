@@ -11,7 +11,7 @@ from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetwork
 
 
 class TestGovernanceTransactionsFactory:
-    factory = GovernanceTransactionsFactory(TransactionsFactoryConfig("chain"))
+    factory = GovernanceTransactionsFactory(TransactionsFactoryConfig("D"))
     commit_hash = "1db734c0315f9ec422b88f679ccfe3e0197b9d67"
     alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     governance_address = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla"
@@ -32,7 +32,7 @@ class TestGovernanceTransactionsFactory:
 
         assert transaction.sender == self.alice
         assert transaction.receiver.to_bech32() == self.governance_address
-        # assert transaction.chain_id == "D"
+        assert transaction.chain_id == "D"
         assert transaction.value == 1000_000000000000000000
         assert transaction.gas_limit == 50_192_500
         assert transaction.data.decode() == f"proposal@{self.commit_hash.encode().hex()}@0a@0f"
@@ -48,8 +48,8 @@ class TestGovernanceTransactionsFactory:
         assert transaction.receiver.to_bech32() == self.governance_address
         assert transaction.chain_id == "D"
         assert transaction.value == 0
-        assert transaction.gas_limit == 5_122_000
-        assert transaction.data.decode() == "vote@01@00"
+        assert transaction.gas_limit == 5_171_000
+        assert transaction.data.decode() == "vote@01@796573"
 
     def test_create_transaction_for_delagating(self):
         bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
@@ -66,8 +66,8 @@ class TestGovernanceTransactionsFactory:
         assert transaction.receiver.to_bech32() == self.governance_address
         assert transaction.chain_id == "D"
         assert transaction.value == 0
-        assert transaction.gas_limit == 50_260_000
-        assert transaction.data.decode() == f"delegateVote@01@00@{bob.to_hex()}@056bc75e2d63100000"
+        assert transaction.gas_limit == 50_209_000
+        assert transaction.data.decode() == f"delegateVote@01@796573@{bob.to_hex()}@056bc75e2d63100000"
 
     def test_create_transaction_for_closing_proposal(self):
         transaction = self.factory.create_transaction_for_closing_proposal(sender=self.alice, proposal_nonce=1)
@@ -76,20 +76,27 @@ class TestGovernanceTransactionsFactory:
         assert transaction.receiver.to_bech32() == self.governance_address
         assert transaction.chain_id == "D"
         assert transaction.value == 0
-        assert transaction.gas_limit == 50_131_000
+        assert transaction.gas_limit == 50_074_000
         assert transaction.data.decode() == "closeProposal@01"
 
     def test_create_transaction_for_clearing_ended_proposals(self):
         transaction = self.factory.create_transaction_for_clearing_ended_proposals(
             sender=self.alice,
+            proposers=[
+                self.alice,
+                Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
+            ],
         )
 
         assert transaction.sender == self.alice
         assert transaction.receiver.to_bech32() == self.governance_address
         assert transaction.chain_id == "D"
         assert transaction.value == 0
-        assert transaction.gas_limit == 50_078_500
-        assert transaction.data.decode() == "clearEndedProposals"
+        assert transaction.gas_limit == 150_273_500
+        assert (
+            transaction.data.decode()
+            == "clearEndedProposals@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+        )
 
     def test_create_transaction_for_claiming_accumulated_fees(self):
         transaction = self.factory.create_transaction_for_claiming_accumulated_fees(
@@ -106,16 +113,19 @@ class TestGovernanceTransactionsFactory:
     def test_create_transaction_for_changing_config(self):
         transaction = self.factory.create_transaction_for_changing_config(
             sender=self.alice,
+            proposal_fee="1000000000000000000000",
+            lost_proposal_fee="10000000000000000000",
             min_quorum=5000,
-            min_pass_threshold=6000,
             min_veto_threshold=3000,
-            max_duration=10,
-            proposal_fee=1000_000000000000000000,
+            min_pass_threshold=6000,
         )
 
         assert transaction.sender == self.alice
         assert transaction.receiver.to_bech32() == self.governance_address
         assert transaction.chain_id == "D"
         assert transaction.value == 0
-        assert transaction.gas_limit == 50_123_500
-        assert transaction.data.decode() == "changeConfig@1388@1770@0bb8@0a@3635c9adc5dea00000"
+        assert transaction.gas_limit == 50_219_500
+        assert (
+            transaction.data.decode()
+            == "changeConfig@31303030303030303030303030303030303030303030@3130303030303030303030303030303030303030@1388@0bb8@1770"
+        )

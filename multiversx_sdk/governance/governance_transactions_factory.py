@@ -1,3 +1,4 @@
+from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.string_value import StringValue
@@ -97,14 +98,20 @@ class GovernanceTransactionsFactory:
     def create_transaction_for_clearing_ended_proposals(
         self,
         sender: Address,
+        proposers: list[Address],
     ) -> Transaction:
-        data_parts = ["clearEndedProposals"]
+        serialized_proposers = self.serializer.serialize_to_parts(
+            [AddressValue.new_from_address(user) for user in proposers]
+        )
+
+        data_parts = ["clearEndedProposals"] + [address.hex() for address in serialized_proposers]
         return TransactionBuilder(
             config=self.config,
             sender=sender,
             receiver=self.governance_contract,
             data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_clear_proposals,
+            gas_limit=self.config.gas_limit_for_clear_proposals
+            + len(proposers) * self.config.gas_limit_for_clear_proposals,
             add_data_movement_gas=True,
         ).build()
 
