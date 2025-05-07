@@ -1,7 +1,10 @@
 from typing import Optional, Protocol, Union
 
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.base_controller import BaseController
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.constants import GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX
 from multiversx_sdk.core.interfaces import IAccount
 from multiversx_sdk.core.transaction import Transaction
@@ -10,7 +13,16 @@ from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryC
 from multiversx_sdk.governance.governance_transactions_factory import (
     GovernanceTransactionsFactory,
 )
+from multiversx_sdk.governance.resources import (
+    DelegatedVoteInfo,
+    GovernaceConfig,
+    ProposalInfo,
+    VoteType,
+)
 from multiversx_sdk.network_providers.resources import AwaitingOptions
+from multiversx_sdk.smart_contracts.smart_contract_controller import (
+    SmartContractController,
+)
 from multiversx_sdk.smart_contracts.smart_contract_query import (
     SmartContractQuery,
     SmartContractQueryResponse,
@@ -34,6 +46,9 @@ class GovernanceController(BaseController):
         self._factory = GovernanceTransactionsFactory(TransactionsFactoryConfig(chain_id))
         self._network_provider = network_provider
         self._governance_contract = Address.new_from_hex(GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX)
+        self._sc_controller = SmartContractController(chain_id, network_provider)
+        self._serializer = Serializer()
+        self._address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
 
     def create_transaction_for_new_proposal(
         self,
@@ -42,11 +57,260 @@ class GovernanceController(BaseController):
         github_commit_hash: str,
         start_vote_epoch: int,
         end_vote_epoch: int,
-        value: int,
         native_token_amount: int,
         gas_limit: Optional[int] = None,
         gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
     ) -> Transaction:
-        pass
+        transaction = self._factory.create_transaction_for_new_proposal(
+            sender=sender.address,
+            github_commit_hash=github_commit_hash,
+            start_vote_epoch=start_vote_epoch,
+            end_vote_epoch=end_vote_epoch,
+            native_token_amount=native_token_amount,
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_voting(
+        self,
+        sender: IAccount,
+        nonce: int,
+        proposal_nonce: int,
+        vote: VoteType,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self._factory.create_transaction_for_voting(
+            sender=sender.address, proposal_nonce=proposal_nonce, vote=vote
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_delegating_vote(
+        self,
+        sender: IAccount,
+        nonce: int,
+        proposal_nonce: int,
+        vote: VoteType,
+        delegate_to: Address,
+        balance_to_vote: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self._factory.create_transaction_for_delegating_vote(
+            sender=sender.address,
+            proposal_nonce=proposal_nonce,
+            vote=vote,
+            delegate_to=delegate_to,
+            balance_to_vote=balance_to_vote,
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_closing_proposal(
+        self,
+        sender: IAccount,
+        nonce: int,
+        proposal_nonce: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self._factory.create_transaction_for_closing_proposal(
+            sender=sender.address, proposal_nonce=proposal_nonce
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_clearing_ended_proposals(
+        self,
+        sender: IAccount,
+        nonce: int,
+        proposers: list[Address],
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self._factory.create_transaction_for_clearing_ended_proposals(
+            sender=sender.address, proposers=proposers
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_claiming_accumulated_fees(
+        self,
+        sender: IAccount,
+        nonce: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self._factory.create_transaction_for_claiming_accumulated_fees(sender=sender.address)
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_changing_config(
+        self,
+        sender: IAccount,
+        nonce: int,
+        proposal_fee: str,
+        lost_proposal_fee: str,
+        min_quorum: int,
+        min_veto_threshold: int,
+        min_pass_threshold: int,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+    ) -> Transaction:
+        transaction = self._factory.create_transaction_for_changing_config(
+            sender=sender.address,
+            proposal_fee=proposal_fee,
+            lost_proposal_fee=lost_proposal_fee,
+            min_quorum=min_quorum,
+            min_veto_threshold=min_veto_threshold,
+            min_pass_threshold=min_pass_threshold,
+        )
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def get_voting_power(self, address: Address) -> int:
+        result = self._sc_controller.query(
+            contract=self._governance_contract,
+            function="viewVotingPower",
+            arguments=[address.to_hex()],
+        )
+        value = BigUIntValue()
+        self._serializer.deserialize_parts(result, [value])
+        return value.get_payload()
+
+    def get_config(self) -> GovernaceConfig:
+        result = self._sc_controller.query(
+            contract=self._governance_contract,
+            function="viewConfig",
+            arguments=[],
+        )
+
+        proposal_fee = int.from_bytes(result[0])
+        min_quorum = float(result[1].hex())
+        min_pass_threshold = float(result[2].hex())
+        min_veto_threshold = float(result[3].hex())
+        last_proposal_nonce = int.from_bytes(result[4])
+
+        return GovernaceConfig(proposal_fee, min_quorum, min_pass_threshold, min_veto_threshold, last_proposal_nonce)
+
+    def get_proposal(self, proposal_nonce: int) -> ProposalInfo:
+        result = self._sc_controller.query(
+            contract=self._governance_contract,
+            function="viewProposal",
+            arguments=[self._serializer.serialize([BigUIntValue(proposal_nonce)])],
+        )
+
+        proposal_cost = int.from_bytes(result[0])
+        commit_hash = result[1].hex()
+        nonce = int.from_bytes(result[2])
+        issuer = Address(result[3], self._address_hrp)
+        start_vote_epoch = int.from_bytes(result[4])
+        end_vote_epoch = int.from_bytes(result[5])
+        quorum_stake = int.from_bytes(result[6])
+        vote_yes = int.from_bytes(result[7])
+        vote_no = int.from_bytes(result[8])
+        vote_veto = int.from_bytes(result[9])
+        vote_abstain = int.from_bytes(result[10])
+        proposal_closed = bool(int.from_bytes(result[11]))
+        proposal_passed = bool(int.from_bytes(result[12]))
+
+        return ProposalInfo(
+            proposal_cost,
+            commit_hash,
+            nonce,
+            issuer,
+            start_vote_epoch,
+            end_vote_epoch,
+            quorum_stake,
+            vote_yes,
+            vote_no,
+            vote_veto,
+            vote_abstain,
+            proposal_closed,
+            proposal_passed,
+        )
+
+    def get_delegated_vote_info(self) -> DelegatedVoteInfo:
+        result = self._sc_controller.query(
+            contract=self._governance_contract,
+            function="viewDelegatedVoteInfo",
+            arguments=[],
+        )
+
+        used_stake = int.from_bytes(result[0])
+        used_power = int.from_bytes(result[1])
+        total_stake = int.from_bytes(result[2])
+        total_power = int.from_bytes(result[3])
+
+        return DelegatedVoteInfo(used_stake, used_power, total_stake, total_power)
