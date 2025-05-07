@@ -21,5 +21,3 @@ class ExpectedAccountConditionNotReachedError(Exception):
 class TransactionFetchingError(NetworkProviderError):
     def __init__(self, url: str, error: Any):
         super().__init__(url, error)
-        self.url = url
-        self.data = error
