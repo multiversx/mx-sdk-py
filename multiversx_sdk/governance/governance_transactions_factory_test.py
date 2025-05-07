@@ -25,7 +25,7 @@ class TestGovernanceTransactionsFactory:
             github_commit_hash=self.commit_hash,
             start_vote_epoch=10,
             end_vote_epoch=15,
-            value=1000_000000000000000000,
+            native_token_amount=1000_000000000000000000,
         )
 
         assert transaction.sender == self.alice
