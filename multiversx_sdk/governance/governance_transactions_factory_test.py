@@ -7,7 +7,6 @@ from multiversx_sdk.governance.governance_transactions_factory import (
     GovernanceTransactionsFactory,
 )
 from multiversx_sdk.governance.resources import VoteType
-from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
 
 
 class TestGovernanceTransactionsFactory:
@@ -16,7 +15,6 @@ class TestGovernanceTransactionsFactory:
     alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     governance_address = "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla"
 
-    proxy = ProxyNetworkProvider("http://localhost:8085")
     testdata = Path(__file__).parent.parent / "testutils" / "testdata"
     testwallets = Path(__file__).parent.parent / "testutils" / "testwallets"
     alice_acc = Account.new_from_pem(testwallets / "alice.pem")
