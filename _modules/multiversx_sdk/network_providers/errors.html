@@ -100,9 +100,9 @@
 
 <div class="viewcode-block" id="TransactionFetchingError">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.TransactionFetchingError">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TransactionFetchingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TransactionFetchingError</span><span class="p">(</span><span class="n">NetworkProviderError</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Couldn&#39;t fetch transaction on url = [</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">], error = [</span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span></div>
 
 </pre></div>
 
