@@ -21,3 +21,5 @@ class ExpectedAccountConditionNotReachedError(Exception):
 class TransactionFetchingError(Exception):
     def __init__(self, url: str, error: Any):
         super().__init__(f"Couldn't fetch transaction on url = [{url}], error = [{error}]")
+        self.url = url
+        self.data = error
