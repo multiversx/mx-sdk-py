@@ -1,5 +1,6 @@
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from copy import deepcopy
 from threading import Thread
 from typing import Any, Callable, Optional, Union
 
@@ -78,7 +79,7 @@ class ProxyNetworkProvider(INetworkProvider):
     ) -> None:
         self.url = url
         self.address_hrp = address_hrp or LibraryConfig.default_address_hrp
-        self.config = config if config is not None else NetworkProviderConfig()
+        self.config = deepcopy(config) if config is not None else NetworkProviderConfig()
 
         self.user_agent_prefix = f"{BASE_USER_AGENT}/proxy"
         extend_user_agent(self.user_agent_prefix, self.config)
