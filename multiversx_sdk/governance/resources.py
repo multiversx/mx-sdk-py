@@ -30,9 +30,9 @@ class DelegatedVoteInfo:
 
 @dataclass
 class ProposalInfo:
-    proposal_cost: int
+    cost: int
     commit_hash: str
-    proposal_nonce: int
+    nonce: int
     issuer_address: Address
     start_vote_epoch: int
     end_vote_epoch: int
@@ -41,5 +41,5 @@ class ProposalInfo:
     no_votes: int
     veto_votes: int
     abstain_votes: int
-    is_proposal_closed: bool
-    is_proposal_passed: bool
+    is_closed: bool
+    is_passed: bool
