@@ -87,3 +87,11 @@ class TransactionsFactoryConfig:
     gas_limit_for_unbonding_tokens: int = 5_000_000
     gas_limit_for_cleaning_registered_data: int = 5_000_000
     gas_limit_for_restaking_unstaked_tokens: int = 5_000_000
+
+    # Configuration for governance operations
+    gas_limit_for_proposal = 50_000_000
+    gas_limit_for_vote = 5_000_000
+    gas_limit_for_closing_proposal = 50_000_000
+    gas_limit_for_clear_proposals = 50_000_000
+    gas_limit_for_change_config = 50_000_000
+    gas_limit_for_claim_accumulated_fees = 1_000_000
