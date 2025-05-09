@@ -41,11 +41,15 @@ from multiversx_sdk.entrypoints import (
     TestnetEntrypoint,
 )
 from multiversx_sdk.governance import (
+    CloseProposalOutcome,
     DelegatedVoteInfo,
+    DelegateVoteOutcome,
     GovernaceConfig,
     GovernanceController,
     GovernanceTransactionsFactory,
     ProposalInfo,
+    ProposeProposalOutcome,
+    VoteOutcome,
     VoteType,
 )
 from multiversx_sdk.ledger.ledger_app import LedgerApp
@@ -305,4 +309,8 @@ __all__ = [
     "GovernaceConfig",
     "GovernanceController",
     "ProposalInfo",
+    "ProposeProposalOutcome",
+    "VoteOutcome",
+    "DelegateVoteOutcome",
+    "CloseProposalOutcome",
 ]
