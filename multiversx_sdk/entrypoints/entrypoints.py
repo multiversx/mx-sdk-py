@@ -26,6 +26,10 @@ from multiversx_sdk.entrypoints.config import (
     TestnetEntrypointConfig,
 )
 from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
+from multiversx_sdk.multisig.multisig_controller import MultisigController
+from multiversx_sdk.multisig.multisig_transactions_factory import (
+    MultisigTransactionsFactory,
+)
 from multiversx_sdk.network_providers import ApiNetworkProvider, ProxyNetworkProvider
 from multiversx_sdk.network_providers.interface import INetworkProvider
 from multiversx_sdk.relayed.relayed_controller import RelayedController
@@ -178,6 +182,12 @@ class NetworkEntrypoint:
 
     def create_transfers_transactions_factory(self) -> TransferTransactionsFactory:
         return TransferTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
+
+    def create_multisig_controller(self, abi: Abi, address_hrp: Optional[str] = None) -> MultisigController:
+        return MultisigController(self._get_chain_id(), self.network_provider, abi, address_hrp)
+
+    def create_multisig_transactions_factory(self, abi: Abi) -> MultisigTransactionsFactory:
+        return MultisigTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()), abi)
 
     def _get_chain_id(self) -> str:
         if self.chain_id:

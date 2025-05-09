@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional, cast
 
 from multiversx_sdk.abi.biguint_value import BigUIntValue
@@ -60,6 +61,23 @@ class EsdtTokenPayment(StructValue):
         )
 
 
+class UserRole(Enum):
+    NONE = 0
+    PROPOSER = 1
+    BOARD_MEMBER = 2
+
+
+class ActionFullInfo:
+    def __init__(self, action_id: int, group_id: int, action_data: "Action", signers: list[Address]) -> None:
+        self.action_id = action_id
+        self.group_id = group_id
+        self.action_data = action_data
+        self.signers = signers
+
+    def __repr__(self) -> str:
+        return f"ActionFullInfo(action_id={self.action_id}, group_id={self.group_id}, action_data={self.action_data}, signers={self.signers})"
+
+
 class Action:
     discriminant: int
 
@@ -68,3 +86,110 @@ class Action:
 
     def __repr__(self) -> str:
         return self.__class__.__name__
+
+    def __int__(self) -> int:
+        return self.discriminant
+
+
+class AddBoardMember(Action):
+    discriminant = 1
+
+    def __init__(self, address: Address) -> None:
+        self.address = address
+
+
+class AddProposer(Action):
+    discriminant = 2
+
+    def __init__(self, address: Address) -> None:
+        self.address = address
+
+
+class RemoveUser(Action):
+    discriminant = 3
+
+    def __init__(self, address: Address) -> None:
+        self.address = address
+
+
+class ChangeQuorum(Action):
+    discriminant = 4
+
+    def __init__(self, quorum: int) -> None:
+        self.quorum = quorum
+
+
+class SendTransferExecuteEgld(Action):
+    discriminant = 5
+
+    def __init__(self, data: "CallActionData") -> None:
+        self.data = data
+
+
+class CallActionData:
+    def __init__(
+        self,
+        to: Address,
+        egld_amount: int,
+        endpoint_name: str,
+        arguments: list[bytes],
+        opt_gas_limit: Optional[int] = None,
+    ):
+        self.to = to
+        self.egld_amount = egld_amount
+        self.endpoint_name = endpoint_name
+        self.arguments = arguments
+        self.opt_gas_limit = opt_gas_limit
+
+
+class SendTransferExecuteEsdt(Action):
+    discriminant = 6
+
+    def __init__(self, data: "EsdtTransferExecuteData") -> None:
+        self.data = data
+
+
+class EsdtTransferExecuteData:
+    def __init__(
+        self,
+        to: Address,
+        tokens: list[EsdtTokenPayment],
+        opt_gas_limit: Optional[int],
+        endpoint_name: str,
+        arguments: list[bytes],
+    ) -> None:
+        self.to = to
+        self.tokens = tokens
+        self.opt_gas_limit = opt_gas_limit
+        self.endpoint_name = endpoint_name
+        self.arguments = arguments
+
+
+class SendAsyncCall(Action):
+    discriminant = 7
+
+    def __init__(self, data: "CallActionData") -> None:
+        self.data = data
+
+
+class SCDeployFromSource(Action):
+    discriminant = 8
+
+    def __init__(self, amount: int, source: Address, code_metadata: bytes, arguments: list[bytes]) -> None:
+        self.amount = amount
+        self.source = source
+        self.code_metadata = code_metadata
+        self.arguments = arguments
+
+
+class SCUpgradeFromSource(Action):
+    discriminant = 9
+
+    def __init__(
+        self, sc_address: Address, amount: int, source: Address, code_metadata: bytes, arguments: list[bytes]
+    ) -> None:
+        self.sc_address = sc_address
+        self.amount = amount
+        self.source = source
+        self.code_metadata = code_metadata
+        self.arguments = arguments

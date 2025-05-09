@@ -35,7 +35,7 @@ from multiversx_sdk.transfers.transfer_transactions_factory import (
 
 
 class MultisigTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig, abi: Optional[Abi] = None) -> None:
+    def __init__(self, config: TransactionsFactoryConfig, abi: Abi) -> None:
         self._sc_factory = SmartContractTransactionsFactory(config, abi)
         self._serializer = Serializer()
 
@@ -46,7 +46,6 @@ class MultisigTransactionsFactory:
         quorum: int,
         board: list[Address],
         gas_limit: int,
-        native_transfer_amount: int = 0,
         is_upgradeable: bool = True,
         is_readable: bool = True,
         is_payable: bool = False,
@@ -60,7 +59,6 @@ class MultisigTransactionsFactory:
             bytecode=bytecode,
             arguments=args,
             gas_limit=gas_limit,
-            native_transfer_amount=native_transfer_amount,
             is_upgradeable=is_upgradeable,
             is_readable=is_readable,
             is_payable=is_payable,
@@ -302,7 +300,7 @@ class MultisigTransactionsFactory:
         contract: Address,
         receiver: Address,
         gas_limit: int,
-        native_token_amount: Optional[int] = None,
+        native_token_amount: int = 0,
         token_transfers: Optional[list[TokenTransfer]] = None,
         opt_gas_limit: Optional[int] = None,
         abi: Optional[Abi] = None,
@@ -390,14 +388,14 @@ class MultisigTransactionsFactory:
         function_call = [function_name, *function_arguments]
         return ProposeAsyncCallInput(to, function_call, gas_limit)
 
-    def create_transaction_for_contract_deploy_from_source(
+    def create_transaction_for_propose_contract_deploy_from_source(
         self,
         sender: Address,
         contract: Address,
         gas_limit: int,
         contract_to_copy: Address,
-        arguments: list[Any],
-        native_token_amount: int,
+        native_token_amount: int = 0,
+        arguments: Optional[list[Any]] = None,
         is_upgradeable: bool = True,
         is_readable: bool = True,
         is_payable: bool = False,
@@ -410,7 +408,7 @@ class MultisigTransactionsFactory:
             payable=is_payable,
             payable_by_contract=is_payable_by_sc,
         )
-
+        arguments = arguments or []
         if abi:
             arguments = abi.encode_constructor_input_parameters(arguments)
         else:
@@ -429,15 +427,15 @@ class MultisigTransactionsFactory:
             ],
         )
 
-    def create_transaction_for_contract_upgrade_from_source(
+    def create_transaction_for_propose_contract_upgrade_from_source(
         self,
         sender: Address,
         contract: Address,
         contract_to_upgrade: Address,
-        gas_limit: int,
         contract_to_copy: Address,
-        arguments: list[Any],
-        native_token_amount: int,
+        gas_limit: int,
+        arguments: Optional[list[Any]] = None,
+        native_token_amount: int = 0,
         is_upgradeable: bool = True,
         is_readable: bool = True,
         is_payable: bool = False,
@@ -450,7 +448,7 @@ class MultisigTransactionsFactory:
             payable=is_payable,
             payable_by_contract=is_payable_by_sc,
         )
-
+        arguments = arguments or []
         if abi:
             arguments = abi.encode_upgrade_constructor_input_parameters(arguments)
         else:
