@@ -50,7 +50,9 @@ class GovernanceTransactionsFactory:
         proposal_nonce: int,
         vote: VoteType,
     ) -> Transaction:
-        data_parts = ["vote", self._serializer.serialize([BigUIntValue(proposal_nonce)]), vote.value]
+        serialized_args = self._serializer.serialize_to_parts([BigUIntValue(proposal_nonce), StringValue(vote.value)])
+        data_parts = ["vote"] + [arg.hex() for arg in serialized_args]
+
         return TransactionBuilder(
             config=self._config,
             sender=sender,

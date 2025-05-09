@@ -91,7 +91,6 @@ class TransactionsFactoryConfig:
     # Configuration for governance operations
     gas_limit_for_proposal = 50_000_000
     gas_limit_for_vote = 5_000_000
-    gas_limit_for_delegate_vote = 50_000_000
     gas_limit_for_closing_proposal = 50_000_000
     gas_limit_for_clear_proposals = 50_000_000
     gas_limit_for_change_config = 50_000_000
