@@ -43,3 +43,34 @@ class ProposalInfo:
     abstain_votes: int
     is_closed: bool
     is_passed: bool
+
+
+@dataclass
+class ProposeProposalOutcome:
+    proposal_nonce: int
+    commit_hash: str
+    start_vote_epoch: int
+    end_vote_epoch: int
+
+
+@dataclass
+class VoteOutcome:
+    proposal_nonce: int
+    vote: str
+    total_stake: int
+    total_voting_power: int
+
+
+@dataclass
+class DelegateVoteOutcome:
+    proposal_nonce: int
+    vote: str
+    voter: Address
+    user_stake: int
+    voting_power: int
+
+
+@dataclass
+class CloseProposalOutcome:
+    commit_hash: str
+    passed: bool
