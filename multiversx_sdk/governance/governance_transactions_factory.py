@@ -50,37 +50,15 @@ class GovernanceTransactionsFactory:
         proposal_nonce: int,
         vote: VoteType,
     ) -> Transaction:
-        data_parts = ["vote", self._serializer.serialize([BigUIntValue(proposal_nonce)]), vote.value]
+        serialized_args = self._serializer.serialize_to_parts([BigUIntValue(proposal_nonce), StringValue(vote.value)])
+        data_parts = ["vote"] + [arg.hex() for arg in serialized_args]
+
         return TransactionBuilder(
             config=self._config,
             sender=sender,
             receiver=self._governance_contract,
             data_parts=data_parts,
             gas_limit=self._config.gas_limit_for_vote + EXTRA_GAS_LIMIT_FOR_VOTING_PROPOSAL,
-            add_data_movement_gas=True,
-        ).build()
-
-    def create_transaction_for_delegating_vote(
-        self,
-        sender: Address,
-        proposal_nonce: int,
-        vote: VoteType,
-        delegate_to: Address,
-        balance_to_vote: int,
-    ) -> Transaction:
-        data_parts = [
-            "delegateVote",
-            self._serializer.serialize([BigUIntValue(proposal_nonce)]),
-            vote.value,
-            delegate_to.to_hex(),
-            self._serializer.serialize([BigUIntValue(balance_to_vote)]),
-        ]
-        return TransactionBuilder(
-            config=self._config,
-            sender=sender,
-            receiver=self._governance_contract,
-            data_parts=data_parts,
-            gas_limit=self._config.gas_limit_for_delegate_vote,
             add_data_movement_gas=True,
         ).build()
 

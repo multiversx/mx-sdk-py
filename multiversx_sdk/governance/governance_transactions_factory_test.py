@@ -49,24 +49,6 @@ class TestGovernanceTransactionsFactory:
         assert transaction.gas_limit == 5_171_000
         assert transaction.data.decode() == "vote@01@796573"
 
-    def test_create_transaction_for_delagating(self):
-        bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
-
-        transaction = self.factory.create_transaction_for_delegating_vote(
-            sender=self.alice,
-            proposal_nonce=1,
-            vote=VoteType.YES,
-            delegate_to=bob,
-            balance_to_vote=100_000000000000000000,
-        )
-
-        assert transaction.sender == self.alice
-        assert transaction.receiver.to_bech32() == self.governance_address
-        assert transaction.chain_id == "D"
-        assert transaction.value == 0
-        assert transaction.gas_limit == 50_209_000
-        assert transaction.data.decode() == f"delegateVote@01@796573@{bob.to_hex()}@056bc75e2d63100000"
-
     def test_create_transaction_for_closing_proposal(self):
         transaction = self.factory.create_transaction_for_closing_proposal(sender=self.alice, proposal_nonce=1)
 
