@@ -20,7 +20,7 @@ class TestGovernanceTransactionsFactory:
     def test_create_transaction_for_new_proposal(self):
         transaction = self.factory.create_transaction_for_new_proposal(
             sender=self.alice,
-            github_commit_hash=self.commit_hash,
+            commit_hash=self.commit_hash,
             start_vote_epoch=10,
             end_vote_epoch=15,
             native_token_amount=1000_000000000000000000,

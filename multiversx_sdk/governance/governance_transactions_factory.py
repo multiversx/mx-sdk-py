@@ -22,14 +22,14 @@ class GovernanceTransactionsFactory:
     def create_transaction_for_new_proposal(
         self,
         sender: Address,
-        github_commit_hash: str,
+        commit_hash: str,
         start_vote_epoch: int,
         end_vote_epoch: int,
         native_token_amount: int,
     ) -> Transaction:
         data_parts = ["proposal"]
         serialized_args = self._serializer.serialize_to_parts(
-            [StringValue(github_commit_hash), BigUIntValue(start_vote_epoch), BigUIntValue(end_vote_epoch)]
+            [StringValue(commit_hash), BigUIntValue(start_vote_epoch), BigUIntValue(end_vote_epoch)]
         )
         serialized_args = [arg.hex() for arg in serialized_args]
         data_parts.extend(serialized_args)

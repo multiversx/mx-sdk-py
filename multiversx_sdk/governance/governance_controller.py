@@ -54,7 +54,7 @@ class GovernanceController(BaseController):
         self,
         sender: IAccount,
         nonce: int,
-        github_commit_hash: str,
+        commit_hash: str,
         start_vote_epoch: int,
         end_vote_epoch: int,
         native_token_amount: int,
@@ -65,7 +65,7 @@ class GovernanceController(BaseController):
     ) -> Transaction:
         transaction = self._factory.create_transaction_for_new_proposal(
             sender=sender.address,
-            github_commit_hash=github_commit_hash,
+            commit_hash=commit_hash,
             start_vote_epoch=start_vote_epoch,
             end_vote_epoch=end_vote_epoch,
             native_token_amount=native_token_amount,
