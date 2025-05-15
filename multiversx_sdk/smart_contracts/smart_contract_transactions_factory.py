@@ -18,7 +18,11 @@ from multiversx_sdk.core import (
     TokenTransfer,
     Transaction,
 )
-from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS_HEX, VM_TYPE_WASM_VM
+from multiversx_sdk.core.constants import (
+    CONTRACT_DEPLOY_ADDRESS_HEX,
+    EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER,
+    VM_TYPE_WASM_VM,
+)
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.smart_contracts.errors import ArgumentSerializationError
 
@@ -94,7 +98,12 @@ class SmartContractTransactionsFactory:
         if number_of_tokens == 1:
             transfer = token_transfers[0]
 
-            if self.token_computer.is_fungible(transfer.token):
+            if transfer.token.identifier == EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER:
+                data_parts = self._data_args_builder.build_args_for_multi_esdt_nft_transfer(
+                    receiver=receiver, transfers=token_transfers
+                )
+                receiver = sender
+            elif self.token_computer.is_fungible(transfer.token):
                 data_parts = self._data_args_builder.build_args_for_esdt_transfer(transfer=transfer)
             else:
                 data_parts = self._data_args_builder.build_args_for_single_esdt_nft_transfer(
