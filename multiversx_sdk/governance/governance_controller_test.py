@@ -190,9 +190,9 @@ class TestGovernanceController:
         assert proposal.start_vote_epoch == 53
         assert proposal.end_vote_epoch == 55
         assert proposal.quorum_stake == 0
-        assert proposal.yes_votes == 0
-        assert proposal.no_votes == 0
-        assert proposal.veto_votes == 0
-        assert proposal.abstain_votes == 0
+        assert proposal.num_yes_votes == 0
+        assert proposal.num_no_votes == 0
+        assert proposal.num_veto_votes == 0
+        assert proposal.num_abstain_votes == 0
         assert not proposal.is_closed
         assert not proposal.is_passed

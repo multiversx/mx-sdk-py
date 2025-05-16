@@ -1,5 +1,9 @@
 from typing import Optional
 
+from multiversx_sdk.abi.address_value import AddressValue
+from multiversx_sdk.abi.biguint_value import BigUIntValue
+from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.transaction_on_network import (
@@ -22,18 +26,30 @@ class GovernanceTransactionsOutcomeParser:
     def __init__(self, address_hrp: Optional[str] = None) -> None:
         self._parser = SmartContractTransactionsOutcomeParser()
         self._address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
+        self._serializer = Serializer()
 
     def parse_propose_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[ProposeProposalOutcome]:
         self._ensure_no_error(transaction_on_network.logs.events)
         events = find_events_by_identifier(transaction_on_network, "proposal")
         outcome: list[ProposeProposalOutcome] = []
 
+        proposal_nonce = BigUIntValue()
+        commit_hash = StringValue()
+        start_vote_epoch = BigUIntValue()
+        end_vote_epoch = BigUIntValue()
+
         for event in events:
-            proposal_nonce = int.from_bytes(event.topics[0])
-            commit_hash = event.topics[1].decode()
-            start_vote_epoch = int.from_bytes(event.topics[2])
-            end_vote_epoch = int.from_bytes(event.topics[3])
-            outcome.append(ProposeProposalOutcome(proposal_nonce, commit_hash, start_vote_epoch, end_vote_epoch))
+            self._serializer.deserialize_parts(
+                event.topics, [proposal_nonce, commit_hash, start_vote_epoch, end_vote_epoch]
+            )
+            outcome.append(
+                ProposeProposalOutcome(
+                    proposal_nonce.get_payload(),
+                    commit_hash.get_payload(),
+                    start_vote_epoch.get_payload(),
+                    end_vote_epoch.get_payload(),
+                )
+            )
 
         return outcome
 
@@ -42,12 +58,21 @@ class GovernanceTransactionsOutcomeParser:
         events = find_events_by_identifier(transaction_on_network, "vote")
         outcome: list[VoteOutcome] = []
 
+        proposal_to_vote = BigUIntValue()
+        vote = StringValue()
+        total_stake = BigUIntValue()
+        voting_power = BigUIntValue()
+
         for event in events:
-            proposal_to_vote = int.from_bytes(event.topics[0])
-            vote = event.topics[1].decode()
-            total_stake = int.from_bytes(event.topics[2])
-            voting_power = int.from_bytes(event.topics[3])
-            outcome.append(VoteOutcome(proposal_to_vote, vote, total_stake, voting_power))
+            self._serializer.deserialize_parts(event.topics, [proposal_to_vote, vote, total_stake, voting_power])
+            outcome.append(
+                VoteOutcome(
+                    proposal_to_vote.get_payload(),
+                    vote.get_payload(),
+                    total_stake.get_payload(),
+                    voting_power.get_payload(),
+                )
+            )
 
         return outcome
 
@@ -56,13 +81,23 @@ class GovernanceTransactionsOutcomeParser:
         events = find_events_by_identifier(transaction_on_network, "delegateVote")
         outcome: list[DelegateVoteOutcome] = []
 
+        proposal_to_vote = BigUIntValue()
+        vote = StringValue()
+        voter = AddressValue()
+        user_stake = BigUIntValue()
+        voting_power = BigUIntValue()
+
         for event in events:
-            proposal_to_vote = int.from_bytes(event.topics[0])
-            vote = event.topics[1].decode()
-            voter = Address(event.topics[2], self._address_hrp)
-            user_stake = int.from_bytes(event.topics[3])
-            voting_power = int.from_bytes(event.topics[4])
-            outcome.append(DelegateVoteOutcome(proposal_to_vote, vote, voter, user_stake, voting_power))
+            self._serializer.deserialize_parts(event.topics, [proposal_to_vote, vote, voter, user_stake, voting_power])
+            outcome.append(
+                DelegateVoteOutcome(
+                    proposal_to_vote.get_payload(),
+                    vote.get_payload(),
+                    Address(voter.get_payload(), self._address_hrp),
+                    user_stake.get_payload(),
+                    voting_power.get_payload(),
+                )
+            )
 
         return outcome
 

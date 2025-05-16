@@ -3,6 +3,7 @@ from typing import Optional, Protocol, Union
 from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.config import LibraryConfig
@@ -16,7 +17,7 @@ from multiversx_sdk.governance.governance_transactions_factory import (
 )
 from multiversx_sdk.governance.resources import (
     DelegatedVoteInfo,
-    GovernaceConfig,
+    GovernanceConfig,
     ProposalInfo,
     VoteType,
 )
@@ -49,6 +50,7 @@ class GovernanceController(BaseController):
         self._governance_contract = Address.new_from_hex(GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX)
         self._sc_controller = SmartContractController(chain_id, network_provider)
         self._address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
+        self._serializer = Serializer()
 
     def create_transaction_for_new_proposal(
         self,
@@ -215,11 +217,10 @@ class GovernanceController(BaseController):
             arguments=[AddressValue.new_from_address(address)],
         )
         value = BigUIntValue()
-        serializer = Serializer()
-        serializer.deserialize_parts(result, [value])
+        self._serializer.deserialize_parts(result, [value])
         return value.get_payload()
 
-    def get_config(self) -> GovernaceConfig:
+    def get_config(self) -> GovernanceConfig:
         result = self._sc_controller.query(
             contract=self._governance_contract,
             function="viewConfig",
@@ -232,7 +233,7 @@ class GovernanceController(BaseController):
         min_veto_threshold = float(result[3].decode())
         last_proposal_nonce = int(result[4].decode())
 
-        return GovernaceConfig(proposal_fee, min_quorum, min_pass_threshold, min_veto_threshold, last_proposal_nonce)
+        return GovernanceConfig(proposal_fee, min_quorum, min_pass_threshold, min_veto_threshold, last_proposal_nonce)
 
     def get_proposal(self, proposal_nonce: int) -> ProposalInfo:
         result = self._sc_controller.query(
@@ -241,32 +242,50 @@ class GovernanceController(BaseController):
             arguments=[BigUIntValue(proposal_nonce)],
         )
 
-        proposal_cost = int.from_bytes(result[0])
-        commit_hash = result[1].decode()
-        nonce = int.from_bytes(result[2])
-        issuer = Address(result[3], self._address_hrp)
-        start_vote_epoch = int.from_bytes(result[4])
-        end_vote_epoch = int.from_bytes(result[5])
-        quorum_stake = int.from_bytes(result[6])
-        vote_yes = int.from_bytes(result[7])
-        vote_no = int.from_bytes(result[8])
-        vote_veto = int.from_bytes(result[9])
-        vote_abstain = int.from_bytes(result[10])
+        proposal_cost = BigUIntValue()
+        commit_hash = StringValue()
+        nonce = BigUIntValue()
+        issuer = AddressValue()
+        start_vote_epoch = BigUIntValue()
+        end_vote_epoch = BigUIntValue()
+        quorum_stake = BigUIntValue()
+        num_vote_yes = BigUIntValue()
+        num_vote_no = BigUIntValue()
+        num_vote_veto = BigUIntValue()
+        num_vote_abstain = BigUIntValue()
+
+        self._serializer.deserialize_parts(
+            result[:11],
+            [
+                proposal_cost,
+                commit_hash,
+                nonce,
+                issuer,
+                start_vote_epoch,
+                end_vote_epoch,
+                quorum_stake,
+                num_vote_yes,
+                num_vote_no,
+                num_vote_veto,
+                num_vote_abstain,
+            ],
+        )
+
         proposal_closed = True if result[11].decode() == "true" else False
         proposal_passed = True if result[12].decode() == "true" else False
 
         return ProposalInfo(
-            proposal_cost,
-            commit_hash,
-            nonce,
-            issuer,
-            start_vote_epoch,
-            end_vote_epoch,
-            quorum_stake,
-            vote_yes,
-            vote_no,
-            vote_veto,
-            vote_abstain,
+            proposal_cost.get_payload(),
+            commit_hash.get_payload(),
+            nonce.get_payload(),
+            Address(issuer.get_payload(), self._address_hrp),
+            start_vote_epoch.get_payload(),
+            end_vote_epoch.get_payload(),
+            quorum_stake.get_payload(),
+            num_vote_yes.get_payload(),
+            num_vote_no.get_payload(),
+            num_vote_veto.get_payload(),
+            num_vote_abstain.get_payload(),
             proposal_closed,
             proposal_passed,
         )
@@ -278,9 +297,16 @@ class GovernanceController(BaseController):
             arguments=[AddressValue.new_from_address(contract), AddressValue.new_from_address(user)],
         )
 
-        used_stake = int.from_bytes(result[0])
-        used_power = int.from_bytes(result[1])
-        total_stake = int.from_bytes(result[2])
-        total_power = int.from_bytes(result[3])
+        used_stake = BigUIntValue()
+        used_power = BigUIntValue()
+        total_stake = BigUIntValue()
+        total_power = BigUIntValue()
 
-        return DelegatedVoteInfo(used_stake, used_power, total_stake, total_power)
+        self._serializer.deserialize_parts(result, [used_stake, used_power, total_stake, total_power])
+
+        return DelegatedVoteInfo(
+            used_stake.get_payload(),
+            used_power.get_payload(),
+            total_stake.get_payload(),
+            total_power.get_payload(),
+        )

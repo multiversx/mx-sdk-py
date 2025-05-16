@@ -12,7 +12,7 @@ class VoteType(Enum):
 
 
 @dataclass
-class GovernaceConfig:
+class GovernanceConfig:
     proposal_fee: int
     min_quorum: float
     min_pass_threshold: float
@@ -37,10 +37,10 @@ class ProposalInfo:
     start_vote_epoch: int
     end_vote_epoch: int
     quorum_stake: int
-    yes_votes: int
-    no_votes: int
-    veto_votes: int
-    abstain_votes: int
+    num_yes_votes: int
+    num_no_votes: int
+    num_veto_votes: int
+    num_abstain_votes: int
     is_closed: bool
     is_passed: bool
 
