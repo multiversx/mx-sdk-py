@@ -11,7 +11,7 @@ from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryC
 
 class AccountController(BaseController):
     def __init__(self, chain_id: str) -> None:
-        self.factory = AccountTransactionsFactory(TransactionsFactoryConfig(chain_id))
+        self.factory = AccountTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
 
     def create_transaction_for_saving_key_value(
         self,
@@ -79,7 +79,6 @@ class AccountController(BaseController):
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
-        self._set_version_and_options_for_guardian(transaction)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

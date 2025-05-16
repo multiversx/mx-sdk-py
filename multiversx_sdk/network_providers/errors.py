@@ -18,6 +18,6 @@ class ExpectedAccountConditionNotReachedError(Exception):
         super().__init__("The expected account condition was not reached")
 
 
-class TransactionFetchingError(Exception):
+class TransactionFetchingError(NetworkProviderError):
     def __init__(self, url: str, error: Any):
-        super().__init__(f"Couldn't fetch transaction on url = [{url}], error = [{error}]")
+        super().__init__(url, error)

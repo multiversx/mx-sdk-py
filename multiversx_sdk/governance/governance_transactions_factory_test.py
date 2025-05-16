@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.governance.governance_transactions_factory import (
@@ -17,12 +16,11 @@ class TestGovernanceTransactionsFactory:
 
     testdata = Path(__file__).parent.parent / "testutils" / "testdata"
     testwallets = Path(__file__).parent.parent / "testutils" / "testwallets"
-    alice_acc = Account.new_from_pem(testwallets / "alice.pem")
 
     def test_create_transaction_for_new_proposal(self):
         transaction = self.factory.create_transaction_for_new_proposal(
             sender=self.alice,
-            github_commit_hash=self.commit_hash,
+            commit_hash=self.commit_hash,
             start_vote_epoch=10,
             end_vote_epoch=15,
             native_token_amount=1000_000000000000000000,
