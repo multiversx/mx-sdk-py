@@ -40,10 +40,18 @@ from multiversx_sdk.entrypoints import (
     NetworkEntrypoint,
     TestnetEntrypoint,
 )
-from multiversx_sdk.governance.governance_transactions_factory import (
+from multiversx_sdk.governance import (
+    CloseProposalOutcome,
+    DelegatedVoteInfo,
+    DelegateVoteOutcome,
+    GovernanceConfig,
+    GovernanceController,
     GovernanceTransactionsFactory,
+    ProposalInfo,
+    ProposeProposalOutcome,
+    VoteOutcome,
+    VoteType,
 )
-from multiversx_sdk.governance.resources import VoteType
 from multiversx_sdk.ledger.ledger_app import LedgerApp
 from multiversx_sdk.multisig import (
     Action,
@@ -297,4 +305,12 @@ __all__ = [
     "UserRole",
     "VoteType",
     "GovernanceTransactionsFactory",
+    "DelegatedVoteInfo",
+    "GovernanceConfig",
+    "GovernanceController",
+    "ProposalInfo",
+    "ProposeProposalOutcome",
+    "VoteOutcome",
+    "DelegateVoteOutcome",
+    "CloseProposalOutcome",
 ]
