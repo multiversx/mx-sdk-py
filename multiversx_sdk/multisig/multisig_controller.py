@@ -83,7 +83,7 @@ class MultisigController(BaseController):
         is_upgradeable: bool = True,
         is_readable: bool = True,
         is_payable: bool = False,
-        is_payable_by_contract: bool = True,
+        is_payable_by_sc: bool = True,
         gas_price: Optional[int] = None,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
@@ -97,7 +97,7 @@ class MultisigController(BaseController):
             is_upgradeable=is_upgradeable,
             is_readable=is_readable,
             is_payable=is_payable,
-            is_payable_by_sc=is_payable_by_contract,
+            is_payable_by_sc=is_payable_by_sc,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
