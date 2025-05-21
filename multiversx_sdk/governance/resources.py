@@ -46,7 +46,7 @@ class ProposalInfo:
 
 
 @dataclass
-class ProposeProposalOutcome:
+class NewProposalOutcome:
     proposal_nonce: int
     commit_hash: str
     start_vote_epoch: int

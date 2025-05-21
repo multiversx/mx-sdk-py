@@ -14,7 +14,7 @@ from multiversx_sdk.core.transaction_on_network import (
 from multiversx_sdk.governance.resources import (
     CloseProposalOutcome,
     DelegateVoteOutcome,
-    ProposeProposalOutcome,
+    NewProposalOutcome,
     VoteOutcome,
 )
 
@@ -24,10 +24,10 @@ class GovernanceTransactionsOutcomeParser:
         self._address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
         self._serializer = Serializer()
 
-    def parse_propose_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[ProposeProposalOutcome]:
+    def parse_new_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[NewProposalOutcome]:
         self._ensure_no_error(transaction_on_network.logs.events)
         events = find_events_by_identifier(transaction_on_network, "proposal")
-        outcome: list[ProposeProposalOutcome] = []
+        outcome: list[NewProposalOutcome] = []
 
         proposal_nonce = BigUIntValue()
         commit_hash = StringValue()
@@ -39,7 +39,7 @@ class GovernanceTransactionsOutcomeParser:
                 event.topics, [proposal_nonce, commit_hash, start_vote_epoch, end_vote_epoch]
             )
             outcome.append(
-                ProposeProposalOutcome(
+                NewProposalOutcome(
                     proposal_nonce.get_payload(),
                     commit_hash.get_payload(),
                     start_vote_epoch.get_payload(),

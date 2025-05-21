@@ -7,8 +7,8 @@ from multiversx_sdk.governance.resources import (
     DelegatedVoteInfo,
     DelegateVoteOutcome,
     GovernanceConfig,
+    NewProposalOutcome,
     ProposalInfo,
-    ProposeProposalOutcome,
     VoteOutcome,
     VoteType,
 )
@@ -20,7 +20,7 @@ __all__ = [
     "DelegatedVoteInfo",
     "GovernanceConfig",
     "ProposalInfo",
-    "ProposeProposalOutcome",
+    "NewProposalOutcome",
     "VoteOutcome",
     "DelegateVoteOutcome",
     "CloseProposalOutcome",

@@ -22,8 +22,8 @@ from multiversx_sdk.governance.resources import (
     CloseProposalOutcome,
     DelegatedVoteInfo,
     GovernanceConfig,
+    NewProposalOutcome,
     ProposalInfo,
-    ProposeProposalOutcome,
     VoteOutcome,
     VoteType,
 )
@@ -90,12 +90,12 @@ class GovernanceController(BaseController):
 
         return transaction
 
-    def parse_propose_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[ProposeProposalOutcome]:
-        return self._parser.parse_propose_proposal(transaction_on_network)
+    def parse_new_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[NewProposalOutcome]:
+        return self._parser.parse_new_proposal(transaction_on_network)
 
-    def await_completed_new_proposal(self, tx_hash: Union[str, bytes]) -> list[ProposeProposalOutcome]:
+    def await_completed_new_proposal(self, tx_hash: Union[str, bytes]) -> list[NewProposalOutcome]:
         transaction = self._network_provider.await_transaction_completed(tx_hash)
-        return self.parse_propose_proposal(transaction)
+        return self.parse_new_proposal(transaction)
 
     def create_transaction_for_voting(
         self,
