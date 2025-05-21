@@ -186,7 +186,7 @@ class TestGovernanceController:
         assert proposal.cost == 1000_000000000000000000
         assert proposal.commit_hash == "1db734c0315f9ec422b88f679ccfe3e0197b9d67"
         assert proposal.nonce == 1
-        assert proposal.issuer_address == self.alice.address
+        assert proposal.issuer == self.alice.address
         assert proposal.start_vote_epoch == 53
         assert proposal.end_vote_epoch == 55
         assert proposal.quorum_stake == 0
