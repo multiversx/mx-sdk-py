@@ -1,4 +1,3 @@
-from multiversx_sdk.abi.address_value import AddressValue
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.string_value import StringValue
@@ -78,11 +77,7 @@ class GovernanceTransactionsFactory:
         sender: Address,
         proposers: list[Address],
     ) -> Transaction:
-        serialized_proposers = self._serializer.serialize_to_parts(
-            [AddressValue.new_from_address(user) for user in proposers]
-        )
-
-        data_parts = ["clearEndedProposals"] + [address.hex() for address in serialized_proposers]
+        data_parts = ["clearEndedProposals"] + [address.to_hex() for address in proposers]
         return TransactionBuilder(
             config=self._config,
             sender=sender,
@@ -110,8 +105,8 @@ class GovernanceTransactionsFactory:
     def create_transaction_for_changing_config(
         self,
         sender: Address,
-        proposal_fee: str,
-        lost_proposal_fee: str,
+        proposal_fee: int,
+        lost_proposal_fee: int,
         min_quorum: int,
         min_veto_threshold: int,
         min_pass_threshold: int,
@@ -119,11 +114,11 @@ class GovernanceTransactionsFactory:
         data_parts = ["changeConfig"]
         args = self._serializer.serialize_to_parts(
             [
-                StringValue(proposal_fee),
-                StringValue(lost_proposal_fee),
-                BigUIntValue(min_quorum),
-                BigUIntValue(min_veto_threshold),
-                BigUIntValue(min_pass_threshold),
+                StringValue(str(proposal_fee)),
+                StringValue(str(lost_proposal_fee)),
+                StringValue(str(min_quorum)),
+                StringValue(str(min_veto_threshold)),
+                StringValue(str(min_pass_threshold)),
             ]
         )
 

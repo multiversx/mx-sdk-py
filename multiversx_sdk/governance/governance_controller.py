@@ -15,10 +15,16 @@ from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryC
 from multiversx_sdk.governance.governance_transactions_factory import (
     GovernanceTransactionsFactory,
 )
+from multiversx_sdk.governance.governance_transactions_outcome_parser import (
+    GovernanceTransactionsOutcomeParser,
+)
 from multiversx_sdk.governance.resources import (
+    CloseProposalOutcome,
     DelegatedVoteInfo,
     GovernanceConfig,
     ProposalInfo,
+    ProposeProposalOutcome,
+    VoteOutcome,
     VoteType,
 )
 from multiversx_sdk.network_providers.resources import AwaitingOptions
@@ -51,6 +57,7 @@ class GovernanceController(BaseController):
         self._sc_controller = SmartContractController(chain_id, network_provider)
         self._address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
         self._serializer = Serializer()
+        self._parser = GovernanceTransactionsOutcomeParser(address_hrp=self._address_hrp)
 
     def create_transaction_for_new_proposal(
         self,
@@ -83,6 +90,13 @@ class GovernanceController(BaseController):
 
         return transaction
 
+    def parse_propose_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[ProposeProposalOutcome]:
+        return self._parser.parse_propose_proposal(transaction_on_network)
+
+    def await_completed_new_proposal(self, tx_hash: Union[str, bytes]) -> list[ProposeProposalOutcome]:
+        transaction = self._network_provider.await_transaction_completed(tx_hash)
+        return self.parse_propose_proposal(transaction)
+
     def create_transaction_for_voting(
         self,
         sender: IAccount,
@@ -108,6 +122,13 @@ class GovernanceController(BaseController):
 
         return transaction
 
+    def parse_vote(self, transaction_on_network: TransactionOnNetwork) -> list[VoteOutcome]:
+        return self._parser.parse_vote(transaction_on_network)
+
+    def await_completed_vote(self, tx_hash: Union[str, bytes]) -> list[VoteOutcome]:
+        transaction = self._network_provider.await_transaction_completed(tx_hash)
+        return self.parse_vote(transaction)
+
     def create_transaction_for_closing_proposal(
         self,
         sender: IAccount,
@@ -131,6 +152,13 @@ class GovernanceController(BaseController):
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
+
+    def parse_close_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[CloseProposalOutcome]:
+        return self._parser.parse_close_proposal(transaction_on_network)
+
+    def await_completed_close_proposal(self, tx_hash: Union[str, bytes]) -> list[CloseProposalOutcome]:
+        transaction = self._network_provider.await_transaction_completed(tx_hash)
+        return self.parse_close_proposal(transaction)
 
     def create_transaction_for_clearing_ended_proposals(
         self,
@@ -181,8 +209,8 @@ class GovernanceController(BaseController):
         self,
         sender: IAccount,
         nonce: int,
-        proposal_fee: str,
-        lost_proposal_fee: str,
+        proposal_fee: int,
+        lost_proposal_fee: int,
         min_quorum: int,
         min_veto_threshold: int,
         min_pass_threshold: int,
