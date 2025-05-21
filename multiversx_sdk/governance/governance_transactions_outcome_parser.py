@@ -17,14 +17,10 @@ from multiversx_sdk.governance.resources import (
     ProposeProposalOutcome,
     VoteOutcome,
 )
-from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser import (
-    SmartContractTransactionsOutcomeParser,
-)
 
 
 class GovernanceTransactionsOutcomeParser:
     def __init__(self, address_hrp: Optional[str] = None) -> None:
-        self._parser = SmartContractTransactionsOutcomeParser()
         self._address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
         self._serializer = Serializer()
 
