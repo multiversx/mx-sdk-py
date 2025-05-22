@@ -26,7 +26,7 @@ class TestGovernanceOutcomeParser:
             )
         ]
 
-        outcome = self.parser.parse_propose_proposal(transaction)
+        outcome = self.parser.parse_new_proposal(transaction)
         assert len(outcome) == 1
         assert outcome[0].proposal_nonce == 1
         assert outcome[0].commit_hash == "1db734c0315f9ec422b88f679ccfe3e0197b9d67"

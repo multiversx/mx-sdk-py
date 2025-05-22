@@ -33,7 +33,7 @@ class ProposalInfo:
     cost: int
     commit_hash: str
     nonce: int
-    issuer_address: Address
+    issuer: Address
     start_vote_epoch: int
     end_vote_epoch: int
     quorum_stake: int
@@ -46,7 +46,7 @@ class ProposalInfo:
 
 
 @dataclass
-class ProposeProposalOutcome:
+class NewProposalOutcome:
     proposal_nonce: int
     commit_hash: str
     start_vote_epoch: int

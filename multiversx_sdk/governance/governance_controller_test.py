@@ -105,8 +105,8 @@ class TestGovernanceController:
         transaction = self.controller.create_transaction_for_changing_config(
             sender=self.alice,
             nonce=self.alice.get_nonce_then_increment(),
-            proposal_fee="1000000000000000000000",
-            lost_proposal_fee="10000000000000000000",
+            proposal_fee=1000000000000000000000,
+            lost_proposal_fee=10000000000000000000,
             min_quorum=5000,
             min_veto_threshold=3000,
             min_pass_threshold=6000,
@@ -116,10 +116,10 @@ class TestGovernanceController:
         assert transaction.receiver.to_bech32() == self.governance_address
         assert transaction.chain_id == "D"
         assert transaction.value == 0
-        assert transaction.gas_limit == 50_219_500
+        assert transaction.gas_limit == 50_237_500
         assert (
             transaction.data.decode()
-            == "changeConfig@31303030303030303030303030303030303030303030@3130303030303030303030303030303030303030@1388@0bb8@1770"
+            == "changeConfig@31303030303030303030303030303030303030303030@3130303030303030303030303030303030303030@35303030@33303030@36303030"
         )
 
     def test_get_voting_power(self):
@@ -186,7 +186,7 @@ class TestGovernanceController:
         assert proposal.cost == 1000_000000000000000000
         assert proposal.commit_hash == "1db734c0315f9ec422b88f679ccfe3e0197b9d67"
         assert proposal.nonce == 1
-        assert proposal.issuer_address == self.alice.address
+        assert proposal.issuer == self.alice.address
         assert proposal.start_vote_epoch == 53
         assert proposal.end_vote_epoch == 55
         assert proposal.quorum_stake == 0
