@@ -498,6 +498,11 @@
         <span class="n">add_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_role_nft_add_quantity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_nft_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_esdt_modify_royalties</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_esdt_set_new_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;setSpecialRole&quot;</span><span class="p">,</span>
@@ -511,6 +516,11 @@
                 <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_burn</span> <span class="k">else</span> <span class="p">[]),</span>
                 <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTAddQuantity&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_add_quantity</span> <span class="k">else</span> <span class="p">[]),</span>
                 <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTUpdate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_update</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyRoyalties&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_modify_royalties</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleSetNewURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_set_new_uri</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyCreator&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_esdt_modify_creator</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTRecreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">add_role_nft_recreate</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="p">]</span>
         <span class="p">)</span>
 
@@ -537,6 +547,11 @@
         <span class="n">remove_role_nft_burn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">remove_role_nft_add_quantity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">remove_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_modify_royalties</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_set_new_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">remove_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;unSetSpecialRole&quot;</span><span class="p">,</span>
@@ -549,6 +564,11 @@
                 <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTBurn&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_burn</span> <span class="k">else</span> <span class="p">[]),</span>
                 <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTAddQuantity&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_add_quantity</span> <span class="k">else</span> <span class="p">[]),</span>
                 <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTTransferRole&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_transfer_role</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTUpdate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_update</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyRoyalties&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_modify_royalties</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleSetNewURI&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_set_new_uri</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleModifyCreator&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_esdt_modify_creator</span> <span class="k">else</span> <span class="p">[]),</span>
+                <span class="o">*</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;ESDTRoleNFTRecreate&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="n">remove_role_nft_recreate</span> <span class="k">else</span> <span class="p">[]),</span>
             <span class="p">]</span>
         <span class="p">)</span>
 
