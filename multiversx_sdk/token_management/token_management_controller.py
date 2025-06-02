@@ -451,6 +451,11 @@ class TokenManagementController(BaseController):
         add_role_nft_burn: bool = False,
         add_role_nft_add_quantity: bool = False,
         add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_creator: bool = False,
+        add_role_nft_recreate: bool = False,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
@@ -464,6 +469,11 @@ class TokenManagementController(BaseController):
             add_role_nft_burn=add_role_nft_burn,
             add_role_nft_add_quantity=add_role_nft_add_quantity,
             add_role_esdt_transfer_role=add_role_esdt_transfer_role,
+            add_role_nft_update=add_role_nft_update,
+            add_role_esdt_modify_royalties=add_role_esdt_modify_royalties,
+            add_role_esdt_set_new_uri=add_role_esdt_set_new_uri,
+            add_role_esdt_modify_creator=add_role_esdt_modify_creator,
+            add_role_nft_recreate=add_role_nft_recreate,
         )
 
         transaction.guardian = guardian
@@ -497,6 +507,11 @@ class TokenManagementController(BaseController):
         remove_role_nft_burn: bool = False,
         remove_role_nft_add_quantity: bool = False,
         remove_role_esdt_transfer_role: bool = False,
+        remove_role_nft_update: bool = False,
+        remove_role_esdt_modify_royalties: bool = False,
+        remove_role_esdt_set_new_uri: bool = False,
+        remove_role_esdt_modify_creator: bool = False,
+        remove_role_nft_recreate: bool = False,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
@@ -509,6 +524,11 @@ class TokenManagementController(BaseController):
             remove_role_nft_burn=remove_role_nft_burn,
             remove_role_nft_add_quantity=remove_role_nft_add_quantity,
             remove_role_esdt_transfer_role=remove_role_esdt_transfer_role,
+            remove_role_nft_update=remove_role_nft_update,
+            remove_role_esdt_modify_royalties=remove_role_esdt_modify_royalties,
+            remove_role_esdt_set_new_uri=remove_role_esdt_set_new_uri,
+            remove_role_esdt_modify_creator=remove_role_esdt_modify_creator,
+            remove_role_nft_recreate=remove_role_nft_recreate,
         )
 
         transaction.guardian = guardian
