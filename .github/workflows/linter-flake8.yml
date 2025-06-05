@@ -2,6 +2,10 @@
 
 name: Linter checks (flake8)
 on: [pull_request]
+
+permissions:
+  contents: read
+
 jobs:
   run-linter:
     name: flake8
