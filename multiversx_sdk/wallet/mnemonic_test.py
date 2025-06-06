@@ -1,6 +1,6 @@
 import pytest
 
-from multiversx_sdk.wallet.errors import InvalidMnemonicError
+from multiversx_sdk.wallet.errors import InvalidAddressIndexError, InvalidMnemonicError
 from multiversx_sdk.wallet.mnemonic import Mnemonic
 
 
@@ -14,6 +14,9 @@ def test_generate():
     mnemonic = Mnemonic.generate()
     words = mnemonic.get_words()
     assert len(words) == 24
+
+    with pytest.raises(InvalidAddressIndexError):
+        mnemonic.derive_key(-1)
 
 
 def test_derive_keys():
