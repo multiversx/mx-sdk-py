@@ -27,6 +27,11 @@ def test_derive_keys():
     assert mnemonic.derive_key(1).hex() == "b8ca6f8203fb4b545a8e83c5384da033c415db155b53fb5b8eba7ff5a039d639"
     assert mnemonic.derive_key(2).hex() == "e253a571ca153dc2aee845819f74bcc9773b0586edead15a94cb7235a5027436"
 
+    # change the text to an invalid mnemonic
+    mnemonic.text = "this is an invalid mnemonic"
+    with pytest.raises(InvalidMnemonicError):
+        mnemonic.derive_key()
+
 
 def test_convert_entropy_to_mnemonic_and_back():
     def test_conversion(text: str, entropy_hex: str) -> None:

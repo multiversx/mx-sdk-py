@@ -23,7 +23,7 @@ def derive_keys(mnemonic: str, address_index: int = 0):
 
 
 # References:
-# https://github.com/trezor/python-mnemonic/blob/master/mnemonic/mnemonic.py
+# https://github.com/trezor/python-mnemonic/blob/master/src/mnemonic/mnemonic.py
 # https://ethereum.stackexchange.com/a/72871/59887
 def mnemonic_to_bip39seed(mnemonic: str, passphrase: str = ""):
     if not Mnemonic(BIP39_LANGUAGE).check(mnemonic):
