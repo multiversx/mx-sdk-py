@@ -47,6 +47,7 @@ from multiversx_sdk.governance import (
     GovernanceConfig,
     GovernanceController,
     GovernanceTransactionsFactory,
+    GovernanceTransactionsOutcomeParser,
     NewProposalOutcome,
     ProposalInfo,
     VoteOutcome,
@@ -313,4 +314,5 @@ __all__ = [
     "VoteOutcome",
     "DelegateVoteOutcome",
     "CloseProposalOutcome",
+    "GovernanceTransactionsOutcomeParser",
 ]
