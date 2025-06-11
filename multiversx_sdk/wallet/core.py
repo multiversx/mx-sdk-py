@@ -2,6 +2,11 @@ import hashlib
 import hmac
 import struct
 
+from mnemonic import Mnemonic
+
+from multiversx_sdk.wallet.constants import BIP39_LANGUAGE
+from multiversx_sdk.wallet.errors import InvalidMnemonicError
+
 # TODO: Rename "core.py" to "bip39.py".
 
 BIP39_SALT_MODIFIER = "mnemonic"
@@ -18,9 +23,12 @@ def derive_keys(mnemonic: str, address_index: int = 0):
 
 
 # References:
-# https://github.com/trezor/python-mnemonic/blob/master/mnemonic/mnemonic.py
+# https://github.com/trezor/python-mnemonic/blob/master/src/mnemonic/mnemonic.py
 # https://ethereum.stackexchange.com/a/72871/59887
 def mnemonic_to_bip39seed(mnemonic: str, passphrase: str = ""):
+    if not Mnemonic(BIP39_LANGUAGE).check(mnemonic):
+        raise InvalidMnemonicError()
+
     passphrase = BIP39_SALT_MODIFIER + passphrase
     mnemonic_bytes = mnemonic.encode("utf-8")
     passphrase_bytes = passphrase.encode("utf-8")

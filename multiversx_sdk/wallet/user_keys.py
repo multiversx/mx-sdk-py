@@ -1,6 +1,8 @@
+import logging
 from typing import Optional
 
 import nacl.signing
+from nacl.exceptions import CryptoError
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
@@ -8,6 +10,8 @@ from multiversx_sdk.wallet.errors import (
     InvalidPublicKeyLengthError,
     InvalidSecretKeyLengthError,
 )
+
+logger = logging.getLogger("user_keys")
 
 
 class UserSecretKey:
@@ -25,7 +29,7 @@ class UserSecretKey:
 
     @classmethod
     def new_from_string(cls, buffer_hex: str) -> "UserSecretKey":
-        buffer = bytes.fromhex(buffer_hex)
+        buffer = bytes.fromhex(buffer_hex.strip())
         return cls(buffer)
 
     def generate_public_key(self) -> "UserPublicKey":
@@ -70,7 +74,11 @@ class UserPublicKey:
         try:
             verify_key.verify(data, signature)
             return True
-        except Exception:
+        except CryptoError as e:
+            logger.info(str(e))
+            return False
+        except Exception as e:
+            logger.info(str(e))
             return False
 
     def to_address(self, hrp: Optional[str] = None) -> Address:

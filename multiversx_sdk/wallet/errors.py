@@ -44,3 +44,8 @@ class LibraryNotFoundError(Exception):
 class UnsupportedOSError(Exception):
     def __init__(self, os_name: str) -> None:
         super().__init__(f"Unsupported OS: {os_name}")
+
+
+class InvalidAddressIndexError(Exception):
+    def __init__(self, index: int) -> None:
+        super().__init__(f"Invalid address index: [{index}] ")

@@ -2,7 +2,7 @@ import mnemonic
 
 from multiversx_sdk.wallet import core
 from multiversx_sdk.wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
-from multiversx_sdk.wallet.errors import InvalidMnemonicError
+from multiversx_sdk.wallet.errors import InvalidAddressIndexError, InvalidMnemonicError
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 
 
@@ -32,6 +32,9 @@ class Mnemonic:
         return cls(text)
 
     def derive_key(self, address_index: int = 0) -> UserSecretKey:
+        if address_index < 0:
+            raise InvalidAddressIndexError(address_index)
+
         secret_key = core.derive_keys(self.text, address_index)
         return UserSecretKey(secret_key)
 
