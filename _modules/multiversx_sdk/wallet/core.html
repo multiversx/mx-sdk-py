@@ -73,6 +73,11 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">hmac</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">mnemonic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mnemonic</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">BIP39_LANGUAGE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidMnemonicError</span>
+
 <span class="c1"># TODO: Rename &quot;core.py&quot; to &quot;bip39.py&quot;.</span>
 
 <span class="n">BIP39_SALT_MODIFIER</span> <span class="o">=</span> <span class="s2">&quot;mnemonic&quot;</span>
@@ -92,11 +97,14 @@
 
 
 <span class="c1"># References:</span>
-<span class="c1"># https://github.com/trezor/python-mnemonic/blob/master/mnemonic/mnemonic.py</span>
+<span class="c1"># https://github.com/trezor/python-mnemonic/blob/master/src/mnemonic/mnemonic.py</span>
 <span class="c1"># https://ethereum.stackexchange.com/a/72871/59887</span>
 <div class="viewcode-block" id="mnemonic_to_bip39seed">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.core.mnemonic_to_bip39seed">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mnemonic_to_bip39seed</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">passphrase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Mnemonic</span><span class="p">(</span><span class="n">BIP39_LANGUAGE</span><span class="p">)</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InvalidMnemonicError</span><span class="p">()</span>
+
     <span class="n">passphrase</span> <span class="o">=</span> <span class="n">BIP39_SALT_MODIFIER</span> <span class="o">+</span> <span class="n">passphrase</span>
     <span class="n">mnemonic_bytes</span> <span class="o">=</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
     <span class="n">passphrase_bytes</span> <span class="o">=</span> <span class="n">passphrase</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>

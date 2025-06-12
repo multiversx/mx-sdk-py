@@ -69,9 +69,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.wallet.user_keys</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">nacl.signing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nacl.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">CryptoError</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">USER_PUBKEY_LENGTH</span><span class="p">,</span> <span class="n">USER_SEED_LENGTH</span>
@@ -79,6 +81,8 @@
     <span class="n">InvalidPublicKeyLengthError</span><span class="p">,</span>
     <span class="n">InvalidSecretKeyLengthError</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;user_keys&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="UserSecretKey">
@@ -103,7 +107,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSecretKey.new_from_string">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">new_from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserSecretKey&quot;</span><span class="p">:</span>
-        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">buffer_hex</span><span class="p">)</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">buffer_hex</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
 
 
@@ -166,7 +170,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">verify_key</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="n">CryptoError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
 

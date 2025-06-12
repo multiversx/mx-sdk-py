@@ -97,6 +97,14 @@
     <span class="n">TestnetEntrypointConfig</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.entrypoints.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidNetworkProviderKindError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.governance.governance_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">GovernanceController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.governance.governance_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GovernanceTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.multisig.multisig_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultisigController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.multisig.multisig_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MultisigTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.network_providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiNetworkProvider</span><span class="p">,</span> <span class="n">ProxyNetworkProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.network_providers.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">INetworkProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.relayed.relayed_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">RelayedController</span>
@@ -319,6 +327,30 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_transfers_transactions_factory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transfers_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransferTransactionsFactory</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TransferTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="NetworkEntrypoint.create_multisig_controller">
+<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_multisig_controller">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_multisig_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Abi</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultisigController</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MultisigController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">abi</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NetworkEntrypoint.create_multisig_transactions_factory">
+<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_multisig_transactions_factory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_multisig_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Abi</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultisigTransactionsFactory</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MultisigTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span> <span class="n">abi</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NetworkEntrypoint.create_governance_controller">
+<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_governance_controller">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_governance_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GovernanceController</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GovernanceController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NetworkEntrypoint.create_governance_transactions_factory">
+<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_governance_transactions_factory">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_governance_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GovernanceTransactionsFactory</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GovernanceTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_chain_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

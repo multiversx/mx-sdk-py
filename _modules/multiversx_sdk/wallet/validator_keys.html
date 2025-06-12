@@ -98,7 +98,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorSecretKey.from_string">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValidatorSecretKey&quot;</span><span class="p">:</span>
-        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">buffer_hex</span><span class="p">)</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">buffer_hex</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
 
 

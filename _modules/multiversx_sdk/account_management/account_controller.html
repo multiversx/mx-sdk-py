@@ -84,7 +84,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AccountController</span><span class="p">(</span><span class="n">BaseController</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">AccountTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="n">chain_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">AccountTransactionsFactory</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="n">chain_id</span><span class="p">))</span>
 
 <div class="viewcode-block" id="AccountController.create_transaction_for_saving_key_value">
 <a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountController.create_transaction_for_saving_key_value">[docs]</a>
@@ -160,7 +160,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
         <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>

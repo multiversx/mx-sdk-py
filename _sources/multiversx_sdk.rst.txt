@@ -14,7 +14,9 @@ Subpackages
    multiversx_sdk.core
    multiversx_sdk.delegation
    multiversx_sdk.entrypoints
+   multiversx_sdk.governance
    multiversx_sdk.ledger
+   multiversx_sdk.multisig
    multiversx_sdk.native_auth
    multiversx_sdk.network_providers
    multiversx_sdk.relayed
@@ -29,5 +31,5 @@ Module contents
 
 .. automodule:: multiversx_sdk
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

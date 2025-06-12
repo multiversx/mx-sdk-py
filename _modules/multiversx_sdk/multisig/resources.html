@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.multisig.resources &mdash; multiversx-sdk 1.5.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d75fd82e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.multisig.resources</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.multisig.resources</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.biguint_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">BigUIntValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.fields</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ISingleValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.small_int_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">U64Value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.string_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.struct_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">StructValue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+
+
+<div class="viewcode-block" id="ProposeTransferExecuteInput">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.ProposeTransferExecuteInput">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProposeTransferExecuteInput</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">to</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">native_transfer_amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">function_call</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">egld_amount</span> <span class="o">=</span> <span class="n">native_transfer_amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_call</span> <span class="o">=</span> <span class="n">function_call</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_gas_limit</span> <span class="o">=</span> <span class="n">opt_gas_limit</span></div>
+
+
+
+<div class="viewcode-block" id="ProposeTransferExecuteEsdtInput">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.ProposeTransferExecuteEsdtInput">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProposeTransferExecuteEsdtInput</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">to</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;EsdtTokenPayment&quot;</span><span class="p">],</span>
+        <span class="n">function_call</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="n">ISingleValue</span><span class="p">],</span> <span class="n">tokens</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_call</span> <span class="o">=</span> <span class="n">function_call</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_gas_limit</span> <span class="o">=</span> <span class="n">opt_gas_limit</span></div>
+
+
+
+<div class="viewcode-block" id="ProposeAsyncCallInput">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.ProposeAsyncCallInput">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProposeAsyncCallInput</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">to</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">function_call</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">function_call</span> <span class="o">=</span> <span class="n">function_call</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_gas_limit</span> <span class="o">=</span> <span class="n">opt_gas_limit</span> <span class="ow">or</span> <span class="mi">0</span></div>
+
+
+
+<div class="viewcode-block" id="EsdtTokenPayment">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.EsdtTokenPayment">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EsdtTokenPayment</span><span class="p">(</span><span class="n">StructValue</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;token_identifier&quot;</span><span class="p">,</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)),</span>
+                <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;token_nonce&quot;</span><span class="p">,</span> <span class="n">U64Value</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">)),</span>
+                <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)),</span>
+            <span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="UserRole">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.UserRole">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UserRole</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">PROPOSER</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BOARD_MEMBER</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="ActionFullInfo">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.ActionFullInfo">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ActionFullInfo</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">action_data</span><span class="p">:</span> <span class="s2">&quot;Action&quot;</span><span class="p">,</span> <span class="n">signers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_id</span> <span class="o">=</span> <span class="n">action_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span> <span class="o">=</span> <span class="n">group_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_data</span> <span class="o">=</span> <span class="n">action_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">signers</span> <span class="o">=</span> <span class="n">signers</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ActionFullInfo(action_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_id</span><span class="si">}</span><span class="s2">, group_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="si">}</span><span class="s2">, action_data=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_data</span><span class="si">}</span><span class="s2">, signers=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">signers</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="Action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.Action">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Action</span><span class="p">:</span>
+    <span class="n">discriminant</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span></div>
+
+
+
+<div class="viewcode-block" id="AddBoardMember">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.AddBoardMember">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddBoardMember</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span></div>
+
+
+
+<div class="viewcode-block" id="AddProposer">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.AddProposer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddProposer</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span></div>
+
+
+
+<div class="viewcode-block" id="RemoveUser">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.RemoveUser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemoveUser</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span></div>
+
+
+
+<div class="viewcode-block" id="ChangeQuorum">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.ChangeQuorum">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ChangeQuorum</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quorum</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quorum</span> <span class="o">=</span> <span class="n">quorum</span></div>
+
+
+
+<div class="viewcode-block" id="SendTransferExecuteEgld">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.SendTransferExecuteEgld">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SendTransferExecuteEgld</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;CallActionData&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="CallActionData">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.CallActionData">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CallActionData</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">to</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">egld_amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">egld_amount</span> <span class="o">=</span> <span class="n">egld_amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_name</span> <span class="o">=</span> <span class="n">endpoint_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_gas_limit</span> <span class="o">=</span> <span class="n">opt_gas_limit</span></div>
+
+
+
+<div class="viewcode-block" id="SendTransferExecuteEsdt">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.SendTransferExecuteEsdt">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SendTransferExecuteEsdt</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">6</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;EsdtTransferExecuteData&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="EsdtTransferExecuteData">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.EsdtTransferExecuteData">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EsdtTransferExecuteData</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">to</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">EsdtTokenPayment</span><span class="p">],</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to</span> <span class="o">=</span> <span class="n">to</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">tokens</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_gas_limit</span> <span class="o">=</span> <span class="n">opt_gas_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_name</span> <span class="o">=</span> <span class="n">endpoint_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span></div>
+
+
+
+<div class="viewcode-block" id="SendAsyncCall">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.SendAsyncCall">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SendAsyncCall</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">7</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;CallActionData&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="SCDeployFromSource">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.SCDeployFromSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SCDeployFromSource</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">8</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">code_metadata</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code_metadata</span> <span class="o">=</span> <span class="n">code_metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span></div>
+
+
+
+<div class="viewcode-block" id="SCUpgradeFromSource">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.SCUpgradeFromSource">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SCUpgradeFromSource</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">9</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sc_address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">code_metadata</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sc_address</span> <span class="o">=</span> <span class="n">sc_address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code_metadata</span> <span class="o">=</span> <span class="n">code_metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span> <span class="o">=</span> <span class="n">arguments</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

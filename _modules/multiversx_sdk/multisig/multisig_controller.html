@@ -1,0 +1,1374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>multiversx_sdk.multisig.multisig_controller &mdash; multiversx-sdk 1.5.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d75fd82e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            multiversx-sdk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">multiversx_sdk</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">multiversx-sdk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">multiversx_sdk.multisig.multisig_controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for multiversx_sdk.multisig.multisig_controller</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.abi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Abi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.base_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">LibraryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IAccount</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.tokens</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenTransfer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction_on_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionOnNetwork</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.multisig.multisig_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MultisigTransactionsFactory</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.multisig.multisig_transactions_outcome_parser</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MultisigTransactionsOutcomeParser</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.multisig.resources</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Action</span><span class="p">,</span>
+    <span class="n">ActionFullInfo</span><span class="p">,</span>
+    <span class="n">AddBoardMember</span><span class="p">,</span>
+    <span class="n">AddProposer</span><span class="p">,</span>
+    <span class="n">CallActionData</span><span class="p">,</span>
+    <span class="n">ChangeQuorum</span><span class="p">,</span>
+    <span class="n">EsdtTokenPayment</span><span class="p">,</span>
+    <span class="n">EsdtTransferExecuteData</span><span class="p">,</span>
+    <span class="n">RemoveUser</span><span class="p">,</span>
+    <span class="n">SCDeployFromSource</span><span class="p">,</span>
+    <span class="n">SCUpgradeFromSource</span><span class="p">,</span>
+    <span class="n">SendAsyncCall</span><span class="p">,</span>
+    <span class="n">SendTransferExecuteEgld</span><span class="p">,</span>
+    <span class="n">SendTransferExecuteEsdt</span><span class="p">,</span>
+    <span class="n">UserRole</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.network_providers.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">AwaitingOptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.smart_contracts</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SmartContractController</span><span class="p">,</span>
+    <span class="n">SmartContractQuery</span><span class="p">,</span>
+    <span class="n">SmartContractQueryResponse</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_types</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SmartContractDeployOutcome</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># fmt: off</span>
+<div class="viewcode-block" id="INetworkProvider">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.INetworkProvider">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">INetworkProvider</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<div class="viewcode-block" id="INetworkProvider.query_contract">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.INetworkProvider.query_contract">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">query_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">SmartContractQuery</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractQueryResponse</span><span class="p">:</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="INetworkProvider.await_transaction_completed">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.INetworkProvider.await_transaction_completed">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_transaction_completed</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+        <span class="o">...</span></div>
+</div>
+
+<span class="c1"># fmt: on</span>
+
+
+<div class="viewcode-block" id="MultisigController">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultisigController</span><span class="p">(</span><span class="n">BaseController</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">network_provider</span><span class="p">:</span> <span class="n">INetworkProvider</span><span class="p">,</span>
+        <span class="n">abi</span><span class="p">:</span> <span class="n">Abi</span><span class="p">,</span>
+        <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_network_provider</span> <span class="o">=</span> <span class="n">network_provider</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span> <span class="o">=</span> <span class="n">MultisigTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="n">chain_id</span><span class="p">),</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">MultisigTransactionsOutcomeParser</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span> <span class="o">=</span> <span class="n">SmartContractController</span><span class="p">(</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="n">chain_id</span><span class="p">,</span> <span class="n">network_provider</span><span class="o">=</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span> <span class="o">=</span> <span class="n">address_hrp</span> <span class="k">if</span> <span class="n">address_hrp</span> <span class="k">else</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_deploy">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_deploy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_deploy</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">bytecode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">quorum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">],</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_readable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_payable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">is_payable_by_sc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_deploy</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">quorum</span><span class="o">=</span><span class="n">quorum</span><span class="p">,</span>
+            <span class="n">board</span><span class="o">=</span><span class="n">board</span><span class="p">,</span>
+            <span class="n">is_upgradeable</span><span class="o">=</span><span class="n">is_upgradeable</span><span class="p">,</span>
+            <span class="n">is_readable</span><span class="o">=</span><span class="n">is_readable</span><span class="p">,</span>
+            <span class="n">is_payable</span><span class="o">=</span><span class="n">is_payable</span><span class="p">,</span>
+            <span class="n">is_payable_by_sc</span><span class="o">=</span><span class="n">is_payable_by_sc</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.parse_deploy">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.parse_deploy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_on_network</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractDeployOutcome</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse_deploy</span><span class="p">(</span><span class="n">transaction_on_network</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.await_completed_deploy">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.await_completed_deploy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartContractDeployOutcome</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_deploy</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_deposit">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_deposit">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_deposit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">token_transfers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_deposit</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">native_token_amount</span><span class="o">=</span><span class="n">native_token_amount</span><span class="p">,</span>
+            <span class="n">token_transfers</span><span class="o">=</span><span class="n">token_transfers</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_discard_action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_discard_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_discard_action</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_discard_action</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">action_id</span><span class="o">=</span><span class="n">action_id</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_discard_batch">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_discard_batch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_discard_batch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">actions_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_discard_batch</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">action_ids</span><span class="o">=</span><span class="n">actions_ids</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_quorum">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_quorum">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_quorum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getQuorum&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_num_board_members">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_num_board_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_board_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getNumBoardMembers&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_num_groups">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_num_groups">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getNumGroups&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_num_proposers">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_num_proposers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_proposers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getNumProposers&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_action_group">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_action_group">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_action_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="p">[</span><span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionGroup&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">group_id</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">values</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_last_group_action_id">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_last_group_action_id">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_group_action_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getLastGroupActionId&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_action_last_index">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_action_last_index">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_action_last_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionLastIndex&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_add_board_member">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_add_board_member">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_add_board_member</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">board_member</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_add_board_member</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">board_member</span><span class="o">=</span><span class="n">board_member</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_add_proposer">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_add_proposer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_add_proposer</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">proposer</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_add_proposer</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">proposer</span><span class="o">=</span><span class="n">proposer</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_remove_user">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_remove_user">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_remove_user</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_remove_user</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_change_quorum">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_change_quorum">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_change_quorum</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">new_quorum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_change_quorum</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">quorum</span><span class="o">=</span><span class="n">new_quorum</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_transfer_execute">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_transfer_execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_transfer_execute</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Propose a transaction in which the contract will perform a transfer-execute call.</span>
+<span class="sd">        Can send EGLD without calling anything.</span>
+<span class="sd">        Can call smart contract endpoints directly.</span>
+<span class="sd">        Doesn&#39;t really work with builtin functions.&quot;&quot;&quot;</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_transfer_execute</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span>
+            <span class="n">native_token_amount</span><span class="o">=</span><span class="n">native_token_amount</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">opt_gas_limit</span><span class="o">=</span><span class="n">opt_gas_limit</span><span class="p">,</span>
+            <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_transfer_execute_esdt">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_transfer_execute_esdt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_transfer_execute_esdt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">token_transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">],</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_transfer_esdt_execute</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span>
+            <span class="n">token_transfers</span><span class="o">=</span><span class="n">token_transfers</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">opt_gas_limit</span><span class="o">=</span><span class="n">opt_gas_limit</span><span class="p">,</span>
+            <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_async_call">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_async_call">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_async_call</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">token_transfers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_async_call</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">native_token_amount</span><span class="o">=</span><span class="n">native_token_amount</span><span class="p">,</span>
+            <span class="n">token_transfers</span><span class="o">=</span><span class="n">token_transfers</span><span class="p">,</span>
+            <span class="n">opt_gas_limit</span><span class="o">=</span><span class="n">opt_gas_limit</span><span class="p">,</span>
+            <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_contract_deploy_from_source">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_contract_deploy_from_source">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_contract_deploy_from_source</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract_to_copy</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_readable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_payable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">is_payable_by_sc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_contract_deploy_from_source</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">contract_to_copy</span><span class="o">=</span><span class="n">contract_to_copy</span><span class="p">,</span>
+            <span class="n">native_token_amount</span><span class="o">=</span><span class="n">native_token_amount</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+            <span class="n">is_upgradeable</span><span class="o">=</span><span class="n">is_upgradeable</span><span class="p">,</span>
+            <span class="n">is_readable</span><span class="o">=</span><span class="n">is_readable</span><span class="p">,</span>
+            <span class="n">is_payable</span><span class="o">=</span><span class="n">is_payable</span><span class="p">,</span>
+            <span class="n">is_payable_by_sc</span><span class="o">=</span><span class="n">is_payable_by_sc</span><span class="p">,</span>
+            <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_contract_upgrade_from_source">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_contract_upgrade_from_source">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_contract_upgrade_from_source</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">contract_to_upgrade</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">contract_to_copy</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_readable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">is_payable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">is_payable_by_sc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_contract_upgrade_from_source</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">contract_to_upgrade</span><span class="o">=</span><span class="n">contract_to_upgrade</span><span class="p">,</span>
+            <span class="n">contract_to_copy</span><span class="o">=</span><span class="n">contract_to_copy</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+            <span class="n">native_token_amount</span><span class="o">=</span><span class="n">native_token_amount</span><span class="p">,</span>
+            <span class="n">is_upgradeable</span><span class="o">=</span><span class="n">is_upgradeable</span><span class="p">,</span>
+            <span class="n">is_readable</span><span class="o">=</span><span class="n">is_readable</span><span class="p">,</span>
+            <span class="n">is_payable</span><span class="o">=</span><span class="n">is_payable</span><span class="p">,</span>
+            <span class="n">is_payable_by_sc</span><span class="o">=</span><span class="n">is_payable_by_sc</span><span class="p">,</span>
+            <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_propose_batch">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_propose_batch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_propose_batch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Action</span><span class="p">],</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_batch</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_sign_action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_sign_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_sign_action</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_sign_action</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">action_id</span><span class="o">=</span><span class="n">action_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_sign_batch">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_sign_batch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_sign_batch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_sign_batch</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_sign_and_perform">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_sign_and_perform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_sign_and_perform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_sign_and_perform</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">action_id</span><span class="o">=</span><span class="n">action_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_sign_batch_and_perform">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_sign_batch_and_perform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_sign_batch_and_perform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_sign_batch_and_perform</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_unsign_action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_unsign_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unsign_action</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_unsign_action</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">action_id</span><span class="o">=</span><span class="n">action_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_unsign_batch">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_unsign_batch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unsign_batch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_unsign_batch</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.is_signed_by">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.is_signed_by">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_signed_by</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;signed&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="p">,</span> <span class="n">action_id</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_unsign_for_outdated_board_members">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_unsign_for_outdated_board_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unsign_for_outdated_board_members</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">outdated_board_members</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_unsign_for_outdated_board_members</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">action_id</span><span class="o">=</span><span class="n">action_id</span><span class="p">,</span>
+            <span class="n">outdated_board_members</span><span class="o">=</span><span class="n">outdated_board_members</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.is_quorum_reached">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.is_quorum_reached">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_quorum_reached</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;quorumReached&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_perform_action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_perform_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_perform_action</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_perform_action</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">action_id</span><span class="o">=</span><span class="n">action_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_perform_batch">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_perform_batch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_perform_batch</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_perform_batch</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">batch_id</span><span class="o">=</span><span class="n">batch_id</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_pending_actions_full_info">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_pending_actions_full_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pending_actions_full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ActionFullInfo</span><span class="p">]:</span>
+        <span class="p">[</span><span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getPendingActionFullInfo&quot;</span><span class="p">,</span>
+            <span class="c1"># For now, we don&#39;t support the `opt_range` argument.</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_new_action_full_info_from_object</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">actions</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_new_action_full_info_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ActionFullInfo</span><span class="p">:</span>
+        <span class="n">signers</span> <span class="o">=</span> <span class="p">[</span><span class="n">Address</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">object</span><span class="o">.</span><span class="n">signers</span><span class="p">]</span>
+        <span class="n">action_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_action_from_object</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">action_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ActionFullInfo</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">action_id</span><span class="p">,</span> <span class="nb">object</span><span class="o">.</span><span class="n">group_id</span><span class="p">,</span> <span class="n">action_data</span><span class="p">,</span> <span class="n">signers</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MultisigController.get_user_role">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_user_role">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_user_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserRole</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;userRole&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">UserRole</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_all_board_members">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_all_board_members">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_board_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
+        <span class="p">[</span><span class="n">public_keys</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getAllBoardMembers&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Address</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_all_proposers">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_all_proposers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_proposers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
+        <span class="p">[</span><span class="n">public_keys</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getAllProposers&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Address</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_action_data">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_action_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_action_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Action</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionData&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_action_from_object</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_action_signers">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_action_signers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_action_signers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
+        <span class="p">[</span><span class="n">public_keys</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionSigners&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Address</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_action_signer_count">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_action_signer_count">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_action_signer_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionSignerCount&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.get_action_valid_signer_count">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.get_action_valid_signer_count">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_action_valid_signer_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionValidSignerCount&quot;</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.parse_propose_action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.parse_propose_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_propose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_on_network</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse_propose_action</span><span class="p">(</span><span class="n">transaction_on_network</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.await_completed_execute_propose_any">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.await_completed_execute_propose_any">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_execute_propose_any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_propose_action</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.parse_perform_action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.parse_perform_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_perform_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_on_network</span><span class="p">:</span> <span class="n">TransactionOnNetwork</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse_perform_action</span><span class="p">(</span><span class="n">transaction_on_network</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.await_completed_perform_action">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.await_completed_perform_action">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_perform_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_perform_action</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.create_transaction_for_execute">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.create_transaction_for_execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_execute</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
+        <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">native_transfer_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">token_transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_execute</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+            <span class="n">native_transfer_amount</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
+            <span class="n">token_transfers</span><span class="o">=</span><span class="n">token_transfers</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span> <span class="o">=</span> <span class="n">relayer</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="n">nonce</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">transaction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_transaction_gas_options</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="p">,</span> <span class="n">gas_price</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+        <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="n">sender</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="MultisigController.query">
+<a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.MultisigController.query">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">query</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+        <span class="n">caller</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
+            <span class="n">caller</span><span class="o">=</span><span class="n">caller</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_add_board_member_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AddBoardMember</span><span class="p">:</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">public_key</span> <span class="o">=</span> <span class="n">field_0</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AddBoardMember</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_add_proposer_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AddProposer</span><span class="p">:</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">public_key</span> <span class="o">=</span> <span class="n">field_0</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AddProposer</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_remove_user_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RemoveUser</span><span class="p">:</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">public_key</span> <span class="o">=</span> <span class="n">field_0</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">RemoveUser</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_change_quorum_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChangeQuorum</span><span class="p">:</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">quorum</span> <span class="o">=</span> <span class="n">field_0</span>
+        <span class="k">return</span> <span class="n">ChangeQuorum</span><span class="p">(</span><span class="n">quorum</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_send_transfer_execute_egld_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SendTransferExecuteEgld</span><span class="p">:</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_call_action_data_from_object</span><span class="p">(</span><span class="n">field_0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SendTransferExecuteEgld</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_send_transfer_execute_esdt_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SendTransferExecuteEsdt</span><span class="p">:</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_esdt_transfer_execute_data_from_object</span><span class="p">(</span><span class="n">field_0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SendTransferExecuteEsdt</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_send_async_call_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SendAsyncCall</span><span class="p">:</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_call_action_data_from_object</span><span class="p">(</span><span class="n">field_0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SendAsyncCall</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_sc_deploy_from_source_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SCDeployFromSource</span><span class="p">:</span>
+        <span class="n">amount</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">amount</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="n">code_metadata</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">code_metadata</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">arguments</span>
+        <span class="k">return</span> <span class="n">SCDeployFromSource</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">code_metadata</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_sc_upgrade_from_source_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SCUpgradeFromSource</span><span class="p">:</span>
+        <span class="n">sc_address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">sc_address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="n">amount</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">amount</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="n">code_metadata</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">code_metadata</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">arguments</span>
+        <span class="k">return</span> <span class="n">SCUpgradeFromSource</span><span class="p">(</span><span class="n">sc_address</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">code_metadata</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_call_action_data_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CallActionData</span><span class="p">:</span>
+        <span class="n">to</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="n">egld_amount</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">egld_amount</span>
+        <span class="n">endpoint_name</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">endpoint_name</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">arguments</span>
+        <span class="n">opt_gas_limit</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">opt_gas_limit</span>
+        <span class="k">return</span> <span class="n">CallActionData</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">egld_amount</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">opt_gas_limit</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_esdt_transfer_execute_data_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EsdtTransferExecuteData</span><span class="p">:</span>
+        <span class="n">to</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">EsdtTokenPayment</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">token_identifier</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">token_nonce</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">object</span><span class="o">.</span><span class="n">tokens</span><span class="p">]</span>
+        <span class="n">opt_gas_limit</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">opt_gas_limit</span>
+        <span class="n">endpoint_name</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="n">endpoint_name</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">arguments</span>
+        <span class="k">return</span> <span class="n">EsdtTransferExecuteData</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">opt_gas_limit</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_action_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Action&quot;</span><span class="p">:</span>
+        <span class="c1"># The object is of type _EnumPayload, and its integer conversion is overridden to return the value of the __discriminant__ field.</span>
+        <span class="n">discriminant</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">AddBoardMember</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_add_board_member_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">AddProposer</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_add_proposer_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">RemoveUser</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_remove_user_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">ChangeQuorum</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_change_quorum_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">SendTransferExecuteEgld</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_send_transfer_execute_egld_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">SendTransferExecuteEsdt</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_send_transfer_execute_esdt_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">SendAsyncCall</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_send_async_call_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">SCDeployFromSource</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_sc_deploy_from_source_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">SCUpgradeFromSource</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_sc_upgrade_from_source_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown action discriminant: </span><span class="si">{</span><span class="n">discriminant</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, MultiversX.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

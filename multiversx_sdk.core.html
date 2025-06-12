@@ -54,7 +54,9 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">multiversx_sdk.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html">multiversx_sdk.delegation package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.entrypoints.html">multiversx_sdk.entrypoints package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.governance.html">multiversx_sdk.governance package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.ledger.html">multiversx_sdk.ledger package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.multisig.html">multiversx_sdk.multisig package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.native_auth.html">multiversx_sdk.native_auth package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html">multiversx_sdk.network_providers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html">multiversx_sdk.relayed package</a></li>
@@ -106,7 +108,13 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="multiversx_sdk.core.proto.html">multiversx_sdk.core.proto package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.proto.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.proto.html#module-multiversx_sdk.core.proto.transaction_pb2">multiversx_sdk.core.proto.transaction_pb2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.proto.html#module-multiversx_sdk.core.proto.transaction_pb2">multiversx_sdk.core.proto.transaction_pb2 module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_pb2.Transaction"><code class="docutils literal notranslate"><span class="pre">Transaction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_pb2.Transaction.DESCRIPTOR"><code class="docutils literal notranslate"><span class="pre">Transaction.DESCRIPTOR</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.core.proto.html#module-multiversx_sdk.core.proto.transaction_serializer">multiversx_sdk.core.proto.transaction_serializer module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer"><code class="docutils literal notranslate"><span class="pre">ProtoSerializer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.proto.html#multiversx_sdk.core.proto.transaction_serializer.ProtoSerializer.convert_to_proto_message"><code class="docutils literal notranslate"><span class="pre">ProtoSerializer.convert_to_proto_message()</span></code></a></li>
@@ -1127,8 +1135,18 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_change_config">
+<span class="sig-name descname"><span class="pre">gas_limit_for_change_config</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_change_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_changing_rewards_address">
 <span class="sig-name descname"><span class="pre">gas_limit_for_changing_rewards_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_changing_rewards_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_claim_accumulated_fees">
+<span class="sig-name descname"><span class="pre">gas_limit_for_claim_accumulated_fees</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_claim_accumulated_fees" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1139,6 +1157,21 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_cleaning_registered_data">
 <span class="sig-name descname"><span class="pre">gas_limit_for_cleaning_registered_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_cleaning_registered_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_clear_proposals">
+<span class="sig-name descname"><span class="pre">gas_limit_for_clear_proposals</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_clear_proposals" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_closing_proposal">
+<span class="sig-name descname"><span class="pre">gas_limit_for_closing_proposal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_closing_proposal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_proposal">
+<span class="sig-name descname"><span class="pre">gas_limit_for_proposal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_proposal" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1189,6 +1222,11 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_unstaking_tokens">
 <span class="sig-name descname"><span class="pre">gas_limit_for_unstaking_tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_unstaking_tokens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_vote">
+<span class="sig-name descname"><span class="pre">gas_limit_for_vote</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_for_vote" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2092,8 +2130,18 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_change_config">
+<span class="sig-name descname"><span class="pre">gas_limit_for_change_config</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_change_config" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_changing_rewards_address">
 <span class="sig-name descname"><span class="pre">gas_limit_for_changing_rewards_address</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_changing_rewards_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_claim_accumulated_fees">
+<span class="sig-name descname"><span class="pre">gas_limit_for_claim_accumulated_fees</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_claim_accumulated_fees" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2104,6 +2152,21 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_cleaning_registered_data">
 <span class="sig-name descname"><span class="pre">gas_limit_for_cleaning_registered_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_cleaning_registered_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_clear_proposals">
+<span class="sig-name descname"><span class="pre">gas_limit_for_clear_proposals</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_clear_proposals" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_closing_proposal">
+<span class="sig-name descname"><span class="pre">gas_limit_for_closing_proposal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_closing_proposal" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_proposal">
+<span class="sig-name descname"><span class="pre">gas_limit_for_proposal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_proposal" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2154,6 +2217,11 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_unstaking_tokens">
 <span class="sig-name descname"><span class="pre">gas_limit_for_unstaking_tokens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_unstaking_tokens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_vote">
+<span class="sig-name descname"><span class="pre">gas_limit_for_vote</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5000000</span></em><a class="headerlink" href="#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_for_vote" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
