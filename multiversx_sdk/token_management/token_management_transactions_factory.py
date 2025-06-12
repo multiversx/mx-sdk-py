@@ -393,6 +393,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         add_role_nft_burn: bool = False,
         add_role_nft_add_quantity: bool = False,
         add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_creator: bool = False,
+        add_role_nft_recreate: bool = False,
     ) -> Transaction:
         parts = [
             "setSpecialRole",
@@ -406,6 +411,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                 *([StringValue("ESDTRoleNFTBurn")] if add_role_nft_burn else []),
                 *([StringValue("ESDTRoleNFTAddQuantity")] if add_role_nft_add_quantity else []),
                 *([StringValue("ESDTTransferRole")] if add_role_esdt_transfer_role else []),
+                *([StringValue("ESDTRoleNFTUpdate")] if add_role_nft_update else []),
+                *([StringValue("ESDTRoleModifyRoyalties")] if add_role_esdt_modify_royalties else []),
+                *([StringValue("ESDTRoleSetNewURI")] if add_role_esdt_set_new_uri else []),
+                *([StringValue("ESDTRoleModifyCreator")] if add_role_esdt_modify_creator else []),
+                *([StringValue("ESDTRoleNFTRecreate")] if add_role_nft_recreate else []),
             ]
         )
 
@@ -429,6 +439,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         remove_role_nft_burn: bool = False,
         remove_role_nft_add_quantity: bool = False,
         remove_role_esdt_transfer_role: bool = False,
+        remove_role_nft_update: bool = False,
+        remove_role_esdt_modify_royalties: bool = False,
+        remove_role_esdt_set_new_uri: bool = False,
+        remove_role_esdt_modify_creator: bool = False,
+        remove_role_nft_recreate: bool = False,
     ) -> Transaction:
         parts = [
             "unSetSpecialRole",
@@ -441,6 +456,11 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
                 *([StringValue("ESDTRoleNFTBurn")] if remove_role_nft_burn else []),
                 *([StringValue("ESDTRoleNFTAddQuantity")] if remove_role_nft_add_quantity else []),
                 *([StringValue("ESDTTransferRole")] if remove_role_esdt_transfer_role else []),
+                *([StringValue("ESDTRoleNFTUpdate")] if remove_role_nft_update else []),
+                *([StringValue("ESDTRoleModifyRoyalties")] if remove_role_esdt_modify_royalties else []),
+                *([StringValue("ESDTRoleSetNewURI")] if remove_role_esdt_set_new_uri else []),
+                *([StringValue("ESDTRoleModifyCreator")] if remove_role_esdt_modify_creator else []),
+                *([StringValue("ESDTRoleNFTRecreate")] if remove_role_nft_recreate else []),
             ]
         )
 
