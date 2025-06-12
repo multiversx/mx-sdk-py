@@ -20,7 +20,7 @@ class ValidatorSecretKey:
 
     @classmethod
     def from_string(cls, buffer_hex: str) -> "ValidatorSecretKey":
-        buffer = bytes.fromhex(buffer_hex)
+        buffer = bytes.fromhex(buffer_hex.strip())
         return cls(buffer)
 
     def generate_public_key(self) -> "ValidatorPublicKey":
