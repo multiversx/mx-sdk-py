@@ -252,7 +252,7 @@ class MultisigTransactionsFactory:
                 AddressValue.new_from_address(input.to),
                 ListValue(items=input.tokens),
                 OptionValue(U64Value(input.opt_gas_limit or 0)),
-                VariadicValues([StringValue(arg.hex()) for arg in input.function_call]),
+                VariadicValues([BytesValue(arg) for arg in input.function_call]),
             ],
         )
 
@@ -333,7 +333,7 @@ class MultisigTransactionsFactory:
                 AddressValue.new_from_address(input.to),
                 BigUIntValue(native_token_amount or 0),
                 OptionValue(U64Value(input.opt_gas_limit)),
-                VariadicValues([StringValue(arg.decode()) for arg in input.function_call]),
+                VariadicValues([BytesValue(arg) for arg in input.function_call]),
             ],
         )
 
