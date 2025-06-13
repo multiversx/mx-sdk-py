@@ -3,10 +3,14 @@ from pathlib import Path
 import pytest
 
 from multiversx_sdk.abi.abi import Abi
+from multiversx_sdk.abi.address_value import AddressValue
+from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.small_int_values import U32Value
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token, TokenTransfer
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
+from multiversx_sdk.governance.resources import VoteType
 from multiversx_sdk.multisig.multisig_transactions_factory import (
     MultisigTransactionsFactory,
 )
@@ -307,6 +311,35 @@ class TestMultisigTransactionsFactory:
             arguments=[b"\x07"],
         )
         assert transaction_with_bytes_args == transaction
+
+    def test_propose_async_delegate_vote(self):
+        alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+        multisig = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq6kurkz43xq8t35kx9p8rvyz5kpxe9g7qd8ssefqjw8")
+        contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrlllsrujgla")
+
+        transaction = self.abi_factory.create_transaction_for_propose_async_call(
+            sender=alice,
+            contract=multisig,
+            receiver=contract,
+            gas_limit=60_000_000,
+            opt_gas_limit=5_000_000,
+            function="delegateVote",
+            arguments=[
+                BigUIntValue(1),
+                StringValue(VoteType.YES.value),
+                AddressValue.new_from_address(alice),
+                StringValue(str(100_000000000000000000)),
+            ],
+        )
+        assert transaction.sender == alice
+        assert transaction.receiver == multisig
+        assert transaction.value == 0
+        assert transaction.gas_limit == 60_000_000
+        assert transaction.chain_id == "D"
+        assert (
+            transaction.data.decode()
+            == "proposeAsyncCall@0000000000000000050078d29632acb15998003f615d0a51261353d8041d3e13@@0100000000004c4b40@64656c6567617465566f7465@01@796573@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1@31303030"
+        )
 
     def test_propose_sc_deploy_from_source(self):
         sender = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
