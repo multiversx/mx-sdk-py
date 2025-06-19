@@ -1,3 +1,4 @@
+import logging
 import urllib.parse
 from copy import deepcopy
 from typing import Any, Callable, Optional, Union, cast
@@ -65,6 +66,8 @@ from multiversx_sdk.smart_contracts.smart_contract_query import (
     SmartContractQuery,
     SmartContractQueryResponse,
 )
+
+logger = logging.getLogger("api_network_provider")
 
 
 class ApiNetworkProvider(INetworkProvider):
@@ -306,6 +309,7 @@ class ApiNetworkProvider(INetworkProvider):
         return response
 
     def _do_get(self, url: str) -> Any:
+        logger.debug(f"GET {url}")
         try:
             retry_strategy = Retry(
                 total=self.config.requests_retry_options.retries,
@@ -332,6 +336,7 @@ class ApiNetworkProvider(INetworkProvider):
             raise NetworkProviderError(url, err)
 
     def _do_post(self, url: str, payload: Any) -> dict[str, Any]:
+        logger.debug(f"POST {url}")
         try:
             response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()

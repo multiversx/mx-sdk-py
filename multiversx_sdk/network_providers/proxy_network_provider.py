@@ -1,3 +1,4 @@
+import logging
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from copy import deepcopy
@@ -68,6 +69,8 @@ from multiversx_sdk.smart_contracts.smart_contract_query import (
     SmartContractQuery,
     SmartContractQueryResponse,
 )
+
+logger = logging.getLogger("proxy_network_provider")
 
 
 class ProxyNetworkProvider(INetworkProvider):
@@ -364,6 +367,7 @@ class ProxyNetworkProvider(INetworkProvider):
         return response
 
     def _do_get(self, url: str) -> GenericResponse:
+        logger.debug(f"GET {url}")
         try:
             retry_strategy = Retry(
                 total=self.config.requests_retry_options.retries,
@@ -390,6 +394,7 @@ class ProxyNetworkProvider(INetworkProvider):
             raise NetworkProviderError(url, err)
 
     def _do_post(self, url: str, payload: Any) -> GenericResponse:
+        logger.debug(f"POST {url}")
         try:
             response = requests.post(url, json=payload, **self.config.requests_options)
             response.raise_for_status()

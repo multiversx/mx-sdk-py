@@ -75,10 +75,10 @@ class UserPublicKey:
             verify_key.verify(data, signature)
             return True
         except CryptoError as e:
-            logger.info(str(e))
+            logger.error(str(e))
             return False
         except Exception as e:
-            logger.info(str(e))
+            logger.error(str(e))
             return False
 
     def to_address(self, hrp: Optional[str] = None) -> Address:
