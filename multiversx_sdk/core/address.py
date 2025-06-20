@@ -1,4 +1,3 @@
-import logging
 from typing import Optional
 
 from Cryptodome.Hash import keccak
@@ -10,8 +9,6 @@ from multiversx_sdk.core.errors import BadAddressError, BadPubkeyLengthError
 
 SC_HEX_PUBKEY_PREFIX = "0" * 16
 PUBKEY_LENGTH = 32
-
-logger = logging.getLogger("address")
 
 
 class Address:
