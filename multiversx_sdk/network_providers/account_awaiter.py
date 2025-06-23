@@ -1,4 +1,3 @@
-import logging
 import time
 from typing import Callable, Optional, Protocol, Union
 
@@ -13,8 +12,6 @@ from multiversx_sdk.network_providers.errors import (
     ExpectedAccountConditionNotReachedError,
 )
 from multiversx_sdk.network_providers.resources import AccountOnNetwork
-
-logger = logging.getLogger("account_awaiter")
 
 
 class IAccountFetcher(Protocol):
