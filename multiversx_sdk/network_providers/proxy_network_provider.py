@@ -342,6 +342,11 @@ class ProxyNetworkProvider(INetworkProvider):
         response = self.do_get_generic(f"transaction/{transaction_hash}/process-status")
         return TransactionStatus(response.get("status", ""))
 
+    def estimate_gas_limit(self, transaction: Transaction) -> int:
+        """Works ok for move balance or built-in functions. Not yet accurate for cross-shard transactions."""
+        result = self.do_post_generic("transaction/cost", transaction.to_dictionary())
+        return result.get("txGasUnits", 0)
+
     def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]] = None) -> GenericResponse:
         """Does a generic GET request against the network (handles API enveloping)."""
         url = f"{self.url}/{url}"

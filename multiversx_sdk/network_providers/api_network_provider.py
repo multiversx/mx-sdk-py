@@ -284,6 +284,14 @@ class ApiNetworkProvider(INetworkProvider):
         response = self.do_post_generic("query", request)
         return vm_query_response_to_smart_contract_query_response(response, query.function)
 
+    def estimate_gas_limit(self, transaction: Transaction) -> int:
+        """
+        Works ok for move balance or built-in functions. Not yet accurate for cross-shard transactions.
+        Forwards the request to the backing proxy to estimate the gas limit for a transaction.
+        """
+        result = self.do_post_generic("transaction/cost", transaction.to_dictionary())
+        return result["txGasUnits"]
+
     def do_get_generic(self, url: str, url_parameters: Optional[dict[str, Any]] = None) -> Any:
         """Does a generic GET request against the network(handles API enveloping)."""
         url = f"{self.url}/{url}"

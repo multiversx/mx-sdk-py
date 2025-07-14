@@ -9,6 +9,8 @@ from multiversx_sdk.core import (
     TransactionOnNetwork,
     TransactionStatus,
 )
+from multiversx_sdk.core.tokens import TokenTransfer
+from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.http_resources import block_from_response
@@ -17,6 +19,9 @@ from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.smart_contracts.smart_contract_query import SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
+from multiversx_sdk.transfers.transfer_transactions_factory import (
+    TransferTransactionsFactory,
+)
 
 
 @pytest.mark.networkInteraction
@@ -414,6 +419,59 @@ class TestProxy:
         )
         response = self.proxy.query_contract(query)
         assert response.return_data_parts == []
+
+    def test_estimate_gas_limit_move_balance(self):
+        alice = load_wallets()["alice"]
+        bob = load_wallets()["bob"]
+
+        transaction = Transaction(
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32(bob.label),
+            gas_limit=0,
+            chain_id="D",
+        )
+
+        estimated_gas_limit = self.proxy.estimate_gas_limit(transaction)
+        assert estimated_gas_limit == 50_000
+
+    def test_estimate_gas_limit_move_balance_with_data(self):
+        alice = load_wallets()["alice"]
+        bob = load_wallets()["bob"]
+
+        transaction = Transaction(
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32(bob.label),
+            gas_limit=0,
+            chain_id="D",
+            data="test".encode(),
+        )
+
+        estimated_gas_limit = self.proxy.estimate_gas_limit(transaction)
+        assert estimated_gas_limit == 56_000
+
+    @pytest.mark.only
+    def test_estimate_gas_limit_multi_transfer(self):
+        alice = load_wallets()["alice"]
+        bob = load_wallets()["bob"]
+
+        transfers = [
+            TokenTransfer(Token("TEST-c8fe82"), 100),
+            TokenTransfer(Token("TESTCOLL-86bc05", 1), 1),
+        ]
+
+        factory = TransferTransactionsFactory(TransactionsFactoryConfig("D"))
+        transaction = factory.create_transaction_for_transfer(
+            sender=Address.new_from_bech32(alice.label),
+            receiver=Address.new_from_bech32(bob.label),
+            token_transfers=transfers,
+        )
+        print(transaction.gas_limit)
+        print(transaction.gas_limit - 800000)
+
+        transaction.nonce = self.proxy.get_account(Address.new_from_bech32(alice.label)).nonce
+        estimated_gas_limit = self.proxy.estimate_gas_limit(transaction)
+
+        assert estimated_gas_limit == 691_900
 
     def test_user_agent(self):
         # using config without user agent
