@@ -449,7 +449,6 @@ class TestProxy:
         estimated_gas_limit = self.proxy.estimate_gas_limit(transaction)
         assert estimated_gas_limit == 56_000
 
-    @pytest.mark.only
     def test_estimate_gas_limit_multi_transfer(self):
         alice = load_wallets()["alice"]
         bob = load_wallets()["bob"]
