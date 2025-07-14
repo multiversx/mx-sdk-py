@@ -256,12 +256,20 @@ class GovernanceController(BaseController):
         )
 
         proposal_fee = int(result[0].decode())
-        min_quorum = float(result[1].decode())
-        min_pass_threshold = float(result[2].decode())
+        lost_proposal_fee = int(result[1].decode())
+        min_quorum = float(result[2].decode())
         min_veto_threshold = float(result[3].decode())
-        last_proposal_nonce = int(result[4].decode())
+        min_pass_threshold = float(result[4].decode())
+        last_proposal_nonce = int(result[5].decode())
 
-        return GovernanceConfig(proposal_fee, min_quorum, min_pass_threshold, min_veto_threshold, last_proposal_nonce)
+        return GovernanceConfig(
+            proposal_fee,
+            lost_proposal_fee,
+            min_quorum,
+            min_pass_threshold,
+            min_veto_threshold,
+            last_proposal_nonce,
+        )
 
     def get_proposal(self, proposal_nonce: int) -> ProposalInfo:
         result = self._sc_controller.query(
