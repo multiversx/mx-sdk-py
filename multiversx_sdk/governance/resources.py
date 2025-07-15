@@ -14,6 +14,7 @@ class VoteType(Enum):
 @dataclass
 class GovernanceConfig:
     proposal_fee: int
+    lost_proposal_fee: int
     min_quorum: float
     min_pass_threshold: float
     min_veto_threshold: float
