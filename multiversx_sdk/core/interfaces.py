@@ -22,4 +22,9 @@ class IAccount(Protocol):
 
     def sign_transaction(self, transaction: Transaction) -> bytes:
         ...
+
+
+class IGasLimitEstimator(Protocol):
+    def estimate_gas_limit(self, transaction: Transaction) -> int:
+        ...
 # fmt: on

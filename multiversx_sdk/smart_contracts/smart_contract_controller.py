@@ -11,7 +11,7 @@ from multiversx_sdk.core import (
     TransactionOnNetwork,
 )
 from multiversx_sdk.core.base_controller import BaseController
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.network_providers.resources import AwaitingOptions
 from multiversx_sdk.smart_contracts.errors import SmartContractQueryError
@@ -49,9 +49,14 @@ class SmartContractController(BaseController):
         chain_id: str,
         network_provider: INetworkProvider,
         abi: Optional[Abi] = None,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
         self.abi = abi
-        self.factory = SmartContractTransactionsFactory(TransactionsFactoryConfig(chain_id), abi=self.abi)
+        self.factory = SmartContractTransactionsFactory(
+            TransactionsFactoryConfig(chain_id),
+            abi=self.abi,
+            gas_limit_estimator=gas_limit_estimator,
+        )
         self.parser = SmartContractTransactionsOutcomeParser(abi=self.abi)
         self.network_provider = network_provider
         self.serializer = Serializer()

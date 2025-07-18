@@ -1,11 +1,20 @@
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
+from typing import Optional
+
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.base_factory import BaseFactory
+from multiversx_sdk.core.constants import TRANSACTION_OPTIONS_TX_GUARDED
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 
 
-class AccountTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig) -> None:
+class AccountTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        super().__init__(config, gas_limit_estimator)
         self.config = config
 
     def create_transaction_for_saving_key_value(
@@ -18,14 +27,17 @@ class AccountTransactionsFactory:
 
         data_parts.insert(0, function)
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            data_parts=data_parts,
-            gas_limit=extra_gas,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=extra_gas)
+
+        return transaction
 
     def create_transaction_for_setting_guardian(
         self, sender: Address, guardian_address: Address, service_id: str
@@ -36,40 +48,53 @@ class AccountTransactionsFactory:
             service_id.encode().hex(),
         ]
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_set_guardian,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_set_guardian)
+
+        return transaction
 
     def create_transaction_for_guarding_account(self, sender: Address) -> Transaction:
         data_parts = ["GuardAccount"]
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_guard_account,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
 
-    def create_transaction_for_unguarding_account(self, sender: Address, guardian: Address) -> Transaction:
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_guard_account)
+
+        return transaction
+
+    def create_transaction_for_unguarding_account(
+        self,
+        sender: Address,
+        guardian: Optional[Address] = None,
+    ) -> Transaction:
         data_parts = ["UnGuardAccount"]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_unguard_account,
-            add_data_movement_gas=True,
-        ).build()
-        transaction.options = 2
-        transaction.guardian = guardian
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        if guardian:
+            transaction.guardian = guardian
+            transaction.options = TRANSACTION_OPTIONS_TX_GUARDED
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_unguard_account)
 
         return transaction
 

@@ -280,7 +280,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.data
         assert transaction.data.decode() == "delegate"
         assert transaction.value == 1000000000000000000
-        assert transaction.gas_limit == 12000000
+        assert transaction.gas_limit == 11062000
 
     def test_create_transaction_for_claiming_rewards(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -295,7 +295,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.data
         assert transaction.data.decode() == "claimRewards"
         assert transaction.value == 0
-        assert transaction.gas_limit == 6000000
+        assert transaction.gas_limit == 11068000
 
     def test_create_transaction_for_redelegating_rewards(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -310,7 +310,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.data
         assert transaction.data.decode() == "reDelegateRewards"
         assert transaction.value == 0
-        assert transaction.gas_limit == 12000000
+        assert transaction.gas_limit == 11075500
 
     def test_create_transaction_for_undelegating(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -327,7 +327,7 @@ class TestDelegationTransactionsFactory:
         assert transaction.data
         assert transaction.data.decode() == "unDelegate@0de0b6b3a7640000"
         assert transaction.value == 0
-        assert transaction.gas_limit == 12000000
+        assert transaction.gas_limit == 11090500
 
     def test_create_transaction_for_withdrawing(self):
         sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
@@ -342,4 +342,4 @@ class TestDelegationTransactionsFactory:
         assert transaction.data
         assert transaction.data.decode() == "withdraw"
         assert transaction.value == 0
-        assert transaction.gas_limit == 12000000
+        assert transaction.gas_limit == 11062000

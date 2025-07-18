@@ -6,9 +6,10 @@ from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.string_value import StringValue
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, Transaction
+from multiversx_sdk.core.base_factory import BaseFactory
 from multiversx_sdk.core.errors import BadUsageError
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 
 logger = logging.getLogger(__name__)
@@ -21,8 +22,13 @@ class TokenType(Enum):
     FNG = "FNG"
 
 
-class TokenManagementTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig):
+class TokenManagementTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        super().__init__(config, gas_limit_estimator)
         self._config = config
         self.serializer = Serializer()
 
@@ -69,15 +75,18 @@ class TokenManagementTransactionsFactory:
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=self._config.issue_cost,
-            gas_limit=self._config.gas_limit_issue,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=self._config.issue_cost,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_issue)
+
+        return transaction
 
     def _notify_about_unsetting_burn_role_globally(self) -> None:
         logger.info(
@@ -131,15 +140,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=self._config.issue_cost,
-            gas_limit=self._config.gas_limit_issue,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=self._config.issue_cost,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_issue)
+
+        return transaction
 
     def create_transaction_for_issuing_non_fungible(
         self,
@@ -183,15 +195,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=self._config.issue_cost,
-            gas_limit=self._config.gas_limit_issue,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=self._config.issue_cost,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_issue)
+
+        return transaction
 
     def create_transaction_for_registering_meta_esdt(
         self,
@@ -237,15 +252,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=self._config.issue_cost,
-            gas_limit=self._config.gas_limit_issue,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=self._config.issue_cost,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_issue)
+
+        return transaction
 
     def create_transaction_for_registering_and_setting_roles(
         self,
@@ -270,15 +288,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=self._config.issue_cost,
-            gas_limit=self._config.gas_limit_issue,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=self._config.issue_cost,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_issue)
+
+        return transaction
 
     def create_transaction_for_setting_burn_role_globally(self, sender: Address, token_identifier: str) -> Transaction:
         parts = [
@@ -286,15 +307,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([StringValue(token_identifier)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_toggle_burn_role_globally,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_toggle_burn_role_globally)
+
+        return transaction
 
     def create_transaction_for_unsetting_burn_role_globally(
         self, sender: Address, token_identifier: str
@@ -304,15 +327,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([StringValue(token_identifier)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_toggle_burn_role_globally,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_toggle_burn_role_globally)
+
+        return transaction
 
     def create_transaction_for_setting_special_role_on_fungible_token(
         self,
@@ -339,15 +364,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_set_special_role,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_set_special_role)
+
+        return transaction
 
     def create_transaction_for_unsetting_special_role_on_fungible_token(
         self,
@@ -374,15 +401,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_set_special_role,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_set_special_role)
+
+        return transaction
 
     def create_transaction_for_setting_special_role_on_semi_fungible_token(
         self,
@@ -421,15 +450,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_set_special_role,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_set_special_role)
+
+        return transaction
 
     def create_transaction_for_unsetting_special_role_on_semi_fungible_token(
         self,
@@ -466,15 +497,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_set_special_role,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_set_special_role)
+
+        return transaction
 
     def create_transaction_for_setting_special_role_on_meta_esdt(
         self,
@@ -553,15 +586,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_set_special_role,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_set_special_role)
+
+        return transaction
 
     def create_transaction_for_unsetting_special_role_on_non_fungible_token(
         self,
@@ -600,15 +635,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_set_special_role,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_set_special_role)
+
+        return transaction
 
     def create_transaction_for_creating_nft(
         self,
@@ -644,41 +681,50 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         nft_data = name + hash + attributes.hex() + "".join(uris)
         storage_gas_limit = len(nft_data) * self._config.gas_limit_store_per_byte
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_nft_create + storage_gas_limit,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self._config.gas_limit_esdt_nft_create + storage_gas_limit,
+        )
+
+        return transaction
 
     def create_transaction_for_pausing(self, sender: Address, token_identifier: str) -> Transaction:
         parts = ["pause", self.serializer.serialize([StringValue(token_identifier)])]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_pausing,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_pausing)
+
+        return transaction
 
     def create_transaction_for_unpausing(self, sender: Address, token_identifier: str) -> Transaction:
         parts = ["unPause", self.serializer.serialize([StringValue(token_identifier)])]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_pausing,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_pausing)
+
+        return transaction
 
     def create_transaction_for_freezing(self, sender: Address, user: Address, token_identifier: str) -> Transaction:
         """Can be used for FungibleESDT"""
@@ -688,15 +734,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             user.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_freezing,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_freezing)
+
+        return transaction
 
     def create_transaction_for_unfreezing(self, sender: Address, user: Address, token_identifier: str) -> Transaction:
         """Can be used for FungibleESDT"""
@@ -706,15 +754,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             user.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_freezing,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_freezing)
+
+        return transaction
 
     def create_transaction_for_wiping(self, sender: Address, user: Address, token_identifier: str) -> Transaction:
         parts = [
@@ -723,15 +773,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             user.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_wiping,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_wiping)
+
+        return transaction
 
     def create_transaction_for_local_minting(
         self, sender: Address, token_identifier: str, supply_to_mint: int
@@ -742,15 +794,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([BigUIntValue(supply_to_mint)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_local_mint,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_local_mint)
+
+        return transaction
 
     def create_transaction_for_local_burning(
         self, sender: Address, token_identifier: str, supply_to_burn: int
@@ -761,15 +815,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([BigUIntValue(supply_to_burn)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_local_burn,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_local_burn)
+
+        return transaction
 
     def create_transaction_for_updating_attributes(
         self,
@@ -790,15 +846,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_nft_update_attributes,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_nft_update_attributes)
+
+        return transaction
 
     def create_transaction_for_adding_quantity(
         self,
@@ -819,15 +877,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_nft_add_quantity,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_nft_add_quantity)
+
+        return transaction
 
     def create_transaction_for_burning_quantity(
         self,
@@ -848,15 +908,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_nft_burn,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_nft_burn)
+
+        return transaction
 
     def create_transaction_for_modifying_royalties(
         self,
@@ -877,15 +939,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_modify_royalties,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_modify_royalties)
+
+        return transaction
 
     def create_transaction_for_setting_new_uris(
         self,
@@ -909,15 +973,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_set_new_uris,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_set_new_uris)
+
+        return transaction
 
     def create_transaction_for_modifying_creator(
         self, sender: Address, token_identifier: str, token_nonce: int
@@ -928,15 +994,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([BigUIntValue(token_nonce)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_modify_creator,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_modify_creator)
+
+        return transaction
 
     def create_transaction_for_updating_metadata(
         self,
@@ -965,15 +1033,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_esdt_metadata_update,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_metadata_update)
+
+        return transaction
 
     def create_transaction_for_nft_metadata_recreate(
         self,
@@ -1002,15 +1072,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=None,
-            gas_limit=self._config.gas_limit_nft_metadata_recreate,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_nft_metadata_recreate)
+
+        return transaction
 
     def create_transaction_for_changing_token_to_dynamic(self, sender: Address, token_identifier: str) -> Transaction:
         """The following token types cannot be changed to dynamic: FungibleESDT, NonFungibleESDT, NonFungibleESDTv2"""
@@ -1019,15 +1091,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([StringValue(token_identifier)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_nft_change_to_dynamic,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_nft_change_to_dynamic)
+
+        return transaction
 
     def create_transaction_for_updating_token_id(self, sender: Address, token_identifier: str) -> Transaction:
         parts = [
@@ -1035,15 +1109,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([StringValue(token_identifier)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=None,
-            gas_limit=self._config.gas_limit_update_token_id,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_update_token_id)
+
+        return transaction
 
     def create_transaction_for_registering_dynamic_token(
         self,
@@ -1071,15 +1147,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         if token_type == TokenType.META and denominator is not None:
             parts.append(self.serializer.serialize([BigUIntValue(denominator)]))
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=self._config.issue_cost,
-            gas_limit=self._config.gas_limit_register_dynamic,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=self._config.issue_cost,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_register_dynamic)
+
+        return transaction
 
     def create_transaction_for_registering_dynamic_and_setting_roles(
         self,
@@ -1107,15 +1186,18 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         if token_type == TokenType.META and denominator is not None:
             parts.append(self.serializer.serialize([BigUIntValue(denominator)]))
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=self._config.issue_cost,
-            gas_limit=self._config.gas_limit_register_dynamic,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=self._config.issue_cost,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_register_dynamic)
+
+        return transaction
 
     def create_transaction_for_transferring_ownership(
         self, sender: Address, token_identifier: str, new_owner: Address
@@ -1126,15 +1208,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             new_owner.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=0,
-            gas_limit=self._config.gas_limit_transfer_ownership,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_transfer_ownership)
+
+        return transaction
 
     def create_transaction_for_freezing_single_nft(
         self, sender: Address, token_identifier: str, token_nonce: int, user: Address
@@ -1146,15 +1230,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             user.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=0,
-            gas_limit=self._config.gas_limit_freeze_single_nft,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_freeze_single_nft)
+
+        return transaction
 
     def create_transaction_for_unfreezing_single_nft(
         self, sender: Address, token_identifier: str, token_nonce: int, user: Address
@@ -1166,15 +1252,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             user.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=0,
-            gas_limit=self._config.gas_limit_unfreeze_single_nft,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_unfreeze_single_nft)
+
+        return transaction
 
     def create_transaction_for_changing_sft_to_meta_esdt(
         self, sender: Address, collection: str, num_decimals: int
@@ -1185,15 +1273,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([BigUIntValue(num_decimals)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=0,
-            gas_limit=self._config.gas_limit_change_sft_to_meta_esdt,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_change_sft_to_meta_esdt)
+
+        return transaction
 
     def create_transaction_for_transferring_nft_create_role(
         self, sender: Address, token_identifier: str, user: Address
@@ -1206,15 +1296,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             user.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=0,
-            gas_limit=self._config.gas_limit_transfer_nft_create_role,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_transfer_nft_create_role)
+
+        return transaction
 
     def create_transaction_for_stopping_nft_creation(self, sender: Address, token_identifier: str) -> Transaction:
         parts = [
@@ -1222,15 +1314,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             self.serializer.serialize([StringValue(token_identifier)]),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=0,
-            gas_limit=self._config.gas_limit_stop_nft_create,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_stop_nft_create)
+
+        return transaction
 
     def create_transaction_for_wiping_single_nft(
         self, sender: Address, token_identifier: str, token_nonce: int, user: Address
@@ -1242,15 +1336,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
             user.to_hex(),
         ]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._config.esdt_contract_address,
-            amount=0,
-            gas_limit=self._config.gas_limit_wipe_single_nft,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_wipe_single_nft)
+
+        return transaction
 
     def create_transction_for_adding_uris(
         self,
@@ -1267,15 +1363,17 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=sender,
-            amount=0,
-            gas_limit=self._config.gas_limit_esdt_nft_add_uri,
-            add_data_movement_gas=True,
-            data_parts=parts,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_esdt_nft_add_uri)
+
+        return transaction
 
     def _bool_to_typed_string(self, value: bool) -> StringValue:
         if value:

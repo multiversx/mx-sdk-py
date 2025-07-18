@@ -350,8 +350,8 @@ class TestMultisigTransactionsFactory:
         abi_transaction = self.abi_factory.create_transaction_for_propose_contract_deploy_from_source(
             sender=sender,
             contract=multisig,
-            gas_limit=60_000_000,
             contract_to_copy=contract,
+            gas_limit=60_000_000,
             native_token_amount=50000000000000000,
             arguments=[0],
             abi=adder,

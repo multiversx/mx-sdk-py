@@ -1,18 +1,24 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from multiversx_sdk.abi import Serializer
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.string_value import StringValue
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, Transaction
+from multiversx_sdk.core.base_factory import BaseFactory
 from multiversx_sdk.core.constants import DELEGATION_MANAGER_SC_ADDRESS_HEX
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.delegation.errors import ListsLengthMismatchError
 from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
-class DelegationTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig) -> None:
+class DelegationTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        super().__init__(config, gas_limit_estimator)
         self.config = config
         self.serializer = Serializer()
 
@@ -27,16 +33,19 @@ class DelegationTransactionsFactory:
 
         parts.extend([part.hex() for part in serialized_parts])
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(DELEGATION_MANAGER_SC_ADDRESS_HEX),
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_create_delegation_contract
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-            amount=amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=amount,
+        )
+
+        self.set_payload(transaction, parts)
+        gas_limit = (
+            self.config.gas_limit_create_delegation_contract + self.config.additional_gas_for_delegation_operations
+        )
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -56,15 +65,17 @@ class DelegationTransactionsFactory:
             parts.append(signed_messages[i].hex())
 
         num_nodes = len(public_keys)
+        gas_limit = self._compute_execution_gas_limit_for_nodes_management(num_nodes)
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self._compute_execution_gas_limit_for_nodes_management(num_nodes),
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -80,20 +91,22 @@ class DelegationTransactionsFactory:
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
     ) -> Transaction:
-        num_nodes = len(public_keys)
-
         parts = ["removeNodes"]
         for public_key in public_keys:
             parts.append(public_key.hex())
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        num_nodes = len(public_keys)
+        gas_limit = self._compute_execution_gas_limit_for_nodes_management(num_nodes)
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self._compute_execution_gas_limit_for_nodes_management(num_nodes),
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -103,22 +116,26 @@ class DelegationTransactionsFactory:
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
     ) -> Transaction:
-        num_nodes = len(public_keys)
-
         parts = ["stakeNodes"]
         for public_key in public_keys:
             parts.append(public_key.hex())
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        num_nodes = len(public_keys)
+        gas_limit = (
+            self.config.gas_limit_delegation_operations
+            + self.config.gas_limit_stake
+            + num_nodes * self.config.additional_gas_limit_per_validator_node
+        )
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.gas_limit_stake
-            + num_nodes * self.config.additional_gas_limit_per_validator_node,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -128,22 +145,26 @@ class DelegationTransactionsFactory:
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
     ) -> Transaction:
-        num_nodes = len(public_keys)
-
         parts = ["unBondNodes"]
         for public_key in public_keys:
             parts.append(public_key.hex())
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        num_nodes = len(public_keys)
+        gas_limit = (
+            self.config.gas_limit_delegation_operations
+            + self.config.gas_limit_unbond
+            + num_nodes * self.config.additional_gas_limit_per_validator_node
+        )
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.gas_limit_unbond
-            + num_nodes * self.config.additional_gas_limit_per_validator_node,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -153,22 +174,26 @@ class DelegationTransactionsFactory:
         delegation_contract: Address,
         public_keys: Sequence[ValidatorPublicKey],
     ) -> Transaction:
-        num_nodes = len(public_keys)
-
         parts = ["unStakeNodes"]
         for public_key in public_keys:
             parts.append(public_key.hex())
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        num_nodes = len(public_keys)
+        gas_limit = (
+            self.config.gas_limit_delegation_operations
+            + self.config.gas_limit_unstake
+            + num_nodes * self.config.additional_gas_limit_per_validator_node
+        )
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.gas_limit_unstake
-            + num_nodes * self.config.additional_gas_limit_per_validator_node,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -179,21 +204,23 @@ class DelegationTransactionsFactory:
         public_keys: Sequence[ValidatorPublicKey],
         amount: int,
     ) -> Transaction:
-        num_nodes = len(public_keys)
-
         parts = ["unJailNodes"]
         for public_key in public_keys:
             parts.append(public_key.hex())
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        num_nodes = len(public_keys)
+        gas_limit = self._compute_execution_gas_limit_for_nodes_management(num_nodes)
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self._compute_execution_gas_limit_for_nodes_management(num_nodes),
-            add_data_movement_gas=True,
-            amount=amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=amount,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -204,16 +231,17 @@ class DelegationTransactionsFactory:
             "changeServiceFee",
             self.serializer.serialize([BigUIntValue(service_fee)]),
         ]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -224,16 +252,17 @@ class DelegationTransactionsFactory:
             "modifyTotalDelegationCap",
             self.serializer.serialize([BigUIntValue(delegation_cap)]),
         ]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -244,16 +273,17 @@ class DelegationTransactionsFactory:
             "setAutomaticActivation",
             self.serializer.serialize([StringValue("true")]),
         ]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -264,16 +294,17 @@ class DelegationTransactionsFactory:
             "setAutomaticActivation",
             self.serializer.serialize([StringValue("false")]),
         ]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -284,16 +315,17 @@ class DelegationTransactionsFactory:
             "setCheckCapOnReDelegateRewards",
             self.serializer.serialize([StringValue("true")]),
         ]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -304,16 +336,17 @@ class DelegationTransactionsFactory:
             "setCheckCapOnReDelegateRewards",
             self.serializer.serialize([StringValue("false")]),
         ]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
@@ -332,77 +365,101 @@ class DelegationTransactionsFactory:
         )
 
         parts.extend([part.hex() for part in serialized_parts])
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=parts,
-            gas_limit=self.config.gas_limit_delegation_operations
-            + self.config.additional_gas_for_delegation_operations,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
 
     def create_transaction_for_delegating(
         self, sender: Address, delegation_contract: Address, amount: int
     ) -> Transaction:
-        return TransactionBuilder(
-            config=self.config,
+        parts = ["delegate"]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=["delegate"],
-            gas_limit=12000000,
-            add_data_movement_gas=False,
-            amount=amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=amount,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
+
+        return transaction
 
     def create_transaction_for_claiming_rewards(self, sender: Address, delegation_contract: Address) -> Transaction:
-        return TransactionBuilder(
-            config=self.config,
+        parts = ["claimRewards"]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=["claimRewards"],
-            gas_limit=6000000,
-            add_data_movement_gas=False,
-            amount=0,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
+
+        return transaction
 
     def create_transaction_for_redelegating_rewards(self, sender: Address, delegation_contract: Address) -> Transaction:
-        return TransactionBuilder(
-            config=self.config,
+        parts = ["reDelegateRewards"]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=["reDelegateRewards"],
-            gas_limit=12000000,
-            add_data_movement_gas=False,
-            amount=0,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
+
+        return transaction
 
     def create_transaction_for_undelegating(
         self, sender: Address, delegation_contract: Address, amount: int
     ) -> Transaction:
-        return TransactionBuilder(
-            config=self.config,
+        parts = ["unDelegate", self.serializer.serialize([BigUIntValue(amount)])]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=[
-                "unDelegate",
-                self.serializer.serialize([BigUIntValue(amount)]),
-            ],
-            gas_limit=12000000,
-            add_data_movement_gas=False,
-            amount=0,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
+
+        return transaction
 
     def create_transaction_for_withdrawing(self, sender: Address, delegation_contract: Address) -> Transaction:
-        return TransactionBuilder(
-            config=self.config,
+        parts = ["withdraw"]
+        gas_limit = self.config.gas_limit_delegation_operations + self.config.additional_gas_for_delegation_operations
+
+        transaction = Transaction(
             sender=sender,
             receiver=delegation_contract,
-            data_parts=["withdraw"],
-            gas_limit=12000000,
-            add_data_movement_gas=False,
-            amount=0,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
+
+        return transaction
