@@ -7,17 +7,23 @@ from multiversx_sdk.abi.bytes_value import BytesValue
 from multiversx_sdk.abi.interface import ISingleValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.small_int_values import U32Value
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.base_factory import BaseFactory
 from multiversx_sdk.core.constants import STAKING_SMART_CONTRACT_ADDRESS_HEX
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.validators.validators_signers import ValidatorsSigners
 from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
-class ValidatorsTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig) -> None:
+class ValidatorsTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        super().__init__(config, gas_limit_estimator)
         self.config = config
         self.serializer = Serializer()
 
@@ -37,15 +43,19 @@ class ValidatorsTransactionsFactory:
             rewards_address=rewards_address,
         )
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_staking * validators_file.get_num_of_nodes(),
-            add_data_movement_gas=True,
-            amount=amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=amount,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self.config.gas_limit_for_staking * validators_file.get_num_of_nodes(),
+        )
 
         return transaction
 
@@ -83,15 +93,16 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data = ["stake"]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data,
-            gas_limit=self.config.gas_limit_for_topping_up,
-            add_data_movement_gas=True,
-            amount=amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=amount,
+        )
+
+        self.set_payload(transaction, data)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_for_topping_up)
 
         return transaction
 
@@ -102,14 +113,18 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data_parts = ["unStake"] + [key.hex() for key in public_keys]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_unstaking * len(public_keys),
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self.config.gas_limit_for_unstaking * len(public_keys),
+        )
 
         return transaction
 
@@ -121,15 +136,19 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data_parts = ["unJail"] + [key.hex() for key in public_keys]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_unjailing * len(public_keys),
-            add_data_movement_gas=True,
-            amount=amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=amount,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self.config.gas_limit_for_unjailing * len(public_keys),
+        )
 
         return transaction
 
@@ -140,14 +159,18 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data_parts = ["unBond"] + [key.hex() for key in public_keys]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_unbonding * len(public_keys),
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self.config.gas_limit_for_unbonding * len(public_keys),
+        )
 
         return transaction
 
@@ -158,28 +181,30 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data_parts = ["changeRewardAddress", rewards_address.to_hex()]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_changing_rewards_address,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_for_changing_rewards_address)
 
         return transaction
 
     def create_transaction_for_claiming(self, sender: Address) -> Transaction:
         data_parts = ["claim"]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_claiming,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_for_claiming)
 
         return transaction
 
@@ -190,28 +215,33 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data_parts = ["unStakeNodes"] + [key.hex() for key in public_keys]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_unstaking_nodes * len(public_keys),
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self.config.gas_limit_for_unstaking_nodes * len(public_keys),
+        )
 
         return transaction
 
     def create_transaction_for_unstaking_tokens(self, sender: Address, amount: int) -> Transaction:
         data_parts = ["unStakeTokens", self.serializer.serialize([BigUIntValue(amount)])]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_unstaking_tokens,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_for_unstaking_tokens)
 
         return transaction
 
@@ -222,42 +252,48 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data_parts = ["unBondNodes"] + [key.hex() for key in public_keys]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_unbonding_nodes * len(public_keys),
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self.config.gas_limit_for_unbonding_nodes * len(public_keys),
+        )
 
         return transaction
 
     def create_transaction_for_unbonding_tokens(self, sender: Address, amount: int) -> Transaction:
         data_parts = ["unBondTokens", self.serializer.serialize([BigUIntValue(amount)])]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_unbonding_tokens,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_for_unbonding_tokens)
 
         return transaction
 
     def create_transaction_for_cleaning_registered_data(self, sender: Address) -> Transaction:
         data_parts = ["cleanRegisteredData"]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_cleaning_registered_data,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self.config.gas_limit_for_cleaning_registered_data)
 
         return transaction
 
@@ -268,13 +304,17 @@ class ValidatorsTransactionsFactory:
     ) -> Transaction:
         data_parts = ["reStakeUnStakedNodes"] + [key.hex() for key in public_keys]
 
-        transaction = TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(STAKING_SMART_CONTRACT_ADDRESS_HEX),
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_for_restaking_unstaked_tokens * len(public_keys),
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self.config.gas_limit_for_restaking_unstaked_tokens * len(public_keys),
+        )
 
         return transaction

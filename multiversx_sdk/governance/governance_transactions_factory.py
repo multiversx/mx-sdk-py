@@ -1,9 +1,12 @@
+from typing import Optional
+
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.serializer import Serializer
 from multiversx_sdk.abi.string_value import StringValue
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.base_factory import BaseFactory
 from multiversx_sdk.core.constants import GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.governance.resources import VoteType
@@ -12,8 +15,13 @@ from multiversx_sdk.governance.resources import VoteType
 EXTRA_GAS_LIMIT_FOR_VOTING_PROPOSAL = 100_000
 
 
-class GovernanceTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig) -> None:
+class GovernanceTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        super().__init__(config, gas_limit_estimator)
         self._config = config
         self._governance_contract = Address.new_from_hex(GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX)
         self._serializer = Serializer()
@@ -33,15 +41,18 @@ class GovernanceTransactionsFactory:
         serialized_args = [arg.hex() for arg in serialized_args]
         data_parts.extend(serialized_args)
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._governance_contract,
-            data_parts=data_parts,
-            gas_limit=self._config.gas_limit_for_proposal,
-            add_data_movement_gas=True,
-            amount=native_token_amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+            value=native_token_amount,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_for_proposal)
+
+        return transaction
 
     def create_transaction_for_voting(
         self,
@@ -52,25 +63,35 @@ class GovernanceTransactionsFactory:
         serialized_args = self._serializer.serialize_to_parts([BigUIntValue(proposal_nonce), StringValue(vote.value)])
         data_parts = ["vote"] + [arg.hex() for arg in serialized_args]
 
-        return TransactionBuilder(
-            config=self._config,
+        transaction = Transaction(
             sender=sender,
             receiver=self._governance_contract,
-            data_parts=data_parts,
-            gas_limit=self._config.gas_limit_for_vote + EXTRA_GAS_LIMIT_FOR_VOTING_PROPOSAL,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            config_gas_limit=self._config.gas_limit_for_vote + EXTRA_GAS_LIMIT_FOR_VOTING_PROPOSAL,
+        )
+
+        return transaction
 
     def create_transaction_for_closing_proposal(self, sender: Address, proposal_nonce: int) -> Transaction:
         data_parts = ["closeProposal", self._serializer.serialize([BigUIntValue(proposal_nonce)])]
-        return TransactionBuilder(
-            config=self._config,
+
+        transaction = Transaction(
             sender=sender,
             receiver=self._governance_contract,
-            data_parts=data_parts,
-            gas_limit=self._config.gas_limit_for_closing_proposal,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_for_closing_proposal)
+
+        return transaction
 
     def create_transaction_for_clearing_ended_proposals(
         self,
@@ -78,29 +99,39 @@ class GovernanceTransactionsFactory:
         proposers: list[Address],
     ) -> Transaction:
         data_parts = ["clearEndedProposals"] + [address.to_hex() for address in proposers]
-        return TransactionBuilder(
-            config=self._config,
+
+        transaction = Transaction(
             sender=sender,
             receiver=self._governance_contract,
-            data_parts=data_parts,
-            gas_limit=self._config.gas_limit_for_clear_proposals
-            + len(proposers) * self._config.gas_limit_for_clear_proposals,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        gas_limit = (
+            self._config.gas_limit_for_clear_proposals + len(proposers) * self._config.gas_limit_for_clear_proposals
+        )
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
+
+        return transaction
 
     def create_transaction_for_claiming_accumulated_fees(
         self,
         sender: Address,
     ) -> Transaction:
         data_parts = ["claimAccumulatedFees"]
-        return TransactionBuilder(
-            config=self._config,
+
+        transaction = Transaction(
             sender=sender,
             receiver=self._governance_contract,
-            data_parts=data_parts,
-            gas_limit=self._config.gas_limit_for_claim_accumulated_fees,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_for_claim_accumulated_fees)
+
+        return transaction
 
     def create_transaction_for_changing_config(
         self,
@@ -121,13 +152,16 @@ class GovernanceTransactionsFactory:
                 StringValue(str(min_pass_threshold)),
             ]
         )
-
         data_parts = data_parts + [arg.hex() for arg in args]
-        return TransactionBuilder(
-            config=self._config,
+
+        transaction = Transaction(
             sender=sender,
             receiver=self._governance_contract,
-            data_parts=data_parts,
-            gas_limit=self._config.gas_limit_for_change_config,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self._config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=self._config.gas_limit_for_change_config)
+
+        return transaction

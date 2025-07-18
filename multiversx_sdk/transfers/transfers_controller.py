@@ -2,7 +2,7 @@ from typing import Optional
 
 from multiversx_sdk.core import Address, TokenTransfer, Transaction
 from multiversx_sdk.core.base_controller import BaseController
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.transfers.transfer_transactions_factory import (
     TransferTransactionsFactory,
@@ -10,8 +10,12 @@ from multiversx_sdk.transfers.transfer_transactions_factory import (
 
 
 class TransfersController(BaseController):
-    def __init__(self, chain_id: str) -> None:
-        self.factory = TransferTransactionsFactory(TransactionsFactoryConfig(chain_id))
+    def __init__(
+        self,
+        chain_id: str,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        self.factory = TransferTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
 
     def create_transaction_for_native_token_transfer(
         self,

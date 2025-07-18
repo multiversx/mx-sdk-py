@@ -8,7 +8,7 @@ from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.constants import GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
@@ -50,8 +50,14 @@ class INetworkProvider(Protocol):
 
 
 class GovernanceController(BaseController):
-    def __init__(self, chain_id: str, network_provider: INetworkProvider, address_hrp: Optional[str] = None) -> None:
-        self._factory = GovernanceTransactionsFactory(TransactionsFactoryConfig(chain_id))
+    def __init__(
+        self,
+        chain_id: str,
+        network_provider: INetworkProvider,
+        address_hrp: Optional[str] = None,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        self._factory = GovernanceTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
         self._network_provider = network_provider
         self._governance_contract = Address.new_from_hex(GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX)
         self._sc_controller = SmartContractController(chain_id, network_provider)

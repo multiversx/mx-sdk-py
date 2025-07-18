@@ -7,7 +7,7 @@ from multiversx_sdk.core import (
     TransactionsFactoryConfig,
 )
 from multiversx_sdk.core.base_controller import BaseController
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.delegation.delegation_transactions_factory import (
     DelegationTransactionsFactory,
 )
@@ -33,9 +33,14 @@ class INetworkProvider(Protocol):
 
 
 class DelegationController(BaseController):
-    def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
+    def __init__(
+        self,
+        chain_id: str,
+        network_provider: INetworkProvider,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
         self.network_provider = network_provider
-        self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id))
+        self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
         self.parser = DelegationTransactionsOutcomeParser()
 
     def create_transaction_for_new_delegation_contract(
