@@ -1,5 +1,3 @@
-import pytest
-
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_status import TransactionStatus
@@ -49,7 +47,6 @@ class TestGasLimitEstimator:
         estimated_gas_limit = gas_estimator.estimate_gas_limit(transaction)
         assert estimated_gas_limit == 75000
 
-    @pytest.mark.only
     def test_ensure_integer_value_gas_limit_estimator_with_multiplier(self):
         provider = MockNetworkProvider()
         provider.mock_transaction_cost_response = TransactionCostResponse(
