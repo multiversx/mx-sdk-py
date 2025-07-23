@@ -41,7 +41,7 @@ class DelegationTransactionsFactory(BaseFactory):
             value=amount,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         gas_limit = (
             self.config.gas_limit_create_delegation_contract + self.config.additional_gas_for_delegation_operations
         )
@@ -74,7 +74,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -105,7 +105,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -134,7 +134,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -163,7 +163,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -192,7 +192,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -219,7 +219,7 @@ class DelegationTransactionsFactory(BaseFactory):
             value=amount,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -240,7 +240,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -261,7 +261,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -282,7 +282,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -303,7 +303,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -324,7 +324,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -345,7 +345,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -374,7 +374,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -393,7 +393,7 @@ class DelegationTransactionsFactory(BaseFactory):
             value=amount,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -409,7 +409,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -425,7 +425,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -443,7 +443,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
@@ -459,7 +459,7 @@ class DelegationTransactionsFactory(BaseFactory):
             chain_id=self.config.chain_id,
         )
 
-        self.set_payload(transaction, parts)
+        self.set_payload(transaction=transaction, data_parts=parts)
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction

@@ -42,4 +42,6 @@ class BaseFactory:
             data_movement_gas = self.config.min_gas_limit + self.config.gas_limit_per_byte * len(transaction.data)
             transaction.gas_limit = data_movement_gas + config_gas_limit
         else:
-            raise Exception("Gas limit must be provided or a gas limit estimator must be set.")
+            raise Exception(
+                "Either provide a `gas_limit` parameter or initialize the factory with a `gas_limit_estimator`."
+            )

@@ -1,6 +1,7 @@
 from typing import Optional, Protocol
 
 from multiversx_sdk.core.transaction import Transaction
+from multiversx_sdk.gas_estimator.errors import GasLimitEstimationError
 from multiversx_sdk.network_providers.resources import TransactionCostResponse
 
 
@@ -34,4 +35,4 @@ class GasLimitEstimator:
             cost_response = self.network_provider.estimate_transaction_cost(transaction)
             return int(cost_response.gas_limit * self.gas_multiplier)
         except Exception as e:
-            raise Exception(f"Failed to estimate gas limit: {e}") from e
+            raise GasLimitEstimationError(e)
