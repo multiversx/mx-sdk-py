@@ -5,7 +5,7 @@ from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.base_controller import BaseController
 from multiversx_sdk.core.config import LibraryConfig
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
@@ -63,9 +63,14 @@ class MultisigController(BaseController):
         network_provider: INetworkProvider,
         abi: Abi,
         address_hrp: Optional[str] = None,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
         self._network_provider = network_provider
-        self._factory = MultisigTransactionsFactory(TransactionsFactoryConfig(chain_id), abi=abi)
+        self._factory = MultisigTransactionsFactory(
+            config=TransactionsFactoryConfig(chain_id),
+            abi=abi,
+            gas_limit_estimator=gas_limit_estimator,
+        )
         self._parser = MultisigTransactionsOutcomeParser(abi=abi)
         self._smart_contract_controller = SmartContractController(
             chain_id=chain_id, network_provider=network_provider, abi=abi
