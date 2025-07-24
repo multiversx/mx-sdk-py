@@ -145,12 +145,20 @@ class TestGovernanceController:
             function="viewConfig",
             return_code="ok",
             return_message="",
-            return_data_parts=[b"1000000000000000000000", b"0.2000", b"0.5000", b"0.3300", b"1"],
+            return_data_parts=[
+                b"1000000000000000000000",
+                b"10000000000000000000",
+                b"0.2000",
+                b"0.3300",
+                b"0.5000",
+                b"1",
+            ],
         )
         network_provider.mock_query_contract_on_function("viewConfig", contract_query_response)
 
         config = controller.get_config()
         assert config.proposal_fee == 1000_000000000000000000
+        assert config.lost_proposal_fee == 10_000000000000000000
         assert config.min_quorum == 0.2
         assert config.min_pass_threshold == 0.5
         assert config.min_veto_threshold == 0.33
