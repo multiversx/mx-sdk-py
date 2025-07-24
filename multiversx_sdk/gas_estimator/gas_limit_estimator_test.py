@@ -65,5 +65,4 @@ class TestGasLimitEstimator:
         )
 
         estimated_gas_limit = gas_estimator.estimate_gas_limit(transaction)
-        print(f"Estimated gas limit: {estimated_gas_limit}")
         assert estimated_gas_limit == 99382

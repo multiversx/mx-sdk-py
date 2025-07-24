@@ -26,6 +26,7 @@ from multiversx_sdk.entrypoints.config import (
     TestnetEntrypointConfig,
 )
 from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
+from multiversx_sdk.gas_estimator.gas_limit_estimator import GasLimitEstimator
 from multiversx_sdk.governance.governance_controller import GovernanceController
 from multiversx_sdk.governance.governance_transactions_factory import (
     GovernanceTransactionsFactory,
@@ -67,8 +68,12 @@ class NetworkEntrypoint:
         network_provider_kind: Optional[str] = None,
         chain_id: Optional[str] = None,
         network_provider: Optional[INetworkProvider] = None,
+        with_gas_limit_estimator: Optional[bool] = None,
+        gas_limit_multiplier: Optional[float] = None,
     ) -> None:
         self.chain_id = chain_id
+        self.with_gas_limit_estimator = with_gas_limit_estimator
+        self.gas_limit_multiplier = gas_limit_multiplier
 
         if network_provider:
             self.network_provider = network_provider
@@ -149,17 +154,33 @@ class NetworkEntrypoint:
     ) -> INetworkProvider:
         return self.network_provider
 
+    def create_gas_limit_estimator(self) -> GasLimitEstimator:
+        return GasLimitEstimator(network_provider=self.network_provider, gas_multiplier=self.gas_limit_multiplier)
+
     def create_delegation_controller(self) -> DelegationController:
-        return DelegationController(self._get_chain_id(), self.network_provider)
+        return DelegationController(
+            self._get_chain_id(),
+            self.network_provider,
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_delegation_transactions_factory(self) -> DelegationTransactionsFactory:
-        return DelegationTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
+        return DelegationTransactionsFactory(
+            TransactionsFactoryConfig(self._get_chain_id()),
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_account_controller(self) -> AccountController:
-        return AccountController(self._get_chain_id())
+        return AccountController(
+            self._get_chain_id(),
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_account_transactions_factory(self) -> AccountTransactionsFactory:
-        return AccountTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
+        return AccountTransactionsFactory(
+            TransactionsFactoryConfig(self._get_chain_id()),
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_relayed_controller(self) -> RelayedController:
         return RelayedController(self._get_chain_id())
@@ -168,36 +189,76 @@ class NetworkEntrypoint:
         return RelayedTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
     def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
-        return SmartContractController(self._get_chain_id(), self.network_provider, abi)
+        return SmartContractController(
+            self._get_chain_id(),
+            self.network_provider,
+            abi,
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_smart_contract_transactions_factory(self, abi: Optional[Abi] = None) -> SmartContractTransactionsFactory:
-        return SmartContractTransactionsFactory(config=TransactionsFactoryConfig(self._get_chain_id()), abi=abi)
+        return SmartContractTransactionsFactory(
+            config=TransactionsFactoryConfig(self._get_chain_id()),
+            abi=abi,
+            gas_limit_estimator=self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_token_management_controller(self) -> TokenManagementController:
-        return TokenManagementController(self._get_chain_id(), self.network_provider)
+        return TokenManagementController(
+            self._get_chain_id(),
+            self.network_provider,
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_token_management_transactions_factory(
         self,
     ) -> TokenManagementTransactionsFactory:
-        return TokenManagementTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
+        return TokenManagementTransactionsFactory(
+            TransactionsFactoryConfig(self._get_chain_id()),
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_transfers_controller(self) -> TransfersController:
-        return TransfersController(self._get_chain_id())
+        return TransfersController(
+            self._get_chain_id(),
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_transfers_transactions_factory(self) -> TransferTransactionsFactory:
-        return TransferTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
+        return TransferTransactionsFactory(
+            TransactionsFactoryConfig(self._get_chain_id()),
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_multisig_controller(self, abi: Abi, address_hrp: Optional[str] = None) -> MultisigController:
-        return MultisigController(self._get_chain_id(), self.network_provider, abi, address_hrp)
+        return MultisigController(
+            self._get_chain_id(),
+            self.network_provider,
+            abi,
+            address_hrp,
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_multisig_transactions_factory(self, abi: Abi) -> MultisigTransactionsFactory:
-        return MultisigTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()), abi)
+        return MultisigTransactionsFactory(
+            TransactionsFactoryConfig(self._get_chain_id()),
+            abi,
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_governance_controller(self, address_hrp: Optional[str] = None) -> GovernanceController:
-        return GovernanceController(self._get_chain_id(), self.network_provider, address_hrp)
+        return GovernanceController(
+            self._get_chain_id(),
+            self.network_provider,
+            address_hrp,
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def create_governance_transactions_factory(self) -> GovernanceTransactionsFactory:
-        return GovernanceTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
+        return GovernanceTransactionsFactory(
+            TransactionsFactoryConfig(self._get_chain_id()),
+            self.create_gas_limit_estimator() if self.with_gas_limit_estimator else None,
+        )
 
     def _get_chain_id(self) -> str:
         if self.chain_id:
@@ -208,36 +269,84 @@ class NetworkEntrypoint:
 
 
 class TestnetEntrypoint(NetworkEntrypoint):
-    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        url: Optional[str] = None,
+        kind: Optional[str] = None,
+        with_gas_limit_estimator: Optional[bool] = None,
+        gas_limit_multiplier: Optional[float] = None,
+    ) -> None:
         url = url or TestnetEntrypointConfig.network_provider_url
 
         kind = kind or TestnetEntrypointConfig.network_provider_kind
 
-        super().__init__(url, kind, TestnetEntrypointConfig.chain_id)
+        super().__init__(
+            network_provider_url=url,
+            network_provider_kind=kind,
+            chain_id=TestnetEntrypointConfig.chain_id,
+            with_gas_limit_estimator=with_gas_limit_estimator,
+            gas_limit_multiplier=gas_limit_multiplier,
+        )
 
 
 class DevnetEntrypoint(NetworkEntrypoint):
-    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        url: Optional[str] = None,
+        kind: Optional[str] = None,
+        with_gas_limit_estimator: Optional[bool] = None,
+        gas_limit_multiplier: Optional[float] = None,
+    ) -> None:
         url = url or DevnetEntrypointConfig.network_provider_url
 
         kind = kind or DevnetEntrypointConfig.network_provider_kind
 
-        super().__init__(url, kind, DevnetEntrypointConfig.chain_id)
+        super().__init__(
+            network_provider_url=url,
+            network_provider_kind=kind,
+            chain_id=DevnetEntrypointConfig.chain_id,
+            with_gas_limit_estimator=with_gas_limit_estimator,
+            gas_limit_multiplier=gas_limit_multiplier,
+        )
 
 
 class MainnetEntrypoint(NetworkEntrypoint):
-    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        url: Optional[str] = None,
+        kind: Optional[str] = None,
+        with_gas_limit_estimator: Optional[bool] = None,
+        gas_limit_multiplier: Optional[float] = None,
+    ) -> None:
         url = url or MainnetEntrypointConfig.network_provider_url
 
         kind = kind or MainnetEntrypointConfig.network_provider_kind
 
-        super().__init__(url, kind, MainnetEntrypointConfig.chain_id)
+        super().__init__(
+            network_provider_url=url,
+            network_provider_kind=kind,
+            chain_id=MainnetEntrypointConfig.chain_id,
+            with_gas_limit_estimator=with_gas_limit_estimator,
+            gas_limit_multiplier=gas_limit_multiplier,
+        )
 
 
 class LocalnetEntrypoint(NetworkEntrypoint):
-    def __init__(self, url: Optional[str] = None, kind: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        url: Optional[str] = None,
+        kind: Optional[str] = None,
+        with_gas_limit_estimator: Optional[bool] = None,
+        gas_limit_multiplier: Optional[float] = None,
+    ) -> None:
         url = url or LocalnetEntrypointConfig.network_provider_url
 
         kind = kind or LocalnetEntrypointConfig.network_provider_kind
 
-        super().__init__(url, kind, LocalnetEntrypointConfig.chain_id)
+        super().__init__(
+            network_provider_url=url,
+            network_provider_kind=kind,
+            chain_id=LocalnetEntrypointConfig.chain_id,
+            with_gas_limit_estimator=with_gas_limit_estimator,
+            gas_limit_multiplier=gas_limit_multiplier,
+        )
