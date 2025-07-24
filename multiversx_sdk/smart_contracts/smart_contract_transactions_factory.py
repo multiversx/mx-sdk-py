@@ -153,7 +153,7 @@ class SmartContractTransactionsFactory(BaseFactory):
         sender: Address,
         contract: Address,
         bytecode: Union[Path, bytes],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         arguments: Sequence[Any] = [],
         native_transfer_amount: int = 0,
         is_upgradeable: bool = True,
