@@ -36,10 +36,6 @@ from multiversx_sdk.multisig.multisig_transactions_factory import (
 )
 from multiversx_sdk.network_providers import ApiNetworkProvider, ProxyNetworkProvider
 from multiversx_sdk.network_providers.interface import INetworkProvider
-from multiversx_sdk.relayed.relayed_controller import RelayedController
-from multiversx_sdk.relayed.relayed_transactions_factory import (
-    RelayedTransactionsFactory,
-)
 from multiversx_sdk.smart_contracts.smart_contract_controller import (
     SmartContractController,
 )
@@ -160,12 +156,6 @@ class NetworkEntrypoint:
 
     def create_account_transactions_factory(self) -> AccountTransactionsFactory:
         return AccountTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
-
-    def create_relayed_controller(self) -> RelayedController:
-        return RelayedController(self._get_chain_id())
-
-    def create_relayed_transactions_factory(self) -> RelayedTransactionsFactory:
-        return RelayedTransactionsFactory(TransactionsFactoryConfig(self._get_chain_id()))
 
     def create_smart_contract_controller(self, abi: Optional[Abi] = None) -> SmartContractController:
         return SmartContractController(self._get_chain_id(), self.network_provider, abi)

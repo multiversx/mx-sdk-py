@@ -104,7 +104,6 @@ from multiversx_sdk.network_providers import (
     TransactionDecoder,
     TransactionMetadata,
 )
-from multiversx_sdk.relayed import RelayedController, RelayedTransactionsFactory
 from multiversx_sdk.smart_contracts import (
     DeployedSmartContract,
     ParsedSmartContractCallOutcome,
@@ -191,7 +190,6 @@ __all__ = [
     "TokenType",
     "SmartContractTransactionsFactory",
     "TransferTransactionsFactory",
-    "RelayedTransactionsFactory",
     "AccountTransactionsFactory",
     "NetworkProviderError",
     "GenericResponse",
@@ -226,7 +224,6 @@ __all__ = [
     "TestnetEntrypoint",
     "AccountController",
     "DelegationController",
-    "RelayedController",
     "SmartContractController",
     "TokenManagementController",
     "TransfersController",

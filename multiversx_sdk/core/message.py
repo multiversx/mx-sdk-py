@@ -64,7 +64,7 @@ class MessageComputer:
         signature = self._trim_hex_prefix(signature)
 
         address = packed_message.get("address", "")
-        address = Address.from_bech32(address) if address else None
+        address = Address.new_from_bech32(address) if address else None
 
         version = packed_message.get("version", DEFAULT_MESSAGE_VERSION)
         signer = packed_message.get("signer", UNKNOWN_SIGNER)
