@@ -16,10 +16,10 @@ class GasLimitEstimator:
 
         Args:
             network_provider: The network provider for making API calls.
-            gas_multiplier: Optional multiplier to adjust the estimated gas limit (default: 1.0).
+            gas_multiplier: Optional multiplier to adjust the estimated gas limit (default: 1.2).
         """
         self.network_provider = network_provider
-        self.gas_multiplier = gas_multiplier if gas_multiplier is not None else 1.0
+        self.gas_multiplier = gas_multiplier if gas_multiplier is not None else 1.2
 
     def estimate_gas_limit(self, transaction: Transaction) -> int:
         """
