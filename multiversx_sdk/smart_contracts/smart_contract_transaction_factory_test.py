@@ -432,7 +432,7 @@ class TestSmartContractTransactionsFactory:
     def test_create_transaction_for_changing_owner_address(self):
         sender = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
         contract_address = Address.new_from_bech32("erd1qqqqqqqqqqqqqpgqhy6nl6zq07rnzry8uyh6rtyq0uzgtk3e69fqgtz9l4")
-        new_owner = Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
+        new_owner = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         transaction = self.factory.create_transaction_for_changing_owner_address(
             sender=sender, contract=contract_address, new_owner=new_owner
