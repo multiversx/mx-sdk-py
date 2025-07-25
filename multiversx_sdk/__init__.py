@@ -40,6 +40,7 @@ from multiversx_sdk.entrypoints import (
     NetworkEntrypoint,
     TestnetEntrypoint,
 )
+from multiversx_sdk.gas_estimator import GasLimitEstimator
 from multiversx_sdk.governance import (
     CloseProposalOutcome,
     DelegatedVoteInfo,
@@ -312,4 +313,5 @@ __all__ = [
     "DelegateVoteOutcome",
     "CloseProposalOutcome",
     "GovernanceTransactionsOutcomeParser",
+    "GasLimitEstimator",
 ]

@@ -5,13 +5,16 @@ from multiversx_sdk.account_management.account_transactions_factory import (
 )
 from multiversx_sdk.core import Address, Transaction
 from multiversx_sdk.core.base_controller import BaseController
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 
 
 class AccountController(BaseController):
-    def __init__(self, chain_id: str) -> None:
-        self.factory = AccountTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
+    def __init__(self, chain_id: str, gasLimitEstimator: Optional[IGasLimitEstimator] = None) -> None:
+        self.factory = AccountTransactionsFactory(
+            config=TransactionsFactoryConfig(chain_id),
+            gas_limit_estimator=gasLimitEstimator,
+        )
 
     def create_transaction_for_saving_key_value(
         self,

@@ -147,7 +147,6 @@ class TestEntrypoint:
         controller = self.entrypoint.create_account_controller()
 
         account = LedgerAccount()
-        print(account.address.to_bech32())
         account.nonce = self.entrypoint.recall_account_nonce(account.address)
 
         transaction = controller.create_transaction_for_saving_key_value(
@@ -232,3 +231,18 @@ class TestEntrypoint:
 
         _ = entrypoint.create_delegation_controller()
         assert entrypoint.chain_id == "D"
+
+    def test_should_estimate_gas_limit(self):
+        entrypoint = DevnetEntrypoint(with_gas_limit_estimator=True, gas_limit_multiplier=1.5)
+        controller = entrypoint.create_transfers_controller()
+        alice = Account.new_from_pem(self.alice_pem)
+        alice.nonce = entrypoint.recall_account_nonce(alice.address)
+
+        transaction = controller.create_transaction_for_transfer(
+            sender=alice,
+            nonce=alice.get_nonce_then_increment(),
+            receiver=alice.address,
+            native_transfer_amount=1_000_000_000,
+        )
+
+        assert transaction.gas_limit == 75000

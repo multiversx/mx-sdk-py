@@ -14,8 +14,10 @@ from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.typesystem import is_list_of_typed_values
 from multiversx_sdk.abi.variadic_values import VariadicValues
 from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.base_factory import BaseFactory
 from multiversx_sdk.core.code_metadata import CodeMetadata
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.tokens import TokenTransfer
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
@@ -34,9 +36,14 @@ from multiversx_sdk.transfers.transfer_transactions_factory import (
 )
 
 
-class MultisigTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig, abi: Abi) -> None:
-        self._sc_factory = SmartContractTransactionsFactory(config, abi)
+class MultisigTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        abi: Abi,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        self._sc_factory = SmartContractTransactionsFactory(config, abi, gas_limit_estimator)
         self._serializer = Serializer()
 
     def create_transaction_for_deploy(
@@ -45,7 +52,7 @@ class MultisigTransactionsFactory:
         bytecode: Union[Path, bytes],
         quorum: int,
         board: list[Address],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         is_upgradeable: bool = True,
         is_readable: bool = True,
         is_payable: bool = False,
@@ -69,7 +76,7 @@ class MultisigTransactionsFactory:
         self,
         sender: Address,
         contract: Address,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         native_token_amount: Optional[int] = None,
         token_transfers: Optional[list[TokenTransfer]] = None,
     ) -> Transaction:
@@ -91,7 +98,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         action_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -106,7 +113,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         action_ids: list[int],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -121,7 +128,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         board_member: Address,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -136,7 +143,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         proposer: Address,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -151,7 +158,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         user: Address,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -166,7 +173,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         quorum: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -182,7 +189,7 @@ class MultisigTransactionsFactory:
         contract: Address,
         receiver: Address,
         native_token_amount: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         opt_gas_limit: Optional[int] = None,
         abi: Optional[Abi] = None,
         function: Optional[str] = None,
@@ -228,7 +235,7 @@ class MultisigTransactionsFactory:
         contract: Address,
         receiver: Address,
         token_transfers: list[TokenTransfer],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         opt_gas_limit: Optional[int] = None,
         abi: Optional[Abi] = None,
         function: Optional[str] = None,
@@ -299,7 +306,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         receiver: Address,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         native_token_amount: int = 0,
         token_transfers: Optional[list[TokenTransfer]] = None,
         opt_gas_limit: Optional[int] = None,
@@ -392,8 +399,8 @@ class MultisigTransactionsFactory:
         self,
         sender: Address,
         contract: Address,
-        gas_limit: int,
         contract_to_copy: Address,
+        gas_limit: Optional[int] = None,
         native_token_amount: int = 0,
         arguments: Optional[list[Any]] = None,
         is_upgradeable: bool = True,
@@ -433,7 +440,7 @@ class MultisigTransactionsFactory:
         contract: Address,
         contract_to_upgrade: Address,
         contract_to_copy: Address,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         arguments: Optional[list[Any]] = None,
         native_token_amount: int = 0,
         is_upgradeable: bool = True,
@@ -473,7 +480,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         actions: list[Action],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         raise NotImplementedError("proposeBatch was not implemented")
 
@@ -482,7 +489,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         action_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -497,7 +504,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         batch_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -512,7 +519,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         action_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -527,7 +534,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         batch_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -542,7 +549,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         action_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -557,7 +564,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         batch_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -573,7 +580,7 @@ class MultisigTransactionsFactory:
         contract: Address,
         action_id: int,
         outdated_board_members: list[int],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -591,7 +598,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         action_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -606,7 +613,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         batch_id: int,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         return self._sc_factory.create_transaction_for_execute(
             sender=sender,
@@ -621,7 +628,7 @@ class MultisigTransactionsFactory:
         sender: Address,
         contract: Address,
         function: str,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         arguments: list[Any] = [],
         native_transfer_amount: int = 0,
         token_transfers: list[TokenTransfer] = [],
