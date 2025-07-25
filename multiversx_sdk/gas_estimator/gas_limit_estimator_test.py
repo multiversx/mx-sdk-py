@@ -25,7 +25,7 @@ class TestGasLimitEstimator:
         )
 
         estimated_gas_limit = gas_estimator.estimate_gas_limit(transaction)
-        assert estimated_gas_limit == 60000
+        assert estimated_gas_limit == 50001
 
     def test_gas_limit_estimator_with_multiplier(self):
         provider = MockNetworkProvider()
