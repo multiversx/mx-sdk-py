@@ -19,7 +19,7 @@ class GasLimitEstimator:
             gas_multiplier: Optional multiplier to adjust the estimated gas limit (default: None).
         """
         self.network_provider = network_provider
-        self.gas_multiplier = gas_multiplier
+        self.gas_multiplier = gas_multiplier or 1.0
 
     def estimate_gas_limit(self, transaction: Transaction) -> int:
         """
@@ -33,9 +33,6 @@ class GasLimitEstimator:
         """
         try:
             cost_response = self.network_provider.estimate_transaction_cost(transaction)
-            if self.gas_multiplier:
-                return int(cost_response.gas_limit * self.gas_multiplier)
-            # if no `gas_multiplier` is provided, we add 1 to the estimated value because the protocol wants a slightly larger than estimated value
-            return cost_response.gas_limit + 1
+            return int(cost_response.gas_limit * self.gas_multiplier)
         except Exception as e:
             raise GasLimitEstimationError(e)
