@@ -9,29 +9,29 @@ multiversx\_sdk.entrypoints.config module
 
 .. automodule:: multiversx_sdk.entrypoints.config
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 multiversx\_sdk.entrypoints.entrypoints module
 ----------------------------------------------
 
 .. automodule:: multiversx_sdk.entrypoints.entrypoints
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 multiversx\_sdk.entrypoints.errors module
 -----------------------------------------
 
 .. automodule:: multiversx_sdk.entrypoints.errors
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: multiversx_sdk.entrypoints
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

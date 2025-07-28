@@ -9,21 +9,21 @@ multiversx\_sdk.core.proto.transaction\_pb2 module
 
 .. automodule:: multiversx_sdk.core.proto.transaction_pb2
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 multiversx\_sdk.core.proto.transaction\_serializer module
 ---------------------------------------------------------
 
 .. automodule:: multiversx_sdk.core.proto.transaction_serializer
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: multiversx_sdk.core.proto
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
