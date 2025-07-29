@@ -200,7 +200,7 @@ class ProxyNetworkProvider(INetworkProvider):
         if tx_copy.guardian and not tx_copy.guardian_signature:
             tx_copy.guardian_signature = bytes([0]) * 64
 
-        if tx_copy.relayer_signature and not tx_copy.relayer_signature:
+        if tx_copy.relayer and not tx_copy.relayer_signature:
             tx_copy.relayer_signature = bytes([0]) * 64
 
         response = self.do_post_generic("transaction/cost", tx_copy.to_dictionary())
