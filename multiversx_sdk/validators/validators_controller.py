@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.base_controller import BaseController
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.validators.validators_signers import ValidatorsSigners
@@ -14,8 +14,8 @@ from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 
 class ValidatorsController(BaseController):
-    def __init__(self, chain_id: str) -> None:
-        self.factory = ValidatorsTransactionsFactory(TransactionsFactoryConfig(chain_id))
+    def __init__(self, chain_id: str, gas_limit_estimator: Optional[IGasLimitEstimator] = None) -> None:
+        self.factory = ValidatorsTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
 
     def create_transaction_for_staking(
         self,

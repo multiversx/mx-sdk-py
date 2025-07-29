@@ -158,7 +158,7 @@ def test_decode_endpoint_output_parameters_artificial_contract():
 def test_encode_endpoint_input_parameters_multisig_propose_batch():
     abi = Abi.load(testdata / "multisig-full.abi.json")
 
-    alice = Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+    alice = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
     expected_encoded_values = [
         bytes.fromhex(
             "05|0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1|000000080de0b6b3a7640000|010000000000e4e1c0|000000076578616d706c65|00000002000000020342000000020743".replace(
@@ -333,7 +333,7 @@ def test_decode_endpoint_output_parameters_multisig_get_pending_action_full_info
     action_data_0 = getattr(action_full_info.action_data, "0")
     assert (
         action_data_0.to
-        == Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key()
+        == Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key()
     )
     assert action_data_0.egld_amount == 1000000000000000000
     assert action_data_0.opt_gas_limit == 15000000
@@ -341,8 +341,8 @@ def test_decode_endpoint_output_parameters_multisig_get_pending_action_full_info
     assert action_data_0.arguments == [bytes([0x03, 0x42]), bytes([0x07, 0x43])]
 
     assert action_full_info.signers == [
-        Address.from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
-        Address.from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx").get_public_key(),
+        Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th").get_public_key(),
+        Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx").get_public_key(),
     ]
 
 

@@ -2,7 +2,7 @@ from typing import Optional, Protocol, Union
 
 from multiversx_sdk.core import Address, Transaction, TransactionOnNetwork
 from multiversx_sdk.core.base_controller import BaseController
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.network_providers.resources import AwaitingOptions
 from multiversx_sdk.token_management.token_management_transactions_factory import (
@@ -48,8 +48,13 @@ class INetworkProvider(Protocol):
 
 
 class TokenManagementController(BaseController):
-    def __init__(self, chain_id: str, network_provider: INetworkProvider) -> None:
-        self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id))
+    def __init__(
+        self,
+        chain_id: str,
+        network_provider: INetworkProvider,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
         self.network_provider = network_provider
         self.parser = TokenManagementTransactionsOutcomeParser()
 

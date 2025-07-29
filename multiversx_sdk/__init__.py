@@ -40,6 +40,7 @@ from multiversx_sdk.entrypoints import (
     NetworkEntrypoint,
     TestnetEntrypoint,
 )
+from multiversx_sdk.gas_estimator import GasLimitEstimator
 from multiversx_sdk.governance import (
     CloseProposalOutcome,
     DelegatedVoteInfo,
@@ -104,7 +105,6 @@ from multiversx_sdk.network_providers import (
     TransactionDecoder,
     TransactionMetadata,
 )
-from multiversx_sdk.relayed import RelayedController, RelayedTransactionsFactory
 from multiversx_sdk.smart_contracts import (
     DeployedSmartContract,
     ParsedSmartContractCallOutcome,
@@ -191,7 +191,6 @@ __all__ = [
     "TokenType",
     "SmartContractTransactionsFactory",
     "TransferTransactionsFactory",
-    "RelayedTransactionsFactory",
     "AccountTransactionsFactory",
     "NetworkProviderError",
     "GenericResponse",
@@ -226,7 +225,6 @@ __all__ = [
     "TestnetEntrypoint",
     "AccountController",
     "DelegationController",
-    "RelayedController",
     "SmartContractController",
     "TokenManagementController",
     "TransfersController",
@@ -315,4 +313,5 @@ __all__ = [
     "DelegateVoteOutcome",
     "CloseProposalOutcome",
     "GovernanceTransactionsOutcomeParser",
+    "GasLimitEstimator",
 ]

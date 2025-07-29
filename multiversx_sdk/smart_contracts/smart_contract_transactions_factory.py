@@ -10,7 +10,6 @@ from multiversx_sdk.abi.typesystem import is_list_of_bytes, is_list_of_typed_val
 from multiversx_sdk.builders.token_transfers_data_builder import (
     TokenTransfersDataBuilder,
 )
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import (
     Address,
     CodeMetadata,
@@ -18,17 +17,25 @@ from multiversx_sdk.core import (
     TokenTransfer,
     Transaction,
 )
+from multiversx_sdk.core.base_factory import BaseFactory
 from multiversx_sdk.core.constants import (
     CONTRACT_DEPLOY_ADDRESS_HEX,
     EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER,
     VM_TYPE_WASM_VM,
 )
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.smart_contracts.errors import ArgumentSerializationError
 
 
-class SmartContractTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig, abi: Optional[Abi] = None) -> None:
+class SmartContractTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        abi: Optional[Abi] = None,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        super().__init__(config, gas_limit_estimator)
         self.config = config
         self.abi = abi
         self.serializer = Serializer()
@@ -39,7 +46,7 @@ class SmartContractTransactionsFactory:
         self,
         sender: Address,
         bytecode: Union[Path, bytes],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         arguments: Sequence[Any] = [],
         native_transfer_amount: int = 0,
         is_upgradeable: bool = True,
@@ -63,22 +70,25 @@ class SmartContractTransactionsFactory:
         prepared_arg = self._encode_deploy_arguments(list(arguments))
         parts = [arg.hex() for arg in serialized_parts + prepared_arg]
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=Address.new_from_hex(CONTRACT_DEPLOY_ADDRESS_HEX),
-            data_parts=parts,
-            gas_limit=gas_limit,
-            add_data_movement_gas=False,
-            amount=native_transfer_amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=native_transfer_amount,
+        )
+
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, gas_limit=gas_limit)
+
+        return transaction
 
     def create_transaction_for_execute(
         self,
         sender: Address,
         contract: Address,
         function: str,
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         arguments: Sequence[Any] = [],
         native_transfer_amount: int = 0,
         token_transfers: list[TokenTransfer] = [],
@@ -125,22 +135,25 @@ class SmartContractTransactionsFactory:
         )
         data_parts += [arg.hex() for arg in prepared_arguments]
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=receiver,
-            data_parts=data_parts,
-            gas_limit=gas_limit,
-            add_data_movement_gas=False,
-            amount=native_transfer_amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=native_transfer_amount,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, gas_limit=gas_limit)
+
+        return transaction
 
     def create_transaction_for_upgrade(
         self,
         sender: Address,
         contract: Address,
         bytecode: Union[Path, bytes],
-        gas_limit: int,
+        gas_limit: Optional[int] = None,
         arguments: Sequence[Any] = [],
         native_transfer_amount: int = 0,
         is_upgradeable: bool = True,
@@ -161,41 +174,67 @@ class SmartContractTransactionsFactory:
         prepared_arguments = self._encode_upgrade_arguments(list(arguments))
         parts += [arg.hex() for arg in serialized_parts + prepared_arguments]
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=contract,
-            data_parts=parts,
-            gas_limit=gas_limit,
-            add_data_movement_gas=False,
-            amount=native_transfer_amount,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+            value=native_transfer_amount,
+        )
 
-    def create_transaction_for_claiming_developer_rewards(self, sender: Address, contract: Address) -> Transaction:
+        self.set_payload(transaction, parts)
+        self.set_gas_limit(transaction=transaction, gas_limit=gas_limit)
+
+        return transaction
+
+    def create_transaction_for_claiming_developer_rewards(
+        self,
+        sender: Address,
+        contract: Address,
+        gas_limit: Optional[int] = None,
+    ) -> Transaction:
         data_parts = ["ClaimDeveloperRewards"]
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=contract,
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_claim_developer_rewards,
-            add_data_movement_gas=False,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            gas_limit=gas_limit,
+            config_gas_limit=self.config.gas_limit_claim_developer_rewards,
+        )
+
+        return transaction
 
     def create_transaction_for_changing_owner_address(
-        self, sender: Address, contract: Address, new_owner: Address
+        self,
+        sender: Address,
+        contract: Address,
+        new_owner: Address,
+        gas_limit: Optional[int] = None,
     ) -> Transaction:
         data_parts = ["ChangeOwnerAddress", new_owner.to_hex()]
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=contract,
-            data_parts=data_parts,
-            gas_limit=self.config.gas_limit_change_owner_address,
-            add_data_movement_gas=False,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(
+            transaction=transaction,
+            gas_limit=gas_limit,
+            config_gas_limit=self.config.gas_limit_change_owner_address,
+        )
+
+        return transaction
 
     def _encode_deploy_arguments(self, args: list[Any]) -> list[bytes]:
         if self.abi:

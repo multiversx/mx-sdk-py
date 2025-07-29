@@ -3,18 +3,24 @@ from typing import Optional
 from multiversx_sdk.builders.token_transfers_data_builder import (
     TokenTransfersDataBuilder,
 )
-from multiversx_sdk.builders.transaction_builder import TransactionBuilder
 from multiversx_sdk.core import Address, TokenComputer, TokenTransfer, Transaction
+from multiversx_sdk.core.base_factory import BaseFactory
 from multiversx_sdk.core.constants import EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER
 from multiversx_sdk.core.errors import BadUsageError
+from multiversx_sdk.core.interfaces import IGasLimitEstimator
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 
 ADDITIONAL_GAS_FOR_ESDT_TRANSFER = 100000
 ADDITIONAL_GAS_FOR_ESDT_NFT_TRANSFER = 800000
 
 
-class TransferTransactionsFactory:
-    def __init__(self, config: TransactionsFactoryConfig) -> None:
+class TransferTransactionsFactory(BaseFactory):
+    def __init__(
+        self,
+        config: TransactionsFactoryConfig,
+        gas_limit_estimator: Optional[IGasLimitEstimator] = None,
+    ) -> None:
+        super().__init__(config, gas_limit_estimator)
         self.config = config
         self.token_computer = TokenComputer()
         self._data_args_builder = TokenTransfersDataBuilder(self.token_computer)
@@ -27,15 +33,19 @@ class TransferTransactionsFactory:
         data: Optional[str] = None,
     ) -> Transaction:
         transaction_data = data if data else ""
-        return TransactionBuilder(
-            config=self.config,
+
+        transaction = Transaction(
             sender=sender,
             receiver=receiver,
-            data_parts=[transaction_data],
             gas_limit=0,
-            add_data_movement_gas=True,
-            amount=native_amount,
-        ).build()
+            chain_id=self.config.chain_id,
+            value=native_amount,
+        )
+
+        self.set_payload(transaction, [transaction_data])
+        self.set_gas_limit(transaction=transaction, config_gas_limit=0)
+
+        return transaction
 
     def create_transaction_for_esdt_token_transfer(
         self, sender: Address, receiver: Address, token_transfers: list[TokenTransfer]
@@ -48,14 +58,17 @@ class TransferTransactionsFactory:
         else:
             data_parts, extra_gas_for_transfer, receiver = self._multi_transfer(sender, receiver, token_transfers)
 
-        return TransactionBuilder(
-            config=self.config,
+        transaction = Transaction(
             sender=sender,
             receiver=receiver,
-            data_parts=data_parts,
-            gas_limit=extra_gas_for_transfer,
-            add_data_movement_gas=True,
-        ).build()
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction, data_parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=extra_gas_for_transfer)
+
+        return transaction
 
     def _single_transfer(
         self, sender: Address, receiver: Address, transfer: TokenTransfer

@@ -11,7 +11,11 @@ from multiversx_sdk.core.transaction_on_network import (
     TransactionOnNetwork,
 )
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.resources import AccountOnNetwork, AwaitingOptions
+from multiversx_sdk.network_providers.resources import (
+    AccountOnNetwork,
+    AwaitingOptions,
+    TransactionCostResponse,
+)
 from multiversx_sdk.smart_contracts.smart_contract_query import (
     SmartContractQuery,
     SmartContractQueryResponse,
@@ -61,6 +65,9 @@ class MockNetworkProvider:
         }
         self.query_contract_responders: list[QueryContractResponder] = []
         self.get_transaction_responders: list[GetTransactionResponder] = []
+        self.mock_transaction_cost_response = TransactionCostResponse(
+            raw={}, gas_limit=0, status=TransactionStatus("success")
+        )
 
     def mock_update_account(self, address: Address, mutate: Callable[[AccountOnNetwork], None]) -> None:
         account = self.accounts.get(address.to_bech32(), None)
@@ -178,6 +185,9 @@ class MockNetworkProvider:
                 return responder.response
 
         raise Exception("No query response to return")
+
+    def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
+        return self.mock_transaction_cost_response
 
     def await_transaction_completed(
         self,
