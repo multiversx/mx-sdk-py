@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.relayed.errors &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk.gas_estimator.errors &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e15882dc"></script>
+      <script src="../../../_static/documentation_options.js?v=51b770b3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -59,7 +59,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">multiversx_sdk.relayed.errors</li>
+      <li class="breadcrumb-item active">multiversx_sdk.gas_estimator.errors</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,12 +68,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for multiversx_sdk.relayed.errors</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="InvalidInnerTransactionError">
-<a class="viewcode-back" href="../../../multiversx_sdk.relayed.html#multiversx_sdk.relayed.errors.InvalidInnerTransactionError">[docs]</a>
-<span></span><span class="k">class</span><span class="w"> </span><span class="nc">InvalidInnerTransactionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+  <h1>Source code for multiversx_sdk.gas_estimator.errors</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="GasLimitEstimationError">
+<a class="viewcode-back" href="../../../multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.errors.GasLimitEstimationError">[docs]</a>
+<span></span><span class="k">class</span><span class="w"> </span><span class="nc">GasLimitEstimationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to estimate gas limit: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">error</span></div>
 
 </pre></div>
 
@@ -84,7 +85,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

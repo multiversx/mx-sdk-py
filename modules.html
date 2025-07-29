@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=e15882dc"></script>
+      <script src="_static/documentation_options.js?v=51b770b3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -135,7 +135,6 @@
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.builders.html">multiversx_sdk.builders package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.builders.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.builders.html#module-multiversx_sdk.builders.token_transfers_data_builder">multiversx_sdk.builders.token_transfers_data_builder module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.builders.html#module-multiversx_sdk.builders.transaction_builder">multiversx_sdk.builders.transaction_builder module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.builders.html#module-multiversx_sdk.builders">Module contents</a></li>
 </ul>
 </li>
@@ -144,6 +143,7 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.address">multiversx_sdk.core.address module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.base_controller">multiversx_sdk.core.base_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.base_factory">multiversx_sdk.core.base_factory module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.bech32">multiversx_sdk.core.bech32 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.code_metadata">multiversx_sdk.core.code_metadata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.core.html#module-multiversx_sdk.core.config">multiversx_sdk.core.config module</a></li>
@@ -176,6 +176,13 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.entrypoints.html#module-multiversx_sdk.entrypoints.entrypoints">multiversx_sdk.entrypoints.entrypoints module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.entrypoints.html#module-multiversx_sdk.entrypoints.errors">multiversx_sdk.entrypoints.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.entrypoints.html#module-multiversx_sdk.entrypoints">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.gas_estimator.html">multiversx_sdk.gas_estimator package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.gas_estimator.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator.errors">multiversx_sdk.gas_estimator.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator.gas_limit_estimator">multiversx_sdk.gas_estimator.gas_limit_estimator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.governance.html">multiversx_sdk.governance package</a><ul>
@@ -229,14 +236,6 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#module-multiversx_sdk.network_providers.transaction_decoder">multiversx_sdk.network_providers.transaction_decoder module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#module-multiversx_sdk.network_providers.user_agent">multiversx_sdk.network_providers.user_agent module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html#module-multiversx_sdk.network_providers">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.relayed.html">multiversx_sdk.relayed package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.errors">multiversx_sdk.relayed.errors module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.relayed_controller">multiversx_sdk.relayed.relayed_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.relayed_transactions_factory">multiversx_sdk.relayed.relayed_transactions_factory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.smart_contracts.html">multiversx_sdk.smart_contracts package</a><ul>
@@ -381,13 +380,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address"><code class="docutils literal notranslate"><span class="pre">Address</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.bech32"><code class="docutils literal notranslate"><span class="pre">Address.bech32()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.empty"><code class="docutils literal notranslate"><span class="pre">Address.empty()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.from_bech32"><code class="docutils literal notranslate"><span class="pre">Address.from_bech32()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.from_hex"><code class="docutils literal notranslate"><span class="pre">Address.from_hex()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.get_hrp"><code class="docutils literal notranslate"><span class="pre">Address.get_hrp()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.get_public_key"><code class="docutils literal notranslate"><span class="pre">Address.get_public_key()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.hex"><code class="docutils literal notranslate"><span class="pre">Address.hex()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.is_empty"><code class="docutils literal notranslate"><span class="pre">Address.is_empty()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.is_smart_contract"><code class="docutils literal notranslate"><span class="pre">Address.is_smart_contract()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Address.new_from_bech32"><code class="docutils literal notranslate"><span class="pre">Address.new_from_bech32()</span></code></a></li>
@@ -596,6 +591,10 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.FungibleTokenMetadata.owner"><code class="docutils literal notranslate"><span class="pre">FungibleTokenMetadata.owner</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.FungibleTokenMetadata.raw"><code class="docutils literal notranslate"><span class="pre">FungibleTokenMetadata.raw</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.FungibleTokenMetadata.ticker"><code class="docutils literal notranslate"><span class="pre">FungibleTokenMetadata.ticker</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.GasLimitEstimator"><code class="docutils literal notranslate"><span class="pre">GasLimitEstimator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.GasLimitEstimator.estimate_gas_limit"><code class="docutils literal notranslate"><span class="pre">GasLimitEstimator.estimate_gas_limit()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.GenericResponse"><code class="docutils literal notranslate"><span class="pre">GenericResponse</span></code></a><ul>
@@ -872,13 +871,12 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_account_transactions_factory"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_account_transactions_factory()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_delegation_controller"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_delegation_controller()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_delegation_transactions_factory"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_delegation_transactions_factory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_gas_limit_estimator"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_gas_limit_estimator()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_governance_controller"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_governance_controller()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_governance_transactions_factory"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_governance_transactions_factory()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_multisig_controller"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_multisig_controller()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_multisig_transactions_factory"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_multisig_transactions_factory()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_network_provider"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_network_provider()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_relayed_controller"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_relayed_controller()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_relayed_transactions_factory"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_relayed_transactions_factory()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_smart_contract_controller"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_smart_contract_controller()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_smart_contract_transactions_factory"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_smart_contract_transactions_factory()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_token_management_controller"><code class="docutils literal notranslate"><span class="pre">NetworkEntrypoint.create_token_management_controller()</span></code></a></li>
@@ -981,16 +979,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RegisterMetaEsdtOutcome"><code class="docutils literal notranslate"><span class="pre">RegisterMetaEsdtOutcome</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RegisterMetaEsdtOutcome.token_identifier"><code class="docutils literal notranslate"><span class="pre">RegisterMetaEsdtOutcome.token_identifier</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedController"><code class="docutils literal notranslate"><span class="pre">RelayedController</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedController.create_relayed_v1_transaction"><code class="docutils literal notranslate"><span class="pre">RelayedController.create_relayed_v1_transaction()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedController.create_relayed_v2_transaction"><code class="docutils literal notranslate"><span class="pre">RelayedController.create_relayed_v2_transaction()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory"><code class="docutils literal notranslate"><span class="pre">RelayedTransactionsFactory</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v1_transaction"><code class="docutils literal notranslate"><span class="pre">RelayedTransactionsFactory.create_relayed_v1_transaction()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v2_transaction"><code class="docutils literal notranslate"><span class="pre">RelayedTransactionsFactory.create_relayed_v2_transaction()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RemoveUser"><code class="docutils literal notranslate"><span class="pre">RemoveUser</span></code></a><ul>
@@ -1682,7 +1670,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.multisig.multisig_controller &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk.multisig.multisig_controller &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e15882dc"></script>
+      <script src="../../../_static/documentation_options.js?v=51b770b3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -76,7 +76,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.base_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseController</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">LibraryConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IAccount</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IAccount</span><span class="p">,</span> <span class="n">IGasLimitEstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.tokens</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenTransfer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction_on_network</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionOnNetwork</span>
@@ -145,9 +145,14 @@
         <span class="n">network_provider</span><span class="p">:</span> <span class="n">INetworkProvider</span><span class="p">,</span>
         <span class="n">abi</span><span class="p">:</span> <span class="n">Abi</span><span class="p">,</span>
         <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasLimitEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_network_provider</span> <span class="o">=</span> <span class="n">network_provider</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span> <span class="o">=</span> <span class="n">MultisigTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="n">chain_id</span><span class="p">),</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span> <span class="o">=</span> <span class="n">MultisigTransactionsFactory</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="n">chain_id</span><span class="p">),</span>
+            <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span>
+            <span class="n">gas_limit_estimator</span><span class="o">=</span><span class="n">gas_limit_estimator</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">MultisigTransactionsOutcomeParser</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span> <span class="o">=</span> <span class="n">SmartContractController</span><span class="p">(</span>
             <span class="n">chain_id</span><span class="o">=</span><span class="n">chain_id</span><span class="p">,</span> <span class="n">network_provider</span><span class="o">=</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span>
@@ -163,7 +168,7 @@
         <span class="n">bytecode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
         <span class="n">quorum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">board</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">],</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">is_readable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">is_payable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -215,7 +220,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">token_transfers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -249,7 +254,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -280,7 +285,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">actions_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -395,7 +400,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">board_member</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -426,7 +431,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">proposer</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -457,7 +462,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -488,7 +493,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">new_quorum</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -519,8 +524,8 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -565,7 +570,7 @@
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">token_transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">],</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -605,7 +610,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">receiver</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">token_transfers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -647,8 +652,8 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract_to_copy</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -694,7 +699,7 @@
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">contract_to_upgrade</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">contract_to_copy</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">arguments</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">native_token_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -740,7 +745,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Action</span><span class="p">],</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -761,7 +766,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -792,7 +797,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -823,7 +828,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -854,7 +859,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -885,7 +890,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -916,7 +921,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -965,7 +970,7 @@
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">outdated_board_members</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1009,7 +1014,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1040,7 +1045,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">batch_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1200,7 +1205,7 @@
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
         <span class="n">native_transfer_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">token_transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
@@ -1351,7 +1356,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

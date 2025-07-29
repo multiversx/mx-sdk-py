@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>Index &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=e15882dc"></script>
+      <script src="_static/documentation_options.js?v=51b770b3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -919,14 +919,8 @@
       </ul></li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.base_controller.BaseController">BaseController (class in multiversx_sdk.core.base_controller)</a>
 </li>
-      <li><a href="multiversx_sdk.html#multiversx_sdk.Address.bech32">bech32() (multiversx_sdk.Address method)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.Address.bech32">(multiversx_sdk.core.Address method)</a>
+      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.base_factory.BaseFactory">BaseFactory (class in multiversx_sdk.core.base_factory)</a>
 </li>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address.bech32">(multiversx_sdk.core.address.Address method)</a>
-</li>
-      </ul></li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_create_checksum">bech32_create_checksum() (in module multiversx_sdk.core.bech32)</a>
 </li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_decode">bech32_decode() (in module multiversx_sdk.core.bech32)</a>
@@ -1047,15 +1041,11 @@
         <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.bool_value.BoolValue">(class in multiversx_sdk.abi.bool_value)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder.build">build() (multiversx_sdk.builders.transaction_builder.TransactionBuilder method)</a>
-</li>
       <li><a href="multiversx_sdk.builders.html#multiversx_sdk.builders.token_transfers_data_builder.TokenTransfersDataBuilder.build_args_for_esdt_transfer">build_args_for_esdt_transfer() (multiversx_sdk.builders.token_transfers_data_builder.TokenTransfersDataBuilder method)</a>
 </li>
       <li><a href="multiversx_sdk.builders.html#multiversx_sdk.builders.token_transfers_data_builder.TokenTransfersDataBuilder.build_args_for_multi_esdt_nft_transfer">build_args_for_multi_esdt_nft_transfer() (multiversx_sdk.builders.token_transfers_data_builder.TokenTransfersDataBuilder method)</a>
 </li>
       <li><a href="multiversx_sdk.builders.html#multiversx_sdk.builders.token_transfers_data_builder.TokenTransfersDataBuilder.build_args_for_single_esdt_nft_transfer">build_args_for_single_esdt_nft_transfer() (multiversx_sdk.builders.token_transfers_data_builder.TokenTransfersDataBuilder method)</a>
-</li>
-      <li><a href="multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder.build_transaction_payload">build_transaction_payload() (multiversx_sdk.builders.transaction_builder.TransactionBuilder method)</a>
 </li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.BurnOutcome">BurnOutcome (class in multiversx_sdk)</a>
 
@@ -1291,8 +1281,6 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.TokenComputer.compute_extended_identifier_from_parts">(multiversx_sdk.TokenComputer method)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder.compute_gas_limit">compute_gas_limit() (multiversx_sdk.builders.transaction_builder.TransactionBuilder method)</a>
-</li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_computer.TransactionComputer.compute_hash_for_signing">compute_hash_for_signing() (multiversx_sdk.core.transaction_computer.TransactionComputer method)</a>
 
       <ul>
@@ -1463,6 +1451,14 @@
         <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.AddressFactory.create_from_public_key">(multiversx_sdk.core.AddressFactory method)</a>
 </li>
       </ul></li>
+      <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint.create_gas_limit_estimator">create_gas_limit_estimator() (multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint method)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.NetworkEntrypoint.create_gas_limit_estimator">(multiversx_sdk.entrypoints.NetworkEntrypoint method)</a>
+</li>
+        <li><a href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_gas_limit_estimator">(multiversx_sdk.NetworkEntrypoint method)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint.create_governance_controller">create_governance_controller() (multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint method)</a>
 
       <ul>
@@ -1509,50 +1505,6 @@
         <li><a href="multiversx_sdk.smart_contracts.html#multiversx_sdk.smart_contracts.SmartContractController.create_query">(multiversx_sdk.smart_contracts.SmartContractController method)</a>
 </li>
         <li><a href="multiversx_sdk.html#multiversx_sdk.SmartContractController.create_query">(multiversx_sdk.SmartContractController method)</a>
-</li>
-      </ul></li>
-      <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint.create_relayed_controller">create_relayed_controller() (multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint method)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.NetworkEntrypoint.create_relayed_controller">(multiversx_sdk.entrypoints.NetworkEntrypoint method)</a>
-</li>
-        <li><a href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_relayed_controller">(multiversx_sdk.NetworkEntrypoint method)</a>
-</li>
-      </ul></li>
-      <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint.create_relayed_transactions_factory">create_relayed_transactions_factory() (multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint method)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.NetworkEntrypoint.create_relayed_transactions_factory">(multiversx_sdk.entrypoints.NetworkEntrypoint method)</a>
-</li>
-        <li><a href="multiversx_sdk.html#multiversx_sdk.NetworkEntrypoint.create_relayed_transactions_factory">(multiversx_sdk.NetworkEntrypoint method)</a>
-</li>
-      </ul></li>
-      <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.relayed_controller.RelayedController.create_relayed_v1_transaction">create_relayed_v1_transaction() (multiversx_sdk.relayed.relayed_controller.RelayedController method)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.relayed_transactions_factory.RelayedTransactionsFactory.create_relayed_v1_transaction">(multiversx_sdk.relayed.relayed_transactions_factory.RelayedTransactionsFactory method)</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.RelayedController.create_relayed_v1_transaction">(multiversx_sdk.relayed.RelayedController method)</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.RelayedTransactionsFactory.create_relayed_v1_transaction">(multiversx_sdk.relayed.RelayedTransactionsFactory method)</a>
-</li>
-        <li><a href="multiversx_sdk.html#multiversx_sdk.RelayedController.create_relayed_v1_transaction">(multiversx_sdk.RelayedController method)</a>
-</li>
-        <li><a href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v1_transaction">(multiversx_sdk.RelayedTransactionsFactory method)</a>
-</li>
-      </ul></li>
-      <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.relayed_controller.RelayedController.create_relayed_v2_transaction">create_relayed_v2_transaction() (multiversx_sdk.relayed.relayed_controller.RelayedController method)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.relayed_transactions_factory.RelayedTransactionsFactory.create_relayed_v2_transaction">(multiversx_sdk.relayed.relayed_transactions_factory.RelayedTransactionsFactory method)</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.RelayedController.create_relayed_v2_transaction">(multiversx_sdk.relayed.RelayedController method)</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.RelayedTransactionsFactory.create_relayed_v2_transaction">(multiversx_sdk.relayed.RelayedTransactionsFactory method)</a>
-</li>
-        <li><a href="multiversx_sdk.html#multiversx_sdk.RelayedController.create_relayed_v2_transaction">(multiversx_sdk.RelayedController method)</a>
-</li>
-        <li><a href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory.create_relayed_v2_transaction">(multiversx_sdk.RelayedTransactionsFactory method)</a>
 </li>
       </ul></li>
       <li><a href="multiversx_sdk.entrypoints.html#multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint.create_smart_contract_controller">create_smart_contract_controller() (multiversx_sdk.entrypoints.entrypoints.NetworkEntrypoint method)</a>
@@ -2201,8 +2153,6 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.MultisigTransactionsFactory.create_transaction_for_propose_add_board_member">(multiversx_sdk.MultisigTransactionsFactory method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.multisig_controller.MultisigController.create_transaction_for_propose_add_proposer">create_transaction_for_propose_add_proposer() (multiversx_sdk.multisig.multisig_controller.MultisigController method)</a>
 
       <ul>
@@ -2217,6 +2167,8 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.MultisigTransactionsFactory.create_transaction_for_propose_add_proposer">(multiversx_sdk.MultisigTransactionsFactory method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.multisig_controller.MultisigController.create_transaction_for_propose_async_call">create_transaction_for_propose_async_call() (multiversx_sdk.multisig.multisig_controller.MultisigController method)</a>
 
       <ul>
@@ -3959,9 +3911,21 @@
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.EsdtTransferExecuteData">(class in multiversx_sdk.multisig.resources)</a>
 </li>
       </ul></li>
+      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IGasLimitEstimator.estimate_gas_limit">estimate_gas_limit() (multiversx_sdk.core.interfaces.IGasLimitEstimator method)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.gas_limit_estimator.GasLimitEstimator.estimate_gas_limit">(multiversx_sdk.gas_estimator.gas_limit_estimator.GasLimitEstimator method)</a>
+</li>
+        <li><a href="multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.GasLimitEstimator.estimate_gas_limit">(multiversx_sdk.gas_estimator.GasLimitEstimator method)</a>
+</li>
+        <li><a href="multiversx_sdk.html#multiversx_sdk.GasLimitEstimator.estimate_gas_limit">(multiversx_sdk.GasLimitEstimator method)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.ApiNetworkProvider.estimate_transaction_cost">estimate_transaction_cost() (multiversx_sdk.ApiNetworkProvider method)</a>
 
       <ul>
+        <li><a href="multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.gas_limit_estimator.INetworkProvider.estimate_transaction_cost">(multiversx_sdk.gas_estimator.gas_limit_estimator.INetworkProvider method)</a>
+</li>
         <li><a href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.api_network_provider.ApiNetworkProvider.estimate_transaction_cost">(multiversx_sdk.network_providers.api_network_provider.ApiNetworkProvider method)</a>
 </li>
         <li><a href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.ApiNetworkProvider.estimate_transaction_cost">(multiversx_sdk.network_providers.ApiNetworkProvider method)</a>
@@ -4115,14 +4079,6 @@
         <li><a href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.UserVerifier.from_address">(multiversx_sdk.wallet.UserVerifier class method)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.html#multiversx_sdk.Address.from_bech32">from_bech32() (multiversx_sdk.Address class method)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.Address.from_bech32">(multiversx_sdk.core.Address class method)</a>
-</li>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address.from_bech32">(multiversx_sdk.core.address.Address class method)</a>
-</li>
-      </ul></li>
       <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.AbiDefinition.from_dict">from_dict() (multiversx_sdk.abi.abi_definition.AbiDefinition class method)</a>
 
       <ul>
@@ -4187,22 +4143,14 @@
         <li><a href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.ValidatorPEM.from_file_all">(multiversx_sdk.wallet.ValidatorPEM class method)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.html#multiversx_sdk.Address.from_hex">from_hex() (multiversx_sdk.Address class method)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.Address.from_hex">(multiversx_sdk.core.Address class method)</a>
-</li>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address.from_hex">(multiversx_sdk.core.address.Address class method)</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.wallet.crypto.html#multiversx_sdk.wallet.crypto.encrypted_data.EncryptedData.from_keyfile_object">from_keyfile_object() (multiversx_sdk.wallet.crypto.encrypted_data.EncryptedData class method)</a>
 
       <ul>
         <li><a href="multiversx_sdk.wallet.crypto.html#multiversx_sdk.wallet.crypto.EncryptedData.from_keyfile_object">(multiversx_sdk.wallet.crypto.EncryptedData class method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.html#multiversx_sdk.UserWallet.from_mnemonic">from_mnemonic() (multiversx_sdk.UserWallet class method)</a>
 
       <ul>
@@ -4699,9 +4647,11 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.TransactionsFactoryConfig.gas_limit_pausing">(multiversx_sdk.TransactionsFactoryConfig attribute)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_per_byte">gas_limit_per_byte (multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig attribute)</a>
+      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.base_factory.IConfig.gas_limit_per_byte">gas_limit_per_byte (multiversx_sdk.core.base_factory.IConfig attribute)</a>
 
       <ul>
+        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.gas_limit_per_byte">(multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig attribute)</a>
+</li>
         <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionsFactoryConfig.gas_limit_per_byte">(multiversx_sdk.core.TransactionsFactoryConfig attribute)</a>
 </li>
         <li><a href="multiversx_sdk.html#multiversx_sdk.TransactionsFactoryConfig.gas_limit_per_byte">(multiversx_sdk.TransactionsFactoryConfig attribute)</a>
@@ -4887,6 +4837,16 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.NetworkConfig.gas_price_modifier">(multiversx_sdk.NetworkConfig attribute)</a>
 </li>
       </ul></li>
+      <li><a href="multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.errors.GasLimitEstimationError">GasLimitEstimationError</a>
+</li>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.GasLimitEstimator">GasLimitEstimator (class in multiversx_sdk)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.GasLimitEstimator">(class in multiversx_sdk.gas_estimator)</a>
+</li>
+        <li><a href="multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.gas_limit_estimator.GasLimitEstimator">(class in multiversx_sdk.gas_estimator.gas_limit_estimator)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_on_network.gather_all_events">gather_all_events() (in module multiversx_sdk.core.transaction_on_network)</a>
 </li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.KeyPair.generate">generate() (multiversx_sdk.KeyPair static method)</a>
@@ -5049,6 +5009,8 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.MultisigController.get_action_signers">(multiversx_sdk.MultisigController method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.multisig_controller.MultisigController.get_action_valid_signer_count">get_action_valid_signer_count() (multiversx_sdk.multisig.multisig_controller.MultisigController method)</a>
 
       <ul>
@@ -5057,8 +5019,6 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.MultisigController.get_action_valid_signer_count">(multiversx_sdk.MultisigController method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.ledger.html#multiversx_sdk.ledger.ledger_app.LedgerApp.get_address">get_address() (multiversx_sdk.ledger.ledger_app.LedgerApp method)</a>
 
       <ul>
@@ -5775,15 +5735,9 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.TransactionOnNetwork.hash">(multiversx_sdk.TransactionOnNetwork attribute)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.html#multiversx_sdk.Address.hex">hex() (multiversx_sdk.Address method)</a>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.UserPublicKey.hex">hex() (multiversx_sdk.UserPublicKey method)</a>
 
       <ul>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.Address.hex">(multiversx_sdk.core.Address method)</a>
-</li>
-        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address.hex">(multiversx_sdk.core.address.Address method)</a>
-</li>
-        <li><a href="multiversx_sdk.html#multiversx_sdk.UserPublicKey.hex">(multiversx_sdk.UserPublicKey method)</a>
-</li>
         <li><a href="multiversx_sdk.html#multiversx_sdk.UserSecretKey.hex">(multiversx_sdk.UserSecretKey method)</a>
 </li>
         <li><a href="multiversx_sdk.html#multiversx_sdk.ValidatorPublicKey.hex">(multiversx_sdk.ValidatorPublicKey method)</a>
@@ -5869,6 +5823,8 @@
 </li>
       <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.IAddress">IAddress (class in multiversx_sdk.abi.address_value)</a>
 </li>
+      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.base_factory.IConfig">IConfig (class in multiversx_sdk.core.base_factory)</a>
+</li>
       <li><a href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.interfaces.IRandomness.id">id (multiversx_sdk.wallet.interfaces.IRandomness attribute)</a>
 </li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_on_network.TransactionEvent.identifier">identifier (multiversx_sdk.core.transaction_on_network.TransactionEvent attribute)</a>
@@ -5885,11 +5841,15 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.TransactionEvent.identifier">(multiversx_sdk.TransactionEvent attribute)</a>
 </li>
       </ul></li>
+      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.interfaces.IGasLimitEstimator">IGasLimitEstimator (class in multiversx_sdk.core.interfaces)</a>
+</li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.interfaces.INetworkConfig">INetworkConfig (class in multiversx_sdk.core.interfaces)</a>
 </li>
       <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_controller.INetworkProvider">INetworkProvider (class in multiversx_sdk.delegation.delegation_controller)</a>
 
       <ul>
+        <li><a href="multiversx_sdk.gas_estimator.html#multiversx_sdk.gas_estimator.gas_limit_estimator.INetworkProvider">(class in multiversx_sdk.gas_estimator.gas_limit_estimator)</a>
+</li>
         <li><a href="multiversx_sdk.governance.html#multiversx_sdk.governance.governance_controller.INetworkProvider">(class in multiversx_sdk.governance.governance_controller)</a>
 </li>
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.multisig_controller.INetworkProvider">(class in multiversx_sdk.multisig.multisig_controller)</a>
@@ -5922,8 +5882,6 @@
       <li><a href="multiversx_sdk.ledger.html#multiversx_sdk.ledger.ledger_app.Instructions">Instructions (class in multiversx_sdk.ledger.ledger_app)</a>
 </li>
       <li><a href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.errors.InvalidAddressIndexError">InvalidAddressIndexError</a>
-</li>
-      <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.errors.InvalidInnerTransactionError">InvalidInnerTransactionError</a>
 </li>
       <li><a href="multiversx_sdk.wallet.html#multiversx_sdk.wallet.errors.InvalidKeystoreFilePasswordError">InvalidKeystoreFilePasswordError</a>
 </li>
@@ -6401,9 +6359,11 @@
         <li><a href="multiversx_sdk.token_management.html#multiversx_sdk.token_management.token_management_transactions_outcome_parser_types.MetadataRecreateOutcome">(class in multiversx_sdk.token_management.token_management_transactions_outcome_parser_types)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.interfaces.INetworkConfig.min_gas_limit">min_gas_limit (multiversx_sdk.core.interfaces.INetworkConfig attribute)</a>
+      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.base_factory.IConfig.min_gas_limit">min_gas_limit (multiversx_sdk.core.base_factory.IConfig attribute)</a>
 
       <ul>
+        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.interfaces.INetworkConfig.min_gas_limit">(multiversx_sdk.core.interfaces.INetworkConfig attribute)</a>
+</li>
         <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig.min_gas_limit">(multiversx_sdk.core.transactions_factory_config.TransactionsFactoryConfig attribute)</a>
 </li>
         <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.TransactionsFactoryConfig.min_gas_limit">(multiversx_sdk.core.TransactionsFactoryConfig attribute)</a>
@@ -6591,13 +6551,13 @@
 </li>
         <li><a href="multiversx_sdk.builders.html#module-multiversx_sdk.builders.token_transfers_data_builder">multiversx_sdk.builders.token_transfers_data_builder</a>
 </li>
-        <li><a href="multiversx_sdk.builders.html#module-multiversx_sdk.builders.transaction_builder">multiversx_sdk.builders.transaction_builder</a>
-</li>
         <li><a href="multiversx_sdk.core.html#module-multiversx_sdk.core">multiversx_sdk.core</a>
 </li>
         <li><a href="multiversx_sdk.core.html#module-multiversx_sdk.core.address">multiversx_sdk.core.address</a>
 </li>
         <li><a href="multiversx_sdk.core.html#module-multiversx_sdk.core.base_controller">multiversx_sdk.core.base_controller</a>
+</li>
+        <li><a href="multiversx_sdk.core.html#module-multiversx_sdk.core.base_factory">multiversx_sdk.core.base_factory</a>
 </li>
         <li><a href="multiversx_sdk.core.html#module-multiversx_sdk.core.bech32">multiversx_sdk.core.bech32</a>
 </li>
@@ -6650,6 +6610,12 @@
         <li><a href="multiversx_sdk.entrypoints.html#module-multiversx_sdk.entrypoints.entrypoints">multiversx_sdk.entrypoints.entrypoints</a>
 </li>
         <li><a href="multiversx_sdk.entrypoints.html#module-multiversx_sdk.entrypoints.errors">multiversx_sdk.entrypoints.errors</a>
+</li>
+        <li><a href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator">multiversx_sdk.gas_estimator</a>
+</li>
+        <li><a href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator.errors">multiversx_sdk.gas_estimator.errors</a>
+</li>
+        <li><a href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator.gas_limit_estimator">multiversx_sdk.gas_estimator.gas_limit_estimator</a>
 </li>
         <li><a href="multiversx_sdk.governance.html#module-multiversx_sdk.governance">multiversx_sdk.governance</a>
 </li>
@@ -6716,14 +6682,6 @@
         <li><a href="multiversx_sdk.network_providers.html#module-multiversx_sdk.network_providers.transaction_decoder">multiversx_sdk.network_providers.transaction_decoder</a>
 </li>
         <li><a href="multiversx_sdk.network_providers.html#module-multiversx_sdk.network_providers.user_agent">multiversx_sdk.network_providers.user_agent</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed">multiversx_sdk.relayed</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.errors">multiversx_sdk.relayed.errors</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.relayed_controller">multiversx_sdk.relayed.relayed_controller</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.relayed_transactions_factory">multiversx_sdk.relayed.relayed_transactions_factory</a>
 </li>
         <li><a href="multiversx_sdk.smart_contracts.html#module-multiversx_sdk.smart_contracts">multiversx_sdk.smart_contracts</a>
 </li>
@@ -7144,13 +7102,6 @@
 </li>
       </ul></li>
       <li>
-    multiversx_sdk.builders.transaction_builder
-
-      <ul>
-        <li><a href="multiversx_sdk.builders.html#module-multiversx_sdk.builders.transaction_builder">module</a>
-</li>
-      </ul></li>
-      <li>
     multiversx_sdk.core
 
       <ul>
@@ -7169,6 +7120,13 @@
 
       <ul>
         <li><a href="multiversx_sdk.core.html#module-multiversx_sdk.core.base_controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    multiversx_sdk.core.base_factory
+
+      <ul>
+        <li><a href="multiversx_sdk.core.html#module-multiversx_sdk.core.base_factory">module</a>
 </li>
       </ul></li>
       <li>
@@ -7351,6 +7309,27 @@
 
       <ul>
         <li><a href="multiversx_sdk.entrypoints.html#module-multiversx_sdk.entrypoints.errors">module</a>
+</li>
+      </ul></li>
+      <li>
+    multiversx_sdk.gas_estimator
+
+      <ul>
+        <li><a href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator">module</a>
+</li>
+      </ul></li>
+      <li>
+    multiversx_sdk.gas_estimator.errors
+
+      <ul>
+        <li><a href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator.errors">module</a>
+</li>
+      </ul></li>
+      <li>
+    multiversx_sdk.gas_estimator.gas_limit_estimator
+
+      <ul>
+        <li><a href="multiversx_sdk.gas_estimator.html#module-multiversx_sdk.gas_estimator.gas_limit_estimator">module</a>
 </li>
       </ul></li>
       <li>
@@ -7582,34 +7561,6 @@
 
       <ul>
         <li><a href="multiversx_sdk.network_providers.html#module-multiversx_sdk.network_providers.user_agent">module</a>
-</li>
-      </ul></li>
-      <li>
-    multiversx_sdk.relayed
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed">module</a>
-</li>
-      </ul></li>
-      <li>
-    multiversx_sdk.relayed.errors
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.errors">module</a>
-</li>
-      </ul></li>
-      <li>
-    multiversx_sdk.relayed.relayed_controller
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.relayed_controller">module</a>
-</li>
-      </ul></li>
-      <li>
-    multiversx_sdk.relayed.relayed_transactions_factory
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#module-multiversx_sdk.relayed.relayed_transactions_factory">module</a>
 </li>
       </ul></li>
       <li>
@@ -9388,6 +9339,8 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.TransactionOnNetwork.receiver_shard">(multiversx_sdk.TransactionOnNetwork attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.RedelegateRewardsOutcome">RedelegateRewardsOutcome (class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
 </li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.RegisterAndSetAllRolesOutcome">RegisterAndSetAllRolesOutcome (class in multiversx_sdk)</a>
@@ -9398,8 +9351,6 @@
         <li><a href="multiversx_sdk.token_management.html#multiversx_sdk.token_management.token_management_transactions_outcome_parser_types.RegisterAndSetAllRolesOutcome">(class in multiversx_sdk.token_management.token_management_transactions_outcome_parser_types)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.html#multiversx_sdk.RegisterDynamicOutcome">RegisterDynamicOutcome (class in multiversx_sdk)</a>
 
       <ul>
@@ -9414,22 +9365,6 @@
         <li><a href="multiversx_sdk.token_management.html#multiversx_sdk.token_management.RegisterMetaEsdtOutcome">(class in multiversx_sdk.token_management)</a>
 </li>
         <li><a href="multiversx_sdk.token_management.html#multiversx_sdk.token_management.token_management_transactions_outcome_parser_types.RegisterMetaEsdtOutcome">(class in multiversx_sdk.token_management.token_management_transactions_outcome_parser_types)</a>
-</li>
-      </ul></li>
-      <li><a href="multiversx_sdk.html#multiversx_sdk.RelayedController">RelayedController (class in multiversx_sdk)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.RelayedController">(class in multiversx_sdk.relayed)</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.relayed_controller.RelayedController">(class in multiversx_sdk.relayed.relayed_controller)</a>
-</li>
-      </ul></li>
-      <li><a href="multiversx_sdk.html#multiversx_sdk.RelayedTransactionsFactory">RelayedTransactionsFactory (class in multiversx_sdk)</a>
-
-      <ul>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.RelayedTransactionsFactory">(class in multiversx_sdk.relayed)</a>
-</li>
-        <li><a href="multiversx_sdk.relayed.html#multiversx_sdk.relayed.relayed_transactions_factory.RelayedTransactionsFactory">(class in multiversx_sdk.relayed.relayed_transactions_factory)</a>
 </li>
       </ul></li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.RemoveUser">RemoveUser (class in multiversx_sdk)</a>
@@ -9754,6 +9689,8 @@
 </li>
       <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.fields.set_fields_from_list">set_fields_from_list() (in module multiversx_sdk.abi.fields)</a>
 </li>
+      <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.base_factory.BaseFactory.set_gas_limit">set_gas_limit() (multiversx_sdk.core.base_factory.BaseFactory method)</a>
+</li>
       <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue.set_payload">set_payload() (multiversx_sdk.abi.address_value.AddressValue method)</a>
 
       <ul>
@@ -9840,6 +9777,8 @@
         <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.variadic_values.VariadicValues.set_payload">(multiversx_sdk.abi.variadic_values.VariadicValues method)</a>
 </li>
         <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.VariadicValues.set_payload">(multiversx_sdk.abi.VariadicValues method)</a>
+</li>
+        <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.base_factory.BaseFactory.set_payload">(multiversx_sdk.core.base_factory.BaseFactory method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -10620,8 +10559,6 @@
         <li><a href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.transaction_awaiter.TransactionAwaiter">(class in multiversx_sdk.network_providers.transaction_awaiter)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.builders.html#multiversx_sdk.builders.transaction_builder.TransactionBuilder">TransactionBuilder (class in multiversx_sdk.builders.transaction_builder)</a>
-</li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.TransactionComputer">TransactionComputer (class in multiversx_sdk)</a>
 
       <ul>
@@ -11282,7 +11219,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

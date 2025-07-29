@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.entrypoints.entrypoints &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk.entrypoints.entrypoints &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e15882dc"></script>
+      <script src="../../../_static/documentation_options.js?v=51b770b3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -97,6 +97,7 @@
     <span class="n">TestnetEntrypointConfig</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.entrypoints.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidNetworkProviderKindError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.gas_estimator.gas_limit_estimator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GasLimitEstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.governance.governance_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">GovernanceController</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.governance.governance_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GovernanceTransactionsFactory</span><span class="p">,</span>
@@ -107,10 +108,6 @@
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.network_providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiNetworkProvider</span><span class="p">,</span> <span class="n">ProxyNetworkProvider</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.network_providers.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">INetworkProvider</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.relayed.relayed_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">RelayedController</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.relayed.relayed_transactions_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">RelayedTransactionsFactory</span><span class="p">,</span>
-<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.smart_contracts.smart_contract_controller</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">SmartContractController</span><span class="p">,</span>
 <span class="p">)</span>
@@ -140,8 +137,12 @@
         <span class="n">network_provider_kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">chain_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">network_provider</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">INetworkProvider</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">with_gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit_multiplier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chain_id</span> <span class="o">=</span> <span class="n">chain_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="o">=</span> <span class="n">with_gas_limit_estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_multiplier</span> <span class="o">=</span> <span class="n">gas_limit_multiplier</span>
 
         <span class="k">if</span> <span class="n">network_provider</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span> <span class="o">=</span> <span class="n">network_provider</span>
@@ -255,58 +256,78 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span></div>
 
 
+<div class="viewcode-block" id="NetworkEntrypoint.create_gas_limit_estimator">
+<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_gas_limit_estimator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_gas_limit_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GasLimitEstimator</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">GasLimitEstimator</span><span class="p">(</span><span class="n">network_provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">gas_multiplier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_multiplier</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="NetworkEntrypoint.create_delegation_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_delegation_controller">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_delegation_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DelegationController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">DelegationController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">DelegationController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_delegation_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_delegation_transactions_factory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_delegation_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DelegationTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">DelegationTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
+        <span class="k">return</span> <span class="n">DelegationTransactionsFactory</span><span class="p">(</span>
+            <span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_account_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_account_controller">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_account_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">AccountController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">AccountController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_account_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_account_transactions_factory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_account_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AccountTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">AccountTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
-
-
-<div class="viewcode-block" id="NetworkEntrypoint.create_relayed_controller">
-<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_relayed_controller">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_relayed_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelayedController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">RelayedController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">())</span></div>
-
-
-<div class="viewcode-block" id="NetworkEntrypoint.create_relayed_transactions_factory">
-<a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_relayed_transactions_factory">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_relayed_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelayedTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">RelayedTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
+        <span class="k">return</span> <span class="n">AccountTransactionsFactory</span><span class="p">(</span>
+            <span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_smart_contract_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_smart_contract_controller">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_smart_contract_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">SmartContractController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">abi</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">SmartContractController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span>
+            <span class="n">abi</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_smart_contract_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_smart_contract_transactions_factory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_smart_contract_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">SmartContractTransactionsFactory</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">SmartContractTransactionsFactory</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span>
+            <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span>
+            <span class="n">gas_limit_estimator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_token_management_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_token_management_controller">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_token_management_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenManagementController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TokenManagementController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">TokenManagementController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_token_management_transactions_factory">
@@ -314,43 +335,70 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_token_management_transactions_factory</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
+        <span class="k">return</span> <span class="n">TokenManagementTransactionsFactory</span><span class="p">(</span>
+            <span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_transfers_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_transfers_controller">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transfers_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransfersController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TransfersController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">TransfersController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_transfers_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_transfers_transactions_factory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transfers_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransferTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TransferTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
+        <span class="k">return</span> <span class="n">TransferTransactionsFactory</span><span class="p">(</span>
+            <span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_multisig_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_multisig_controller">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_multisig_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Abi</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultisigController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">MultisigController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">abi</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">MultisigController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span>
+            <span class="n">abi</span><span class="p">,</span>
+            <span class="n">address_hrp</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_multisig_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_multisig_transactions_factory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_multisig_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Abi</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MultisigTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">MultisigTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span> <span class="n">abi</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">MultisigTransactionsFactory</span><span class="p">(</span>
+            <span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span>
+            <span class="n">abi</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_governance_controller">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_governance_controller">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_governance_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GovernanceController</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">GovernanceController</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span> <span class="n">address_hrp</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">GovernanceController</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="p">,</span>
+            <span class="n">address_hrp</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_governance_transactions_factory">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_governance_transactions_factory">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_governance_transactions_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GovernanceTransactionsFactory</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">GovernanceTransactionsFactory</span><span class="p">(</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()))</span></div>
+        <span class="k">return</span> <span class="n">GovernanceTransactionsFactory</span><span class="p">(</span>
+            <span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_chain_id</span><span class="p">()),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_gas_limit_estimator</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_gas_limit_estimator</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_chain_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -365,48 +413,96 @@
 <div class="viewcode-block" id="TestnetEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.TestnetEntrypoint">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TestnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">with_gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit_multiplier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">TestnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
 
         <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">TestnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">TestnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">network_provider_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">network_provider_kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="n">TestnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">with_gas_limit_estimator</span><span class="o">=</span><span class="n">with_gas_limit_estimator</span><span class="p">,</span>
+            <span class="n">gas_limit_multiplier</span><span class="o">=</span><span class="n">gas_limit_multiplier</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="DevnetEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.DevnetEntrypoint">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DevnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">with_gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit_multiplier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">DevnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
 
         <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">DevnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">DevnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">network_provider_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">network_provider_kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="n">DevnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">with_gas_limit_estimator</span><span class="o">=</span><span class="n">with_gas_limit_estimator</span><span class="p">,</span>
+            <span class="n">gas_limit_multiplier</span><span class="o">=</span><span class="n">gas_limit_multiplier</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="MainnetEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.MainnetEntrypoint">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MainnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">with_gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit_multiplier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">MainnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
 
         <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">MainnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">MainnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">network_provider_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">network_provider_kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="n">MainnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">with_gas_limit_estimator</span><span class="o">=</span><span class="n">with_gas_limit_estimator</span><span class="p">,</span>
+            <span class="n">gas_limit_multiplier</span><span class="o">=</span><span class="n">gas_limit_multiplier</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="LocalnetEntrypoint">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.LocalnetEntrypoint">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LocalnetEntrypoint</span><span class="p">(</span><span class="n">NetworkEntrypoint</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">with_gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit_multiplier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">LocalnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_url</span>
 
         <span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span> <span class="ow">or</span> <span class="n">LocalnetEntrypointConfig</span><span class="o">.</span><span class="n">network_provider_kind</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">LocalnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">network_provider_url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">network_provider_kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="n">LocalnetEntrypointConfig</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">with_gas_limit_estimator</span><span class="o">=</span><span class="n">with_gas_limit_estimator</span><span class="p">,</span>
+            <span class="n">gas_limit_multiplier</span><span class="o">=</span><span class="n">gas_limit_multiplier</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 
@@ -417,7 +513,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.token_management.token_management_transactions_factory &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk.token_management.token_management_transactions_factory &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e15882dc"></script>
+      <script src="../../../_static/documentation_options.js?v=51b770b3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -77,9 +77,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.biguint_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">BigUIntValue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.bytes_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesValue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.string_value</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringValue</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.builders.transaction_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionBuilder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span><span class="p">,</span> <span class="n">Transaction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.base_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseFactory</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">BadUsageError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IGasLimitEstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -97,8 +98,13 @@
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementTransactionsFactory">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TokenManagementTransactionsFactory</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TokenManagementTransactionsFactory</span><span class="p">(</span><span class="n">BaseFactory</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">,</span>
+        <span class="n">gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasLimitEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">gas_limit_estimator</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
 
@@ -147,15 +153,18 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_notify_about_unsetting_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -212,15 +221,18 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_issuing_non_fungible">
@@ -267,15 +279,18 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_meta_esdt">
@@ -324,15 +339,18 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_and_setting_roles">
@@ -360,15 +378,18 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_issue</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_burn_role_globally">
@@ -379,15 +400,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_burn_role_globally">
@@ -400,15 +423,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_toggle_burn_role_globally</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_fungible_token">
@@ -438,15 +463,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_fungible_token">
@@ -476,15 +503,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_semi_fungible_token">
@@ -526,15 +555,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_semi_fungible_token">
@@ -574,15 +605,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_special_role_on_meta_esdt">
@@ -670,15 +703,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unsetting_special_role_on_non_fungible_token">
@@ -720,15 +755,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_special_role</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_creating_nft">
@@ -767,15 +804,20 @@
         <span class="n">nft_data</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="nb">hash</span> <span class="o">+</span> <span class="n">attributes</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">uris</span><span class="p">)</span>
         <span class="n">storage_gas_limit</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nft_data</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_store_per_byte</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_create</span> <span class="o">+</span> <span class="n">storage_gas_limit</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_create</span> <span class="o">+</span> <span class="n">storage_gas_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_pausing">
@@ -783,15 +825,17 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_pausing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pause&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)])]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_pausing</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_pausing</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unpausing">
@@ -799,15 +843,17 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unpausing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unPause&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)])]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_pausing</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_pausing</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_freezing">
@@ -820,15 +866,17 @@
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freezing</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freezing</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unfreezing">
@@ -841,15 +889,17 @@
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freezing</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freezing</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_wiping">
@@ -861,15 +911,17 @@
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_wiping</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_wiping</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_local_minting">
@@ -883,15 +935,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">supply_to_mint</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_local_mint</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_local_mint</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_local_burning">
@@ -905,15 +959,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">supply_to_burn</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_local_burn</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_local_burn</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_updating_attributes">
@@ -937,15 +993,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_update_attributes</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_adding_quantity">
@@ -969,15 +1027,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_quantity</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_burning_quantity">
@@ -1001,15 +1061,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_burn</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_burn</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_modifying_royalties">
@@ -1033,15 +1095,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_modify_royalties</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_modify_royalties</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_setting_new_uris">
@@ -1068,15 +1132,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_new_uris</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_set_new_uris</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_modifying_creator">
@@ -1090,15 +1156,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_modify_creator</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_modify_creator</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_updating_metadata">
@@ -1130,15 +1198,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_metadata_update</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_metadata_update</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_nft_metadata_recreate">
@@ -1170,15 +1240,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_nft_metadata_recreate</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_nft_metadata_recreate</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_changing_token_to_dynamic">
@@ -1190,15 +1262,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_nft_change_to_dynamic</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_nft_change_to_dynamic</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_updating_token_id">
@@ -1209,15 +1283,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_update_token_id</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_update_token_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_token">
@@ -1248,15 +1324,18 @@
         <span class="k">if</span> <span class="n">token_type</span> <span class="o">==</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">META</span> <span class="ow">and</span> <span class="n">denominator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">denominator</span><span class="p">)]))</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_register_dynamic</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_register_dynamic</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_registering_dynamic_and_setting_roles">
@@ -1287,15 +1366,18 @@
         <span class="k">if</span> <span class="n">token_type</span> <span class="o">==</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">META</span> <span class="ow">and</span> <span class="n">denominator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">denominator</span><span class="p">)]))</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_register_dynamic</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">issue_cost</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_register_dynamic</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_transferring_ownership">
@@ -1309,15 +1391,17 @@
             <span class="n">new_owner</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_transfer_ownership</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_transfer_ownership</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_freezing_single_nft">
@@ -1332,15 +1416,17 @@
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freeze_single_nft</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_freeze_single_nft</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_unfreezing_single_nft">
@@ -1355,15 +1441,17 @@
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_unfreeze_single_nft</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_unfreeze_single_nft</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_changing_sft_to_meta_esdt">
@@ -1377,15 +1465,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">num_decimals</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_change_sft_to_meta_esdt</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_change_sft_to_meta_esdt</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_transferring_nft_create_role">
@@ -1401,15 +1491,17 @@
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_transfer_nft_create_role</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_transfer_nft_create_role</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_stopping_nft_creation">
@@ -1420,15 +1512,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)]),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_stop_nft_create</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_stop_nft_create</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transaction_for_wiping_single_nft">
@@ -1443,15 +1537,17 @@
             <span class="n">user</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(),</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">esdt_contract_address</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_wipe_single_nft</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_wipe_single_nft</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementTransactionsFactory.create_transction_for_adding_uris">
@@ -1471,15 +1567,17 @@
 
         <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">part</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">serialized_parts</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_uri</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">gas_limit_esdt_nft_add_uri</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_bool_to_typed_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StringValue</span><span class="p">:</span>
@@ -1496,7 +1594,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

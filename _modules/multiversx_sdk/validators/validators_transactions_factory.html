@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.validators.validators_transactions_factory &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk.validators.validators_transactions_factory &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e15882dc"></script>
+      <script src="../../../_static/documentation_options.js?v=51b770b3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -78,9 +78,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">ISingleValue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.serializer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Serializer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.small_int_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">U32Value</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.builders.transaction_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionBuilder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.base_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseFactory</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IGasLimitEstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.validators.validators_signers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidatorsSigners</span>
@@ -89,8 +90,13 @@
 
 <div class="viewcode-block" id="ValidatorsTransactionsFactory">
 <a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ValidatorsTransactionsFactory</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ValidatorsTransactionsFactory</span><span class="p">(</span><span class="n">BaseFactory</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">,</span>
+        <span class="n">gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasLimitEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">gas_limit_estimator</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
 
@@ -112,15 +118,19 @@
             <span class="n">rewards_address</span><span class="o">=</span><span class="n">rewards_address</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_staking</span> <span class="o">*</span> <span class="n">validators_file</span><span class="o">.</span><span class="n">get_num_of_nodes</span><span class="p">(),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_staking</span> <span class="o">*</span> <span class="n">validators_file</span><span class="o">.</span><span class="n">get_num_of_nodes</span><span class="p">(),</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -161,15 +171,16 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stake&quot;</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_topping_up</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_topping_up</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -183,14 +194,18 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStake&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -205,15 +220,19 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unJail&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unjailing</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">amount</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unjailing</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -227,14 +246,18 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBond&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -248,14 +271,15 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;changeRewardAddress&quot;</span><span class="p">,</span> <span class="n">rewards_address</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_changing_rewards_address</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_changing_rewards_address</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -265,14 +289,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_claiming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;claim&quot;</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_claiming</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_claiming</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -286,14 +311,18 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStakeNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking_nodes</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking_nodes</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -303,14 +332,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unstaking_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStakeTokens&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking_tokens</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unstaking_tokens</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -324,14 +354,18 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBondNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding_nodes</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding_nodes</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -341,14 +375,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unbonding_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBondTokens&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding_tokens</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_unbonding_tokens</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -358,14 +393,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_cleaning_registered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cleanRegisteredData&quot;</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_cleaning_registered_data</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_cleaning_registered_data</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 
@@ -379,14 +415,18 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reStakeUnStakedNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
-        <span class="n">transaction</span> <span class="o">=</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_restaking_unstaked_tokens</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_restaking_unstaked_tokens</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
 </div>
@@ -400,7 +440,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

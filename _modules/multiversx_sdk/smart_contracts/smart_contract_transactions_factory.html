@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.smart_contracts.smart_contract_transactions_factory &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk.smart_contracts.smart_contract_transactions_factory &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=e15882dc"></script>
+      <script src="../../../_static/documentation_options.js?v=51b770b3"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -81,7 +81,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.builders.token_transfers_data_builder</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TokenTransfersDataBuilder</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.builders.transaction_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionBuilder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Address</span><span class="p">,</span>
     <span class="n">CodeMetadata</span><span class="p">,</span>
@@ -89,19 +88,27 @@
     <span class="n">TokenTransfer</span><span class="p">,</span>
     <span class="n">Transaction</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.base_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseFactory</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="p">,</span>
     <span class="n">EGLD_IDENTIFIER_FOR_MULTI_ESDTNFT_TRANSFER</span><span class="p">,</span>
     <span class="n">VM_TYPE_WASM_VM</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IGasLimitEstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.smart_contracts.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArgumentSerializationError</span>
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SmartContractTransactionsFactory</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">,</span> <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SmartContractTransactionsFactory</span><span class="p">(</span><span class="n">BaseFactory</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">TransactionsFactoryConfig</span><span class="p">,</span>
+        <span class="n">abi</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Abi</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasLimitEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">gas_limit_estimator</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">abi</span> <span class="o">=</span> <span class="n">abi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
@@ -114,7 +121,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">bytecode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">arguments</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
         <span class="n">native_transfer_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -138,15 +145,18 @@
         <span class="n">prepared_arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encode_deploy_arguments</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">arguments</span><span class="p">))</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">serialized_parts</span> <span class="o">+</span> <span class="n">prepared_arg</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">CONTRACT_DEPLOY_ADDRESS_HEX</span><span class="p">),</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_execute">
@@ -156,7 +166,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">function</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">arguments</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
         <span class="n">native_transfer_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">token_transfers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">TokenTransfer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
@@ -203,15 +213,18 @@
         <span class="p">)</span>
         <span class="n">data_parts</span> <span class="o">+=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">prepared_arguments</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_upgrade">
@@ -221,7 +234,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">bytecode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
-        <span class="n">gas_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">arguments</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
         <span class="n">native_transfer_amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">is_upgradeable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -242,47 +255,73 @@
         <span class="n">prepared_arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encode_upgrade_arguments</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">arguments</span><span class="p">))</span>
         <span class="n">parts</span> <span class="o">+=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">serialized_parts</span> <span class="o">+</span> <span class="n">prepared_arguments</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">amount</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_claiming_developer_rewards">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_claiming_developer_rewards">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_claiming_developer_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_claiming_developer_rewards</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ClaimDeveloperRewards&quot;</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_claim_developer_rewards</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_claim_developer_rewards</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
 <div class="viewcode-block" id="SmartContractTransactionsFactory.create_transaction_for_changing_owner_address">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractTransactionsFactory.create_transaction_for_changing_owner_address">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_changing_owner_address</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">new_owner</span><span class="p">:</span> <span class="n">Address</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">new_owner</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ChangeOwnerAddress&quot;</span><span class="p">,</span> <span class="n">new_owner</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
 
-        <span class="k">return</span> <span class="n">TransactionBuilder</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
             <span class="n">receiver</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">data_parts</span><span class="o">=</span><span class="n">data_parts</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_change_owner_address</span><span class="p">,</span>
-            <span class="n">add_data_movement_gas</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_change_owner_address</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_encode_deploy_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
@@ -330,7 +369,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

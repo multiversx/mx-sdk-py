@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.core package &mdash; multiversx-sdk 1.6.2 documentation</title>
+  <title>multiversx_sdk.core package &mdash; multiversx-sdk 2.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=e15882dc"></script>
+      <script src="_static/documentation_options.js?v=51b770b3"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -54,12 +54,12 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">multiversx_sdk.core package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html">multiversx_sdk.delegation package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.entrypoints.html">multiversx_sdk.entrypoints package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.gas_estimator.html">multiversx_sdk.gas_estimator package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.governance.html">multiversx_sdk.governance package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.ledger.html">multiversx_sdk.ledger package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.multisig.html">multiversx_sdk.multisig package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.native_auth.html">multiversx_sdk.native_auth package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.network_providers.html">multiversx_sdk.network_providers package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.relayed.html">multiversx_sdk.relayed package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.smart_contracts.html">multiversx_sdk.smart_contracts package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.token_management.html">multiversx_sdk.token_management package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.transfers.html">multiversx_sdk.transfers package</a></li>
@@ -147,28 +147,10 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.address.Address.bech32">
-<span class="sig-name descname"><span class="pre">bech32</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.bech32"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.address.Address.bech32" title="Link to this definition"></a></dt>
-<dd><p>The <cite>bech32()</cite> method is deprecated. Please us <cite>to_bech32()</cite> instead</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.core.address.Address.empty">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.address.Address.empty" title="Link to this definition"></a></dt>
 <dd><p>Creates an empty address object.
 Generally speaking, this should not be used by client code <strong>(internal use only)</strong>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.address.Address.from_bech32">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bech32</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.from_bech32"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.address.Address.from_bech32" title="Link to this definition"></a></dt>
-<dd><p>The <cite>from_bech32()</cite> method is deprecated. Please use <cite>new_from_bech32()</cite> instead</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.address.Address.from_hex">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.from_hex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.address.Address.from_hex" title="Link to this definition"></a></dt>
-<dd><p>The <cite>from_hex()</cite> method is deprecated. Please use <cite>new_from_hex()</cite> instead</p>
 </dd></dl>
 
 <dl class="py method">
@@ -181,12 +163,6 @@ Generally speaking, this should not be used by client code <strong>(internal use
 <dt class="sig sig-object py" id="multiversx_sdk.core.address.Address.get_public_key">
 <span class="sig-name descname"><span class="pre">get_public_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.get_public_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.address.Address.get_public_key" title="Link to this definition"></a></dt>
 <dd><p>Returns the pubkey as bytes</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.address.Address.hex">
-<span class="sig-name descname"><span class="pre">hex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.hex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.address.Address.hex" title="Link to this definition"></a></dt>
-<dd><p>The <cite>hex()</cite> method is deprecated. Please use <cite>to_hex()</cite> instead</p>
 </dd></dl>
 
 <dl class="py method">
@@ -321,6 +297,48 @@ Generally speaking, this should not be used by client code <strong>(internal use
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.base_controller.</span></span><span class="sig-name descname"><span class="pre">BaseController</span></span><a class="reference internal" href="_modules/multiversx_sdk/core/base_controller.html#BaseController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.base_controller.BaseController" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This is the base class for all controllers. <strong>Internal use only.</strong></p>
+</dd></dl>
+
+</section>
+<section id="module-multiversx_sdk.core.base_factory">
+<span id="multiversx-sdk-core-base-factory-module"></span><h2>multiversx_sdk.core.base_factory module<a class="headerlink" href="#module-multiversx_sdk.core.base_factory" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.base_factory.BaseFactory">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.base_factory.</span></span><span class="sig-name descname"><span class="pre">BaseFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.base_factory.IConfig" title="multiversx_sdk.core.base_factory.IConfig"><span class="pre">IConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_limit_estimator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.interfaces.IGasLimitEstimator" title="multiversx_sdk.core.interfaces.IGasLimitEstimator"><span class="pre">IGasLimitEstimator</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/base_factory.html#BaseFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.base_factory.BaseFactory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for factories in the MultiversX SDK. <strong>Internal use only.</strong></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.base_factory.BaseFactory.set_gas_limit">
+<span class="sig-name descname"><span class="pre">set_gas_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction.Transaction" title="multiversx_sdk.core.transaction.Transaction"><span class="pre">Transaction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_gas_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/base_factory.html#BaseFactory.set_gas_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.base_factory.BaseFactory.set_gas_limit" title="Link to this definition"></a></dt>
+<dd><p>Sets the gas limit for the transaction.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>gas_limit: Optional gas limit to set. This is the value provided by the user.
+config_gas_limit: Optional gas limit from the configuration. This is computed internally based on some config values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.base_factory.BaseFactory.set_payload">
+<span class="sig-name descname"><span class="pre">set_payload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction.Transaction" title="multiversx_sdk.core.transaction.Transaction"><span class="pre">Transaction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_parts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/base_factory.html#BaseFactory.set_payload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.base_factory.BaseFactory.set_payload" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.base_factory.IConfig">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.base_factory.</span></span><span class="sig-name descname"><span class="pre">IConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/base_factory.html#IConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.base_factory.IConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.base_factory.IConfig.gas_limit_per_byte">
+<span class="sig-name descname"><span class="pre">gas_limit_per_byte</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.base_factory.IConfig.gas_limit_per_byte" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.core.base_factory.IConfig.min_gas_limit">
+<span class="sig-name descname"><span class="pre">min_gas_limit</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#multiversx_sdk.core.base_factory.IConfig.min_gas_limit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -520,6 +538,17 @@ Only alter the configuration, if needed, within a final application that uses th
 <dl class="py property">
 <dt class="sig sig-object py" id="multiversx_sdk.core.interfaces.IAccount.use_hash_signing">
 <em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_hash_signing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#multiversx_sdk.core.interfaces.IAccount.use_hash_signing" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.core.interfaces.IGasLimitEstimator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.core.interfaces.</span></span><span class="sig-name descname"><span class="pre">IGasLimitEstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/core/interfaces.html#IGasLimitEstimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.interfaces.IGasLimitEstimator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="multiversx_sdk.core.interfaces.IGasLimitEstimator.estimate_gas_limit">
+<span class="sig-name descname"><span class="pre">estimate_gas_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#multiversx_sdk.core.transaction.Transaction" title="multiversx_sdk.core.transaction.Transaction"><span class="pre">Transaction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/interfaces.html#IGasLimitEstimator.estimate_gas_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.interfaces.IGasLimitEstimator.estimate_gas_limit" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1396,28 +1425,10 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.Address.bech32">
-<span class="sig-name descname"><span class="pre">bech32</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.bech32"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.Address.bech32" title="Link to this definition"></a></dt>
-<dd><p>The <cite>bech32()</cite> method is deprecated. Please us <cite>to_bech32()</cite> instead</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.core.Address.empty">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.Address.empty" title="Link to this definition"></a></dt>
 <dd><p>Creates an empty address object.
 Generally speaking, this should not be used by client code <strong>(internal use only)</strong>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.Address.from_bech32">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_bech32</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.from_bech32"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.Address.from_bech32" title="Link to this definition"></a></dt>
-<dd><p>The <cite>from_bech32()</cite> method is deprecated. Please use <cite>new_from_bech32()</cite> instead</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.Address.from_hex">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.from_hex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.Address.from_hex" title="Link to this definition"></a></dt>
-<dd><p>The <cite>from_hex()</cite> method is deprecated. Please use <cite>new_from_hex()</cite> instead</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1430,12 +1441,6 @@ Generally speaking, this should not be used by client code <strong>(internal use
 <dt class="sig sig-object py" id="multiversx_sdk.core.Address.get_public_key">
 <span class="sig-name descname"><span class="pre">get_public_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.get_public_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.Address.get_public_key" title="Link to this definition"></a></dt>
 <dd><p>Returns the pubkey as bytes</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="multiversx_sdk.core.Address.hex">
-<span class="sig-name descname"><span class="pre">hex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/multiversx_sdk/core/address.html#Address.hex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.core.Address.hex" title="Link to this definition"></a></dt>
-<dd><p>The <cite>hex()</cite> method is deprecated. Please use <cite>to_hex()</cite> instead</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2400,7 +2405,7 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, MultiversX.</p>
+    <p>&#169; Copyright 2025, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
