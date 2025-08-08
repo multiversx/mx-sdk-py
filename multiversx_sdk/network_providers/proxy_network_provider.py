@@ -23,6 +23,7 @@ from multiversx_sdk.network_providers.constants import (
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
 )
 from multiversx_sdk.network_providers.errors import (
+    EstimateTransactionCostError,
     NetworkProviderError,
     TransactionFetchingError,
 )
@@ -204,6 +205,9 @@ class ProxyNetworkProvider(INetworkProvider):
             tx_copy.relayer_signature = bytes([0]) * 64
 
         response = self.do_post_generic("transaction/cost", tx_copy.to_dictionary())
+        error_message = response.get("returnMessage", "")
+        if error_message:
+            raise EstimateTransactionCostError(error_message)
         return transaction_cost_estimation_from_response(response.to_dictionary())
 
     def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
