@@ -35,7 +35,6 @@ from multiversx_sdk.network_providers.http_resources import (
     definition_of_tokens_collection_from_api_response,
     smart_contract_query_to_vm_query_request,
     token_amount_from_api_response,
-    transaction_cost_estimation_from_response,
     transaction_from_api_response,
     transaction_from_simulate_response,
     transactions_from_send_multiple_response,
@@ -161,22 +160,7 @@ class ApiNetworkProvider(INetworkProvider):
 
     def estimate_transaction_cost(self, transaction: Transaction) -> TransactionCostResponse:
         """Estimates the cost of a transaction."""
-        tx_copy = deepcopy(transaction)
-
-        if not tx_copy.nonce:
-            tx_copy.nonce = self.get_account(tx_copy.sender).nonce
-
-        if not tx_copy.signature:
-            tx_copy.signature = bytes([0]) * 64
-
-        if tx_copy.guardian and not tx_copy.guardian_signature:
-            tx_copy.guardian_signature = bytes([0]) * 64
-
-        if tx_copy.relayer and not tx_copy.relayer_signature:
-            tx_copy.relayer_signature = bytes([0]) * 64
-
-        response = self.do_post_generic("transaction/cost", tx_copy.to_dictionary())
-        return transaction_cost_estimation_from_response(response.get("data", {}))
+        return self.backing_proxy.estimate_transaction_cost(transaction=transaction)
 
     def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:
         """
