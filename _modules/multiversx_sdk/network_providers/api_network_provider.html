@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.network_providers.api_network_provider &mdash; multiversx-sdk 2.0.0 documentation</title>
+  <title>multiversx_sdk.network_providers.api_network_provider &mdash; multiversx-sdk 2.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=51b770b3"></script>
+      <script src="../../../_static/documentation_options.js?v=f5cff4aa"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -106,7 +106,6 @@
     <span class="n">definition_of_tokens_collection_from_api_response</span><span class="p">,</span>
     <span class="n">smart_contract_query_to_vm_query_request</span><span class="p">,</span>
     <span class="n">token_amount_from_api_response</span><span class="p">,</span>
-    <span class="n">transaction_cost_estimation_from_response</span><span class="p">,</span>
     <span class="n">transaction_from_api_response</span><span class="p">,</span>
     <span class="n">transaction_from_simulate_response</span><span class="p">,</span>
     <span class="n">transactions_from_send_multiple_response</span><span class="p">,</span>
@@ -266,22 +265,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.estimate_transaction_cost">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">estimate_transaction_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionCostResponse</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimates the cost of a transaction.&quot;&quot;&quot;</span>
-        <span class="n">tx_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">nonce</span><span class="p">:</span>
-            <span class="n">tx_copy</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_account</span><span class="p">(</span><span class="n">tx_copy</span><span class="o">.</span><span class="n">sender</span><span class="p">)</span><span class="o">.</span><span class="n">nonce</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">signature</span><span class="p">:</span>
-            <span class="n">tx_copy</span><span class="o">.</span><span class="n">signature</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">64</span>
-
-        <span class="k">if</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">guardian</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">guardian_signature</span><span class="p">:</span>
-            <span class="n">tx_copy</span><span class="o">.</span><span class="n">guardian_signature</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">64</span>
-
-        <span class="k">if</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">relayer</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">relayer_signature</span><span class="p">:</span>
-            <span class="n">tx_copy</span><span class="o">.</span><span class="n">relayer_signature</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mi">64</span>
-
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_post_generic</span><span class="p">(</span><span class="s2">&quot;transaction/cost&quot;</span><span class="p">,</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">to_dictionary</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">transaction_cost_estimation_from_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="p">{}))</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span><span class="o">.</span><span class="n">estimate_transaction_cost</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ApiNetworkProvider.send_transactions">
