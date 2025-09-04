@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Any, Callable, Optional, Union
 
 from multiversx_sdk.abi.interface import IPayloadHolder, ISingleValue
@@ -17,6 +18,12 @@ class CountedVariadicValues(IPayloadHolder):
         self.item_creator = item_creator
 
     def set_payload(self, value: Any):
+        if isinstance(value, CountedVariadicValues):
+            self.items = deepcopy(value.items)
+            self.item_creator = value.item_creator
+            self.length = value.length
+            return
+
         if not self.item_creator:
             raise ValueError("populating variadic values from a native object requires the item creator to be set")
 

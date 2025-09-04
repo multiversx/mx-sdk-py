@@ -47,6 +47,8 @@ class AddressValue:
         elif isinstance(value, str):
             address = Address.new_from_bech32(value)
             pubkey = address.get_public_key()
+        elif isinstance(value, AddressValue):
+            pubkey = value.get_payload()
         else:
             pubkey = bytes(value)
 

@@ -17,6 +17,11 @@ def test_set_payload_and_get_payload():
     assert value.items == [U32Value(1), U32Value(2), U32Value(3)]
     assert value.get_payload() == [1, 2, 3]
 
+    second_value = ArrayValue(length=3)
+    second_value.set_payload(value)
+    assert second_value.items == [U32Value(1), U32Value(2), U32Value(3)]
+    assert second_value.get_payload() == [1, 2, 3]
+
     # Simple
     value = ArrayValue(
         length=3,
@@ -35,6 +40,11 @@ def test_set_payload_and_get_payload():
     value.set_payload(range(4, 7))
     assert value.items == [BigUIntValue(4), BigUIntValue(5), BigUIntValue(6)]
     assert value.get_payload() == [4, 5, 6]
+
+    second_value = ArrayValue(length=3)
+    second_value.set_payload(value)
+    assert second_value.items == [BigUIntValue(4), BigUIntValue(5), BigUIntValue(6)]
+    assert second_value.get_payload() == [4, 5, 6]
 
     # Nested (with recursion)
     value = ArrayValue(

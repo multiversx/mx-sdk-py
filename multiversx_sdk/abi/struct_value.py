@@ -1,4 +1,5 @@
 import io
+from copy import deepcopy
 from types import SimpleNamespace
 from typing import Any
 
@@ -33,6 +34,10 @@ class StructValue:
         self.decode_nested(reader)
 
     def set_payload(self, value: Any):
+        if isinstance(value, StructValue):
+            self.fields = deepcopy(value.fields)
+            return
+
         native_dictionary, ok = convert_native_value_to_dictionary(value, raise_on_failure=False)
         if ok:
             set_fields_from_dictionary(self.fields, native_dictionary)

@@ -14,12 +14,20 @@ def test_set_payload_and_get_payload():
     assert values.value == U32Value(42)
     assert values.get_payload() == 42
 
+    second_value = OptionalValue()
+    second_value.set_payload(values)
+    assert second_value.get_payload() == 42
+
     # Nested
     values = OptionalValue(MultiValue([U32Value(), StringValue()]))
     values.set_payload([42, "hello"])
 
     assert values.value == MultiValue([U32Value(42), StringValue("hello")])
     assert values.get_payload() == [42, "hello"]
+
+    second_value = OptionalValue()
+    second_value.set_payload(values)
+    assert second_value.get_payload() == [42, "hello"]
 
     # With errors
     with pytest.raises(

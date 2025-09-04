@@ -19,6 +19,11 @@ def test_set_payload_and_get_payload():
     assert value.items == [U32Value(1), StringValue("hello")]
     assert value.get_payload() == [1, "hello"]
 
+    second_value = MultiValue([])
+    second_value.set_payload(value)
+    assert second_value.items == [U32Value(1), StringValue("hello")]
+    assert second_value.get_payload() == [1, "hello"]
+
     # Nested
     value = MultiValue(
         [
@@ -42,6 +47,15 @@ def test_set_payload_and_get_payload():
     ]
 
     assert value.get_payload() == ["a", "b", [42, "hello"]]
+
+    second_value = MultiValue([])
+    second_value.set_payload(value)
+    assert second_value.items == [
+        StringValue("a"),
+        StringValue("b"),
+        MultiValue([U32Value(42), StringValue("hello")]),
+    ]
+    assert second_value.get_payload() == ["a", "b", [42, "hello"]]
 
     # With errors
     with pytest.raises(

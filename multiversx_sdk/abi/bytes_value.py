@@ -29,6 +29,12 @@ class BytesValue:
         elif isinstance(value, dict):
             value = cast(dict[str, str], value)
             self.value = self._extract_value_from_dict(value)
+        elif isinstance(value, int):
+            if value < 0:
+                length = ((value + (value < 0)).bit_length() + 7 + 1) // 8
+                self.value = value.to_bytes(length, byteorder="big", signed=True)
+            else:
+                self.value = value.to_bytes()
         else:
             self.value = bytes(value)
 

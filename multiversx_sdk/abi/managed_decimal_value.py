@@ -1,4 +1,5 @@
 import io
+from copy import deepcopy
 from decimal import Decimal, localcontext
 from typing import Any, Union
 
@@ -22,10 +23,8 @@ class ManagedDecimalValue:
             if self.is_variable != value.is_variable:
                 raise Exception("Cannot set payload! Both managed decimal values should be variable.")
 
-            self.value = value.value
-
-            if self.is_variable:
-                self.scale = value.scale
+            self.value = deepcopy(value.value)
+            self.scale = value.scale
         else:
             self.value = self._convert_to_decimal(value)
 

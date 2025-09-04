@@ -1,4 +1,5 @@
 import io
+from copy import deepcopy
 from types import SimpleNamespace
 from typing import Any, Callable, Optional
 
@@ -73,6 +74,13 @@ class EnumValue:
         return self.names_to_discriminants[variant_name]
 
     def set_payload(self, value: Any):
+        if isinstance(value, EnumValue):
+            self.discriminant = value.discriminant
+            self.fields = deepcopy(value.fields)
+            self.fields_provider = deepcopy(value.fields_provider)
+            self.names_to_discriminants = value.names_to_discriminants
+            return
+
         if not self.fields_provider:
             raise ValueError("populating an enum from a native object requires the fields provider to be set")
 

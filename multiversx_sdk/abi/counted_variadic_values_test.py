@@ -17,6 +17,12 @@ def test_set_payload_and_get_payload():
     assert values.items == [U32Value(1), U32Value(2), U32Value(3)]
     assert values.get_payload() == [1, 2, 3]
 
+    second_value = CountedVariadicValues()
+    second_value.set_payload(values)
+    assert second_value.length == 3
+    assert second_value.items == [U32Value(1), U32Value(2), U32Value(3)]
+    assert second_value.get_payload() == [1, 2, 3]
+
     # Nested
     values = CountedVariadicValues(item_creator=lambda: MultiValue([U32Value(), StringValue()]))
     values.set_payload([[42, "hello"], [43, "world"]])
