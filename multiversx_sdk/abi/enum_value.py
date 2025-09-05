@@ -77,8 +77,8 @@ class EnumValue:
         if isinstance(value, EnumValue):
             self.discriminant = value.discriminant
             self.fields = deepcopy(value.fields)
-            self.fields_provider = deepcopy(value.fields_provider)
-            self.names_to_discriminants = value.names_to_discriminants
+            self.fields_provider = value.fields_provider
+            self.names_to_discriminants = deepcopy(value.names_to_discriminants)
             return
 
         if not self.fields_provider:

@@ -1,6 +1,7 @@
 import io
 from typing import Any, cast
 
+from multiversx_sdk.abi.bigint_value import BigIntValue
 from multiversx_sdk.abi.shared import decode_length, encode_length, read_bytes_exactly
 
 
@@ -24,17 +25,18 @@ class BytesValue:
         self.value = data
 
     def set_payload(self, value: Any):
-        if isinstance(value, str):
+        if isinstance(value, BytesValue):
+            self.value = value.get_payload()
+        elif isinstance(value, str):
             self.value = bytes(value, "utf-8")
         elif isinstance(value, dict):
             value = cast(dict[str, str], value)
             self.value = self._extract_value_from_dict(value)
         elif isinstance(value, int):
-            if value < 0:
-                length = ((value + (value < 0)).bit_length() + 7 + 1) // 8
-                self.value = value.to_bytes(length, byteorder="big", signed=True)
-            else:
-                self.value = value.to_bytes()
+            typed_value = BigIntValue(value)
+            writer = io.BytesIO()
+            typed_value.encode_top_level(writer)
+            self.value = writer.getvalue()
         else:
             self.value = bytes(value)
 
