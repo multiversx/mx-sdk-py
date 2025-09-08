@@ -16,6 +16,11 @@ def test_set_payload_and_get_payload():
     assert values.items == [U32Value(1), U32Value(2), U32Value(3)]
     assert values.get_payload() == [1, 2, 3]
 
+    second_values = VariadicValues()
+    second_values.set_payload(values)
+    assert second_values.items == [U32Value(1), U32Value(2), U32Value(3)]
+    assert second_values.get_payload() == [1, 2, 3]
+
     # Nested
     values = VariadicValues(item_creator=lambda: MultiValue([U32Value(), StringValue()]))
     values.set_payload([[42, "hello"], [43, "world"]])
@@ -26,6 +31,14 @@ def test_set_payload_and_get_payload():
     ]
 
     assert values.get_payload() == [[42, "hello"], [43, "world"]]
+
+    second_values = VariadicValues()
+    second_values.set_payload(values)
+    assert second_values.items == [
+        MultiValue([U32Value(42), StringValue("hello")]),
+        MultiValue([U32Value(43), StringValue("world")]),
+    ]
+    assert second_values.get_payload() == [[42, "hello"], [43, "world"]]
 
     # With errors
     with pytest.raises(

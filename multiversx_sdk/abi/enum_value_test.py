@@ -57,6 +57,13 @@ def test_set_payload_and_get_payload():
     assert value.get_payload() == SimpleNamespace(__discriminant__=41, a=1, b=2)
     assert int(value.get_payload()) == 41
 
+    second_value = EnumValue()
+    second_value.set_payload(value)
+    assert second_value.discriminant == 41
+    assert second_value.fields == [Field("a", U32Value(1)), Field("b", BigUIntValue(2))]
+    assert second_value.get_payload() == SimpleNamespace(__discriminant__=41, a=1, b=2)
+    assert int(second_value.get_payload()) == 41
+
     class Payload:
         def __init__(self, c: int, d: int):
             self.__discriminant__ = 42

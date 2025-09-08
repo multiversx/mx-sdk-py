@@ -1,4 +1,5 @@
 import io
+from copy import deepcopy
 from typing import Any, Callable, Optional
 
 from multiversx_sdk.abi.interface import ISingleValue
@@ -52,6 +53,11 @@ class ListValue:
         self.items.append(new_item)
 
     def set_payload(self, value: Any):
+        if isinstance(value, ListValue):
+            self.items = deepcopy(value.items)
+            self.item_creator = value.item_creator
+            return
+
         if not self.item_creator:
             raise ValueError("populating a list from a native object requires the item creator to be set")
 

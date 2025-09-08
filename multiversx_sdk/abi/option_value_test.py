@@ -15,16 +15,28 @@ def test_set_payload_and_get_payload():
     value.set_payload(42)
     assert value.get_payload() == 42
 
+    second_value = OptionValue()
+    second_value.set_payload(value)
+    assert second_value.get_payload() == 42
+
     # Simple (missing)
     value = OptionValue(U32Value())
     value.set_payload(None)
     assert value.get_payload() is None
+
+    second_value = OptionValue()
+    second_value.set_payload(value)
+    assert second_value.get_payload() is None
 
     # Nested
     value = OptionValue(StructValue([Field("a", U32Value()), Field("b", BigUIntValue())]))
 
     value.set_payload({"a": 41, "b": 42})
     assert value.get_payload() == SimpleNamespace(a=41, b=42)
+
+    second_value = OptionValue()
+    second_value.set_payload(value)
+    assert second_value.get_payload() == SimpleNamespace(a=41, b=42)
 
     # With errors
     with pytest.raises(

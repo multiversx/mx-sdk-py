@@ -1,4 +1,5 @@
 import io
+from copy import deepcopy
 from typing import Any
 
 from multiversx_sdk.abi.interface import ISingleValue
@@ -31,6 +32,10 @@ class TupleValue:
         self.decode_nested(reader)
 
     def set_payload(self, value: Any):
+        if isinstance(value, TupleValue):
+            self.fields = deepcopy(value.fields)
+            return
+
         native_list, ok = convert_native_value_to_list(value, raise_on_failure=False)
         if ok:
             if len(self.fields) != len(native_list):

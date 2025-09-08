@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Any, Optional, Union
 
 from multiversx_sdk.abi.interface import IPayloadHolder, ISingleValue
@@ -9,16 +10,16 @@ class OptionalValue(IPayloadHolder):
         self.value = value
 
     def set_payload(self, value: Any):
+        if isinstance(value, OptionalValue):
+            self.value = deepcopy(value.value)
+            return
+
         if value is None:
             self.value = None
             return
 
         if self.value is None:
             raise ValueError("placeholder value of optional should be set before calling set_payload")
-
-        if isinstance(value, OptionalValue):
-            self.value = value.value
-            return
 
         self.value.set_payload(value)
 

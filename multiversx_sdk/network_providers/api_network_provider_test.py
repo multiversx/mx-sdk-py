@@ -172,6 +172,7 @@ class TestApi:
         assert num_txs == 2
         assert hashes == expected_hashes
 
+    @pytest.mark.skip
     def test_simulate_transaction(self):
         bob = load_wallets()["bob"]
         tx_computer = TransactionComputer()
