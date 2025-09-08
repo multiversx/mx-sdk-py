@@ -127,6 +127,10 @@
 <div class="viewcode-block" id="SmallUIntValue.set_payload">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallUIntValue.set_payload">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SmallUIntValue</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">return</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 
@@ -192,6 +196,15 @@
 <div class="viewcode-block" id="SmallIntValue.set_payload">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.SmallIntValue.set_payload">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SmallIntValue</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_bytes</span> <span class="o">&lt;</span> <span class="n">value</span><span class="o">.</span><span class="n">_num_bytes</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;cannot set payload: source value has </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">_num_bytes</span><span class="si">}</span><span class="s2"> bytes, which is more than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_bytes</span><span class="si">}</span><span class="s2"> bytes of the target&quot;</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">return</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 
