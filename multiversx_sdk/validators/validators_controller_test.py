@@ -410,3 +410,65 @@ class TestValidatorsController:
             transaction.data.decode()
             == "reStakeUnStakedNodes@e7beaa95b3877f47348df4dd1cb578a4f7cabf7a20bfeefe5cdd263878ff132b765e04fef6f40c93512b666c47ed7719b8902f6c922c04247989b7137e837cc81a62e54712471c97a2ddab75aa9c2f58f813ed4c0fa722bde0ab718bff382208"
         )
+
+    def test_create_new_delegation_contract_from_validator(self):
+        transaction = self.controller.create_transaction_for_new_delegation_contract_from_validator_data(
+            sender=self.alice,
+            nonce=7,
+            max_cap=0,
+            fee=3745,
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"
+        assert transaction.value == 0
+        assert transaction.nonce == 7
+        assert transaction.gas_limit == 51_107_000
+        assert transaction.chain_id == "localnet"
+        assert transaction.version == 2
+        assert transaction.options == 0
+        assert transaction.data.decode() == "makeNewContractFromValidatorData@@0ea1"
+
+    def test_create_transaction_for_merging_validator_to_delegation(self):
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        transaction = self.controller.create_transaction_for_merging_validator_to_delegation_with_whitelist(
+            sender=self.alice,
+            nonce=7,
+            delegation_contract=delegation_contract,
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"
+        assert transaction.value == 0
+        assert transaction.nonce == 7
+        assert transaction.gas_limit == 50_206_000
+        assert transaction.chain_id == "localnet"
+        assert transaction.version == 2
+        assert transaction.options == 0
+        assert (
+            transaction.data.decode()
+            == "mergeValidatorToDelegationWithWhitelist@000000000000000000010000000000000000000000000000000000002fffffff"
+        )
+
+    def test_create_transaction_for_merging_validator_to_delegation_same_owner(self):
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+
+        transaction = self.controller.create_transaction_for_merging_validator_to_delegation_same_owner(
+            sender=self.alice,
+            nonce=7,
+            delegation_contract=delegation_contract,
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqylllslmq6y6"
+        assert transaction.value == 0
+        assert transaction.nonce == 7
+        assert transaction.gas_limit == 50_200_000
+        assert transaction.chain_id == "localnet"
+        assert transaction.version == 2
+        assert transaction.options == 0
+        assert (
+            transaction.data.decode()
+            == "mergeValidatorToDelegationSameOwner@000000000000000000010000000000000000000000000000000000002fffffff"
+        )
