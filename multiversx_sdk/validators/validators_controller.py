@@ -356,3 +356,81 @@ class ValidatorsController(BaseController):
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
+
+    def create_transaction_for_new_delegation_contract_from_validator_data(
+        self,
+        sender: IAccount,
+        nonce: int,
+        max_cap: int,
+        fee: int,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_new_delegation_contract_from_validator_data(
+            sender=sender.address,
+            max_cap=max_cap,
+            fee=fee,
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_merging_validator_to_delegation_with_whitelist(
+        self,
+        sender: IAccount,
+        nonce: int,
+        delegation_contract: Address,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_merging_validator_to_delegation_with_whitelist(
+            sender=sender.address, delegation_contract=delegation_contract
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
+
+    def create_transaction_for_merging_validator_to_delegation_same_owner(
+        self,
+        sender: IAccount,
+        nonce: int,
+        delegation_contract: Address,
+        guardian: Optional[Address] = None,
+        relayer: Optional[Address] = None,
+        gas_limit: Optional[int] = None,
+        gas_price: Optional[int] = None,
+    ) -> Transaction:
+        transaction = self.factory.create_transaction_for_merging_validator_to_delegation_same_owner(
+            sender=sender.address, delegation_contract=delegation_contract
+        )
+
+        transaction.guardian = guardian
+        transaction.relayer = relayer
+        transaction.nonce = nonce
+
+        self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
+        self._set_version_and_options_for_guardian(transaction)
+        transaction.signature = sender.sign_transaction(transaction)
+
+        return transaction
