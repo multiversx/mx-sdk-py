@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.delegation.delegation_transactions_factory &mdash; multiversx-sdk 2.0.1 documentation</title>
+  <title>multiversx_sdk.delegation.delegation_transactions_factory &mdash; multiversx-sdk 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f5cff4aa"></script>
+      <script src="../../../_static/documentation_options.js?v=20623aea"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -580,6 +580,30 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_withdrawing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;withdraw&quot;</span><span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">delegation_contract</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="o">=</span><span class="n">parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span> <span class="n">config_gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="DelegationTransactionsFactory.create_transaction_for_whitelist_for_merge">
+<a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationTransactionsFactory.create_transaction_for_whitelist_for_merge">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_whitelist_for_merge</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">validator_operator</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;whitelistForMerge&quot;</span><span class="p">,</span> <span class="n">validator_operator</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+        <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_whitelist_for_merge</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>

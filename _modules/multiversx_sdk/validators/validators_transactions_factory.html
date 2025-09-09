@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.validators.validators_transactions_factory &mdash; multiversx-sdk 2.0.1 documentation</title>
+  <title>multiversx_sdk.validators.validators_transactions_factory &mdash; multiversx-sdk 2.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=f5cff4aa"></script>
+      <script src="../../../_static/documentation_options.js?v=20623aea"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -80,7 +80,10 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.small_int_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">U32Value</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.base_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseFactory</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DELEGATION_MANAGER_SC_ADDRESS_HEX</span><span class="p">,</span>
+    <span class="n">STAKING_SMART_CONTRACT_ADDRESS_HEX</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IGasLimitEstimator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transaction</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transactions_factory_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionsFactoryConfig</span>
@@ -426,6 +429,85 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
             <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
             <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_restaking_unstaked_tokens</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_new_delegation_contract_from_validator_data">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_new_delegation_contract_from_validator_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_new_delegation_contract_from_validator_data</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">max_cap</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">fee</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">max_cap</span><span class="p">),</span> <span class="n">BigUIntValue</span><span class="p">(</span><span class="n">fee</span><span class="p">)])]</span>
+
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;makeNewContractFromValidatorData&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">DELEGATION_MANAGER_SC_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_creating_delegation_contract_from_validator</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_merging_validator_to_delegation_with_whitelist">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_merging_validator_to_delegation_with_whitelist">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_merging_validator_to_delegation_with_whitelist</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mergeValidatorToDelegationWithWhitelist&quot;</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">DELEGATION_MANAGER_SC_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_merging_validator_to_delegation</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span></div>
+
+
+<div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_merging_validator_to_delegation_same_owner">
+<a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_merging_validator_to_delegation_same_owner">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_merging_validator_to_delegation_same_owner</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+        <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mergeValidatorToDelegationSameOwner&quot;</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">receiver</span><span class="o">=</span><span class="n">Address</span><span class="o">.</span><span class="n">new_from_hex</span><span class="p">(</span><span class="n">DELEGATION_MANAGER_SC_ADDRESS_HEX</span><span class="p">),</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">chain_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chain_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">data_parts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gas_limit</span><span class="p">(</span>
+            <span class="n">transaction</span><span class="o">=</span><span class="n">transaction</span><span class="p">,</span>
+            <span class="n">config_gas_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_merging_validator_to_delegation</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">transaction</span></div>
