@@ -638,6 +638,11 @@ class TokenManagementController(BaseController):
         add_role_nft_update_attributes: bool = False,
         add_role_nft_add_uri: bool = False,
         add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_creator: bool = False,
+        add_role_nft_recreate: bool = False,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
@@ -652,6 +657,11 @@ class TokenManagementController(BaseController):
             add_role_nft_update_attributes=add_role_nft_update_attributes,
             add_role_nft_add_uri=add_role_nft_add_uri,
             add_role_esdt_transfer_role=add_role_esdt_transfer_role,
+            add_role_nft_update=add_role_nft_update,
+            add_role_esdt_modify_royalties=add_role_esdt_modify_royalties,
+            add_role_esdt_set_new_uri=add_role_esdt_set_new_uri,
+            add_role_esdt_modify_creator=add_role_esdt_modify_creator,
+            add_role_nft_recreate=add_role_nft_recreate,
         )
 
         transaction.guardian = guardian
@@ -1656,7 +1666,7 @@ class TokenManagementController(BaseController):
 
         return transaction
 
-    def create_transction_for_adding_uris(
+    def create_transaction_for_adding_uris(
         self,
         sender: IAccount,
         nonce: int,
@@ -1668,7 +1678,7 @@ class TokenManagementController(BaseController):
         gas_limit: Optional[int] = None,
         gas_price: Optional[int] = None,
     ) -> Transaction:
-        transaction = self.factory.create_transction_for_adding_uris(
+        transaction = self.factory.create_transaction_for_adding_uris(
             sender=sender.address,
             token_identifier=token_identifier,
             token_nonce=token_nonce,
