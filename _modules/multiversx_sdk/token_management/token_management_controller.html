@@ -818,6 +818,11 @@
         <span class="n">add_role_nft_update_attributes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_role_nft_add_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_role_esdt_transfer_role</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_nft_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_esdt_modify_royalties</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_esdt_set_new_uri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_esdt_modify_creator</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_role_nft_recreate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -832,6 +837,11 @@
             <span class="n">add_role_nft_update_attributes</span><span class="o">=</span><span class="n">add_role_nft_update_attributes</span><span class="p">,</span>
             <span class="n">add_role_nft_add_uri</span><span class="o">=</span><span class="n">add_role_nft_add_uri</span><span class="p">,</span>
             <span class="n">add_role_esdt_transfer_role</span><span class="o">=</span><span class="n">add_role_esdt_transfer_role</span><span class="p">,</span>
+            <span class="n">add_role_nft_update</span><span class="o">=</span><span class="n">add_role_nft_update</span><span class="p">,</span>
+            <span class="n">add_role_esdt_modify_royalties</span><span class="o">=</span><span class="n">add_role_esdt_modify_royalties</span><span class="p">,</span>
+            <span class="n">add_role_esdt_set_new_uri</span><span class="o">=</span><span class="n">add_role_esdt_set_new_uri</span><span class="p">,</span>
+            <span class="n">add_role_esdt_modify_creator</span><span class="o">=</span><span class="n">add_role_esdt_modify_creator</span><span class="p">,</span>
+            <span class="n">add_role_nft_recreate</span><span class="o">=</span><span class="n">add_role_nft_recreate</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span> <span class="o">=</span> <span class="n">guardian</span>
@@ -2044,9 +2054,9 @@
         <span class="k">return</span> <span class="n">transaction</span></div>
 
 
-<div class="viewcode-block" id="TokenManagementController.create_transction_for_adding_uris">
-<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.create_transction_for_adding_uris">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_transction_for_adding_uris</span><span class="p">(</span>
+<div class="viewcode-block" id="TokenManagementController.create_transaction_for_adding_uris">
+<a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.create_transaction_for_adding_uris">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_adding_uris</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span>
         <span class="n">nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -2058,7 +2068,7 @@
         <span class="n">gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">gas_price</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transction_for_adding_uris</span><span class="p">(</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_adding_uris</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
             <span class="n">token_identifier</span><span class="o">=</span><span class="n">token_identifier</span><span class="p">,</span>
             <span class="n">token_nonce</span><span class="o">=</span><span class="n">token_nonce</span><span class="p">,</span>
