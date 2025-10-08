@@ -57,7 +57,8 @@ class GovernanceController(BaseController):
         address_hrp: Optional[str] = None,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
-        self._factory = GovernanceTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self._factory = GovernanceTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
         self._network_provider = network_provider
         self._governance_contract = Address.new_from_hex(GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX)
         self._sc_controller = SmartContractController(chain_id, network_provider)

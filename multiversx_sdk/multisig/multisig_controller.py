@@ -65,11 +65,11 @@ class MultisigController(BaseController):
         address_hrp: Optional[str] = None,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
         self._network_provider = network_provider
         self._factory = MultisigTransactionsFactory(
             config=TransactionsFactoryConfig(chain_id),
             abi=abi,
-            gas_limit_estimator=gas_limit_estimator,
         )
         self._parser = MultisigTransactionsOutcomeParser(abi=abi)
         self._smart_contract_controller = SmartContractController(

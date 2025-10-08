@@ -10,11 +10,9 @@ from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryC
 
 
 class AccountController(BaseController):
-    def __init__(self, chain_id: str, gasLimitEstimator: Optional[IGasLimitEstimator] = None) -> None:
-        self.factory = AccountTransactionsFactory(
-            config=TransactionsFactoryConfig(chain_id),
-            gas_limit_estimator=gasLimitEstimator,
-        )
+    def __init__(self, chain_id: str, gas_limit_estimator: Optional[IGasLimitEstimator] = None) -> None:
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self.factory = AccountTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
 
     def create_transaction_for_saving_key_value(
         self,

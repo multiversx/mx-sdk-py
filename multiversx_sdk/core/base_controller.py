@@ -4,13 +4,16 @@ from multiversx_sdk.core.constants import (
     EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTIONS,
     EXTRA_GAS_LIMIT_FOR_RELAYED_TRANSACTIONS,
 )
-from multiversx_sdk.core.interfaces import IAccount
+from multiversx_sdk.core.interfaces import IAccount, IGasLimitEstimator
 from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 
 
 class BaseController:
     """This is the base class for all controllers. **Internal use only.**"""
+
+    def __init__(self, gas_limit_estimator: Optional[IGasLimitEstimator] = None) -> None:
+        self.gas_limit_estimator = gas_limit_estimator
 
     def _set_version_and_options_for_hash_signing(self, sender: IAccount, transaction: Transaction):
         """If the Account has the `use_hash_signing` flag set to `True`, this method will set the correct `version` and `options` properties of `Transaction`."""
@@ -37,8 +40,13 @@ class BaseController:
 
         if gas_limit:
             transaction.gas_limit = gas_limit
+            return
         else:
             self._add_extra_gas_limit_if_required(transaction)
+
+        if self.gas_limit_estimator:
+            transaction.gas_limit = 0
+            transaction.gas_limit = self.gas_limit_estimator.estimate_gas_limit(transaction)
 
     def _set_version_and_options_for_guardian(self, transaction: Transaction):
         if transaction.guardian:

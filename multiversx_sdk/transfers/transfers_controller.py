@@ -15,7 +15,8 @@ class TransfersController(BaseController):
         chain_id: str,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
-        self.factory = TransferTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self.factory = TransferTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
 
     def create_transaction_for_native_token_transfer(
         self,

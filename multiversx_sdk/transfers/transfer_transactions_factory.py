@@ -1,5 +1,7 @@
 from typing import Optional
 
+from multiversx_sdk.abi.serializer import Serializer
+from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.builders.token_transfers_data_builder import (
     TokenTransfersDataBuilder,
 )
@@ -48,7 +50,11 @@ class TransferTransactionsFactory(BaseFactory):
         return transaction
 
     def create_transaction_for_esdt_token_transfer(
-        self, sender: Address, receiver: Address, token_transfers: list[TokenTransfer]
+        self,
+        sender: Address,
+        receiver: Address,
+        token_transfers: list[TokenTransfer],
+        data: Optional[bytes] = None,
     ) -> Transaction:
         if not token_transfers:
             raise BadUsageError("No token transfer has been provided")
@@ -57,6 +63,10 @@ class TransferTransactionsFactory(BaseFactory):
             data_parts, extra_gas_for_transfer, receiver = self._single_transfer(sender, receiver, token_transfers[0])
         else:
             data_parts, extra_gas_for_transfer, receiver = self._multi_transfer(sender, receiver, token_transfers)
+
+        if data:
+            serializer = Serializer()
+            data_parts.append(serializer.serialize([StringValue(data.decode())]))
 
         transaction = Transaction(
             sender=sender,
@@ -104,10 +114,7 @@ class TransferTransactionsFactory(BaseFactory):
         token_transfers: Optional[list[TokenTransfer]] = None,
         data: Optional[bytes] = None,
     ) -> Transaction:
-        if token_transfers and data:
-            raise BadUsageError("Can't set data field when sending esdt tokens")
-
-        if (native_amount and not token_transfers) or data:
+        if (native_amount or data) and not token_transfers:
             native_amount = native_amount if native_amount else 0
             return self.create_transaction_for_native_token_transfer(
                 sender=sender,
@@ -118,9 +125,13 @@ class TransferTransactionsFactory(BaseFactory):
 
         token_transfers = list(token_transfers) if token_transfers else []
 
-        native_transfer = TokenTransfer.new_from_native_amount(native_amount) if native_amount else None
-        token_transfers.append(native_transfer) if native_transfer else None
+        if native_amount:
+            native_transfer = TokenTransfer.new_from_native_amount(native_amount)
+            token_transfers.append(native_transfer)
 
         return self.create_transaction_for_esdt_token_transfer(
-            sender=sender, receiver=receiver, token_transfers=token_transfers
+            sender=sender,
+            receiver=receiver,
+            token_transfers=token_transfers,
+            data=data,
         )

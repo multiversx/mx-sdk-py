@@ -39,8 +39,9 @@ class DelegationController(BaseController):
         network_provider: INetworkProvider,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
         self.network_provider = network_provider
-        self.factory = DelegationTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
+        self.factory = DelegationTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
         self.parser = DelegationTransactionsOutcomeParser()
 
     def create_transaction_for_new_delegation_contract(

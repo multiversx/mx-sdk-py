@@ -54,7 +54,8 @@ class TokenManagementController(BaseController):
         network_provider: INetworkProvider,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
-        self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self.factory = TokenManagementTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
         self.network_provider = network_provider
         self.parser = TokenManagementTransactionsOutcomeParser()
 
