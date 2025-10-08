@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token, TokenTransfer
@@ -7,6 +9,7 @@ from multiversx_sdk.entrypoints.entrypoints import DevnetEntrypoint
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 
 
+@pytest.mark.networkInteraction
 class TestTransfersController:
     sender = Account(UserSecretKey(bytes.fromhex("bdf3c95c4b0bcbacd828b148231a10c25f93286befe92077b5d096055fb4e96a")))
     mike = Address.new_from_bech32("erd1uv40ahysflse896x4ktnh6ecx43u7cmy9wnxnvcyp7deg299a4sq6vaywa")

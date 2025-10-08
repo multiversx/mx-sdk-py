@@ -1,7 +1,5 @@
 from typing import Optional
 
-from multiversx_sdk.abi.serializer import Serializer
-from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.builders.token_transfers_data_builder import (
     TokenTransfersDataBuilder,
 )
@@ -65,8 +63,7 @@ class TransferTransactionsFactory(BaseFactory):
             data_parts, extra_gas_for_transfer, receiver = self._multi_transfer(sender, receiver, token_transfers)
 
         if data:
-            serializer = Serializer()
-            data_parts.append(serializer.serialize([StringValue(data.decode())]))
+            data_parts.append(data.hex())
 
         transaction = Transaction(
             sender=sender,
@@ -114,24 +111,22 @@ class TransferTransactionsFactory(BaseFactory):
         token_transfers: Optional[list[TokenTransfer]] = None,
         data: Optional[bytes] = None,
     ) -> Transaction:
-        if (native_amount or data) and not token_transfers:
-            native_amount = native_amount if native_amount else 0
-            return self.create_transaction_for_native_token_transfer(
+        if token_transfers:
+            if native_amount:
+                native_transfer = TokenTransfer.new_from_native_amount(native_amount)
+                token_transfers.append(native_transfer)
+
+            return self.create_transaction_for_esdt_token_transfer(
                 sender=sender,
                 receiver=receiver,
-                native_amount=native_amount,
-                data=data.decode() if data else None,
+                token_transfers=token_transfers,
+                data=data,
             )
 
-        token_transfers = list(token_transfers) if token_transfers else []
-
-        if native_amount:
-            native_transfer = TokenTransfer.new_from_native_amount(native_amount)
-            token_transfers.append(native_transfer)
-
-        return self.create_transaction_for_esdt_token_transfer(
+        native_amount = native_amount if native_amount else 0
+        return self.create_transaction_for_native_token_transfer(
             sender=sender,
             receiver=receiver,
-            token_transfers=token_transfers,
-            data=data,
+            native_amount=native_amount,
+            data=data.decode() if data else None,
         )
