@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.account_management.account_controller &mdash; multiversx-sdk 2.1.0 documentation</title>
+  <title>multiversx_sdk.account_management.account_controller &mdash; multiversx-sdk 2.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=20623aea"></script>
+      <script src="../../../_static/documentation_options.js?v=c3c8ae58"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -83,11 +83,9 @@
 <div class="viewcode-block" id="AccountController">
 <a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AccountController</span><span class="p">(</span><span class="n">BaseController</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gasLimitEstimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasLimitEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">AccountTransactionsFactory</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="n">chain_id</span><span class="p">),</span>
-            <span class="n">gas_limit_estimator</span><span class="o">=</span><span class="n">gasLimitEstimator</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasLimitEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">gas_limit_estimator</span><span class="o">=</span><span class="n">gas_limit_estimator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">AccountTransactionsFactory</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">TransactionsFactoryConfig</span><span class="p">(</span><span class="n">chain_id</span><span class="p">))</span>
 
 <div class="viewcode-block" id="AccountController.create_transaction_for_saving_key_value">
 <a class="viewcode-back" href="../../../multiversx_sdk.account_management.html#multiversx_sdk.AccountController.create_transaction_for_saving_key_value">[docs]</a>
