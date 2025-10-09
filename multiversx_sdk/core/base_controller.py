@@ -45,8 +45,6 @@ class BaseController:
             self._add_extra_gas_limit_if_required(transaction)
 
         if self.gas_limit_estimator:
-            # we set gas_limit to 0 for the /cost endpoint which is not really working as expected if gas_limit is set
-            transaction.gas_limit = 0
             transaction.gas_limit = self.gas_limit_estimator.estimate_gas_limit(transaction)
 
     def _set_version_and_options_for_guardian(self, transaction: Transaction):
