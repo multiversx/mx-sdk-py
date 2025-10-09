@@ -192,6 +192,9 @@ class ProxyNetworkProvider(INetworkProvider):
         """Estimates the cost of a transaction."""
         tx_copy = deepcopy(transaction)
 
+        # we set gas_limit to 0 for the /cost endpoint which is not really working as expected if gas_limit is set
+        tx_copy.gas_limit = 0
+
         if not tx_copy.nonce:
             tx_copy.nonce = self.get_account(tx_copy.sender).nonce
 
