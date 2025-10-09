@@ -297,6 +297,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimates the cost of a transaction.&quot;&quot;&quot;</span>
         <span class="n">tx_copy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
+        <span class="c1"># we set gas_limit to 0 for the /cost endpoint which is not really working as expected if gas_limit is set</span>
+        <span class="n">tx_copy</span><span class="o">.</span><span class="n">gas_limit</span> <span class="o">=</span> <span class="mi">0</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tx_copy</span><span class="o">.</span><span class="n">nonce</span><span class="p">:</span>
             <span class="n">tx_copy</span><span class="o">.</span><span class="n">nonce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_account</span><span class="p">(</span><span class="n">tx_copy</span><span class="o">.</span><span class="n">sender</span><span class="p">)</span><span class="o">.</span><span class="n">nonce</span>
 

@@ -118,8 +118,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_extra_gas_limit_if_required</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_estimator</span><span class="p">:</span>
-            <span class="c1"># we set gas_limit to 0 for the /cost endpoint which is not really working as expected if gas_limit is set</span>
-            <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_estimator</span><span class="o">.</span><span class="n">estimate_gas_limit</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_version_and_options_for_guardian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">):</span>
