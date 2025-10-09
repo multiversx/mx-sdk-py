@@ -51,11 +51,11 @@ class SmartContractController(BaseController):
         abi: Optional[Abi] = None,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
         self.abi = abi
         self.factory = SmartContractTransactionsFactory(
-            TransactionsFactoryConfig(chain_id),
+            config=TransactionsFactoryConfig(chain_id),
             abi=self.abi,
-            gas_limit_estimator=gas_limit_estimator,
         )
         self.parser = SmartContractTransactionsOutcomeParser(abi=self.abi)
         self.network_provider = network_provider

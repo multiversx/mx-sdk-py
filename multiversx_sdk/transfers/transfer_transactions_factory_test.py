@@ -1,7 +1,4 @@
-import pytest
-
 from multiversx_sdk.core import Address, Token, TokenTransfer
-from multiversx_sdk.core.errors import BadUsageError
 from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryConfig
 from multiversx_sdk.transfers.transfer_transactions_factory import (
     TransferTransactionsFactory,
@@ -103,17 +100,44 @@ class TestTransferTransactionsFactory:
         )
         assert second_transaction == transaction
 
-    def test_create_transaction_for_token_transfer_with_errors(self):
-        with pytest.raises(BadUsageError, match="Can't set data field when sending esdt tokens"):
-            nft = Token("NFT-123456", 10)
-            transfer = TokenTransfer(nft, 1)
+    def test_create_transaction_for_nft_transfer_with_data(self):
+        nft = Token("NFT-123456", 10)
+        transfer = TokenTransfer(nft, 1)
 
-            self.transfer_factory.create_transaction_for_transfer(
-                sender=self.alice,
-                receiver=self.bob,
-                token_transfers=[transfer],
-                data="hello".encode(),
-            )
+        transaction = self.transfer_factory.create_transaction_for_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            token_transfers=[transfer],
+            data="hello".encode(),
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.value == 0
+        assert transaction.chain_id == "D"
+        assert transaction.gas_limit == 1_227_000
+        assert (
+            transaction.data.decode()
+            == "ESDTNFTTransfer@4e46542d313233343536@0a@01@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@68656c6c6f"
+        )
+
+    def test_create_transaction_for_esdt_transfer_with_data(self):
+        token = Token("TEST-123456")
+        transfer = TokenTransfer(token, 7)
+
+        transaction = self.transfer_factory.create_transaction_for_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            token_transfers=[transfer],
+            data="hello".encode(),
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+        assert transaction.value == 0
+        assert transaction.chain_id == "D"
+        assert transaction.gas_limit == 423_500
+        assert transaction.data.decode() == "ESDTTransfer@544553542d313233343536@07@68656c6c6f"
 
     def test_create_transaction_for_native_transfer(self):
         transaction = self.transfer_factory.create_transaction_for_transfer(
@@ -176,6 +200,31 @@ class TestTransferTransactionsFactory:
             == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@03@4e46542d313233343536@0a@01@544553542d393837363534@01@01@45474c442d303030303030@@0de0b6b3a7640000"
         )
         assert transaction.gas_limit == 1_727_500
+
+    def test_create_transaction_for_token_transfers_with_data(self):
+        first_nft = Token("NFT-123456", 10)
+        first_transfer = TokenTransfer(first_nft, 1)
+
+        second_nft = Token("TEST-987654", 1)
+        second_transfer = TokenTransfer(second_nft, 1)
+
+        transaction = self.transfer_factory.create_transaction_for_transfer(
+            sender=self.alice,
+            receiver=self.bob,
+            native_amount=1000000000000000000,
+            token_transfers=[first_transfer, second_transfer],
+            data="hello".encode(),
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.value == 0
+        assert transaction.chain_id == "D"
+        assert (
+            transaction.data.decode()
+            == "MultiESDTNFTTransfer@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8@03@4e46542d313233343536@0a@01@544553542d393837363534@01@01@45474c442d303030303030@@0de0b6b3a7640000@68656c6c6f"
+        )
+        assert transaction.gas_limit == 1744000
 
     def test_egld_as_single_token_transfer(self):
         egld = Token("EGLD-000000")

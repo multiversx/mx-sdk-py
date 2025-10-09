@@ -15,7 +15,8 @@ from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey
 
 class ValidatorsController(BaseController):
     def __init__(self, chain_id: str, gas_limit_estimator: Optional[IGasLimitEstimator] = None) -> None:
-        self.factory = ValidatorsTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self.factory = ValidatorsTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
 
     def create_transaction_for_staking(
         self,
