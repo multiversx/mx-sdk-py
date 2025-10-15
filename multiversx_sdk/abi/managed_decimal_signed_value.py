@@ -73,9 +73,20 @@ class ManagedDecimalSignedValue:
         self.value = self._convert_to_decimal(value.get_payload())
 
     def decode_nested(self, reader: io.BytesIO):
-        length = self._unsigned_from_bytes(read_bytes_exactly(reader, U32_SIZE_IN_BYTES))
-        payload = read_bytes_exactly(reader, length)
-        self.decode_top_level(payload)
+        if self.is_variable:
+            # read biguint value length in bytes
+            payload_length = read_bytes_exactly(reader, U32_SIZE_IN_BYTES)
+            length = self._unsigned_from_bytes(payload_length)
+            # read biguint value
+            payload_value = read_bytes_exactly(reader, length)
+            # read scale
+            payload_scale = read_bytes_exactly(reader, U32_SIZE_IN_BYTES)
+
+            self.decode_top_level(payload_length + payload_value + payload_scale)
+        else:
+            length = self._unsigned_from_bytes(read_bytes_exactly(reader, U32_SIZE_IN_BYTES))
+            payload = read_bytes_exactly(reader, length)
+            self.decode_top_level(payload)
 
     def get_precision(self) -> int:
         value_str = f"{self.value:.{self.scale}f}"
