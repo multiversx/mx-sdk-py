@@ -80,7 +80,7 @@ class SmartContractController(BaseController):
         transaction = self.factory.create_transaction_for_deploy(
             sender=sender.address,
             bytecode=bytecode,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             arguments=arguments,
             native_transfer_amount=native_transfer_amount,
             is_upgradeable=is_upgradeable,
@@ -128,7 +128,7 @@ class SmartContractController(BaseController):
             sender=sender.address,
             contract=contract,
             bytecode=bytecode,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             arguments=arguments,
             native_transfer_amount=native_transfer_amount,
             is_upgradeable=is_upgradeable,
@@ -165,7 +165,7 @@ class SmartContractController(BaseController):
         transaction = self.factory.create_transaction_for_execute(
             sender=sender.address,
             contract=contract,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             function=function,
             arguments=arguments,
             native_transfer_amount=native_transfer_amount,

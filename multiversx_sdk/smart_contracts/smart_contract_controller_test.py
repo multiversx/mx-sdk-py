@@ -9,7 +9,9 @@ from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.constants import CONTRACT_DEPLOY_ADDRESS_HEX
+from multiversx_sdk.gas_estimator.gas_limit_estimator import GasLimitEstimator
 from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
+from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
 from multiversx_sdk.smart_contracts.smart_contract_controller import (
     SmartContractController,
 )
@@ -43,6 +45,26 @@ class TestSmartContractQueriesController:
         assert transaction.receiver.to_bech32() == Address.new_from_hex(CONTRACT_DEPLOY_ADDRESS_HEX).to_bech32()
         assert transaction.data == f"{self.bytecode.hex()}@0500@0504@01".encode()
         assert transaction.gas_limit == gas_limit
+        assert transaction.value == 0
+
+    @pytest.mark.networkInteraction
+    def test_create_transaction_for_deploy_using_gas_estimator(self):
+        proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
+        gas = GasLimitEstimator(proxy)
+        controller = SmartContractController(
+            chain_id="D", network_provider=proxy, abi=self.abi, gas_limit_estimator=gas
+        )
+        transaction = controller.create_transaction_for_deploy(
+            sender=self.alice,
+            nonce=self.alice.get_nonce_then_increment(),
+            bytecode=self.bytecode,
+            arguments=[BigUIntValue(1)],
+        )
+
+        assert transaction.sender.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+        assert transaction.receiver.to_bech32() == Address.new_from_hex(CONTRACT_DEPLOY_ADDRESS_HEX).to_bech32()
+        assert transaction.data == f"{self.bytecode.hex()}@0500@0504@01".encode()
+        assert transaction.gas_limit
         assert transaction.value == 0
 
     def test_create_transaction_for_execute(self):

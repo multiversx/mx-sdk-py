@@ -1,12 +1,15 @@
 import base64
 from pathlib import Path
 
+import pytest
+
 from multiversx_sdk.abi.abi import Abi
 from multiversx_sdk.abi.biguint_value import BigUIntValue
 from multiversx_sdk.abi.small_int_values import U32Value
 from multiversx_sdk.accounts.account import Account
 from multiversx_sdk.core.address import Address
 from multiversx_sdk.core.tokens import Token, TokenTransfer
+from multiversx_sdk.gas_estimator.gas_limit_estimator import GasLimitEstimator
 from multiversx_sdk.multisig.multisig_controller import MultisigController
 from multiversx_sdk.multisig.resources import (
     AddBoardMember,
@@ -58,6 +61,32 @@ class TestMultisigController:
         )
         assert transaction.value == 0
         assert transaction.gas_limit == 100_000_000
+        assert transaction.chain_id == "D"
+        assert (
+            transaction.data.decode()
+            == f"{self.multisig_bytecode.hex()}@0500@0504@02@3fb81f4303be6f7377350b8a595f94b13fd6cbce4c4c7d2c63e9e1f8f0d42cf1@8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+        )
+
+    @pytest.mark.networkInteraction
+    def test_deploy_contract_using_gas_estimator(self):
+        gas = GasLimitEstimator(self.network_provider)
+        controller = MultisigController(
+            chain_id="D", network_provider=self.network_provider, abi=self.multisig_abi, gas_limit_estimator=gas
+        )
+
+        transaction = controller.create_transaction_for_deploy(
+            sender=self.john,
+            nonce=self.john.get_nonce_then_increment(),
+            bytecode=self.multisig_bytecode,
+            quorum=2,
+            board=[self.john.address, self.bob.address],
+        )
+        assert transaction.sender == self.john.address
+        assert transaction.receiver == Address.new_from_bech32(
+            "erd1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq6gq4hu"
+        )
+        assert transaction.value == 0
+        assert transaction.gas_limit
         assert transaction.chain_id == "D"
         assert (
             transaction.data.decode()
