@@ -54,6 +54,8 @@ class TestSmartContractQueriesController:
         controller = SmartContractController(
             chain_id="D", network_provider=proxy, abi=self.abi, gas_limit_estimator=gas
         )
+
+        self.alice.nonce = proxy.get_account(self.alice.address).nonce
         transaction = controller.create_transaction_for_deploy(
             sender=self.alice,
             nonce=self.alice.get_nonce_then_increment(),
@@ -67,6 +69,7 @@ class TestSmartContractQueriesController:
         assert transaction.gas_limit
         assert transaction.value == 0
 
+    @pytest.mark.networkInteraction
     def test_create_transaction_for_deploy_with_gas_estimator_and_gas_limit(self):
         proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
         gas = GasLimitEstimator(proxy)
