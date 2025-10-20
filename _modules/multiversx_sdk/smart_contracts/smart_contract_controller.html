@@ -164,7 +164,7 @@
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_deploy</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
             <span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
             <span class="n">native_transfer_amount</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
             <span class="n">is_upgradeable</span><span class="o">=</span><span class="n">is_upgradeable</span><span class="p">,</span>
@@ -221,7 +221,7 @@
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
             <span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
             <span class="n">native_transfer_amount</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
             <span class="n">is_upgradeable</span><span class="o">=</span><span class="n">is_upgradeable</span><span class="p">,</span>
@@ -261,7 +261,7 @@
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">create_transaction_for_execute</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span><span class="p">,</span>
+            <span class="n">gas_limit</span><span class="o">=</span><span class="n">gas_limit</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
             <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
             <span class="n">native_transfer_amount</span><span class="o">=</span><span class="n">native_transfer_amount</span><span class="p">,</span>
