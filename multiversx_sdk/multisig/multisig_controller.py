@@ -96,7 +96,7 @@ class MultisigController(BaseController):
         transaction = self._factory.create_transaction_for_deploy(
             sender=sender.address,
             bytecode=bytecode,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             quorum=quorum,
             board=board,
             is_upgradeable=is_upgradeable,
@@ -137,7 +137,7 @@ class MultisigController(BaseController):
         transaction = self._factory.create_transaction_for_deposit(
             sender=sender.address,
             contract=contract,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             native_token_amount=native_token_amount,
             token_transfers=token_transfers,
         )
@@ -166,7 +166,7 @@ class MultisigController(BaseController):
         transaction = self._factory.create_transaction_for_discard_action(
             sender=sender.address,
             contract=contract,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             action_id=action_id,
         )
         transaction.guardian = guardian
@@ -194,7 +194,7 @@ class MultisigController(BaseController):
         transaction = self._factory.create_transaction_for_discard_batch(
             sender=sender.address,
             contract=contract,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             action_ids=actions_ids,
         )
         transaction.guardian = guardian
@@ -286,7 +286,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             board_member=board_member,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -314,7 +314,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             proposer=proposer,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -342,7 +342,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             user=user,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -370,7 +370,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             quorum=new_quorum,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -408,7 +408,7 @@ class MultisigController(BaseController):
             contract=contract,
             receiver=receiver,
             native_token_amount=native_token_amount,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             opt_gas_limit=opt_gas_limit,
             abi=abi,
             function=function,
@@ -446,7 +446,7 @@ class MultisigController(BaseController):
             contract=contract,
             receiver=receiver,
             token_transfers=token_transfers,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             opt_gas_limit=opt_gas_limit,
             abi=abi,
             function=function,
@@ -484,7 +484,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             receiver=receiver,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             native_token_amount=native_token_amount,
             token_transfers=token_transfers,
             opt_gas_limit=opt_gas_limit,
@@ -524,7 +524,7 @@ class MultisigController(BaseController):
         transaction = self._factory.create_transaction_for_propose_contract_deploy_from_source(
             sender=sender.address,
             contract=contract,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             contract_to_copy=contract_to_copy,
             native_token_amount=native_token_amount,
             arguments=arguments,
@@ -569,7 +569,7 @@ class MultisigController(BaseController):
             contract=contract,
             contract_to_upgrade=contract_to_upgrade,
             contract_to_copy=contract_to_copy,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             arguments=arguments,
             native_token_amount=native_token_amount,
             is_upgradeable=is_upgradeable,
@@ -604,7 +604,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             actions=actions,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
 
     def create_transaction_for_sign_action(
@@ -622,7 +622,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             action_id=action_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -650,7 +650,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             batch_id=batch_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -678,7 +678,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             action_id=action_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -706,7 +706,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             batch_id=batch_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -734,7 +734,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             action_id=action_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -762,7 +762,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             batch_id=batch_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -806,7 +806,7 @@ class MultisigController(BaseController):
             contract=contract,
             action_id=action_id,
             outdated_board_members=outdated_board_members,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -843,7 +843,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             action_id=action_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -871,7 +871,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             batch_id=batch_id,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
         )
         transaction.guardian = guardian
         transaction.relayer = relayer
@@ -995,7 +995,7 @@ class MultisigController(BaseController):
             sender=sender.address,
             contract=contract,
             function=function,
-            gas_limit=gas_limit,
+            gas_limit=gas_limit or 0,
             arguments=arguments,
             native_transfer_amount=native_transfer_amount,
             token_transfers=token_transfers,
