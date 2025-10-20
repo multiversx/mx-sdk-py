@@ -73,6 +73,8 @@ class TestSmartContractQueriesController:
         controller = SmartContractController(
             chain_id="D", network_provider=proxy, abi=self.abi, gas_limit_estimator=gas
         )
+
+        self.alice.nonce = proxy.get_account(self.alice.address).nonce
         transaction = controller.create_transaction_for_deploy(
             sender=self.alice,
             nonce=self.alice.get_nonce_then_increment(),

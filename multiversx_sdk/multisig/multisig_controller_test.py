@@ -74,6 +74,7 @@ class TestMultisigController:
             chain_id="D", network_provider=self.network_provider, abi=self.multisig_abi, gas_limit_estimator=gas
         )
 
+        self.john.nonce = self.network_provider.get_account(self.john.address).nonce
         transaction = controller.create_transaction_for_deploy(
             sender=self.john,
             nonce=self.john.get_nonce_then_increment(),
