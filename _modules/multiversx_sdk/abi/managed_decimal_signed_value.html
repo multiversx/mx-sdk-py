@@ -79,7 +79,7 @@
     <span class="n">LOCAL_CONTEXT_PRECISION_FOR_DECIMAL</span><span class="p">,</span>
     <span class="n">U32_SIZE_IN_BYTES</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_bytes_exactly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">decode_length</span><span class="p">,</span> <span class="n">read_bytes_exactly</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.abi.small_int_values</span><span class="w"> </span><span class="kn">import</span> <span class="n">U32Value</span>
 
 
@@ -139,16 +139,16 @@
         <span class="n">scale</span> <span class="o">=</span> <span class="n">U32Value</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_variable</span><span class="p">:</span>
-            <span class="c1"># read biguint value length in bytes</span>
+            <span class="c1"># read BigInt value length in bytes</span>
             <span class="n">value_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unsigned_from_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="n">U32_SIZE_IN_BYTES</span><span class="p">])</span>
 
-            <span class="c1"># remove biguint length; data is only biguint value and scale</span>
+            <span class="c1"># remove BigInt length; data is only BigInt value and scale</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">U32_SIZE_IN_BYTES</span><span class="p">:]</span>
 
-            <span class="c1"># read biguint value</span>
+            <span class="c1"># read BigInt value</span>
             <span class="n">value</span><span class="o">.</span><span class="n">decode_top_level</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="n">value_length</span><span class="p">])</span>
 
-            <span class="c1"># remove biguintvalue; data contains only scale</span>
+            <span class="c1"># remove BigInt value; data contains only scale</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">value_length</span><span class="p">:]</span>
 
             <span class="c1"># read scale</span>
@@ -163,9 +163,20 @@
 <div class="viewcode-block" id="ManagedDecimalSignedValue.decode_nested">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.managed_decimal_signed_value.ManagedDecimalSignedValue.decode_nested">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unsigned_from_bytes</span><span class="p">(</span><span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">U32_SIZE_IN_BYTES</span><span class="p">))</span>
-        <span class="n">payload</span> <span class="o">=</span> <span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">decode_top_level</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_variable</span><span class="p">:</span>
+            <span class="c1"># read BigInt value length in bytes</span>
+            <span class="n">payload_length</span> <span class="o">=</span> <span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">U32_SIZE_IN_BYTES</span><span class="p">)</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unsigned_from_bytes</span><span class="p">(</span><span class="n">payload_length</span><span class="p">)</span>
+            <span class="c1"># read BigInt value</span>
+            <span class="n">payload_value</span> <span class="o">=</span> <span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+            <span class="c1"># read scale</span>
+            <span class="n">payload_scale</span> <span class="o">=</span> <span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">U32_SIZE_IN_BYTES</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">decode_top_level</span><span class="p">(</span><span class="n">payload_length</span> <span class="o">+</span> <span class="n">payload_value</span> <span class="o">+</span> <span class="n">payload_scale</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="n">decode_length</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">decode_top_level</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ManagedDecimalSignedValue.get_precision">
