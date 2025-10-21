@@ -32,6 +32,7 @@ class Address:
 
         self.pubkey = bytes(pubkey)
         self.hrp = hrp if hrp else LibraryConfig.default_address_hrp
+        self._cached_bech32 = ""
 
     @classmethod
     def empty(cls) -> "Address":
@@ -72,9 +73,13 @@ class Address:
         if self.is_empty():
             return ""
 
+        if self._cached_bech32:
+            return self._cached_bech32
+
         converted = bech32.convertbits(self.pubkey, 8, 5)
         assert converted is not None
         encoded = bech32.bech32_encode(self.hrp, converted)
+        self._cached_bech32 = encoded
         return encoded
 
     def get_public_key(self) -> bytes:
