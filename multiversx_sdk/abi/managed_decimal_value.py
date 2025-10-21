@@ -8,7 +8,7 @@ from multiversx_sdk.abi.constants import (
     LOCAL_CONTEXT_PRECISION_FOR_DECIMAL,
     U32_SIZE_IN_BYTES,
 )
-from multiversx_sdk.abi.shared import read_bytes_exactly
+from multiversx_sdk.abi.shared import decode_length, read_bytes_exactly
 from multiversx_sdk.abi.small_int_values import U32Value
 
 
@@ -52,16 +52,16 @@ class ManagedDecimalValue:
         scale = U32Value()
 
         if self.is_variable:
-            # read biguint value length in bytes
+            # read BigUInt value length in bytes
             value_length = self._unsigned_from_bytes(data[:U32_SIZE_IN_BYTES])
 
-            # remove biguint length; data is only biguint value and scale
+            # remove BigUInt length; data is only BigUInt value and scale
             data = data[U32_SIZE_IN_BYTES:]
 
-            # read biguint value
+            # read BigUInt value
             value.decode_top_level(data[:value_length])
 
-            # remove biguintvalue; data contains only scale
+            # remove BigUInt value; data contains only scale
             data = data[value_length:]
 
             # read scale
@@ -73,9 +73,20 @@ class ManagedDecimalValue:
         self.value = self._convert_to_decimal(value.get_payload())
 
     def decode_nested(self, reader: io.BytesIO):
-        length = self._unsigned_from_bytes(read_bytes_exactly(reader, U32_SIZE_IN_BYTES))
-        payload = read_bytes_exactly(reader, length)
-        self.decode_top_level(payload)
+        if self.is_variable:
+            # read BigUInt value length
+            payload_length = read_bytes_exactly(reader, U32_SIZE_IN_BYTES)
+            length = self._unsigned_from_bytes(payload_length)
+            # read BigUInt value
+            payload_value = read_bytes_exactly(reader, length)
+            # read scale
+            payload_scale = read_bytes_exactly(reader, U32_SIZE_IN_BYTES)
+
+            self.decode_top_level(payload_length + payload_value + payload_scale)
+        else:
+            length = decode_length(reader)
+            payload = read_bytes_exactly(reader, length)
+            self.decode_top_level(payload)
 
     def get_precision(self) -> int:
         value_str = f"{self.value:.{self.scale}f}"

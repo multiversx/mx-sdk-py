@@ -430,6 +430,7 @@ def test_decode_custom_struct():
                         {"name": "opt_function", "type": "Option<bytes>"},
                         {"name": "opt_arguments", "type": "Option<List<bytes>>"},
                         {"name": "opt_gas_limit", "type": "Option<u64>"},
+                        {"name": "managed_decimal", "type": "ManagedDecimal<usize>"},
                     ],
                 }
             },
@@ -440,12 +441,15 @@ def test_decode_custom_struct():
     with pytest.raises(Exception, match=re.escape('Missing custom type! No custom type found for name: "customType"')):
         abi.decode_custom_type("customType", b"")
 
-    decoded_type = abi.decode_custom_type(name="DepositEvent", data=bytes.fromhex("00000000000003db000000"))
+    decoded_type = abi.decode_custom_type(
+        name="DepositEvent", data=bytes.fromhex("00000000000003db0000000000000202bc00000002")
+    )
     assert decoded_type == SimpleNamespace(
         tx_nonce=987,
         opt_function=None,
         opt_arguments=None,
         opt_gas_limit=None,
+        managed_decimal=7,
     )
 
 
