@@ -328,6 +328,8 @@ class Abi:
             return TokenIdentifierValue()
         if name == "EgldOrEsdtTokenIdentifier":
             return TokenIdentifierValue()
+        if name == "EsdtTokenIdentifier":
+            return TokenIdentifierValue()
         if name == "CodeMetadata":
             return CodeMetadataValue()
         if name == "tuple":
