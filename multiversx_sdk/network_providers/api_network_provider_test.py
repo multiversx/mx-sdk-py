@@ -263,7 +263,7 @@ class TestApi:
         assert transaction.logs.events
         assert len(transaction.logs.events) == 2
         assert transaction.logs.events[0].identifier == "upgradeProperties"
-        assert len(transaction.logs.events[1].topics) == 8
+        assert len(transaction.logs.events[0].topics) == 8
         assert transaction.logs.events[0].topics[0].hex() == "544553542d666631353565"
         assert transaction.logs.events[0].topics[1].hex() == ""
         assert transaction.logs.events[0].topics[2].hex() == "63616e4368616e67654f776e6572"
