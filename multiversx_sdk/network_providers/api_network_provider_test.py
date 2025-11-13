@@ -262,11 +262,11 @@ class TestApi:
         assert transaction.logs
         assert transaction.logs.events
         assert len(transaction.logs.events) == 2
-        assert transaction.logs.events[1].identifier == "upgradeProperties"
-        assert len(transaction.logs.events[1].topics) == 8
-        assert transaction.logs.events[1].topics[0].hex() == "544553542d666631353565"
-        assert transaction.logs.events[1].topics[1].hex() == ""
-        assert transaction.logs.events[1].topics[2].hex() == "63616e4368616e67654f776e6572"
+        assert transaction.logs.events[0].identifier == "upgradeProperties"
+        assert len(transaction.logs.events[0].topics) == 8
+        assert transaction.logs.events[0].topics[0].hex() == "544553542d666631353565"
+        assert transaction.logs.events[0].topics[1].hex() == ""
+        assert transaction.logs.events[0].topics[2].hex() == "63616e4368616e67654f776e6572"
 
     def test_get_sc_invoking_tx(self):
         result = self.api.get_transaction("6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb")
