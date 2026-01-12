@@ -22,6 +22,7 @@ from multiversx_sdk.abi.option_value import OptionValue
 from multiversx_sdk.abi.small_int_values import U32Value, U64Value
 from multiversx_sdk.abi.string_value import StringValue
 from multiversx_sdk.abi.struct_value import StructValue
+from multiversx_sdk.abi.token_identifier_value import TokenIdentifierValue
 from multiversx_sdk.abi.variadic_values import VariadicValues
 from multiversx_sdk.core.address import Address
 
@@ -490,3 +491,39 @@ def test_encode_custom_struct():
 
     encoded = abi.encode_custom_type("EsdtTokenPayment", ["TEST-8b028f", 0, 10000])
     assert encoded == "0000000b544553542d3862303238660000000000000000000000022710"
+
+
+def test_map_token_identifier():
+    abi_definition = AbiDefinition.from_dict(
+        {
+            "endpoints": [
+                {
+                    "name": "dummy",
+                    "inputs": [{"name": "q", "type": "TokenIdentifier"}],
+                    "outputs": [],
+                },
+                {
+                    "name": "foo",
+                    "inputs": [{"name": "x", "type": "TokenId"}],
+                    "outputs": [],
+                },
+                {
+                    "name": "foobar",
+                    "inputs": [{"name": "y", "type": "EgldOrEsdtTokenIdentifier"}],
+                    "outputs": [],
+                },
+                {
+                    "name": "esdt",
+                    "inputs": [{"name": "z", "type": "EsdtTokenIdentifier"}],
+                    "outputs": [],
+                },
+            ]
+        }
+    )
+
+    abi = Abi(abi_definition)
+
+    assert abi.endpoints_prototypes_by_name["dummy"].input_parameters[0] == TokenIdentifierValue()
+    assert abi.endpoints_prototypes_by_name["foo"].input_parameters[0] == TokenIdentifierValue()
+    assert abi.endpoints_prototypes_by_name["foobar"].input_parameters[0] == TokenIdentifierValue()
+    assert abi.endpoints_prototypes_by_name["esdt"].input_parameters[0] == TokenIdentifierValue()
