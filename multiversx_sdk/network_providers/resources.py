@@ -39,6 +39,7 @@ class NetworkConfig:
 class NetworkStatus:
     raw: dict[str, Any]
     block_timestamp: int
+    block_timestamp_ms: int
     block_nonce: int
     highest_final_block_nonce: int
     current_round: int

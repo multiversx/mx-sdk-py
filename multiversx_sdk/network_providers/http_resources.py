@@ -314,6 +314,7 @@ def network_config_from_response(raw_response: dict[str, Any]) -> NetworkConfig:
 
 def network_status_from_response(raw_response: dict[str, Any]) -> NetworkStatus:
     block_timestamp = raw_response.get("erd_block_timestamp", 0)
+    block_timestamp_ms = raw_response.get("erd_block_timestamp_ms", 0)
     block_nonce = raw_response.get("erd_nonce", 0)
     highest_final_nonce = raw_response.get("erd_highest_final_nonce", 0)
     current_round = raw_response.get("erd_current_round", 0)
@@ -322,6 +323,7 @@ def network_status_from_response(raw_response: dict[str, Any]) -> NetworkStatus:
     return NetworkStatus(
         raw=raw_response,
         block_timestamp=block_timestamp,
+        block_timestamp_ms=block_timestamp_ms,
         block_nonce=block_nonce,
         highest_final_block_nonce=highest_final_nonce,
         current_round=current_round,

@@ -51,11 +51,33 @@ class TestTransactionAwaiter:
 
         assert tx_from_network.status.is_completed
 
+    def test_await_status_not_executable(self):
+        tx_hash = "abbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabbaabba"
+        tx_on_network = get_empty_transaction_on_network()
+        tx_on_network.status = TransactionStatus("unknown")
+        self.provider.mock_put_transaction(tx_hash, tx_on_network)
+
+        self.provider.mock_transaction_timeline_by_hash(
+            tx_hash,
+            [
+                TimelinePointWait(40),
+                TransactionStatus("pending"),
+                TimelinePointWait(40),
+                TransactionStatus("not-executable-in-block"),
+                TimelinePointMarkCompleted(),
+            ],
+        )
+        tx_from_network = self.watcher.await_completed(tx_hash)
+
+        assert tx_from_network.status.is_failed
+
     @pytest.mark.networkInteraction
     def test_on_network(self):
         alice = load_wallets()["alice"]
         proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
-        watcher = TransactionAwaiter(proxy)
+        watcher = TransactionAwaiter(
+            proxy, polling_interval_in_milliseconds=6000, timeout_interval_in_milliseconds=30000
+        )
         tx_computer = TransactionComputer()
 
         transaction = Transaction(

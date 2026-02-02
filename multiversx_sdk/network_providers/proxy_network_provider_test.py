@@ -13,7 +13,10 @@ from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.http_resources import block_from_response
 from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
-from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
+from multiversx_sdk.network_providers.resources import (
+    AwaitingOptions,
+    TokenAmountOnNetwork,
+)
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.smart_contracts.smart_contract_query import SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
@@ -369,7 +372,13 @@ class TestProxy:
 
         hash = self.proxy.send_transaction(transaction)
 
-        tx_on_network = self.proxy.await_transaction_completed(hash)
+        tx_on_network = self.proxy.await_transaction_completed(
+            hash,
+            options=AwaitingOptions(
+                polling_interval_in_milliseconds=6000,
+                timeout_in_milliseconds=30000,
+            ),
+        )
         assert tx_on_network.status.is_completed
 
         transaction = Transaction(
@@ -387,7 +396,11 @@ class TestProxy:
 
         hash = self.proxy.send_transaction(transaction)
 
-        tx_on_network = self.proxy.await_transaction_on_condition(transaction_hash=hash, condition=condition)
+        tx_on_network = self.proxy.await_transaction_on_condition(
+            transaction_hash=hash,
+            condition=condition,
+            options=AwaitingOptions(polling_interval_in_milliseconds=6000, timeout_in_milliseconds=30000),
+        )
         assert not tx_on_network.status.is_successful
 
     def test_do_get_generic(self):

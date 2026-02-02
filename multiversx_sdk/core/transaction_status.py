@@ -26,4 +26,5 @@ class TransactionStatus:
             or self.status == "failed"
             or self.status == "unsuccessful"
             or self.status == "invalid"
+            or self.status == "not-executable-in-block"
         )
