@@ -102,7 +102,11 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">INetworkProvider</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <div class="viewcode-block" id="INetworkProvider.await_transaction_completed">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.INetworkProvider.await_transaction_completed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_transaction_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_transaction_completed</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
         <span class="o">...</span></div>
 </div>
 
@@ -167,9 +171,11 @@
 <div class="viewcode-block" id="DelegationController.await_completed_create_new_delegation_contract">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationController.await_completed_create_new_delegation_contract">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_create_new_delegation_contract</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">CreateNewDelegationContractOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_create_new_delegation_contract</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -611,8 +617,12 @@
 
 <div class="viewcode-block" id="DelegationController.await_completed_delegate">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationController.await_completed_delegate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_delegate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DelegateOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_delegate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DelegateOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_delegate</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -652,8 +662,12 @@
 
 <div class="viewcode-block" id="DelegationController.await_completed_claim_rewards">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationController.await_completed_claim_rewards">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_claim_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClaimRewardsOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_claim_rewards</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ClaimRewardsOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_claim_rewards</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -693,8 +707,12 @@
 
 <div class="viewcode-block" id="DelegationController.await_completed_redelegate_rewards">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationController.await_completed_redelegate_rewards">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_redelegate_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RedelegateRewardsOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_redelegate_rewards</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RedelegateRewardsOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_redelegate_rewards</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -737,8 +755,12 @@
 
 <div class="viewcode-block" id="DelegationController.await_completed_undelegate">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationController.await_completed_undelegate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_undelegate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UndelegateOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_undelegate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UndelegateOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_undelegate</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 

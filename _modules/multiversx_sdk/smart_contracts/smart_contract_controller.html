@@ -193,8 +193,12 @@
 
 <div class="viewcode-block" id="SmartContractController.await_completed_deploy">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.await_completed_deploy">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartContractDeployOutcome</span><span class="p">:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_deploy</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartContractDeployOutcome</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_deploy</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -292,8 +296,12 @@
 
 <div class="viewcode-block" id="SmartContractController.await_completed_execute">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.await_completed_execute">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ParsedSmartContractCallOutcome</span><span class="p">:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_execute</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParsedSmartContractCallOutcome</span><span class="p">:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_execute</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">transaction</span><span class="o">.</span><span class="n">function</span><span class="p">)</span></div>
 
 

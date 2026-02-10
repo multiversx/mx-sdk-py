@@ -193,8 +193,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_issue_fungible">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_issue_fungible">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_issue_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueFungibleOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_issue_fungible</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueFungibleOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_issue_fungible</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -252,9 +256,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_issue_semi_fungible">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_issue_semi_fungible">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_issue_semi_fungible</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueSemiFungibleOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_issue_semi_fungible</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -311,8 +317,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_issue_non_fungible">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_issue_non_fungible">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_issue_non_fungible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueNonFungibleOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_issue_non_fungible</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IssueNonFungibleOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_issue_non_fungible</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -371,8 +381,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_register_meta_esdt">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_register_meta_esdt">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_register_meta_esdt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterMetaEsdtOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_register_meta_esdt</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterMetaEsdtOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_register_meta_esdt</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -422,9 +436,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_register_and_set_all_roles">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_register_and_set_all_roles">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_register_and_set_all_roles</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterAndSetAllRolesOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_register_and_set_all_roles</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -464,8 +480,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_set_burn_role_globally">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_set_burn_role_globally">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]):</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_burn_role_globally</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_set_burn_role_globally</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -505,8 +525,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_unset_burn_role_globally">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_unset_burn_role_globally">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_unset_burn_role_globally</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]):</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_unset_burn_role_globally</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_unset_burn_role_globally</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -558,9 +582,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_set_special_role_on_fungible_token">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_set_special_role_on_fungible_token">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_special_role_on_fungible_token</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_set_special_role_on_fungible_token</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -661,9 +687,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_set_special_role_on_semi_fungible_token">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_set_special_role_on_semi_fungible_token">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_special_role_on_semi_fungible_token</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_set_special_role_on_semi_fungible_token</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -763,9 +791,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_set_special_role_on_meta_esdt">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_set_special_role_on_meta_esdt">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_special_role_on_meta_esdt</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_set_special_role_on_meta_esdt</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -868,9 +898,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_set_special_role_on_non_fungible_token">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_set_special_role_on_non_fungible_token">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_special_role_on_non_fungible_token</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetSpecialRoleOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_set_special_role_on_non_fungible_token</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -972,8 +1004,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_create_nft">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_create_nft">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_create_nft</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">NFTCreateOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_create_nft</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">NFTCreateOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_create_nft</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1013,8 +1049,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_pause">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_pause">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_pause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PauseOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_pause</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PauseOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_pause</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1054,8 +1094,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_unpause">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_unpause">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_unpause</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UnPauseOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_unpause</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UnPauseOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_unpause</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1096,8 +1140,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_freeze">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_freeze">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_freeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">FreezeOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_freeze</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">FreezeOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_freeze</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1138,8 +1186,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_unfreeze">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_unfreeze">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_unfreeze</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UnFreezeOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_unfreeze</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UnFreezeOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_unfreeze</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1180,8 +1232,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_wipe">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_wipe">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_wipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">WipeOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_wipe</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">WipeOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_wipe</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1224,8 +1280,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_local_mint">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_local_mint">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_local_mint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MintOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_local_mint</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MintOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_local_mint</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1268,8 +1328,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_local_burn">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_local_burn">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_local_burn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">BurnOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_local_burn</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">BurnOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_local_burn</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1314,8 +1378,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_update_attributes">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_update_attributes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_update_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UpdateAttributesOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_update_attributes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UpdateAttributesOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_update_attributes</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1360,8 +1428,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_add_quantity">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_add_quantity">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_add_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AddQuantityOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_add_quantity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AddQuantityOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_add_quantity</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1406,8 +1478,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_burn_quantity">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_burn_quantity">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_burn_quantity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">BurnQuantityOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_burn_quantity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">BurnQuantityOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_burn_quantity</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1452,8 +1528,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_modify_royalties">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_modify_royalties">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_modify_royalties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModifyRoyaltiesOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_modify_royalties</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModifyRoyaltiesOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_modify_royalties</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1498,8 +1578,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_set_new_uris">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_set_new_uris">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_new_uris</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetNewUrisOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_set_new_uris</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SetNewUrisOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_set_new_uris</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1540,8 +1624,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_modify_creator">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_modify_creator">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_modify_creator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModifyCreatorOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_modify_creator</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ModifyCreatorOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_modify_creator</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1594,8 +1682,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_update_metadata">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_update_metadata">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_update_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UpdateMetadataOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_update_metadata</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">UpdateMetadataOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_update_metadata</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1648,8 +1740,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_metadata_recreate">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_metadata_recreate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_metadata_recreate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MetadataRecreateOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_metadata_recreate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MetadataRecreateOutcome</span><span class="p">]:</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_metadata_recreate</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1694,9 +1790,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_change_token_to_dynamic">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_change_token_to_dynamic">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_change_token_to_dynamic</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ChangeTokenToDynamicOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_change_token_to_dynamic</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1731,8 +1829,12 @@
 
 <div class="viewcode-block" id="TokenManagementController.await_completed_update_token_id">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_update_token_id">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_update_token_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_update_token_id</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransactionOnNetwork</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TokenManagementController.create_transaction_for_registering_dynamic_token">
@@ -1781,9 +1883,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_register_dynamic_token">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_register_dynamic_token">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_register_dynamic_token</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterDynamicOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_register_dynamic_token</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
@@ -1833,9 +1937,11 @@
 <div class="viewcode-block" id="TokenManagementController.await_completed_register_dynamic_token_and_setting_roles">
 <a class="viewcode-back" href="../../../multiversx_sdk.token_management.html#multiversx_sdk.TokenManagementController.await_completed_register_dynamic_token_and_setting_roles">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_completed_register_dynamic_token_and_setting_roles</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">transaction_hash</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+        <span class="n">options</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AwaitingOptions</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RegisterDynamicOutcome</span><span class="p">]:</span>
-        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">)</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">await_transaction_completed</span><span class="p">(</span><span class="n">transaction_hash</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_register_dynamic_token_and_setting_roles</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span></div>
 
 
