@@ -7,14 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>multiversx_sdk.network_providers.http_resources &mdash; multiversx-sdk 2.3.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=67b02a41"></script>
-      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -417,6 +417,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.http_resources.network_status_from_response">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">network_status_from_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NetworkStatus</span><span class="p">:</span>
     <span class="n">block_timestamp</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_block_timestamp&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">block_timestamp_ms</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_block_timestamp_ms&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">block_nonce</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">highest_final_nonce</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_highest_final_nonce&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">current_round</span> <span class="o">=</span> <span class="n">raw_response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erd_current_round&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -425,6 +426,7 @@
     <span class="k">return</span> <span class="n">NetworkStatus</span><span class="p">(</span>
         <span class="n">raw</span><span class="o">=</span><span class="n">raw_response</span><span class="p">,</span>
         <span class="n">block_timestamp</span><span class="o">=</span><span class="n">block_timestamp</span><span class="p">,</span>
+        <span class="n">block_timestamp_ms</span><span class="o">=</span><span class="n">block_timestamp_ms</span><span class="p">,</span>
         <span class="n">block_nonce</span><span class="o">=</span><span class="n">block_nonce</span><span class="p">,</span>
         <span class="n">highest_final_block_nonce</span><span class="o">=</span><span class="n">highest_final_nonce</span><span class="p">,</span>
         <span class="n">current_round</span><span class="o">=</span><span class="n">current_round</span><span class="p">,</span>
