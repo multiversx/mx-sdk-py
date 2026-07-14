@@ -131,7 +131,7 @@ class ProxyNetworkProvider(INetworkProvider):
         response = self.do_get_generic(f"address/{address.to_bech32()}")
         account = account_from_proxy_response(response.to_dictionary())
 
-        get_guardian_data_thread.join(timeout=2)
+        get_guardian_data_thread.join(timeout=self.config.requests_options.get("timeout", 5))
         account.is_guarded = data.get("is_guarded", False)
 
         return account

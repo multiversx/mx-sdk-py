@@ -1358,7 +1358,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
         parts = ["ESDTNFTAddURI"]
 
         serialized_parts = self.serializer.serialize_to_parts(
-            [StringValue(token_identifier), BigUIntValue(token_nonce), *map(StringValue, uris)],
+            [StringValue(token_identifier), BigUIntValue(token_nonce), *[StringValue(uri) for uri in uris]],
         )
 
         parts.extend([part.hex() for part in serialized_parts])

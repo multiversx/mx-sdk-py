@@ -258,7 +258,7 @@ class MultisigTransactionsFactory(BaseFactory):
             arguments=[
                 AddressValue.new_from_address(input.to),
                 ListValue(items=input.tokens),
-                OptionValue(U64Value(input.opt_gas_limit or 0)),
+                OptionValue(U64Value(input.opt_gas_limit) if input.opt_gas_limit else None),
                 VariadicValues([BytesValue(arg) for arg in input.function_call]),
             ],
         )
@@ -314,8 +314,12 @@ class MultisigTransactionsFactory(BaseFactory):
         function: Optional[str] = None,
         arguments: Optional[list[Any]] = None,
     ) -> Transaction:
+        """Depending on the contract version used, `opt_gas_limit` might not be required anymore."""
         token_transfers = token_transfers or []
         if not function:
+            if not token_transfers:
+                raise Exception("No function or token transfers provided")
+
             input = self._prepare_async_call_input_for_transfer(
                 to=receiver,
                 token_transfers=token_transfers,

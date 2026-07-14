@@ -58,7 +58,7 @@ class AbiDefinition:
 
         # Fallback for contracts written using an old Rust framework:
         if "constructor" in data:
-            EndpointDefinition.from_dict(data["constructor"])
+            return EndpointDefinition.from_dict(data["constructor"])
 
         return NullEndpointDefinition()
 
