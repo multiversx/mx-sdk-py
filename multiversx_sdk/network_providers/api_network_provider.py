@@ -101,7 +101,7 @@ class ApiNetworkProvider(INetworkProvider):
 
     def get_latest_block(self) -> BlockOnNetwork:
         """Fetches the latest block of a shard."""
-        result = self.do_get_generic("/blocks/latest")
+        result = self.do_get_generic("blocks/latest")
         return block_from_response(result)
 
     def get_account(self, address: Address) -> AccountOnNetwork:
