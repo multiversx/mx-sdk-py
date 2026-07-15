@@ -10,6 +10,7 @@ from multiversx_sdk.entrypoints.entrypoints import DevnetEntrypoint, NetworkEntr
 from multiversx_sdk.entrypoints.errors import InvalidNetworkProviderKindError
 from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
 from multiversx_sdk.network_providers.proxy_network_provider import ProxyNetworkProvider
+from multiversx_sdk.network_providers.resources import AwaitingOptions
 
 testutils = Path(__file__).parent.parent / "testutils"
 
@@ -78,7 +79,7 @@ class TestEntrypoint:
         )
 
         tx_hash = self.entrypoint.send_transaction(transaction)
-        outcome = controller.await_completed_deploy(tx_hash)
+        outcome = controller.await_completed_deploy(tx_hash, AwaitingOptions(polling_interval_in_milliseconds=6000))
 
         assert len(outcome.contracts) == 1
 
