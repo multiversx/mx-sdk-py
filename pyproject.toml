@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "multiversx-sdk"
-version = "2.4.0"
+version = "3.0.0"
 authors = [
   { name="MultiversX" },
 ]
