@@ -1,6 +1,6 @@
 pycryptodomex==3.19.1
 protobuf==6.33.5
-cryptography==44.0.1
+cryptography==48.0.1
 pynacl==1.6.2
 mnemonic==0.21
 requests>=2.32.0,<3.0.0
