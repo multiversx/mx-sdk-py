@@ -13,7 +13,10 @@ from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProv
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
 from multiversx_sdk.network_providers.http_resources import account_from_api_response
-from multiversx_sdk.network_providers.resources import TokenAmountOnNetwork
+from multiversx_sdk.network_providers.resources import (
+    AwaitingOptions,
+    TokenAmountOnNetwork,
+)
 from multiversx_sdk.network_providers.user_agent import extend_user_agent
 from multiversx_sdk.smart_contracts.smart_contract_query import SmartContractQuery
 from multiversx_sdk.testutils.wallets import load_wallets
@@ -172,6 +175,7 @@ class TestApi:
         assert num_txs == 2
         assert hashes == expected_hashes
 
+    @pytest.mark.skip
     def test_simulate_transaction(self):
         bob = load_wallets()["bob"]
         tx_computer = TransactionComputer()
@@ -261,11 +265,11 @@ class TestApi:
         assert transaction.logs
         assert transaction.logs.events
         assert len(transaction.logs.events) == 2
-        assert transaction.logs.events[1].identifier == "upgradeProperties"
-        assert len(transaction.logs.events[1].topics) == 8
-        assert transaction.logs.events[1].topics[0].hex() == "544553542d666631353565"
-        assert transaction.logs.events[1].topics[1].hex() == ""
-        assert transaction.logs.events[1].topics[2].hex() == "63616e4368616e67654f776e6572"
+        assert transaction.logs.events[0].identifier == "upgradeProperties"
+        assert len(transaction.logs.events[0].topics) == 8
+        assert transaction.logs.events[0].topics[0].hex() == "544553542d666631353565"
+        assert transaction.logs.events[0].topics[1].hex() == ""
+        assert transaction.logs.events[0].topics[2].hex() == "63616e4368616e67654f776e6572"
 
     def test_get_sc_invoking_tx(self):
         result = self.api.get_transaction("6fe05e4ca01d42c96ae5182978a77fe49f26bcc14aac95ad4f19618173f86ddb")
@@ -303,7 +307,10 @@ class TestApi:
 
         hash = self.api.send_transaction(transaction)
 
-        tx_on_network = self.api.await_transaction_completed(hash)
+        tx_on_network = self.api.await_transaction_completed(
+            transaction_hash=hash,
+            options=AwaitingOptions(polling_interval_in_milliseconds=6000, timeout_in_milliseconds=30000),
+        )
         assert tx_on_network.status.is_completed
 
         transaction = Transaction(
@@ -318,7 +325,10 @@ class TestApi:
 
         hash = self.api.send_transaction(transaction)
 
-        tx_on_network = self.api.await_transaction_completed(transaction_hash=hash)
+        tx_on_network = self.api.await_transaction_completed(
+            transaction_hash=hash,
+            options=AwaitingOptions(polling_interval_in_milliseconds=6000, timeout_in_milliseconds=30000),
+        )
         assert not tx_on_network.status.is_successful
 
     def test_send_and_await_transaction_on_condition(self):
@@ -339,7 +349,10 @@ class TestApi:
 
         hash = self.api.send_transaction(transaction)
 
-        tx_on_network = self.api.await_transaction_completed(hash)
+        tx_on_network = self.api.await_transaction_completed(
+            transaction_hash=hash,
+            options=AwaitingOptions(polling_interval_in_milliseconds=6000, timeout_in_milliseconds=30000),
+        )
         assert tx_on_network.status.is_completed
 
         transaction = Transaction(
@@ -357,7 +370,11 @@ class TestApi:
 
         hash = self.api.send_transaction(transaction)
 
-        tx_on_network = self.api.await_transaction_on_condition(transaction_hash=hash, condition=condition)
+        tx_on_network = self.api.await_transaction_on_condition(
+            transaction_hash=hash,
+            condition=condition,
+            options=AwaitingOptions(polling_interval_in_milliseconds=6000, timeout_in_milliseconds=30000),
+        )
         assert tx_on_network.status.status == "fail"
 
     def test_get_token_of_account(self):

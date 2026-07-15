@@ -10,11 +10,9 @@ from multiversx_sdk.core.transactions_factory_config import TransactionsFactoryC
 
 
 class AccountController(BaseController):
-    def __init__(self, chain_id: str, gasLimitEstimator: Optional[IGasLimitEstimator] = None) -> None:
-        self.factory = AccountTransactionsFactory(
-            config=TransactionsFactoryConfig(chain_id),
-            gas_limit_estimator=gasLimitEstimator,
-        )
+    def __init__(self, chain_id: str, gas_limit_estimator: Optional[IGasLimitEstimator] = None) -> None:
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self.factory = AccountTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
 
     def create_transaction_for_saving_key_value(
         self,
@@ -35,6 +33,7 @@ class AccountController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
+        self._set_version_and_options_for_guardian(transaction)
         self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
@@ -61,8 +60,8 @@ class AccountController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -101,8 +100,8 @@ class AccountController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

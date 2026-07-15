@@ -57,7 +57,8 @@ class GovernanceController(BaseController):
         address_hrp: Optional[str] = None,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
-        self._factory = GovernanceTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self._factory = GovernanceTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
         self._network_provider = network_provider
         self._governance_contract = Address.new_from_hex(GOVERNANCE_SMART_CONTRACT_ADDRESS_HEX)
         self._sc_controller = SmartContractController(chain_id, network_provider)
@@ -90,8 +91,8 @@ class GovernanceController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -99,8 +100,12 @@ class GovernanceController(BaseController):
     def parse_new_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[NewProposalOutcome]:
         return self._parser.parse_new_proposal(transaction_on_network)
 
-    def await_completed_new_proposal(self, tx_hash: Union[str, bytes]) -> list[NewProposalOutcome]:
-        transaction = self._network_provider.await_transaction_completed(tx_hash)
+    def await_completed_new_proposal(
+        self,
+        tx_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[NewProposalOutcome]:
+        transaction = self._network_provider.await_transaction_completed(tx_hash, options)
         return self.parse_new_proposal(transaction)
 
     def create_transaction_for_voting(
@@ -122,8 +127,8 @@ class GovernanceController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -131,8 +136,12 @@ class GovernanceController(BaseController):
     def parse_vote(self, transaction_on_network: TransactionOnNetwork) -> list[VoteOutcome]:
         return self._parser.parse_vote(transaction_on_network)
 
-    def await_completed_vote(self, tx_hash: Union[str, bytes]) -> list[VoteOutcome]:
-        transaction = self._network_provider.await_transaction_completed(tx_hash)
+    def await_completed_vote(
+        self,
+        tx_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[VoteOutcome]:
+        transaction = self._network_provider.await_transaction_completed(tx_hash, options)
         return self.parse_vote(transaction)
 
     def create_transaction_for_closing_proposal(
@@ -153,8 +162,8 @@ class GovernanceController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -162,8 +171,12 @@ class GovernanceController(BaseController):
     def parse_close_proposal(self, transaction_on_network: TransactionOnNetwork) -> list[CloseProposalOutcome]:
         return self._parser.parse_close_proposal(transaction_on_network)
 
-    def await_completed_close_proposal(self, tx_hash: Union[str, bytes]) -> list[CloseProposalOutcome]:
-        transaction = self._network_provider.await_transaction_completed(tx_hash)
+    def await_completed_close_proposal(
+        self,
+        tx_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[CloseProposalOutcome]:
+        transaction = self._network_provider.await_transaction_completed(tx_hash, options)
         return self.parse_close_proposal(transaction)
 
     def create_transaction_for_clearing_ended_proposals(
@@ -184,8 +197,8 @@ class GovernanceController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -205,8 +218,8 @@ class GovernanceController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -238,8 +251,8 @@ class GovernanceController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction

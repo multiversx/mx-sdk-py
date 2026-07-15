@@ -1,4 +1,5 @@
 import io
+from copy import deepcopy
 from typing import Any, Optional
 
 from multiversx_sdk.abi.constants import (
@@ -63,16 +64,16 @@ class OptionValue:
         self.value.decode_nested(reader)
 
     def set_payload(self, value: Any):
+        if isinstance(value, OptionValue):
+            self.value = deepcopy(value.value)
+            return
+
         if value is None:
             self.value = None
             return
 
         if self.value is None:
             raise ValueError("placeholder value of option should be set before calling set_payload")
-
-        if isinstance(value, OptionValue):
-            self.value = value.value
-            return
 
         self.value.set_payload(value)
 

@@ -41,7 +41,9 @@ class AddressValue:
             raise ValueError(f"public key (address) has invalid length: {len(pubkey)}")
 
     def set_payload(self, value: Any):
-        if isinstance(value, dict):
+        if isinstance(value, AddressValue):
+            pubkey = value.get_payload()
+        elif isinstance(value, dict):
             value = cast(dict[str, str], value)
             pubkey = self._extract_pubkey_from_dict(value)
         elif isinstance(value, str):

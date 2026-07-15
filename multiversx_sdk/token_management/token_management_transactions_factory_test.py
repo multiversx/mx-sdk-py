@@ -822,7 +822,7 @@ def test_create_transaction_for_wiping_single_nft():
 
 
 def test_create_transaction_for_adding_uris():
-    transaction = factory.create_transction_for_adding_uris(
+    transaction = factory.create_transaction_for_adding_uris(
         sender=alice, token_identifier="SFT-123456", token_nonce=10, uris=["firstURI", "secondURI"]
     )
 

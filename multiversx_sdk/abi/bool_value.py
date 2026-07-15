@@ -47,7 +47,10 @@ class BoolValue:
         raise ValueError(f"unexpected boolean value: {data}")
 
     def set_payload(self, value: Any):
-        self.value = bool(value)
+        if isinstance(value, BoolValue):
+            self.value = value.get_payload()
+        else:
+            self.value = bool(value)
 
     def get_payload(self) -> Any:
         return self.value

@@ -1348,7 +1348,7 @@ Once the token is registered, you can unset this role by calling "unsetBurnRoleG
 
         return transaction
 
-    def create_transction_for_adding_uris(
+    def create_transaction_for_adding_uris(
         self,
         sender: Address,
         token_identifier: str,

@@ -24,10 +24,20 @@ def test_set_payload_and_get_payload():
     assert value.fields == [Field("a", U32Value(39)), Field("b", BigUIntValue(40))]
     assert value.get_payload() == SimpleNamespace(a=39, b=40)
 
+    second_value = StructValue([])
+    second_value.set_payload(value)
+    assert second_value.fields == [Field("a", U32Value(39)), Field("b", BigUIntValue(40))]
+    assert second_value.get_payload() == SimpleNamespace(a=39, b=40)
+
     # From SimpleNamespace
     value.set_payload(SimpleNamespace(a=41, b=42))
     assert value.fields == [Field("a", U32Value(41)), Field("b", BigUIntValue(42))]
     assert value.get_payload() == SimpleNamespace(a=41, b=42)
+
+    second_value = StructValue([])
+    second_value.set_payload(value)
+    assert second_value.fields == [Field("a", U32Value(41)), Field("b", BigUIntValue(42))]
+    assert second_value.get_payload() == SimpleNamespace(a=41, b=42)
 
     class Payload:
         def __init__(self, a: int, b: int):
@@ -39,7 +49,17 @@ def test_set_payload_and_get_payload():
     assert value.fields == [Field("a", U32Value(43)), Field("b", BigUIntValue(44))]
     assert value.get_payload() == SimpleNamespace(a=43, b=44)
 
+    second_value = StructValue([])
+    second_value.set_payload(value)
+    assert second_value.fields == [Field("a", U32Value(43)), Field("b", BigUIntValue(44))]
+    assert second_value.get_payload() == SimpleNamespace(a=43, b=44)
+
     # Then, from dictionary
     value.set_payload({"a": 45, "b": 46})
     assert value.fields == [Field("a", U32Value(45)), Field("b", BigUIntValue(46))]
     assert value.get_payload() == SimpleNamespace(a=45, b=46)
+
+    second_value = StructValue([])
+    second_value.set_payload(value)
+    assert second_value.fields == [Field("a", U32Value(45)), Field("b", BigUIntValue(46))]
+    assert second_value.get_payload() == SimpleNamespace(a=45, b=46)

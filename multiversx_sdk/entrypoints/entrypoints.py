@@ -37,6 +37,7 @@ from multiversx_sdk.multisig.multisig_transactions_factory import (
 )
 from multiversx_sdk.network_providers import ApiNetworkProvider, ProxyNetworkProvider
 from multiversx_sdk.network_providers.interface import INetworkProvider
+from multiversx_sdk.network_providers.resources import AwaitingOptions
 from multiversx_sdk.smart_contracts.smart_contract_controller import (
     SmartContractController,
 )
@@ -139,8 +140,12 @@ class NetworkEntrypoint:
     def send_transaction(self, transaction: Transaction) -> bytes:
         return self.network_provider.send_transaction(transaction)
 
-    def await_transaction_completed(self, tx_hash: Union[str, bytes]) -> TransactionOnNetwork:
-        return self.network_provider.await_transaction_completed(tx_hash)
+    def await_transaction_completed(
+        self,
+        tx_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> TransactionOnNetwork:
+        return self.network_provider.await_transaction_completed(tx_hash, options)
 
     def get_transaction(self, tx_hash: Union[str, bytes]) -> TransactionOnNetwork:
         return self.network_provider.get_transaction(tx_hash)

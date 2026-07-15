@@ -1,7 +1,7 @@
 from decimal import Decimal
 
-from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 from multiversx_sdk.abi.managed_decimal_signed_value import ManagedDecimalSignedValue
+from multiversx_sdk.abi.managed_decimal_value import ManagedDecimalValue
 
 
 class TestManagedDecimalValueTest:
@@ -11,6 +11,12 @@ class TestManagedDecimalValueTest:
         assert not value.is_variable
         assert value.get_precision() == 3
         assert value.get_payload() == Decimal(1)
+
+        second_value = ManagedDecimalValue()
+        second_value.set_payload(value)
+        assert not second_value.is_variable
+        assert second_value.get_precision() == 3
+        assert second_value.get_payload() == Decimal(1)
 
         value = ManagedDecimalValue("1.234", 3)
         assert value.get_precision() == 4
@@ -52,6 +58,12 @@ class TestManagedDecimalSignedValueTest:
         assert not value.is_variable
         assert value.get_precision() == 4
         assert value.get_payload() == Decimal(-1)
+
+        second_value = ManagedDecimalSignedValue()
+        second_value.set_payload(value)
+        assert not second_value.is_variable
+        assert second_value.get_precision() == 4
+        assert second_value.get_payload() == Decimal(-1)
 
         value = ManagedDecimalSignedValue("1.234", 3)
         assert value.get_precision() == 4

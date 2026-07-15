@@ -27,7 +27,17 @@ def test_set_payload_and_get_payload():
     assert value.fields == [U32Value(41), StringValue("hello")]
     assert value.get_payload() == (41, "hello")
 
+    second_value = TupleValue([])
+    second_value.set_payload(value)
+    assert second_value.fields == [U32Value(41), StringValue("hello")]
+    assert second_value.get_payload() == (41, "hello")
+
     # From list
     value.set_payload([42, "world"])
     assert value.fields == [U32Value(42), StringValue("world")]
     assert value.get_payload() == (42, "world")
+
+    second_value = TupleValue([])
+    second_value.set_payload(value)
+    assert second_value.fields == [U32Value(42), StringValue("world")]
+    assert second_value.get_payload() == (42, "world")

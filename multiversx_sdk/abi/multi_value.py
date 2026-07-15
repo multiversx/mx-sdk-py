@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Any, Union
 
 from multiversx_sdk.abi.interface import IPayloadHolder, ISingleValue
@@ -9,6 +10,10 @@ class MultiValue(IPayloadHolder):
         self.items = items
 
     def set_payload(self, value: Any):
+        if isinstance(value, MultiValue):
+            self.items = deepcopy(value.items)
+            return
+
         native_items, _ = convert_native_value_to_list(value)
 
         if len(value) != len(self.items):

@@ -27,3 +27,13 @@ def test_set_payload_and_get_payload():
 
     with pytest.raises(ValueError, match="cannot get value from dictionary: missing 'hex' key"):
         BytesValue().set_payload({})
+
+
+def test_set_payload_from_int():
+    value = BytesValue()
+
+    value.set_payload(7)
+    assert value.get_payload() == b"\x07"
+
+    value.set_payload(-7)
+    assert value.get_payload() == b"\xf9"

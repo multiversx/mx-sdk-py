@@ -87,6 +87,9 @@ class TransactionsFactoryConfig:
     gas_limit_for_unbonding_tokens: int = 5_000_000
     gas_limit_for_cleaning_registered_data: int = 5_000_000
     gas_limit_for_restaking_unstaked_tokens: int = 5_000_000
+    gas_limit_for_creating_delegation_contract_from_validator: int = 51_000_000
+    gas_limit_for_whitelist_for_merge: int = 5_000_000
+    gas_limit_for_merging_validator_to_delegation: int = 50_000_000
 
     # Configuration for governance operations
     gas_limit_for_proposal = 50_000_000

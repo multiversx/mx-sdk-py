@@ -1,4 +1,5 @@
 import io
+from copy import deepcopy
 from typing import Any, Callable, Optional
 
 from multiversx_sdk.abi.interface import ISingleValue
@@ -51,6 +52,12 @@ class ArrayValue:
         self.items.append(new_item)
 
     def set_payload(self, value: Any):
+        if isinstance(value, ArrayValue):
+            self.length = value.length
+            self.items = deepcopy(value.items)
+            self.item_creator = value.item_creator
+            return
+
         if not self.item_creator:
             raise ValueError("populating an array from a native object requires the item creator to be set")
 

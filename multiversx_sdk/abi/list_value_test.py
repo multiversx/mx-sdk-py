@@ -16,6 +16,11 @@ def test_set_payload_and_get_payload():
     assert value.items == [U32Value(1), U32Value(2), U32Value(3)]
     assert value.get_payload() == [1, 2, 3]
 
+    second_value = ListValue()
+    second_value.set_payload(value)
+    assert second_value.items == [U32Value(1), U32Value(2), U32Value(3)]
+    assert second_value.get_payload() == [1, 2, 3]
+
     # Simple
     value = ListValue(item_creator=lambda: BigUIntValue())
     value.set_payload(range(4, 7))

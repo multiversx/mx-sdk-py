@@ -39,7 +39,10 @@ class BigIntValue:
         return int.from_bytes(data, byteorder="big", signed=True)
 
     def set_payload(self, value: Any):
-        self.value = int(value)
+        if isinstance(value, BigIntValue):
+            self.value = value.get_payload()
+        else:
+            self.value = int(value)
 
     def get_payload(self) -> Any:
         return self.value

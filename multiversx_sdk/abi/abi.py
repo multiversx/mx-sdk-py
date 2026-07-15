@@ -326,7 +326,11 @@ class Abi:
             return AddressValue()
         if name == "TokenIdentifier":
             return TokenIdentifierValue()
+        if name == "TokenId":
+            return TokenIdentifierValue()
         if name == "EgldOrEsdtTokenIdentifier":
+            return TokenIdentifierValue()
+        if name == "EsdtTokenIdentifier":
             return TokenIdentifierValue()
         if name == "CodeMetadata":
             return CodeMetadataValue()

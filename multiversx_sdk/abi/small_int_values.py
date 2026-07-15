@@ -40,6 +40,10 @@ class SmallUIntValue:
             )
 
     def set_payload(self, value: Any):
+        if isinstance(value, SmallUIntValue):
+            self.value = value.value
+            return
+
         self.value = int(value)
 
     def get_payload(self) -> Any:
@@ -84,6 +88,15 @@ class SmallIntValue:
             )
 
     def set_payload(self, value: Any):
+        if isinstance(value, SmallIntValue):
+            if self._num_bytes < value._num_bytes:
+                raise ValueError(
+                    f"cannot set payload: source value has {value._num_bytes} bytes, which is more than {self._num_bytes} bytes of the target"
+                )
+
+            self.value = value.value
+            return
+
         self.value = int(value)
 
     def get_payload(self) -> Any:

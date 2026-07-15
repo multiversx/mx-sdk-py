@@ -343,3 +343,24 @@ class TestDelegationTransactionsFactory:
         assert transaction.data.decode() == "withdraw"
         assert transaction.value == 0
         assert transaction.gas_limit == 11062000
+
+    def test_create_transaction_for_whitelist_for_merge(self):
+        sender = Address.new_from_bech32("erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2")
+        delegation_contract = Address.new_from_bech32("erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc")
+        node_operator = Address.new_from_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th")
+
+        transaction = self.factory.create_transaction_for_whitelist_for_merge(
+            sender=sender,
+            delegation_contract=delegation_contract,
+            validator_operator=node_operator,
+        )
+
+        assert transaction.sender.to_bech32() == "erd18s6a06ktr2v6fgxv4ffhauxvptssnaqlds45qgsrucemlwc8rawq553rt2"
+        assert transaction.receiver.to_bech32() == "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtllllls002zgc"
+        assert transaction.data
+        assert (
+            transaction.data.decode()
+            == "whitelistForMerge@0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
+        )
+        assert transaction.value == 0
+        assert transaction.gas_limit == 5173000

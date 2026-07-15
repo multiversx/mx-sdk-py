@@ -3,7 +3,8 @@
         "multiversx_sdk"
     ],
     "exclude": [
-        "**/__pycache__"
+        "**/__pycache__",
+        "**/transaction_pb2*"
     ],
     "ignore": [],
     "defineConstant": {

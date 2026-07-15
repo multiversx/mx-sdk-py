@@ -23,6 +23,7 @@ from multiversx_sdk.network_providers.constants import (
     DEFAULT_ACCOUNT_AWAITING_PATIENCE_IN_MILLISECONDS,
 )
 from multiversx_sdk.network_providers.errors import (
+    EstimateTransactionCostError,
     NetworkProviderError,
     TransactionFetchingError,
 )
@@ -191,6 +192,9 @@ class ProxyNetworkProvider(INetworkProvider):
         """Estimates the cost of a transaction."""
         tx_copy = deepcopy(transaction)
 
+        # we set gas_limit to 0 for the /cost endpoint which is not really working as expected if gas_limit is set
+        tx_copy.gas_limit = 0
+
         if not tx_copy.nonce:
             tx_copy.nonce = self.get_account(tx_copy.sender).nonce
 
@@ -204,6 +208,9 @@ class ProxyNetworkProvider(INetworkProvider):
             tx_copy.relayer_signature = bytes([0]) * 64
 
         response = self.do_post_generic("transaction/cost", tx_copy.to_dictionary())
+        error_message = response.get("returnMessage", "")
+        if error_message:
+            raise EstimateTransactionCostError(error_message)
         return transaction_cost_estimation_from_response(response.to_dictionary())
 
     def send_transactions(self, transactions: list[Transaction]) -> tuple[int, list[bytes]]:

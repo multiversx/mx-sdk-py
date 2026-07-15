@@ -463,3 +463,24 @@ class DelegationTransactionsFactory(BaseFactory):
         self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
 
         return transaction
+
+    def create_transaction_for_whitelist_for_merge(
+        self,
+        sender: Address,
+        delegation_contract: Address,
+        validator_operator: Address,
+    ) -> Transaction:
+        parts = ["whitelistForMerge", validator_operator.to_hex()]
+        gas_limit = self.config.gas_limit_for_whitelist_for_merge
+
+        transaction = Transaction(
+            sender=sender,
+            receiver=delegation_contract,
+            gas_limit=0,
+            chain_id=self.config.chain_id,
+        )
+
+        self.set_payload(transaction=transaction, data_parts=parts)
+        self.set_gas_limit(transaction=transaction, config_gas_limit=gas_limit)
+
+        return transaction

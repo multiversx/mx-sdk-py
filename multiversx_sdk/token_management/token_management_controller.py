@@ -54,7 +54,8 @@ class TokenManagementController(BaseController):
         network_provider: INetworkProvider,
         gas_limit_estimator: Optional[IGasLimitEstimator] = None,
     ) -> None:
-        self.factory = TokenManagementTransactionsFactory(TransactionsFactoryConfig(chain_id), gas_limit_estimator)
+        super().__init__(gas_limit_estimator=gas_limit_estimator)
+        self.factory = TokenManagementTransactionsFactory(config=TransactionsFactoryConfig(chain_id))
         self.network_provider = network_provider
         self.parser = TokenManagementTransactionsOutcomeParser()
 
@@ -96,8 +97,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -105,8 +106,12 @@ class TokenManagementController(BaseController):
     def parse_issue_fungible(self, transaction_on_network: TransactionOnNetwork) -> list[IssueFungibleOutcome]:
         return self.parser.parse_issue_fungible(transaction_on_network)
 
-    def await_completed_issue_fungible(self, transaction_hash: Union[str, bytes]) -> list[IssueFungibleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_issue_fungible(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[IssueFungibleOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_issue_fungible(transaction)
 
     def create_transaction_for_issuing_semi_fungible(
@@ -145,8 +150,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -155,9 +160,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_issue_semi_fungible(transaction_on_network)
 
     def await_completed_issue_semi_fungible(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[IssueSemiFungibleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_issue_semi_fungible(transaction)
 
     def create_transaction_for_issuing_non_fungible(
@@ -196,8 +203,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -205,8 +212,12 @@ class TokenManagementController(BaseController):
     def parse_issue_non_fungible(self, transaction_on_network: TransactionOnNetwork) -> list[IssueNonFungibleOutcome]:
         return self.parser.parse_issue_non_fungible(transaction_on_network)
 
-    def await_completed_issue_non_fungible(self, transaction_hash: Union[str, bytes]) -> list[IssueNonFungibleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_issue_non_fungible(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[IssueNonFungibleOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_issue_non_fungible(transaction)
 
     def create_transaction_for_registering_meta_esdt(
@@ -247,8 +258,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -256,8 +267,12 @@ class TokenManagementController(BaseController):
     def parse_register_meta_esdt(self, transaction_on_network: TransactionOnNetwork) -> list[RegisterMetaEsdtOutcome]:
         return self.parser.parse_register_meta_esdt(transaction_on_network)
 
-    def await_completed_register_meta_esdt(self, transaction_hash: Union[str, bytes]) -> list[RegisterMetaEsdtOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_register_meta_esdt(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[RegisterMetaEsdtOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_register_meta_esdt(transaction)
 
     def create_transaction_for_registering_and_setting_roles(
@@ -286,8 +301,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -298,9 +313,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_register_and_set_all_roles(transaction_on_network)
 
     def await_completed_register_and_set_all_roles(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[RegisterAndSetAllRolesOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_register_and_set_all_roles(transaction)
 
     def create_transaction_for_setting_burn_role_globally(
@@ -322,8 +339,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -331,8 +348,12 @@ class TokenManagementController(BaseController):
     def parse_set_burn_role_globally(self, transaction_on_network: TransactionOnNetwork):
         return self.parser.parse_set_burn_role_globally(transaction_on_network)
 
-    def await_completed_set_burn_role_globally(self, transaction_hash: Union[str, bytes]):
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_set_burn_role_globally(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ):
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_set_burn_role_globally(transaction)
 
     def create_transaction_for_unsetting_burn_role_globally(
@@ -354,8 +375,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -363,8 +384,12 @@ class TokenManagementController(BaseController):
     def parse_unset_burn_role_globally(self, transaction_on_network: TransactionOnNetwork):
         return self.parser.parse_unset_burn_role_globally(transaction_on_network)
 
-    def await_completed_unset_burn_role_globally(self, transaction_hash: Union[str, bytes]):
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_unset_burn_role_globally(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ):
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_unset_burn_role_globally(transaction)
 
     def create_transaction_for_setting_special_role_on_fungible_token(
@@ -395,8 +420,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -407,9 +432,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_set_special_role(transaction_on_network)
 
     def await_completed_set_special_role_on_fungible_token(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[SetSpecialRoleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_set_special_role_on_fungible_token(transaction)
 
     def create_transaction_for_unsetting_special_role_on_fungible_token(
@@ -440,8 +467,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -486,8 +513,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -498,9 +525,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_set_special_role(transaction_on_network)
 
     def await_completed_set_special_role_on_semi_fungible_token(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[SetSpecialRoleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_set_special_role_on_semi_fungible_token(transaction)
 
     def create_transaction_for_unsetting_special_role_on_semi_fungible_token(
@@ -541,8 +570,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -576,8 +605,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -588,9 +617,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_set_special_role(transaction_on_network)
 
     def await_completed_set_special_role_on_meta_esdt(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[SetSpecialRoleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_set_special_role_on_meta_esdt(transaction)
 
     def create_transaction_for_unsetting_special_role_on_meta_esdt(
@@ -621,8 +652,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -638,6 +669,11 @@ class TokenManagementController(BaseController):
         add_role_nft_update_attributes: bool = False,
         add_role_nft_add_uri: bool = False,
         add_role_esdt_transfer_role: bool = False,
+        add_role_nft_update: bool = False,
+        add_role_esdt_modify_royalties: bool = False,
+        add_role_esdt_set_new_uri: bool = False,
+        add_role_esdt_modify_creator: bool = False,
+        add_role_nft_recreate: bool = False,
         guardian: Optional[Address] = None,
         relayer: Optional[Address] = None,
         gas_limit: Optional[int] = None,
@@ -652,6 +688,11 @@ class TokenManagementController(BaseController):
             add_role_nft_update_attributes=add_role_nft_update_attributes,
             add_role_nft_add_uri=add_role_nft_add_uri,
             add_role_esdt_transfer_role=add_role_esdt_transfer_role,
+            add_role_nft_update=add_role_nft_update,
+            add_role_esdt_modify_royalties=add_role_esdt_modify_royalties,
+            add_role_esdt_set_new_uri=add_role_esdt_set_new_uri,
+            add_role_esdt_modify_creator=add_role_esdt_modify_creator,
+            add_role_nft_recreate=add_role_nft_recreate,
         )
 
         transaction.guardian = guardian
@@ -659,8 +700,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -671,9 +712,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_set_special_role(transaction_on_network)
 
     def await_completed_set_special_role_on_non_fungible_token(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[SetSpecialRoleOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_set_special_role_on_non_fungible_token(transaction)
 
     def create_transaction_for_unsetting_special_role_on_non_fungible_token(
@@ -716,8 +759,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -754,8 +797,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -763,8 +806,12 @@ class TokenManagementController(BaseController):
     def parse_create_nft(self, transaction_on_network: TransactionOnNetwork) -> list[NFTCreateOutcome]:
         return self.parser.parse_nft_create(transaction_on_network)
 
-    def await_completed_create_nft(self, transaction_hash: Union[str, bytes]) -> list[NFTCreateOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_create_nft(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[NFTCreateOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_create_nft(transaction)
 
     def create_transaction_for_pausing(
@@ -786,8 +833,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -795,8 +842,12 @@ class TokenManagementController(BaseController):
     def parse_pause(self, transaction_on_network: TransactionOnNetwork) -> list[PauseOutcome]:
         return self.parser.parse_pause(transaction_on_network)
 
-    def await_completed_pause(self, transaction_hash: Union[str, bytes]) -> list[PauseOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_pause(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[PauseOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_pause(transaction)
 
     def create_transaction_for_unpausing(
@@ -818,8 +869,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -827,8 +878,12 @@ class TokenManagementController(BaseController):
     def parse_unpause(self, transaction_on_network: TransactionOnNetwork) -> list[UnPauseOutcome]:
         return self.parser.parse_unpause(transaction_on_network)
 
-    def await_completed_unpause(self, transaction_hash: Union[str, bytes]) -> list[UnPauseOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_unpause(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[UnPauseOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_unpause(transaction)
 
     def create_transaction_for_freezing(
@@ -851,8 +906,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -860,8 +915,12 @@ class TokenManagementController(BaseController):
     def parse_freeze(self, transaction_on_network: TransactionOnNetwork) -> list[FreezeOutcome]:
         return self.parser.parse_freeze(transaction_on_network)
 
-    def await_completed_freeze(self, transaction_hash: Union[str, bytes]) -> list[FreezeOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_freeze(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[FreezeOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_freeze(transaction)
 
     def create_transaction_for_unfreezing(
@@ -884,8 +943,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -893,8 +952,12 @@ class TokenManagementController(BaseController):
     def parse_unfreeze(self, transaction_on_network: TransactionOnNetwork) -> list[UnFreezeOutcome]:
         return self.parser.parse_unfreeze(transaction_on_network)
 
-    def await_completed_unfreeze(self, transaction_hash: Union[str, bytes]) -> list[UnFreezeOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_unfreeze(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[UnFreezeOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_unfreeze(transaction)
 
     def create_transaction_for_wiping(
@@ -917,8 +980,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -926,8 +989,12 @@ class TokenManagementController(BaseController):
     def parse_wipe(self, transaction_on_network: TransactionOnNetwork) -> list[WipeOutcome]:
         return self.parser.parse_wipe(transaction_on_network)
 
-    def await_completed_wipe(self, transaction_hash: Union[str, bytes]) -> list[WipeOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_wipe(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[WipeOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_wipe(transaction)
 
     def create_transaction_for_local_minting(
@@ -952,8 +1019,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -961,8 +1028,12 @@ class TokenManagementController(BaseController):
     def parse_local_mint(self, transaction_on_network: TransactionOnNetwork) -> list[MintOutcome]:
         return self.parser.parse_local_mint(transaction_on_network)
 
-    def await_completed_local_mint(self, transaction_hash: Union[str, bytes]) -> list[MintOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_local_mint(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[MintOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_local_mint(transaction)
 
     def create_transaction_for_local_burning(
@@ -987,8 +1058,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -996,8 +1067,12 @@ class TokenManagementController(BaseController):
     def parse_local_burn(self, transaction_on_network: TransactionOnNetwork) -> list[BurnOutcome]:
         return self.parser.parse_local_burn(transaction_on_network)
 
-    def await_completed_local_burn(self, transaction_hash: Union[str, bytes]) -> list[BurnOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_local_burn(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[BurnOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_local_burn(transaction)
 
     def create_transaction_for_updating_attributes(
@@ -1024,8 +1099,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1033,8 +1108,12 @@ class TokenManagementController(BaseController):
     def parse_update_attributes(self, transaction_on_network: TransactionOnNetwork) -> list[UpdateAttributesOutcome]:
         return self.parser.parse_update_attributes(transaction_on_network)
 
-    def await_completed_update_attributes(self, transaction_hash: Union[str, bytes]) -> list[UpdateAttributesOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_update_attributes(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[UpdateAttributesOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_update_attributes(transaction)
 
     def create_transaction_for_adding_quantity(
@@ -1061,8 +1140,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1070,8 +1149,12 @@ class TokenManagementController(BaseController):
     def parse_add_quantity(self, transaction_on_network: TransactionOnNetwork) -> list[AddQuantityOutcome]:
         return self.parser.parse_add_quantity(transaction_on_network)
 
-    def await_completed_add_quantity(self, transaction_hash: Union[str, bytes]) -> list[AddQuantityOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_add_quantity(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[AddQuantityOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_add_quantity(transaction)
 
     def create_transaction_for_burning_quantity(
@@ -1098,8 +1181,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1107,8 +1190,12 @@ class TokenManagementController(BaseController):
     def parse_burn_quantity(self, transaction_on_network: TransactionOnNetwork) -> list[BurnQuantityOutcome]:
         return self.parser.parse_burn_quantity(transaction_on_network)
 
-    def await_completed_burn_quantity(self, transaction_hash: Union[str, bytes]) -> list[BurnQuantityOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_burn_quantity(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[BurnQuantityOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_burn_quantity(transaction)
 
     def create_transaction_for_modifying_royalties(
@@ -1135,8 +1222,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1144,8 +1231,12 @@ class TokenManagementController(BaseController):
     def parse_modify_royalties(self, transaction_on_network: TransactionOnNetwork) -> list[ModifyRoyaltiesOutcome]:
         return self.parser.parse_modify_royalties(transaction_on_network)
 
-    def await_completed_modify_royalties(self, transaction_hash: Union[str, bytes]) -> list[ModifyRoyaltiesOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_modify_royalties(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[ModifyRoyaltiesOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_modify_royalties(transaction)
 
     def create_transaction_for_setting_new_uris(
@@ -1172,8 +1263,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1181,8 +1272,12 @@ class TokenManagementController(BaseController):
     def parse_set_new_uris(self, transaction_on_network: TransactionOnNetwork) -> list[SetNewUrisOutcome]:
         return self.parser.parse_set_new_uris(transaction_on_network)
 
-    def await_completed_set_new_uris(self, transaction_hash: Union[str, bytes]) -> list[SetNewUrisOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_set_new_uris(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[SetNewUrisOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_set_new_uris(transaction)
 
     def create_transaction_for_modifying_creator(
@@ -1205,8 +1300,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1214,8 +1309,12 @@ class TokenManagementController(BaseController):
     def parse_modify_creator(self, transaction_on_network: TransactionOnNetwork) -> list[ModifyCreatorOutcome]:
         return self.parser.parse_modify_creator(transaction_on_network)
 
-    def await_completed_modify_creator(self, transaction_hash: Union[str, bytes]) -> list[ModifyCreatorOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_modify_creator(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[ModifyCreatorOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_modify_creator(transaction)
 
     def create_transaction_for_updating_metadata(
@@ -1250,8 +1349,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1259,8 +1358,12 @@ class TokenManagementController(BaseController):
     def parse_update_metadata(self, transaction_on_network: TransactionOnNetwork) -> list[UpdateMetadataOutcome]:
         return self.parser.parse_update_metadata(transaction_on_network)
 
-    def await_completed_update_metadata(self, transaction_hash: Union[str, bytes]) -> list[UpdateMetadataOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_update_metadata(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[UpdateMetadataOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_update_metadata(transaction)
 
     def create_transaction_for_nft_metadata_recreate(
@@ -1295,8 +1398,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1304,8 +1407,12 @@ class TokenManagementController(BaseController):
     def parse_metadata_recreate(self, transaction_on_network: TransactionOnNetwork) -> list[MetadataRecreateOutcome]:
         return self.parser.parse_metadata_recreate(transaction_on_network)
 
-    def await_completed_metadata_recreate(self, transaction_hash: Union[str, bytes]) -> list[MetadataRecreateOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_metadata_recreate(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> list[MetadataRecreateOutcome]:
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_metadata_recreate(transaction)
 
     def create_transaction_for_changing_token_to_dynamic(
@@ -1329,8 +1436,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1341,9 +1448,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_change_token_to_dynamic(transaction_on_network)
 
     def await_completed_change_token_to_dynamic(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[ChangeTokenToDynamicOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_change_token_to_dynamic(transaction)
 
     def create_transaction_for_updating_token_id(
@@ -1366,14 +1475,18 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
 
-    def await_completed_update_token_id(self, transaction_hash: Union[str, bytes]) -> TransactionOnNetwork:
-        return self.network_provider.await_transaction_completed(transaction_hash)
+    def await_completed_update_token_id(
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
+    ) -> TransactionOnNetwork:
+        return self.network_provider.await_transaction_completed(transaction_hash, options)
 
     def create_transaction_for_registering_dynamic_token(
         self,
@@ -1401,8 +1514,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1413,9 +1526,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_register_dynamic_token(transaction_on_network)
 
     def await_completed_register_dynamic_token(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[RegisterDynamicOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_register_dynamic_token(transaction)
 
     def create_transaction_for_registering_dynamic_and_setting_roles(
@@ -1444,8 +1559,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1456,9 +1571,11 @@ class TokenManagementController(BaseController):
         return self.parser.parse_register_dynamic_and_setting_roles(transaction_on_network)
 
     def await_completed_register_dynamic_token_and_setting_roles(
-        self, transaction_hash: Union[str, bytes]
+        self,
+        transaction_hash: Union[str, bytes],
+        options: Optional[AwaitingOptions] = None,
     ) -> list[RegisterDynamicOutcome]:
-        transaction = self.network_provider.await_transaction_completed(transaction_hash)
+        transaction = self.network_provider.await_transaction_completed(transaction_hash, options)
         return self.parse_register_dynamic_token_and_setting_roles(transaction)
 
     def create_transaction_for_transferring_ownership(
@@ -1483,8 +1600,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1513,8 +1630,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1543,8 +1660,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1569,8 +1686,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1595,8 +1712,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1620,8 +1737,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
@@ -1650,13 +1767,13 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
 
-    def create_transction_for_adding_uris(
+    def create_transaction_for_adding_uris(
         self,
         sender: IAccount,
         nonce: int,
@@ -1668,7 +1785,7 @@ class TokenManagementController(BaseController):
         gas_limit: Optional[int] = None,
         gas_price: Optional[int] = None,
     ) -> Transaction:
-        transaction = self.factory.create_transction_for_adding_uris(
+        transaction = self.factory.create_transaction_for_adding_uris(
             sender=sender.address,
             token_identifier=token_identifier,
             token_nonce=token_nonce,
@@ -1680,8 +1797,8 @@ class TokenManagementController(BaseController):
         transaction.nonce = nonce
 
         self._set_version_and_options_for_hash_signing(sender, transaction)
-        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         self._set_version_and_options_for_guardian(transaction)
+        self._set_transaction_gas_options(transaction, gas_limit, gas_price)
         transaction.signature = sender.sign_transaction(transaction)
 
         return transaction
