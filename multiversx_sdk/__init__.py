@@ -28,10 +28,14 @@ from multiversx_sdk.core import (
     find_events_by_identifier,
 )
 from multiversx_sdk.delegation import (
+    ClaimRewardsOutcome,
     CreateNewDelegationContractOutcome,
+    DelegateOutcome,
     DelegationController,
     DelegationTransactionsFactory,
     DelegationTransactionsOutcomeParser,
+    RedelegateRewardsOutcome,
+    UndelegateOutcome,
 )
 from multiversx_sdk.entrypoints import (
     DevnetEntrypoint,
@@ -67,6 +71,7 @@ from multiversx_sdk.multisig import (
     MultisigController,
     MultisigTransactionsFactory,
     MultisigTransactionsOutcomeParser,
+    Nothing,
     RemoveUser,
     SCDeployFromSource,
     SCUpgradeFromSource,
@@ -314,4 +319,9 @@ __all__ = [
     "CloseProposalOutcome",
     "GovernanceTransactionsOutcomeParser",
     "GasLimitEstimator",
+    "ClaimRewardsOutcome",
+    "DelegateOutcome",
+    "RedelegateRewardsOutcome",
+    "UndelegateOutcome",
+    "Nothing",
 ]

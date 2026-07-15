@@ -112,14 +112,15 @@ class TransferTransactionsFactory(BaseFactory):
         data: Optional[bytes] = None,
     ) -> Transaction:
         if token_transfers:
+            transfers = list(token_transfers)
             if native_amount:
                 native_transfer = TokenTransfer.new_from_native_amount(native_amount)
-                token_transfers.append(native_transfer)
+                transfers.append(native_transfer)
 
             return self.create_transaction_for_esdt_token_transfer(
                 sender=sender,
                 receiver=receiver,
-                token_transfers=token_transfers,
+                token_transfers=transfers,
                 data=data,
             )
 

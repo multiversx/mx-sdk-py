@@ -78,7 +78,7 @@ class ApiNetworkProvider(INetworkProvider):
     ) -> None:
         self.url = url
         self.address_hrp = address_hrp or LibraryConfig.default_address_hrp
-        self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp)
+        self.backing_proxy = ProxyNetworkProvider(url, self.address_hrp, config)
         self.config = deepcopy(config) if config is not None else NetworkProviderConfig()
 
         self.user_agent_prefix = f"{BASE_USER_AGENT}/api"
@@ -101,7 +101,7 @@ class ApiNetworkProvider(INetworkProvider):
 
     def get_latest_block(self) -> BlockOnNetwork:
         """Fetches the latest block of a shard."""
-        result = self.do_get_generic("/blocks/latest")
+        result = self.do_get_generic("blocks/latest")
         return block_from_response(result)
 
     def get_account(self, address: Address) -> AccountOnNetwork:

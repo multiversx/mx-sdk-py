@@ -184,6 +184,6 @@ class TestDelegationTransactionsOutcomeParser:
         tx = get_empty_transaction_on_network()
         tx.logs = logs
 
-        outcome = self.parser.parse_delegate(tx)
+        outcome = self.parser.parse_redelegate_rewards(tx)
         assert len(outcome) == 1
         assert outcome[0].amount == 1354252518492142

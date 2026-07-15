@@ -141,7 +141,7 @@ class SmartContractTransactionsOutcomeParser:
 
         # then, we search in the logs of contract_results
         for result in transaction.smart_contract_results:
-            if result.raw.get("prevTxHash", "") != transaction.hash:
+            if result.raw.get("prevTxHash", "") != transaction.hash.hex():
                 continue
 
             for event in result.logs.events:

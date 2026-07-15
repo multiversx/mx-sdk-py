@@ -8,7 +8,7 @@ from multiversx_sdk.abi.shared import read_bytes_exactly
 class SmallUIntValue:
     def __init__(self, num_bytes: int, value: int = 0) -> None:
         self._num_bytes = num_bytes
-        self.value = value
+        self.value = self._validate_fixed_width_integer(value)
 
     def encode_nested(self, writer: io.BytesIO):
         data = self.value.to_bytes(self._num_bytes, byteorder="big", signed=False)
@@ -41,10 +41,15 @@ class SmallUIntValue:
 
     def set_payload(self, value: Any):
         if isinstance(value, SmallUIntValue):
+            if self._num_bytes < value._num_bytes:
+                raise ValueError(
+                    f"cannot set payload: source value has {value._num_bytes} bytes, which is more than {self._num_bytes} bytes of the target"
+                )
+
             self.value = value.value
             return
 
-        self.value = int(value)
+        self.value = self._validate_fixed_width_integer(int(value))
 
     def get_payload(self) -> Any:
         return self.value
@@ -52,11 +57,28 @@ class SmallUIntValue:
     def __int__(self):
         return self.value
 
+    def _validate_fixed_width_integer(
+        self,
+        value: int,
+    ) -> int:
+        bits = self._num_bytes * 8
+
+        minimum = 0
+        maximum = (1 << bits) - 1
+
+        if value < minimum or value > maximum:
+            raise ValueError(
+                f"value {value} is out of range for {self.__class__.__name__}; "
+                f"expected {minimum} <= value <= {maximum}"
+            )
+
+        return value
+
 
 class SmallIntValue:
     def __init__(self, num_bytes: int, value: int = 0) -> None:
         self._num_bytes = num_bytes
-        self.value = value
+        self.value = self._validate_fixed_width_integer(value)
 
     def encode_nested(self, writer: io.BytesIO):
         data = self.value.to_bytes(self._num_bytes, byteorder="big", signed=True)
@@ -97,13 +119,30 @@ class SmallIntValue:
             self.value = value.value
             return
 
-        self.value = int(value)
+        self.value = self._validate_fixed_width_integer(int(value))
 
     def get_payload(self) -> Any:
         return self.value
 
     def __int__(self):
         return self.value
+
+    def _validate_fixed_width_integer(
+        self,
+        value: int,
+    ) -> int:
+        bits = self._num_bytes * 8
+
+        minimum = -(1 << (bits - 1))
+        maximum = (1 << (bits - 1)) - 1
+
+        if value < minimum or value > maximum:
+            raise ValueError(
+                f"value {value} is out of range for {self.__class__.__name__}; "
+                f"expected {minimum} <= value <= {maximum}"
+            )
+
+        return value
 
 
 class U8Value(SmallUIntValue):

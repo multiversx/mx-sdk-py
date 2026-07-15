@@ -14,6 +14,7 @@ from multiversx_sdk.multisig.resources import (
     ChangeQuorum,
     EsdtTokenPayment,
     EsdtTransferExecuteData,
+    Nothing,
     RemoveUser,
     SCDeployFromSource,
     SCUpgradeFromSource,
@@ -42,4 +43,5 @@ __all__ = [
     "SendTransferExecuteEgld",
     "SendTransferExecuteEsdt",
     "UserRole",
+    "Nothing",
 ]
