@@ -108,7 +108,7 @@ class ProxyNetworkProvider(INetworkProvider):
         if block_hash:
             block_hash = block_hash.hex() if isinstance(block_hash, bytes) else block_hash
             response = self.do_get_generic(f"block/{shard}/by-hash/{block_hash}")
-        elif block_nonce:
+        elif block_nonce is not None:
             response = self.do_get_generic(f"block/{shard}/by-nonce/{block_nonce}")
         else:
             raise Exception("Block hash or block nonce not provided.")
