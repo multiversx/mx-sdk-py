@@ -108,7 +108,7 @@ class ProxyNetworkProvider(INetworkProvider):
         if block_hash:
             block_hash = block_hash.hex() if isinstance(block_hash, bytes) else block_hash
             response = self.do_get_generic(f"block/{shard}/by-hash/{block_hash}")
-        elif block_nonce:
+        elif block_nonce is not None:
             response = self.do_get_generic(f"block/{shard}/by-nonce/{block_nonce}")
         else:
             raise Exception("Block hash or block nonce not provided.")
@@ -131,7 +131,7 @@ class ProxyNetworkProvider(INetworkProvider):
         response = self.do_get_generic(f"address/{address.to_bech32()}")
         account = account_from_proxy_response(response.to_dictionary())
 
-        get_guardian_data_thread.join(timeout=self.config.requests_options.get("timeout", 5))
+        get_guardian_data_thread.join(timeout=2)
         account.is_guarded = data.get("is_guarded", False)
 
         return account

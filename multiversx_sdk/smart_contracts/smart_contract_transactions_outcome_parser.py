@@ -9,6 +9,7 @@ from multiversx_sdk.core import (
     TransactionOnNetwork,
     find_events_by_identifier,
 )
+from multiversx_sdk.core.config import LibraryConfig
 from multiversx_sdk.core.constants import ARGS_SEPARATOR
 from multiversx_sdk.smart_contracts.smart_contract_transactions_outcome_parser_types import (
     DeployedSmartContract,
@@ -40,8 +41,9 @@ class SmartContractCallOutcome:
 
 
 class SmartContractTransactionsOutcomeParser:
-    def __init__(self, abi: Optional[Abi] = None) -> None:
+    def __init__(self, abi: Optional[Abi] = None, address_hrp: Optional[str] = None) -> None:
         self.abi = abi
+        self._address_hrp = address_hrp if address_hrp else LibraryConfig.default_address_hrp
 
     def parse_deploy(self, transaction: TransactionOnNetwork) -> SmartContractDeployOutcome:
         direct_call_outcome = self._find_direct_smart_contract_call_outcome(transaction)
@@ -221,8 +223,8 @@ class SmartContractTransactionsOutcomeParser:
 
         code_hash_topic = event.topics[2] if event.topics[2] else b""
 
-        contract_address = Address(contract_address_topic)
-        owner_address = Address(owner_address_topic)
+        contract_address = Address(contract_address_topic, self._address_hrp)
+        owner_address = Address(owner_address_topic, self._address_hrp)
         code_hash = code_hash_topic
 
         return DeployedSmartContract(contract_address, owner_address, code_hash)
