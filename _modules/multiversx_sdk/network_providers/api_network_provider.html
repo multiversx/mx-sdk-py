@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.network_providers.api_network_provider &mdash; multiversx-sdk 2.3.1 documentation</title>
+  <title>multiversx_sdk.network_providers.api_network_provider &mdash; multiversx-sdk 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../../../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -151,7 +151,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span> <span class="o">=</span> <span class="n">address_hrp</span> <span class="ow">or</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span> <span class="o">=</span> <span class="n">ProxyNetworkProvider</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backing_proxy</span> <span class="o">=</span> <span class="n">ProxyNetworkProvider</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_hrp</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">NetworkProviderConfig</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">user_agent_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">BASE_USER_AGENT</span><span class="si">}</span><span class="s2">/api&quot;</span>
@@ -185,7 +185,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.ApiNetworkProvider.get_latest_block">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BlockOnNetwork</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Fetches the latest block of a shard.&quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="s2">&quot;/blocks/latest&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="s2">&quot;blocks/latest&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">block_from_response</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 
@@ -519,7 +519,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, MultiversX.</p>
+    <p>&#169; Copyright 2026, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

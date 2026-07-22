@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk.network_providers.proxy_network_provider &mdash; multiversx-sdk 2.3.1 documentation</title>
+  <title>multiversx_sdk.network_providers.proxy_network_provider &mdash; multiversx-sdk 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=67b02a41"></script>
+      <script src="../../../_static/documentation_options.js?v=acc74ff5"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -189,7 +189,7 @@
         <span class="k">if</span> <span class="n">block_hash</span><span class="p">:</span>
             <span class="n">block_hash</span> <span class="o">=</span> <span class="n">block_hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block_hash</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="k">else</span> <span class="n">block_hash</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;block/</span><span class="si">{</span><span class="n">shard</span><span class="si">}</span><span class="s2">/by-hash/</span><span class="si">{</span><span class="n">block_hash</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">block_nonce</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">block_nonce</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_get_generic</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;block/</span><span class="si">{</span><span class="n">shard</span><span class="si">}</span><span class="s2">/by-nonce/</span><span class="si">{</span><span class="n">block_nonce</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Block hash or block nonce not provided.&quot;</span><span class="p">)</span>
@@ -599,7 +599,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, MultiversX.</p>
+    <p>&#169; Copyright 2026, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

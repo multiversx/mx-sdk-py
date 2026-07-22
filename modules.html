@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk &mdash; multiversx-sdk 2.3.1 documentation</title>
+  <title>multiversx_sdk &mdash; multiversx-sdk 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=67b02a41"></script>
+      <script src="_static/documentation_options.js?v=acc74ff5"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -477,6 +477,10 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ChangeTokenToDynamicOutcome.token_type"><code class="docutils literal notranslate"><span class="pre">ChangeTokenToDynamicOutcome.token_type</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ClaimRewardsOutcome"><code class="docutils literal notranslate"><span class="pre">ClaimRewardsOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ClaimRewardsOutcome.amount"><code class="docutils literal notranslate"><span class="pre">ClaimRewardsOutcome.amount</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.CloseProposalOutcome"><code class="docutils literal notranslate"><span class="pre">CloseProposalOutcome</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.CloseProposalOutcome.commit_hash"><code class="docutils literal notranslate"><span class="pre">CloseProposalOutcome.commit_hash</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.CloseProposalOutcome.passed"><code class="docutils literal notranslate"><span class="pre">CloseProposalOutcome.passed</span></code></a></li>
@@ -489,6 +493,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.CreateNewDelegationContractOutcome"><code class="docutils literal notranslate"><span class="pre">CreateNewDelegationContractOutcome</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.CreateNewDelegationContractOutcome.contract_address"><code class="docutils literal notranslate"><span class="pre">CreateNewDelegationContractOutcome.contract_address</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegateOutcome"><code class="docutils literal notranslate"><span class="pre">DelegateOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegateOutcome.amount"><code class="docutils literal notranslate"><span class="pre">DelegateOutcome.amount</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.DelegateVoteOutcome"><code class="docutils literal notranslate"><span class="pre">DelegateVoteOutcome</span></code></a><ul>
@@ -914,6 +922,10 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.NewProposalOutcome.start_vote_epoch"><code class="docutils literal notranslate"><span class="pre">NewProposalOutcome.start_vote_epoch</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Nothing"><code class="docutils literal notranslate"><span class="pre">Nothing</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.Nothing.discriminant"><code class="docutils literal notranslate"><span class="pre">Nothing.discriminant</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ParsedSmartContractCallOutcome"><code class="docutils literal notranslate"><span class="pre">ParsedSmartContractCallOutcome</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ParsedSmartContractCallOutcome.return_code"><code class="docutils literal notranslate"><span class="pre">ParsedSmartContractCallOutcome.return_code</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ParsedSmartContractCallOutcome.return_message"><code class="docutils literal notranslate"><span class="pre">ParsedSmartContractCallOutcome.return_message</span></code></a></li>
@@ -965,6 +977,10 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ProxyNetworkProvider.send_transaction"><code class="docutils literal notranslate"><span class="pre">ProxyNetworkProvider.send_transaction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ProxyNetworkProvider.send_transactions"><code class="docutils literal notranslate"><span class="pre">ProxyNetworkProvider.send_transactions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.ProxyNetworkProvider.simulate_transaction"><code class="docutils literal notranslate"><span class="pre">ProxyNetworkProvider.simulate_transaction()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RedelegateRewardsOutcome"><code class="docutils literal notranslate"><span class="pre">RedelegateRewardsOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RedelegateRewardsOutcome.amount"><code class="docutils literal notranslate"><span class="pre">RedelegateRewardsOutcome.amount</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.RegisterAndSetAllRolesOutcome"><code class="docutils literal notranslate"><span class="pre">RegisterAndSetAllRolesOutcome</span></code></a><ul>
@@ -1495,6 +1511,10 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.UnPauseOutcome.token_identifier"><code class="docutils literal notranslate"><span class="pre">UnPauseOutcome.token_identifier</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.UndelegateOutcome"><code class="docutils literal notranslate"><span class="pre">UndelegateOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.UndelegateOutcome.amount"><code class="docutils literal notranslate"><span class="pre">UndelegateOutcome.amount</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.UpdateAttributesOutcome"><code class="docutils literal notranslate"><span class="pre">UpdateAttributesOutcome</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.UpdateAttributesOutcome.attributes"><code class="docutils literal notranslate"><span class="pre">UpdateAttributesOutcome.attributes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.html#multiversx_sdk.UpdateAttributesOutcome.nonce"><code class="docutils literal notranslate"><span class="pre">UpdateAttributesOutcome.nonce</span></code></a></li>
@@ -1683,7 +1703,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, MultiversX.</p>
+    <p>&#169; Copyright 2026, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

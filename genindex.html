@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; multiversx-sdk 2.3.1 documentation</title>
+  <title>Index &mdash; multiversx-sdk 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=67b02a41"></script>
+      <script src="_static/documentation_options.js?v=acc74ff5"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -341,20 +341,36 @@
         <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.address_value.AddressValue">(class in multiversx_sdk.abi.address_value)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.ClaimRewardsOutcome.amount">amount (multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.ClaimRewardsOutcome attribute)</a>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.ClaimRewardsOutcome.amount">amount (multiversx_sdk.ClaimRewardsOutcome attribute)</a>
 
       <ul>
+        <li><a href="multiversx_sdk.html#multiversx_sdk.DelegateOutcome.amount">(multiversx_sdk.DelegateOutcome attribute)</a>
+</li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.ClaimRewardsOutcome.amount">(multiversx_sdk.delegation.ClaimRewardsOutcome attribute)</a>
+</li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegateOutcome.amount">(multiversx_sdk.delegation.DelegateOutcome attribute)</a>
+</li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.ClaimRewardsOutcome.amount">(multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.ClaimRewardsOutcome attribute)</a>
+</li>
         <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.DelegateOutcome.amount">(multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.DelegateOutcome attribute)</a>
 </li>
         <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.RedelegateRewardsOutcome.amount">(multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.RedelegateRewardsOutcome attribute)</a>
 </li>
         <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.UndelegateOutcome.amount">(multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.UndelegateOutcome attribute)</a>
 </li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.RedelegateRewardsOutcome.amount">(multiversx_sdk.delegation.RedelegateRewardsOutcome attribute)</a>
+</li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.UndelegateOutcome.amount">(multiversx_sdk.delegation.UndelegateOutcome attribute)</a>
+</li>
         <li><a href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.resources.TokenAmountOnNetwork.amount">(multiversx_sdk.network_providers.resources.TokenAmountOnNetwork attribute)</a>
 </li>
         <li><a href="multiversx_sdk.network_providers.html#multiversx_sdk.network_providers.TokenAmountOnNetwork.amount">(multiversx_sdk.network_providers.TokenAmountOnNetwork attribute)</a>
 </li>
+        <li><a href="multiversx_sdk.html#multiversx_sdk.RedelegateRewardsOutcome.amount">(multiversx_sdk.RedelegateRewardsOutcome attribute)</a>
+</li>
         <li><a href="multiversx_sdk.html#multiversx_sdk.TokenAmountOnNetwork.amount">(multiversx_sdk.TokenAmountOnNetwork attribute)</a>
+</li>
+        <li><a href="multiversx_sdk.html#multiversx_sdk.UndelegateOutcome.amount">(multiversx_sdk.UndelegateOutcome attribute)</a>
 </li>
       </ul></li>
       <li><a href="multiversx_sdk.ledger.html#multiversx_sdk.ledger.ledger_app.Apdu">Apdu (class in multiversx_sdk.ledger.ledger_app)</a>
@@ -473,6 +489,8 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.TokenManagementController.await_completed_change_token_to_dynamic">(multiversx_sdk.TokenManagementController method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_controller.DelegationController.await_completed_claim_rewards">await_completed_claim_rewards() (multiversx_sdk.delegation.delegation_controller.DelegationController method)</a>
 
       <ul>
@@ -481,8 +499,6 @@
         <li><a href="multiversx_sdk.html#multiversx_sdk.DelegationController.await_completed_claim_rewards">(multiversx_sdk.DelegationController method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="multiversx_sdk.governance.html#multiversx_sdk.governance.governance_controller.GovernanceController.await_completed_close_proposal">await_completed_close_proposal() (multiversx_sdk.governance.governance_controller.GovernanceController method)</a>
 
       <ul>
@@ -1153,8 +1169,14 @@
       </ul></li>
       <li><a href="multiversx_sdk.ledger.html#multiversx_sdk.ledger.ledger_app.Apdu.cla">cla (multiversx_sdk.ledger.ledger_app.Apdu attribute)</a>
 </li>
-      <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.ClaimRewardsOutcome">ClaimRewardsOutcome (class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.ClaimRewardsOutcome">ClaimRewardsOutcome (class in multiversx_sdk)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.ClaimRewardsOutcome">(class in multiversx_sdk.delegation)</a>
 </li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.ClaimRewardsOutcome">(class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.ledger.html#multiversx_sdk.ledger.ledger_app.LedgerApp.close">close() (multiversx_sdk.ledger.ledger_app.LedgerApp method)</a>
 
       <ul>
@@ -3529,8 +3551,14 @@
         <li><a href="multiversx_sdk.governance.html#multiversx_sdk.governance.resources.DelegatedVoteInfo">(class in multiversx_sdk.governance.resources)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.DelegateOutcome">DelegateOutcome (class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.DelegateOutcome">DelegateOutcome (class in multiversx_sdk)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegateOutcome">(class in multiversx_sdk.delegation)</a>
 </li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.DelegateOutcome">(class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.DelegateVoteOutcome">DelegateVoteOutcome (class in multiversx_sdk)</a>
 
       <ul>
@@ -3622,6 +3650,8 @@
 </li>
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.ChangeQuorum.discriminant">(multiversx_sdk.multisig.ChangeQuorum attribute)</a>
 </li>
+        <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.Nothing.discriminant">(multiversx_sdk.multisig.Nothing attribute)</a>
+</li>
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.RemoveUser.discriminant">(multiversx_sdk.multisig.RemoveUser attribute)</a>
 </li>
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.Action.discriminant">(multiversx_sdk.multisig.resources.Action attribute)</a>
@@ -3631,6 +3661,8 @@
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.AddProposer.discriminant">(multiversx_sdk.multisig.resources.AddProposer attribute)</a>
 </li>
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.ChangeQuorum.discriminant">(multiversx_sdk.multisig.resources.ChangeQuorum attribute)</a>
+</li>
+        <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.Nothing.discriminant">(multiversx_sdk.multisig.resources.Nothing attribute)</a>
 </li>
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.RemoveUser.discriminant">(multiversx_sdk.multisig.resources.RemoveUser attribute)</a>
 </li>
@@ -3653,6 +3685,8 @@
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.SendTransferExecuteEgld.discriminant">(multiversx_sdk.multisig.SendTransferExecuteEgld attribute)</a>
 </li>
         <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.SendTransferExecuteEsdt.discriminant">(multiversx_sdk.multisig.SendTransferExecuteEsdt attribute)</a>
+</li>
+        <li><a href="multiversx_sdk.html#multiversx_sdk.Nothing.discriminant">(multiversx_sdk.Nothing attribute)</a>
 </li>
         <li><a href="multiversx_sdk.html#multiversx_sdk.RemoveUser.discriminant">(multiversx_sdk.RemoveUser attribute)</a>
 </li>
@@ -8363,6 +8397,14 @@
       </ul></li>
       <li><a href="multiversx_sdk.core.html#multiversx_sdk.core.errors.NotEnoughGasError">NotEnoughGasError</a>
 </li>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.Nothing">Nothing (class in multiversx_sdk)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.Nothing">(class in multiversx_sdk.multisig)</a>
+</li>
+        <li><a href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.Nothing">(class in multiversx_sdk.multisig.resources)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi_definition.NullEndpointDefinition">NullEndpointDefinition (class in multiversx_sdk.abi.abi_definition)</a>
 </li>
       <li><a href="multiversx_sdk.governance.html#multiversx_sdk.governance.ProposalInfo.num_abstain_votes">num_abstain_votes (multiversx_sdk.governance.ProposalInfo attribute)</a>
@@ -9439,8 +9481,14 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.RedelegateRewardsOutcome">RedelegateRewardsOutcome (class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.RedelegateRewardsOutcome">RedelegateRewardsOutcome (class in multiversx_sdk)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.RedelegateRewardsOutcome">(class in multiversx_sdk.delegation)</a>
 </li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.RedelegateRewardsOutcome">(class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.RegisterAndSetAllRolesOutcome">RegisterAndSetAllRolesOutcome (class in multiversx_sdk)</a>
 
       <ul>
@@ -10823,8 +10871,14 @@
         <li><a href="multiversx_sdk.abi.html#multiversx_sdk.abi.small_int_values.U8Value">(class in multiversx_sdk.abi.small_int_values)</a>
 </li>
       </ul></li>
-      <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.UndelegateOutcome">UndelegateOutcome (class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+      <li><a href="multiversx_sdk.html#multiversx_sdk.UndelegateOutcome">UndelegateOutcome (class in multiversx_sdk)</a>
+
+      <ul>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.UndelegateOutcome">(class in multiversx_sdk.delegation)</a>
 </li>
+        <li><a href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.delegation_transactions_outcome_parser_types.UndelegateOutcome">(class in multiversx_sdk.delegation.delegation_transactions_outcome_parser_types)</a>
+</li>
+      </ul></li>
       <li><a href="multiversx_sdk.html#multiversx_sdk.UnFreezeOutcome">UnFreezeOutcome (class in multiversx_sdk)</a>
 
       <ul>
@@ -11317,7 +11371,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, MultiversX.</p>
+    <p>&#169; Copyright 2026, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

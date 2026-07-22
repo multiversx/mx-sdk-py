@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>multiversx_sdk package &mdash; multiversx-sdk 2.3.1 documentation</title>
+  <title>multiversx_sdk package &mdash; multiversx-sdk 3.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=67b02a41"></script>
+      <script src="_static/documentation_options.js?v=acc74ff5"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -92,9 +92,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.CallActionData"><code class="docutils literal notranslate"><span class="pre">CallActionData</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ChangeQuorum"><code class="docutils literal notranslate"><span class="pre">ChangeQuorum</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ChangeTokenToDynamicOutcome"><code class="docutils literal notranslate"><span class="pre">ChangeTokenToDynamicOutcome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ClaimRewardsOutcome"><code class="docutils literal notranslate"><span class="pre">ClaimRewardsOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.CloseProposalOutcome"><code class="docutils literal notranslate"><span class="pre">CloseProposalOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.CodeMetadata"><code class="docutils literal notranslate"><span class="pre">CodeMetadata</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.CreateNewDelegationContractOutcome"><code class="docutils literal notranslate"><span class="pre">CreateNewDelegationContractOutcome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.DelegateOutcome"><code class="docutils literal notranslate"><span class="pre">DelegateOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.DelegateVoteOutcome"><code class="docutils literal notranslate"><span class="pre">DelegateVoteOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.DelegatedVoteInfo"><code class="docutils literal notranslate"><span class="pre">DelegatedVoteInfo</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.DelegationController"><code class="docutils literal notranslate"><span class="pre">DelegationController</span></code></a></li>
@@ -142,10 +144,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.NetworkProviderError"><code class="docutils literal notranslate"><span class="pre">NetworkProviderError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.NetworkStatus"><code class="docutils literal notranslate"><span class="pre">NetworkStatus</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.NewProposalOutcome"><code class="docutils literal notranslate"><span class="pre">NewProposalOutcome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.Nothing"><code class="docutils literal notranslate"><span class="pre">Nothing</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ParsedSmartContractCallOutcome"><code class="docutils literal notranslate"><span class="pre">ParsedSmartContractCallOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.PauseOutcome"><code class="docutils literal notranslate"><span class="pre">PauseOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ProposalInfo"><code class="docutils literal notranslate"><span class="pre">ProposalInfo</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.ProxyNetworkProvider"><code class="docutils literal notranslate"><span class="pre">ProxyNetworkProvider</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.RedelegateRewardsOutcome"><code class="docutils literal notranslate"><span class="pre">RedelegateRewardsOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.RegisterAndSetAllRolesOutcome"><code class="docutils literal notranslate"><span class="pre">RegisterAndSetAllRolesOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.RegisterDynamicOutcome"><code class="docutils literal notranslate"><span class="pre">RegisterDynamicOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.RegisterMetaEsdtOutcome"><code class="docutils literal notranslate"><span class="pre">RegisterMetaEsdtOutcome</span></code></a></li>
@@ -192,6 +196,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.TransfersController"><code class="docutils literal notranslate"><span class="pre">TransfersController</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.UnFreezeOutcome"><code class="docutils literal notranslate"><span class="pre">UnFreezeOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.UnPauseOutcome"><code class="docutils literal notranslate"><span class="pre">UnPauseOutcome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.UndelegateOutcome"><code class="docutils literal notranslate"><span class="pre">UndelegateOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.UpdateAttributesOutcome"><code class="docutils literal notranslate"><span class="pre">UpdateAttributesOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.UpdateMetadataOutcome"><code class="docutils literal notranslate"><span class="pre">UpdateMetadataOutcome</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#multiversx_sdk.UserPEM"><code class="docutils literal notranslate"><span class="pre">UserPEM</span></code></a></li>
@@ -1667,8 +1672,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="multiversx_sdk.delegation.html#module-multiversx_sdk.delegation">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.ClaimRewardsOutcome"><code class="docutils literal notranslate"><span class="pre">ClaimRewardsOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.ClaimRewardsOutcome.amount"><code class="docutils literal notranslate"><span class="pre">ClaimRewardsOutcome.amount</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.CreateNewDelegationContractOutcome"><code class="docutils literal notranslate"><span class="pre">CreateNewDelegationContractOutcome</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.CreateNewDelegationContractOutcome.contract_address"><code class="docutils literal notranslate"><span class="pre">CreateNewDelegationContractOutcome.contract_address</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegateOutcome"><code class="docutils literal notranslate"><span class="pre">DelegateOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegateOutcome.amount"><code class="docutils literal notranslate"><span class="pre">DelegateOutcome.amount</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegationController"><code class="docutils literal notranslate"><span class="pre">DelegationController</span></code></a><ul>
@@ -1733,6 +1746,14 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegationTransactionsOutcomeParser.parse_delegate"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_delegate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegationTransactionsOutcomeParser.parse_redelegate_rewards"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_redelegate_rewards()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.DelegationTransactionsOutcomeParser.parse_undelegate"><code class="docutils literal notranslate"><span class="pre">DelegationTransactionsOutcomeParser.parse_undelegate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.RedelegateRewardsOutcome"><code class="docutils literal notranslate"><span class="pre">RedelegateRewardsOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.RedelegateRewardsOutcome.amount"><code class="docutils literal notranslate"><span class="pre">RedelegateRewardsOutcome.amount</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.UndelegateOutcome"><code class="docutils literal notranslate"><span class="pre">UndelegateOutcome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.delegation.html#multiversx_sdk.delegation.UndelegateOutcome.amount"><code class="docutils literal notranslate"><span class="pre">UndelegateOutcome.amount</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -2281,6 +2302,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.EsdtTokenPayment"><code class="docutils literal notranslate"><span class="pre">EsdtTokenPayment</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.EsdtTransferExecuteData"><code class="docutils literal notranslate"><span class="pre">EsdtTransferExecuteData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.Nothing"><code class="docutils literal notranslate"><span class="pre">Nothing</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.Nothing.discriminant"><code class="docutils literal notranslate"><span class="pre">Nothing.discriminant</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.ProposeAsyncCallInput"><code class="docutils literal notranslate"><span class="pre">ProposeAsyncCallInput</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.ProposeTransferExecuteEsdtInput"><code class="docutils literal notranslate"><span class="pre">ProposeTransferExecuteEsdtInput</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.ProposeTransferExecuteInput"><code class="docutils literal notranslate"><span class="pre">ProposeTransferExecuteInput</span></code></a></li>
@@ -2419,6 +2444,10 @@
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.MultisigTransactionsOutcomeParser.parse_deploy"><code class="docutils literal notranslate"><span class="pre">MultisigTransactionsOutcomeParser.parse_deploy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.MultisigTransactionsOutcomeParser.parse_perform_action"><code class="docutils literal notranslate"><span class="pre">MultisigTransactionsOutcomeParser.parse_perform_action()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.MultisigTransactionsOutcomeParser.parse_propose_action"><code class="docutils literal notranslate"><span class="pre">MultisigTransactionsOutcomeParser.parse_propose_action()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.Nothing"><code class="docutils literal notranslate"><span class="pre">Nothing</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.Nothing.discriminant"><code class="docutils literal notranslate"><span class="pre">Nothing.discriminant</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.RemoveUser"><code class="docutils literal notranslate"><span class="pre">RemoveUser</span></code></a><ul>
@@ -4066,7 +4095,6 @@
 <li class="toctree-l3"><a class="reference internal" href="multiversx_sdk.wallet.libraries.html">multiversx_sdk.wallet.libraries package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.libraries.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.libraries.html#module-multiversx_sdk.wallet.libraries.bls_facade">multiversx_sdk.wallet.libraries.bls_facade module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.libraries.html#multiversx-sdk-wallet-libraries-libbls-module">multiversx_sdk.wallet.libraries.libbls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multiversx_sdk.wallet.libraries.html#module-multiversx_sdk.wallet.libraries">Module contents</a></li>
 </ul>
 </li>
@@ -5166,6 +5194,17 @@ If a transaction is not accepted, its hash is empty in the returned list.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.ClaimRewardsOutcome">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">ClaimRewardsOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/delegation/delegation_transactions_outcome_parser_types.html#ClaimRewardsOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.ClaimRewardsOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.ClaimRewardsOutcome.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#multiversx_sdk.ClaimRewardsOutcome.amount" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.CloseProposalOutcome">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">CloseProposalOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commit_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/governance/resources.html#CloseProposalOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.CloseProposalOutcome" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -5204,6 +5243,17 @@ If a transaction is not accepted, its hash is empty in the returned list.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="multiversx_sdk.CreateNewDelegationContractOutcome.contract_address">
 <span class="sig-name descname"><span class="pre">contract_address</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span><a class="headerlink" href="#multiversx_sdk.CreateNewDelegationContractOutcome.contract_address" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.DelegateOutcome">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">DelegateOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/delegation/delegation_transactions_outcome_parser_types.html#DelegateOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.DelegateOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.DelegateOutcome.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#multiversx_sdk.DelegateOutcome.amount" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -6526,7 +6576,8 @@ Doesn’t really work with builtin functions.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.MultisigTransactionsFactory.create_transaction_for_propose_async_call">
 <span class="sig-name descname"><span class="pre">create_transaction_for_propose_async_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">contract</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">receiver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.address.Address" title="multiversx_sdk.core.address.Address"><span class="pre">Address</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">gas_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">native_token_amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_transfers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.tokens.TokenTransfer" title="multiversx_sdk.core.tokens.TokenTransfer"><span class="pre">TokenTransfer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_gas_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi" title="multiversx_sdk.abi.abi.Abi"><span class="pre">Abi</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction.Transaction" title="multiversx_sdk.core.transaction.Transaction"><span class="pre">Transaction</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/multisig/multisig_transactions_factory.html#MultisigTransactionsFactory.create_transaction_for_propose_async_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.MultisigTransactionsFactory.create_transaction_for_propose_async_call" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Depending on the contract version used, <cite>opt_gas_limit</cite> might not be required anymore.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.MultisigTransactionsFactory.create_transaction_for_propose_batch">
@@ -7045,6 +7096,17 @@ verify_signature: Optional function to verify signatures.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.Nothing">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">Nothing</span></span><a class="reference internal" href="_modules/multiversx_sdk/multisig/resources.html#Nothing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.Nothing" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="multiversx_sdk.multisig.html#multiversx_sdk.multisig.resources.Action" title="multiversx_sdk.multisig.resources.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.Nothing.discriminant">
+<span class="sig-name descname"><span class="pre">discriminant</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#multiversx_sdk.Nothing.discriminant" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.ParsedSmartContractCallOutcome">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">ParsedSmartContractCallOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/smart_contracts/smart_contract_transactions_outcome_parser_types.html#ParsedSmartContractCallOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.ParsedSmartContractCallOutcome" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -7300,6 +7362,17 @@ If a transaction is not accepted, its hash is empty in the returned list.</p>
 <span class="sig-name descname"><span class="pre">simulate_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction.Transaction" title="multiversx_sdk.core.transaction.Transaction"><span class="pre">Transaction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="multiversx_sdk.core.html#multiversx_sdk.core.transaction_on_network.TransactionOnNetwork" title="multiversx_sdk.core.transaction_on_network.TransactionOnNetwork"><span class="pre">TransactionOnNetwork</span></a></span></span><a class="reference internal" href="_modules/multiversx_sdk/network_providers/proxy_network_provider.html#ProxyNetworkProvider.simulate_transaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.ProxyNetworkProvider.simulate_transaction" title="Link to this definition"></a></dt>
 <dd><p>Simulates a transaction.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.RedelegateRewardsOutcome">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">RedelegateRewardsOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/delegation/delegation_transactions_outcome_parser_types.html#RedelegateRewardsOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.RedelegateRewardsOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.RedelegateRewardsOutcome.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#multiversx_sdk.RedelegateRewardsOutcome.amount" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -7649,7 +7722,7 @@ If a transaction is not accepted, its hash is empty in the returned list.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.SmartContractTransactionsOutcomeParser">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">SmartContractTransactionsOutcomeParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi" title="multiversx_sdk.abi.abi.Abi"><span class="pre">Abi</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/smart_contracts/smart_contract_transactions_outcome_parser.html#SmartContractTransactionsOutcomeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractTransactionsOutcomeParser" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">SmartContractTransactionsOutcomeParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi" title="multiversx_sdk.abi.abi.Abi"><span class="pre">Abi</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address_hrp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/smart_contracts/smart_contract_transactions_outcome_parser.html#SmartContractTransactionsOutcomeParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.SmartContractTransactionsOutcomeParser" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="multiversx_sdk.SmartContractTransactionsOutcomeParser.parse_deploy">
@@ -9603,6 +9676,17 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="multiversx_sdk.UndelegateOutcome">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">UndelegateOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/delegation/delegation_transactions_outcome_parser_types.html#UndelegateOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.UndelegateOutcome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="multiversx_sdk.UndelegateOutcome.amount">
+<span class="sig-name descname"><span class="pre">amount</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#multiversx_sdk.UndelegateOutcome.amount" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="multiversx_sdk.UpdateAttributesOutcome">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">multiversx_sdk.</span></span><span class="sig-name descname"><span class="pre">UpdateAttributesOutcome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/multiversx_sdk/token_management/token_management_transactions_outcome_parser_types.html#UpdateAttributesOutcome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#multiversx_sdk.UpdateAttributesOutcome" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -10294,7 +10378,7 @@ If the least significant bit of the <cite>options</cite> is set, will serialize 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, MultiversX.</p>
+    <p>&#169; Copyright 2026, MultiversX.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
