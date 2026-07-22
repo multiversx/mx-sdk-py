@@ -357,7 +357,7 @@ class TokenManagementTransactionsOutcomeParser:
                 ticker=event.topics[2].decode() if len(event.topics[2]) else "",
                 token_type=event.topics[3].decode() if len(event.topics[3]) else "",
                 num_of_decimals=(
-                    int.from_bytes(bytes.fromhex(event.topics[4].decode()), byteorder="big", signed=False)
+                    int.from_bytes(event.topics[4], byteorder="big", signed=False)
                     if len(event.topics) > 4 and event.topics[4]
                     else 0
                 ),

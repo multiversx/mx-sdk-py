@@ -3,7 +3,11 @@ from multiversx_sdk.delegation.delegation_transactions_factory import (
     DelegationTransactionsFactory,
 )
 from multiversx_sdk.delegation.delegation_transactions_outcome_parser import (
+    ClaimRewardsOutcome,
+    DelegateOutcome,
     DelegationTransactionsOutcomeParser,
+    RedelegateRewardsOutcome,
+    UndelegateOutcome,
 )
 from multiversx_sdk.delegation.delegation_transactions_outcome_parser_types import (
     CreateNewDelegationContractOutcome,
@@ -14,4 +18,8 @@ __all__ = [
     "DelegationTransactionsFactory",
     "DelegationTransactionsOutcomeParser",
     "CreateNewDelegationContractOutcome",
+    "ClaimRewardsOutcome",
+    "DelegateOutcome",
+    "RedelegateRewardsOutcome",
+    "UndelegateOutcome",
 ]

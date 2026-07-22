@@ -9,7 +9,7 @@ class StringValue:
         self.value = value
 
     def encode_nested(self, writer: io.BytesIO):
-        encode_length(writer, len(self.value))
+        encode_length(writer, len(self.value.encode("utf-8")))
         writer.write(self.value.encode("utf-8"))
 
     def encode_top_level(self, writer: io.BytesIO):

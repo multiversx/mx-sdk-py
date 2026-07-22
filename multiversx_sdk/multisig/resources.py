@@ -91,6 +91,10 @@ class Action:
         return self.discriminant
 
 
+class Nothing(Action):
+    discriminant = 0
+
+
 class AddBoardMember(Action):
     discriminant = 1
 

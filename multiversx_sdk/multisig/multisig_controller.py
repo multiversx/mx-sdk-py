@@ -25,6 +25,7 @@ from multiversx_sdk.multisig.resources import (
     ChangeQuorum,
     EsdtTokenPayment,
     EsdtTransferExecuteData,
+    Nothing,
     RemoveUser,
     SCDeployFromSource,
     SCUpgradeFromSource,
@@ -1039,6 +1040,9 @@ class MultisigController(BaseController):
             value=value,
         )
 
+    def _create_nothing_from_object(self, object: Any) -> Nothing:
+        return Nothing()
+
     def _create_add_board_member_from_object(self, object: Any) -> AddBoardMember:
         field_0 = getattr(object, "0")
         public_key = field_0
@@ -1112,7 +1116,9 @@ class MultisigController(BaseController):
         # The object is of type _EnumPayload, and its integer conversion is overridden to return the value of the __discriminant__ field.
         discriminant = int(object)
 
-        if discriminant == AddBoardMember.discriminant:
+        if discriminant == Nothing.discriminant:
+            return self._create_nothing_from_object(object)
+        elif discriminant == AddBoardMember.discriminant:
             return self._create_add_board_member_from_object(object)
         elif discriminant == AddProposer.discriminant:
             return self._create_add_proposer_from_object(object)
