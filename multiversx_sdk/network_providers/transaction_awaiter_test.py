@@ -75,7 +75,7 @@ class TestTransactionAwaiter:
         alice = load_wallets()["alice"]
         proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
         watcher = TransactionAwaiter(
-            proxy, polling_interval_in_milliseconds=1000, timeout_interval_in_milliseconds=10000
+            proxy, polling_interval_in_milliseconds=1000, timeout_interval_in_milliseconds=20000
         )
         tx_computer = TransactionComputer()
 

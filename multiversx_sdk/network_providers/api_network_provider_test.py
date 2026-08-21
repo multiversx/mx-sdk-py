@@ -348,7 +348,10 @@ class TestApi:
 
         hash = self.api.send_transaction(transaction)
 
-        tx_on_network = self.api.await_transaction_completed(transaction_hash=hash)
+        tx_on_network = self.api.await_transaction_completed(
+            transaction_hash=hash,
+            options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
+        )
         assert tx_on_network.status.is_completed
 
         transaction = Transaction(
@@ -369,6 +372,7 @@ class TestApi:
         tx_on_network = self.api.await_transaction_on_condition(
             transaction_hash=hash,
             condition=condition,
+            options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
         )
         assert tx_on_network.status.status == "fail"
 
