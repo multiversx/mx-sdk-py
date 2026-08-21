@@ -80,7 +80,7 @@ class TestEntrypoint:
 
         tx_hash = self.entrypoint.send_transaction(transaction)
         outcome = controller.await_completed_deploy(
-            tx_hash, AwaitingOptions(polling_interval_in_milliseconds=6000, timeout_in_milliseconds=60000)
+            tx_hash, AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=30000)
         )
 
         assert len(outcome.contracts) == 1

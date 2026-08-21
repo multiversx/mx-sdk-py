@@ -374,7 +374,7 @@ class TestProxy:
         tx_on_network = self.proxy.await_transaction_completed(
             hash,
             options=AwaitingOptions(
-                polling_interval_in_milliseconds=6000,
+                polling_interval_in_milliseconds=600,
                 timeout_in_milliseconds=30000,
             ),
         )
@@ -398,7 +398,7 @@ class TestProxy:
         tx_on_network = self.proxy.await_transaction_on_condition(
             transaction_hash=hash,
             condition=condition,
-            options=AwaitingOptions(polling_interval_in_milliseconds=6000, timeout_in_milliseconds=30000),
+            options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=30000),
         )
         assert not tx_on_network.status.is_successful
 
