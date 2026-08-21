@@ -92,31 +92,57 @@ class TransactionAwaiter:
         do_fetch: Callable[[], TransactionOnNetwork],
         error: Exception,
     ) -> TransactionOnNetwork:
-        is_condition_satisfied = False
-        fetched_data: Union[TransactionOnNetwork, None] = None
-        max_number_of_retries = self.timeout_interval_in_milliseconds // self.polling_interval_in_milliseconds
+        max_number_of_attempts = self.timeout_interval_in_milliseconds // self.polling_interval_in_milliseconds
+        fetched_data, attempts_made = self._fetch_until_condition(
+            is_satisfied=is_satisfied,
+            do_fetch=do_fetch,
+            number_of_attempts=max_number_of_attempts,
+        )
 
-        number_of_retries = 0
-        while number_of_retries < max_number_of_retries:
-            try:
-                fetched_data = do_fetch()
-                is_condition_satisfied = is_satisfied(fetched_data)
-
-                if is_condition_satisfied:
-                    break
-            except TransactionFetchingError:
-                logger.warning("Couldn't fetch transaction. Retrying...")
-            except Exception as ex:
-                raise ex
-
-            number_of_retries += 1
-            time.sleep(self.polling_interval_in_milliseconds / ONE_SECOND_IN_MILLISECONDS)
-
-        if fetched_data is None or not is_condition_satisfied:
+        if fetched_data is None:
             raise error
 
         if self.patience_time_in_milliseconds:
             time.sleep(self.patience_time_in_milliseconds / ONE_SECOND_IN_MILLISECONDS)
-            return do_fetch()
+            remaining_attempts = max_number_of_attempts - attempts_made
+
+            # Keep the existing post-patience refresh in addition to the unused attempts.
+            refreshed_data, _ = self._fetch_until_condition(
+                is_satisfied=is_satisfied,
+                do_fetch=do_fetch,
+                number_of_attempts=remaining_attempts + 1,
+            )
+
+            if refreshed_data is not None:
+                return refreshed_data
+
+            logger.warning(
+                "Transaction status regressed after reaching the expected condition. "
+                "Returning the last satisfying response."
+            )
 
         return fetched_data
+
+    def _fetch_until_condition(
+        self,
+        is_satisfied: Callable[[TransactionOnNetwork], bool],
+        do_fetch: Callable[[], TransactionOnNetwork],
+        number_of_attempts: int,
+    ) -> tuple[Optional[TransactionOnNetwork], int]:
+        attempts_made = 0
+
+        while attempts_made < number_of_attempts:
+            attempts_made += 1
+
+            try:
+                fetched_data = do_fetch()
+
+                if is_satisfied(fetched_data):
+                    return fetched_data, attempts_made
+            except TransactionFetchingError:
+                logger.warning("Couldn't fetch transaction. Retrying...")
+
+            if attempts_made < number_of_attempts:
+                time.sleep(self.polling_interval_in_milliseconds / ONE_SECOND_IN_MILLISECONDS)
+
+        return None, attempts_made
