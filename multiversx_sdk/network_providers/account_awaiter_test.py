@@ -89,7 +89,7 @@ class TestAccountAwaiter:
         api = ApiNetworkProvider("https://devnet-api.multiversx.com")
         watcher = AccountAwaiter(
             fetcher=api,
-            polling_interval_in_milliseconds=100,
+            polling_interval_in_milliseconds=600,
             timeout_interval_in_milliseconds=1000,
         )
 
