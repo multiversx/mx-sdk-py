@@ -82,15 +82,15 @@ class TestAccountAwaiter:
 
     @pytest.mark.networkInteraction
     def test_ensure_error_if_timeout(self):
-        alice = load_wallets()["alice"]
-        alice_address = Address.new_from_bech32(alice.label)
+        grace = load_wallets()["grace"]
+        alice_address = Address.new_from_bech32(grace.label)
         bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
         api = ApiNetworkProvider("https://devnet-api.multiversx.com")
         watcher = AccountAwaiter(
             fetcher=api,
-            polling_interval_in_milliseconds=1000,
-            timeout_interval_in_milliseconds=10000,
+            polling_interval_in_milliseconds=100,
+            timeout_interval_in_milliseconds=1000,
         )
 
         value = 100_000
@@ -104,7 +104,7 @@ class TestAccountAwaiter:
         transaction.nonce = api.get_account(alice_address).nonce
 
         tx_computer = TransactionComputer()
-        transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
+        transaction.signature = grace.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         initial_balance = api.get_account(bob).balance
 

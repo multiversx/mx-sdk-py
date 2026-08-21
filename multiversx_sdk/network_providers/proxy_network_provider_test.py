@@ -31,7 +31,7 @@ class TestProxy:
 
         assert result.chain_id == "D"
         assert result.gas_per_data_byte == 1500
-        assert result.round_duration == 6000
+        assert result.round_duration == 600
         assert result.min_gas_limit == 50000
         assert result.min_gas_price == 1_000_000_000
         assert result.raw
@@ -281,7 +281,6 @@ class TestProxy:
         assert num_txs == 2
         assert hashes == expected_hashes
 
-    @pytest.mark.skip
     def test_simulate_transaction(self):
         bob = load_wallets()["bob"]
         tx_computer = TransactionComputer()
@@ -307,7 +306,7 @@ class TestProxy:
         transaction = Transaction(
             sender=Address.new_from_bech32(bob.label),
             receiver=Address.new_from_bech32("erd1qqqqqqqqqqqqqpgq076flgeualrdu5jyyj60snvrh7zu4qrg05vqez5jen"),
-            gas_limit=10000000,
+            gas_limit=1_500_000,
             chain_id="D",
             data=b"add@07",
             nonce=nonce,
