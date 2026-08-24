@@ -318,7 +318,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_quorum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getQuorum&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getQuorum"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -330,7 +330,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_num_board_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getNumBoardMembers&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getNumBoardMembers"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -342,7 +342,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_num_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getNumGroups&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getNumGroups"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -354,7 +354,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_num_proposers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getNumProposers&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getNumProposers"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -366,7 +366,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_action_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="p">[</span><span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionGroup&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getActionGroup"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">group_id</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -378,7 +378,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_last_group_action_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getLastGroupActionId&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getLastGroupActionId"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -390,7 +390,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_action_last_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionLastIndex&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getActionLastIndex"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -539,10 +539,10 @@
         <span class="n">guardian</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">relayer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Propose a transaction in which the contract will perform a transfer-execute call.</span>
+<span class="w">        </span><span class="sd">"""Propose a transaction in which the contract will perform a transfer-execute call.</span>
 <span class="sd">        Can send EGLD without calling anything.</span>
 <span class="sd">        Can call smart contract endpoints directly.</span>
-<span class="sd">        Doesn&#39;t really work with builtin functions.&quot;&quot;&quot;</span>
+<span class="sd">        Doesn't really work with builtin functions."""</span>
         <span class="n">transaction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="o">.</span><span class="n">create_transaction_for_propose_transfer_execute</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
@@ -959,7 +959,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;signed&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"signed"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="p">,</span> <span class="n">action_id</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1004,7 +1004,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">is_quorum_reached</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;quorumReached&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"quorumReached"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1078,8 +1078,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_pending_actions_full_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ActionFullInfo</span><span class="p">]:</span>
         <span class="p">[</span><span class="n">values</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getPendingActionFullInfo&quot;</span><span class="p">,</span>
-            <span class="c1"># For now, we don&#39;t support the `opt_range` argument.</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getPendingActionFullInfo"</span><span class="p">,</span>
+            <span class="c1"># For now, we don't support the `opt_range` argument.</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1097,7 +1097,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_user_role</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserRole</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;userRole&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"userRole"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1109,7 +1109,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_all_board_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
         <span class="p">[</span><span class="n">public_keys</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getAllBoardMembers&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getAllBoardMembers"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -1121,7 +1121,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_all_proposers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
         <span class="p">[</span><span class="n">public_keys</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getAllProposers&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getAllProposers"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -1133,7 +1133,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_action_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Action</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionData&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getActionData"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1145,7 +1145,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_action_signers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">]:</span>
         <span class="p">[</span><span class="n">public_keys</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionSigners&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getActionSigners"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1157,7 +1157,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_action_signer_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionSignerCount&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getActionSignerCount"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1169,7 +1169,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_action_valid_signer_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smart_contract_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;getActionValidSignerCount&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"getActionValidSignerCount"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">action_id</span><span class="p">],</span>
         <span class="p">)</span>
 
@@ -1270,40 +1270,40 @@
         <span class="k">return</span> <span class="n">Nothing</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_add_board_member_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AddBoardMember</span><span class="p">:</span>
-        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span>
         <span class="n">public_key</span> <span class="o">=</span> <span class="n">field_0</span>
         <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">AddBoardMember</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_add_proposer_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AddProposer</span><span class="p">:</span>
-        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span>
         <span class="n">public_key</span> <span class="o">=</span> <span class="n">field_0</span>
         <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">AddProposer</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_remove_user_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RemoveUser</span><span class="p">:</span>
-        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span>
         <span class="n">public_key</span> <span class="o">=</span> <span class="n">field_0</span>
         <span class="n">address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">public_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">RemoveUser</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_change_quorum_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChangeQuorum</span><span class="p">:</span>
-        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span>
         <span class="n">quorum</span> <span class="o">=</span> <span class="n">field_0</span>
         <span class="k">return</span> <span class="n">ChangeQuorum</span><span class="p">(</span><span class="n">quorum</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_send_transfer_execute_egld_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SendTransferExecuteEgld</span><span class="p">:</span>
-        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_call_action_data_from_object</span><span class="p">(</span><span class="n">field_0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SendTransferExecuteEgld</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_send_transfer_execute_esdt_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SendTransferExecuteEsdt</span><span class="p">:</span>
-        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_esdt_transfer_execute_data_from_object</span><span class="p">(</span><span class="n">field_0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SendTransferExecuteEsdt</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_send_async_call_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SendAsyncCall</span><span class="p">:</span>
-        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">field_0</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_call_action_data_from_object</span><span class="p">(</span><span class="n">field_0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SendAsyncCall</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
@@ -1338,7 +1338,7 @@
         <span class="n">arguments</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">arguments</span>
         <span class="k">return</span> <span class="n">EsdtTransferExecuteData</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">opt_gas_limit</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_action_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Action&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_action_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Action"</span><span class="p">:</span>
         <span class="c1"># The object is of type _EnumPayload, and its integer conversion is overridden to return the value of the __discriminant__ field.</span>
         <span class="n">discriminant</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
 
@@ -1363,7 +1363,7 @@
         <span class="k">elif</span> <span class="n">discriminant</span> <span class="o">==</span> <span class="n">SCUpgradeFromSource</span><span class="o">.</span><span class="n">discriminant</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_sc_upgrade_from_source_from_object</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown action discriminant: </span><span class="si">{</span><span class="n">discriminant</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown action discriminant: </span><span class="si">{</span><span class="n">discriminant</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 </pre></div>
 

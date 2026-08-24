@@ -83,7 +83,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">NativeAuthClientConfig</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
         <span class="n">api_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_API_URL</span><span class="p">,</span>
         <span class="n">expiry_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">DEFAULT_EXPIRY_TIME_IN_SECONDS</span><span class="p">,</span>
         <span class="n">block_hash_shard</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -122,7 +122,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.native_auth.html#multiversx_sdk.NativeAuthServerConfig">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">NativeAuthServerConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Configuration for Native Authentication.</span>
 
 <span class="sd">    Attributes:</span>
@@ -135,7 +135,7 @@
 <span class="sd">        skip_legacy_validation: Determines whether legacy signature validation should be skipped.</span>
 <span class="sd">        extra_request_headers: Optional extra request headers.</span>
 <span class="sd">        verify_signature: Optional function to verify signatures.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">api_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_API_URL</span>
     <span class="n">accepted_origins</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>

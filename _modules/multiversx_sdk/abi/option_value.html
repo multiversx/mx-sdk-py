@@ -112,7 +112,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.decode_nested">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;placeholder value of option should be set before decoding&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"placeholder value of option should be set before decoding"</span><span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="n">read_bytes_exactly</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">first_byte</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -125,14 +125,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">decode_nested</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;invalid first byte for nested encoded option: </span><span class="si">{</span><span class="n">first_byte</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"invalid first byte for nested encoded option: </span><span class="si">{</span><span class="n">first_byte</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="OptionValue.decode_top_level">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.option_value.OptionValue.decode_top_level">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode_top_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;placeholder value of option should be set before decoding&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"placeholder value of option should be set before decoding"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
@@ -142,7 +142,7 @@
         <span class="n">data_after_first_byte</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
         <span class="k">if</span> <span class="n">first_byte</span> <span class="o">!=</span> <span class="n">OPTION_MARKER_FOR_PRESENT_VALUE</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;invalid first byte for top-level encoded option: </span><span class="si">{</span><span class="n">first_byte</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"invalid first byte for top-level encoded option: </span><span class="si">{</span><span class="n">first_byte</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="n">reader</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data_after_first_byte</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">decode_nested</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span></div>
@@ -160,7 +160,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;placeholder value of option should be set before calling set_payload&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"placeholder value of option should be set before calling set_payload"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 

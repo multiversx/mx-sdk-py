@@ -98,7 +98,7 @@
 <div class="viewcode-block" id="AccountAwaiter">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.AccountAwaiter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AccountAwaiter</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;AccountAwaiter allows one to await until a specific event occurs on a given address.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""AccountAwaiter allows one to await until a specific event occurs on a given address."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -107,13 +107,13 @@
         <span class="n">timeout_interval_in_milliseconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">patience_time_in_milliseconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 <span class="sd">            fetcher (IAccountFetcher): Used to fetch the account of the network.</span>
 <span class="sd">            polling_interval_in_milliseconds (Optional[int]): The polling interval, in milliseconds.</span>
 <span class="sd">            timeout_interval_in_milliseconds (Optional[int]): The timeout, in milliseconds.</span>
 <span class="sd">            patience_time_in_milliseconds (Optional[int]): The patience, an extra time (in milliseconds) to wait, after the account has reached its desired condition.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fetcher</span> <span class="o">=</span> <span class="n">fetcher</span>
 
         <span class="k">if</span> <span class="n">polling_interval_in_milliseconds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -134,7 +134,7 @@
 <div class="viewcode-block" id="AccountAwaiter.await_on_condition">
 <a class="viewcode-back" href="../../../multiversx_sdk.network_providers.html#multiversx_sdk.AccountAwaiter.await_on_condition">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">await_on_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AccountOnNetwork</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AccountOnNetwork</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Waits until the condition is satisfied.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Waits until the condition is satisfied."""</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">do_fetch</span><span class="p">():</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fetcher</span><span class="o">.</span><span class="n">get_account</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>

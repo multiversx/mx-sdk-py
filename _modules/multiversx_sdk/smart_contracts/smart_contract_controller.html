@@ -315,7 +315,7 @@
         <span class="n">caller</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;It calls `create_query()`, `run_query()` and `parse_query_response()` in one go.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""It calls `create_query()`, `run_query()` and `parse_query_response()` in one go."""</span>
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="n">contract</span><span class="p">,</span>
             <span class="n">function</span><span class="o">=</span><span class="n">function</span><span class="p">,</span>
@@ -330,7 +330,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_raise_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_response</span><span class="p">:</span> <span class="n">SmartContractQueryResponse</span><span class="p">):</span>
-        <span class="n">is_ok</span> <span class="o">=</span> <span class="n">query_response</span><span class="o">.</span><span class="n">return_code</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span>
+        <span class="n">is_ok</span> <span class="o">=</span> <span class="n">query_response</span><span class="o">.</span><span class="n">return_code</span> <span class="o">==</span> <span class="s2">"ok"</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ok</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SmartContractQueryError</span><span class="p">(</span><span class="n">query_response</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span> <span class="n">query_response</span><span class="o">.</span><span class="n">return_message</span><span class="p">)</span>
 
@@ -365,7 +365,7 @@
         <span class="k">if</span> <span class="n">is_list_of_bytes</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">args</span>
 
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Can&#39;t serialize arguments&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"Can't serialize arguments"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SmartContractController.run_query">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractController.run_query">[docs]</a>

@@ -89,9 +89,9 @@
 <div class="viewcode-block" id="decrypt">
 <a class="viewcode-back" href="../../../../multiversx_sdk.wallet.crypto.html#multiversx_sdk.wallet.crypto.decryptor.decrypt">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">decrypt</span><span class="p">(</span><span class="n">encrypted_data</span><span class="p">:</span> <span class="n">EncryptedData</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Also see: https://github.com/multiversx/mx-sdk-js-wallet/blob/main/src/crypto/decryptor.ts</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">backend</span> <span class="o">=</span> <span class="n">default_backend</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">encrypted_data</span><span class="o">.</span><span class="n">kdf</span> <span class="o">!=</span> <span class="n">KEY_DERIVATION_FUNCTION_SCRYPT</span><span class="p">:</span>

@@ -90,20 +90,20 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.gas_estimator.html#multiversx_sdk.GasLimitEstimator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GasLimitEstimator</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network_provider</span><span class="p">:</span> <span class="n">INetworkProvider</span><span class="p">,</span> <span class="n">gas_multiplier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initializes the gas limit estimator.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            network_provider: The network provider for making API calls.</span>
 <span class="sd">            gas_multiplier: Optional multiplier to adjust the estimated gas limit (default: None).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span> <span class="o">=</span> <span class="n">network_provider</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_multiplier</span> <span class="o">=</span> <span class="n">gas_multiplier</span> <span class="ow">or</span> <span class="mf">1.0</span>
 
 <div class="viewcode-block" id="GasLimitEstimator.estimate_gas_limit">
 <a class="viewcode-back" href="../../../multiversx_sdk.gas_estimator.html#multiversx_sdk.GasLimitEstimator.estimate_gas_limit">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">estimate_gas_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Estimates the gas limit for the given transaction.</span>
 
 <span class="sd">        Args:</span>
@@ -111,7 +111,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: The estimated gas limit, adjusted by the gas multiplier.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cost_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">estimate_transaction_cost</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">cost_response</span><span class="o">.</span><span class="n">gas_limit</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gas_multiplier</span><span class="p">)</span>

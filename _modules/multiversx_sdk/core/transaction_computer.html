@@ -100,7 +100,7 @@
 <div class="viewcode-block" id="TransactionComputer.compute_transaction_fee">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_transaction_fee">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_transaction_fee</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">network_config</span><span class="p">:</span> <span class="n">INetworkConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;`TransactionsFactoryConfig` can be used here as the `network_config`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""`TransactionsFactoryConfig` can be used here as the `network_config`."""</span>
         <span class="n">move_balance_gas</span> <span class="o">=</span> <span class="n">network_config</span><span class="o">.</span><span class="n">min_gas_limit</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">*</span> <span class="n">network_config</span><span class="o">.</span><span class="n">gas_per_data_byte</span>
         <span class="k">if</span> <span class="n">move_balance_gas</span> <span class="o">&gt;</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotEnoughGasError</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span><span class="p">)</span>
@@ -119,10 +119,10 @@
 <div class="viewcode-block" id="TransactionComputer.compute_bytes_for_signing">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.TransactionComputer.compute_bytes_for_signing">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_bytes_for_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">ignore_options</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;If `ignore_options == False`, the method computes the bytes for signing based on the `version` and `options` of the transaction.</span>
+<span class="w">        </span><span class="sd">"""If `ignore_options == False`, the method computes the bytes for signing based on the `version` and `options` of the transaction.</span>
 <span class="sd">        If the least significant bit of the `options` is set, will serialize transaction for hash signing.</span>
 
-<span class="sd">        If `ignore_options == True`, the transaction is simply serialized.&quot;&quot;&quot;</span>
+<span class="sd">        If `ignore_options == True`, the transaction is simply serialized."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_fields</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
         <span class="n">dictionary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
@@ -135,7 +135,7 @@
             <span class="k">return</span> <span class="n">serialized</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span> <span class="o">&gt;=</span> <span class="n">MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The transaction version you have set does not allow `options`.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"The transaction version you have set does not allow `options`."</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">keccak</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">digest_bits</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span></div>
 
@@ -158,7 +158,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_options_set_for_hash_signing</span><span class="p">(</span><span class="n">transaction</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s2">&quot;`options` property is not set for hash signing. Please set the least signinficant bit of the `options` property to `1`.&quot;</span>
+                <span class="s2">"`options` property is not set for hash signing. Please set the least signinficant bit of the `options` property to `1`."</span>
             <span class="p">)</span>
 
         <span class="n">dictionary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_dictionary</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
@@ -216,65 +216,65 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">to_hex</span><span class="p">())</span> <span class="o">!=</span> <span class="n">HEX_ADDRESS_LENGTH</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;Invalid `sender` field. Should be the bech32 address of the sender.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">"Invalid `sender` field. Should be the bech32 address of the sender."</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">to_hex</span><span class="p">())</span> <span class="o">!=</span> <span class="n">HEX_ADDRESS_LENGTH</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;Invalid `receiver` field. Should be the bech32 address of the receiver.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">"Invalid `receiver` field. Should be the bech32 address of the receiver."</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">&quot;The `chainID` field is not set&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span><span class="s2">"The `chainID` field is not set"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;</span> <span class="n">MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_options_set_for_guarded_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_options_set_for_hash_signing</span><span class="p">(</span>
                 <span class="n">transaction</span>
             <span class="p">):</span>
                 <span class="k">raise</span> <span class="n">BadUsageError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Non-empty transaction options requires transaction version &gt;= </span><span class="si">{</span><span class="n">MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Non-empty transaction options requires transaction version &gt;= </span><span class="si">{</span><span class="n">MIN_TRANSACTION_VERSION_THAT_SUPPORTS_OPTIONS</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">,</span> <span class="n">with_signature</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Only used when serializing transaction for signing. Internal use only.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Only used when serializing transaction for signing. Internal use only."""</span>
         <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;nonce&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="s2">"nonce"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">nonce</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="s2">"value"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;receiver&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="s2">"receiver"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="s2">"sender"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">sender_username</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;senderUsername&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">"senderUsername"</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">sender_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">receiver_username</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;receiverUsername&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">"receiverUsername"</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">receiver_username</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;gasPrice&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_price</span>
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;gasLimit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="s2">"gasPrice"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_price</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="s2">"gasLimit"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">transaction</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">with_signature</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="p">:</span>
-                <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;signature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+                <span class="n">dictionary</span><span class="p">[</span><span class="s2">"signature"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
 
-        <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;chainID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="s2">"chainID"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">chain_id</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">"version"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">version</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">"options"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">options</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;guardian&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">"guardian"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="p">:</span>
-            <span class="n">dictionary</span><span class="p">[</span><span class="s2">&quot;relayer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="s2">"relayer"</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">relayer</span><span class="o">.</span><span class="n">to_bech32</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">dictionary</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_dict_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">":"</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span></div>
 
 </pre></div>
 

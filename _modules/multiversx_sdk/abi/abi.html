@@ -175,7 +175,7 @@
             <span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">structs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_struct_prototype</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot create prototype for custom type </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: definition not found&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cannot create prototype for custom type </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: definition not found"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_enum_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enum_definition</span><span class="p">:</span> <span class="n">EnumDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">EnumValue</span><span class="p">(</span>
@@ -202,7 +202,7 @@
             <span class="k">return</span> <span class="n">fields_prototypes</span>
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;cannot provide fields from enum </span><span class="si">{</span><span class="n">enum_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: variant with discriminant </span><span class="si">{</span><span class="n">discriminant</span><span class="si">}</span><span class="s2"> not found&quot;</span>
+            <span class="sa">f</span><span class="s2">"cannot provide fields from enum </span><span class="si">{</span><span class="n">enum_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: variant with discriminant </span><span class="si">{</span><span class="n">discriminant</span><span class="si">}</span><span class="s2"> not found"</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_struct_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_definition</span><span class="p">:</span> <span class="n">StructDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
@@ -254,13 +254,13 @@
 <div class="viewcode-block" id="Abi.encode_constructor_input_parameters">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_constructor_input_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">encode_constructor_input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_encode_endpoint_input_parameters</span><span class="p">(</span><span class="s2">&quot;constructor&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructor_prototype</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_encode_endpoint_input_parameters</span><span class="p">(</span><span class="s2">"constructor"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructor_prototype</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Abi.encode_upgrade_constructor_input_parameters">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.encode_upgrade_constructor_input_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">encode_upgrade_constructor_input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_encode_endpoint_input_parameters</span><span class="p">(</span><span class="s2">&quot;upgrade&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upgrade_constructor_prototype</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_encode_endpoint_input_parameters</span><span class="p">(</span><span class="s2">"upgrade"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upgrade_constructor_prototype</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Abi.encode_endpoint_input_parameters">
@@ -273,12 +273,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_do_encode_endpoint_input_parameters</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">endpoint_prototype</span><span class="p">:</span> <span class="s2">&quot;EndpointPrototype&quot;</span><span class="p">,</span>
+        <span class="n">endpoint_prototype</span><span class="p">:</span> <span class="s2">"EndpointPrototype"</span><span class="p">,</span>
         <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">endpoint_prototype</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;for </span><span class="si">{</span><span class="n">endpoint_name</span><span class="si">}</span><span class="s2">, invalid value length: expected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">endpoint_prototype</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"for </span><span class="si">{</span><span class="n">endpoint_name</span><span class="si">}</span><span class="s2">, invalid value length: expected </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">endpoint_prototype</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="n">input_values</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">endpoint_prototype</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">)</span>
@@ -345,7 +345,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">custom_type</span><span class="p">:</span> <span class="n">IPayloadHolder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_types_prototypes_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Missing custom type! No custom type found for name: &quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Missing custom type! No custom type found for name: "</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">"'</span><span class="p">)</span>
 
         <span class="n">custom_type</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">custom_type</span><span class="p">])</span></div>
@@ -357,7 +357,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">custom_type</span><span class="p">:</span> <span class="n">ISingleValue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_types_prototypes_by_name</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Missing custom type! No custom type found for name: &quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Missing custom type! No custom type found for name: "</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">"'</span><span class="p">)</span>
 
         <span class="n">custom_type</span><span class="o">.</span><span class="n">decode_top_level</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">custom_type</span><span class="o">.</span><span class="n">get_payload</span><span class="p">()</span></div>
@@ -371,105 +371,105 @@
 
         <span class="k">return</span> <span class="n">type_prototype</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_endpoint_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EndpointPrototype&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_endpoint_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"EndpointPrototype"</span><span class="p">:</span>
         <span class="n">endpoint_prototype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoints_prototypes_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">endpoint_prototype</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;endpoint &#39;</span><span class="si">{</span><span class="n">endpoint_name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"endpoint '</span><span class="si">{</span><span class="n">endpoint_name</span><span class="si">}</span><span class="s2">' not found"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">endpoint_prototype</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_event_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EventPrototype&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_event_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"EventPrototype"</span><span class="p">:</span>
         <span class="n">event_prototype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events_prototypes_by_name</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">event_prototype</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;event &#39;</span><span class="si">{</span><span class="n">event_name</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"event '</span><span class="si">{</span><span class="n">event_name</span><span class="si">}</span><span class="s2">' not found"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">event_prototype</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_prototype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_formula</span><span class="p">:</span> <span class="n">TypeFormula</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">name</span>
 
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;bool&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"bool"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">BoolValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;u8&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"u8"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">U8Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;u16&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"u16"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">U16Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;u32&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"u32"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">U32Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;u64&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"u64"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">U64Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;i8&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"i8"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">I8Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;i16&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"i16"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">I16Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;i32&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"i32"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">I32Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;i64&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"i64"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">I64Value</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;BigUint&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"BigUint"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">BigUIntValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;BigInt&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"BigInt"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">BigIntValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;bytes&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"bytes"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">BytesValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;utf-8 string&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"utf-8 string"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">StringValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Address&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"Address"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">AddressValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TokenIdentifier&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"TokenIdentifier"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TokenIdentifierValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;TokenId&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"TokenId"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TokenIdentifierValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;EgldOrEsdtTokenIdentifier&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"EgldOrEsdtTokenIdentifier"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TokenIdentifierValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;EsdtTokenIdentifier&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"EsdtTokenIdentifier"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TokenIdentifierValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;CodeMetadata&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"CodeMetadata"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">CodeMetadataValue</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;tuple&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"tuple"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">TupleValue</span><span class="p">(</span>
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">)</span> <span class="k">for</span> <span class="n">type_parameter</span> <span class="ow">in</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">]</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Option&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"Option"</span><span class="p">:</span>
             <span class="n">type_parameter</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">OptionValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;List&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"List"</span><span class="p">:</span>
             <span class="n">type_parameter</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">ListValue</span><span class="p">([],</span> <span class="n">item_creator</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;array&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"array"</span><span class="p">):</span>
             <span class="n">type_parameter</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">5</span><span class="p">:])</span>
             <span class="k">return</span> <span class="n">ArrayValue</span><span class="p">(</span>
                 <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">,</span>
                 <span class="n">item_creator</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">),</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;optional&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"optional"</span><span class="p">:</span>
             <span class="c1"># The prototype of an optional is provided a value (the placeholder).</span>
             <span class="n">type_parameter</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">OptionalValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;variadic&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"variadic"</span><span class="p">:</span>
             <span class="n">type_parameter</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">VariadicValues</span><span class="p">([],</span> <span class="n">item_creator</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;counted-variadic&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"counted-variadic"</span><span class="p">:</span>
             <span class="n">type_parameter</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">CountedVariadicValues</span><span class="p">([],</span> <span class="n">item_creator</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;multi&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"multi"</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">MultiValue</span><span class="p">(</span>
                 <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_prototype</span><span class="p">(</span><span class="n">type_parameter</span><span class="p">)</span> <span class="k">for</span> <span class="n">type_parameter</span> <span class="ow">in</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">]</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;ManagedDecimal&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"ManagedDecimal"</span><span class="p">:</span>
             <span class="n">scale</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
 
-            <span class="k">if</span> <span class="n">scale</span> <span class="o">==</span> <span class="s2">&quot;usize&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scale</span> <span class="o">==</span> <span class="s2">"usize"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">ManagedDecimalValue</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_variable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">ManagedDecimalValue</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">scale</span><span class="p">),</span> <span class="n">is_variable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;ManagedDecimalSigned&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"ManagedDecimalSigned"</span><span class="p">:</span>
             <span class="n">scale</span> <span class="o">=</span> <span class="n">type_formula</span><span class="o">.</span><span class="n">type_parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
 
-            <span class="k">if</span> <span class="n">scale</span> <span class="o">==</span> <span class="s2">&quot;usize&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scale</span> <span class="o">==</span> <span class="s2">"usize"</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">ManagedDecimalSignedValue</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">is_variable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">ManagedDecimalSignedValue</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">scale</span><span class="p">),</span> <span class="n">is_variable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -481,7 +481,7 @@
 <div class="viewcode-block" id="Abi.load">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.abi.Abi.load">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Abi&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Abi"</span><span class="p">:</span>
         <span class="n">definition</span> <span class="o">=</span> <span class="n">AbiDefinition</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span></div>
 </div>

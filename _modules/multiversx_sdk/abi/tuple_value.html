@@ -90,7 +90,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">field</span><span class="o">.</span><span class="n">encode_nested</span><span class="p">(</span><span class="n">writer</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot encode field &#39;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&#39; of tuple, because of: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cannot encode field '</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">' of tuple, because of: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TupleValue.encode_top_level">
@@ -106,7 +106,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">field</span><span class="o">.</span><span class="n">decode_nested</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot decode field &#39;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&#39; of tuple, because of: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cannot decode field '</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">' of tuple, because of: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TupleValue.decode_top_level">
@@ -127,7 +127,7 @@
         <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">native_list</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;the number of fields (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match the number of provided native values (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">native_list</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="sa">f</span><span class="s2">"the number of fields (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match the number of provided native values (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">native_list</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span>
                 <span class="p">)</span>
 
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">):</span>
@@ -135,7 +135,7 @@
 
             <span class="k">return</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cannot set payload for tuple (should be either a tuple or a list)&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"cannot set payload for tuple (should be either a tuple or a list)"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TupleValue.get_payload">

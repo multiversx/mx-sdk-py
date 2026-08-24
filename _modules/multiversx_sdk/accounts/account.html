@@ -96,7 +96,7 @@
 <div class="viewcode-block" id="Account.new_from_pem">
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.Account.new_from_pem">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_pem</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Account&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_pem</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Account"</span><span class="p">:</span>
         <span class="n">signer</span> <span class="o">=</span> <span class="n">UserSigner</span><span class="o">.</span><span class="n">from_pem_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">signer</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">hrp</span><span class="p">)</span></div>
 
@@ -110,7 +110,7 @@
         <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">address_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Account&quot;</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Account"</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserWallet</span><span class="o">.</span><span class="n">load_secret_key</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">address_index</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">hrp</span><span class="p">)</span></div>
 
@@ -118,7 +118,7 @@
 <div class="viewcode-block" id="Account.new_from_mnemonic">
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.Account.new_from_mnemonic">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_mnemonic</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Account&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_mnemonic</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">hrp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Account"</span><span class="p">:</span>
         <span class="n">mnemonic_handler</span> <span class="o">=</span> <span class="n">Mnemonic</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">)</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">mnemonic_handler</span><span class="o">.</span><span class="n">derive_key</span><span class="p">(</span><span class="n">address_index</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">hrp</span><span class="p">)</span></div>
@@ -127,21 +127,21 @@
 <div class="viewcode-block" id="Account.new_from_keypair">
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.Account.new_from_keypair">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_keypair</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">keypair</span><span class="p">:</span> <span class="n">KeyPair</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Account&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_keypair</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">keypair</span><span class="p">:</span> <span class="n">KeyPair</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Account"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">keypair</span><span class="o">.</span><span class="n">get_secret_key</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="Account.sign">
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.Account.sign">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Signs using the account&#39;s secret key.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Signs using the account's secret key."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Account.verify">
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.Account.verify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verifies the signature using the account&#39;s public key.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Verifies the signature using the account's public key."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span></div>
 
 
@@ -178,8 +178,8 @@
 
 <div class="viewcode-block" id="Account.save_to_keystore">
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.Account.save_to_keystore">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the secret key to a keystore file with `kind=secretKey`.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_keystore</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Saves the secret key to a keystore file with `kind=secretKey`."""</span>
         <span class="n">wallet</span> <span class="o">=</span> <span class="n">UserWallet</span><span class="o">.</span><span class="n">from_secret_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
         <span class="n">wallet</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">get_hrp</span><span class="p">())</span></div>
 </div>

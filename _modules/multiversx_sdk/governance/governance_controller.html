@@ -380,7 +380,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_voting_power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sc_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_governance_contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;viewVotingPower&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"viewVotingPower"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">AddressValue</span><span class="o">.</span><span class="n">new_from_address</span><span class="p">(</span><span class="n">address</span><span class="p">)],</span>
         <span class="p">)</span>
         <span class="n">value</span> <span class="o">=</span> <span class="n">BigUIntValue</span><span class="p">()</span>
@@ -393,7 +393,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GovernanceConfig</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sc_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_governance_contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;viewConfig&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"viewConfig"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[],</span>
         <span class="p">)</span>
 
@@ -419,7 +419,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_proposal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proposal_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProposalInfo</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sc_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_governance_contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;viewProposal&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"viewProposal"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">proposal_nonce</span><span class="p">)],</span>
         <span class="p">)</span>
 
@@ -452,8 +452,8 @@
             <span class="p">],</span>
         <span class="p">)</span>
 
-        <span class="n">proposal_closed</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">else</span> <span class="kc">False</span>
-        <span class="n">proposal_passed</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">proposal_closed</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"true"</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">proposal_passed</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"true"</span> <span class="k">else</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="n">ProposalInfo</span><span class="p">(</span>
             <span class="n">proposal_cost</span><span class="o">.</span><span class="n">get_payload</span><span class="p">(),</span>
@@ -477,7 +477,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_delegated_vote_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DelegatedVoteInfo</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sc_controller</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
             <span class="n">contract</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_governance_contract</span><span class="p">,</span>
-            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;viewDelegatedVoteInfo&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">"viewDelegatedVoteInfo"</span><span class="p">,</span>
             <span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="n">AddressValue</span><span class="o">.</span><span class="n">new_from_address</span><span class="p">(</span><span class="n">contract</span><span class="p">),</span> <span class="n">AddressValue</span><span class="o">.</span><span class="n">new_from_address</span><span class="p">(</span><span class="n">user</span><span class="p">)],</span>
         <span class="p">)</span>
 

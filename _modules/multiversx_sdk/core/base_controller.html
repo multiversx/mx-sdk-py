@@ -83,19 +83,19 @@
 <div class="viewcode-block" id="BaseController">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.base_controller.BaseController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseController</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the base class for all controllers. **Internal use only.**&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""This is the base class for all controllers. **Internal use only.**"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gas_limit_estimator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IGasLimitEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gas_limit_estimator</span> <span class="o">=</span> <span class="n">gas_limit_estimator</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_version_and_options_for_hash_signing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">IAccount</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the Account has the `use_hash_signing` flag set to `True`, this method will set the correct `version` and `options` properties of `Transaction`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""If the Account has the `use_hash_signing` flag set to `True`, this method will set the correct `version` and `options` properties of `Transaction`."""</span>
         <span class="k">if</span> <span class="n">sender</span><span class="o">.</span><span class="n">use_hash_signing</span><span class="p">:</span>
             <span class="n">transaction_computer</span> <span class="o">=</span> <span class="n">TransactionComputer</span><span class="p">()</span>
             <span class="n">transaction_computer</span><span class="o">.</span><span class="n">apply_options_for_hash_signing</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_extra_gas_limit_if_required</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;In case of guarded or relayed transactions, extra gas limit is added.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""In case of guarded or relayed transactions, extra gas limit is added."""</span>
         <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">guardian</span><span class="p">:</span>
             <span class="n">transaction</span><span class="o">.</span><span class="n">gas_limit</span> <span class="o">+=</span> <span class="n">EXTRA_GAS_LIMIT_FOR_GUARDED_TRANSACTIONS</span>
 

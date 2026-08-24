@@ -87,14 +87,14 @@
 <div class="viewcode-block" id="UserPEM.from_file">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserPEM.from_file">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserPEM&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserPEM"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file_all</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="n">index</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="UserPEM.from_file_all">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserPEM.from_file_all">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_file_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;UserPEM&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_file_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">"UserPEM"</span><span class="p">]:</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_text_all</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 
@@ -102,7 +102,7 @@
 <div class="viewcode-block" id="UserPEM.from_text">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserPEM.from_text">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserPEM&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserPEM"</span><span class="p">:</span>
         <span class="n">items</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_text_all</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
 
@@ -110,7 +110,7 @@
 <div class="viewcode-block" id="UserPEM.from_text_all">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserPEM.from_text_all">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_text_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;UserPEM&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_text_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">"UserPEM"</span><span class="p">]:</span>
         <span class="n">entries</span> <span class="o">=</span> <span class="n">PemEntry</span><span class="o">.</span><span class="n">from_text_all</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">result_items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">UserPEM</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 

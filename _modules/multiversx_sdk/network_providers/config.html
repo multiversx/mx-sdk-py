@@ -107,8 +107,8 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client_name</span> <span class="o">=</span> <span class="n">client_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">requests_options</span> <span class="o">=</span> <span class="n">requests_options</span> <span class="ow">or</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">requests_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;timeout&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">requests_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;auth&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">requests_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"timeout"</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">requests_options</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"auth"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">requests_retry_options</span> <span class="o">=</span> <span class="n">requests_retry_options</span> <span class="k">if</span> <span class="n">requests_retry_options</span> <span class="k">else</span> <span class="n">RequestsRetryOptions</span><span class="p">()</span></div>
 
 </pre></div>

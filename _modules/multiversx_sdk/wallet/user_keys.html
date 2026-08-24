@@ -82,7 +82,7 @@
     <span class="n">InvalidSecretKeyLengthError</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;user_keys&quot;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"user_keys"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="UserSecretKey">
@@ -97,7 +97,7 @@
 <div class="viewcode-block" id="UserSecretKey.generate">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSecretKey.generate">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserSecretKey&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserSecretKey"</span><span class="p">:</span>
         <span class="n">signing_key</span> <span class="o">=</span> <span class="n">nacl</span><span class="o">.</span><span class="n">signing</span><span class="o">.</span><span class="n">SigningKey</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">signing_key</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
@@ -106,14 +106,14 @@
 <div class="viewcode-block" id="UserSecretKey.new_from_string">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSecretKey.new_from_string">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserSecretKey&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserSecretKey"</span><span class="p">:</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">buffer_hex</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="UserSecretKey.generate_public_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSecretKey.generate_public_key">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserPublicKey&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserPublicKey"</span><span class="p">:</span>
         <span class="n">public_key</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">nacl</span><span class="o">.</span><span class="n">signing</span><span class="o">.</span><span class="n">SigningKey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span><span class="o">.</span><span class="n">verify_key</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">UserPublicKey</span><span class="p">(</span><span class="n">public_key</span><span class="p">)</span></div>
 

@@ -150,11 +150,11 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">network_provider_url</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;network provider url not provided&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"network provider url not provided"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">network_provider_kind</span> <span class="o">==</span> <span class="s2">&quot;proxy&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">network_provider_kind</span> <span class="o">==</span> <span class="s2">"proxy"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span> <span class="o">=</span> <span class="n">ProxyNetworkProvider</span><span class="p">(</span><span class="n">network_provider_url</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">network_provider_kind</span> <span class="o">==</span> <span class="s2">&quot;api&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">network_provider_kind</span> <span class="o">==</span> <span class="s2">"api"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span> <span class="o">=</span> <span class="n">ApiNetworkProvider</span><span class="p">(</span><span class="n">network_provider_url</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidNetworkProviderKindError</span><span class="p">()</span>
@@ -164,14 +164,14 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">new_from_network_provider</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">network_provider</span><span class="p">:</span> <span class="n">INetworkProvider</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NetworkEntrypoint&quot;</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"NetworkEntrypoint"</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">chain_id</span><span class="o">=</span><span class="n">chain_id</span><span class="p">,</span> <span class="n">network_provider</span><span class="o">=</span><span class="n">network_provider</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.create_account">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.create_account">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_account</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Account</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a new secret key and instantiates an account.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Generates a new secret key and instantiates an account."""</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserSecretKey</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">Account</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 
@@ -179,8 +179,8 @@
 <div class="viewcode-block" id="NetworkEntrypoint.get_airdrop">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.get_airdrop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_airdrop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get xEGLD tokens on Devnet or Testnet.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The faucet is unavailable at the moment.&quot;</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Get xEGLD tokens on Devnet or Testnet."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"The faucet is unavailable at the moment."</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkEntrypoint.verify_transaction_signature">
@@ -199,7 +199,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.verify_message_signature">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">verify_message_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">address</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;`address` property of Message is not set&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"`address` property of Message is not set"</span><span class="p">)</span>
 
         <span class="n">verifier</span> <span class="o">=</span> <span class="n">UserVerifier</span><span class="o">.</span><span class="n">from_address</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
         <span class="n">message_computer</span> <span class="o">=</span> <span class="n">MessageComputer</span><span class="p">()</span>
@@ -219,7 +219,7 @@
 <div class="viewcode-block" id="NetworkEntrypoint.send_transactions">
 <a class="viewcode-back" href="../../../multiversx_sdk.entrypoints.html#multiversx_sdk.NetworkEntrypoint.send_transactions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">send_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Transaction</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sends multiple transactions.</span>
 
 <span class="sd">        Args:</span>
@@ -227,7 +227,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            tuple (int, list[bytes]): The integer indicates the total number of transactions sent, while the list contains the transactions hashes. If a transaction is not sent, the hash is empty.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_provider</span><span class="o">.</span><span class="n">send_transactions</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span></div>
 
 

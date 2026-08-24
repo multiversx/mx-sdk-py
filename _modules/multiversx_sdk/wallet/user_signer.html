@@ -80,9 +80,9 @@
 <div class="viewcode-block" id="UserSigner">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSigner">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UserSigner</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    ed25519 signer</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="n">UserSecretKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="n">secret_key</span>
@@ -90,7 +90,7 @@
 <div class="viewcode-block" id="UserSigner.from_pem_file">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSigner.from_pem_file">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_pem_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserSigner&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_pem_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserSigner"</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserPEM</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">secret_key</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 
@@ -98,7 +98,7 @@
 <div class="viewcode-block" id="UserSigner.from_pem_file_all">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSigner.from_pem_file_all">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_pem_file_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;UserSigner&quot;</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_pem_file_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="s2">"UserSigner"</span><span class="p">]:</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">UserPEM</span><span class="o">.</span><span class="n">from_file_all</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">secret_key</span><span class="p">)</span> <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">]</span></div>
 
@@ -106,7 +106,7 @@
 <div class="viewcode-block" id="UserSigner.from_wallet">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserSigner.from_wallet">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserSigner&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_wallet</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserSigner"</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserWallet</span><span class="o">.</span><span class="n">load_secret_key</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 

@@ -77,7 +77,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.transaction_computer</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransactionComputer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.ledger.ledger_app</span><span class="w"> </span><span class="kn">import</span> <span class="n">LedgerApp</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ledger_account&quot;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"ledger_account"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="LedgerAccount">
@@ -92,7 +92,7 @@
 <div class="viewcode-block" id="LedgerAccount.set_address">
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.LedgerAccount.set_address">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the working address for the device. Also sets the `address_index` and `address` properties of the class.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Sets the working address for the device. Also sets the `address_index` and `address` properties of the class."""</span>
         <span class="n">app</span> <span class="o">=</span> <span class="n">LedgerApp</span><span class="p">()</span>
         <span class="n">app</span><span class="o">.</span><span class="n">set_address</span><span class="p">(</span><span class="n">address_index</span><span class="p">)</span>
         <span class="n">bech32_address</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_address</span><span class="p">(</span><span class="n">address_index</span><span class="p">)</span>
@@ -109,7 +109,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">transaction_computer</span><span class="o">.</span><span class="n">has_options_set_for_hash_signing</span><span class="p">(</span><span class="n">transaction</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s2">&quot;Invalid transaction options. Set the least significant bit of the `options` property to `1`.&quot;</span>
+                <span class="s2">"Invalid transaction options. Set the least significant bit of the `options` property to `1`."</span>
             <span class="p">)</span>
 
         <span class="n">serialized_transaction</span> <span class="o">=</span> <span class="n">transaction_computer</span><span class="o">.</span><span class="n">compute_bytes_for_signing</span><span class="p">(</span>
@@ -120,7 +120,7 @@
         <span class="n">app</span> <span class="o">=</span> <span class="n">LedgerApp</span><span class="p">()</span>
         <span class="n">app</span><span class="o">.</span><span class="n">set_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address_index</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Confirm the transaction on the device.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Confirm the transaction on the device."</span><span class="p">)</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">serialized_transaction</span><span class="p">)</span>
         <span class="n">app</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
@@ -131,13 +131,13 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.accounts.html#multiversx_sdk.LedgerAccount.sign_message">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sign_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="n">message_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="n">message_length</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">message_length</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"big"</span><span class="p">)</span>
         <span class="n">serialized_message</span> <span class="o">=</span> <span class="n">size</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="n">data</span>
 
         <span class="n">app</span> <span class="o">=</span> <span class="n">LedgerApp</span><span class="p">()</span>
         <span class="n">app</span><span class="o">.</span><span class="n">set_address</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address_index</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Confirm the message on the device.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Confirm the message on the device."</span><span class="p">)</span>
         <span class="n">signature</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">sign_message</span><span class="p">(</span><span class="n">serialized_message</span><span class="p">)</span>
         <span class="n">app</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 

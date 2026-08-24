@@ -130,7 +130,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.enum_value.EnumValue.decode_nested">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">decode_nested</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_provider</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;cannot decode enum: fields provider is None&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"cannot decode enum: fields provider is None"</span><span class="p">)</span>
 
         <span class="n">discriminant</span> <span class="o">=</span> <span class="n">U8Value</span><span class="p">()</span>
         <span class="n">discriminant</span><span class="o">.</span><span class="n">decode_nested</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
@@ -156,7 +156,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_name_to_discriminant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variant_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_to_discriminants</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;converting a variant name to its discriminant requires the names to discriminants dict to be set&quot;</span>
+                <span class="s2">"converting a variant name to its discriminant requires the names to discriminants dict to be set"</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_to_discriminants</span><span class="p">[</span><span class="n">variant_name</span><span class="p">]</span></div>
 
@@ -172,12 +172,12 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_provider</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;populating an enum from a native object requires the fields provider to be set&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"populating an enum from a native object requires the fields provider to be set"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_provider</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;for enums, if the native object is a mere integer, it must be the discriminant, and the corresponding enum variant must have no fields&quot;</span>
+                    <span class="s2">"for enums, if the native object is a mere integer, it must be the discriminant, and the corresponding enum variant must have no fields"</span>
                 <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span> <span class="o">=</span> <span class="n">value</span>
@@ -187,7 +187,7 @@
             <span class="n">discriminant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_name_to_discriminant</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_provider</span><span class="p">(</span><span class="n">discriminant</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;for enums, if the native object is a mere string, it must be the name of the variant, and the corresponding enum variant must have no fields&quot;</span>
+                    <span class="s2">"for enums, if the native object is a mere string, it must be the name of the variant, and the corresponding enum variant must have no fields"</span>
                 <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span> <span class="o">=</span> <span class="n">discriminant</span>
@@ -202,8 +202,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_name_to_discriminant</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;for enums, the native object (when it&#39;s a dictionary) must contain the special field &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">ENUM_DISCRIMINANT_FIELD_NAME</span><span class="si">}</span><span class="s2">&#39; or &#39;</span><span class="si">{</span><span class="n">ENUM_NAME_FIELD_NAME</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                    <span class="s2">"for enums, the native object (when it's a dictionary) must contain the special field "</span>
+                    <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">ENUM_DISCRIMINANT_FIELD_NAME</span><span class="si">}</span><span class="s2">' or '</span><span class="si">{</span><span class="n">ENUM_NAME_FIELD_NAME</span><span class="si">}</span><span class="s2">'"</span>
                 <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_provider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span><span class="p">)</span>
@@ -214,8 +214,8 @@
         <span class="k">if</span> <span class="n">ok</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">native_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;for enums, the native object (when it&#39;s a list) must have the discriminant or &quot;</span>
-                    <span class="s2">&quot;the name as the first element&quot;</span>
+                    <span class="s2">"for enums, the native object (when it's a list) must have the discriminant or "</span>
+                    <span class="s2">"the name as the first element"</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">native_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">native_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -224,15 +224,15 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_name_to_discriminant</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;for enums, the native object (when it&#39;s a list) must have the discriminant (int) or the &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;name (str) as the first element, found </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">native_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="s2">"for enums, the native object (when it's a list) must have the discriminant (int) or the "</span>
+                    <span class="sa">f</span><span class="s2">"name (str) as the first element, found </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">native_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_provider</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">discriminant</span><span class="p">)</span>
             <span class="n">set_fields_from_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span> <span class="n">native_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
             <span class="k">return</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cannot set payload for enum (should be either a dictionary or a list)&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"cannot set payload for enum (should be either a dictionary or a list)"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="EnumValue.get_payload">

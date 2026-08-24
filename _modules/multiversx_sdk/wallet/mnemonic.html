@@ -103,7 +103,7 @@
 <div class="viewcode-block" id="Mnemonic.generate">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.Mnemonic.generate">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Mnemonic&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Mnemonic"</span><span class="p">:</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">Mnemonic</span><span class="p">(</span><span class="n">BIP39_LANGUAGE</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">strength</span><span class="o">=</span><span class="n">BIP39_STRENGTH</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 
@@ -111,7 +111,7 @@
 <div class="viewcode-block" id="Mnemonic.from_entropy">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.Mnemonic.from_entropy">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_entropy</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">entropy</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Mnemonic&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_entropy</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">entropy</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Mnemonic"</span><span class="p">:</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">Mnemonic</span><span class="p">(</span><span class="n">BIP39_LANGUAGE</span><span class="p">)</span><span class="o">.</span><span class="n">to_mnemonic</span><span class="p">(</span><span class="n">entropy</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 

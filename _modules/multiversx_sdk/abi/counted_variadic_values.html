@@ -100,7 +100,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_creator</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;populating variadic values from a native object requires the item creator to be set&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"populating variadic values from a native object requires the item creator to be set"</span><span class="p">)</span>
 
         <span class="n">native_items</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">convert_native_value_to_list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">native_items</span><span class="p">)</span>

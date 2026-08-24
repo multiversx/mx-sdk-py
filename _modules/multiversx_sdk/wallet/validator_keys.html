@@ -89,7 +89,7 @@
 <div class="viewcode-block" id="ValidatorSecretKey.generate">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorSecretKey.generate">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValidatorSecretKey&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ValidatorSecretKey"</span><span class="p">:</span>
         <span class="n">secret_key_bytes</span> <span class="o">=</span> <span class="n">BLSFacade</span><span class="p">()</span><span class="o">.</span><span class="n">generate_private_key</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">secret_key_bytes</span><span class="p">)</span></div>
 
@@ -97,14 +97,14 @@
 <div class="viewcode-block" id="ValidatorSecretKey.from_string">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorSecretKey.from_string">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValidatorSecretKey&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ValidatorSecretKey"</span><span class="p">:</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">buffer_hex</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ValidatorSecretKey.generate_public_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorSecretKey.generate_public_key">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValidatorPublicKey&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_public_key</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ValidatorPublicKey"</span><span class="p">:</span>
         <span class="n">public_key_bytes</span> <span class="o">=</span> <span class="n">BLSFacade</span><span class="p">()</span><span class="o">.</span><span class="n">generate_public_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ValidatorPublicKey</span><span class="p">(</span><span class="n">public_key_bytes</span><span class="p">)</span></div>
 
@@ -142,7 +142,7 @@
 <div class="viewcode-block" id="ValidatorPublicKey.from_string">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorPublicKey.from_string">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValidatorPublicKey&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">buffer_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ValidatorPublicKey"</span><span class="p">:</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">buffer_hex</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ValidatorPublicKey</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span></div>
 

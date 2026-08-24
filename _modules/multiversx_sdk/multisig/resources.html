@@ -104,7 +104,7 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">to</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
-        <span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;EsdtTokenPayment&quot;</span><span class="p">],</span>
+        <span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">"EsdtTokenPayment"</span><span class="p">],</span>
         <span class="n">function_call</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
         <span class="n">opt_gas_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -136,9 +136,9 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">token_nonce</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="p">[</span>
-                <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;token_identifier&quot;</span><span class="p">,</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)),</span>
-                <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;token_nonce&quot;</span><span class="p">,</span> <span class="n">U64Value</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">)),</span>
-                <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span> <span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)),</span>
+                <span class="n">Field</span><span class="p">(</span><span class="s2">"token_identifier"</span><span class="p">,</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">token_identifier</span><span class="p">)),</span>
+                <span class="n">Field</span><span class="p">(</span><span class="s2">"token_nonce"</span><span class="p">,</span> <span class="n">U64Value</span><span class="p">(</span><span class="n">token_nonce</span><span class="p">)),</span>
+                <span class="n">Field</span><span class="p">(</span><span class="s2">"amount"</span><span class="p">,</span> <span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)),</span>
             <span class="p">],</span>
         <span class="p">)</span></div>
 
@@ -156,14 +156,14 @@
 <div class="viewcode-block" id="ActionFullInfo">
 <a class="viewcode-back" href="../../../multiversx_sdk.multisig.html#multiversx_sdk.ActionFullInfo">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ActionFullInfo</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">action_data</span><span class="p">:</span> <span class="s2">&quot;Action&quot;</span><span class="p">,</span> <span class="n">signers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">action_data</span><span class="p">:</span> <span class="s2">"Action"</span><span class="p">,</span> <span class="n">signers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Address</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_id</span> <span class="o">=</span> <span class="n">action_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span> <span class="o">=</span> <span class="n">group_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">action_data</span> <span class="o">=</span> <span class="n">action_data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">signers</span> <span class="o">=</span> <span class="n">signers</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ActionFullInfo(action_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_id</span><span class="si">}</span><span class="s2">, group_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="si">}</span><span class="s2">, action_data=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_data</span><span class="si">}</span><span class="s2">, signers=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">signers</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"ActionFullInfo(action_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_id</span><span class="si">}</span><span class="s2">, group_id=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="si">}</span><span class="s2">, action_data=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_data</span><span class="si">}</span><span class="s2">, signers=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">signers</span><span class="si">}</span><span class="s2">)"</span></div>
 
 
 
@@ -235,7 +235,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">SendTransferExecuteEgld</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">5</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;CallActionData&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">"CallActionData"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
 
 
@@ -264,7 +264,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">SendTransferExecuteEsdt</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">6</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;EsdtTransferExecuteData&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">"EsdtTransferExecuteData"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
 
 
@@ -293,7 +293,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">SendAsyncCall</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
     <span class="n">discriminant</span> <span class="o">=</span> <span class="mi">7</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;CallActionData&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">"CallActionData"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span></div>
 
 

@@ -131,7 +131,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_decode_list_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reader</span><span class="p">:</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_creator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;cannot decode list: item creator is None&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"cannot decode list: item creator is None"</span><span class="p">)</span>
 
         <span class="n">new_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_creator</span><span class="p">()</span>
         <span class="n">new_item</span><span class="o">.</span><span class="n">decode_nested</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
@@ -146,7 +146,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_creator</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;populating a list from a native object requires the item creator to be set&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"populating a list from a native object requires the item creator to be set"</span><span class="p">)</span>
 
         <span class="n">native_items</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">convert_native_value_to_list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 

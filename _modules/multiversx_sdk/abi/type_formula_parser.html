@@ -77,9 +77,9 @@
 <div class="viewcode-block" id="TypeFormulaParser">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TypeFormulaParser</span><span class="p">:</span>
-    <span class="n">BEGIN_TYPE_PARAMETERS</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
-    <span class="n">END_TYPE_PARAMETERS</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
-    <span class="n">COMMA</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span>
+    <span class="n">BEGIN_TYPE_PARAMETERS</span> <span class="o">=</span> <span class="s2">"&lt;"</span>
+    <span class="n">END_TYPE_PARAMETERS</span> <span class="o">=</span> <span class="s2">"&gt;"</span>
+    <span class="n">COMMA</span> <span class="o">=</span> <span class="s2">","</span>
     <span class="n">PUNCTUATION</span> <span class="o">=</span> <span class="p">[</span><span class="n">COMMA</span><span class="p">,</span> <span class="n">BEGIN_TYPE_PARAMETERS</span><span class="p">,</span> <span class="n">END_TYPE_PARAMETERS</span><span class="p">]</span>
 
 <div class="viewcode-block" id="TypeFormulaParser.parse_expression">
@@ -98,15 +98,15 @@
                     <span class="c1"># This symbol is pushed as a simple string.</span>
                     <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unexpected token (punctuation): </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected token (punctuation): </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># It&#39;s a type name. We push it as a simple string.</span>
+                <span class="c1"># It's a type name. We push it as a simple string.</span>
                 <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unexpected stack length at end of parsing: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected stack length at end of parsing: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stack</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">stack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PUNCTUATION</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unexpected root element&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"unexpected root element"</span><span class="p">)</span>
 
         <span class="n">item</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -116,14 +116,14 @@
             <span class="c1"># Expression contained a simple, non-generic type.</span>
             <span class="k">return</span> <span class="n">TypeFormula</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">[])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected item on stack: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected item on stack: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TypeFormulaParser.tokenize_expression">
 <a class="viewcode-back" href="../../../multiversx_sdk.abi.html#multiversx_sdk.abi.type_formula_parser.TypeFormulaParser.tokenize_expression">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">tokenize_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">tokens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">current_token</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">current_token</span> <span class="o">=</span> <span class="s2">""</span>
 
         <span class="k">for</span> <span class="n">character</span> <span class="ow">in</span> <span class="n">expression</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_punctuation</span><span class="p">(</span><span class="n">character</span><span class="p">):</span>
@@ -131,7 +131,7 @@
                     <span class="c1"># Retain current token</span>
                     <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_token</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
                     <span class="c1"># Reset current token</span>
-                    <span class="n">current_token</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">current_token</span> <span class="o">=</span> <span class="s2">""</span>
                 <span class="c1"># Punctuation character</span>
                 <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">character</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -162,10 +162,10 @@
             <span class="n">item</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;badly specified type parameters&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"badly specified type parameters"</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_beginning_of_type_parameters</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
-                <span class="c1"># We&#39;ve acquired all type parameters.</span>
+                <span class="c1"># We've acquired all type parameters.</span>
                 <span class="k">break</span>
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TypeFormula</span><span class="p">):</span>
@@ -175,7 +175,7 @@
                 <span class="c1"># Type parameter is a simple, non-generic type.</span>
                 <span class="n">type_parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TypeFormula</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">[]))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unexpected type parameter object in stack: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected type parameter object in stack: </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">type_parameters</span></div>
 

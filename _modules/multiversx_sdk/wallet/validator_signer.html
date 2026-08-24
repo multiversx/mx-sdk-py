@@ -79,9 +79,9 @@
 <div class="viewcode-block" id="ValidatorSigner">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorSigner">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ValidatorSigner</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Validator signer (BLS signer)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="n">ValidatorSecretKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="n">secret_key</span>
@@ -89,7 +89,7 @@
 <div class="viewcode-block" id="ValidatorSigner.from_pem_file">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.ValidatorSigner.from_pem_file">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_pem_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValidatorSigner&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_pem_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ValidatorSigner"</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">ValidatorPEM</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">secret_key</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 

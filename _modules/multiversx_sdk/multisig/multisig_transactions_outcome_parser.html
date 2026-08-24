@@ -115,7 +115,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_raise_for_return_code_in_outcome</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outcome</span><span class="p">:</span> <span class="n">ParsedSmartContractCallOutcome</span><span class="p">):</span>
-        <span class="n">is_ok</span> <span class="o">=</span> <span class="n">outcome</span><span class="o">.</span><span class="n">return_code</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span>
+        <span class="n">is_ok</span> <span class="o">=</span> <span class="n">outcome</span><span class="o">.</span><span class="n">return_code</span> <span class="o">==</span> <span class="s2">"ok"</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ok</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">outcome</span><span class="o">.</span><span class="n">return_code</span><span class="p">,</span> <span class="n">outcome</span><span class="o">.</span><span class="n">return_message</span><span class="p">)</span></div>
 

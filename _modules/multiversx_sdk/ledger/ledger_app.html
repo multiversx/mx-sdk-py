@@ -75,7 +75,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.ledger.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LedgerError</span>
 
 <span class="n">CLA</span> <span class="o">=</span> <span class="mh">0xED</span>
-<span class="n">CONNECTION_ERROR_MSG</span> <span class="o">=</span> <span class="s2">&quot;check if device is plugged in, unlocked and on MultiversX app&quot;</span>
+<span class="n">CONNECTION_ERROR_MSG</span> <span class="o">=</span> <span class="s2">"check if device is plugged in, unlocked and on MultiversX app"</span>
 
 <span class="c1"># account index is always 0 for MultiversX</span>
 <span class="n">DEFAULT_ACCOUNT_INDEX</span> <span class="o">=</span> <span class="mi">0</span>
@@ -110,52 +110,52 @@
             <span class="kn">from</span><span class="w"> </span><span class="nn">ledgercomm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transport</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                <span class="s2">&quot;The ledgercomm package is not installed. Please install it using &quot;</span>
-                <span class="s2">&quot;pip install multiversx_sdk[ledger].&quot;</span>
+                <span class="s2">"The ledgercomm package is not installed. Please install it using "</span>
+                <span class="s2">"pip install multiversx_sdk[ledger]."</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">Transport</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="s2">&quot;hid&quot;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Nano S/X using HID interface</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">Transport</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="s2">"hid"</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Nano S/X using HID interface</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LedgerApp.set_address">
 <a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.set_address">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">DEFAULT_ACCOUNT_INDEX</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">address_index</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">DEFAULT_ACCOUNT_INDEX</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"big"</span><span class="p">)</span> <span class="o">+</span> <span class="n">address_index</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"big"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xED</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x05</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="n">sw</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
         <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">""</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LedgerApp.get_address">
 <a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.get_address">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">DEFAULT_ACCOUNT_INDEX</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">address_index</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">&quot;big&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">DEFAULT_ACCOUNT_INDEX</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"big"</span><span class="p">)</span> <span class="o">+</span> <span class="n">address_index</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s2">"big"</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xED</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x03</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="n">sw</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
 
         <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">err</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">""</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span> <span class="o">+</span> <span class="s2">" ("</span> <span class="o">+</span> <span class="n">err</span> <span class="o">+</span> <span class="s2">")"</span><span class="p">)</span>
 
         <span class="n">response_body</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="n">address</span> <span class="o">=</span> <span class="n">response_body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="n">response_body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">address</span></div>
 
 
 <div class="viewcode-block" id="LedgerApp.get_app_configuration">
 <a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.get_app_configuration">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_app_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LedgerAppConfiguration</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xED</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x02</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="mh">0xED</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="mh">0x02</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="sa">b</span><span class="s2">""</span><span class="p">)</span>
         <span class="n">sw</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
         <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">err</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">""</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">CONNECTION_ERROR_MSG</span> <span class="o">+</span> <span class="s2">" ("</span> <span class="o">+</span> <span class="n">err</span> <span class="o">+</span> <span class="s2">")"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_ledger_config_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
 
 
@@ -215,17 +215,17 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.LedgerApp.get_signature_from_apdus">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_signature_from_apdus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apdus</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Apdu</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">sw</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">""</span>
         <span class="k">for</span> <span class="n">apdu</span> <span class="ow">in</span> <span class="n">apdus</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cla</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">cla</span><span class="p">,</span> <span class="n">ins</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">ins</span><span class="p">,</span> <span class="n">p1</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">p2</span><span class="p">,</span> <span class="n">cdata</span><span class="o">=</span><span class="n">apdu</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
             <span class="n">sw</span><span class="p">,</span> <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
 
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">65</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">64</span> <span class="ow">or</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">err_message</span> <span class="o">=</span> <span class="s2">&quot;signature failed&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">65</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">64</span> <span class="ow">or</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">""</span><span class="p">:</span>
+            <span class="n">err_message</span> <span class="o">=</span> <span class="s2">"signature failed"</span>
             <span class="n">err</span> <span class="o">=</span> <span class="n">get_error</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                <span class="n">err_message</span> <span class="o">+=</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">err</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="s2">""</span><span class="p">:</span>
+                <span class="n">err_message</span> <span class="o">+=</span> <span class="s2">": "</span> <span class="o">+</span> <span class="n">err</span>
             <span class="k">raise</span> <span class="n">LedgerError</span><span class="p">(</span><span class="n">err_message</span><span class="p">)</span>
 
         <span class="n">response_body</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -249,7 +249,7 @@
         <span class="n">config</span><span class="o">.</span><span class="n">account_index</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">config</span><span class="o">.</span><span class="n">address_index</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
-        <span class="n">version</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="s2">"."</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">+</span> <span class="s2">"."</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
         <span class="n">config</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
 
         <span class="k">return</span> <span class="n">config</span></div>
@@ -260,30 +260,30 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.ledger.html#multiversx_sdk.get_error">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="n">errors</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mh">0x9000</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="mh">0x6985</span><span class="p">:</span> <span class="s2">&quot;user denied&quot;</span><span class="p">,</span>
-        <span class="mh">0x6D00</span><span class="p">:</span> <span class="s2">&quot;unknown instruction&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E00</span><span class="p">:</span> <span class="s2">&quot;wrong cla&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E10</span><span class="p">:</span> <span class="s2">&quot;signature failed&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E01</span><span class="p">:</span> <span class="s2">&quot;invalid arguments&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E02</span><span class="p">:</span> <span class="s2">&quot;invalid message&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E03</span><span class="p">:</span> <span class="s2">&quot;invalid p1&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E04</span><span class="p">:</span> <span class="s2">&quot;message too long&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E05</span><span class="p">:</span> <span class="s2">&quot;receiver too long&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E06</span><span class="p">:</span> <span class="s2">&quot;amount too long&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E07</span><span class="p">:</span> <span class="s2">&quot;contract data disabled&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E08</span><span class="p">:</span> <span class="s2">&quot;message incomplete&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E09</span><span class="p">:</span> <span class="s2">&quot;wrong tx version&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E0A</span><span class="p">:</span> <span class="s2">&quot;nonce too long&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E0B</span><span class="p">:</span> <span class="s2">&quot;invalid amount&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E0C</span><span class="p">:</span> <span class="s2">&quot;invalid fee&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E0D</span><span class="p">:</span> <span class="s2">&quot;pretty failed&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E0E</span><span class="p">:</span> <span class="s2">&quot;data too long&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E0F</span><span class="p">:</span> <span class="s2">&quot;wrong tx options&quot;</span><span class="p">,</span>
-        <span class="mh">0x6E11</span><span class="p">:</span> <span class="s2">&quot;regular signing is deprecated&quot;</span><span class="p">,</span>
+        <span class="mh">0x9000</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="mh">0x6985</span><span class="p">:</span> <span class="s2">"user denied"</span><span class="p">,</span>
+        <span class="mh">0x6D00</span><span class="p">:</span> <span class="s2">"unknown instruction"</span><span class="p">,</span>
+        <span class="mh">0x6E00</span><span class="p">:</span> <span class="s2">"wrong cla"</span><span class="p">,</span>
+        <span class="mh">0x6E10</span><span class="p">:</span> <span class="s2">"signature failed"</span><span class="p">,</span>
+        <span class="mh">0x6E01</span><span class="p">:</span> <span class="s2">"invalid arguments"</span><span class="p">,</span>
+        <span class="mh">0x6E02</span><span class="p">:</span> <span class="s2">"invalid message"</span><span class="p">,</span>
+        <span class="mh">0x6E03</span><span class="p">:</span> <span class="s2">"invalid p1"</span><span class="p">,</span>
+        <span class="mh">0x6E04</span><span class="p">:</span> <span class="s2">"message too long"</span><span class="p">,</span>
+        <span class="mh">0x6E05</span><span class="p">:</span> <span class="s2">"receiver too long"</span><span class="p">,</span>
+        <span class="mh">0x6E06</span><span class="p">:</span> <span class="s2">"amount too long"</span><span class="p">,</span>
+        <span class="mh">0x6E07</span><span class="p">:</span> <span class="s2">"contract data disabled"</span><span class="p">,</span>
+        <span class="mh">0x6E08</span><span class="p">:</span> <span class="s2">"message incomplete"</span><span class="p">,</span>
+        <span class="mh">0x6E09</span><span class="p">:</span> <span class="s2">"wrong tx version"</span><span class="p">,</span>
+        <span class="mh">0x6E0A</span><span class="p">:</span> <span class="s2">"nonce too long"</span><span class="p">,</span>
+        <span class="mh">0x6E0B</span><span class="p">:</span> <span class="s2">"invalid amount"</span><span class="p">,</span>
+        <span class="mh">0x6E0C</span><span class="p">:</span> <span class="s2">"invalid fee"</span><span class="p">,</span>
+        <span class="mh">0x6E0D</span><span class="p">:</span> <span class="s2">"pretty failed"</span><span class="p">,</span>
+        <span class="mh">0x6E0E</span><span class="p">:</span> <span class="s2">"data too long"</span><span class="p">,</span>
+        <span class="mh">0x6E0F</span><span class="p">:</span> <span class="s2">"wrong tx options"</span><span class="p">,</span>
+        <span class="mh">0x6E11</span><span class="p">:</span> <span class="s2">"regular signing is deprecated"</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">errors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="s2">&quot;unknown error code: &quot;</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">code</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">errors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="s2">"unknown error code: "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">code</span><span class="p">))</span></div>
 
 </pre></div>
 

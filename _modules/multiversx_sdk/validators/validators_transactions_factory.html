@@ -144,7 +144,7 @@
         <span class="n">validators_file</span><span class="p">:</span> <span class="n">ValidatorsSigners</span><span class="p">,</span>
         <span class="n">rewards_address</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Address</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stake&quot;</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"stake"</span><span class="p">]</span>
 
         <span class="n">num_of_nodes</span> <span class="o">=</span> <span class="n">validators_file</span><span class="o">.</span><span class="n">get_num_of_nodes</span><span class="p">()</span>
 
@@ -172,7 +172,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stake&quot;</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"stake"</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -195,7 +195,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStake&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unStake"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -221,7 +221,7 @@
         <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
         <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unJail&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unJail"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -247,7 +247,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBond&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unBond"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -272,7 +272,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">rewards_address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;changeRewardAddress&quot;</span><span class="p">,</span> <span class="n">rewards_address</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"changeRewardAddress"</span><span class="p">,</span> <span class="n">rewards_address</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -290,7 +290,7 @@
 <div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_claiming">
 <a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_claiming">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_claiming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;claim&quot;</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"claim"</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -312,7 +312,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStakeNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unStakeNodes"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -333,7 +333,7 @@
 <div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unstaking_tokens">
 <a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unstaking_tokens">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unstaking_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStakeTokens&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unStakeTokens"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -355,7 +355,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBondNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unBondNodes"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -376,7 +376,7 @@
 <div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_unbonding_tokens">
 <a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_unbonding_tokens">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_unbonding_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBondTokens&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unBondTokens"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -394,7 +394,7 @@
 <div class="viewcode-block" id="ValidatorsTransactionsFactory.create_transaction_for_cleaning_registered_data">
 <a class="viewcode-back" href="../../../multiversx_sdk.validators.html#multiversx_sdk.ValidatorsTransactionsFactory.create_transaction_for_cleaning_registered_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_cleaning_registered_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cleanRegisteredData&quot;</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"cleanRegisteredData"</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -416,7 +416,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reStakeUnStakedNodes&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"reStakeUnStakedNodes"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -445,7 +445,7 @@
         <span class="n">serializer</span> <span class="o">=</span> <span class="n">Serializer</span><span class="p">()</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">max_cap</span><span class="p">),</span> <span class="n">BigUIntValue</span><span class="p">(</span><span class="n">fee</span><span class="p">)])]</span>
 
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;makeNewContractFromValidatorData&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"makeNewContractFromValidatorData"</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -470,7 +470,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mergeValidatorToDelegationWithWhitelist&quot;</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"mergeValidatorToDelegationWithWhitelist"</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>
@@ -495,7 +495,7 @@
         <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mergeValidatorToDelegationSameOwner&quot;</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+        <span class="n">data_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"mergeValidatorToDelegationSameOwner"</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
             <span class="n">sender</span><span class="o">=</span><span class="n">sender</span><span class="p">,</span>

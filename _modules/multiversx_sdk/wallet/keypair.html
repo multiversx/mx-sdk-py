@@ -82,7 +82,7 @@
 <div class="viewcode-block" id="KeyPair.generate">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.generate">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;KeyPair&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">"KeyPair"</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserSecretKey</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">KeyPair</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 
@@ -90,7 +90,7 @@
 <div class="viewcode-block" id="KeyPair.new_from_bytes">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.new_from_bytes">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;KeyPair&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">new_from_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"KeyPair"</span><span class="p">:</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserSecretKey</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">KeyPair</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 
@@ -98,14 +98,14 @@
 <div class="viewcode-block" id="KeyPair.sign">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.sign">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Signs using the secret key of the keypair.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Signs using the secret key of the keypair."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="KeyPair.verify">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.KeyPair.verify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verifies using the public key of the keypair.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Verifies using the public key of the keypair."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">signature</span><span class="p">)</span></div>
 
 

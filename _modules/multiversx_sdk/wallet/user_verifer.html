@@ -82,7 +82,7 @@
 <div class="viewcode-block" id="UserVerifier.from_address">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserVerifier.from_address">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_address</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;UserVerifier&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_address</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserVerifier"</span><span class="p">:</span>
         <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">address</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
         <span class="n">public_key</span> <span class="o">=</span> <span class="n">UserPublicKey</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">public_key</span><span class="p">)</span></div>

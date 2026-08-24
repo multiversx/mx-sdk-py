@@ -100,7 +100,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_new_delegation_contract</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">total_delegation_cap</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">service_fee</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;createNewDelegationContract&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"createNewDelegationContract"</span><span class="p">]</span>
 
         <span class="n">serialized_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">(</span>
             <span class="p">[</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">total_delegation_cap</span><span class="p">),</span> <span class="n">BigUIntValue</span><span class="p">(</span><span class="n">service_fee</span><span class="p">)]</span>
@@ -135,9 +135,9 @@
         <span class="n">signed_messages</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">bytes</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signed_messages</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ListsLengthMismatchError</span><span class="p">(</span><span class="s2">&quot;The number of public keys should match the number of signed messages&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ListsLengthMismatchError</span><span class="p">(</span><span class="s2">"The number of public keys should match the number of signed messages"</span><span class="p">)</span>
 
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;addNodes&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"addNodes"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">public_keys</span><span class="p">)):</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">public_keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">signed_messages</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
@@ -172,7 +172,7 @@
         <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;removeNodes&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"removeNodes"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">public_key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">public_key</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
 
@@ -200,7 +200,7 @@
         <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;stakeNodes&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"stakeNodes"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">public_key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">public_key</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
 
@@ -232,7 +232,7 @@
         <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unBondNodes&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unBondNodes"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">public_key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">public_key</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
 
@@ -264,7 +264,7 @@
         <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">public_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unStakeNodes&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unStakeNodes"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">public_key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">public_key</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
 
@@ -297,7 +297,7 @@
         <span class="n">public_keys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ValidatorPublicKey</span><span class="p">],</span>
         <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unJailNodes&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unJailNodes"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">public_key</span> <span class="ow">in</span> <span class="n">public_keys</span><span class="p">:</span>
             <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">public_key</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
 
@@ -324,7 +324,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">service_fee</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;changeServiceFee&quot;</span><span class="p">,</span>
+            <span class="s2">"changeServiceFee"</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">service_fee</span><span class="p">)]),</span>
         <span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
@@ -348,7 +348,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_cap</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;modifyTotalDelegationCap&quot;</span><span class="p">,</span>
+            <span class="s2">"modifyTotalDelegationCap"</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">delegation_cap</span><span class="p">)]),</span>
         <span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
@@ -372,8 +372,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;setAutomaticActivation&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;true&quot;</span><span class="p">)]),</span>
+            <span class="s2">"setAutomaticActivation"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">"true"</span><span class="p">)]),</span>
         <span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
@@ -396,8 +396,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;setAutomaticActivation&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;false&quot;</span><span class="p">)]),</span>
+            <span class="s2">"setAutomaticActivation"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">"false"</span><span class="p">)]),</span>
         <span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
@@ -420,8 +420,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;setCheckCapOnReDelegateRewards&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;true&quot;</span><span class="p">)]),</span>
+            <span class="s2">"setCheckCapOnReDelegateRewards"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">"true"</span><span class="p">)]),</span>
         <span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
@@ -444,8 +444,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;setCheckCapOnReDelegateRewards&quot;</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">&quot;false&quot;</span><span class="p">)]),</span>
+            <span class="s2">"setCheckCapOnReDelegateRewards"</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">StringValue</span><span class="p">(</span><span class="s2">"false"</span><span class="p">)]),</span>
         <span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
@@ -472,7 +472,7 @@
         <span class="n">website</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;setMetaData&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"setMetaData"</span><span class="p">]</span>
 
         <span class="n">serialized_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize_to_parts</span><span class="p">(</span>
             <span class="p">[</span><span class="n">StringValue</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">website</span><span class="p">),</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">identifier</span><span class="p">)]</span>
@@ -499,7 +499,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_delegating</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;delegate&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"delegate"</span><span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
@@ -519,7 +519,7 @@
 <div class="viewcode-block" id="DelegationTransactionsFactory.create_transaction_for_claiming_rewards">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationTransactionsFactory.create_transaction_for_claiming_rewards">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_claiming_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;claimRewards&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"claimRewards"</span><span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
@@ -538,7 +538,7 @@
 <div class="viewcode-block" id="DelegationTransactionsFactory.create_transaction_for_redelegating_rewards">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationTransactionsFactory.create_transaction_for_redelegating_rewards">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_redelegating_rewards</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;reDelegateRewards&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"reDelegateRewards"</span><span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
@@ -559,7 +559,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_undelegating</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;unDelegate&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"unDelegate"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">serializer</span><span class="o">.</span><span class="n">serialize</span><span class="p">([</span><span class="n">BigUIntValue</span><span class="p">(</span><span class="n">amount</span><span class="p">)])]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
@@ -578,7 +578,7 @@
 <div class="viewcode-block" id="DelegationTransactionsFactory.create_transaction_for_withdrawing">
 <a class="viewcode-back" href="../../../multiversx_sdk.delegation.html#multiversx_sdk.DelegationTransactionsFactory.create_transaction_for_withdrawing">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_transaction_for_withdrawing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;withdraw&quot;</span><span class="p">]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"withdraw"</span><span class="p">]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_delegation_operations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">additional_gas_for_delegation_operations</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>
@@ -602,7 +602,7 @@
         <span class="n">delegation_contract</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
         <span class="n">validator_operator</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Transaction</span><span class="p">:</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;whitelistForMerge&quot;</span><span class="p">,</span> <span class="n">validator_operator</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"whitelistForMerge"</span><span class="p">,</span> <span class="n">validator_operator</span><span class="o">.</span><span class="n">to_hex</span><span class="p">()]</span>
         <span class="n">gas_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">gas_limit_for_whitelist_for_merge</span>
 
         <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="p">(</span>

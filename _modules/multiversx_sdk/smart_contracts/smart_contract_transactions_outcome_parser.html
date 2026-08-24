@@ -92,23 +92,23 @@
 <div class="viewcode-block" id="Events">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.Events">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Events</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">SCDeploy</span> <span class="o">=</span> <span class="s2">&quot;SCDeploy&quot;</span>
-    <span class="n">SignalError</span> <span class="o">=</span> <span class="s2">&quot;signalError&quot;</span>
-    <span class="n">WriteLog</span> <span class="o">=</span> <span class="s2">&quot;writeLog&quot;</span></div>
+    <span class="n">SCDeploy</span> <span class="o">=</span> <span class="s2">"SCDeploy"</span>
+    <span class="n">SignalError</span> <span class="o">=</span> <span class="s2">"signalError"</span>
+    <span class="n">WriteLog</span> <span class="o">=</span> <span class="s2">"writeLog"</span></div>
 
 
 
 <div class="viewcode-block" id="SmartContractCallOutcome">
 <a class="viewcode-back" href="../../../multiversx_sdk.smart_contracts.html#multiversx_sdk.SmartContractCallOutcome">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SmartContractCallOutcome</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;**For internal use only.**&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""**For internal use only.**"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">function</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
         <span class="n">return_data_parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
-        <span class="n">return_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">return_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">return_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="n">return_code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_data_parts</span> <span class="o">=</span> <span class="n">return_data_parts</span>
@@ -155,7 +155,7 @@
         <span class="n">function_name</span> <span class="o">=</span> <span class="n">function</span> <span class="ow">or</span> <span class="n">direct_call_outcome</span><span class="o">.</span><span class="n">function</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">function_name</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s1">&#39;Function name is not available in the transaction, thus endpoint definition (ABI) cannot be picked (for parsing). Please provide the &quot;function&quot; parameter explicitly.&#39;</span>
+                <span class="s1">'Function name is not available in the transaction, thus endpoint definition (ABI) cannot be picked (for parsing). Please provide the "function" parameter explicitly.'</span>
             <span class="p">)</span>
 
         <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abi</span><span class="o">.</span><span class="n">decode_endpoint_output_parameters</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">direct_call_outcome</span><span class="o">.</span><span class="n">return_data_parts</span><span class="p">)</span>
@@ -203,17 +203,17 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eligible_results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;More than one smart contract result (holding the return data) found for transaction: </span><span class="si">{</span><span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">"More than one smart contract result (holding the return data) found for transaction: </span><span class="si">{</span><span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
             <span class="p">)</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">eligible_results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">return_code</span><span class="p">,</span> <span class="o">*</span><span class="n">return_data_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string_to_bytes_list</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-        <span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="n">return_code</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="n">return_code</span> <span class="k">else</span> <span class="s2">""</span>
 
         <span class="k">return</span> <span class="n">SmartContractCallOutcome</span><span class="p">(</span>
             <span class="n">function</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">function</span><span class="p">,</span>
             <span class="n">return_code</span><span class="o">=</span><span class="n">return_code</span><span class="p">,</span>
-            <span class="n">return_message</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;returnMessage&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">return_code</span><span class="p">,</span>
+            <span class="n">return_message</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"returnMessage"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">return_code</span><span class="p">,</span>
             <span class="n">return_data_parts</span><span class="o">=</span><span class="n">return_data_parts</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -228,7 +228,7 @@
 
         <span class="c1"># then, we search in the logs of contract_results</span>
         <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">transaction</span><span class="o">.</span><span class="n">smart_contract_results</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prevTxHash&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"prevTxHash"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span> <span class="o">!=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">():</span>
                 <span class="k">continue</span>
 
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
@@ -239,7 +239,7 @@
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eligible_events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;More than one &quot;</span><span class="si">{</span><span class="n">event_identifier</span><span class="si">}</span><span class="s1">&quot; event found for transaction: </span><span class="si">{</span><span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">'More than one "</span><span class="si">{</span><span class="n">event_identifier</span><span class="si">}</span><span class="s1">" event found for transaction: </span><span class="si">{</span><span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">event</span> <span class="o">=</span> <span class="n">eligible_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
@@ -253,7 +253,7 @@
             <span class="n">return_message</span> <span class="o">=</span> <span class="n">return_code</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">last_topic</span><span class="p">:</span>
-            <span class="n">return_message</span> <span class="o">=</span> <span class="n">last_topic</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+            <span class="n">return_message</span> <span class="o">=</span> <span class="n">last_topic</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">errors</span><span class="o">=</span><span class="s2">"replace"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">SmartContractCallOutcome</span><span class="p">(</span>
             <span class="n">function</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">function</span><span class="p">,</span>
@@ -272,7 +272,7 @@
 
         <span class="c1"># then, we search in the logs of contract_results</span>
         <span class="k">for</span> <span class="n">restult</span> <span class="ow">in</span> <span class="n">transaction</span><span class="o">.</span><span class="n">smart_contract_results</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">restult</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prevTxHash&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">restult</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"prevTxHash"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span> <span class="o">!=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">():</span>
                 <span class="k">continue</span>
 
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">restult</span><span class="o">.</span><span class="n">logs</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
@@ -283,12 +283,12 @@
             <span class="k">return</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eligible_events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;More than one &quot;</span><span class="si">{</span><span class="n">event_identifier</span><span class="si">}</span><span class="s1">&quot; event found for transaction: </span><span class="si">{</span><span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">'More than one "</span><span class="si">{</span><span class="n">event_identifier</span><span class="si">}</span><span class="s1">" event found for transaction: </span><span class="si">{</span><span class="n">transaction</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="n">event</span> <span class="o">=</span> <span class="n">eligible_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">return_code</span><span class="p">,</span> <span class="o">*</span><span class="n">return_data_parts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_string_to_bytes_list</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="n">return_code</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">return_code</span> <span class="o">=</span> <span class="n">return_code</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="n">return_code</span> <span class="k">else</span> <span class="s2">""</span>
 
         <span class="k">return</span> <span class="n">SmartContractCallOutcome</span><span class="p">(</span>
             <span class="n">function</span><span class="o">=</span><span class="n">transaction</span><span class="o">.</span><span class="n">function</span><span class="p">,</span>
@@ -299,14 +299,14 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_sc_deploy_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">TransactionEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DeployedSmartContract</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No topic found for contract address&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"No topic found for contract address"</span><span class="p">)</span>
         <span class="n">contract_address_topic</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No topic found for owner address&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"No topic found for owner address"</span><span class="p">)</span>
         <span class="n">owner_address_topic</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">code_hash_topic</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+        <span class="n">code_hash_topic</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">topics</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">""</span>
 
         <span class="n">contract_address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">contract_address_topic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
         <span class="n">owner_address</span> <span class="o">=</span> <span class="n">Address</span><span class="p">(</span><span class="n">owner_address_topic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address_hrp</span><span class="p">)</span>
@@ -315,7 +315,7 @@
         <span class="k">return</span> <span class="n">DeployedSmartContract</span><span class="p">(</span><span class="n">contract_address</span><span class="p">,</span> <span class="n">owner_address</span><span class="p">,</span> <span class="n">code_hash</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_string_to_bytes_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">joined_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns raw bytes from an arguments string (e.g. aa@bb@@cc).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Returns raw bytes from an arguments string (e.g. aa@bb@@cc)."""</span>
         <span class="c1"># We also keep the zero-length bytes (they could encode missing options, Option&lt;T&gt;).</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">joined_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ARGS_SEPARATOR</span><span class="p">)</span>
         <span class="n">output</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -324,7 +324,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">part</span><span class="p">))</span>
             <span class="k">except</span><span class="p">:</span>
-                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">b</span><span class="s2">""</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">output</span></div>
 
