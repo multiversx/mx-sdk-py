@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from multiversx_sdk.core.address import Address
@@ -5,7 +7,6 @@ from multiversx_sdk.core.transaction import Transaction
 from multiversx_sdk.core.transaction_computer import TransactionComputer
 from multiversx_sdk.core.transaction_on_network import TransactionOnNetwork
 from multiversx_sdk.core.transaction_status import TransactionStatus
-from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
 from multiversx_sdk.network_providers.errors import (
     ExpectedTransactionStatusNotReachedError,
 )
@@ -20,6 +21,17 @@ from multiversx_sdk.testutils.mock_transaction_on_network import (
     get_empty_transaction_on_network,
 )
 from multiversx_sdk.testutils.wallets import load_wallets
+
+
+class TransactionSequenceFetcher:
+    def __init__(self, transactions: list[TransactionOnNetwork]) -> None:
+        self.transactions = transactions
+        self.number_of_fetches = 0
+
+    def get_transaction(self, transaction_hash: bytes | str) -> TransactionOnNetwork:
+        transaction = self.transactions[self.number_of_fetches]
+        self.number_of_fetches += 1
+        return transaction
 
 
 class TestTransactionAwaiter:
@@ -73,9 +85,9 @@ class TestTransactionAwaiter:
     @pytest.mark.networkInteraction
     def test_on_network(self):
         alice = load_wallets()["alice"]
-        proxy = ProxyNetworkProvider("https://devnet-api.multiversx.com")
+        proxy = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
         watcher = TransactionAwaiter(
-            proxy, polling_interval_in_milliseconds=6000, timeout_interval_in_milliseconds=30000
+            proxy, polling_interval_in_milliseconds=1000, timeout_interval_in_milliseconds=20000
         )
         tx_computer = TransactionComputer()
 
@@ -116,17 +128,72 @@ class TestTransactionAwaiter:
         tx_from_network = self.watcher.await_on_condition(tx_hash, condition)
         assert tx_from_network.status.status == "failed"
 
+    def test_retries_after_status_regresses_during_patience(self):
+        pending = get_empty_transaction_on_network()
+        pending.status = TransactionStatus("pending")
+
+        first_completed = get_empty_transaction_on_network()
+        first_completed.status = TransactionStatus("success")
+
+        regressed = get_empty_transaction_on_network()
+        regressed.status = TransactionStatus("pending")
+
+        refreshed_completed = get_empty_transaction_on_network()
+        refreshed_completed.status = TransactionStatus("success")
+        refreshed_completed.raw["refreshed"] = True
+
+        fetcher = TransactionSequenceFetcher([pending, first_completed, regressed, refreshed_completed])
+        watcher = TransactionAwaiter(
+            fetcher=fetcher,
+            polling_interval_in_milliseconds=10,
+            timeout_interval_in_milliseconds=40,
+            patience_time_in_milliseconds=10,
+        )
+
+        with patch("multiversx_sdk.network_providers.transaction_awaiter.time.sleep"):
+            tx_from_network = watcher.await_completed("transaction-hash")
+
+        assert tx_from_network is refreshed_completed
+        assert tx_from_network.raw["refreshed"]
+        assert fetcher.number_of_fetches == 4
+
+    def test_returns_last_satisfying_response_after_remaining_attempts_are_exhausted(self):
+        pending = get_empty_transaction_on_network()
+        pending.status = TransactionStatus("pending")
+
+        completed = get_empty_transaction_on_network()
+        completed.status = TransactionStatus("success")
+
+        regressed_responses = [get_empty_transaction_on_network() for _ in range(3)]
+        for response in regressed_responses:
+            response.status = TransactionStatus("pending")
+
+        fetcher = TransactionSequenceFetcher([pending, completed, *regressed_responses])
+        watcher = TransactionAwaiter(
+            fetcher=fetcher,
+            polling_interval_in_milliseconds=10,
+            timeout_interval_in_milliseconds=40,
+            patience_time_in_milliseconds=10,
+        )
+
+        with patch("multiversx_sdk.network_providers.transaction_awaiter.time.sleep"):
+            tx_from_network = watcher.await_completed("transaction-hash")
+
+        assert tx_from_network is completed
+        assert tx_from_network.status.is_completed
+        assert fetcher.number_of_fetches == 5
+
     @pytest.mark.networkInteraction
     def test_ensure_error_if_timeout(self):
         alice = load_wallets()["alice"]
         alice_address = Address.new_from_bech32(alice.label)
         bob = Address.new_from_bech32("erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx")
 
-        api = ApiNetworkProvider("https://devnet-api.multiversx.com")
+        api = ProxyNetworkProvider("https://devnet-gateway.multiversx.com")
         watcher = TransactionAwaiter(
             fetcher=api,
-            polling_interval_in_milliseconds=1000,
-            timeout_interval_in_milliseconds=10000,
+            polling_interval_in_milliseconds=600,
+            timeout_interval_in_milliseconds=1000,
         )
 
         transaction = Transaction(
