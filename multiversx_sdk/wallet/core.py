@@ -1,11 +1,12 @@
 import hashlib
 import hmac
 import struct
+import unicodedata
 
 from mnemonic import Mnemonic
 
 from multiversx_sdk.wallet.constants import BIP39_LANGUAGE
-from multiversx_sdk.wallet.errors import InvalidMnemonicError
+from multiversx_sdk.wallet.errors import InvalidAddressIndexError, InvalidMnemonicError
 
 # TODO: Rename "core.py" to "bip39.py".
 
@@ -26,6 +27,11 @@ def derive_keys(mnemonic: str, address_index: int = 0):
 # https://github.com/trezor/python-mnemonic/blob/master/src/mnemonic/mnemonic.py
 # https://ethereum.stackexchange.com/a/72871/59887
 def mnemonic_to_bip39seed(mnemonic: str, passphrase: str = ""):
+    # BIP-39 requires both the mnemonic and the passphrase to be NFKD-normalized before key stretching.
+    # Validation (Mnemonic.check) normalizes internally, so we must hash the very same normalized form.
+    mnemonic = unicodedata.normalize("NFKD", mnemonic)
+    passphrase = unicodedata.normalize("NFKD", passphrase)
+
     if not Mnemonic(BIP39_LANGUAGE).check(mnemonic):
         raise InvalidMnemonicError()
 
@@ -47,6 +53,12 @@ def bip39seed_to_master_key(seed: bytes):
 
 # Reference: https://github.com/alepop/ed25519-hd-key
 def bip39seed_to_secret_key(seed: bytes, address_index: int = 0):
+    # The index is hardened (index + 2^31) and serialized on 32 bits, so it must be lower than 2^31.
+    # Booleans are rejected explicitly, since "bool" is a subclass of "int".
+    is_int = isinstance(address_index, int) and not isinstance(address_index, bool)
+    if not is_int or not 0 <= address_index < HARDENED_OFFSET:
+        raise InvalidAddressIndexError(address_index)
+
     key, chain_code = bip39seed_to_master_key(seed)
 
     for segment in BIP39_DERIVATION_PATH + [address_index]:

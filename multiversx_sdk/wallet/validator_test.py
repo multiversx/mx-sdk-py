@@ -1,7 +1,15 @@
 import os
 from pathlib import Path
 
-from multiversx_sdk.wallet.validator_keys import ValidatorSecretKey
+import pytest
+
+from multiversx_sdk.wallet.errors import (
+    CannotSignError,
+    InvalidPublicKeyLengthError,
+    InvalidSecretKeyError,
+)
+from multiversx_sdk.wallet.pem_entry import PemEntry
+from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey, ValidatorSecretKey
 from multiversx_sdk.wallet.validator_pem import ValidatorPEM
 from multiversx_sdk.wallet.validator_signer import ValidatorSigner
 from multiversx_sdk.wallet.validator_verifier import ValidatorVerifier
@@ -61,3 +69,84 @@ def test_pem_save():
 
     assert content_actual == content_expected
     os.remove(path_saved)
+
+
+def test_validator_secret_key_rejects_zero_key():
+    with pytest.raises(InvalidSecretKeyError):
+        ValidatorSecretKey(bytes(32))
+
+
+def test_load_pem_with_zero_secret_key():
+    # Previously, such a file was loaded, then computing the public key crashed the whole process (Go panic).
+    text = PemEntry("foo", bytes(32)).to_text()
+
+    with pytest.raises(InvalidSecretKeyError):
+        ValidatorPEM.from_text(text)
+
+
+def test_sign_empty_message():
+    # The native library refuses to sign an empty message. Previously, an empty signature was returned (without error).
+    signer = ValidatorSigner.from_pem_file(testwallets / "validatorKey00.pem")
+
+    with pytest.raises(CannotSignError):
+        signer.sign(b"")
+
+    assert len(signer.sign(b"\x00")) == 48
+
+
+def test_sign_and_generate_public_key_with_out_of_range_key():
+    # Not a valid scalar of the BLS12-381 curve: the native library returns an empty result, which must not be taken as a signature.
+    secret_key = ValidatorSecretKey(bytes([0xFF] * 32))
+    signer = ValidatorSigner(secret_key)
+
+    with pytest.raises(CannotSignError):
+        secret_key.sign(b"hello")
+
+    with pytest.raises(CannotSignError):
+        signer.sign(b"hello")
+
+    with pytest.raises(InvalidSecretKeyError):
+        secret_key.generate_public_key()
+
+    with pytest.raises(InvalidSecretKeyError):
+        signer.get_pubkey()
+
+
+def test_sign_and_generate_public_key_with_key_altered_after_construction():
+    secret_key = ValidatorSecretKey.generate()
+    secret_key.buffer = bytes(32)
+
+    with pytest.raises(CannotSignError):
+        secret_key.sign(b"hello")
+
+    with pytest.raises(InvalidSecretKeyError):
+        secret_key.generate_public_key()
+
+
+@pytest.mark.parametrize("index", [4, -1])
+def test_load_validator_pem_with_index_out_of_range(index: int):
+    # Previously, negative indices silently selected entries from the end.
+    with pytest.raises(IndexError, match=f"PEM entry index {index} is out of range \\(number of entries: 4\\)"):
+        ValidatorPEM.from_file(testwallets / "multipleValidatorKeys.pem", index)
+
+
+# 32 bytes is the length of a secret key, 48 bytes the length of a signature.
+@pytest.mark.parametrize("length", [0, 32, 48, 95, 97, 192])
+def test_validator_public_key_with_wrong_length(length: int):
+    # Previously, "InvalidSecretKeyLengthError" ("Bad length of secret key") was raised, although no secret key is involved.
+    with pytest.raises(InvalidPublicKeyLengthError, match="Bad length of public key"):
+        ValidatorPublicKey(bytes(length))
+
+    with pytest.raises(InvalidPublicKeyLengthError, match="Bad length of public key"):
+        ValidatorPublicKey.from_string("ab" * length)
+
+    with pytest.raises(InvalidPublicKeyLengthError, match="Bad length of public key"):
+        ValidatorVerifier.from_string("ab" * length)
+
+
+def test_validator_public_key_with_expected_length():
+    secret_key = ValidatorSecretKey.from_string("7cff99bd671502db7d15bc8abc0c9a804fb925406fbdd50f1e4c17a4cd774247")
+    public_key_hex = secret_key.generate_public_key().hex()
+
+    assert ValidatorPublicKey(bytes.fromhex(public_key_hex)).hex() == public_key_hex
+    assert ValidatorPublicKey.from_string(public_key_hex).hex() == public_key_hex

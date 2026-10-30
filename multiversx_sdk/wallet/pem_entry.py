@@ -1,6 +1,12 @@
 import base64
-import itertools
+import binascii
 import textwrap
+
+from multiversx_sdk.wallet.errors import InvalidPemError
+
+HEADER_PREFIX = "-----BEGIN PRIVATE KEY for"
+FOOTER_PREFIX = "-----END PRIVATE KEY for"
+DELIMITER = "-----"
 
 
 class PemEntry:
@@ -13,26 +19,28 @@ class PemEntry:
         lines = pem_text.splitlines()
         lines = _clean_lines(lines)
 
-        messages_lines = [
-            list(message_lines)
-            for is_next_entry, message_lines in itertools.groupby(lines, lambda line: "-----" in line)
-            if not is_next_entry
-        ]
-        messages_base64 = ["".join(message_lines) for message_lines in messages_lines]
-        labels = _parse_labels(lines)
-
         result: list[PemEntry] = []
 
-        for index, message_base64 in enumerate(messages_base64):
-            message_hex = base64.b64decode(message_base64).decode()
-            message_bytes = bytes.fromhex(message_hex)
-            label = labels[index]
+        # Each entry is parsed on its own (header, message lines, footer), so that labels can't be paired with the wrong messages.
+        for header, message_lines, footer in _group_blocks(lines):
+            label = _parse_label(header, HEADER_PREFIX)
+            if _parse_label(footer, FOOTER_PREFIX) != label:
+                raise InvalidPemError("the END line does not match the BEGIN line")
 
+            if not message_lines:
+                raise InvalidPemError("an entry has no content")
+
+            message_base64 = "".join(message_lines)
+            message_bytes = _decode_message(message_base64)
             result.append(cls(label, message_bytes))
 
         return result
 
     def to_text(self) -> str:
+        # Such labels would break the structure of the file.
+        if DELIMITER in self.label or "".join(self.label.splitlines()) != self.label:
+            raise InvalidPemError(f"the label must not contain line breaks or '{DELIMITER}'")
+
         header = f"-----BEGIN PRIVATE KEY for {self.label}-----"
         footer = f"-----END PRIVATE KEY for {self.label}-----"
 
@@ -45,14 +53,58 @@ class PemEntry:
         return text
 
 
+def assert_index_is_valid(index: int, number_of_entries: int) -> None:
+    # Negative indices are rejected, as well, since they would silently select entries from the end (hiding off-by-one errors).
+    if not 0 <= index < number_of_entries:
+        raise IndexError(f"PEM entry index {index} is out of range (number of entries: {number_of_entries})")
+
+
 def _clean_lines(lines: list[str]) -> list[str]:
     lines = [line.strip() for line in lines]
     lines = list(filter(None, lines))
     return lines
 
 
-def _parse_labels(headers: list[str]) -> list[str]:
-    marker = "-----BEGIN PRIVATE KEY for"
-    headers = [line for line in headers if line.startswith(marker)]
-    labels = [line.replace(marker, "").replace("-", "").strip() for line in headers]
-    return labels
+def _group_blocks(lines: list[str]) -> list[tuple[str, list[str], str]]:
+    blocks: list[tuple[str, list[str], str]] = []
+    header = None
+    message_lines: list[str] = []
+
+    for line in lines:
+        if line.startswith(HEADER_PREFIX):
+            if header is not None:
+                raise InvalidPemError("missing END line")
+
+            header = line
+            message_lines = []
+        elif line.startswith(FOOTER_PREFIX):
+            if header is None:
+                raise InvalidPemError("missing BEGIN line")
+
+            blocks.append((header, message_lines, line))
+            header = None
+        elif header is None:
+            # The content of the line is not included in the error message, since it could be secret.
+            raise InvalidPemError("unexpected line outside of an entry")
+        else:
+            message_lines.append(line)
+
+    if header is not None:
+        raise InvalidPemError("missing END line")
+
+    return blocks
+
+
+def _parse_label(line: str, prefix: str) -> str:
+    # Only the delimiters are removed, so that dashes within the label are kept.
+    # The trailing delimiter is handled leniently (e.g. "---" instead of "-----"), as before: such files exist in the wild.
+    return line[len(prefix) :].rstrip("-").strip()
+
+
+def _decode_message(message_base64: str) -> bytes:
+    try:
+        message_hex = base64.b64decode(message_base64, validate=True).decode()
+        return bytes.fromhex(message_hex)
+    except (binascii.Error, ValueError):
+        # The underlying error is not chained, since its message could reveal bits of the (secret) content.
+        raise InvalidPemError("the content of an entry is not properly encoded") from None

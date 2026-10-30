@@ -2,7 +2,12 @@ from multiversx_sdk.wallet.constants import (
     VALIDATOR_PUBKEY_LENGTH,
     VALIDATOR_SECRETKEY_LENGTH,
 )
-from multiversx_sdk.wallet.errors import InvalidSecretKeyLengthError
+from multiversx_sdk.wallet.errors import (
+    CannotSignError,
+    InvalidPublicKeyLengthError,
+    InvalidSecretKeyError,
+    InvalidSecretKeyLengthError,
+)
 from multiversx_sdk.wallet.libraries.bls_facade import BLSFacade
 
 
@@ -10,6 +15,10 @@ class ValidatorSecretKey:
     def __init__(self, buffer: bytes) -> None:
         if len(buffer) != VALIDATOR_SECRETKEY_LENGTH:
             raise InvalidSecretKeyLengthError()
+
+        # Fail fast (e.g. when loading a corrupted PEM file), instead of crashing later, when the public key is computed.
+        if buffer == bytes(VALIDATOR_SECRETKEY_LENGTH):
+            raise InvalidSecretKeyError()
 
         self.buffer = buffer
 
@@ -25,10 +34,20 @@ class ValidatorSecretKey:
 
     def generate_public_key(self) -> "ValidatorPublicKey":
         public_key_bytes = BLSFacade().generate_public_key(self.buffer)
+
+        # The native library signals errors (e.g. an invalid key) by returning an empty result.
+        if not public_key_bytes:
+            raise InvalidSecretKeyError()
+
         return ValidatorPublicKey(public_key_bytes)
 
     def sign(self, data: bytes) -> bytes:
         signature = BLSFacade().compute_message_signature(data, self.buffer)
+
+        # The native library signals errors (e.g. an invalid key) by returning an empty result.
+        if not signature:
+            raise CannotSignError()
+
         return signature
 
     def hex(self) -> str:
@@ -44,7 +63,7 @@ class ValidatorSecretKey:
 class ValidatorPublicKey:
     def __init__(self, buffer: bytes) -> None:
         if len(buffer) != VALIDATOR_PUBKEY_LENGTH:
-            raise InvalidSecretKeyLengthError()
+            raise InvalidPublicKeyLengthError()
 
         self.buffer = buffer
 

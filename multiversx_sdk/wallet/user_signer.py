@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from multiversx_sdk.wallet.errors import CannotSignError
 from multiversx_sdk.wallet.user_keys import UserPublicKey, UserSecretKey
@@ -25,8 +26,9 @@ class UserSigner:
         return [cls(user.secret_key) for user in users]
 
     @classmethod
-    def from_wallet(cls, path: Path, password: str) -> "UserSigner":
-        secret_key = UserWallet.load_secret_key(path, password)
+    def from_wallet(cls, path: Path, password: str, address_index: Optional[int] = None) -> "UserSigner":
+        # "address_index" is only used for keystore files holding a mnemonic (same as "UserWallet.load_secret_key").
+        secret_key = UserWallet.load_secret_key(path, password, address_index)
         return cls(secret_key)
 
     def sign(self, data: bytes) -> bytes:

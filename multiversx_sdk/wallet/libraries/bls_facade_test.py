@@ -1,4 +1,10 @@
+import subprocess
+import sys
+from pathlib import Path
+
 from multiversx_sdk.wallet.libraries.bls_facade import BLSFacade
+
+REPOSITORY_ROOT = Path(__file__).parent.parent.parent.parent
 
 
 def test_generate_public_key():
@@ -70,6 +76,8 @@ def test_verify_message_signature():
         ),
     )
 
+    assert not ok
+
     # With altered message
     ok = facade.verify_message_signature(
         public_key=bytes.fromhex(
@@ -107,3 +115,15 @@ def test_generate_sign_and_verify():
     ok = facade.verify_message_signature(public_key, message, signature)
 
     assert ok
+
+
+def test_generate_public_key_with_zero_key_does_not_crash_the_process():
+    # For the zero key, the native library panics (nil pointer dereference) and kills the process.
+    # Here, we use a subprocess, so that a regression fails this test (instead of crashing the whole test session).
+    code = "from multiversx_sdk.wallet.libraries.bls_facade import BLSFacade; print(BLSFacade().generate_public_key(bytes(32)).hex() or 'EMPTY')"
+    result = subprocess.run(
+        [sys.executable, "-c", code], cwd=REPOSITORY_ROOT, capture_output=True, text=True, timeout=60
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "EMPTY"
