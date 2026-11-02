@@ -16,6 +16,17 @@ class InvalidKeystoreFilePasswordError(Exception):
         super().__init__("Provided keystore file password is invalid.")
 
 
+class InvalidKeystoreFileError(Exception):
+    def __init__(self, reason: str):
+        super().__init__(f"Invalid keystore file: {reason}.")
+
+
+class InvalidPemError(ValueError):
+    # Subclass of "ValueError", for backwards compatibility (previously, malformed content raised "ValueError").
+    def __init__(self, reason: str):
+        super().__init__(f"Invalid PEM: {reason}.")
+
+
 class CannotSignError(Exception):
     def __init__(self) -> None:
         super().__init__("Cannot sign object.")
@@ -29,6 +40,11 @@ class InvalidMnemonicError(Exception):
 class InvalidSecretKeyLengthError(Exception):
     def __init__(self) -> None:
         super().__init__("Bad length of secret key")
+
+
+class InvalidSecretKeyError(Exception):
+    def __init__(self) -> None:
+        super().__init__("Invalid secret key")
 
 
 class InvalidPublicKeyLengthError(Exception):

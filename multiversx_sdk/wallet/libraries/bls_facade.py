@@ -4,6 +4,7 @@ import platform
 from pathlib import Path
 from typing import Optional
 
+from multiversx_sdk.wallet.constants import VALIDATOR_SECRETKEY_LENGTH
 from multiversx_sdk.wallet.errors import LibraryNotFoundError, UnsupportedOSError
 
 
@@ -23,6 +24,11 @@ class BLSFacade:
         return private_key
 
     def generate_public_key(self, private_key: bytes) -> bytes:
+        # For an all-zero key, the native library panics (nil pointer dereference) and kills the whole process.
+        # Thus, such a key must never cross the FFI boundary. We return an empty result, as the library does for other errors.
+        if private_key == bytes(VALIDATOR_SECRETKEY_LENGTH):
+            return b""
+
         generate_public_key_function = self._get_library().generatePublicKey
 
         output = generate_public_key_function(private_key.hex().encode())

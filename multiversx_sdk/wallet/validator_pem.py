@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from multiversx_sdk.wallet.pem_entry import PemEntry
+from multiversx_sdk.wallet.pem_entry import PemEntry, assert_index_is_valid
 from multiversx_sdk.wallet.validator_keys import ValidatorSecretKey
 
 
@@ -11,7 +11,9 @@ class ValidatorPEM:
 
     @classmethod
     def from_file(cls, path: Path, index: int = 0) -> "ValidatorPEM":
-        return cls.from_file_all(path)[index]
+        items = cls.from_file_all(path)
+        assert_index_is_valid(index, len(items))
+        return items[index]
 
     @classmethod
     def from_file_all(cls, path: Path) -> list["ValidatorPEM"]:
@@ -21,6 +23,7 @@ class ValidatorPEM:
     @classmethod
     def from_text(cls, text: str, index: int = 0) -> "ValidatorPEM":
         items = cls.from_text_all(text)
+        assert_index_is_valid(index, len(items))
         return items[index]
 
     @classmethod

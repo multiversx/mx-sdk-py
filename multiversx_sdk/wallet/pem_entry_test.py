@@ -1,6 +1,9 @@
 from pathlib import Path
 
+import pytest
+
 from multiversx_sdk.wallet.constants import USER_SEED_LENGTH
+from multiversx_sdk.wallet.errors import InvalidPemError
 from multiversx_sdk.wallet.pem_entry import PemEntry
 
 testwallets = Path(__file__).parent.parent / "testutils" / "testwallets"
@@ -87,3 +90,86 @@ def test_to_text():
     entries = PemEntry.from_text_all(text)
     text_actual = "\n".join([entry.to_text() for entry in entries])
     assert text_actual == text.strip()
+
+
+ALICE_PEM = (testwallets / "alice.pem").read_text().strip()
+BOB_PEM = (testwallets / "bob.pem").read_text().strip()
+ALICE_HEADER, ALICE_FOOTER = ALICE_PEM.splitlines()[0], ALICE_PEM.splitlines()[-1]
+
+
+def test_from_text_all_with_entry_without_content():
+    # Previously, the labels were shifted: Bob's key was returned under Alice's label.
+    text = "\n".join([ALICE_HEADER, ALICE_FOOTER, BOB_PEM])
+
+    with pytest.raises(InvalidPemError, match="an entry has no content"):
+        PemEntry.from_text_all(text)
+
+
+@pytest.mark.parametrize(
+    "text, error",
+    [
+        ("\n".join(ALICE_PEM.splitlines()[:-1]), "missing END line"),
+        ("\n".join(ALICE_PEM.splitlines()[:-1] + [BOB_PEM]), "missing END line"),
+        ("\n".join(ALICE_PEM.splitlines()[1:]), "unexpected line outside of an entry"),
+        ("\n".join([ALICE_FOOTER]), "missing BEGIN line"),
+        ("\n".join(["Some comment", ALICE_PEM]), "unexpected line outside of an entry"),
+        ("\n".join(BOB_PEM.splitlines()[:-1] + [ALICE_FOOTER]), "the END line does not match the BEGIN line"),
+        ("-----BEGIN PRIVATE KEY-----\nYWJj\n-----END PRIVATE KEY-----", "unexpected line outside of an entry"),
+    ],
+    ids=[
+        "no-end",
+        "no-end-then-entry",
+        "no-begin",
+        "footer-only",
+        "comment",
+        "footer-of-another-entry",
+        "generic-header",
+    ],
+)
+def test_from_text_all_with_malformed_structure(text: str, error: str):
+    with pytest.raises(InvalidPemError, match=error):
+        PemEntry.from_text_all(text)
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "NDEzZjQyNTc1ZjdmMjZmYWQzMzE3YTc3ODc3MTIxMmZk*#@",  # characters outside of the base64 alphabet
+        "NDEzZjQyNTc1ZjdmMjZmYWQzMzE3YTc3ODc3MTIxMmZk=",  # bad padding
+        "aGVsbG8gd29ybGQ=",  # base64 of "hello world" (not hex)
+        "//79",  # base64 of non-UTF-8 bytes
+    ],
+    ids=["non-base64-characters", "bad-padding", "not-hex", "not-utf8"],
+)
+def test_from_text_all_with_badly_encoded_content(content: str):
+    text = "\n".join([ALICE_HEADER, content, ALICE_FOOTER])
+
+    with pytest.raises(InvalidPemError, match="the content of an entry is not properly encoded"):
+        PemEntry.from_text_all(text)
+
+    # For backwards compatibility, the error is a "ValueError" (as before).
+    with pytest.raises(ValueError):
+        PemEntry.from_text_all(text)
+
+
+def test_from_text_all_keeps_dashes_within_label():
+    entry = PemEntry("my-key-label", bytes(32))
+    entries = PemEntry.from_text_all(entry.to_text())
+
+    assert entries[0].label == "my-key-label"
+    assert entries[0].message == bytes(32)
+
+
+def test_from_text_all_with_shorter_trailing_delimiter():
+    # Such files exist in the wild (e.g. "testKeys/walletKeys.pem" in mx-chain-go), and they were loaded before.
+    text = ALICE_PEM.removesuffix("-----") + "---"
+    entries = PemEntry.from_text_all(text)
+
+    assert len(entries) == 1
+    assert entries[0].label == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+
+
+@pytest.mark.parametrize("label", ["foo\nbar", "foo\r\n", "foo-----bar", "foo\u2028bar"])
+def test_to_text_with_label_breaking_the_structure(label: str):
+    with pytest.raises(InvalidPemError, match="the label must not contain line breaks"):
+        PemEntry(label, bytes(32)).to_text()

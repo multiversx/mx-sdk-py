@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any, Optional
 
 import pytest
 
@@ -10,7 +11,15 @@ from multiversx_sdk.core import (
     Transaction,
     TransactionComputer,
 )
+from multiversx_sdk.wallet import user_keys
+from multiversx_sdk.wallet.crypto import encryptor
 from multiversx_sdk.wallet.crypto.randomness import Randomness
+from multiversx_sdk.wallet.errors import (
+    InvalidAddressIndexError,
+    InvalidKeystoreFileError,
+    InvalidPemError,
+)
+from multiversx_sdk.wallet.pem_entry import PemEntry
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 from multiversx_sdk.wallet.user_pem import UserPEM
 from multiversx_sdk.wallet.user_signer import UserSigner
@@ -273,9 +282,295 @@ def test_load_secret_key_with_mnemonic():
     )
 
 
+@pytest.mark.parametrize(
+    "address_index, expected_address",
+    [
+        (None, "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+        (0, "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"),
+        (1, "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"),
+        (2, "erd1k2s324ww2g0yj38qn2ch2jwctdy8mnfxep94q9arncc6xecg3xaq6mjse8"),
+    ],
+)
+def test_user_signer_from_wallet_with_mnemonic(address_index: Optional[int], expected_address: str):
+    keystore_path = testwallets / "withDummyMnemonic.json"
+    signer = UserSigner.from_wallet(keystore_path, "password", address_index)
+
+    assert signer.get_pubkey().to_address("erd").to_bech32() == expected_address
+    assert signer.secret_key == UserWallet.load_secret_key(keystore_path, "password", address_index)
+
+
+def test_user_signer_from_wallet_with_secret_key():
+    keystore_path = testwallets / "alice.json"
+
+    # Backwards compatible: the index is optional.
+    signer = UserSigner.from_wallet(keystore_path, "password")
+    assert signer.get_pubkey().to_address("erd").to_bech32() == ALICE_BECH32
+
+    # Same as "UserWallet.load_secret_key": an index makes no sense for a keystore holding a single secret key.
+    with pytest.raises(Exception, match="address_index must not be provided when kind == 'secretKey'"):
+        UserSigner.from_wallet(keystore_path, "password", 1)
+
+
+@pytest.mark.parametrize("address_index", [-1, 2**31])
+def test_user_signer_from_wallet_with_invalid_address_index(address_index: int):
+    keystore_path = testwallets / "withDummyMnemonic.json"
+
+    with pytest.raises(InvalidAddressIndexError):
+        UserSigner.from_wallet(keystore_path, "password", address_index)
+
+
 def test_decrypt_secret_key_with_keystore_mnemonic():
     user_wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "")
     mnemonic_json = user_wallet.to_dict()
 
     with pytest.raises(Exception, match="Expected kind to be secretKey, but it was mnemonic"):
         UserWallet.decrypt_secret_key(mnemonic_json, "")
+
+
+def test_create_keystore_with_mnemonic_requiring_nfkd_normalization(tmp_path: Path):
+    # The keystore must hold the canonical (NFKD-normalized) text, so that every SDK derives the same accounts from it.
+    mnemonic = DUMMY_MNEMONIC.replace(" ", "\u00a0")
+    wallet = UserWallet.from_mnemonic(mnemonic, "password")
+    keystore_path = tmp_path / "wallet.json"
+    wallet.save(keystore_path)
+
+    keyfile_object = json.loads(keystore_path.read_text())
+    assert UserWallet.decrypt_mnemonic(keyfile_object, "password").get_text() == DUMMY_MNEMONIC
+    assert (
+        UserWallet.load_secret_key(keystore_path, "password", 0).generate_public_key().to_address("erd").to_bech32()
+        == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+    )
+
+
+def test_load_secret_key_from_keystore_holding_non_normalized_mnemonic(tmp_path: Path):
+    # Keystores written by older versions may contain the raw (non-normalized) text; they must derive the standard accounts.
+    mnemonic = DUMMY_MNEMONIC.replace(" ", "\u3000")
+    encrypted_data = encryptor.encrypt(mnemonic.encode(), "password", Randomness())
+    keystore_path = tmp_path / "wallet.json"
+    UserWallet(kind="mnemonic", encrypted_data=encrypted_data).save(keystore_path)
+
+    assert (
+        UserWallet.load_secret_key(keystore_path, "password", 1).generate_public_key().to_address("erd").to_bech32()
+        == "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+    )
+
+
+ALICE_SECRET_KEY = "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
+ALICE_PUBLIC_KEY = "0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
+ALICE_BECH32 = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
+BOB_HEX = "8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
+BOB_BECH32 = "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
+
+
+def _create_alice_keyfile_object_holding(plaintext: bytes) -> dict[str, Any]:
+    # A keystore with a valid MAC (as created by anyone knowing the password), with alice's address in the envelope.
+    alice_public_key = UserSecretKey.new_from_string(ALICE_SECRET_KEY).generate_public_key()
+    encrypted_data = encryptor.encrypt(plaintext, "password", Randomness())
+    wallet = UserWallet(
+        kind="secretKey", encrypted_data=encrypted_data, public_key_when_kind_is_secret_key=alice_public_key
+    )
+    return wallet.to_dict("erd")
+
+
+def test_decrypt_secret_key_with_tampered_iv():
+    # The MAC does not cover the IV: such a file decrypts (without error) to a different key, which must be rejected.
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+    iv = bytearray.fromhex(keyfile_object["crypto"]["cipherparams"]["iv"])
+    iv[-1] ^= 1
+    keyfile_object["crypto"]["cipherparams"]["iv"] = iv.hex()
+
+    with pytest.raises(InvalidKeystoreFileError):
+        UserWallet.decrypt_secret_key(keyfile_object, "password")
+
+
+def test_decrypt_secret_key_with_address_fields_of_another_account():
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+
+    with pytest.raises(InvalidKeystoreFileError, match="the 'address' field does not match"):
+        UserWallet.decrypt_secret_key({**keyfile_object, "address": BOB_HEX}, "password")
+
+    with pytest.raises(InvalidKeystoreFileError, match="the 'bech32' field does not match"):
+        UserWallet.decrypt_secret_key({**keyfile_object, "bech32": BOB_BECH32}, "password")
+
+    with pytest.raises(InvalidKeystoreFileError, match="the 'bech32' field does not match"):
+        UserWallet.decrypt_secret_key({**keyfile_object, "bech32": "not a bech32 address"}, "password")
+
+
+@pytest.mark.parametrize(
+    "address",
+    [
+        ALICE_PUBLIC_KEY.upper(),
+        ALICE_PUBLIC_KEY[:32].upper() + ALICE_PUBLIC_KEY[32:],
+    ],
+)
+def test_decrypt_secret_key_with_address_field_in_any_case(address: str):
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+    assert keyfile_object["address"] == ALICE_PUBLIC_KEY
+
+    secret_key = UserWallet.decrypt_secret_key({**keyfile_object, "address": address}, "password")
+    assert secret_key.hex() == ALICE_SECRET_KEY
+
+
+def test_decrypt_secret_key_with_bech32_field_in_uppercase():
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+
+    secret_key = UserWallet.decrypt_secret_key({**keyfile_object, "bech32": ALICE_BECH32.upper()}, "password")
+    assert secret_key.hex() == ALICE_SECRET_KEY
+
+
+@pytest.mark.parametrize(
+    "address",
+    [
+        "",
+        "not hex",
+        ALICE_PUBLIC_KEY[:-2],  # one byte short
+        ALICE_PUBLIC_KEY + "00",  # one byte too long
+        ALICE_PUBLIC_KEY[:-1],  # odd number of digits
+        "0x" + ALICE_PUBLIC_KEY,
+    ],
+)
+def test_decrypt_secret_key_with_malformed_address_field(address: str):
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+
+    with pytest.raises(InvalidKeystoreFileError, match="the 'address' field does not match"):
+        UserWallet.decrypt_secret_key({**keyfile_object, "address": address}, "password")
+
+
+@pytest.mark.parametrize("field", ["address", "bech32"])
+def test_decrypt_secret_key_with_missing_address_field(field: str):
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+    del keyfile_object[field]
+
+    with pytest.raises(InvalidKeystoreFileError, match="missing 'address' or 'bech32' field"):
+        UserWallet.decrypt_secret_key(keyfile_object, "password")
+
+
+@pytest.mark.parametrize("length", [0, 1, 16, 31, 33, 63, 65, 100])
+def test_decrypt_secret_key_with_unexpected_plaintext_length(length: int):
+    # Previously, the plaintext was silently left-padded with zeros or truncated.
+    plaintext = (bytes.fromhex(ALICE_SECRET_KEY) * 4)[:length]
+    keyfile_object = _create_alice_keyfile_object_holding(plaintext)
+
+    with pytest.raises(InvalidKeystoreFileError, match=f"unexpected length of decrypted data: {length}"):
+        UserWallet.decrypt_secret_key(keyfile_object, "password")
+
+
+def test_decrypt_secret_key_with_wrong_embedded_public_key():
+    keyfile_object = _create_alice_keyfile_object_holding(bytes.fromhex(ALICE_SECRET_KEY) + bytes.fromhex(BOB_HEX))
+
+    with pytest.raises(InvalidKeystoreFileError, match="the embedded public key does not match"):
+        UserWallet.decrypt_secret_key(keyfile_object, "password")
+
+
+def test_decrypt_secret_key_holding_only_the_secret_key():
+    # E.g. keystores saved by mx-sdk-go hold the secret key alone (32 bytes).
+    keyfile_object = _create_alice_keyfile_object_holding(bytes.fromhex(ALICE_SECRET_KEY))
+    secret_key = UserWallet.decrypt_secret_key(keyfile_object, "password")
+    assert secret_key.hex() == ALICE_SECRET_KEY
+
+
+def test_decrypt_secret_key_with_custom_hrp():
+    secret_key = UserSecretKey.new_from_string(ALICE_SECRET_KEY)
+    keyfile_object = UserWallet.from_secret_key(secret_key, "password").to_dict("test")
+    assert keyfile_object["bech32"].startswith("test1")
+
+    assert UserWallet.decrypt_secret_key(keyfile_object, "password").hex() == ALICE_SECRET_KEY
+
+
+def test_load_user_pem_with_wrong_embedded_public_key():
+    text = PemEntry(ALICE_BECH32, bytes.fromhex(ALICE_SECRET_KEY + BOB_HEX)).to_text()
+
+    with pytest.raises(InvalidPemError, match="the embedded public key does not match"):
+        UserPEM.from_text(text)
+
+
+@pytest.mark.parametrize("length", [33, 48, 63, 65, 96])
+def test_load_user_pem_with_unexpected_message_length(length: int):
+    message = (bytes.fromhex(ALICE_SECRET_KEY + ALICE_PUBLIC_KEY) * 2)[:length]
+    text = PemEntry(ALICE_BECH32, message).to_text()
+
+    with pytest.raises(InvalidPemError, match="the embedded public key does not match"):
+        UserPEM.from_text(text)
+
+
+def test_load_user_pem_with_label_of_another_account():
+    text = PemEntry(BOB_BECH32, bytes.fromhex(ALICE_SECRET_KEY + ALICE_PUBLIC_KEY)).to_text()
+
+    with pytest.raises(InvalidPemError, match="the label \\(address\\) does not match"):
+        UserPEM.from_text(text)
+
+
+@pytest.mark.parametrize(
+    "label, message",
+    [
+        (ALICE_BECH32, ALICE_SECRET_KEY),  # only the secret key
+        (
+            "test1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ss5hqhtr",
+            ALICE_SECRET_KEY + ALICE_PUBLIC_KEY,
+        ),  # custom HRP
+        ("my wallet", ALICE_SECRET_KEY + ALICE_PUBLIC_KEY),  # custom label
+        ("", ALICE_SECRET_KEY + ALICE_PUBLIC_KEY),  # empty label
+    ],
+)
+def test_load_user_pem_still_supported(label: str, message: str):
+    text = PemEntry(label, bytes.fromhex(message)).to_text()
+    pem = UserPEM.from_text(text)
+
+    assert pem.label == label
+    assert pem.secret_key.hex() == ALICE_SECRET_KEY
+
+
+@pytest.mark.parametrize("index", [3, -1, -4])
+def test_load_user_pem_with_index_out_of_range(index: int):
+    # Previously, negative indices silently selected entries from the end.
+    with pytest.raises(IndexError, match=f"PEM entry index {index} is out of range \\(number of entries: 3\\)"):
+        UserPEM.from_file(testwallets / "multipleUserKeys.pem", index)
+
+    with pytest.raises(IndexError, match=f"PEM entry index {index} is out of range"):
+        UserPEM.from_text((testwallets / "multipleUserKeys.pem").read_text(), index)
+
+
+@pytest.mark.parametrize("buffer", ["a" * 32, [0] * 32, memoryview(bytes(32)), None])
+def test_user_secret_key_with_wrong_type(buffer: Any):
+    # Previously, e.g. a 32-characters string was accepted, but failed later, when used.
+    with pytest.raises(TypeError, match="The secret key must be bytes"):
+        UserSecretKey(buffer)
+
+
+def test_user_secret_key_is_not_altered_through_caller_buffer():
+    buffer = bytearray.fromhex(ALICE_SECRET_KEY)
+    secret_key = UserSecretKey(buffer)
+    buffer[0] ^= 1
+
+    assert secret_key.hex() == ALICE_SECRET_KEY
+    assert isinstance(secret_key.buffer, bytes)
+
+
+def test_user_secret_key_equality():
+    alice = UserSecretKey.new_from_string(ALICE_SECRET_KEY)
+    alice_again = UserSecretKey(bytes.fromhex(ALICE_SECRET_KEY))
+    # Differs from Alice's key only in the last byte.
+    almost_alice = UserSecretKey(bytes.fromhex(ALICE_SECRET_KEY)[:-1] + b"\x00")
+
+    assert alice == alice_again
+    assert alice != almost_alice
+    assert alice != UserSecretKey.new_from_string(BOB_HEX)
+    assert alice != bytes.fromhex(ALICE_SECRET_KEY)
+    assert alice != ALICE_SECRET_KEY
+
+
+def test_user_secret_key_equality_is_constant_time(monkeypatch: pytest.MonkeyPatch):
+    calls: list[tuple[bytes, bytes]] = []
+    original = user_keys.hmac.compare_digest
+
+    def spy(a: bytes, b: bytes) -> bool:
+        calls.append((a, b))
+        return original(a, b)
+
+    monkeypatch.setattr(user_keys.hmac, "compare_digest", spy)
+
+    alice = UserSecretKey.new_from_string(ALICE_SECRET_KEY)
+    bob = UserSecretKey.new_from_string(BOB_HEX)
+
+    assert alice != bob
+    assert calls == [(alice.buffer, bob.buffer)]
