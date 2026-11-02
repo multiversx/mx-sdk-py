@@ -356,6 +356,8 @@ def test_load_secret_key_from_keystore_holding_non_normalized_mnemonic(tmp_path:
 
 
 ALICE_SECRET_KEY = "413f42575f7f26fad3317a778771212fdb80245850981e48b58a4f25e344e8f9"
+ALICE_PUBLIC_KEY = "0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
+ALICE_BECH32 = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 BOB_HEX = "8049d639e5a6980d1cd2392abcce41029cda74a1563523a202f09641cc2618f8"
 BOB_BECH32 = "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx"
 
@@ -392,6 +394,46 @@ def test_decrypt_secret_key_with_address_fields_of_another_account():
 
     with pytest.raises(InvalidKeystoreFileError, match="the 'bech32' field does not match"):
         UserWallet.decrypt_secret_key({**keyfile_object, "bech32": "not a bech32 address"}, "password")
+
+
+@pytest.mark.parametrize(
+    "address",
+    [
+        ALICE_PUBLIC_KEY.upper(),
+        ALICE_PUBLIC_KEY[:32].upper() + ALICE_PUBLIC_KEY[32:],
+    ],
+)
+def test_decrypt_secret_key_with_address_field_in_any_case(address: str):
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+    assert keyfile_object["address"] == ALICE_PUBLIC_KEY
+
+    secret_key = UserWallet.decrypt_secret_key({**keyfile_object, "address": address}, "password")
+    assert secret_key.hex() == ALICE_SECRET_KEY
+
+
+def test_decrypt_secret_key_with_bech32_field_in_uppercase():
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+
+    secret_key = UserWallet.decrypt_secret_key({**keyfile_object, "bech32": ALICE_BECH32.upper()}, "password")
+    assert secret_key.hex() == ALICE_SECRET_KEY
+
+
+@pytest.mark.parametrize(
+    "address",
+    [
+        "",
+        "not hex",
+        ALICE_PUBLIC_KEY[:-2],  # one byte short
+        ALICE_PUBLIC_KEY + "00",  # one byte too long
+        ALICE_PUBLIC_KEY[:-1],  # odd number of digits
+        "0x" + ALICE_PUBLIC_KEY,
+    ],
+)
+def test_decrypt_secret_key_with_malformed_address_field(address: str):
+    keyfile_object = json.loads((testwallets / "alice.json").read_text())
+
+    with pytest.raises(InvalidKeystoreFileError, match="the 'address' field does not match"):
+        UserWallet.decrypt_secret_key({**keyfile_object, "address": address}, "password")
 
 
 @pytest.mark.parametrize("field", ["address", "bech32"])
@@ -433,10 +475,6 @@ def test_decrypt_secret_key_with_custom_hrp():
     assert keyfile_object["bech32"].startswith("test1")
 
     assert UserWallet.decrypt_secret_key(keyfile_object, "password").hex() == ALICE_SECRET_KEY
-
-
-ALICE_BECH32 = "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
-ALICE_PUBLIC_KEY = "0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"
 
 
 def test_load_user_pem_with_wrong_embedded_public_key():

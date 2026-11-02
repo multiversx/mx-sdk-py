@@ -1,3 +1,5 @@
+from typing import Union
+
 from multiversx_sdk.wallet.constants import (
     VALIDATOR_PUBKEY_LENGTH,
     VALIDATOR_SECRETKEY_LENGTH,
@@ -12,12 +14,19 @@ from multiversx_sdk.wallet.libraries.bls_facade import BLSFacade
 
 
 class ValidatorSecretKey:
-    def __init__(self, buffer: bytes) -> None:
+    def __init__(self, buffer: Union[bytes, bytearray]) -> None:
+        # Otherwise, e.g. a 32-characters string would be accepted here, but fail later, when used.
+        if not isinstance(buffer, (bytes, bytearray)):
+            raise TypeError(f"The secret key must be bytes, not {type(buffer).__name__}")
+
+        # Copy, so that the key can't be altered through the buffer received from the caller (e.g. a "bytearray").
+        buffer = bytes(buffer)
+
         if len(buffer) != VALIDATOR_SECRETKEY_LENGTH:
             raise InvalidSecretKeyLengthError()
 
         # Fail fast (e.g. when loading a corrupted PEM file), instead of crashing later, when the public key is computed.
-        if buffer == bytes(VALIDATOR_SECRETKEY_LENGTH):
+        if not any(buffer):
             raise InvalidSecretKeyError()
 
         self.buffer = buffer

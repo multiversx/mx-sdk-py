@@ -90,13 +90,21 @@ class UserWallet:
         if embedded_public_key and embedded_public_key != public_key:
             raise InvalidKeystoreFileError("the embedded public key does not match the secret key")
 
-        if address_hex != public_key.hex():
+        if cls._get_public_key_from_hex(address_hex) != public_key:
             raise InvalidKeystoreFileError("the 'address' field does not match the secret key")
 
         if cls._get_public_key_from_bech32(address_bech32) != public_key:
             raise InvalidKeystoreFileError("the 'bech32' field does not match the secret key")
 
         return secret_key
+
+    @classmethod
+    def _get_public_key_from_hex(cls, value: str) -> bytes:
+        # Compared as bytes, so that the case of the hex digits does not matter (e.g. uppercase hex is valid, as well).
+        try:
+            return bytes.fromhex(value)
+        except ValueError:
+            return b""
 
     @classmethod
     def _get_public_key_from_bech32(cls, value: str) -> bytes:

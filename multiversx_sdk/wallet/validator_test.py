@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -7,6 +8,7 @@ from multiversx_sdk.wallet.errors import (
     CannotSignError,
     InvalidPublicKeyLengthError,
     InvalidSecretKeyError,
+    InvalidSecretKeyLengthError,
 )
 from multiversx_sdk.wallet.pem_entry import PemEntry
 from multiversx_sdk.wallet.validator_keys import ValidatorPublicKey, ValidatorSecretKey
@@ -74,6 +76,40 @@ def test_pem_save():
 def test_validator_secret_key_rejects_zero_key():
     with pytest.raises(InvalidSecretKeyError):
         ValidatorSecretKey(bytes(32))
+
+    with pytest.raises(InvalidSecretKeyError):
+        ValidatorSecretKey(bytearray(32))
+
+
+@pytest.mark.parametrize("buffer", ["a" * 32, "\x00" * 32, [1] * 32, memoryview(b"\x01" * 32), None, 42])
+def test_validator_secret_key_rejects_non_bytes(buffer: Any):
+    # Previously, e.g. a 32-characters string was accepted, then failed later, when used.
+    with pytest.raises(TypeError, match="The secret key must be bytes"):
+        ValidatorSecretKey(buffer)
+
+
+@pytest.mark.parametrize("length", [0, 31, 33, 64])
+def test_validator_secret_key_rejects_wrong_length(length: int):
+    with pytest.raises(InvalidSecretKeyLengthError):
+        ValidatorSecretKey(b"\x01" * length)
+
+    with pytest.raises(InvalidSecretKeyLengthError):
+        ValidatorSecretKey(bytearray(b"\x01" * length))
+
+
+def test_validator_secret_key_from_bytearray_is_copied():
+    expected = ValidatorSecretKey.generate()
+    buffer = bytearray(expected.buffer)
+
+    secret_key = ValidatorSecretKey(buffer)
+    assert type(secret_key.buffer) is bytes
+    assert secret_key.buffer == expected.buffer
+
+    # Altering the caller's buffer (even to the zero key, which crashes the native library) must not affect the key.
+    buffer[:] = bytes(32)
+    assert secret_key.buffer == expected.buffer
+    assert secret_key.generate_public_key().hex() == expected.generate_public_key().hex()
+    assert secret_key.sign(b"hello") == expected.sign(b"hello")
 
 
 def test_load_pem_with_zero_secret_key():
