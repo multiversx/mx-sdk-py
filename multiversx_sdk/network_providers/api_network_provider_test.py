@@ -328,7 +328,10 @@ class TestApi:
             transaction_hash=hash,
             options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
         )
-        assert not tx_on_network.status.is_successful
+        assert tx_on_network.status.is_completed
+
+        response = self.api.do_get_generic(f"transaction/{hash.hex()}/process-status")
+        assert response.get("data", {}).get("status") == "fail"
 
     def test_send_and_await_transaction_on_condition(self):
         alice = load_wallets()["alice"]
@@ -365,7 +368,9 @@ class TestApi:
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
         def condition(tx: TransactionOnNetwork) -> bool:
-            return tx.status.status == "fail"
+            hash = tx.hash.hex()
+            response = self.api.do_get_generic(f"transaction/{hash}/process-status")
+            return response.get("data", {}).get("status") == "fail"
 
         hash = self.api.send_transaction(transaction)
 
@@ -374,7 +379,7 @@ class TestApi:
             condition=condition,
             options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
         )
-        assert tx_on_network.status.status == "fail"
+        assert any(event.identifier == "signalError" for event in tx_on_network.logs.events)
 
     def test_get_token_of_account(self):
         address = Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl")
