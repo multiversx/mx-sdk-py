@@ -148,9 +148,15 @@ def test_sign_and_generate_public_key_with_out_of_range_key():
         signer.get_pubkey()
 
 
-def test_sign_and_generate_public_key_with_key_altered_after_construction():
+@pytest.mark.parametrize(
+    "buffer",
+    [bytes(32), bytes(33), bytes(32) + b"\x01"],
+    ids=["zero-key", "zero-key-33-bytes", "zero-key-then-nonzero-byte"],
+)
+def test_sign_and_generate_public_key_with_key_altered_after_construction(buffer: bytes):
+    # Longer buffers starting with 32 zero bytes crash some builds of the native library (just as the zero key does).
     secret_key = ValidatorSecretKey.generate()
-    secret_key.buffer = bytes(32)
+    secret_key.buffer = buffer
 
     with pytest.raises(CannotSignError):
         secret_key.sign(b"hello")

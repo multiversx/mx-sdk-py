@@ -41,6 +41,10 @@ class PemEntry:
         if DELIMITER in self.label or "".join(self.label.splitlines()) != self.label:
             raise InvalidPemError(f"the label must not contain line breaks or '{DELIMITER}'")
 
+        # Such labels would not survive a save / load cycle: when parsing, the trailing dashes and the surrounding whitespace are dropped.
+        if self.label != self.label.strip() or self.label.endswith("-"):
+            raise InvalidPemError("the label must not start or end with whitespace, nor end with '-'")
+
         header = f"-----BEGIN PRIVATE KEY for {self.label}-----"
         footer = f"-----END PRIVATE KEY for {self.label}-----"
 

@@ -173,3 +173,19 @@ def test_from_text_all_with_shorter_trailing_delimiter():
 def test_to_text_with_label_breaking_the_structure(label: str):
     with pytest.raises(InvalidPemError, match="the label must not contain line breaks"):
         PemEntry(label, bytes(32)).to_text()
+
+
+@pytest.mark.parametrize("label", ["my-key-", "foo---", "foo -", " foo", "foo ", " foo ", "foo\t", "\u00a0foo"])
+def test_to_text_with_label_not_surviving_a_save_and_load_cycle(label: str):
+    # When parsing, the trailing dashes and the surrounding whitespace are dropped, so such labels would be altered on reload.
+    with pytest.raises(InvalidPemError, match="the label must not start or end with whitespace, nor end with '-'"):
+        PemEntry(label, bytes(32)).to_text()
+
+
+@pytest.mark.parametrize("label", ["", "foo", "-foo", "my-key-label", "foo bar", "foo - bar", "foo--bar"])
+def test_to_text_then_from_text_all_preserves_label(label: str):
+    entries = PemEntry.from_text_all(PemEntry(label, bytes(32)).to_text())
+
+    assert len(entries) == 1
+    assert entries[0].label == label
+    assert entries[0].message == bytes(32)

@@ -319,6 +319,18 @@ def test_user_signer_from_wallet_with_invalid_address_index(address_index: int):
         UserSigner.from_wallet(keystore_path, "password", address_index)
 
 
+@pytest.mark.parametrize("address_index", [False, 0.0, "", [], True, 1.0, "0"])
+def test_load_from_wallet_with_address_index_of_wrong_type(address_index: Any):
+    # Previously, falsy values (e.g. False, 0.0) were silently taken as "no index", thus the first account was loaded.
+    keystore_path = testwallets / "withDummyMnemonic.json"
+
+    with pytest.raises(InvalidAddressIndexError):
+        UserWallet.load_secret_key(keystore_path, "password", address_index)
+
+    with pytest.raises(InvalidAddressIndexError):
+        UserSigner.from_wallet(keystore_path, "password", address_index)
+
+
 def test_decrypt_secret_key_with_keystore_mnemonic():
     user_wallet = UserWallet.from_mnemonic(DUMMY_MNEMONIC, "")
     mnemonic_json = user_wallet.to_dict()

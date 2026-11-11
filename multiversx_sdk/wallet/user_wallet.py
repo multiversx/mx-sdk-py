@@ -144,7 +144,8 @@ class UserWallet:
             secret_key = cls.decrypt_secret_key(key_file_object, password)
         elif kind == UserWalletKind.MNEMONIC.value:
             mnemonic = cls.decrypt_mnemonic(key_file_object, password)
-            secret_key = mnemonic.derive_key(address_index or 0)
+            # Only a missing index defaults to 0. Other falsy values (e.g. False, 0.0) are not valid indices: they get rejected upon derivation.
+            secret_key = mnemonic.derive_key(0 if address_index is None else address_index)
         else:
             raise Exception(f"Unknown kind: {kind}")
 
