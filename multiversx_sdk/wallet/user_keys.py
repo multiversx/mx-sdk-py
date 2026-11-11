@@ -1,5 +1,6 @@
+import hmac
 import logging
-from typing import Optional
+from typing import Optional, Union
 
 import nacl.signing
 from nacl.exceptions import CryptoError
@@ -15,11 +16,16 @@ logger = logging.getLogger("user_keys")
 
 
 class UserSecretKey:
-    def __init__(self, buffer: bytes) -> None:
+    def __init__(self, buffer: Union[bytes, bytearray]) -> None:
+        # Otherwise, e.g. a 32-characters string would be accepted here, but fail later, when used.
+        if not isinstance(buffer, (bytes, bytearray)):
+            raise TypeError(f"The secret key must be bytes, not {type(buffer).__name__}")
+
         if len(buffer) != USER_SEED_LENGTH:
             raise InvalidSecretKeyLengthError()
 
-        self.buffer = buffer
+        # Copy, so that the key can't be altered through the buffer received from the caller (e.g. a "bytearray").
+        self.buffer = bytes(buffer)
 
     @classmethod
     def generate(cls) -> "UserSecretKey":
@@ -58,7 +64,8 @@ class UserSecretKey:
         if not isinstance(value, UserSecretKey):
             return False
 
-        return self.buffer == value.buffer
+        # Constant-time comparison, so that the timing does not reveal how many leading bytes match.
+        return hmac.compare_digest(self.buffer, value.buffer)
 
 
 class UserPublicKey:

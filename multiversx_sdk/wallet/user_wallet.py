@@ -4,7 +4,11 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from multiversx_sdk.core.address import Address
+from multiversx_sdk.core.errors import BadAddressError, BadPubkeyLengthError
+from multiversx_sdk.wallet.constants import USER_PUBKEY_LENGTH, USER_SEED_LENGTH
 from multiversx_sdk.wallet.crypto import EncryptedData, Randomness, decryptor, encryptor
+from multiversx_sdk.wallet.errors import InvalidKeystoreFileError
 from multiversx_sdk.wallet.interfaces import IRandomness
 from multiversx_sdk.wallet.mnemonic import Mnemonic
 from multiversx_sdk.wallet.user_keys import UserPublicKey, UserSecretKey
@@ -52,8 +56,8 @@ class UserWallet:
     def from_mnemonic(cls, mnemonic: str, password: str, randomness: Union[IRandomness, None] = None) -> "UserWallet":
         randomness = randomness or Randomness()
 
-        Mnemonic.assert_text_is_valid(mnemonic)
-        data = mnemonic.encode()
+        # Encrypt the canonical (NFKD-normalized) text, so that all SDKs derive the same keys from the keystore.
+        data = Mnemonic(mnemonic).get_text().encode()
         encrypted_data = encryptor.encrypt(data, password, randomness)
 
         return cls(kind=UserWalletKind.MNEMONIC.value, encrypted_data=encrypted_data)
@@ -65,11 +69,50 @@ class UserWallet:
         if kind and kind != UserWalletKind.SECRET_KEY.value:
             raise Exception(f"Expected kind to be {UserWalletKind.SECRET_KEY.value}, but it was {kind}")
 
+        address_hex = keyfile_object.get("address")
+        address_bech32 = keyfile_object.get("bech32")
+        if not isinstance(address_hex, str) or not isinstance(address_bech32, str):
+            raise InvalidKeystoreFileError("missing 'address' or 'bech32' field")
+
         encrypted_data = EncryptedData.from_keyfile_object(keyfile_object)
         buffer = decryptor.decrypt(encrypted_data, password)
-        buffer = buffer.rjust(32, b"\x00")
-        seed = buffer[:32]
-        return UserSecretKey(seed)
+
+        # The plaintext holds the secret key, optionally followed by the public key.
+        if len(buffer) not in [USER_SEED_LENGTH, USER_SEED_LENGTH + USER_PUBKEY_LENGTH]:
+            raise InvalidKeystoreFileError(f"unexpected length of decrypted data: {len(buffer)}")
+
+        secret_key = UserSecretKey(buffer[:USER_SEED_LENGTH])
+        public_key = secret_key.generate_public_key().buffer
+
+        # The MAC covers the ciphertext, but not the IV: a damaged or tampered file can decrypt to a different, valid-looking key.
+        # Thus, we make sure we've recovered the very account recorded in the file (as mx-sdk-go does, as well).
+        embedded_public_key = buffer[USER_SEED_LENGTH:]
+        if embedded_public_key and embedded_public_key != public_key:
+            raise InvalidKeystoreFileError("the embedded public key does not match the secret key")
+
+        if cls._get_public_key_from_hex(address_hex) != public_key:
+            raise InvalidKeystoreFileError("the 'address' field does not match the secret key")
+
+        if cls._get_public_key_from_bech32(address_bech32) != public_key:
+            raise InvalidKeystoreFileError("the 'bech32' field does not match the secret key")
+
+        return secret_key
+
+    @classmethod
+    def _get_public_key_from_hex(cls, value: str) -> bytes:
+        # Compared as bytes, so that the case of the hex digits does not matter (e.g. uppercase hex is valid, as well).
+        try:
+            return bytes.fromhex(value)
+        except ValueError:
+            return b""
+
+    @classmethod
+    def _get_public_key_from_bech32(cls, value: str) -> bytes:
+        # The HRP isn't checked, so that keystores saved with a custom HRP can be loaded, as well.
+        try:
+            return Address.new_from_bech32(value).get_public_key()
+        except (BadAddressError, BadPubkeyLengthError):
+            return b""
 
     @classmethod
     def decrypt_mnemonic(cls, keyfile_object: dict[str, Any], password: str) -> Mnemonic:
@@ -101,7 +144,8 @@ class UserWallet:
             secret_key = cls.decrypt_secret_key(key_file_object, password)
         elif kind == UserWalletKind.MNEMONIC.value:
             mnemonic = cls.decrypt_mnemonic(key_file_object, password)
-            secret_key = mnemonic.derive_key(address_index or 0)
+            # Only a missing index defaults to 0. Other falsy values (e.g. False, 0.0) are not valid indices: they get rejected upon derivation.
+            secret_key = mnemonic.derive_key(0 if address_index is None else address_index)
         else:
             raise Exception(f"Unknown kind: {kind}")
 
