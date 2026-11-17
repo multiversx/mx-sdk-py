@@ -1,6 +1,6 @@
 import base64
 import json
-from http.client import NOT_FOUND, OK
+from http.client import FORBIDDEN, NOT_FOUND
 from typing import Optional, Union
 
 import requests
@@ -156,33 +156,39 @@ class NativeAuthServer:
             if is_valid:
                 return impersonate_address
 
-        return None
+        # impersonation was requested, but it could not be validated: the token is rejected
+        raise NativeAuthInvalidImpersonateError()
 
     def _validate_impersonate_address_from_url(self, address: str, impersonate_address: str) -> str:
         cache_key = f"impersonate:{address}:{impersonate_address}"
 
         if self.cache:
             cached_value = self.cache.get(cache_key)
-            if cached_value == CACHE_VALUE_IMPERSONATED:
+            # the cache returns strings (see `NativeAuthCacheInterface`)
+            if cached_value is not None and str(cached_value) == str(CACHE_VALUE_IMPERSONATED):
                 return impersonate_address
 
         url = f"{self.config.validate_impersonate_url}/{address}/{impersonate_address}"
 
         try:
-            requests.get(url)
-
-            if self.cache:
-                self.cache.set(cache_key, CACHE_VALUE_IMPERSONATED, ONE_HOUR_IN_SECONDS)
-
-            return impersonate_address
-        except requests.exceptions.RequestException as ex:
-            if ex.response and ex.response.status_code != OK:
-                if self.cache:
-                    self.cache.set(cache_key, CACHE_VALUE_NOT_IMPERSONATED, ONE_HOUR_IN_SECONDS)
-
+            response = requests.get(url)
+        except requests.exceptions.RequestException:
             raise NativeAuthInvalidImpersonateError()
-        except Exception as ex:
-            raise ex
+
+        # `requests` does not raise on error statuses;
+        # only a success (2xx) response means that the impersonation is allowed
+        if response.status_code == FORBIDDEN:
+            if self.cache:
+                self.cache.set(cache_key, CACHE_VALUE_NOT_IMPERSONATED, ONE_HOUR_IN_SECONDS)
+            raise NativeAuthInvalidImpersonateError()
+
+        if not 200 <= response.status_code < 300:
+            raise NativeAuthInvalidImpersonateError()
+
+        if self.cache:
+            self.cache.set(cache_key, CACHE_VALUE_IMPERSONATED, ONE_HOUR_IN_SECONDS)
+
+        return impersonate_address
 
     def _verify_signature(self, address: Address, message: str, signature: bytes) -> bool:
         if self.config.verify_signature:
