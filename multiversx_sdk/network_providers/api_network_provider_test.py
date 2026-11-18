@@ -369,8 +369,11 @@ class TestApi:
 
         def condition(tx: TransactionOnNetwork) -> bool:
             hash = tx.hash.hex()
-            response = self.api.do_get_generic(f"transaction/{hash}/process-status")
-            return response.get("data", {}).get("status") == "fail"
+            try:
+                response = self.api.do_get_generic(f"transaction/{hash}/process-status")
+                return response.get("data", {}).get("status") == "fail"
+            except:
+                return False
 
         hash = self.api.send_transaction(transaction)
 

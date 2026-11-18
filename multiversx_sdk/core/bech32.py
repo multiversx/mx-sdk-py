@@ -57,6 +57,7 @@ def bech32_create_checksum(hrp: str, data: List[int]):
 
 def bech32_encode(hrp: str, data: List[int]):
     """Compute a Bech32 string given HRP and data values."""
+    hrp = hrp.lower()
     combined = data + bech32_create_checksum(hrp, data)
     return hrp + "1" + "".join([CHARSET[d] for d in combined])
 

@@ -1,5 +1,4 @@
 import base64
-import binascii
 import textwrap
 
 from multiversx_sdk.wallet.errors import InvalidPemError
@@ -109,6 +108,6 @@ def _decode_message(message_base64: str) -> bytes:
     try:
         message_hex = base64.b64decode(message_base64, validate=True).decode()
         return bytes.fromhex(message_hex)
-    except (binascii.Error, ValueError):
+    except ValueError:
         # The underlying error is not chained, since its message could reveal bits of the (secret) content.
         raise InvalidPemError("the content of an entry is not properly encoded") from None

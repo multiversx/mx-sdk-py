@@ -481,12 +481,14 @@ def test_decrypt_secret_key_holding_only_the_secret_key():
     assert secret_key.hex() == ALICE_SECRET_KEY
 
 
-def test_decrypt_secret_key_with_custom_hrp():
+@pytest.mark.parametrize("hrp", ["test", "TEST", "TeSt"])
+def test_save_and_load_secret_key_with_custom_hrp(tmp_path: Path, hrp: str):
     secret_key = UserSecretKey.new_from_string(ALICE_SECRET_KEY)
-    keyfile_object = UserWallet.from_secret_key(secret_key, "password").to_dict("test")
-    assert keyfile_object["bech32"].startswith("test1")
+    path = tmp_path / "wallet.json"
+    UserWallet.from_secret_key(secret_key, "password").save(path, address_hrp=hrp)
 
-    assert UserWallet.decrypt_secret_key(keyfile_object, "password").hex() == ALICE_SECRET_KEY
+    assert json.loads(path.read_text())["bech32"].startswith("test1")
+    assert UserWallet.load_secret_key(path, "password").hex() == ALICE_SECRET_KEY
 
 
 def test_load_user_pem_with_wrong_embedded_public_key():
