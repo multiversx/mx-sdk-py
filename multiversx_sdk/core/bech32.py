@@ -24,6 +24,7 @@
 from typing import List, Union
 
 CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
+MAX_BECH32_LENGTH = 90
 
 
 def bech32_polymod(values: List[int]):
@@ -58,6 +59,8 @@ def bech32_create_checksum(hrp: str, data: List[int]):
 def bech32_encode(hrp: str, data: List[int]):
     """Compute a Bech32 string given HRP and data values."""
     hrp = hrp.lower()
+    if len(hrp) + 1 + len(data) + 6 > MAX_BECH32_LENGTH:
+        raise ValueError(f"Bech32 string exceeds {MAX_BECH32_LENGTH} characters")
     combined = data + bech32_create_checksum(hrp, data)
     return hrp + "1" + "".join([CHARSET[d] for d in combined])
 
@@ -68,7 +71,7 @@ def bech32_decode(bech: str):
         return (None, None)
     bech = bech.lower()
     pos = bech.rfind("1")
-    if pos < 1 or pos + 7 > len(bech) or len(bech) > 90:
+    if pos < 1 or pos + 7 > len(bech) or len(bech) > MAX_BECH32_LENGTH:
         return (None, None)
     if not all(x in CHARSET for x in bech[pos + 1 :]):
         return (None, None)
@@ -124,7 +127,10 @@ def encode(hrp: str, witver: int, witprog: List[int]):
     converted = convertbits(witprog, 8, 5)
     if converted is None:
         return None
-    ret = bech32_encode(hrp, [witver] + converted)
+    try:
+        ret = bech32_encode(hrp, [witver] + converted)
+    except ValueError:
+        return None
     if decode(hrp, ret) == (None, None):
         return None
     return ret

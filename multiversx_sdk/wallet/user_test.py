@@ -491,6 +491,20 @@ def test_save_and_load_secret_key_with_custom_hrp(tmp_path: Path, hrp: str):
     assert UserWallet.load_secret_key(path, "password").hex() == ALICE_SECRET_KEY
 
 
+def test_save_secret_key_at_bech32_length_limit(tmp_path: Path):
+    secret_key = UserSecretKey.new_from_string(ALICE_SECRET_KEY)
+    wallet = UserWallet.from_secret_key(secret_key, "password")
+    path = tmp_path / "wallet.json"
+    wallet.save(path, address_hrp="x" * 31)
+    backup = path.read_bytes()
+    assert len(json.loads(backup)["bech32"]) == 90
+    assert UserWallet.load_secret_key(path, "password").hex() == ALICE_SECRET_KEY
+
+    with pytest.raises(ValueError, match="90 characters"):
+        wallet.save(path, address_hrp="x" * 32)
+    assert path.read_bytes() == backup
+
+
 def test_load_user_pem_with_wrong_embedded_public_key():
     text = PemEntry(ALICE_BECH32, bytes.fromhex(ALICE_SECRET_KEY + BOB_HEX)).to_text()
 
