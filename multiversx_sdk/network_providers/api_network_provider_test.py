@@ -393,7 +393,7 @@ class TestApi:
             condition=self._process_status_is_fail,
             options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
         )
-        assert any(event.identifier == "signalError" for event in tx_on_network.logs.events)
+        assert tx_on_network.status.status == "fail"
 
     def test_get_token_of_account(self):
         address = Address.new_from_bech32("erd1487vz5m4zpxjyqw4flwa3xhnkzg4yrr3mkzf5sf0zgt94hjprc8qazcccl")

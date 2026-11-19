@@ -61,6 +61,8 @@ def bech32_encode(hrp: str, data: List[int]):
     hrp = hrp.lower()
     if len(hrp) + 1 + len(data) + 6 > MAX_BECH32_LENGTH:
         raise ValueError(f"Bech32 string exceeds {MAX_BECH32_LENGTH} characters")
+    if any(not 33 <= ord(char) <= 126 for char in hrp):
+        raise ValueError("Invalid Bech32 prefix")
     combined = data + bech32_create_checksum(hrp, data)
     return hrp + "1" + "".join([CHARSET[d] for d in combined])
 

@@ -491,6 +491,18 @@ def test_save_and_load_secret_key_with_custom_hrp(tmp_path: Path, hrp: str):
     assert UserWallet.load_secret_key(path, "password").hex() == ALICE_SECRET_KEY
 
 
+@pytest.mark.parametrize("hrp", ["bad hrp", "tést"])
+def test_save_secret_key_with_invalid_hrp_preserves_backup(tmp_path: Path, hrp: str):
+    wallet = UserWallet.from_secret_key(UserSecretKey.new_from_string(ALICE_SECRET_KEY), "password")
+    path = tmp_path / "wallet.json"
+    wallet.save(path)
+    backup = path.read_bytes()
+
+    with pytest.raises(ValueError, match="^Invalid Bech32 prefix$"):
+        wallet.save(path, address_hrp=hrp)
+    assert path.read_bytes() == backup
+
+
 def test_save_secret_key_at_bech32_length_limit(tmp_path: Path):
     secret_key = UserSecretKey.new_from_string(ALICE_SECRET_KEY)
     wallet = UserWallet.from_secret_key(secret_key, "password")
