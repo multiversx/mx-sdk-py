@@ -4,6 +4,7 @@ import platform
 from pathlib import Path
 from typing import Optional
 
+from multiversx_sdk.wallet.constants import VALIDATOR_SECRETKEY_LENGTH
 from multiversx_sdk.wallet.errors import LibraryNotFoundError, UnsupportedOSError
 
 
@@ -23,6 +24,9 @@ class BLSFacade:
         return private_key
 
     def generate_public_key(self, private_key: bytes) -> bytes:
+        if not self._is_private_key_safe(private_key):
+            return b""
+
         generate_public_key_function = self._get_library().generatePublicKey
 
         output = generate_public_key_function(private_key.hex().encode())
@@ -32,6 +36,9 @@ class BLSFacade:
         return public_key
 
     def compute_message_signature(self, message: bytes, private_key: bytes) -> bytes:
+        if not self._is_private_key_safe(private_key):
+            return b""
+
         compute_message_signature_function = self._get_library().computeMessageSignature
 
         output = compute_message_signature_function(message.hex().encode(), private_key.hex().encode())
@@ -50,6 +57,13 @@ class BLSFacade:
 
         output_int = ctypes.c_int(output)
         return output_int.value == 1
+
+    def _is_private_key_safe(self, private_key: bytes) -> bool:
+        # For an all-zero key, the native library panics (nil pointer dereference) and kills the whole process.
+        # Some builds of the library (e.g. "libbls.so") only read the first 32 bytes of the key and ignore the rest,
+        # so that longer keys starting with 32 zero bytes crash the process, as well (and other longer keys are accepted).
+        # Thus, such keys must never cross the FFI boundary. Callers return an empty result, as the library does for other errors.
+        return len(private_key) == VALIDATOR_SECRETKEY_LENGTH and any(private_key)
 
     def _get_library(self) -> ctypes.CDLL:
         if self._library is None:

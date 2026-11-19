@@ -61,6 +61,18 @@ def test_address_factory():
     )
 
 
+def test_uppercase_hrp_round_trip():
+    factory = AddressFactory("TEST")
+    pubkey = bytes(range(32))
+    address = factory.create_from_public_key(pubkey)
+    encoded = address.to_bech32()
+
+    assert address.get_hrp() == "test"
+    assert factory.create_from_bech32(encoded) == address
+    assert Address(pubkey, "TeSt") == Address.new_from_bech32(encoded)
+    assert is_valid_bech32(encoded, "TEST")
+
+
 def test_is_valid_bech32():
     assert is_valid_bech32("erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", "erd")
     assert is_valid_bech32("foo1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssunhpj4", "foo")
@@ -93,11 +105,12 @@ def test_compute_contract_address():
     assert contract_address.to_bech32() == "erd1qqqqqqqqqqqqqpgqde8eqjywyu6zlxjxuxqfg5kgtmn3setxh40qen8egy"
 
 
-def test_address_with_library_config_hrp():
+def test_address_with_library_config_hrp(monkeypatch: pytest.MonkeyPatch):
     address = Address(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
     assert address.to_bech32() == "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th"
 
-    LibraryConfig.default_address_hrp = "test"
+    monkeypatch.setattr(LibraryConfig, "default_address_hrp", "TEST")
     address = Address(bytes.fromhex("0139472eff6886771a982f3083da5d421f24c29181e63888228dc81ca60d69e1"))
     assert address.to_bech32() == "test1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ss5hqhtr"
-    LibraryConfig.default_address_hrp = "erd"
+    assert address.get_hrp() == Address.empty().get_hrp() == "test"
+    assert AddressFactory().create_from_bech32(address.to_bech32()) == address

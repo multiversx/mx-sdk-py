@@ -7,7 +7,7 @@ allow-direct-references = true
 
 [project]
 name = "multiversx-sdk"
-version = "3.0.1"
+version = "3.1.0"
 authors = [
   { name="MultiversX" },
 ]
@@ -23,7 +23,7 @@ classifiers = [
 dependencies = [
   "pycryptodomex==3.19.1",
   "protobuf==6.33.5",
-  "cryptography==48.0.1",
+  "cryptography==50.0.2",
   "pynacl==1.6.2",
   "mnemonic==0.21",
   "requests>=2.32.0,<3.0.0"
