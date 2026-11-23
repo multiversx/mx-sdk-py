@@ -747,6 +747,19 @@ class TestNativeAuthServer:
 
         assert cached[f"impersonate:{self.ADDRESS}:{self.MULTISIG_ADDRESS}"] == 0
 
+    def test_impersonate_redirect_is_rejected(self, mocker: Any):
+        cache = mocker.Mock()
+        cache.get.side_effect = lambda key: str(self.BLOCK_TIMESTAMP) if key.startswith("block:timestamp:") else None
+        get = mocker.patch("requests.get", return_value=mocker.Mock(status_code=302))
+        server = NativeAuthServer(self.default_config, cache)
+
+        with pytest.raises(NativeAuthInvalidImpersonateError):
+            server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+
+        url = f"{self.default_config.validate_impersonate_url}/{self.ADDRESS}/{self.MULTISIG_ADDRESS}"
+        get.assert_called_once_with(url, allow_redirects=False)
+        cache.set.assert_not_called()
+
     def test_impersonate_non_success_status(self, mocker: Any):
         cached: dict[str, int] = {}
 

@@ -171,7 +171,7 @@ class NativeAuthServer:
         url = f"{self.config.validate_impersonate_url}/{address}/{impersonate_address}"
 
         try:
-            response = requests.get(url)
+            response = requests.get(url, allow_redirects=False)
         except requests.exceptions.RequestException:
             raise NativeAuthInvalidImpersonateError()
 
