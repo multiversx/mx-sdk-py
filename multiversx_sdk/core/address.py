@@ -24,14 +24,14 @@ class Address:
         # used for creating an empty address
         if not len(pubkey):
             self.pubkey = bytes()
-            self.hrp = LibraryConfig.default_address_hrp
+            self.hrp = LibraryConfig.default_address_hrp.lower()
             return
 
         if len(pubkey) != PUBKEY_LENGTH:
             raise BadPubkeyLengthError(len(pubkey), PUBKEY_LENGTH)
 
         self.pubkey = bytes(pubkey)
-        self.hrp = hrp if hrp else LibraryConfig.default_address_hrp
+        self.hrp = (hrp or LibraryConfig.default_address_hrp).lower()
 
     @classmethod
     def empty(cls) -> "Address":
@@ -110,7 +110,7 @@ class AddressFactory:
 
         Args:
             hrp (str): the human readable part of the address (default: erd)"""
-        self.hrp = hrp if hrp else LibraryConfig.default_address_hrp
+        self.hrp = (hrp or LibraryConfig.default_address_hrp).lower()
 
     def create_from_bech32(self, value: str) -> Address:
         """Creates an address object from the bech32 representation of an address"""
@@ -171,7 +171,7 @@ class AddressComputer:
 
 def is_valid_bech32(value: str, expected_hrp: str) -> bool:
     hrp, value_bytes = bech32.bech32_decode(value)
-    return hrp == expected_hrp and value_bytes is not None
+    return hrp == expected_hrp.lower() and value_bytes is not None
 
 
 def _decode_bech32(value: str) -> tuple[str, bytes]:

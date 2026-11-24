@@ -1,14 +1,18 @@
+import unicodedata
+
 import mnemonic
 
 from multiversx_sdk.wallet import core
 from multiversx_sdk.wallet.constants import BIP39_LANGUAGE, BIP39_STRENGTH
-from multiversx_sdk.wallet.errors import InvalidAddressIndexError, InvalidMnemonicError
+from multiversx_sdk.wallet.errors import InvalidMnemonicError
 from multiversx_sdk.wallet.user_keys import UserSecretKey
 
 
 class Mnemonic:
     def __init__(self, text: str) -> None:
-        text = text.strip()
+        # Store the canonical (NFKD-normalized) form, as required by BIP-39.
+        # E.g. non-breaking or ideographic spaces become regular spaces, fullwidth letters become ASCII.
+        text = unicodedata.normalize("NFKD", text).strip()
         self.assert_text_is_valid(text)
         self.text = text
 
@@ -32,9 +36,7 @@ class Mnemonic:
         return cls(text)
 
     def derive_key(self, address_index: int = 0) -> UserSecretKey:
-        if address_index < 0:
-            raise InvalidAddressIndexError(address_index)
-
+        # The address index is validated by "core" (it must be an integer, with 0 <= index < 2^31).
         secret_key = core.derive_keys(self.text, address_index)
         return UserSecretKey(secret_key)
 

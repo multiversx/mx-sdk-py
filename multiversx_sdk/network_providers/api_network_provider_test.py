@@ -12,6 +12,7 @@ from multiversx_sdk.core import (
 from multiversx_sdk.network_providers.api_network_provider import ApiNetworkProvider
 from multiversx_sdk.network_providers.config import NetworkProviderConfig
 from multiversx_sdk.network_providers.constants import BASE_USER_AGENT
+from multiversx_sdk.network_providers.errors import NetworkProviderError
 from multiversx_sdk.network_providers.http_resources import account_from_api_response
 from multiversx_sdk.network_providers.resources import (
     AwaitingOptions,
@@ -328,7 +329,28 @@ class TestApi:
             transaction_hash=hash,
             options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
         )
-        assert not tx_on_network.status.is_successful
+        assert tx_on_network.status.is_completed
+
+        self.api.await_transaction_on_condition(
+            transaction_hash=hash,
+            condition=self._process_status_is_fail,
+            options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
+        )
+
+    def _process_status_is_fail(self, tx: TransactionOnNetwork) -> bool:
+        try:
+            response = self.api.do_get_generic(f"transaction/{tx.hash.hex()}/process-status")
+        except NetworkProviderError as err:
+            cause = err.__context__
+            if (
+                isinstance(cause, requests.HTTPError)
+                and cause.response is not None
+                and cause.response.status_code == 400
+            ):
+                return False
+            raise
+
+        return response.get("data", {}).get("status") == "fail"
 
     def test_send_and_await_transaction_on_condition(self):
         alice = load_wallets()["alice"]
@@ -364,14 +386,11 @@ class TestApi:
         transaction.nonce = nonce + 1
         transaction.signature = alice.secret_key.sign(tx_computer.compute_bytes_for_signing(transaction))
 
-        def condition(tx: TransactionOnNetwork) -> bool:
-            return tx.status.status == "fail"
-
         hash = self.api.send_transaction(transaction)
 
         tx_on_network = self.api.await_transaction_on_condition(
             transaction_hash=hash,
-            condition=condition,
+            condition=self._process_status_is_fail,
             options=AwaitingOptions(polling_interval_in_milliseconds=600, timeout_in_milliseconds=20000),
         )
         assert tx_on_network.status.status == "fail"
