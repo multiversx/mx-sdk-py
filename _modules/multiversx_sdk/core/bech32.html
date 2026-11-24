@@ -95,6 +95,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="n">CHARSET</span> <span class="o">=</span> <span class="s2">"qpzry9x8gf2tvdw0s3jn54khce6mua7l"</span>
+<span class="n">MAX_BECH32_LENGTH</span> <span class="o">=</span> <span class="mi">90</span>
 
 
 <div class="viewcode-block" id="bech32_polymod">
@@ -142,6 +143,11 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.core.bech32.bech32_encode">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">bech32_encode</span><span class="p">(</span><span class="n">hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""Compute a Bech32 string given HRP and data values."""</span>
+    <span class="n">hrp</span> <span class="o">=</span> <span class="n">hrp</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hrp</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">&gt;</span> <span class="n">MAX_BECH32_LENGTH</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Bech32 string exceeds </span><span class="si">{</span><span class="n">MAX_BECH32_LENGTH</span><span class="si">}</span><span class="s2"> characters"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="ow">not</span> <span class="mi">33</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">126</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">hrp</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Invalid Bech32 prefix"</span><span class="p">)</span>
     <span class="n">combined</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="n">bech32_create_checksum</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">hrp</span> <span class="o">+</span> <span class="s2">"1"</span> <span class="o">+</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">CHARSET</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">combined</span><span class="p">])</span></div>
 
@@ -155,7 +161,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">bech</span> <span class="o">=</span> <span class="n">bech</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="n">bech</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">"1"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bech</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">bech</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bech</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">bech</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_BECH32_LENGTH</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">CHARSET</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bech</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]):</span>
         <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -220,7 +226,10 @@
     <span class="n">converted</span> <span class="o">=</span> <span class="n">convertbits</span><span class="p">(</span><span class="n">witprog</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">converted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">ret</span> <span class="o">=</span> <span class="n">bech32_encode</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="p">[</span><span class="n">witver</span><span class="p">]</span> <span class="o">+</span> <span class="n">converted</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">bech32_encode</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="p">[</span><span class="n">witver</span><span class="p">]</span> <span class="o">+</span> <span class="n">converted</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">decode</span><span class="p">(</span><span class="n">hrp</span><span class="p">,</span> <span class="n">ret</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">ret</span></div>

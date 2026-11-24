@@ -70,8 +70,13 @@
              
   <h1>Source code for multiversx_sdk.wallet.pem_entry</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidPemError</span>
+
+<span class="n">HEADER_PREFIX</span> <span class="o">=</span> <span class="s2">"-----BEGIN PRIVATE KEY for"</span>
+<span class="n">FOOTER_PREFIX</span> <span class="o">=</span> <span class="s2">"-----END PRIVATE KEY for"</span>
+<span class="n">DELIMITER</span> <span class="o">=</span> <span class="s2">"-----"</span>
 
 
 <div class="viewcode-block" id="PemEntry">
@@ -88,21 +93,19 @@
         <span class="n">lines</span> <span class="o">=</span> <span class="n">pem_text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">_clean_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
-        <span class="n">messages_lines</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="nb">list</span><span class="p">(</span><span class="n">message_lines</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">is_next_entry</span><span class="p">,</span> <span class="n">message_lines</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="s2">"-----"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_next_entry</span>
-        <span class="p">]</span>
-        <span class="n">messages_base64</span> <span class="o">=</span> <span class="p">[</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">message_lines</span><span class="p">)</span> <span class="k">for</span> <span class="n">message_lines</span> <span class="ow">in</span> <span class="n">messages_lines</span><span class="p">]</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="n">_parse_labels</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-
         <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">PemEntry</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">message_base64</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">messages_base64</span><span class="p">):</span>
-            <span class="n">message_hex</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_base64</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-            <span class="n">message_bytes</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">message_hex</span><span class="p">)</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="c1"># Each entry is parsed on its own (header, message lines, footer), so that labels can't be paired with the wrong messages.</span>
+        <span class="k">for</span> <span class="n">header</span><span class="p">,</span> <span class="n">message_lines</span><span class="p">,</span> <span class="n">footer</span> <span class="ow">in</span> <span class="n">_group_blocks</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">_parse_label</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">HEADER_PREFIX</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_parse_label</span><span class="p">(</span><span class="n">footer</span><span class="p">,</span> <span class="n">FOOTER_PREFIX</span><span class="p">)</span> <span class="o">!=</span> <span class="n">label</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"the END line does not match the BEGIN line"</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">message_lines</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"an entry has no content"</span><span class="p">)</span>
+
+            <span class="n">message_base64</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">message_lines</span><span class="p">)</span>
+            <span class="n">message_bytes</span> <span class="o">=</span> <span class="n">_decode_message</span><span class="p">(</span><span class="n">message_base64</span><span class="p">)</span>
             <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">message_bytes</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
@@ -111,6 +114,14 @@
 <div class="viewcode-block" id="PemEntry.to_text">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.pem_entry.PemEntry.to_text">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># Such labels would break the structure of the file.</span>
+        <span class="k">if</span> <span class="n">DELIMITER</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">or</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"the label must not contain line breaks or '</span><span class="si">{</span><span class="n">DELIMITER</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+
+        <span class="c1"># Such labels would not survive a save / load cycle: when parsing, the trailing dashes and the surrounding whitespace are dropped.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"-"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"the label must not start or end with whitespace, nor end with '-'"</span><span class="p">)</span>
+
         <span class="n">header</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"-----BEGIN PRIVATE KEY for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">-----"</span>
         <span class="n">footer</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"-----END PRIVATE KEY for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">-----"</span>
 
@@ -125,17 +136,64 @@
 
 
 
+<div class="viewcode-block" id="assert_index_is_valid">
+<a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.pem_entry.assert_index_is_valid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">assert_index_is_valid</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">number_of_entries</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># Negative indices are rejected, as well, since they would silently select entries from the end (hiding off-by-one errors).</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="n">number_of_entries</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PEM entry index </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2"> is out of range (number of entries: </span><span class="si">{</span><span class="n">number_of_entries</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span></div>
+
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_clean_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">lines</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">lines</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_parse_labels</span><span class="p">(</span><span class="n">headers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="n">marker</span> <span class="o">=</span> <span class="s2">"-----BEGIN PRIVATE KEY for"</span>
-    <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">headers</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">marker</span><span class="p">)]</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">marker</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">labels</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_group_blocks</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]:</span>
+    <span class="n">blocks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">message_lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">HEADER_PREFIX</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"missing END line"</span><span class="p">)</span>
+
+            <span class="n">header</span> <span class="o">=</span> <span class="n">line</span>
+            <span class="n">message_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">FOOTER_PREFIX</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"missing BEGIN line"</span><span class="p">)</span>
+
+            <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">header</span><span class="p">,</span> <span class="n">message_lines</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">header</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># The content of the line is not included in the error message, since it could be secret.</span>
+            <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"unexpected line outside of an entry"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">header</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"missing END line"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">blocks</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_label</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="c1"># Only the delimiters are removed, so that dashes within the label are kept.</span>
+    <span class="c1"># The trailing delimiter is handled leniently (e.g. "---" instead of "-----"), as before: such files exist in the wild.</span>
+    <span class="k">return</span> <span class="n">line</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="p">:]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"-"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_decode_message</span><span class="p">(</span><span class="n">message_base64</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">message_hex</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">message_base64</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">message_hex</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="c1"># The underlying error is not chained, since its message could reveal bits of the (secret) content.</span>
+        <span class="k">raise</span> <span class="n">InvalidPemError</span><span class="p">(</span><span class="s2">"the content of an entry is not properly encoded"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 </pre></div>
 
            </div>

@@ -97,14 +97,14 @@
         <span class="c1"># used for creating an empty address</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">pubkey</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pubkey</span><span class="p">)</span> <span class="o">!=</span> <span class="n">PUBKEY_LENGTH</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">BadPubkeyLengthError</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pubkey</span><span class="p">),</span> <span class="n">PUBKEY_LENGTH</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pubkey</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">pubkey</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">hrp</span> <span class="k">if</span> <span class="n">hrp</span> <span class="k">else</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="p">(</span><span class="n">hrp</span> <span class="ow">or</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Address.empty">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.Address.empty">[docs]</a>
@@ -213,7 +213,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            hrp (str): the human readable part of the address (default: erd)"""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="n">hrp</span> <span class="k">if</span> <span class="n">hrp</span> <span class="k">else</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hrp</span> <span class="o">=</span> <span class="p">(</span><span class="n">hrp</span> <span class="ow">or</span> <span class="n">LibraryConfig</span><span class="o">.</span><span class="n">default_address_hrp</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AddressFactory.create_from_bech32">
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.AddressFactory.create_from_bech32">[docs]</a>
@@ -295,7 +295,7 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.core.html#multiversx_sdk.is_valid_bech32">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_valid_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expected_hrp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">hrp</span><span class="p">,</span> <span class="n">value_bytes</span> <span class="o">=</span> <span class="n">bech32</span><span class="o">.</span><span class="n">bech32_decode</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">hrp</span> <span class="o">==</span> <span class="n">expected_hrp</span> <span class="ow">and</span> <span class="n">value_bytes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+    <span class="k">return</span> <span class="n">hrp</span> <span class="o">==</span> <span class="n">expected_hrp</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="n">value_bytes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
 
 

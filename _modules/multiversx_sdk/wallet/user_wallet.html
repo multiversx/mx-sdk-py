@@ -75,7 +75,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.address</span><span class="w"> </span><span class="kn">import</span> <span class="n">Address</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">BadAddressError</span><span class="p">,</span> <span class="n">BadPubkeyLengthError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">USER_PUBKEY_LENGTH</span><span class="p">,</span> <span class="n">USER_SEED_LENGTH</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.crypto</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncryptedData</span><span class="p">,</span> <span class="n">Randomness</span><span class="p">,</span> <span class="n">decryptor</span><span class="p">,</span> <span class="n">encryptor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidKeystoreFileError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IRandomness</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.mnemonic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mnemonic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.user_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserPublicKey</span><span class="p">,</span> <span class="n">UserSecretKey</span>
@@ -133,8 +137,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">from_mnemonic</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">randomness</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">IRandomness</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"UserWallet"</span><span class="p">:</span>
         <span class="n">randomness</span> <span class="o">=</span> <span class="n">randomness</span> <span class="ow">or</span> <span class="n">Randomness</span><span class="p">()</span>
 
-        <span class="n">Mnemonic</span><span class="o">.</span><span class="n">assert_text_is_valid</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="c1"># Encrypt the canonical (NFKD-normalized) text, so that all SDKs derive the same keys from the keystore.</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">Mnemonic</span><span class="p">(</span><span class="n">mnemonic</span><span class="p">)</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
         <span class="n">encrypted_data</span> <span class="o">=</span> <span class="n">encryptor</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">randomness</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="n">UserWalletKind</span><span class="o">.</span><span class="n">MNEMONIC</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">encrypted_data</span><span class="o">=</span><span class="n">encrypted_data</span><span class="p">)</span></div>
@@ -149,12 +153,51 @@
         <span class="k">if</span> <span class="n">kind</span> <span class="ow">and</span> <span class="n">kind</span> <span class="o">!=</span> <span class="n">UserWalletKind</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected kind to be </span><span class="si">{</span><span class="n">UserWalletKind</span><span class="o">.</span><span class="n">SECRET_KEY</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">, but it was </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
+        <span class="n">address_hex</span> <span class="o">=</span> <span class="n">keyfile_object</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"address"</span><span class="p">)</span>
+        <span class="n">address_bech32</span> <span class="o">=</span> <span class="n">keyfile_object</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"bech32"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_hex</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">address_bech32</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="s2">"missing 'address' or 'bech32' field"</span><span class="p">)</span>
+
         <span class="n">encrypted_data</span> <span class="o">=</span> <span class="n">EncryptedData</span><span class="o">.</span><span class="n">from_keyfile_object</span><span class="p">(</span><span class="n">keyfile_object</span><span class="p">)</span>
         <span class="n">buffer</span> <span class="o">=</span> <span class="n">decryptor</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_data</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-        <span class="n">buffer</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"</span><span class="se">\x00</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">seed</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[:</span><span class="mi">32</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">UserSecretKey</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
 
+        <span class="c1"># The plaintext holds the secret key, optionally followed by the public key.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">USER_SEED_LENGTH</span><span class="p">,</span> <span class="n">USER_SEED_LENGTH</span> <span class="o">+</span> <span class="n">USER_PUBKEY_LENGTH</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected length of decrypted data: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">secret_key</span> <span class="o">=</span> <span class="n">UserSecretKey</span><span class="p">(</span><span class="n">buffer</span><span class="p">[:</span><span class="n">USER_SEED_LENGTH</span><span class="p">])</span>
+        <span class="n">public_key</span> <span class="o">=</span> <span class="n">secret_key</span><span class="o">.</span><span class="n">generate_public_key</span><span class="p">()</span><span class="o">.</span><span class="n">buffer</span>
+
+        <span class="c1"># The MAC covers the ciphertext, but not the IV: a damaged or tampered file can decrypt to a different, valid-looking key.</span>
+        <span class="c1"># Thus, we make sure we've recovered the very account recorded in the file (as mx-sdk-go does, as well).</span>
+        <span class="n">embedded_public_key</span> <span class="o">=</span> <span class="n">buffer</span><span class="p">[</span><span class="n">USER_SEED_LENGTH</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">embedded_public_key</span> <span class="ow">and</span> <span class="n">embedded_public_key</span> <span class="o">!=</span> <span class="n">public_key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="s2">"the embedded public key does not match the secret key"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_public_key_from_hex</span><span class="p">(</span><span class="n">address_hex</span><span class="p">)</span> <span class="o">!=</span> <span class="n">public_key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="s2">"the 'address' field does not match the secret key"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_public_key_from_bech32</span><span class="p">(</span><span class="n">address_bech32</span><span class="p">)</span> <span class="o">!=</span> <span class="n">public_key</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="s2">"the 'bech32' field does not match the secret key"</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">secret_key</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_public_key_from_hex</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="c1"># Compared as bytes, so that the case of the hex digits does not matter (e.g. uppercase hex is valid, as well).</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">""</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_public_key_from_bech32</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="c1"># The HRP isn't checked, so that keystores saved with a custom HRP can be loaded, as well.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Address</span><span class="o">.</span><span class="n">new_from_bech32</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">get_public_key</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">BadAddressError</span><span class="p">,</span> <span class="n">BadPubkeyLengthError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">""</span>
 
 <div class="viewcode-block" id="UserWallet.decrypt_mnemonic">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.UserWallet.decrypt_mnemonic">[docs]</a>
@@ -191,7 +234,8 @@
             <span class="n">secret_key</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">decrypt_secret_key</span><span class="p">(</span><span class="n">key_file_object</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="n">UserWalletKind</span><span class="o">.</span><span class="n">MNEMONIC</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
             <span class="n">mnemonic</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">decrypt_mnemonic</span><span class="p">(</span><span class="n">key_file_object</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-            <span class="n">secret_key</span> <span class="o">=</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">derive_key</span><span class="p">(</span><span class="n">address_index</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># Only a missing index defaults to 0. Other falsy values (e.g. False, 0.0) are not valid indices: they get rejected upon derivation.</span>
+            <span class="n">secret_key</span> <span class="o">=</span> <span class="n">mnemonic</span><span class="o">.</span><span class="n">derive_key</span><span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="n">address_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">address_index</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown kind: </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 

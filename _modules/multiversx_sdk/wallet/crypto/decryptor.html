@@ -69,7 +69,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.wallet.crypto.decryptor</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.backends</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_backend</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidSignature</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.backends</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_backend</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">hashes</span><span class="p">,</span> <span class="n">hmac</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.ciphers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cipher</span><span class="p">,</span> <span class="n">algorithms</span><span class="p">,</span> <span class="n">modes</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.kdf.scrypt</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scrypt</span>
@@ -77,9 +78,18 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.crypto.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CIPHER_ALGORITHM_AES_128_CTR</span><span class="p">,</span>
     <span class="n">KEY_DERIVATION_FUNCTION_SCRYPT</span><span class="p">,</span>
+    <span class="n">RANDOM_IV_LENGTH</span><span class="p">,</span>
+    <span class="n">SCRYPT_DKLEN</span><span class="p">,</span>
+    <span class="n">SCRYPT_MAX_N</span><span class="p">,</span>
+    <span class="n">SCRYPT_MAX_P</span><span class="p">,</span>
+    <span class="n">SCRYPT_MAX_R</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.crypto.encrypted_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">EncryptedData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.crypto.encrypted_data</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EncryptedData</span><span class="p">,</span>
+    <span class="n">KeyDerivationParams</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.errors</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InvalidKeystoreFileError</span><span class="p">,</span>
     <span class="n">InvalidKeystoreFilePasswordError</span><span class="p">,</span>
     <span class="n">UnknownCipherError</span><span class="p">,</span>
     <span class="n">UnknownDerivationFunctionError</span><span class="p">,</span>
@@ -100,9 +110,15 @@
     <span class="k">if</span> <span class="n">encrypted_data</span><span class="o">.</span><span class="n">cipher</span> <span class="o">!=</span> <span class="n">CIPHER_ALGORITHM_AES_128_CTR</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">UnknownCipherError</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">cipher</span><span class="p">)</span>
 
+    <span class="c1"># The parameters come from the (possibly untrusted) file, and the key derivation runs before the MAC check.</span>
+    <span class="n">_validate_key_derivation_params</span><span class="p">(</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">kdfparams</span><span class="p">)</span>
+
     <span class="n">salt</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">salt</span><span class="p">)</span>
     <span class="n">iv</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">iv</span><span class="p">)</span>
     <span class="n">ciphertext</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">ciphertext</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span> <span class="o">!=</span> <span class="n">RANDOM_IV_LENGTH</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unexpected length of IV: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">iv</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">kdf</span> <span class="o">=</span> <span class="n">Scrypt</span><span class="p">(</span>
         <span class="n">salt</span><span class="o">=</span><span class="n">salt</span><span class="p">,</span>
@@ -119,11 +135,13 @@
 
     <span class="n">h</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">HMAC</span><span class="p">(</span><span class="n">derived_key_second_half</span><span class="p">,</span> <span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
     <span class="n">h</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span>
-    <span class="n">computed_mac</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
     <span class="n">actual_mac</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">encrypted_data</span><span class="o">.</span><span class="n">mac</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">computed_mac</span> <span class="o">!=</span> <span class="n">actual_mac</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">InvalidKeystoreFilePasswordError</span><span class="p">()</span>
+    <span class="c1"># "verify" compares in constant time (the "hmac" module of "cryptography" has no "compare_digest").</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">h</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">actual_mac</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">InvalidSignature</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidKeystoreFilePasswordError</span><span class="p">()</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 
     <span class="n">cipher</span> <span class="o">=</span> <span class="n">Cipher</span><span class="p">(</span><span class="n">algorithms</span><span class="o">.</span><span class="n">AES</span><span class="p">(</span><span class="n">derived_key_first_half</span><span class="p">),</span> <span class="n">modes</span><span class="o">.</span><span class="n">CTR</span><span class="p">(</span><span class="n">iv</span><span class="p">),</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
     <span class="n">decryptor</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">decryptor</span><span class="p">()</span>
@@ -131,6 +149,28 @@
 
     <span class="k">return</span> <span class="n">data</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_key_derivation_params</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">KeyDerivationParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">dklen</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">params</span><span class="o">.</span><span class="n">dklen</span>
+
+    <span class="c1"># "type() is int" also rejects booleans.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">dklen</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="s2">"scrypt parameters must be integers"</span><span class="p">)</span>
+
+    <span class="c1"># "n" must be a power of 2.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="n">SCRYPT_MAX_N</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unsupported scrypt parameter: n = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">SCRYPT_MAX_R</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unsupported scrypt parameter: r = </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="n">SCRYPT_MAX_P</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unsupported scrypt parameter: p = </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="c1"># A shorter derived key would shorten (or empty) the MAC key, so that a wrong password would go undetected.</span>
+    <span class="k">if</span> <span class="n">dklen</span> <span class="o">!=</span> <span class="n">SCRYPT_DKLEN</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidKeystoreFileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unsupported scrypt parameter: dklen = </span><span class="si">{</span><span class="n">dklen</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 
            </div>

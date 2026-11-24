@@ -71,7 +71,7 @@
   <h1>Source code for multiversx_sdk.native_auth.native_auth_server</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">http.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">NOT_FOUND</span><span class="p">,</span> <span class="n">OK</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">http.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">FORBIDDEN</span><span class="p">,</span> <span class="n">NOT_FOUND</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
@@ -238,33 +238,39 @@
             <span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">impersonate_address</span>
 
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="c1"># impersonation was requested, but it could not be validated: the token is rejected</span>
+        <span class="k">raise</span> <span class="n">NativeAuthInvalidImpersonateError</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_impersonate_address_from_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">impersonate_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">cache_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"impersonate:</span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">impersonate_address</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
             <span class="n">cached_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">cached_value</span> <span class="o">==</span> <span class="n">CACHE_VALUE_IMPERSONATED</span><span class="p">:</span>
+            <span class="c1"># the cache returns strings (see `NativeAuthCacheInterface`)</span>
+            <span class="k">if</span> <span class="n">cached_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">cached_value</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">CACHE_VALUE_IMPERSONATED</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">impersonate_address</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">validate_impersonate_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">address</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">impersonate_address</span><span class="si">}</span><span class="s2">"</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">CACHE_VALUE_IMPERSONATED</span><span class="p">,</span> <span class="n">ONE_HOUR_IN_SECONDS</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">impersonate_address</span>
-        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span> <span class="ow">and</span> <span class="n">ex</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">CACHE_VALUE_NOT_IMPERSONATED</span><span class="p">,</span> <span class="n">ONE_HOUR_IN_SECONDS</span><span class="p">)</span>
-
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NativeAuthInvalidImpersonateError</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ex</span>
+
+        <span class="c1"># `requests` does not raise on error statuses;</span>
+        <span class="c1"># only a success (2xx) response means that the impersonation is allowed</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">FORBIDDEN</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">CACHE_VALUE_NOT_IMPERSONATED</span><span class="p">,</span> <span class="n">ONE_HOUR_IN_SECONDS</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidImpersonateError</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="mi">200</span> <span class="o">&lt;=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">300</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NativeAuthInvalidImpersonateError</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">CACHE_VALUE_IMPERSONATED</span><span class="p">,</span> <span class="n">ONE_HOUR_IN_SECONDS</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">impersonate_address</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_verify_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verify_signature</span><span class="p">:</span>

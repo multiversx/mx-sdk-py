@@ -96,6 +96,23 @@
 
 
 
+<div class="viewcode-block" id="InvalidKeystoreFileError">
+<a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.errors.InvalidKeystoreFileError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidKeystoreFileError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid keystore file: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidPemError">
+<a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.errors.InvalidPemError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidPemError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="c1"># Subclass of "ValueError", for backwards compatibility (previously, malformed content raised "ValueError").</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid PEM: </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="CannotSignError">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.errors.CannotSignError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CannotSignError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -117,6 +134,14 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">InvalidSecretKeyLengthError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">"Bad length of secret key"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="InvalidSecretKeyError">
+<a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.wallet.errors.InvalidSecretKeyError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidSecretKeyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">"Invalid secret key"</span><span class="p">)</span></div>
 
 
 

@@ -69,11 +69,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for multiversx_sdk.wallet.mnemonic</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">mnemonic</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unicodedata</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">mnemonic</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet</span><span class="w"> </span><span class="kn">import</span> <span class="n">core</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">BIP39_LANGUAGE</span><span class="p">,</span> <span class="n">BIP39_STRENGTH</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidAddressIndexError</span><span class="p">,</span> <span class="n">InvalidMnemonicError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidMnemonicError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">multiversx_sdk.wallet.user_keys</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserSecretKey</span>
 
 
@@ -81,7 +83,9 @@
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.Mnemonic">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Mnemonic</span><span class="p">:</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="c1"># Store the canonical (NFKD-normalized) form, as required by BIP-39.</span>
+        <span class="c1"># E.g. non-breaking or ideographic spaces become regular spaces, fullwidth letters become ASCII.</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">"NFKD"</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assert_text_is_valid</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
 
@@ -119,9 +123,7 @@
 <div class="viewcode-block" id="Mnemonic.derive_key">
 <a class="viewcode-back" href="../../../multiversx_sdk.wallet.html#multiversx_sdk.Mnemonic.derive_key">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">derive_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">address_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserSecretKey</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">address_index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">InvalidAddressIndexError</span><span class="p">(</span><span class="n">address_index</span><span class="p">)</span>
-
+        <span class="c1"># The address index is validated by "core" (it must be an integer, with 0 &lt;= index &lt; 2^31).</span>
         <span class="n">secret_key</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">derive_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">address_index</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">UserSecretKey</span><span class="p">(</span><span class="n">secret_key</span><span class="p">)</span></div>
 
