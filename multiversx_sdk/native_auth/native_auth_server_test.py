@@ -715,6 +715,166 @@ class TestNativeAuthServer:
         assert result.expires == self.BLOCK_TIMESTAMP + self.TTL
         assert result.extra_info == {"impersonate": self.MULTISIG_ADDRESS}
 
+    def test_impersonate_forbidden(self, mocker: Any):
+        cached: dict[str, int] = {}
+
+        class NativeAuthCache:
+            def get(self, key: str) -> Optional[str]:
+                value = cached.get(key)
+                return str(value) if value is not None else None
+
+            def set(self, key: str, value: int, ttl: int) -> None:
+                cached[key] = value
+
+        responses = [
+            {
+                "code": 200,
+                "response": self.BLOCK_TIMESTAMP,
+                "text": str(self.BLOCK_TIMESTAMP),
+            },
+            {
+                "code": 200,
+                "response": [{"timestamp": self.BLOCK_TIMESTAMP}],
+                "text": f'[{{"timestamp": {self.BLOCK_TIMESTAMP}}}]',
+            },
+            {"code": 403, "response": {"message": "Forbidden"}},
+        ]
+        mock_side_effect(mocker, responses)
+
+        server = NativeAuthServer(self.default_config, NativeAuthCache())
+        with pytest.raises(NativeAuthInvalidImpersonateError):
+            server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+
+        assert cached[f"impersonate:{self.ADDRESS}:{self.MULTISIG_ADDRESS}"] == 0
+
+    def test_impersonate_redirect_is_rejected(self, mocker: Any):
+        cache = mocker.Mock()
+        cache.get.side_effect = lambda key: str(self.BLOCK_TIMESTAMP) if key.startswith("block:timestamp:") else None
+        get = mocker.patch("requests.get", return_value=mocker.Mock(status_code=302))
+        server = NativeAuthServer(self.default_config, cache)
+
+        with pytest.raises(NativeAuthInvalidImpersonateError):
+            server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+
+        url = f"{self.default_config.validate_impersonate_url}/{self.ADDRESS}/{self.MULTISIG_ADDRESS}"
+        get.assert_called_once_with(url, allow_redirects=False)
+        cache.set.assert_not_called()
+
+    def test_impersonate_non_success_status(self, mocker: Any):
+        cached: dict[str, int] = {}
+
+        class NativeAuthCache:
+            def get(self, key: str) -> Optional[str]:
+                value = cached.get(key)
+                return str(value) if value is not None else None
+
+            def set(self, key: str, value: int, ttl: int) -> None:
+                cached[key] = value
+
+        responses = [
+            {
+                "code": 200,
+                "response": self.BLOCK_TIMESTAMP,
+                "text": str(self.BLOCK_TIMESTAMP),
+            },
+            {
+                "code": 200,
+                "response": [{"timestamp": self.BLOCK_TIMESTAMP}],
+                "text": f'[{{"timestamp": {self.BLOCK_TIMESTAMP}}}]',
+            },
+            {"code": 500, "response": {"message": "Internal Server Error"}},
+        ]
+        mock_side_effect(mocker, responses)
+
+        server = NativeAuthServer(self.default_config, NativeAuthCache())
+        with pytest.raises(NativeAuthInvalidImpersonateError):
+            server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+
+        assert f"impersonate:{self.ADDRESS}:{self.MULTISIG_ADDRESS}" not in cached
+
+    def test_impersonate_success_is_cached_and_reused(self, mocker: Any):
+        cached: dict[str, int] = {}
+
+        class NativeAuthCache:
+            def get(self, key: str) -> Optional[str]:
+                value = cached.get(key)
+                return str(value) if value is not None else None
+
+            def set(self, key: str, value: int, ttl: int) -> None:
+                cached[key] = value
+
+        # block timestamps (2 requests) + a single call to the impersonate endpoint
+        responses = [
+            {
+                "code": 200,
+                "response": self.BLOCK_TIMESTAMP,
+                "text": str(self.BLOCK_TIMESTAMP),
+            },
+            {
+                "code": 200,
+                "response": [{"timestamp": self.BLOCK_TIMESTAMP}],
+                "text": f'[{{"timestamp": {self.BLOCK_TIMESTAMP}}}]',
+            },
+            {"code": 200, "response": True},
+        ]
+        mock_side_effect(mocker, responses)
+
+        server = NativeAuthServer(self.default_config, NativeAuthCache())
+        result = server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+        assert result.address.to_bech32() == self.MULTISIG_ADDRESS
+        assert cached[f"impersonate:{self.ADDRESS}:{self.MULTISIG_ADDRESS}"] == 1
+
+        # second validation is served entirely from the cache; any request would fail (no responses left)
+        result = server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+        assert result.address.to_bech32() == self.MULTISIG_ADDRESS
+        assert result.signer_address.to_bech32() == self.ADDRESS
+        assert responses == []
+
+    def test_impersonate_not_validated(self, mocker: Any):
+        responses = [
+            {
+                "code": 200,
+                "response": self.BLOCK_TIMESTAMP,
+                "text": str(self.BLOCK_TIMESTAMP),
+            },
+            {
+                "code": 200,
+                "response": [{"timestamp": self.BLOCK_TIMESTAMP}],
+                "text": f'[{{"timestamp": {self.BLOCK_TIMESTAMP}}}]',
+            },
+        ]
+        mock_side_effect(mocker, responses)
+
+        config = deepcopy(self.default_config)
+        config.validate_impersonate_url = None
+        config.validate_impersonate_callback = lambda address, impersonate: False
+        server = NativeAuthServer(config)
+
+        with pytest.raises(NativeAuthInvalidImpersonateError):
+            server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+
+    def test_impersonate_requested_but_not_configured(self, mocker: Any):
+        responses = [
+            {
+                "code": 200,
+                "response": self.BLOCK_TIMESTAMP,
+                "text": str(self.BLOCK_TIMESTAMP),
+            },
+            {
+                "code": 200,
+                "response": [{"timestamp": self.BLOCK_TIMESTAMP}],
+                "text": f'[{{"timestamp": {self.BLOCK_TIMESTAMP}}}]',
+            },
+        ]
+        mock_side_effect(mocker, responses)
+
+        config = deepcopy(self.default_config)
+        config.validate_impersonate_url = None
+        server = NativeAuthServer(config)
+
+        with pytest.raises(NativeAuthInvalidImpersonateError):
+            server.validate(self.IMPERSONATE_ACCESS_TOKEN)
+
     def test_is_valid(self, mocker: Any):
         responses = [
             {
